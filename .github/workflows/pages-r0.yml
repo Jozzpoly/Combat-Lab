@@ -1,4 +1,4 @@
-name: pages-r0
+name: pages-r1
 
 on:
   workflow_run:
@@ -7,7 +7,7 @@ on:
     types:
       - completed
     branches:
-      - experiment/r0-geometric-melee-spike
+      - experiment/r1-combat-organism
   workflow_dispatch:
 
 permissions:
@@ -24,10 +24,10 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout CI-qualified R0 specimen
+      - name: Checkout CI-qualified R1 specimen
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_sha || 'experiment/r0-geometric-melee-spike' }}
+          ref: ${{ github.event.workflow_run.head_sha || 'experiment/r1-combat-organism' }}
 
       - name: Prepare static research specimen
         shell: bash
@@ -36,7 +36,7 @@ jobs:
           mkdir dist
           cp index.html style.css main.js geometry.js dist/
           git rev-parse HEAD > dist/COMMIT.txt
-          printf '%s\n' "experiment/r0-geometric-melee-spike" > dist/BRANCH.txt
+          printf '%s\n' "experiment/r1-combat-organism" > dist/BRANCH.txt
 
       - uses: actions/configure-pages@v5
 
@@ -52,6 +52,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Deploy CI-qualified R0 specimen
+      - name: Deploy CI-qualified R1 specimen
         id: deployment
         uses: actions/deploy-pages@v4
