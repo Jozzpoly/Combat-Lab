@@ -61,7 +61,34 @@ jobs:
           for d in organisms; do
             if [ -d "$d" ]; then cp -R "$d" dist/; fi
           done
-          git rev-parse HEAD > dist/COMMIT.txt
+          SOURCE_SHA="$(git rev-parse HEAD)"
+          export SOURCE_SHA
+          python - <<'PY'
+          from pathlib import Path
+          import os
+          import re
+
+          version = os.environ["SOURCE_SHA"]
+
+          index = Path("dist/index.html")
+          text = index.read_text(encoding="utf-8")
+          text = re.sub(
+              r'((?:src|href)=")([^"]+\.(?:js|css))(")',
+              lambda m: f'{m.group(1)}{m.group(2)}?v={version}{m.group(3)}',
+              text,
+          )
+          index.write_text(text, encoding="utf-8")
+
+          for path in Path("dist").rglob("*.js"):
+              text = path.read_text(encoding="utf-8")
+              text = re.sub(
+                  r'(from\s+["\'])(\.\.?/[^"\']+\.js)(["\'])',
+                  lambda m: f'{m.group(1)}{m.group(2)}?v={version}{m.group(3)}',
+                  text,
+              )
+              path.write_text(text, encoding="utf-8")
+          PY
+          printf '%s\n' "$SOURCE_SHA" > dist/COMMIT.txt
           printf '%s\n' "${{ steps.source.outputs.label }}" > dist/BRANCH.txt
 
       - uses: actions/configure-pages@v5
