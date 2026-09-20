@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "syntax": "node --check core.js && node --check world.js && node --check combat.js && node --check ai.js && node --check main.js",
+    "syntax": "node --check core.js && node --check world.js && node --check combat.js && node --check ai.js && node --check simulation.js && node --check rehearsal.js && node --check main.js",
     "test": "npm run syntax && node --test"
   }
 }
