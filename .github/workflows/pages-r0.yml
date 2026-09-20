@@ -54,8 +54,11 @@ jobs:
           rm -rf dist
           mkdir dist
           cp index.html dist/
-          for f in style.css main.js core.js; do
+          for f in style.css main.js core.js scenario.js; do
             if [ -f "$f" ]; then cp "$f" dist/; fi
+          done
+          for d in organisms; do
+            if [ -d "$d" ]; then cp -R "$d" dist/; fi
           done
           git rev-parse HEAD > dist/COMMIT.txt
           printf '%s\n' "${{ steps.source.outputs.label }}" > dist/BRANCH.txt
