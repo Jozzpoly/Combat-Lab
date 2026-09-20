@@ -1,4 +1,4 @@
-name: pages-r1
+name: pages
 
 on:
   workflow_run:
@@ -7,7 +7,7 @@ on:
     types:
       - completed
     branches:
-      - experiment/r1-combat-organism
+      - main
   workflow_dispatch:
 
 permissions:
@@ -24,19 +24,19 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout CI-qualified R1 specimen
+      - name: Checkout qualified main state
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_sha || 'experiment/r1-combat-organism' }}
+          ref: ${{ github.event.workflow_run.head_sha || 'main' }}
 
-      - name: Prepare static research specimen
+      - name: Prepare reset page
         shell: bash
         run: |
           rm -rf dist
           mkdir dist
-          cp index.html style.css main.js geometry.js dist/
+          cp index.html dist/
           git rev-parse HEAD > dist/COMMIT.txt
-          printf '%s\n' "experiment/r1-combat-organism" > dist/BRANCH.txt
+          printf '%s\n' "main" > dist/BRANCH.txt
 
       - uses: actions/configure-pages@v5
 
@@ -52,6 +52,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Deploy CI-qualified R1 specimen
+      - name: Deploy qualified reset page
         id: deployment
         uses: actions/deploy-pages@v4
