@@ -7,6 +7,7 @@ import {
   createWeaponState,
   requestAttack,
   resolveWeaponClash,
+  damagingSegment,
   resolveWeaponHit,
   updateWeapon,
   weaponSegment
@@ -16,6 +17,8 @@ test("spear has materially different reach and inertia from sword", () => {
   assert.ok(WEAPONS.spear.maxReach > WEAPONS.sword.maxReach + 30);
   assert.ok(WEAPONS.spear.inertia > WEAPONS.sword.inertia * 1.5);
   assert.ok(WEAPONS.spear.maxAngularAccel < WEAPONS.sword.maxAngularAccel);
+  assert.ok(WEAPONS.spear.thrustDamage > WEAPONS.spear.cutDamage * 1.8);
+  assert.ok(WEAPONS.spear.thrustDamageStart > 0.8);
 });
 
 test("attack does not lock locomotion", () => {
@@ -120,4 +123,61 @@ test("same attack cannot multi-hit the same body every substep", () => {
   }
 
   assert.notEqual(firstHp, null);
+});
+
+
+test("spear shaft is physical but does not count as a damaging tip", () => {
+  const attacker = createBody({ id: "a", x: 500, y: 800 });
+  attacker.facing = 0;
+  attacker.desiredFacing = 0;
+
+  const weapon = createWeaponState(attacker, "spear");
+  weapon.angle = 0;
+  weapon.reach = 120;
+
+  const full = weaponSegment(attacker, weapon);
+  const damaging = damagingSegment(weapon, full, "thrust");
+
+  assert.ok(full.ax < 530);
+  assert.ok(damaging.ax > 600);
+  assert.ok(damaging.ax > full.ax + 70);
+});
+
+test("spear thrust cannot damage a body pressed against the wielder", () => {
+  const attacker = createBody({ id: "a", x: 500, y: 800 });
+  const target = createBody({ id: "b", x: 542, y: 800, radius: 18 });
+  attacker.facing = 0;
+  attacker.desiredFacing = 0;
+
+  const weapon = createWeaponState(attacker, "spear");
+  requestAttack(attacker, weapon, "thrust");
+
+  let hitEvent = null;
+  for (let i = 0; i < 120 && !hitEvent; i++) {
+    const frame = updateWeapon(attacker, weapon, 1 / 120);
+    hitEvent = resolveWeaponHit(attacker, weapon, target, frame);
+  }
+
+  assert.equal(hitEvent, null);
+  assert.equal(target.hp, target.maxHp);
+});
+
+test("spear thrust can damage with the tip at its working distance", () => {
+  const attacker = createBody({ id: "a", x: 500, y: 800 });
+  const target = createBody({ id: "b", x: 625, y: 800, radius: 18 });
+  attacker.facing = 0;
+  attacker.desiredFacing = 0;
+
+  const weapon = createWeaponState(attacker, "spear");
+  requestAttack(attacker, weapon, "thrust");
+
+  let hitEvent = null;
+  for (let i = 0; i < 120 && !hitEvent; i++) {
+    const frame = updateWeapon(attacker, weapon, 1 / 120);
+    hitEvent = resolveWeaponHit(attacker, weapon, target, frame);
+  }
+
+  assert.ok(hitEvent);
+  assert.equal(hitEvent.action, "thrust");
+  assert.ok(target.hp < target.maxHp);
 });
