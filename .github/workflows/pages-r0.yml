@@ -55,10 +55,11 @@ jobs:
           rm -rf dist
           mkdir dist
           cp index.html dist/
-          for f in style.css main.js core.js scenario.js; do
+          if [ -f style.css ]; then cp style.css dist/; fi
+          for f in *.js; do
             if [ -f "$f" ]; then cp "$f" dist/; fi
           done
-          for d in organisms; do
+          for d in src organisms; do
             if [ -d "$d" ]; then cp -R "$d" dist/; fi
           done
           SOURCE_SHA="$(git rev-parse HEAD)"
