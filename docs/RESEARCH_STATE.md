@@ -84,37 +84,76 @@ A candidate fails this gate if the same player strategy can be used across candi
 
 ## Active hypothesis space
 
-These are **candidates for research**, not accepted designs:
+The first pass mixed **core combat languages** with orthogonal assist/evaluation axes. That has now been corrected before implementation.
 
-### H1 — direct weapon expression
+The core candidates below must differ in the player's motor strategy and in the realized body/weapon behavior, not merely in constants.
 
-Movement remains highly responsive while mouse/aim directly expresses weapon orientation or attack trajectory. The core question is whether unusually direct control creates mastery and embodiment, or instead feels floaty and detached from body mechanics.
+### C1 — continuous direct weapon expression
 
-### H2 — body-driven committed motion
+The player continuously expresses weapon intent through aim/drag/orientation while locomotion remains live.
 
-The attack is produced by body + weapon momentum rather than by a free cursor-following arc. Movement remains live, but mass, current velocity, turning capability and weapon commitment materially reshape what can happen during the attack.
+The weapon's realized path is tightly coupled to that continuous input rather than being only a canned strike fired at a chosen angle.
 
-This is not an animation lock: the test is whether physically legible constraint can create weight without taking control away.
+**30-second discriminator:** the player should immediately discover that *how they move the aim during the encounter* changes what the weapon physically does.
 
-### H3 — persistent guard / contact language
+**Feniks value if it works:** unusually direct mastery, spatial precision and strong player authorship.
 
-The weapon is not merely spawned as a short damage sweep. Guard orientation and weapon presence persist between attacks, so approach angle, contact, pressure, spacing and transition into an attack become part of combat.
+**Primary falsifier:** it feels like steering a cursor-mounted damage wand, lacks body credibility, or creates excessive dexterity burden without better combat decisions.
 
-The falsifier is immediate: if this produces fiddliness, visual noise or simulation work without better decisions, it loses.
+### C2 — authored intent strikes with live locomotion
 
-### H4 — soft-focus assisted nontarget
+The player chooses a discrete strike intent — for example a thrust, compact cut, broad cut or shove-like action — while retaining meaningful control of locomotion during execution.
 
-The player still fights spatially and without hard target ownership, but a soft focus / assistance layer reduces top-down orientation burden and helps express intent toward a nearby threat.
+The trajectory can be authored and legible rather than simulated. The point is to create a strong **simple-system benchmark** against which more physical approaches must earn their complexity.
 
-The question is whether assistance improves legibility without turning combat into target-lock automation.
+**30-second discriminator:** success comes from choosing a spatially appropriate action and positioning it, not from manually steering the weapon through the whole stroke.
 
-### H5 — footwork-first strike language
+**Feniks value if it works:** clarity, responsiveness, weapon identity and low implementation/debug complexity without arbitrary full-body animation lock.
 
-Attacks are primarily negotiations of approach, step, reach and exit rather than cursor steering. The decisive skill is creating the right spatial relation before and during the strike.
+**Primary falsifier:** it collapses into ordinary cooldown-button combat, actions feel detached from body/world state, or locomotion makes the authored strike visually/mechanically incoherent.
 
-The question is whether this makes terrain, body size and weapon reach naturally meaningful while remaining responsive.
+### C3 — body / momentum coupled strikes
 
-These candidates may be changed or killed before implementation. They exist to widen the design space after three over-narrow experiments.
+The player's current movement, body turn, weapon mass and attack effort materially shape the realized strike.
+
+Control remains live, but the body cannot instantaneously erase physical commitment. Constraint should be legible and manipulable rather than imposed as `canMove=false`.
+
+**30-second discriminator:** entering the same attack from different movement states produces tactically useful differences that the player can intentionally exploit.
+
+**Feniks value if it works:** weight and embodiment emerge from controllable causality rather than animation lock.
+
+**Primary falsifier:** inertia mainly produces sluggishness, unpredictability or correction fighting, and the player spends effort managing the controller instead of fighting.
+
+### C4 — persistent guard / contact continuum
+
+The weapon has meaningful spatial presence between attacks. Guard orientation, approach, contact, pressure, deflection and transition into an offensive action become part of the same control language.
+
+The experiment must remain game-like; it is not a mandate for continuous rigid-body sword simulation.
+
+**30-second discriminator:** the player begins making decisions *before* pressing attack because weapon/body relation to the opponent already matters.
+
+**Feniks value if it works:** spacing, weapon length, terrain and physical presence can become naturally important without relying on hidden state.
+
+**Primary falsifier:** fiddliness, visual noise, contact jitter or cognitive load dominate the decisions gained.
+
+### Not core hypotheses — deferred orthogonal axes
+
+These may later be crossed with a surviving core language, but comparing them as peers to C1–C4 would repeat the category error:
+
+- **soft focus / aim assist / target assistance** — changes orientation burden and intent interpretation;
+- **camera and facing policy** — changes perception/control mapping;
+- **evasive movement vocabulary** — hop, sidestep, acceleration/footwork, etc.; no assumed universal roll or i-frames;
+- **body/weapon archetype scaling** — heavy vs light bodies, reach, mass, turnability;
+- **terrain/contact richness** — walls, narrow passages, soft collision, displacement;
+- **hit-fidelity level** — authored volumes vs deeper geometric/physical contact, unless a core hypothesis specifically depends on it.
+
+### Evaluation lens, not a separate combat model
+
+**Footwork** is currently treated as a cross-cutting test: does a candidate naturally make approach, reach, angle, retreat and terrain useful?
+
+A candidate that talks about spatial combat but does not change meaningful footwork has probably failed regardless of how sophisticated its hit resolver is.
+
+The C1–C4 set is still provisional. The next task is to attack it for hidden overlap and determine whether each candidate can produce a genuinely different playable strategy before any implementation begins.
 
 ## Roadmap
 
@@ -127,9 +166,10 @@ These candidates may be changed or killed before implementation. They exist to w
 
 ### B. Hypothesis formation — ACTIVE
 
-- sharpen or replace H1–H5;
-- look for overlap and fake distinctions;
-- identify the smallest shared **combat situation**, not a shared combat mechanism, that can expose the hypotheses fairly;
+- falsify the C1–C4 taxonomy and remove hidden overlap;
+- keep orthogonal assist/camera/evasion axes out of the first core-language comparison;
+- define one small shared **combat situation**, not a shared combat mechanism, that makes the candidates expose different player strategies;
+- define observable discriminators before code;
 - perform reference research only where it can reveal a genuinely different interaction language.
 
 ### C. Specimen design
