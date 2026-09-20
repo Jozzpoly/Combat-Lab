@@ -504,6 +504,7 @@ export function resolveWeaponHit(attacker, weapon, target, frame, emit) {
     action: actionType,
     damage,
     speed,
+    distance: Math.hypot(target.x - attacker.x, target.y - attacker.y),
     x: frame.segment.bx,
     y: frame.segment.by
   };
