@@ -8,6 +8,7 @@ import {
 
 test("sword rehearsal forms an actual pressured encounter", () => {
   const result = runDuelRehearsal({ weapon: "sword", seconds: 18 });
+  console.log("REHEARSAL_SWORD", JSON.stringify(result));
   assert.equal(result.finite, true);
   assert.ok(result.attackIntents >= 12);
   assert.ok(result.minDistance < 150);
@@ -16,6 +17,7 @@ test("sword rehearsal forms an actual pressured encounter", () => {
 
 test("spear rehearsal forms an actual pressured encounter", () => {
   const result = runDuelRehearsal({ weapon: "spear", seconds: 18 });
+  console.log("REHEARSAL_SPEAR", JSON.stringify(result));
   assert.equal(result.finite, true);
   assert.ok(result.attackIntents >= 10);
   assert.ok(result.minDistance < 170);
@@ -24,6 +26,7 @@ test("spear rehearsal forms an actual pressured encounter", () => {
 
 test("long weapon rehearsal materially negotiates a wall", () => {
   const result = runWallRehearsal({ weapon: "spear" });
+  console.log("REHEARSAL_WALL_SPEAR", JSON.stringify(result));
   assert.equal(result.finite, true);
   assert.ok(result.wallContacts > 0);
 });
