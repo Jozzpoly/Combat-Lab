@@ -125,7 +125,7 @@ An experimental specimen may be deployed only after its checks are green and dep
 Supported explicit paths:
 
 - manual workflow dispatch of an exact ref/SHA; or
-- a checked experiment commit whose message contains `[deploy]`. The Pages workflow deploys that exact checked `head_sha`.
+- a checked commit on the **currently whitelisted active experiment branch** whose message contains `[deploy]`. The Pages workflow deploys that exact checked `head_sha`.
 
 Ordinary experiment pushes never deploy.
 
