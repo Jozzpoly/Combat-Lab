@@ -5,31 +5,10 @@ import {
   normalize
 } from "./core.js";
 
-import {
-  WORLD,
-  createBody,
-  driveBody,
-  resolveBodyPair,
-  setDesiredFacing,
-  tickBodyVisuals,
-  updateFacing
-} from "./world.js";
-
-import {
-  WEAPONS,
-  createWeaponState,
-  equipWeapon,
-  requestAttack,
-  resolveWeaponClash,
-  resolveWeaponHit,
-  updateWeapon,
-  weaponSegment
-} from "./combat.js";
-
-import {
-  createDuelistBrain,
-  updateDuelistAI
-} from "./ai.js";
+import { WORLD } from "./world.js";
+import { WEAPONS, weaponSegment } from "./combat.js";
+import { createTerrariumSimulation } from "./simulation.js";
+import { runNamedRehearsal } from "./rehearsal.js";
 
 const canvas = document.querySelector("#game");
 const ctx = canvas.getContext("2d");
@@ -37,6 +16,7 @@ const hpPlayer = document.querySelector("#playerHpFill");
 const hpEnemy = document.querySelector("#enemyHpFill");
 const weaponLabel = document.querySelector("#weaponLabel");
 const runtimeStatus = document.querySelector("#runtimeStatus");
+const rehearsalStatus = document.querySelector("#rehearsalStatus");
 const eventLabel = document.querySelector("#eventLabel");
 
 const VIEW_W = canvas.width;
@@ -51,32 +31,17 @@ const mouse = {
   worldY: 0
 };
 
-const camera = {
-  x: 390,
-  y: 550
-};
+const camera = { x: 390, y: 550 };
+const sim = createTerrariumSimulation({ playerWeaponId: "sword", autoReset: true });
 
-const game = {
-  time: 0,
-  generation: 0,
-  roundState: "fight",
-  roundTimer: 0,
-  player: null,
-  enemy: null,
-  playerWeapon: null,
-  enemyWeapon: null,
-  enemyBrain: null,
-  playerWeaponId: "sword",
-  events: [],
+const fx = {
   particles: [],
-  trails: {
-    player: [],
-    enemy: []
-  },
+  trails: { player: [], enemy: [] },
   debug: false,
   frame: 0,
   lastEvent: "",
-  lastEventTimer: 0
+  lastEventTimer: 0,
+  generation: sim.generation
 };
 
 let audio = null;
@@ -84,14 +49,13 @@ let lastNow = performance.now();
 let accumulator = 0;
 
 function unlockAudio() {
-  if (!audio) {
-    audio = new (window.AudioContext || window.webkitAudioContext)();
-  }
+  if (!audio) audio = new (window.AudioContext || window.webkitAudioContext)();
   if (audio.state === "suspended") audio.resume();
 }
 
 function tone(kind, strength = 1) {
   if (!audio) return;
+
   const now = audio.currentTime;
   const osc = audio.createOscillator();
   const gain = audio.createGain();
@@ -104,28 +68,13 @@ function tone(kind, strength = 1) {
   osc.type = "triangle";
 
   if (kind === "swing") {
-    f0 = 250;
-    f1 = 120;
-    duration = 0.06;
-    volume = 0.018 * strength;
-    osc.type = "sine";
+    f0 = 250; f1 = 120; duration = 0.06; volume = 0.018 * strength; osc.type = "sine";
   } else if (kind === "clash") {
-    f0 = 1100;
-    f1 = 280;
-    duration = 0.10;
-    volume = 0.055 * strength;
-    osc.type = "square";
+    f0 = 1100; f1 = 280; duration = 0.10; volume = 0.055 * strength; osc.type = "square";
   } else if (kind === "wall") {
-    f0 = 520;
-    f1 = 150;
-    duration = 0.07;
-    volume = 0.026 * strength;
+    f0 = 520; f1 = 150; duration = 0.07; volume = 0.026 * strength;
   } else if (kind === "hit") {
-    f0 = 130;
-    f1 = 48;
-    duration = 0.13;
-    volume = 0.06 * strength;
-    osc.type = "sawtooth";
+    f0 = 130; f1 = 48; duration = 0.13; volume = 0.06 * strength; osc.type = "sawtooth";
   }
 
   filter.type = "lowpass";
@@ -143,84 +92,20 @@ function tone(kind, strength = 1) {
   osc.stop(now + duration + 0.02);
 }
 
-function makePlayer() {
-  return createBody({
-    id: "player",
-    x: 350,
-    y: 555,
-    radius: 18,
-    mass: 1.0,
-    maxSpeed: 250,
-    acceleration: 2250,
-    braking: 2700,
-    turnRate: 11.5,
-    hp: 100
-  });
-}
-
-function makeEnemy() {
-  const body = createBody({
-    id: "duelist",
-    x: 1240,
-    y: 555,
-    radius: 19,
-    mass: 1.12,
-    maxSpeed: 214,
-    acceleration: 1700,
-    braking: 2050,
-    turnRate: 9.6,
-    hp: 100
-  });
-  body.facing = Math.PI;
-  body.desiredFacing = Math.PI;
-  return body;
-}
-
-function resetRound() {
-  game.generation++;
-  game.roundState = "fight";
-  game.roundTimer = 0;
-  game.time = 0;
-  game.player = makePlayer();
-  game.enemy = makeEnemy();
-  game.playerWeapon = createWeaponState(game.player, game.playerWeaponId);
-  game.enemyWeapon = createWeaponState(game.enemy, "sword");
-  game.enemyBrain = createDuelistBrain(game.generation + 3);
-  game.events = [];
-  game.particles = [];
-  game.trails.player = [];
-  game.trails.enemy = [];
-  game.lastEvent = "";
-  game.lastEventTimer = 0;
-  camera.x = game.player.x;
-  camera.y = game.player.y;
-  refreshHUD();
-}
-
-function setPlayerWeapon(id) {
-  if (!WEAPONS[id] || game.playerWeaponId === id) return;
-  game.playerWeaponId = id;
-  equipWeapon(game.player, game.playerWeapon, id);
-  game.player.turnRate = id === "spear" ? 10.0 : 11.5;
-  game.player.maxSpeed = id === "spear" ? 238 : 250;
-  game.trails.player = [];
-  announce(WEAPONS[id].label.toUpperCase(), 0.65);
-  refreshHUD();
-}
-
 function announce(text, seconds = 0.42) {
-  game.lastEvent = text;
-  game.lastEventTimer = seconds;
+  fx.lastEvent = text;
+  fx.lastEventTimer = seconds;
   eventLabel.textContent = text;
   eventLabel.classList.add("visible");
 }
 
 function spawnContact(x, y, kind, strength = 1) {
   const count = kind === "hit" ? 12 : kind === "clash" ? 9 : 5;
+
   for (let i = 0; i < count; i++) {
-    const a = (i / count) * Math.PI * 2 + game.time * 2.7;
+    const a = (i / count) * Math.PI * 2 + sim.totalTime * 2.7;
     const speed = (38 + (i % 4) * 18) * strength;
-    game.particles.push({
+    fx.particles.push({
       x, y,
       vx: Math.cos(a) * speed,
       vy: Math.sin(a) * speed,
@@ -231,24 +116,37 @@ function spawnContact(x, y, kind, strength = 1) {
   }
 }
 
-function onCombatEvent(event) {
-  game.events.push({ ...event, at: game.time });
-  if (game.events.length > 120) game.events.shift();
-
+function onSimulationEvent(event) {
   if (event.type === "blade-clash") {
     spawnContact(event.x, event.y, "clash", clamp(event.relativeSpeed / 420, 0.5, 1.3));
     tone("clash", clamp(event.relativeSpeed / 320, 0.55, 1.2));
     announce("BLADE CONTACT", 0.28);
-  } else if (event.type === "body-hit") {
+    return;
+  }
+
+  if (event.type === "body-hit") {
     spawnContact(event.x, event.y, "hit", 1);
     tone("hit", clamp(event.speed / 360, 0.65, 1.25));
     announce(event.attacker === "player" ? "CLEAN CONTACT" : "HIT TAKEN", 0.35);
-  } else if (event.type === "weapon-wall") {
-    const actor = event.actor === "player" ? game.player : game.enemy;
-    const weapon = event.actor === "player" ? game.playerWeapon : game.enemyWeapon;
-    const seg = weaponSegment(actor, weapon);
-    spawnContact(seg.bx, seg.by, "wall", 0.65);
-    if (event.actor === "player") tone("wall", 0.8);
+    return;
+  }
+
+  if (event.type === "weapon-wall") {
+    if (event.actor === "player") {
+      const seg = weaponSegment(sim.player, sim.playerWeapon);
+      spawnContact(seg.bx, seg.by, "wall", 0.65);
+      tone("wall", 0.8);
+    }
+    return;
+  }
+
+  if (event.type === "round-end") {
+    announce(event.winner === "player" ? "OPENING WON" : "DOWN", 1.1);
+    return;
+  }
+
+  if (event.type === "weapon-equip" && event.actor === "player") {
+    announce(WEAPONS[event.weapon].label.toUpperCase(), 0.65);
   }
 }
 
@@ -267,90 +165,58 @@ function currentMoveInput() {
   if (keys.has("KeyD")) x += 1;
   if (keys.has("KeyW")) y -= 1;
   if (keys.has("KeyS")) y += 1;
+
   const n = normalize(x, y, 0, 0);
   return n.length > 0 ? { x: n.x, y: n.y } : { x: 0, y: 0 };
 }
 
 function recordTrail(owner, weapon, which) {
   const seg = weaponSegment(owner, weapon);
-  const trail = game.trails[which];
+  const trail = fx.trails[which];
+
   trail.push({
     x: seg.bx,
     y: seg.by,
     life: weapon.action ? 0.16 : 0.06,
     maxLife: weapon.action ? 0.16 : 0.06
   });
+
   if (trail.length > 28) trail.shift();
 }
 
-function updateTrail(dt) {
-  for (const trail of [game.trails.player, game.trails.enemy]) {
+function updatePresentation(dt) {
+  for (const trail of [fx.trails.player, fx.trails.enemy]) {
     for (const p of trail) p.life -= dt;
     while (trail.length && trail[0].life <= 0) trail.shift();
   }
-}
 
-function updateParticles(dt) {
-  for (const p of game.particles) {
+  for (const p of fx.particles) {
     p.life -= dt;
     p.x += p.vx * dt;
     p.y += p.vy * dt;
     p.vx *= Math.pow(0.12, dt);
     p.vy *= Math.pow(0.12, dt);
   }
-  game.particles = game.particles.filter(p => p.life > 0);
-}
+  fx.particles = fx.particles.filter(p => p.life > 0);
 
-function endRound(winner) {
-  if (game.roundState !== "fight") return;
-  game.roundState = winner === "player" ? "won" : "lost";
-  game.roundTimer = 1.55;
-  announce(winner === "player" ? "OPENING WON" : "DOWN", 1.1);
-}
-
-function updateFight(dt) {
-  const p = game.player;
-  const e = game.enemy;
-
-  const aim = Math.atan2(mouse.worldY - p.y, mouse.worldX - p.x);
-  setDesiredFacing(p, aim);
-
-  const move = currentMoveInput();
-  const attackMobility = p.playerWeapon?.action ? 1 : 1;
-  driveBody(p, move.x, move.y, dt, attackMobility);
-  updateFacing(p, dt);
-
-  const enemyInput = updateDuelistAI(game.enemyBrain, e, game.enemyWeapon, p, dt);
-  driveBody(e, enemyInput.moveX, enemyInput.moveY, dt, 1);
-  updateFacing(e, dt);
-
-  resolveBodyPair(p, e, 0.80);
-
-  const playerFrame = updateWeapon(p, game.playerWeapon, dt, onCombatEvent);
-  const enemyFrame = updateWeapon(e, game.enemyWeapon, dt, onCombatEvent);
-
-  const clash = resolveWeaponClash(p, game.playerWeapon, e, game.enemyWeapon, onCombatEvent);
-
-  if (!clash) {
-    resolveWeaponHit(p, game.playerWeapon, e, playerFrame, onCombatEvent);
-    resolveWeaponHit(e, game.enemyWeapon, p, enemyFrame, onCombatEvent);
+  if (fx.lastEventTimer > 0) {
+    fx.lastEventTimer -= dt;
+    if (fx.lastEventTimer <= 0) eventLabel.classList.remove("visible");
   }
 
-  recordTrail(p, game.playerWeapon, "player");
-  recordTrail(e, game.enemyWeapon, "enemy");
-
-  if (!e.alive) endRound("player");
-  if (!p.alive) endRound("enemy");
-
-  tickBodyVisuals(p, dt);
-  tickBodyVisuals(e, dt);
+  if (sim.generation !== fx.generation) {
+    fx.generation = sim.generation;
+    fx.trails.player = [];
+    fx.trails.enemy = [];
+    fx.particles = [];
+  }
 }
 
 function updateCamera(dt) {
   const aimLeadX = clamp(mouse.screenX - VIEW_W / 2, -220, 220) * 0.13;
   const aimLeadY = clamp(mouse.screenY - VIEW_H / 2, -160, 160) * 0.13;
-  const tx = game.player.x + aimLeadX;
-  const ty = game.player.y + aimLeadY;
+  const tx = sim.player.x + aimLeadX;
+  const ty = sim.player.y + aimLeadY;
 
   const ease = 1 - Math.pow(0.0008, dt);
   camera.x = lerp(camera.x, tx, ease);
@@ -364,26 +230,21 @@ function updateCamera(dt) {
 }
 
 function fixedUpdate(dt) {
-  game.time += dt;
+  const move = currentMoveInput();
 
-  if (game.lastEventTimer > 0) {
-    game.lastEventTimer -= dt;
-    if (game.lastEventTimer <= 0) {
-      eventLabel.classList.remove("visible");
-    }
-  }
+  sim.step({
+    moveX: move.x,
+    moveY: move.y,
+    aimX: mouse.worldX,
+    aimY: mouse.worldY
+  }, dt);
 
-  if (game.roundState === "fight") {
-    updateFight(dt);
-  } else {
-    game.roundTimer -= dt;
-    tickBodyVisuals(game.player, dt);
-    tickBodyVisuals(game.enemy, dt);
-    if (game.roundTimer <= 0) resetRound();
-  }
+  for (const event of sim.drainEvents()) onSimulationEvent(event);
 
-  updateTrail(dt);
-  updateParticles(dt);
+  recordTrail(sim.player, sim.playerWeapon, "player");
+  recordTrail(sim.enemy, sim.enemyWeapon, "enemy");
+
+  updatePresentation(dt);
   updateCamera(dt);
 }
 
@@ -448,6 +309,7 @@ function drawTrail(trail, color) {
     const alpha = clamp(b.life / b.maxLife, 0, 1) * 0.28;
     const sa = worldToScreen(a.x, a.y);
     const sb = worldToScreen(b.x, b.y);
+
     ctx.strokeStyle = color.replace("ALPHA", alpha.toFixed(3));
     ctx.lineWidth = 2.5 + alpha * 3;
     ctx.beginPath();
@@ -460,8 +322,6 @@ function drawTrail(trail, color) {
 
 function drawBody(body, isPlayer) {
   const s = worldToScreen(body.x, body.y);
-  const facingX = Math.cos(body.facing);
-  const facingY = Math.sin(body.facing);
 
   ctx.save();
   ctx.translate(s.x, s.y);
@@ -486,23 +346,19 @@ function drawBody(body, isPlayer) {
 
   ctx.restore();
 
-  if (game.debug) {
+  if (fx.debug) {
     ctx.strokeStyle = isPlayer ? "#80b4ff66" : "#e06e6266";
     ctx.beginPath();
     ctx.arc(s.x, s.y, body.radius, 0, Math.PI * 2);
     ctx.stroke();
 
-    ctx.strokeStyle = "#d8f1ff55";
-    ctx.beginPath();
-    ctx.moveTo(s.x, s.y);
-    ctx.lineTo(s.x + facingX * 56, s.y + facingY * 56);
-    ctx.stroke();
-
-    const desired = body.desiredFacing;
     ctx.strokeStyle = "#72f0ce88";
     ctx.beginPath();
     ctx.moveTo(s.x, s.y);
-    ctx.lineTo(s.x + Math.cos(desired) * 48, s.y + Math.sin(desired) * 48);
+    ctx.lineTo(
+      s.x + Math.cos(body.desiredFacing) * 48,
+      s.y + Math.sin(body.desiredFacing) * 48
+    );
     ctx.stroke();
   }
 }
@@ -512,24 +368,30 @@ function drawWeapon(owner, weapon, isPlayer) {
   const a = worldToScreen(seg.ax, seg.ay);
   const b = worldToScreen(seg.bx, seg.by);
 
-  if (game.debug) {
-    const pivot = worldToScreen(owner.x + Math.cos(owner.facing) * 8, owner.y + Math.sin(owner.facing) * 8);
-    const reach = weapon.desiredReach;
-    const dx = Math.cos(weapon.desiredAngle);
-    const dy = Math.sin(weapon.desiredAngle);
+  if (fx.debug) {
+    const pivot = worldToScreen(
+      owner.x + Math.cos(owner.facing) * 8,
+      owner.y + Math.sin(owner.facing) * 8
+    );
+
     ctx.save();
     ctx.setLineDash([5, 5]);
     ctx.strokeStyle = isPlayer ? "#72f0ce66" : "#ffb36b55";
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.moveTo(pivot.x + dx * weapon.config.inner, pivot.y + dy * weapon.config.inner);
-    ctx.lineTo(pivot.x + dx * reach, pivot.y + dy * reach);
+    ctx.moveTo(
+      pivot.x + Math.cos(weapon.desiredAngle) * weapon.config.inner,
+      pivot.y + Math.sin(weapon.desiredAngle) * weapon.config.inner
+    );
+    ctx.lineTo(
+      pivot.x + Math.cos(weapon.desiredAngle) * weapon.desiredReach,
+      pivot.y + Math.sin(weapon.desiredAngle) * weapon.desiredReach
+    );
     ctx.stroke();
     ctx.restore();
   }
 
   ctx.lineCap = "round";
-
   ctx.strokeStyle = "#6d5238";
   ctx.lineWidth = weapon.config.id === "spear" ? 5 : 6;
   ctx.beginPath();
@@ -541,18 +403,14 @@ function drawWeapon(owner, weapon, isPlayer) {
     ctx.strokeStyle = isPlayer ? "#dfeeff" : "#ffe2dd";
     ctx.lineWidth = 6.5;
     ctx.beginPath();
-    ctx.moveTo(
-      a.x + (b.x - a.x) * 0.27,
-      a.y + (b.y - a.y) * 0.27
-    );
+    ctx.moveTo(a.x + (b.x - a.x) * 0.27, a.y + (b.y - a.y) * 0.27);
     ctx.lineTo(b.x, b.y);
     ctx.stroke();
   } else {
-    const dx = b.x - a.x;
-    const dy = b.y - a.y;
-    const n = normalize(dx, dy);
+    const n = normalize(b.x - a.x, b.y - a.y);
     const px = -n.y;
     const py = n.x;
+
     ctx.fillStyle = isPlayer ? "#dfeeff" : "#ffe2dd";
     ctx.beginPath();
     ctx.moveTo(b.x + n.x * 9, b.y + n.y * 9);
@@ -564,76 +422,79 @@ function drawWeapon(owner, weapon, isPlayer) {
 }
 
 function drawParticles() {
-  for (const p of game.particles) {
+  for (const p of fx.particles) {
     const s = worldToScreen(p.x, p.y);
     const alpha = clamp(p.life / p.maxLife, 0, 1);
+
     ctx.fillStyle = p.kind === "hit"
       ? `rgba(255,105,90,${alpha})`
       : p.kind === "clash"
         ? `rgba(235,245,255,${alpha})`
         : `rgba(215,180,120,${alpha})`;
+
     ctx.fillRect(s.x - 1.5, s.y - 1.5, 3, 3);
   }
 }
 
 function drawDebug() {
-  if (!game.debug) return;
+  if (!fx.debug) return;
 
   ctx.save();
   ctx.fillStyle = "rgba(8,10,12,.78)";
-  ctx.fillRect(18, VIEW_H - 138, 300, 116);
+  ctx.fillRect(18, VIEW_H - 154, 322, 132);
   ctx.font = "12px ui-monospace, SFMono-Regular, Consolas, monospace";
   ctx.fillStyle = "#aeb9c5";
 
-  const p = game.player;
-  const w = game.playerWeapon;
-  const e = game.enemy;
+  const p = sim.player;
+  const w = sim.playerWeapon;
+  const e = sim.enemy;
 
   const lines = [
     `player v = ${Math.hypot(p.vx,p.vy).toFixed(1)}`,
     `body facing error = ${Math.abs(angleDelta(p.facing,p.desiredFacing)).toFixed(3)} rad`,
     `weapon = ${w.config.id} / ${w.action?.type || "guard"}`,
+    `weapon phase = ${w.action ? "action" : "guard"}`,
     `weapon ω = ${w.angularVelocity.toFixed(2)} rad/s`,
     `weapon reach = ${w.reach.toFixed(1)}`,
     `enemy dist = ${Math.hypot(e.x-p.x,e.y-p.y).toFixed(1)}`
   ];
 
-  lines.forEach((line, i) => ctx.fillText(line, 30, VIEW_H - 112 + i * 16));
+  lines.forEach((line, i) => ctx.fillText(line, 30, VIEW_H - 128 + i * 16));
   ctx.restore();
 }
 
 function render() {
   drawGround();
+  drawTrail(fx.trails.player, "rgba(135,194,255,ALPHA)");
+  drawTrail(fx.trails.enemy, "rgba(255,132,115,ALPHA)");
 
-  drawTrail(game.trails.player, "rgba(135,194,255,ALPHA)");
-  drawTrail(game.trails.enemy, "rgba(255,132,115,ALPHA)");
+  drawBody(sim.enemy, false);
+  drawWeapon(sim.enemy, sim.enemyWeapon, false);
 
-  drawBody(game.enemy, false);
-  drawWeapon(game.enemy, game.enemyWeapon, false);
-
-  drawBody(game.player, true);
-  drawWeapon(game.player, game.playerWeapon, true);
+  drawBody(sim.player, true);
+  drawWeapon(sim.player, sim.playerWeapon, true);
 
   drawParticles();
   drawDebug();
 
-  if (game.roundState !== "fight") {
+  if (sim.roundState !== "fight") {
     ctx.fillStyle = "rgba(7,8,10,.38)";
     ctx.fillRect(0, 0, VIEW_W, VIEW_H);
     ctx.textAlign = "center";
     ctx.font = "800 32px system-ui";
     ctx.fillStyle = "#f2f5f7";
-    ctx.fillText(game.roundState === "won" ? "OPENING WON" : "DOWN", VIEW_W / 2, VIEW_H / 2);
+    ctx.fillText(sim.roundState === "won" ? "OPENING WON" : "DOWN", VIEW_W / 2, VIEW_H / 2);
     ctx.textAlign = "left";
   }
 }
 
 function refreshHUD() {
-  hpPlayer.style.transform = `scaleX(${clamp(game.player.hp / game.player.maxHp, 0, 1)})`;
-  hpEnemy.style.transform = `scaleX(${clamp(game.enemy.hp / game.enemy.maxHp, 0, 1)})`;
-  weaponLabel.textContent = WEAPONS[game.playerWeaponId].label;
+  hpPlayer.style.transform = `scaleX(${clamp(sim.player.hp / sim.player.maxHp, 0, 1)})`;
+  hpEnemy.style.transform = `scaleX(${clamp(sim.enemy.hp / sim.enemy.maxHp, 0, 1)})`;
+  weaponLabel.textContent = WEAPONS[sim.playerWeaponId].label;
+
   document.querySelectorAll("[data-weapon]").forEach(button => {
-    button.classList.toggle("active", button.dataset.weapon === game.playerWeaponId);
+    button.classList.toggle("active", button.dataset.weapon === sim.playerWeaponId);
   });
 }
 
@@ -647,10 +508,10 @@ function frame(now) {
     accumulator -= FIXED_DT;
   }
 
-  game.frame++;
-  if (game.frame % 10 === 0) refreshHUD();
-  if (game.frame % 30 === 0) {
-    runtimeStatus.textContent = `runtime live · ${game.playerWeaponId} · frame ${game.frame}`;
+  fx.frame++;
+  if (fx.frame % 10 === 0) refreshHUD();
+  if (fx.frame % 30 === 0) {
+    runtimeStatus.textContent = `runtime live · ${sim.playerWeaponId} · frame ${fx.frame}`;
   }
 
   render();
@@ -661,41 +522,48 @@ window.addEventListener("keydown", e => {
   keys.add(e.code);
   unlockAudio();
 
-  if (e.code === "Digit1") setPlayerWeapon("sword");
-  if (e.code === "Digit2") setPlayerWeapon("spear");
-  if (e.code === "KeyR") resetRound();
-  if (e.code === "Backquote") game.debug = !game.debug;
+  if (e.code === "Digit1") sim.setPlayerWeapon("sword");
+  if (e.code === "Digit2") sim.setPlayerWeapon("spear");
+  if (e.code === "KeyR") sim.resetRound();
+  if (e.code === "Backquote") fx.debug = !fx.debug;
 });
 
-window.addEventListener("keyup", e => {
-  keys.delete(e.code);
-});
-
-window.addEventListener("blur", () => {
-  keys.clear();
-});
+window.addEventListener("keyup", e => keys.delete(e.code));
+window.addEventListener("blur", () => keys.clear());
 
 canvas.addEventListener("pointermove", pointerToWorld);
 canvas.addEventListener("pointerdown", e => {
   unlockAudio();
   pointerToWorld(e);
-  if (game.roundState !== "fight") return;
+  if (sim.roundState !== "fight") return;
 
-  if (e.button === 0) {
-    if (requestAttack(game.player, game.playerWeapon, "cut")) tone("swing", 0.8);
-  } else if (e.button === 2) {
-    if (requestAttack(game.player, game.playerWeapon, "thrust")) tone("swing", 0.65);
-  }
+  if (e.button === 0 && sim.attack("cut")) tone("swing", 0.8);
+  if (e.button === 2 && sim.attack("thrust")) tone("swing", 0.65);
 });
-
 canvas.addEventListener("contextmenu", e => e.preventDefault());
 
 document.querySelectorAll("[data-weapon]").forEach(button => {
   button.addEventListener("click", () => {
     unlockAudio();
-    setPlayerWeapon(button.dataset.weapon);
+    sim.setPlayerWeapon(button.dataset.weapon);
   });
 });
 
-resetRound();
+const probeName = new URLSearchParams(location.search).get("probe");
+if (probeName) {
+  try {
+    const result = runNamedRehearsal(probeName);
+    rehearsalStatus.textContent = "probe " + probeName + " · " + JSON.stringify(result);
+    rehearsalStatus.dataset.status = result.finite ? "pass" : "fail";
+  } catch (error) {
+    rehearsalStatus.textContent = "probe error · " + String(error?.message || error);
+    rehearsalStatus.dataset.status = "fail";
+  }
+}
+
+camera.x = sim.player.x;
+camera.y = sim.player.y;
+mouse.worldX = sim.player.x + 160;
+mouse.worldY = sim.player.y;
+refreshHUD();
 requestAnimationFrame(frame);
