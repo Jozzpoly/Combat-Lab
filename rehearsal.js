@@ -20,7 +20,17 @@ function summarize(sim, metrics) {
     attackIntents: metrics.attackIntents,
     roundsEnded: metrics.roundsEnded,
     minDistance: Number(metrics.minDistance.toFixed(1)),
-    maxDistance: Number(metrics.maxDistance.toFixed(1))
+    maxDistance: Number(metrics.maxDistance.toFixed(1)),
+    averagePlayerHitDistance: metrics.playerHitDistances.length
+      ? Number((metrics.playerHitDistances.reduce((a, b) => a + b, 0) / metrics.playerHitDistances.length).toFixed(1))
+      : null,
+    minPlayerHitDistance: metrics.playerHitDistances.length
+      ? Number(Math.min(...metrics.playerHitDistances).toFixed(1))
+      : null,
+    maxPlayerHitDistance: metrics.playerHitDistances.length
+      ? Number(Math.max(...metrics.playerHitDistances).toFixed(1))
+      : null,
+    ruinWallContacts: metrics.ruinWallContacts
   };
 }
 
@@ -34,6 +44,8 @@ export function runDuelRehearsal({ weapon = "sword", seconds = 18 } = {}) {
     wallContacts: 0,
     attackIntents: 0,
     roundsEnded: 0,
+    playerHitDistances: [],
+    ruinWallContacts: 0,
     minDistance: Infinity,
     maxDistance: 0
   };
@@ -76,12 +88,15 @@ export function runDuelRehearsal({ weapon = "sword", seconds = 18 } = {}) {
 
     for (const event of sim.drainEvents()) {
       if (event.type === "body-hit") {
-        if (event.attacker === "player") metrics.playerHits++;
-        else metrics.enemyHits++;
+        if (event.attacker === "player") {
+          metrics.playerHits++;
+          if (Number.isFinite(event.distance)) metrics.playerHitDistances.push(event.distance);
+        } else metrics.enemyHits++;
       } else if (event.type === "blade-clash") {
         metrics.clashes++;
       } else if (event.type === "weapon-wall" && event.actor === "player") {
         metrics.wallContacts++;
+        if (event.wall === "ruin-upper" || event.wall === "ruin-lower") metrics.ruinWallContacts++;
       } else if (event.type === "round-end") {
         metrics.roundsEnded++;
       }
@@ -109,6 +124,8 @@ export function runWallRehearsal({ weapon = "spear" } = {}) {
     wallContacts: 0,
     attackIntents: 0,
     roundsEnded: 0,
+    playerHitDistances: [],
+    ruinWallContacts: 0,
     minDistance: Math.hypot(sim.enemy.x - sim.player.x, sim.enemy.y - sim.player.y),
     maxDistance: Math.hypot(sim.enemy.x - sim.player.x, sim.enemy.y - sim.player.y)
   };
@@ -119,7 +136,10 @@ export function runWallRehearsal({ weapon = "spear" } = {}) {
   for (let i = 0; i < Math.floor(2 / DT); i++) {
     sim.step({ moveX: 0, moveY: 0, aimX: 900, aimY: 300 }, DT);
     for (const event of sim.drainEvents()) {
-      if (event.type === "weapon-wall" && event.actor === "player") metrics.wallContacts++;
+      if (event.type === "weapon-wall" && event.actor === "player") {
+        metrics.wallContacts++;
+        if (event.wall === "ruin-upper" || event.wall === "ruin-lower") metrics.ruinWallContacts++;
+      }
       if (event.type === "blade-clash") metrics.clashes++;
       if (event.type === "body-hit") {
         if (event.attacker === "player") metrics.playerHits++;
