@@ -45,6 +45,24 @@ Potentially valid comparison:
 
 The test is player-facing: **would a player naturally behave differently?**
 
+## 3.1 Discovery before attribution
+
+Combat Lab uses two different experimental modes and must not confuse them.
+
+### Discovery mode — current phase
+
+When we do not yet know the right combat language, compare a few **deliberately divergent whole organisms**. Multiple coupled mechanics may differ if that is necessary to make the player-facing phenomena genuinely different.
+
+The goal is not yet to prove which individual variable caused an effect. The goal is to discover **where there is something worth explaining**.
+
+### Attribution mode — later
+
+Once an organism repeatedly survives Owner play and contains a valuable phenomenon, narrow A/B experiments can isolate steering, timing, contact, assistance, momentum, hit fidelity or other variables.
+
+Do not enter attribution mode merely because it is easier to make a clean experiment.
+
+Early over-isolation can remove the phenomenon we are trying to discover; R0 and the LIVE / BOUNDED / CAPTURED spike are preserved warnings of this failure mode.
+
 ## 4. Keep the situation comparable, not the mechanics identical
 
 A comparison may share:
