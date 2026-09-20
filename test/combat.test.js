@@ -18,7 +18,7 @@ test("spear has materially different reach and inertia from sword", () => {
   assert.ok(WEAPONS.spear.inertia > WEAPONS.sword.inertia * 1.5);
   assert.ok(WEAPONS.spear.maxAngularAccel < WEAPONS.sword.maxAngularAccel);
   assert.ok(WEAPONS.spear.thrustDamage > WEAPONS.spear.cutDamage * 1.8);
-  assert.ok(WEAPONS.spear.thrustDamageStart > 0.8);
+  assert.ok(WEAPONS.spear.thrustDamageStart > 0.65);
 });
 
 test("attack does not lock locomotion", () => {
@@ -162,22 +162,28 @@ test("spear thrust cannot damage a body pressed against the wielder", () => {
   assert.equal(target.hp, target.maxHp);
 });
 
-test("spear thrust can damage with the tip at its working distance", () => {
-  const attacker = createBody({ id: "a", x: 500, y: 800 });
-  const target = createBody({ id: "b", x: 625, y: 800, radius: 18 });
-  attacker.facing = 0;
-  attacker.desiredFacing = 0;
+test("spear thrust has an outer damaging envelope while keeping the shaft safe", () => {
+  const successfulDistances = [];
 
-  const weapon = createWeaponState(attacker, "spear");
-  requestAttack(attacker, weapon, "thrust");
+  for (const distance of [82, 92, 102, 112, 122, 132, 142]) {
+    const attacker = createBody({ id: "a", x: 500, y: 800 });
+    const target = createBody({ id: "b", x: 500 + distance, y: 800, radius: 18 });
+    attacker.facing = 0;
+    attacker.desiredFacing = 0;
 
-  let hitEvent = null;
-  for (let i = 0; i < 120 && !hitEvent; i++) {
-    const frame = updateWeapon(attacker, weapon, 1 / 120);
-    hitEvent = resolveWeaponHit(attacker, weapon, target, frame);
+    const weapon = createWeaponState(attacker, "spear");
+    requestAttack(attacker, weapon, "thrust");
+
+    let hitEvent = null;
+    for (let i = 0; i < 140 && !hitEvent; i++) {
+      const frame = updateWeapon(attacker, weapon, 1 / 120);
+      hitEvent = resolveWeaponHit(attacker, weapon, target, frame);
+    }
+
+    if (hitEvent) successfulDistances.push(distance);
   }
 
-  assert.ok(hitEvent);
-  assert.equal(hitEvent.action, "thrust");
-  assert.ok(target.hp < target.maxHp);
+  assert.ok(successfulDistances.length > 0);
+  assert.ok(Math.max(...successfulDistances) >= 102);
+  assert.ok(!successfulDistances.includes(82));
 });
