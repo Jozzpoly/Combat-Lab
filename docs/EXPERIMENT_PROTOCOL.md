@@ -120,7 +120,14 @@ Those require Owner play.
 
 Automatic Pages deployment is reserved for `main`.
 
-An experimental specimen may be deployed only through an **explicit manual deploy of an exact ref/SHA** after its checks are green.
+An experimental specimen may be deployed only after its checks are green and deployment intent is explicit.
+
+Supported explicit paths:
+
+- manual workflow dispatch of an exact ref/SHA; or
+- a checked experiment commit whose message contains `[deploy]`. The Pages workflow deploys that exact checked `head_sha`.
+
+Ordinary experiment pushes never deploy.
 
 The public URL must never silently become an experiment merely because an experiment branch received a push.
 
