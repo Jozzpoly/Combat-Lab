@@ -20,7 +20,7 @@ None of these is a foundation to continue.
 
 The lab is back in **hypothesis formation**.
 
-Before another gameplay lane is implemented, we need **3–5 qualitatively different playable combat hypotheses** that differ in what the player actually does and feels within the first ~30 seconds.
+Before another gameplay lane is implemented, the current comparison must contain **three intentionally divergent whole combat organisms** that make the player behave differently within the first ~30 seconds: **direct manipulation**, **authored spatial action**, and **momentum/contact fighting**.
 
 The active question is broader than attack steering:
 
@@ -32,7 +32,7 @@ Responsiveness and player agency have veto over simulation elegance. Movement du
 
 Read these before substantial continuation:
 
-- [Research state](docs/RESEARCH_STATE.md) — current truth, negative evidence, Owner-confirmed pressures, active hypothesis space and roadmap.
+- [Research state](docs/RESEARCH_STATE.md) — current truth, negative evidence, Owner-confirmed pressures, the A/B/C divergent-organism comparison and roadmap.
 - [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) — hypothesis gate, evidence boundaries, branch hygiene, deployment discipline and the meaning of short Owner commands such as “kontynuuj”.
 
 ## Deployment
