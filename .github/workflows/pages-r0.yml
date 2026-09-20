@@ -8,7 +8,7 @@ on:
       - completed
     branches:
       - main
-      - experiment/discovery-campaign-v1
+      - experiment/combat-terrarium-v1
   workflow_dispatch:
     inputs:
       source_ref:
