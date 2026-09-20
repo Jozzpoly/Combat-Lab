@@ -18,7 +18,7 @@ None of these is a foundation to continue.
 
 ## Current phase
 
-The lab is back in **hypothesis formation**.
+The first discovery campaign is now **machine/browser qualified and waiting for Owner feel evidence**. This is not gameplay acceptance.
 
 The first campaign now contains **four deliberately divergent combat organisms** formed by crossing two questions: **continuous vs discrete intent expression**, and **authored/kinematic vs material/coupled realization**. The four corners are **DIRECT, ACTIONS, COUPLED DIRECT, and COUPLED ACTIONS**.
 
@@ -38,9 +38,10 @@ Read these before substantial continuation:
 
 ## Deployment
 
-- `main` is the automatic public truth and currently serves a reset/status page.
-- Experimental branches do **not** auto-deploy.
-- A candidate may reach Pages only through an explicit manual deploy of an exact branch/tag/SHA after its checks are green.
+- `main` is the automatic public truth and normally serves the reset/status state.
+- Ordinary experimental pushes do **not** deploy.
+- The currently whitelisted active experiment may deploy only after green checks and explicit `[deploy]` intent; the Pages build checks out the exact checked SHA.
+- Deployed JS/CSS module URLs are versioned by that exact source SHA to prevent stale mixed-build browser caches.
 - Owner play is required to qualify gameplay.
 
 ## Working invariant
