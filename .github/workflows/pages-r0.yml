@@ -8,7 +8,7 @@ on:
       - completed
     branches:
       - main
-      - 'experiment/**'
+      - experiment/discovery-campaign-v1
   workflow_dispatch:
     inputs:
       source_ref:
@@ -39,7 +39,7 @@ jobs:
             LABEL="${{ inputs.source_ref }}"
           else
             SOURCE="${{ github.event.workflow_run.head_sha }}"
-            LABEL="main"
+            LABEL="${{ github.event.workflow_run.head_branch }}"
           fi
           echo "source=$SOURCE" >> "$GITHUB_OUTPUT"
           echo "label=$LABEL" >> "$GITHUB_OUTPUT"
