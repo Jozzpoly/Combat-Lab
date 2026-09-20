@@ -8,31 +8,44 @@
 
 There is **no accepted Feniks combat model** in this repository.
 
-### Discovery Campaign v1 — MACHINE/BROWSER QUALIFIED, OWNER FEEL PENDING
+### Mechanism Probe v1 — QUALIFIED AS MECHANISM EVIDENCE, NOT OWNER-ELIGIBLE
 
-Active specimen branch:
+Preserved specimen:
 
-- `experiment/discovery-campaign-v1`
+- branch: `experiment/discovery-campaign-v1`
+- deployed/provenance-verified head: `88b7c40a0f66e222d683e7062f68b37e98776ba2`
 
-Qualified/deployed specimen source:
+The A/B/C/D matrix is now explicitly classified as a **technical / mechanism falsifier**.
 
-- `785ea598b42cb1dc64bb154b561d136712e8faeb`
+It demonstrated:
 
-Evidence established before Owner play:
+- four mechanically distinct player-intent / realization contracts can coexist;
+- A↔C and B↔D can be made causally different rather than parameter-only variants;
+- material contact can alter realized motion while preserving simple input;
+- the browser/deployment instrument can be provenance-controlled.
 
-- CI parses the full browser runtime and runs **13/13 passing mechanism/rehearsal tests**;
-- A/B/C/D are separate organism-owned controllers/resolvers rather than presets in one attack engine;
-- scripted rehearsal distinguishes A↔C and B↔D at the realized-motion/contact level;
-- public Pages provenance reports the exact commit and active experiment branch;
-- fresh browser startup through `?mode=A/B/C/D` reaches a live render loop in the requested organism;
-- Pages now versions JS/CSS module URLs by the exact deploy SHA after a stale-cache incident showed that unversioned assets could mix states across deployments.
+It did **not** provide enough integrated game context to justify Owner feel testing.
 
-What this **does not** establish:
+Missing product evidence includes:
 
-- none of A/B/C/D has passed Owner feel;
-- no organism is a Feniks combat foundation;
-- the current C/D implementations are intentionally minimal representatives of material/coupled realization. They demonstrate path divergence, inertia/contact response and movement-dependent weapon motion, but do **not** yet prove the richer long-term body/momentum model described by the design pressure;
-- machine/browser qualification says the experimental instrument runs and exposes the intended distinctions. It does not say any distinction is good gameplay.
+- an actual place/world slice;
+- credible body↔weapon↔movement coupling;
+- persistent spatial defense worth reading;
+- meaningful opponent pressure;
+- weapon identity;
+- terrain-dependent decisions;
+- camera/world feel;
+- repeated-play desire and mastery.
+
+The earlier state label `Owner feel campaign — ACTIVE` is retracted.
+
+Current active direction:
+
+> build an integrated **Combat Terrarium / small world slice** whose negative or positive Owner reaction would be meaningful evidence about Feniks combat.
+
+Authoritative refoundation document:
+
+- [Owner Specimen Refoundation](OWNER_SPECIMEN_REFOUNDATION.md)
 
 Three implementation directions have already produced useful negative evidence:
 
@@ -94,9 +107,11 @@ The broader active question is:
 
 This question deliberately precedes a final choice of camera, target system, hit authority, animation model, weapon physics, classes, progression or AI architecture.
 
-## Hypothesis gate before implementation
+## Historical mechanism-hypothesis gate
 
-Before another combat specimen is coded, the lab must produce **3–5 qualitatively different playable hypotheses**.
+The four-corner probe used the following gate to escape parameter-only comparison. It remains useful as historical methodology for bounded mechanism probes, but it no longer defines the product-specimen roadmap.
+
+Before a bounded mechanism comparison is coded, candidates should be qualitatively different rather than parameter-only variants.
 
 Each hypothesis must state:
 
