@@ -23,7 +23,7 @@ permissions:
 
 concurrency:
   group: combat-lab-pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
