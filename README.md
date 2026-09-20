@@ -18,9 +18,9 @@ None of these is a foundation to continue.
 
 ## Current phase
 
-The first discovery campaign is now **machine/browser qualified and waiting for Owner feel evidence**. This is not gameplay acceptance.
+The four-corner **A/B/C/D discovery artifact is complete only as a mechanism probe**. It is not an Owner-ready combat specimen.
 
-The first campaign now contains **four deliberately divergent combat organisms** formed by crossing two questions: **continuous vs discrete intent expression**, and **authored/kinematic vs material/coupled realization**. The four corners are **DIRECT, ACTIONS, COUPLED DIRECT, and COUPLED ACTIONS**.
+The active product-research phase is now **Combat Terrarium v1**: a small integrated world slice built around embodied intent, persistent weapon/contact state, live locomotion, meaningful opponent pressure and spatial terrain consequence.
 
 The active question is broader than attack steering:
 
@@ -33,14 +33,15 @@ Responsiveness and player agency have veto over simulation elegance. Movement du
 Read these before substantial continuation:
 
 - [Research state](docs/RESEARCH_STATE.md) — current truth, negative evidence, Owner-confirmed pressures and active roadmap.
-- [Discovery Campaign v1](docs/DISCOVERY_CAMPAIGN_V1.md) — four-corner experiment design, shared situation, implementation boundaries and Owner-test contract.
+- [Discovery Campaign v1](docs/DISCOVERY_CAMPAIGN_V1.md) — preserved four-corner mechanism-probe design; no longer the Owner-test roadmap.
+- [Owner Specimen Refoundation](docs/OWNER_SPECIMEN_REFOUNDATION.md) — recovered Owner intent, donor/research synthesis, Combat Terrarium definition and the real Owner-eligibility gate.
 - [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) — hypothesis gate, evidence boundaries, branch hygiene, deployment discipline and the meaning of short Owner commands such as “kontynuuj”.
 
 ## Deployment
 
 - `main` is the automatic public truth and normally serves the reset/status state.
 - Ordinary experimental pushes do **not** deploy.
-- The currently whitelisted active experiment may deploy only after green checks and explicit `[deploy]` intent; the Pages build checks out the exact checked SHA.
+- Only the currently whitelisted active experiment may deploy after green checks and explicit `[deploy]` intent; the Pages build checks out the exact checked SHA.
 - Deployed JS/CSS module URLs are versioned by that exact source SHA to prevent stale mixed-build browser caches.
 - Owner play is required to qualify gameplay.
 
