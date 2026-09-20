@@ -153,7 +153,81 @@ These may later be crossed with a surviving core language, but comparing them as
 
 A candidate that talks about spatial combat but does not change meaningful footwork has probably failed regardless of how sophisticated its hit resolver is.
 
-The C1–C4 set is still provisional. The next task is to attack it for hidden overlap and determine whether each candidate can produce a genuinely different playable strategy before any implementation begins.
+The C1–C4 descriptions are **design pressures / corners**, not mutually exclusive taxonomic species. Existing combat systems often combine these properties, so treating them as four independent lanes would create another false experimental structure.
+
+### Discovery method — whole-organism divergence first
+
+Combat Lab is currently in an **exploratory discovery phase**, not a mechanism-attribution phase.
+
+That means the first meaningful comparison should intentionally maximize player-facing difference instead of changing one variable at a time. Once a promising combat organism exists, narrower A/B tests can isolate why it works.
+
+The current candidate comparison is therefore:
+
+#### Organism A — DIRECT MANIPULATION
+
+Continuous input has high authority over weapon expression. The player should feel that they are *operating the weapon/body relation itself*, not merely choosing an attack animation.
+
+This is the risky high-agency corner: potentially expressive and embodied, potentially fiddly or detached.
+
+#### Organism B — AUTHORED SPATIAL ACTION
+
+The player uses responsive locomotion + aim and chooses a small vocabulary of clear authored strike intents. Geometry, spacing and movement still matter, but the game carries more of the motion execution.
+
+This is the deliberately simple benchmark. A more simulated system does not earn complexity unless it produces better play than this lane.
+
+#### Organism C — MOMENTUM / CONTACT FIGHTING
+
+Body state, weapon mass/position, guard/contact and movement meaningfully condition what the strike becomes. The weapon has enough continuity that spacing and pre-contact state can matter before an attack button resolves.
+
+This is the embodied-causality corner: potentially weighty and emergent, potentially sluggish, opaque or unstable.
+
+These organisms may share presentation, arena and opponent intent. They **must not** be forced through one common attack implementation, timing model or hit resolver merely to make the comparison look scientifically tidy.
+
+### Why three, not more
+
+Three genuinely distant organisms are currently more useful than five weakly separated variants.
+
+A fourth lane should be added only if we can state a player strategy that is not already representable as a tuning or hybrid of A–C.
+
+Soft focus, target assistance, camera policy, evasion vocabulary and fidelity remain secondary axes to test **inside** a surviving organism later.
+
+### Shared combat situation
+
+The first comparison should share a small **situation**, not a shared combat mechanism:
+
+- one responsive player body;
+- one readable melee opponent applying real pressure;
+- open room plus one simple spatial obstruction / wall relation so spacing and weapon negotiation can reveal themselves;
+- same broad objective: survive, create an opening, land meaningful hits;
+- immediate reset;
+- no progression, skills, magic, loot, combo tree, universal roll or i-frame layer;
+- enough feedback to understand contact and threat, but no polish layer that can rescue weak control.
+
+The opponent may use the same high-level loop — approach → readable preparation → committed threat → recovery — while the exact collision/contact implementation is allowed to differ where a hypothesis requires it.
+
+### 30-second discriminator gate
+
+Before implementation, each organism must predict a **different natural player strategy** within roughly the first half-minute:
+
+- **A:** the player experiments with shaping/directing weapon motion;
+- **B:** the player experiments with choosing and placing distinct strike intents;
+- **C:** the player experiments with body state, spacing, guard/contact and momentum before/during the strike.
+
+If real play does not produce those different behaviours, the comparison has failed even if the code paths are different.
+
+### Cross-cutting evaluation
+
+The Owner test should look for evidence, not numeric preference scoring:
+
+- Is the character responsive or is the control scheme fighting the player?
+- Can the player understand *why* a hit, miss, deflection or bad commitment happened?
+- Does footwork emerge as useful rather than decorative?
+- Does the weapon/body/world relation create decisions unavailable in a detached damage-volume system?
+- Is there something worth mastering or discovering after the first minute?
+- Is complexity producing gameplay leverage, or only simulation burden?
+- Does the player want to keep fighting?
+
+The next implementation begins only after these three organisms survive a final paper-level falsification pass.
 
 ## Roadmap
 
@@ -166,11 +240,12 @@ The C1–C4 set is still provisional. The next task is to attack it for hidden o
 
 ### B. Hypothesis formation — ACTIVE
 
-- falsify the C1–C4 taxonomy and remove hidden overlap;
-- keep orthogonal assist/camera/evasion axes out of the first core-language comparison;
-- define one small shared **combat situation**, not a shared combat mechanism, that makes the candidates expose different player strategies;
-- define observable discriminators before code;
-- perform reference research only where it can reveal a genuinely different interaction language.
+- use C1–C4 as design pressures, not fake mutually-exclusive categories;
+- falsify the three whole-organism corners A/B/C for hidden sameness;
+- keep orthogonal assist/camera/evasion axes out of the first comparison;
+- use the shared combat situation above while allowing each organism its own mechanics;
+- require the 30-second discriminator before code;
+- perform reference research only where it exposes a genuinely different interaction language.
 
 ### C. Specimen design
 
