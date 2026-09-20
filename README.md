@@ -20,7 +20,7 @@ None of these is a foundation to continue.
 
 The lab is back in **hypothesis formation**.
 
-Before another gameplay lane is implemented, the current comparison must contain **three intentionally divergent whole combat organisms** that make the player behave differently within the first ~30 seconds: **direct manipulation**, **authored spatial action**, and **momentum/contact fighting**.
+The first campaign now contains **four deliberately divergent combat organisms** formed by crossing two questions: **continuous vs discrete intent expression**, and **authored/kinematic vs material/coupled realization**. The four corners are **DIRECT, ACTIONS, COUPLED DIRECT, and COUPLED ACTIONS**.
 
 The active question is broader than attack steering:
 
@@ -32,7 +32,8 @@ Responsiveness and player agency have veto over simulation elegance. Movement du
 
 Read these before substantial continuation:
 
-- [Research state](docs/RESEARCH_STATE.md) — current truth, negative evidence, Owner-confirmed pressures, the A/B/C divergent-organism comparison and roadmap.
+- [Research state](docs/RESEARCH_STATE.md) — current truth, negative evidence, Owner-confirmed pressures and active roadmap.
+- [Discovery Campaign v1](docs/DISCOVERY_CAMPAIGN_V1.md) — four-corner experiment design, shared situation, implementation boundaries and Owner-test contract.
 - [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) — hypothesis gate, evidence boundaries, branch hygiene, deployment discipline and the meaning of short Owner commands such as “kontynuuj”.
 
 ## Deployment
