@@ -9,10 +9,11 @@ import {
 } from "./world.js";
 import {
   WEAPONS,
+  createWeaponContactState,
   createWeaponState,
   equipWeapon,
   requestAttack,
-  resolveWeaponClash,
+  resolveWeaponContact,
   resolveWeaponHit,
   updateWeapon
 } from "./combat.js";
@@ -25,14 +26,14 @@ function makePlayer() {
   return createBody({
     id: "player",
     x: 350,
-    y: 555,
+    y: 790,
     radius: 18,
     mass: 1.0,
     maxSpeed: 250,
     acceleration: 2250,
     braking: 2700,
     turnRate: 11.5,
-    hp: 100
+    hp: 125
   });
 }
 
@@ -40,14 +41,14 @@ function makeEnemy() {
   const body = createBody({
     id: "duelist",
     x: 1240,
-    y: 555,
+    y: 315,
     radius: 19,
     mass: 1.12,
     maxSpeed: 214,
     acceleration: 1700,
     braking: 2050,
     turnRate: 9.6,
-    hp: 100
+    hp: 125
   });
   body.facing = Math.PI;
   body.desiredFacing = Math.PI;
@@ -66,6 +67,7 @@ export function createTerrariumSimulation({ playerWeaponId = "sword", autoReset 
     enemy: null,
     playerWeapon: null,
     enemyWeapon: null,
+    weaponContact: null,
     enemyBrain: null,
     events: [],
     pendingEvents: [],
@@ -88,6 +90,7 @@ export function createTerrariumSimulation({ playerWeaponId = "sword", autoReset 
     sim.enemy = makeEnemy();
     sim.playerWeapon = createWeaponState(sim.player, sim.playerWeaponId);
     sim.enemyWeapon = createWeaponState(sim.enemy, "sword");
+    sim.weaponContact = createWeaponContactState();
     sim.enemyBrain = createDuelistBrain(sim.generation + 3);
     emit({ type: "round-reset" });
   }
@@ -147,9 +150,17 @@ export function createTerrariumSimulation({ playerWeaponId = "sword", autoReset 
     const playerFrame = updateWeapon(p, sim.playerWeapon, dt, emit);
     const enemyFrame = updateWeapon(e, sim.enemyWeapon, dt, emit);
 
-    const clash = resolveWeaponClash(p, sim.playerWeapon, e, sim.enemyWeapon, emit);
+    const weaponContact = resolveWeaponContact(
+      p,
+      sim.playerWeapon,
+      e,
+      sim.enemyWeapon,
+      sim.weaponContact,
+      dt,
+      emit
+    );
 
-    if (!clash) {
+    if (!weaponContact?.contact) {
       resolveWeaponHit(p, sim.playerWeapon, e, playerFrame, emit);
       resolveWeaponHit(e, sim.enemyWeapon, p, enemyFrame, emit);
     }
