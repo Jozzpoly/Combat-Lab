@@ -2,53 +2,48 @@
 
 Experimental laboratory for discovering combat language that may later inform **Feniks**.
 
-Combat Lab is not the Feniks combat implementation and is not a place where a prototype automatically becomes architecture.
+Combat Lab is **not** the Feniks combat implementation. A prototype, branch or green CI run never becomes architecture by default.
 
-## Current research truth
+## Live research truth
 
-The repository has been deliberately reset after two failed research lanes:
+There is currently **no accepted Feniks combat model, hit-authority model, aim/target model or commitment scheme**.
 
-- **R0 — authored arc vs sampled sweep:** mechanically useful as a geometry exercise, but **FAILED AS A COMBAT EXPERIMENT**. It isolated hit testing so aggressively that it removed the phenomenon we actually needed to judge: fighting.
-- **R1 — small combat organism:** restored an opponent, timing, contact, obstacles, damage and reset, but **FAILED OWNER FEEL**. More completeness did not make the local direction representative of Feniks.
+Three lanes have already produced negative evidence:
 
-Neither R0 nor R1 is a foundation to continue.
+- **R0 — authored arc vs sampled sweep:** useful geometry work, but **FAILED AS A COMBAT EXPERIMENT** because the specimen became a hit-test visualizer rather than a fight.
+- **R1 — small combat organism:** restored an opponent, timing, contact, damage and obstacles, but **FAILED OWNER FEEL**. More completeness did not make the direction representative of Feniks.
+- **Control / commitment micro-spike:** LIVE STEER vs BOUNDED STEER vs CAPTURED was **REJECTED AS NON-DISCRIMINATING**. The modes changed an algorithmic steering parameter while leaving the player-facing combat language almost the same.
 
-There is currently **no accepted Feniks combat model**, no accepted hit-authority model, and no accepted aim/target/commitment scheme.
+None of these is a foundation to continue.
 
-## Recovered Feniks constraints
+## Current phase
 
-Current work must preserve these pressures without pretending they already specify the answer:
+The lab is back in **hypothesis formation**.
 
-- responsiveness and player agency have veto over simulation elegance;
-- the player should feel embodied in a materially meaningful world rather than operate detached combat abstractions;
-- body, weapon, movement, terrain and contact may matter, but only where the player can perceive and use the difference;
-- movement during attacks is a strong default; stronger commitment must earn itself in play rather than arrive as arbitrary animation lock;
-- nontarget resolution remains important, while focus/assist/targeting are open experimental questions;
-- weapon identity should be allowed to emerge from how weapons negotiate space, timing, movement and contact, not only from DPS/range/cooldown;
-- universal dodge-roll/i-frame combat is not an assumed foundation;
-- simple authored rules are allowed to beat deeper simulation whenever they produce a better game;
-- automated tests can qualify mechanisms; **Owner play is required to qualify gameplay**.
+Before another gameplay lane is implemented, we need **3–5 qualitatively different playable combat hypotheses** that differ in what the player actually does and feels within the first ~30 seconds.
 
-## Current frontier
+The active question is broader than attack steering:
 
-The next specimen should investigate a higher-level question than R0/R1:
+> **What player-to-body-to-weapon control language makes melee combat feel responsive, embodied, spatially meaningful and worth mastering in Feniks?**
 
-> **How does the player express combat intent through an embodied character while remaining responsive, yet still creating readable commitment and spatial consequence?**
+Responsiveness and player agency have veto over simulation elegance. Movement during attacks remains a strong default. Nontarget combat matters; aim assistance / soft focus / target-lock remain open questions. Universal dodge-roll / i-frame combat is not an assumed foundation. Body, weapon, terrain, mass and contact matter only where their consequences are perceivable and useful in play.
 
-This is intentionally not yet a choice of sword physics, class system, camera, target lock, progression, AI architecture or final Feniks combat.
+## Project control
 
-The specimen should keep the surrounding situation constant and expose materially different **control / commitment contracts** for direct comparison. Hit detection is a supporting mechanism, not the experiment's headline.
+Read these before substantial continuation:
 
-## Working method
+- [Research state](docs/RESEARCH_STATE.md) — current truth, negative evidence, Owner-confirmed pressures, active hypothesis space and roadmap.
+- [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) — hypothesis gate, evidence boundaries, branch hygiene, deployment discipline and the meaning of short Owner commands such as “kontynuuj”.
 
-1. Build a small **playable combat situation**, not an algorithm visualizer.
-2. Change one high-level interaction contract at a time.
-3. Keep raw input, realized body/weapon motion, factual contact and presentation distinguishable.
-4. Use enough sensory feedback to read timing/contact, but not enough polish to hide bad control.
-5. Get an Owner feel-test early.
-6. Let the first repeatable material failure choose the next experiment.
-7. Promote nothing to Feniks merely because CI is green or the implementation is elegant.
+## Deployment
 
-## Live state
+- `main` is the automatic public truth and currently serves a reset/status page.
+- Experimental branches do **not** auto-deploy.
+- A candidate may reach Pages only through an explicit manual deploy of an exact branch/tag/SHA after its checks are green.
+- Owner play is required to qualify gameplay.
 
-There is currently **no qualified active combat specimen**. The public page intentionally reports the reset instead of serving stale R0/R1 gameplay.
+## Working invariant
+
+A failed specimen is evidence, not a foundation.
+
+Prefer a clean reset over accumulating mechanics around an unearned direction.
