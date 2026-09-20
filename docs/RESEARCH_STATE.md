@@ -157,77 +157,109 @@ The C1–C4 descriptions are **design pressures / corners**, not mutually exclus
 
 ### Discovery method — whole-organism divergence first
 
-Combat Lab is currently in an **exploratory discovery phase**, not a mechanism-attribution phase.
+Combat Lab is currently in **exploratory discovery**, not mechanism attribution.
 
-That means the first meaningful comparison should intentionally maximize player-facing difference instead of changing one variable at a time. Once a promising combat organism exists, narrower A/B tests can isolate why it works.
+The previous three-organism framing was itself falsified before implementation. It conflated two independent questions:
 
-The current candidate comparison is therefore:
+1. how the player expresses combat intent;
+2. how body / weapon / world realize that intent.
 
-#### Organism A — DIRECT MANIPULATION
+A discrete authored action can still be resolved through material weapon contact, while continuous input can be realized either kinematically or through coupled dynamics. That missing combination is important enough to deserve its own discovery organism.
 
-Continuous input has high authority over weapon expression. The player should feel that they are *operating the weapon/body relation itself*, not merely choosing an attack animation.
+The current campaign therefore uses four deliberate corners:
 
-This is the risky high-agency corner: potentially expressive and embodied, potentially fiddly or detached.
+| | Authored / kinematic realization | Material / coupled realization |
+|---|---|---|
+| **Continuous intent** | **A — DIRECT** | **C — COUPLED DIRECT** |
+| **Discrete intent** | **B — ACTIONS** | **D — COUPLED ACTIONS** |
 
-#### Organism B — AUTHORED SPATIAL ACTION
+These are extreme research organisms, not mutually exclusive categories for final Feniks combat.
 
-The player uses responsive locomotion + aim and chooses a small vocabulary of clear authored strike intents. Geometry, spacing and movement still matter, but the game carries more of the motion execution.
+#### A — DIRECT
 
-This is the deliberately simple benchmark. A more simulated system does not earn complexity unless it produces better play than this lane.
+The player continuously shapes weapon motion with high input authority. The weapon remains body-anchored and spatially factual, but its motion is crisp and kinematic rather than inertia-driven.
 
-#### Organism C — MOMENTUM / CONTACT FIGHTING
+Expected natural strategy: directly shape/correct useful weapon paths.
 
-Body state, weapon mass/position, guard/contact and movement meaningfully condition what the strike becomes. The weapon has enough continuity that spacing and pre-contact state can matter before an attack button resolves.
+#### B — ACTIONS
 
-This is the embodied-causality corner: potentially weighty and emergent, potentially sluggish, opaque or unstable.
+The player uses responsive locomotion + aim and selects a tiny authored vocabulary, initially compact cut + thrust.
 
-These organisms may share presentation, arena and opponent intent. They **must not** be forced through one common attack implementation, timing model or hit resolver merely to make the comparison look scientifically tidy.
+Expected natural strategy: choose the right action and place it through footwork.
 
-### Why three, not more
+This is the simple benchmark deeper systems must beat.
 
-Three genuinely distant organisms are currently more useful than five weakly separated variants.
+#### C — COUPLED DIRECT
 
-A fourth lane should be added only if we can state a player strategy that is not already representable as a tuning or hybrid of A–C.
+The player continuously expresses desired weapon/body motion, but the realized result is filtered through body turn, momentum, weapon inertia and contact.
 
-Soft focus, target assistance, camera policy, evasion vocabulary and fidelity remain secondary axes to test **inside** a surviving organism later.
+Expected natural strategy: set up motion, preload, step and follow through rather than merely draw a path.
 
-### Shared combat situation
+#### D — COUPLED ACTIONS
 
-The first comparison should share a small **situation**, not a shared combat mechanism:
+The player selects the same kind of compact authored intent as B, while material state/contact can alter whether and how the requested motion completes.
 
-- one responsive player body;
-- one readable melee opponent applying real pressure;
-- open room plus one simple spatial obstruction / wall relation so spacing and weapon negotiation can reveal themselves;
-- same broad objective: survive, create an opening, land meaningful hits;
+Expected natural strategy: choose actions partly by whether the current body/weapon/world relationship gives them room to happen.
+
+This is the missing quadrant and a high-value Feniks hypothesis: **simple game-like input may coexist with material consequences**.
+
+### Why four survive the discriminator gate
+
+- **A vs B:** continuous manipulation vs discrete authored choice under deliberately low-dynamics realization.
+- **C vs D:** continuous drive vs discrete action choice under material/coupled realization.
+- **A vs C:** similar continuous expression; dynamics must visibly change player strategy or they have not earned themselves.
+- **B vs D:** similar discrete surface controls; material resolution must add gameplay value or lose to the simpler authored benchmark.
+
+The campaign specification is authoritative for implementation detail:
+
+- [Discovery Campaign v1](DISCOVERY_CAMPAIGN_V1.md)
+
+### Orthogonal axes remain deferred
+
+Do not silently use these to rescue a weak organism:
+
+- soft focus / aim assist / hard target ownership;
+- camera/facing policy changes;
+- dodge vocabulary;
+- body/weapon archetype scaling;
+- shield/stamina/combo systems;
+- richer terrain;
+- RPG progression.
+
+If an organism only works after one of these is added, record that dependency rather than contaminating the first comparison.
+
+### Shared situation
+
+All four solve the same small fight:
+
+- one responsive embodied player;
+- one readable melee opponent applying pressure;
+- open room plus one offset pillar / short-wall relation;
+- real threat geometry, no i-frames;
 - immediate reset;
-- no progression, skills, magic, loot, combo tree, universal roll or i-frame layer;
-- enough feedback to understand contact and threat, but no polish layer that can rescue weak control.
+- enough feedback to understand hit / miss / contact;
+- no progression, magic, loot or feature pile.
 
-The opponent may use the same high-level loop — approach → readable preparation → committed threat → recovery — while the exact collision/contact implementation is allowed to differ where a hypothesis requires it.
+The situation is shared. Attack engines are not.
 
-### 30-second discriminator gate
+### 30-second discriminator
 
-Before implementation, each organism must predict a **different natural player strategy** within roughly the first half-minute:
+The first campaign is valid only if the Owner naturally begins doing different things:
 
-- **A:** the player experiments with shaping/directing weapon motion;
-- **B:** the player experiments with choosing and placing distinct strike intents;
-- **C:** the player experiments with body state, spacing, guard/contact and momentum before/during the strike.
+- **A:** shaping/directing the weapon;
+- **B:** selecting/placing actions;
+- **C:** setting up and exploiting motion/momentum;
+- **D:** selecting actions around material clearance/contact state.
 
-If real play does not produce those different behaviours, the comparison has failed even if the code paths are different.
+If real play collapses two lanes into the same strategy, that distinction failed even if the implementations differ.
 
-### Cross-cutting evaluation
+### Discovery before attribution
 
-The Owner test should look for evidence, not numeric preference scoring:
+Multiple coupled mechanics are allowed to differ now because the goal is to discover **where a valuable combat phenomenon exists**.
 
-- Is the character responsive or is the control scheme fighting the player?
-- Can the player understand *why* a hit, miss, deflection or bad commitment happened?
-- Does footwork emerge as useful rather than decorative?
-- Does the weapon/body/world relation create decisions unavailable in a detached damage-volume system?
-- Is there something worth mastering or discovering after the first minute?
-- Is complexity producing gameplay leverage, or only simulation burden?
-- Does the player want to keep fighting?
+Only after an organism survives Owner play should the lab isolate narrower variables such as steering rate, hit fidelity, assistance, timing or contact model.
 
-The next implementation begins only after these three organisms survive a final paper-level falsification pass.
+R0 and the LIVE / BOUNDED / CAPTURED spike remain warnings against entering attribution mode before there is anything worth attributing.
 
 ## Roadmap
 
@@ -238,28 +270,32 @@ The next implementation begins only after these three organisms survive a final 
 - stop automatic experiment-branch deployment from silently becoming public truth;
 - establish an explicit experiment protocol.
 
-### B. Hypothesis formation — ACTIVE
+### B. Hypothesis formation — DONE FOR v1
 
-- use C1–C4 as design pressures, not fake mutually-exclusive categories;
-- falsify the three whole-organism corners A/B/C for hidden sameness;
-- keep orthogonal assist/camera/evasion axes out of the first comparison;
-- use the shared combat situation above while allowing each organism its own mechanics;
-- require the 30-second discriminator before code;
-- perform reference research only where it exposes a genuinely different interaction language.
+- falsified the earlier A/B/C framing;
+- separated intent expression from motion/contact realization;
+- recovered the missing discrete-intent + material-resolution quadrant;
+- defined four divergent organisms A/B/C/D;
+- kept target/assist/camera/evasion axes outside the first comparison;
+- defined shared situation and 30-second discriminators.
 
-### C. Specimen design
+### C. Specimen design — DONE FOR v1
 
-Select a small set of hypotheses that survive the discriminator gate.
+`docs/DISCOVERY_CAMPAIGN_V1.md` defines the first campaign, implementation boundaries, qualification rules, build order and Owner evidence boundary.
 
-For each, design the minimum playable implementation required to expose its player-facing phenomenon. Do not force all lanes to share attack mechanics merely for experimental neatness.
+### D. Campaign implementation — ACTIVE
 
-### D. Owner feel campaign
+Build the shared situation and the four organism-owned controllers/resolvers without collapsing them into one parameterized attack engine.
+
+Start with the B/D pair, then A/C, because each pair holds the surface intent grammar relatively stable while changing realization authority.
+
+### E. Owner feel campaign
 
 Expose qualified candidates through explicit, provenance-controlled Pages deployments.
 
 Capture first-order feedback: control, readability, weight, spatial consequence, desire to keep playing, surprising affordances and recurring frustration. Do not promote a lane because CI is green.
 
-### E. Consolidation
+### F. Consolidation
 
 Use repeated material evidence to decide what deserves another experiment, what becomes a donor, and what is closed. Only after a combat language starts surviving Owner play should architectural extraction begin.
 
