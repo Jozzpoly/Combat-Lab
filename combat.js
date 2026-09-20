@@ -37,8 +37,12 @@ export const WEAPONS = Object.freeze({
     thrustRecovery: 0.20,
     thrustExtension: 16,
     hitSpeed: 145,
-    damageScale: 0.080,
-    knockScale: 0.040
+    damageScale: 0.045,
+    cutDamage: 1.00,
+    thrustDamage: 0.92,
+    knockScale: 0.032,
+    cutKnock: 1.00,
+    thrustKnock: 0.82
   }),
   spear: Object.freeze({
     id: "spear",
@@ -57,18 +61,22 @@ export const WEAPONS = Object.freeze({
     reachD: 18,
     maxRadialAccel: 1450,
     guardOffset: 0.20,
-    cutStart: 0.72,
-    cutEnd: -0.76,
-    cutWindup: 0.12,
-    cutActive: 0.30,
-    cutRecovery: 0.24,
+    cutStart: 0.68,
+    cutEnd: -0.70,
+    cutWindup: 0.14,
+    cutActive: 0.32,
+    cutRecovery: 0.26,
     thrustWindup: 0.11,
     thrustActive: 0.22,
     thrustRecovery: 0.24,
     thrustExtension: 24,
     hitSpeed: 125,
-    damageScale: 0.070,
-    knockScale: 0.045
+    damageScale: 0.043,
+    cutDamage: 0.58,
+    thrustDamage: 1.18,
+    knockScale: 0.035,
+    cutKnock: 0.78,
+    thrustKnock: 1.18
   })
 });
 
@@ -113,21 +121,28 @@ export function createWeaponState(owner, weaponId = "sword") {
     guardSide: 1,
     action: null,
     hitRegistered: false,
-    clashCooldown: 0,
     wallCooldown: 0,
     wallContact: false,
     lastSegment: null,
     desiredAngle: angle,
-    desiredReach: config.idleReach,
-    lastEvent: ""
+    desiredReach: config.idleReach
   };
   state.lastSegment = weaponSegment(owner, state);
   return state;
 }
 
+export function createWeaponContactState() {
+  return {
+    engaged: false,
+    separatedFor: 1,
+    impacts: 0,
+    contactTime: 0,
+    lastRelativeSpeed: 0
+  };
+}
+
 export function equipWeapon(owner, weapon, weaponId) {
-  const fresh = createWeaponState(owner, weaponId);
-  Object.assign(weapon, fresh);
+  Object.assign(weapon, createWeaponState(owner, weaponId));
 }
 
 export function requestAttack(owner, weapon, type) {
@@ -172,7 +187,6 @@ function actionTargets(owner, weapon) {
   if (a.type === "cut") {
     const w0 = c.cutWindup;
     const w1 = w0 + c.cutActive;
-    const total = a.total;
     let rel;
     let phase;
     let active = false;
@@ -188,8 +202,7 @@ function actionTargets(owner, weapon) {
       active = true;
     } else {
       const p = clamp((a.t - w1) / c.cutRecovery, 0, 1);
-      const nextGuard = -a.side * c.guardOffset;
-      rel = lerp(a.side * c.cutEnd, nextGuard, p);
+      rel = lerp(a.side * c.cutEnd, -a.side * c.guardOffset, p);
       phase = "recover";
     }
 
@@ -198,13 +211,12 @@ function actionTargets(owner, weapon) {
       reach: c.idleReach + (active ? 5 : 0),
       active,
       phase,
-      done: a.t >= total
+      done: a.t >= a.total
     };
   }
 
   const w0 = c.thrustWindup;
   const w1 = w0 + c.thrustActive;
-  const total = a.total;
   let extension = 0;
   let phase;
   let active = false;
@@ -229,7 +241,7 @@ function actionTargets(owner, weapon) {
     reach: c.idleReach + extension,
     active,
     phase,
-    done: a.t >= total
+    done: a.t >= a.total
   };
 }
 
@@ -261,7 +273,6 @@ function integrateWeapon(weapon, desiredAngle, desiredReach, dt) {
 }
 
 export function updateWeapon(owner, weapon, dt, emit) {
-  weapon.clashCooldown = Math.max(0, weapon.clashCooldown - dt);
   weapon.wallCooldown = Math.max(0, weapon.wallCooldown - dt);
   weapon.wallContact = false;
 
@@ -284,14 +295,14 @@ export function updateWeapon(owner, weapon, dt, emit) {
   if (blockingWall) {
     weapon.angle = prevAngle;
     weapon.reach = prevReach;
-    weapon.angularVelocity = -prevAngularVelocity * 0.24;
-    weapon.radialVelocity = -prevRadialVelocity * 0.16;
+    weapon.angularVelocity = -prevAngularVelocity * 0.22;
+    weapon.radialVelocity = -prevRadialVelocity * 0.14;
     seg = weaponSegment(owner, weapon);
     weapon.wallContact = true;
 
     if (weapon.wallCooldown <= 0) {
       emit?.({ type: "weapon-wall", actor: owner.id, weapon: weapon.config.id, wall: blockingWall.id });
-      weapon.wallCooldown = 0.08;
+      weapon.wallCooldown = 0.14;
     }
   }
 
@@ -311,14 +322,31 @@ export function updateWeapon(owner, weapon, dt, emit) {
   };
 }
 
-export function resolveWeaponClash(aOwner, aWeapon, bOwner, bWeapon, emit) {
-  if (!aOwner.alive || !bOwner.alive) return null;
-  if (aWeapon.clashCooldown > 0 || bWeapon.clashCooldown > 0) return null;
+export function resolveWeaponContact(
+  aOwner,
+  aWeapon,
+  bOwner,
+  bWeapon,
+  contactState,
+  dt,
+  emit
+) {
+  if (!aOwner.alive || !bOwner.alive) {
+    contactState.engaged = false;
+    contactState.separatedFor = 1;
+    return null;
+  }
 
   const aSeg = weaponSegment(aOwner, aWeapon);
   const bSeg = weaponSegment(bOwner, bWeapon);
   const hit = segmentsIntersection(aSeg, bSeg);
-  if (!hit) return null;
+
+  if (!hit) {
+    contactState.contactTime = 0;
+    contactState.separatedFor += dt;
+    if (contactState.separatedFor >= 0.055) contactState.engaged = false;
+    return null;
+  }
 
   const av = pointVelocity(aOwner, aWeapon, hit.x, hit.y);
   const bv = pointVelocity(bOwner, bWeapon, hit.x, hit.y);
@@ -326,36 +354,74 @@ export function resolveWeaponClash(aOwner, aWeapon, bOwner, bWeapon, emit) {
   const rvy = av.y - bv.y;
   const relSpeed = Math.hypot(rvx, rvy);
 
-  if (relSpeed < 65) return null;
+  contactState.separatedFor = 0;
+  contactState.contactTime += dt;
+  contactState.lastRelativeSpeed = relSpeed;
 
-  const aSign = Math.sign(aWeapon.angularVelocity || 1);
-  const bSign = Math.sign(bWeapon.angularVelocity || -1);
-  const impulse = clamp(relSpeed / 420, 0.16, 0.85);
+  const newImpact = !contactState.engaged && relSpeed >= 72;
+  contactState.engaged = true;
 
-  aWeapon.angularVelocity = -aSign * Math.max(0.9, Math.abs(aWeapon.angularVelocity) * (0.18 + impulse * 0.30));
-  bWeapon.angularVelocity = -bSign * Math.max(0.9, Math.abs(bWeapon.angularVelocity) * (0.18 + impulse * 0.30));
-  aWeapon.radialVelocity *= -0.18;
-  bWeapon.radialVelocity *= -0.18;
-  aWeapon.clashCooldown = 0.075;
-  bWeapon.clashCooldown = 0.075;
+  if (newImpact) {
+    const aSign = Math.sign(aWeapon.angularVelocity || 1);
+    const bSign = Math.sign(bWeapon.angularVelocity || -1);
+    const impulse = clamp(relSpeed / 440, 0.15, 0.80);
 
-  const nx = bOwner.x - aOwner.x;
-  const ny = bOwner.y - aOwner.y;
-  const n = Math.hypot(nx, ny) || 1;
-  const bodyPush = relSpeed * 0.020;
-  pushBody(aOwner, -nx / n * bodyPush, -ny / n * bodyPush);
-  pushBody(bOwner, nx / n * bodyPush, ny / n * bodyPush);
+    aWeapon.angularVelocity = -aSign * Math.max(
+      0.75,
+      Math.abs(aWeapon.angularVelocity) * (0.17 + impulse * 0.28)
+    );
+    bWeapon.angularVelocity = -bSign * Math.max(
+      0.75,
+      Math.abs(bWeapon.angularVelocity) * (0.17 + impulse * 0.28)
+    );
+    aWeapon.radialVelocity *= -0.15;
+    bWeapon.radialVelocity *= -0.15;
 
-  const event = {
-    type: "blade-clash",
-    x: hit.x,
-    y: hit.y,
-    relativeSpeed: relSpeed,
-    a: aOwner.id,
-    b: bOwner.id
+    const nx = bOwner.x - aOwner.x;
+    const ny = bOwner.y - aOwner.y;
+    const n = Math.hypot(nx, ny) || 1;
+    const bodyPush = relSpeed * 0.014;
+    pushBody(aOwner, -nx / n * bodyPush, -ny / n * bodyPush);
+    pushBody(bOwner, nx / n * bodyPush, ny / n * bodyPush);
+
+    contactState.impacts++;
+
+    const event = {
+      type: "blade-clash",
+      x: hit.x,
+      y: hit.y,
+      relativeSpeed: relSpeed,
+      a: aOwner.id,
+      b: bOwner.id,
+      episode: contactState.impacts
+    };
+    emit?.(event);
+    return {
+      contact: true,
+      impact: event,
+      relativeSpeed: relSpeed
+    };
+  }
+
+  // Persistent contact is still causal, but not a repeated "parry event".
+  // Mild damping prevents interpenetrating blades from pumping energy forever.
+  const damping = Math.pow(0.22, dt);
+  aWeapon.angularVelocity *= damping;
+  bWeapon.angularVelocity *= damping;
+  aWeapon.radialVelocity *= Math.pow(0.32, dt);
+  bWeapon.radialVelocity *= Math.pow(0.32, dt);
+
+  return {
+    contact: true,
+    impact: null,
+    relativeSpeed: relSpeed
   };
-  emit?.(event);
-  return event;
+}
+
+// Backward-compatible alias for bounded mechanism tests.
+export function resolveWeaponClash(aOwner, aWeapon, bOwner, bWeapon, emit) {
+  const state = createWeaponContactState();
+  return resolveWeaponContact(aOwner, aWeapon, bOwner, bWeapon, state, 1 / 120, emit)?.impact || null;
 }
 
 export function resolveWeaponHit(attacker, weapon, target, frame, emit) {
@@ -379,17 +445,31 @@ export function resolveWeaponHit(attacker, weapon, target, frame, emit) {
 
   weapon.hitRegistered = true;
 
+  const actionType = weapon.action.type;
+  const actionDamage = actionType === "thrust"
+    ? weapon.config.thrustDamage
+    : weapon.config.cutDamage;
+  const actionKnock = actionType === "thrust"
+    ? weapon.config.thrustKnock
+    : weapon.config.cutKnock;
+
   const normalized = clamp((speed - weapon.config.hitSpeed) / 520, 0, 1);
-  const damage = Math.round(14 + speed * weapon.config.damageScale + normalized * 12);
+  const rawDamage = 6 + speed * weapon.config.damageScale + normalized * 7;
+  const damage = Math.max(4, Math.round(rawDamage * actionDamage));
+
   target.hp = Math.max(0, target.hp - damage);
   target.hitFlash = 0.14;
 
   const impactN = Math.hypot(relativeVx, relativeVy) || 1;
-  const knock = clamp(speed * weapon.config.knockScale, 8, 34);
-  pushBody(target, relativeVx / impactN * knock * target.mass, relativeVy / impactN * knock * target.mass);
+  const knock = clamp(speed * weapon.config.knockScale * actionKnock, 6, 28);
+  pushBody(
+    target,
+    relativeVx / impactN * knock * target.mass,
+    relativeVy / impactN * knock * target.mass
+  );
 
-  weapon.angularVelocity *= 0.54;
-  weapon.radialVelocity *= 0.62;
+  weapon.angularVelocity *= 0.58;
+  weapon.radialVelocity *= 0.66;
 
   if (target.hp <= 0) target.alive = false;
 
@@ -398,6 +478,7 @@ export function resolveWeaponHit(attacker, weapon, target, frame, emit) {
     attacker: attacker.id,
     target: target.id,
     weapon: weapon.config.id,
+    action: actionType,
     damage,
     speed,
     x: frame.segment.bx,
