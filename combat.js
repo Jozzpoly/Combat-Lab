@@ -40,6 +40,8 @@ export const WEAPONS = Object.freeze({
     damageScale: 0.045,
     cutDamage: 1.00,
     thrustDamage: 0.92,
+    cutDamageStart: 0.30,
+    thrustDamageStart: 0.34,
     knockScale: 0.032,
     cutKnock: 1.00,
     thrustKnock: 0.82
@@ -74,6 +76,8 @@ export const WEAPONS = Object.freeze({
     damageScale: 0.043,
     cutDamage: 0.58,
     thrustDamage: 1.18,
+    cutDamageStart: 0.82,
+    thrustDamageStart: 0.84,
     knockScale: 0.035,
     cutKnock: 0.78,
     thrustKnock: 1.18
@@ -93,6 +97,22 @@ export function weaponSegment(owner, weapon) {
     pivotX,
     pivotY
   };
+}
+
+function sliceSegment(seg, startRatio) {
+  return {
+    ax: lerp(seg.ax, seg.bx, startRatio),
+    ay: lerp(seg.ay, seg.by, startRatio),
+    bx: seg.bx,
+    by: seg.by
+  };
+}
+
+export function damagingSegment(weapon, seg, actionType = weapon.action?.type || "cut") {
+  const startRatio = actionType === "thrust"
+    ? weapon.config.thrustDamageStart
+    : weapon.config.cutDamageStart;
+  return sliceSegment(seg, startRatio);
 }
 
 export function pointVelocity(owner, weapon, x, y) {
@@ -344,7 +364,7 @@ export function resolveWeaponContact(
   if (!hit) {
     contactState.contactTime = 0;
     contactState.separatedFor += dt;
-    if (contactState.separatedFor >= 0.055) contactState.engaged = false;
+    if (contactState.separatedFor >= 0.11) contactState.engaged = false;
     return null;
   }
 
@@ -358,7 +378,7 @@ export function resolveWeaponContact(
   contactState.contactTime += dt;
   contactState.lastRelativeSpeed = relSpeed;
 
-  const newImpact = !contactState.engaged && relSpeed >= 72;
+  const newImpact = !contactState.engaged && relSpeed >= 88;
   contactState.engaged = true;
 
   if (newImpact) {
@@ -428,9 +448,13 @@ export function resolveWeaponHit(attacker, weapon, target, frame, emit) {
   if (!attacker.alive || !target.alive || !weapon.action || weapon.hitRegistered) return null;
   if (!frame.active) return null;
 
+  const actionType = weapon.action.type;
+  const previousDamageSegment = damagingSegment(weapon, frame.previousSegment, actionType);
+  const currentDamageSegment = damagingSegment(weapon, frame.segment, actionType);
+
   const hit = sweptSegmentCircleHit(
-    frame.previousSegment,
-    frame.segment,
+    previousDamageSegment,
+    currentDamageSegment,
     { x: target.x, y: target.y, r: target.radius + weapon.config.thickness },
     8
   );
@@ -445,7 +469,6 @@ export function resolveWeaponHit(attacker, weapon, target, frame, emit) {
 
   weapon.hitRegistered = true;
 
-  const actionType = weapon.action.type;
   const actionDamage = actionType === "thrust"
     ? weapon.config.thrustDamage
     : weapon.config.cutDamage;
