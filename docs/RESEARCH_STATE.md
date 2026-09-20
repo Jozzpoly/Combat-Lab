@@ -8,6 +8,32 @@
 
 There is **no accepted Feniks combat model** in this repository.
 
+### Discovery Campaign v1 — MACHINE/BROWSER QUALIFIED, OWNER FEEL PENDING
+
+Active specimen branch:
+
+- `experiment/discovery-campaign-v1`
+
+Qualified/deployed specimen source:
+
+- `785ea598b42cb1dc64bb154b561d136712e8faeb`
+
+Evidence established before Owner play:
+
+- CI parses the full browser runtime and runs **13/13 passing mechanism/rehearsal tests**;
+- A/B/C/D are separate organism-owned controllers/resolvers rather than presets in one attack engine;
+- scripted rehearsal distinguishes A↔C and B↔D at the realized-motion/contact level;
+- public Pages provenance reports the exact commit and active experiment branch;
+- fresh browser startup through `?mode=A/B/C/D` reaches a live render loop in the requested organism;
+- Pages now versions JS/CSS module URLs by the exact deploy SHA after a stale-cache incident showed that unversioned assets could mix states across deployments.
+
+What this **does not** establish:
+
+- none of A/B/C/D has passed Owner feel;
+- no organism is a Feniks combat foundation;
+- the current C/D implementations are intentionally minimal representatives of material/coupled realization. They demonstrate path divergence, inertia/contact response and movement-dependent weapon motion, but do **not** yet prove the richer long-term body/momentum model described by the design pressure;
+- machine/browser qualification says the experimental instrument runs and exposes the intended distinctions. It does not say any distinction is good gameplay.
+
 Three implementation directions have already produced useful negative evidence:
 
 ### R0 — authored arc vs sampled sweep
@@ -283,17 +309,27 @@ R0 and the LIVE / BOUNDED / CAPTURED spike remain warnings against entering attr
 
 `docs/DISCOVERY_CAMPAIGN_V1.md` defines the first campaign, implementation boundaries, qualification rules, build order and Owner evidence boundary.
 
-### D. Campaign implementation — ACTIVE
+### D. Campaign implementation — DONE FOR FIRST OWNER PASS
 
-Build the shared situation and the four organism-owned controllers/resolvers without collapsing them into one parameterized attack engine.
+The shared duel situation and all four organism-owned controllers/resolvers exist on the active experiment branch.
 
-Start with the B/D pair, then A/C, because each pair holds the surface intent grammar relatively stable while changing realization authority.
+Qualification currently covers syntax/runtime health, geometry helpers, reset behavior, numeric stability, A/C continuous-intent divergence, B/D discrete-intent divergence, wall interaction, clash response and exact deployment provenance.
 
-### E. Owner feel campaign
+### E. Owner feel campaign — ACTIVE
 
-Expose qualified candidates through explicit, provenance-controlled Pages deployments.
+The next material evidence must come from Owner play of the qualified four-corner specimen.
 
-Capture first-order feedback: control, readability, weight, spatial consequence, desire to keep playing, surprising affordances and recurring frustration. Do not promote a lane because CI is green.
+First pass should remain free-form. The useful observations are not numeric scores but:
+
+- what control strategy emerges naturally in each mode;
+- which modes collapse into the same felt strategy despite mechanical differences;
+- where responsiveness is lost;
+- whether material coupling creates useful decisions or merely lag/friction;
+- whether footwork and obstacle relation matter;
+- whether any mode produces immediate curiosity, mastery or desire to keep fighting;
+- whether all four are bad in ways that point to a missing combat language.
+
+Do not tune a disliked organism merely because it exists. A rejection is a valid campaign result.
 
 ### F. Consolidation
 
