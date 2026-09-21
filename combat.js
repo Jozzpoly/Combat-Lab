@@ -37,6 +37,8 @@ export const WEAPONS = Object.freeze({
     thrustRecovery: 0.20,
     thrustExtension: 16,
     hitSpeed: 145,
+    cutHitSpeed: 145,
+    thrustHitSpeed: 112,
     damageScale: 0.045,
     cutDamage: 1.00,
     thrustDamage: 0.92,
@@ -73,11 +75,13 @@ export const WEAPONS = Object.freeze({
     thrustRecovery: 0.24,
     thrustExtension: 24,
     hitSpeed: 92,
+    cutHitSpeed: 118,
+    thrustHitSpeed: 55,
     damageScale: 0.043,
     cutDamage: 0.58,
     thrustDamage: 1.18,
     cutDamageStart: 0.70,
-    thrustDamageStart: 0.74,
+    thrustDamageStart: 0.90,
     knockScale: 0.035,
     cutKnock: 0.78,
     thrustKnock: 1.18
@@ -465,7 +469,11 @@ export function resolveWeaponHit(attacker, weapon, target, frame, emit) {
   const relativeVy = tipVelocity.y - target.vy;
   const speed = Math.hypot(relativeVx, relativeVy);
 
-  if (speed < weapon.config.hitSpeed) return null;
+  const requiredHitSpeed = actionType === "thrust"
+    ? (weapon.config.thrustHitSpeed ?? weapon.config.hitSpeed)
+    : (weapon.config.cutHitSpeed ?? weapon.config.hitSpeed);
+
+  if (speed < requiredHitSpeed) return null;
 
   weapon.hitRegistered = true;
 
