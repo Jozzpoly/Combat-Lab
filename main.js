@@ -140,14 +140,6 @@ function onSimulationEvent(event) {
       isPlayer: event.target === "player"
     });
 
-    const playerDealtHit = event.attacker === "player";
-    announce(
-      playerDealtHit
-        ? "YOU HIT · " + event.damage
-        : "YOU TOOK · " + event.damage,
-      0.52,
-      playerDealtHit ? "hit" : "took"
-    );
     return;
   }
 
@@ -160,14 +152,7 @@ function onSimulationEvent(event) {
     return;
   }
 
-  if (event.type === "round-end") {
-    announce(
-      event.winner === "player" ? "OPENING WON" : "DOWN",
-      1.1,
-      event.winner === "player" ? "won" : "lost"
-    );
-    return;
-  }
+  if (event.type === "round-end") return;
 
   if (event.type === "weapon-equip" && event.actor === "player") {
     announce(WEAPONS[event.weapon].label.toUpperCase(), 0.65, "equip");
@@ -270,7 +255,34 @@ function fixedUpdate(dt) {
     aimY: mouse.worldY
   }, dt);
 
-  for (const event of sim.drainEvents()) onSimulationEvent(event);
+  const events = sim.drainEvents();
+  for (const event of events) onSimulationEvent(event);
+
+  const roundEnd = events.find(event => event.type === "round-end");
+  if (roundEnd) {
+    announce(
+      roundEnd.winner === "player" ? "OPENING WON" : "DOWN",
+      1.1,
+      roundEnd.winner === "player" ? "won" : "lost"
+    );
+  } else {
+    let dealt = 0;
+    let took = 0;
+
+    for (const event of events) {
+      if (event.type !== "body-hit") continue;
+      if (event.attacker === "player") dealt += event.damage;
+      if (event.target === "player") took += event.damage;
+    }
+
+    if (dealt > 0 && took > 0) {
+      announce(`TRADE · DEALT ${dealt} · TOOK ${took}`, 0.62, "trade");
+    } else if (dealt > 0) {
+      announce(`YOU HIT · ${dealt}`, 0.52, "hit");
+    } else if (took > 0) {
+      announce(`YOU TOOK · ${took}`, 0.52, "took");
+    }
+  }
 
   recordTrail(sim.player, sim.playerWeapon, "player");
   recordTrail(sim.enemy, sim.enemyWeapon, "enemy");
