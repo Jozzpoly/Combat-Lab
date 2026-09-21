@@ -519,6 +519,42 @@ Agent-rehearse the qualitative discriminator.
 
 If they collapse into the same strategy, stop before adding more content.
 
+### P1 — two anchor organisms — MECHANICAL DISCRIMINATOR FOUND, NOT OWNER-QUALIFIED
+
+A threshold-free diagnostic matrix at `20ef10d8b1cf1fec8b8242bf069db195c86ce70f` crossed the same anchor bodies with the same two authored navigation policies inside one shared pressure cell.
+
+| Anchor | Frontal strategy | Tight side-route |
+| --- | --- | --- |
+| Bulwark | reached in 1.667 s; 100 HP; 2 shield blocks | did not fit / did not reach |
+| Skirmisher | reached in 1.183 s; 32 HP after 2 body hits | reached in 1.100 s; 100 HP; 0 hits |
+| Continuity hybrid | reached in 1.433 s; 100 HP; 2 shield blocks | did not fit / did not reach |
+
+The matrix was **not** given a success threshold before execution.
+
+Important negative evidence occurred first:
+
+1. the initial side-route controller was stateless and failed even for the light body;
+2. after that controller artifact was corrected, both Bulwark and Skirmisher could cross frontally;
+3. adding a shared compact guard attack supplied an actual consequence to frontal exposure without an anchor-specific rule;
+4. the objective was then corrected to stop at successful crossing rather than simulating several irrelevant seconds after success.
+
+Only after those rehearsal artifacts were removed did the crossover above appear.
+
+Current interpretation:
+
+> Shared body envelope + mass + brace + shield occupancy + one common attack can mechanically make different spatial strategies valuable without a hard class flag.
+
+Evidence boundary:
+
+- the cell is still authored around two known strategic opportunities;
+- the policies are automated and know which route they are attempting;
+- a single frontal guard is not representative PvE;
+- the tight passage creates a legitimate but discrete geometric threshold;
+- this does **not** establish that a human naturally discovers the strategies;
+- this does **not** establish that either phenotype feels powerful, agile, readable or fun.
+
+The next step is therefore an **interactive P1 organism using the same substrate**, not more matrix tuning.
+
 ### P2 — continuity hybrid
 
 Create one awkward hybrid.
