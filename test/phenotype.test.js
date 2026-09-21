@@ -5,12 +5,14 @@ import {
   ANCHOR_FIXTURES,
   createActor,
   derivePhenotype,
-  fitsGap
+  fitsGap,
+  withEquipment
 } from "../src/phenotype.js";
 import {
   resolveBodyOverlap,
   shieldIntercept
 } from "../src/contact.js";
+import { runRoute } from "../src/world.js";
 
 test("anchors expose shared properties rather than class authority", () => {
   for (const spec of Object.values(ANCHOR_FIXTURES)) {
@@ -108,4 +110,60 @@ test("continuity hybrid lies between anchor extremes on core derived behavior", 
 
   assert.ok(heavyBraced.contactAuthority > hybridBraced.contactAuthority);
   assert.ok(hybridBraced.contactAuthority > lightBraced.contactAuthority);
+});
+
+
+test("ordinary equipment burden moves one unchanged body smoothly through phenotype space", () => {
+  const naked = withEquipment(ANCHOR_FIXTURES.skirmisher, [], "same body / no load");
+  const medium = withEquipment(
+    ANCHOR_FIXTURES.skirmisher,
+    [{ kind: "armour", mass: 20 }],
+    "same body / medium load"
+  );
+  const heavyLoad = withEquipment(
+    ANCHOR_FIXTURES.skirmisher,
+    [{ kind: "armour", mass: 50 }],
+    "same body / heavy load"
+  );
+
+  const a = derivePhenotype(naked, 0);
+  const b = derivePhenotype(medium, 0);
+  const c = derivePhenotype(heavyLoad, 0);
+
+  assert.equal(naked.body.radius, medium.body.radius);
+  assert.equal(medium.body.radius, heavyLoad.body.radius);
+  assert.equal(naked.body.locomotorDrive, medium.body.locomotorDrive);
+  assert.equal(medium.body.locomotorDrive, heavyLoad.body.locomotorDrive);
+
+  assert.ok(a.totalMass < b.totalMass && b.totalMass < c.totalMass);
+  assert.ok(a.maxSpeed > b.maxSpeed && b.maxSpeed > c.maxSpeed);
+  assert.ok(a.acceleration > b.acceleration && b.acceleration > c.acceleration);
+  assert.ok(a.turnRate > b.turnRate && b.turnRate > c.turnRate);
+  assert.ok(a.contactAuthority < b.contactAuthority && b.contactAuthority < c.contactAuthority);
+});
+
+
+test("route envelope is demonstrated by actual world collision, not a diameter predicate", () => {
+  const walls = [
+    { id: "left-wall", x: -100, y: 0, w: 83, h: 120 },
+    { id: "right-wall", x: 17, y: 0, w: 83, h: 120 }
+  ];
+
+  const light = createActor(ANCHOR_FIXTURES.skirmisher, { x: 0, y: 150 });
+  const heavy = createActor(ANCHOR_FIXTURES.bulwark, { x: 0, y: 150 });
+
+  const lightResult = runRoute(light, {
+    walls,
+    inputY: -1,
+    seconds: 1.6
+  });
+  const heavyResult = runRoute(heavy, {
+    walls,
+    inputY: -1,
+    seconds: 1.6
+  });
+
+  assert.ok(lightResult.y < 70, `light body should enter corridor; y=${lightResult.y}`);
+  assert.ok(heavyResult.y > 120, `heavy body should be stopped at corridor mouth; y=${heavyResult.y}`);
+  assert.ok(heavyResult.blockedFrames > lightResult.blockedFrames);
 });

@@ -126,3 +126,13 @@ export function createActor(spec, {
 export function fitsGap(spec, gapWidth, margin = 2) {
   return spec.body.radius * 2 + margin * 2 <= gapWidth;
 }
+
+export function withEquipment(spec, equipment, label = spec.label) {
+  return {
+    ...spec,
+    label,
+    body: { ...spec.body },
+    equipment: equipment.map(item => ({ ...item })),
+    weapon: spec.weapon ? { ...spec.weapon } : null
+  };
+}
