@@ -3,7 +3,8 @@ import assert from "node:assert/strict";
 
 import {
   runDuelRehearsal,
-  runWallRehearsal
+  runWallRehearsal,
+  runGateClearanceRehearsal
 } from "../rehearsal.js";
 
 test("sword rehearsal forms an actual pressured encounter", () => {
@@ -45,4 +46,21 @@ test("sword and spear rehearsals do not collapse to identical outcomes", () => {
   ].join(":");
 
   assert.notEqual(signature(sword), signature(spear));
+});
+
+
+test("ruined gate changes which long-weapon action is viable", () => {
+  const spearCut = runGateClearanceRehearsal({ weapon: "spear", action: "cut" });
+  const spearThrust = runGateClearanceRehearsal({ weapon: "spear", action: "thrust" });
+  const swordCut = runGateClearanceRehearsal({ weapon: "sword", action: "cut" });
+
+  console.log("REHEARSAL_GATE", JSON.stringify({ spearCut, spearThrust, swordCut }));
+
+  assert.equal(spearCut.finite, true);
+  assert.equal(spearThrust.finite, true);
+  assert.equal(swordCut.finite, true);
+
+  assert.ok(spearCut.ruinWallContacts > 0);
+  assert.equal(spearThrust.ruinWallContacts, 0);
+  assert.ok(spearCut.ruinWallContacts > swordCut.ruinWallContacts);
 });
