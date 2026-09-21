@@ -5,3 +5,5 @@ Ruined Gate Terrarium pre-Owner agent-rehearsal build. Deployment exists for bro
 Shared simulation + deterministic duel/wall rehearsals qualified in CI; redeploy for browser probes.
 
 Episodic blade contact, lower lethality, weapon action identity and ruined-gate routing; deploy for agent metrics.
+
+Agent rehearsal redeploy after spear working-envelope fix.
