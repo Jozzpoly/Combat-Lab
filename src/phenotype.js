@@ -119,7 +119,9 @@ export function createActor(spec, {
     vx: 0,
     vy: 0,
     facing,
-    brace: 0
+    brace: 0,
+    hp: 100,
+    maxHp: 100
   };
 }
 

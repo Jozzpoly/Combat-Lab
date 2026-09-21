@@ -234,3 +234,10 @@ test("brace strengthens the same shield contact without a shield-specific brace 
   assert.ok(Math.abs(braced.vx) < Math.abs(neutral.vx));
   assert.ok(bracedResult.moverYield > neutralResult.moverYield);
 });
+
+
+test("Bulwark and Skirmisher use the same compact weapon family", () => {
+  assert.equal(ANCHOR_FIXTURES.bulwark.weapon.kind, ANCHOR_FIXTURES.skirmisher.weapon.kind);
+  assert.equal(ANCHOR_FIXTURES.bulwark.weapon.mass, ANCHOR_FIXTURES.skirmisher.weapon.mass);
+  assert.equal(ANCHOR_FIXTURES.bulwark.weapon.reach, ANCHOR_FIXTURES.skirmisher.weapon.reach);
+});
