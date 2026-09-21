@@ -34,7 +34,9 @@ function summarize(sim, metrics) {
     maxPlayerHitDistance: metrics.playerHitDistances.length
       ? Number(Math.max(...metrics.playerHitDistances).toFixed(1))
       : null,
-    ruinWallContacts: metrics.ruinWallContacts
+    ruinWallContacts: metrics.ruinWallContacts,
+    workingBandFrames: metrics.workingBandFrames,
+    faceHugFrames: metrics.faceHugFrames
   };
 }
 
@@ -52,6 +54,8 @@ export function runDuelRehearsal({ weapon = "sword", seconds = 18 } = {}) {
     roundsEnded: 0,
     playerHitDistances: [],
     ruinWallContacts: 0,
+    workingBandFrames: 0,
+    faceHugFrames: 0,
     minDistance: Infinity,
     maxDistance: 0
   };
@@ -72,10 +76,18 @@ export function runDuelRehearsal({ weapon = "sword", seconds = 18 } = {}) {
     let moveX = 0;
     let moveY = 0;
 
-    if (d > (weapon === "spear" ? 124 : 92)) {
+    const bandMin = weapon === "spear" ? 92 : 54;
+    const bandMax = weapon === "spear" ? 118 : 86;
+
+    if (d >= bandMin && d <= bandMax) metrics.workingBandFrames++;
+    if (d < (weapon === "spear" ? 78 : 42)) metrics.faceHugFrames++;
+
+    if (d > bandMax) {
       moveX = dx / d;
       moveY = dy / d;
-    } else if (d < (weapon === "spear" ? 76 : 58)) {
+    } else if (d < bandMin) {
+      // A spear is not a long sword. Protect its outer working envelope
+      // rather than accepting face-hug range and blaming the weapon.
       moveX = -dx / d;
       moveY = -dy / d;
     } else {
@@ -143,6 +155,8 @@ export function runWallRehearsal({ weapon = "spear" } = {}) {
     roundsEnded: 0,
     playerHitDistances: [],
     ruinWallContacts: 0,
+    workingBandFrames: 0,
+    faceHugFrames: 0,
     minDistance: Math.hypot(sim.enemy.x - sim.player.x, sim.enemy.y - sim.player.y),
     maxDistance: Math.hypot(sim.enemy.x - sim.player.x, sim.enemy.y - sim.player.y)
   };
