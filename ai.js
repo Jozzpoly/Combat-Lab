@@ -192,12 +192,14 @@ export function updateDuelistAI(brain, actor, weapon, target, dt) {
   if (canSetUpAttack) {
     brain.readiness += dt;
     mode = "set";
+    // Telegraph intent through ordinary footwork: settle before committing.
+    speed = Math.min(speed, 0.16);
   } else {
     brain.readiness = Math.max(0, brain.readiness - dt * 2.4);
   }
 
   let attackStarted = false;
-  if (canSetUpAttack && brain.readiness >= 0.16) {
+  if (canSetUpAttack && brain.readiness >= 0.22) {
     const thrustBias = clamp(
       (distance - tooClose) / Math.max(1, tooFar - tooClose),
       0.20,
