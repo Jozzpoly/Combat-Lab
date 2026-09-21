@@ -1,3 +1,4 @@
+import { circleRectPenetration } from "./core.js";
 import { createTerrariumSimulation } from "./simulation.js";
 import { WORLD, createBody } from "./world.js";
 import { createWeaponState, requestAttack, updateWeapon } from "./combat.js";
@@ -77,6 +78,52 @@ function configureDuelStart(sim, start) {
   sim.enemyWeapon.lastSegment = null;
 }
 
+function projectedBodyClear(body, angle, distance = 72) {
+  const probe = {
+    x: body.x + Math.cos(angle) * distance,
+    y: body.y + Math.sin(angle) * distance,
+    r: body.radius + 4
+  };
+
+  if (
+    probe.x < probe.r ||
+    probe.y < probe.r ||
+    probe.x > WORLD.width - probe.r ||
+    probe.y > WORLD.height - probe.r
+  ) {
+    return false;
+  }
+
+  return !WORLD.walls.some(wall => circleRectPenetration(probe, wall));
+}
+
+function chooseSpaceMakingMove(body, target, awayAngle) {
+  // One-step obstacle avoidance only. This is deliberately not pathfinding:
+  // the rehearsal should demonstrate that ordinary spatial footwork can
+  // preserve range, not win through an omniscient controller.
+  const offsets = [0, 0.42, -0.42, 0.82, -0.82, 1.22, -1.22, Math.PI * 0.5, -Math.PI * 0.5];
+  let bestAngle = awayAngle;
+  let bestScore = -Infinity;
+
+  for (const offset of offsets) {
+    const angle = awayAngle + offset;
+    if (!projectedBodyClear(body, angle)) continue;
+
+    const px = body.x + Math.cos(angle) * 72;
+    const py = body.y + Math.sin(angle) * 72;
+    const separation = Math.hypot(target.x - px, target.y - py);
+    const detourPenalty = Math.abs(offset) * 4;
+    const score = separation - detourPenalty;
+
+    if (score > bestScore) {
+      bestScore = score;
+      bestAngle = angle;
+    }
+  }
+
+  return { x: Math.cos(bestAngle), y: Math.sin(bestAngle) };
+}
+
 export function runDuelRehearsal({ weapon = "sword", seconds = 18, start = "terrarium" } = {}) {
   const sim = createTerrariumSimulation({
     playerWeaponId: weapon,
@@ -133,9 +180,11 @@ export function runDuelRehearsal({ weapon = "sword", seconds = 18, start = "terr
       moveY = dy / d;
     } else if (d < bandMin) {
       // A spear is not a long sword. Protect its outer working envelope
-      // rather than accepting face-hug range and blaming the weapon.
-      moveX = -dx / d;
-      moveY = -dy / d;
+      // with ordinary wall-aware footwork instead of blindly backing into
+      // the arena boundary and misclassifying the resulting face-hug.
+      const escape = chooseSpaceMakingMove(p, e, Math.atan2(-dy, -dx));
+      moveX = escape.x;
+      moveY = escape.y;
     } else {
       moveX = -dy / d * strafeSign * 0.62;
       moveY = dx / d * strafeSign * 0.62;
