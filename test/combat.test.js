@@ -197,6 +197,10 @@ function runMovingThrust(vx) {
   attacker.vx = vx;
 
   const weapon = createWeaponState(attacker, "sword");
+  // Isolate translational body contribution from guard-to-thrust rotation.
+  weapon.angle = 0;
+  weapon.angularVelocity = 0;
+  weapon.lastSegment = weaponSegment(attacker, weapon);
   requestAttack(attacker, weapon, "thrust");
 
   for (let i = 0; i < 100; i++) {
