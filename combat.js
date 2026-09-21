@@ -469,7 +469,7 @@ export function resolveWeaponClash(aOwner, aWeapon, bOwner, bWeapon, emit) {
   return resolveWeaponContact(aOwner, aWeapon, bOwner, bWeapon, state, 1 / 120, emit)?.impact || null;
 }
 
-export function resolveWeaponHit(attacker, weapon, target, frame, emit) {
+export function probeWeaponHit(attacker, weapon, target, frame) {
   if (!attacker.alive || !target.alive || !weapon.action || weapon.hitRegistered) return null;
   if (!frame.active) return null;
 
@@ -524,8 +524,6 @@ export function resolveWeaponHit(attacker, weapon, target, frame, emit) {
 
   if (speed < requiredHitSpeed) return null;
 
-  weapon.hitRegistered = true;
-
   const actionDamage = actionType === "thrust"
     ? weapon.config.thrustDamage
     : weapon.config.cutDamage;
@@ -537,36 +535,59 @@ export function resolveWeaponHit(attacker, weapon, target, frame, emit) {
   const rawDamage = 6 + speed * weapon.config.damageScale + normalized * 7;
   const damage = Math.max(4, Math.round(rawDamage * actionDamage));
 
+  const impactN = Math.hypot(relativeVx, relativeVy) || 1;
+  const knock = clamp(speed * weapon.config.knockScale * actionKnock, 6, 28);
+
+  return {
+    attacker,
+    weapon,
+    target,
+    damage,
+    speed,
+    pushX: relativeVx / impactN * knock * target.mass,
+    pushY: relativeVy / impactN * knock * target.mass,
+    event: {
+      type: "body-hit",
+      attacker: attacker.id,
+      target: target.id,
+      weapon: weapon.config.id,
+      action: actionType,
+      damage,
+      speed,
+      distance: Math.hypot(target.x - attacker.x, target.y - attacker.y),
+      x: contact.x,
+      y: contact.y
+    }
+  };
+}
+
+export function applyWeaponHit(candidate, emit) {
+  if (!candidate) return null;
+
+  const { weapon, target, damage, pushX, pushY, event } = candidate;
+
+  // A candidate is a committed contact measured from one shared pre-impact
+  // state. Do not re-check alive here: another simultaneous candidate may
+  // already have reduced this actor to zero HP in the same simulation step.
+  weapon.hitRegistered = true;
+
   target.hp = Math.max(0, target.hp - damage);
   target.hitFlash = 0.18;
   target.impactFlash = 0.34;
   target.lastDamage = damage;
 
-  const impactN = Math.hypot(relativeVx, relativeVy) || 1;
-  const knock = clamp(speed * weapon.config.knockScale * actionKnock, 6, 28);
-  pushBody(
-    target,
-    relativeVx / impactN * knock * target.mass,
-    relativeVy / impactN * knock * target.mass
-  );
+  pushBody(target, pushX, pushY);
 
   weapon.angularVelocity *= 0.58;
   weapon.radialVelocity *= 0.66;
 
   if (target.hp <= 0) target.alive = false;
 
-  const event = {
-    type: "body-hit",
-    attacker: attacker.id,
-    target: target.id,
-    weapon: weapon.config.id,
-    action: actionType,
-    damage,
-    speed,
-    distance: Math.hypot(target.x - attacker.x, target.y - attacker.y),
-    x: contact.x,
-    y: contact.y
-  };
   emit?.(event);
   return event;
+}
+
+export function resolveWeaponHit(attacker, weapon, target, frame, emit) {
+  const candidate = probeWeaponHit(attacker, weapon, target, frame);
+  return applyWeaponHit(candidate, emit);
 }

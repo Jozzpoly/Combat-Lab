@@ -261,9 +261,13 @@ function fixedUpdate(dt) {
   const roundEnd = events.find(event => event.type === "round-end");
   if (roundEnd) {
     announce(
-      roundEnd.winner === "player" ? "OPENING WON" : "DOWN",
+      roundEnd.winner === "player"
+        ? "OPENING WON"
+        : roundEnd.winner === "draw" ? "DOUBLE DOWN" : "DOWN",
       1.1,
-      roundEnd.winner === "player" ? "won" : "lost"
+      roundEnd.winner === "player"
+        ? "won"
+        : roundEnd.winner === "draw" ? "trade" : "lost"
     );
   } else {
     let dealt = 0;
@@ -561,7 +565,13 @@ function render() {
     ctx.textAlign = "center";
     ctx.font = "800 32px system-ui";
     ctx.fillStyle = "#f2f5f7";
-    ctx.fillText(sim.roundState === "won" ? "OPENING WON" : "DOWN", VIEW_W / 2, VIEW_H / 2);
+    ctx.fillText(
+      sim.roundState === "won"
+        ? "OPENING WON"
+        : sim.roundState === "draw" ? "DOUBLE DOWN" : "DOWN",
+      VIEW_W / 2,
+      VIEW_H / 2
+    );
     ctx.textAlign = "left";
   }
 }

@@ -14,7 +14,8 @@ import {
   equipWeapon,
   requestAttack,
   resolveWeaponContact,
-  resolveWeaponHit,
+  probeWeaponHit,
+  applyWeaponHit,
   updateWeapon
 } from "./combat.js";
 import {
@@ -118,7 +119,7 @@ export function createTerrariumSimulation({ playerWeaponId = "sword", autoReset 
 
   function endRound(winner) {
     if (sim.roundState !== "fight") return;
-    sim.roundState = winner === "player" ? "won" : "lost";
+    sim.roundState = winner === "player" ? "won" : winner === "draw" ? "draw" : "lost";
     sim.roundTimer = 1.55;
     emit({ type: "round-end", winner });
   }
@@ -177,12 +178,19 @@ export function createTerrariumSimulation({ playerWeaponId = "sword", autoReset 
     // high-energy clash may intercept this instant; sustained contact is
     // not a magical global damage-off switch.
     if (!weaponContact?.impact) {
-      resolveWeaponHit(p, sim.playerWeapon, e, playerFrame, emit);
-      resolveWeaponHit(e, sim.enemyWeapon, p, enemyFrame, emit);
+      // Measure both committed contacts against the same pre-impact state,
+      // then apply their consequences. This avoids player-first hit authority
+      // and preserves legitimate same-step trades.
+      const playerHit = probeWeaponHit(p, sim.playerWeapon, e, playerFrame);
+      const enemyHit = probeWeaponHit(e, sim.enemyWeapon, p, enemyFrame);
+
+      applyWeaponHit(playerHit, emit);
+      applyWeaponHit(enemyHit, emit);
     }
 
-    if (!e.alive) endRound("player");
-    if (!p.alive) endRound("enemy");
+    if (!e.alive && !p.alive) endRound("draw");
+    else if (!e.alive) endRound("player");
+    else if (!p.alive) endRound("enemy");
 
     tickBodyVisuals(p, dt);
     tickBodyVisuals(e, dt);

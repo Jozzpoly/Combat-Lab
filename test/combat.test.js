@@ -7,6 +7,8 @@ import {
   createWeaponState,
   requestAttack,
   resolveWeaponClash,
+  probeWeaponHit,
+  applyWeaponHit,
   damagingSegment,
   resolveWeaponHit,
   updateWeapon,
@@ -230,4 +232,46 @@ test("body motion contributes to realized impact consequence", () => {
   assert.ok(advancing.speed > stationary.speed * 1.8);
   assert.ok(advancing.damage > stationary.damage);
   assert.equal(retreating, null);
+});
+
+
+test("simultaneous committed hits resolve without player-first authority", () => {
+  const a = createBody({ id: "a", x: 500, y: 800, radius: 18, hp: 1 });
+  const b = createBody({ id: "b", x: 568, y: 800, radius: 18, hp: 1 });
+  a.facing = 0;
+  a.desiredFacing = 0;
+  b.facing = Math.PI;
+  b.desiredFacing = Math.PI;
+
+  const aw = createWeaponState(a, "sword");
+  const bw = createWeaponState(b, "sword");
+  requestAttack(a, aw, "thrust");
+  requestAttack(b, bw, "thrust");
+
+  aw.angle = 0;
+  bw.angle = Math.PI;
+  aw.reach = 70;
+  bw.reach = 70;
+  aw.radialVelocity = 120;
+  bw.radialVelocity = 120;
+
+  const aseg = weaponSegment(a, aw);
+  const bseg = weaponSegment(b, bw);
+  const aframe = { previousSegment: aseg, segment: aseg, active: true, phase: "strike" };
+  const bframe = { previousSegment: bseg, segment: bseg, active: true, phase: "strike" };
+
+  const ahit = probeWeaponHit(a, aw, b, aframe);
+  const bhit = probeWeaponHit(b, bw, a, bframe);
+
+  assert.ok(ahit);
+  assert.ok(bhit);
+
+  const events = [];
+  applyWeaponHit(ahit, event => events.push(event));
+  applyWeaponHit(bhit, event => events.push(event));
+
+  assert.equal(a.alive, false);
+  assert.equal(b.alive, false);
+  assert.equal(events.length, 2);
+  assert.deepEqual(new Set(events.map(event => event.attacker)), new Set(["a", "b"]));
 });
