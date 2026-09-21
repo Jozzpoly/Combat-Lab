@@ -19,6 +19,13 @@ test("sword rehearsal forms an actual pressured encounter", () => {
   assert.ok(result.enemyBreatherFrames >= 120);
 });
 
+test("open-field spear range-control diagnostic", () => {
+  const result = runDuelRehearsal({ weapon: "spear", seconds: 12, start: "open-field" });
+  console.log("REHEARSAL_SPEAR_OPEN", JSON.stringify(result));
+  assert.equal(result.finite, true);
+  assert.ok(result.minDistance < 170);
+});
+
 test("spear rehearsal forms an actual pressured encounter", () => {
   const result = runDuelRehearsal({ weapon: "spear", seconds: 18 });
   console.log("REHEARSAL_SPEAR", JSON.stringify(result));
