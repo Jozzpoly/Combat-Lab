@@ -14,6 +14,8 @@ test("sword rehearsal forms an actual pressured encounter", () => {
   assert.ok(result.attackIntents >= 12);
   assert.ok(result.minDistance < 150);
   assert.ok(result.playerHits + result.enemyHits + result.clashes >= 3);
+  assert.ok(result.enemyAttackIntents >= 3);
+  assert.ok(result.enemyBreatherFrames >= 120);
 });
 
 test("spear rehearsal forms an actual pressured encounter", () => {
@@ -23,6 +25,8 @@ test("spear rehearsal forms an actual pressured encounter", () => {
   assert.ok(result.attackIntents >= 10);
   assert.ok(result.minDistance < 170);
   assert.ok(result.playerHits + result.enemyHits + result.clashes >= 3);
+  assert.ok(result.enemyAttackIntents >= 3);
+  assert.ok(result.enemyBreatherFrames >= 120);
 });
 
 test("long weapon rehearsal materially negotiates a wall", () => {
