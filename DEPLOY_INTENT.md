@@ -15,3 +15,5 @@ Agent browser rehearsal after falsifying boundary-trapped spear autopilot; wall-
 Agent browser rehearsal after hit-ownership hierarchy pass: semantic hit/took/trade cues and simultaneous-hit aggregation; still not Owner-qualified.
 
 Agent browser rehearsal after removing player-first same-step hit authority; simultaneous committed contacts and draw outcome are now explicit.
+
+Owner-test eligibility deploy after causal-debug closure. Agent-side gate is satisfied; gameplay/feel remain explicitly Owner-unqualified.

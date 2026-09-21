@@ -403,17 +403,26 @@ Interpretation boundary:
 
 Do not rescue the spear by making the rehearsal increasingly omniscient. The next evidence must keep asking whether ordinary player-understandable movement is enough.
 
-### T4 — presentation / causality — ACTIVE
+### T4 — presentation / causality — AGENT-SIDE ADEQUATE FOR OWNER PASS
 
 Local HP, hit reactions, damage numbers and explicit prototype hit-ownership feedback were added after the accidental Owner exposure.
 
-Still unproven:
+The presentation pass now distinguishes:
 
-- representative hits/misses are understandable with debug off;
-- blade / wall / body contacts are visually and temporally distinct enough;
-- weapon weight is readable without instrumentation.
+- damage dealt vs damage taken through semantic color / emphasis;
+- local impact on the body that actually received the hit;
+- simultaneous same-step trades as `TRADE · DEALT … · TOOK …` rather than allowing the last event to overwrite the first;
+- lethal simultaneous contacts as `DOUBLE DOWN`.
 
-### T5 — agent rehearsal — ACTIVE
+The backtick debug remains separate from normal play and now records the most recent body hit / blade clash / wall contact, highlights its world-space location and reports impact speed where the resolver has a meaningful speed value.
+
+Still deliberately unproven until Owner play:
+
+- whether representative hits/misses are actually legible at combat speed with debug off;
+- whether the feedback hierarchy is perceptually sufficient rather than merely present;
+- whether weapon weight and causality feel understandable rather than instrumented.
+
+### T5 — agent rehearsal — QUALIFIED FOR THIS OWNER PASS
 
 Current agent-side gate includes:
 
@@ -427,19 +436,36 @@ Current agent-side gate includes:
 
 A green agent gate is necessary but not sufficient for Owner eligibility.
 
-### T6 — Owner eligibility — NOT REACHED
+### T6 — Owner eligibility — READY FOR NEXT OWNER PASS
 
-Do not request another Owner test merely because the current branch is green.
+The agent-side eligibility gate is now satisfied strongly enough that further feel tuning without Owner evidence would become speculative.
 
-Before the next high-value Owner pass, agent-side work should defend that:
+Defended before this pass:
 
-- the deployed browser runtime matches the qualified SHA;
-- the fight remains readable with ordinary presentation;
-- sword and spear produce genuinely different but understandable spatial strategies;
-- pressure rhythm no longer feels like continuous adhesive aggression;
-- terrain changes decisions without the specimen becoming a pathfinding/debug exercise.
+- multi-minute deterministic fight/reset rehearsal remains finite and stable;
+- exact-SHA Pages deployment / cache provenance is verified;
+- public browser probes reproduce the qualified Node rehearsal signatures;
+- sword and spear produce materially different spacing signatures from the same combat laws;
+- spear range control was falsified against a boundary-trapped autopilot artifact rather than tuned to pass;
+- Ruined Gate distinguishes spear cut, spear thrust and sword cut through actual clearance;
+- movement contributes directionally to impact consequence;
+- weapon contact redirects motion without becoming a persistent binary parry;
+- opponent pressure contains explicit commit -> breathe/reposition phases while remaining dangerous;
+- same-step body hits are measured from one shared pre-impact state rather than player-first execution order;
+- normal presentation distinguishes hit / took / trade / round outcome, while debug can inspect recent causal contact.
 
-The next Owner pass should test feel, desire, control intuition and combat language — not basic integration.
+What is **not** qualified and is now the purpose of Owner play:
+
+- whether combat is enjoyable or desirable to continue;
+- whether controls feel natural and responsive;
+- whether weight is satisfying rather than sluggish;
+- whether pressure rhythm actually feels less adhesive;
+- whether sword vs spear creates interesting mastery rather than maintenance/kiting;
+- whether hit ownership and misses are readable in real play;
+- whether the Ruined Gate makes terrain tactically meaningful;
+- whether this embodied-intent organism deserves continuation at all.
+
+A negative Owner reaction is a valid high-value result. Do not polish this organism merely because it has reached the test gate.
 
 ## Owner evidence — accidental early exposure, 2026-09-21
 
