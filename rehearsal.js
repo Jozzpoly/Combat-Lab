@@ -84,7 +84,10 @@ export function runDuelRehearsal({ weapon = "sword", seconds = 18 } = {}) {
     }
 
     if (sim.totalTime >= nextAttack && sim.roundState === "fight") {
-      const action = ((Math.floor(nextAttack * 10) + sim.generation) % 3 === 0) ? "thrust" : "cut";
+      const selector = (Math.floor(nextAttack * 10) + sim.generation) % 4;
+      const action = weapon === "spear"
+        ? (selector === 0 ? "cut" : "thrust")
+        : (selector === 0 ? "thrust" : "cut");
       if (sim.attack(action)) metrics.attackIntents++;
       nextAttack += weapon === "spear" ? 0.78 : 0.64;
       if (Math.floor(nextAttack * 10) % 4 === 0) strafeSign *= -1;
