@@ -489,7 +489,9 @@ export function resolveWeaponHit(attacker, weapon, target, frame, emit) {
   const damage = Math.max(4, Math.round(rawDamage * actionDamage));
 
   target.hp = Math.max(0, target.hp - damage);
-  target.hitFlash = 0.14;
+  target.hitFlash = 0.18;
+  target.impactFlash = 0.34;
+  target.lastDamage = damage;
 
   const impactN = Math.hypot(relativeVx, relativeVy) || 1;
   const knock = clamp(speed * weapon.config.knockScale * actionKnock, 6, 28);
