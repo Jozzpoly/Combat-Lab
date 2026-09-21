@@ -42,7 +42,8 @@ const fx = {
   frame: 0,
   lastEvent: "",
   lastEventTimer: 0,
-  generation: sim.generation
+  generation: sim.generation,
+  debugContact: null
 };
 
 let audio = null;
@@ -120,6 +121,13 @@ function spawnContact(x, y, kind, strength = 1) {
 
 function onSimulationEvent(event) {
   if (event.type === "blade-clash") {
+    fx.debugContact = {
+      label: "blade clash",
+      x: event.x,
+      y: event.y,
+      speed: event.relativeSpeed,
+      life: 1.8
+    };
     spawnContact(event.x, event.y, "clash", clamp(event.relativeSpeed / 420, 0.5, 1.3));
     tone("clash", clamp(event.relativeSpeed / 320, 0.55, 1.2));
     announce("BLADE CONTACT", 0.28, "clash");
@@ -127,6 +135,13 @@ function onSimulationEvent(event) {
   }
 
   if (event.type === "body-hit") {
+    fx.debugContact = {
+      label: event.attacker === "player" ? "body hit: player -> duelist" : "body hit: duelist -> player",
+      x: event.x,
+      y: event.y,
+      speed: event.speed,
+      life: 1.8
+    };
     spawnContact(event.x, event.y, "hit", 1);
     tone("hit", clamp(event.speed / 360, 0.65, 1.25));
 
@@ -146,6 +161,13 @@ function onSimulationEvent(event) {
   if (event.type === "weapon-wall") {
     if (event.actor === "player") {
       const seg = weaponSegment(sim.player, sim.playerWeapon);
+      fx.debugContact = {
+        label: "weapon wall: " + event.wall,
+        x: seg.bx,
+        y: seg.by,
+        speed: null,
+        life: 1.8
+      };
       spawnContact(seg.bx, seg.by, "wall", 0.65);
       tone("wall", 0.8);
     }
@@ -219,12 +241,18 @@ function updatePresentation(dt) {
     if (fx.lastEventTimer <= 0) eventLabel.classList.remove("visible");
   }
 
+  if (fx.debugContact) {
+    fx.debugContact.life -= dt;
+    if (fx.debugContact.life <= 0) fx.debugContact = null;
+  }
+
   if (sim.generation !== fx.generation) {
     fx.generation = sim.generation;
     fx.trails.player = [];
     fx.trails.enemy = [];
     fx.particles = [];
     fx.damageTexts = [];
+    fx.debugContact = null;
   }
 }
 
@@ -522,8 +550,8 @@ function drawDebug() {
   if (!fx.debug) return;
 
   ctx.save();
-  ctx.fillStyle = "rgba(8,10,12,.78)";
-  ctx.fillRect(18, VIEW_H - 154, 322, 132);
+  ctx.fillStyle = "rgba(8,10,12,.80)";
+  ctx.fillRect(18, VIEW_H - 194, 386, 172);
   ctx.font = "12px ui-monospace, SFMono-Regular, Consolas, monospace";
   ctx.fillStyle = "#aeb9c5";
 
@@ -531,6 +559,7 @@ function drawDebug() {
   const w = sim.playerWeapon;
   const e = sim.enemy;
 
+  const contact = fx.debugContact;
   const lines = [
     `player v = ${Math.hypot(p.vx,p.vy).toFixed(1)}`,
     `body facing error = ${Math.abs(angleDelta(p.facing,p.desiredFacing)).toFixed(3)} rad`,
@@ -538,10 +567,26 @@ function drawDebug() {
     `weapon phase = ${w.action ? "action" : "guard"}`,
     `weapon ω = ${w.angularVelocity.toFixed(2)} rad/s`,
     `weapon reach = ${w.reach.toFixed(1)}`,
-    `enemy dist = ${Math.hypot(e.x-p.x,e.y-p.y).toFixed(1)}`
+    `enemy dist = ${Math.hypot(e.x-p.x,e.y-p.y).toFixed(1)}`,
+    `last contact = ${contact?.label || "none"}`,
+    `contact speed = ${Number.isFinite(contact?.speed) ? contact.speed.toFixed(1) : "n/a"}`
   ];
 
-  lines.forEach((line, i) => ctx.fillText(line, 30, VIEW_H - 128 + i * 16));
+  lines.forEach((line, i) => ctx.fillText(line, 30, VIEW_H - 166 + i * 16));
+
+  if (contact && Number.isFinite(contact.x) && Number.isFinite(contact.y)) {
+    const s = worldToScreen(contact.x, contact.y);
+    ctx.strokeStyle = "#f4d28f";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, 10, 0, Math.PI * 2);
+    ctx.moveTo(s.x - 14, s.y);
+    ctx.lineTo(s.x + 14, s.y);
+    ctx.moveTo(s.x, s.y - 14);
+    ctx.lineTo(s.x, s.y + 14);
+    ctx.stroke();
+  }
+
   ctx.restore();
 }
 
