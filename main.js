@@ -36,6 +36,7 @@ const sim = createTerrariumSimulation({ playerWeaponId: "sword", autoReset: true
 
 const fx = {
   particles: [],
+  damageTexts: [],
   trails: { player: [], enemy: [] },
   debug: false,
   frame: 0,
@@ -127,7 +128,23 @@ function onSimulationEvent(event) {
   if (event.type === "body-hit") {
     spawnContact(event.x, event.y, "hit", 1);
     tone("hit", clamp(event.speed / 360, 0.65, 1.25));
-    announce(event.attacker === "player" ? "CLEAN CONTACT" : "HIT TAKEN", 0.35);
+
+    const target = event.target === "player" ? sim.player : sim.enemy;
+    fx.damageTexts.push({
+      x: target.x,
+      y: target.y - target.radius - 14,
+      text: "-" + event.damage,
+      life: 0.62,
+      maxLife: 0.62,
+      isPlayer: event.target === "player"
+    });
+
+    announce(
+      event.attacker === "player"
+        ? "YOU HIT · " + event.damage
+        : "YOU TOOK · " + event.damage,
+      0.48
+    );
     return;
   }
 
@@ -199,6 +216,12 @@ function updatePresentation(dt) {
   }
   fx.particles = fx.particles.filter(p => p.life > 0);
 
+  for (const text of fx.damageTexts) {
+    text.life -= dt;
+    text.y -= 20 * dt;
+  }
+  fx.damageTexts = fx.damageTexts.filter(text => text.life > 0);
+
   if (fx.lastEventTimer > 0) {
     fx.lastEventTimer -= dt;
     if (fx.lastEventTimer <= 0) eventLabel.classList.remove("visible");
@@ -209,6 +232,7 @@ function updatePresentation(dt) {
     fx.trails.player = [];
     fx.trails.enemy = [];
     fx.particles = [];
+    fx.damageTexts = [];
   }
 }
 
@@ -346,6 +370,25 @@ function drawBody(body, isPlayer) {
 
   ctx.restore();
 
+  // Body-local state is intentionally explicit in this early specimen.
+  const hpRatio = clamp(body.hp / body.maxHp, 0, 1);
+  const barW = 44;
+  const barY = s.y - body.radius - 15;
+
+  ctx.fillStyle = "rgba(6,8,9,.72)";
+  ctx.fillRect(s.x - barW / 2, barY, barW, 4);
+  ctx.fillStyle = isPlayer ? "#80b4ff" : "#e06e62";
+  ctx.fillRect(s.x - barW / 2, barY, barW * hpRatio, 4);
+
+  if (body.impactFlash > 0) {
+    const alpha = clamp(body.impactFlash / 0.34, 0, 1);
+    ctx.strokeStyle = `rgba(255,255,255,${0.18 + alpha * 0.55})`;
+    ctx.lineWidth = 2 + alpha * 2;
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, body.radius + 8 + (1 - alpha) * 8, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
   if (fx.debug) {
     ctx.strokeStyle = isPlayer ? "#80b4ff66" : "#e06e6266";
     ctx.beginPath();
@@ -434,6 +477,19 @@ function drawParticles() {
 
     ctx.fillRect(s.x - 1.5, s.y - 1.5, 3, 3);
   }
+
+  ctx.save();
+  ctx.textAlign = "center";
+  ctx.font = "800 15px ui-monospace, SFMono-Regular, Consolas, monospace";
+  for (const text of fx.damageTexts) {
+    const s = worldToScreen(text.x, text.y);
+    const alpha = clamp(text.life / text.maxLife, 0, 1);
+    ctx.fillStyle = text.isPlayer
+      ? `rgba(255,176,164,${alpha})`
+      : `rgba(214,235,255,${alpha})`;
+    ctx.fillText(text.text, s.x, s.y);
+  }
+  ctx.restore();
 }
 
 function drawDebug() {
