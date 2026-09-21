@@ -487,20 +487,29 @@ These probes are gates to an organism, not the product result.
 
 ## 15. Implementation order
 
-### P0 — shared phenotype substrate
+### P0 — shared phenotype substrate — MECHANISM-QUALIFIED, 2026-09-21
 
-Implement only:
+Current evidence at `d67612d4722c050db4fb1e4b22502986354a324d`:
 
-- body specification;
-- equipment mass contribution;
-- derived locomotion;
-- shared body contact;
-- posture/brace;
-- shield geometry/contact;
-- simple compact weapon action;
-- minimal world geometry.
+- 13 / 13 deterministic substrate tests PASS;
+- the same body changes movement/contact continuously when ordinary equipment mass is added;
+- heavy/light overlap uses one shared contact-authority derivation;
+- brace trades movement/turn authority for lower physical yield without creating infinite mass;
+- closing velocity transfers through the same contact model;
+- shield is frontal occupied geometry that physically displaces both participants rather than applying damage reduction;
+- brace strengthens shield contact through the generic body authority path, with no shield-specific brace branch;
+- a real corridor collision test admits the light body and blocks the heavy body from actual envelope geometry;
+- the continuity hybrid remains intermediate on the tested derived properties.
 
-No polished opponent yet.
+Evidence boundary:
+
+> P0 demonstrates that a classless mechanical substrate is possible and internally continuous enough to build an organism on. It does **not** demonstrate that Bulwark or Skirmisher are fun, intuitive, tactically rich or even meaningfully different in live play.
+
+Remaining before P1 can become a real combat organism:
+
+- one deliberately simple shared compact weapon action;
+- integrated anchor movement / posture / shield / world behavior;
+- agent rehearsal that looks for strategy collapse rather than merely different numeric signatures.
 
 ### P1 — two anchor organisms
 
