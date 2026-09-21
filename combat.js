@@ -145,8 +145,9 @@ export function createWeaponState(owner, weaponId = "sword") {
     guardSide: 1,
     action: null,
     hitRegistered: false,
-    wallCooldown: 0,
     wallContact: false,
+    wallContactId: null,
+    wallSeparatedFor: 1,
     lastSegment: null,
     desiredAngle: angle,
     desiredReach: config.idleReach
@@ -297,7 +298,6 @@ function integrateWeapon(weapon, desiredAngle, desiredReach, dt) {
 }
 
 export function updateWeapon(owner, weapon, dt, emit) {
-  weapon.wallCooldown = Math.max(0, weapon.wallCooldown - dt);
   weapon.wallContact = false;
 
   if (weapon.action) weapon.action.t += dt;
@@ -317,17 +317,36 @@ export function updateWeapon(owner, weapon, dt, emit) {
 
   const blockingWall = WORLD.walls.find(wall => segmentIntersectsRect(seg, wall));
   if (blockingWall) {
+    const newImpact =
+      weapon.wallContactId !== blockingWall.id ||
+      weapon.wallSeparatedFor >= 0.08;
+
     weapon.angle = prevAngle;
     weapon.reach = prevReach;
-    weapon.angularVelocity = -prevAngularVelocity * 0.22;
-    weapon.radialVelocity = -prevRadialVelocity * 0.14;
+
+    if (newImpact) {
+      weapon.angularVelocity = -prevAngularVelocity * 0.22;
+      weapon.radialVelocity = -prevRadialVelocity * 0.14;
+      emit?.({
+        type: "weapon-wall",
+        actor: owner.id,
+        weapon: weapon.config.id,
+        wall: blockingWall.id
+      });
+    } else {
+      // Sustained material contact constrains motion without repeatedly
+      // inventing new impacts or pumping bounce energy.
+      weapon.angularVelocity = prevAngularVelocity * Math.pow(0.10, dt);
+      weapon.radialVelocity = prevRadialVelocity * Math.pow(0.16, dt);
+    }
+
     seg = weaponSegment(owner, weapon);
     weapon.wallContact = true;
-
-    if (weapon.wallCooldown <= 0) {
-      emit?.({ type: "weapon-wall", actor: owner.id, weapon: weapon.config.id, wall: blockingWall.id });
-      weapon.wallCooldown = 0.14;
-    }
+    weapon.wallContactId = blockingWall.id;
+    weapon.wallSeparatedFor = 0;
+  } else {
+    weapon.wallSeparatedFor += dt;
+    if (weapon.wallSeparatedFor >= 0.08) weapon.wallContactId = null;
   }
 
   weapon.lastSegment = seg;
