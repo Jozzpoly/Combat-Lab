@@ -20,6 +20,8 @@ function summarize(sim, metrics) {
     clashes: metrics.clashes,
     wallContacts: metrics.wallContacts,
     attackIntents: metrics.attackIntents,
+    enemyAttackIntents: metrics.enemyAttackIntents,
+    enemyBreatherFrames: metrics.enemyBreatherFrames,
     roundsEnded: metrics.roundsEnded,
     minDistance: Number(metrics.minDistance.toFixed(1)),
     maxDistance: Number(metrics.maxDistance.toFixed(1)),
@@ -45,6 +47,8 @@ export function runDuelRehearsal({ weapon = "sword", seconds = 18 } = {}) {
     clashes: 0,
     wallContacts: 0,
     attackIntents: 0,
+    enemyAttackIntents: 0,
+    enemyBreatherFrames: 0,
     roundsEnded: 0,
     playerHitDistances: [],
     ruinWallContacts: 0,
@@ -88,8 +92,14 @@ export function runDuelRehearsal({ weapon = "sword", seconds = 18 } = {}) {
 
     sim.step({ moveX, moveY, aimX: e.x, aimY: e.y }, DT);
 
+    if (sim.enemyBrain.mode === "disengage" || sim.enemyBrain.mode === "reset") {
+      metrics.enemyBreatherFrames++;
+    }
+
     for (const event of sim.drainEvents()) {
-      if (event.type === "body-hit") {
+      if (event.type === "attack-intent" && event.actor === "duelist") {
+        metrics.enemyAttackIntents++;
+      } else if (event.type === "body-hit") {
         if (event.attacker === "player") {
           metrics.playerHits++;
           if (Number.isFinite(event.distance)) metrics.playerHitDistances.push(event.distance);
@@ -125,6 +135,8 @@ export function runWallRehearsal({ weapon = "spear" } = {}) {
     clashes: 0,
     wallContacts: 0,
     attackIntents: 0,
+    enemyAttackIntents: 0,
+    enemyBreatherFrames: 0,
     roundsEnded: 0,
     playerHitDistances: [],
     ruinWallContacts: 0,
