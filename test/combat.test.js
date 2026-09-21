@@ -187,3 +187,35 @@ test("spear thrust has an outer damaging envelope while keeping the shaft safe",
   assert.ok(Math.max(...successfulDistances) >= 102);
   assert.ok(!successfulDistances.includes(82));
 });
+
+
+function runMovingThrust(vx) {
+  const attacker = createBody({ id: "a", x: 500, y: 800 });
+  const target = createBody({ id: "b", x: 568, y: 800, radius: 18 });
+  attacker.facing = 0;
+  attacker.desiredFacing = 0;
+  attacker.vx = vx;
+
+  const weapon = createWeaponState(attacker, "sword");
+  requestAttack(attacker, weapon, "thrust");
+
+  for (let i = 0; i < 100; i++) {
+    // Preserve body velocity as an input to impact without advancing position;
+    // this isolates relative impact velocity from simple range changes.
+    const frame = updateWeapon(attacker, weapon, 1 / 120);
+    const hit = resolveWeaponHit(attacker, weapon, target, frame);
+    if (hit) return hit;
+  }
+
+  return null;
+}
+
+test("body motion contributes to realized impact consequence", () => {
+  const advancing = runMovingThrust(120);
+  const retreating = runMovingThrust(-120);
+
+  assert.ok(advancing);
+  assert.ok(retreating);
+  assert.ok(advancing.speed > retreating.speed + 150);
+  assert.ok(advancing.damage > retreating.damage);
+});
