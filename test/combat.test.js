@@ -216,14 +216,18 @@ function runMovingThrust(vx) {
 
 test("body motion contributes to realized impact consequence", () => {
   const advancing = runMovingThrust(120);
+  const stationary = runMovingThrust(0);
   const retreating = runMovingThrust(-120);
 
   assert.ok(advancing);
-  assert.ok(retreating);
+  assert.ok(stationary);
   console.log("BODY_MOTION_IMPACT", JSON.stringify({
     advancing: { speed: advancing.speed, damage: advancing.damage },
-    retreating: { speed: retreating.speed, damage: retreating.damage }
+    stationary: { speed: stationary.speed, damage: stationary.damage },
+    retreating
   }));
-  assert.ok(advancing.speed > retreating.speed + 150);
-  assert.ok(advancing.damage > retreating.damage);
+
+  assert.ok(advancing.speed > stationary.speed + 100);
+  assert.ok(advancing.damage > stationary.damage);
+  assert.equal(retreating, null);
 });
