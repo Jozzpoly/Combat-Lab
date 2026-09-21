@@ -1,5 +1,5 @@
 import { createTerrariumSimulation } from "./simulation.js";
-import { createBody } from "./world.js";
+import { WORLD, createBody } from "./world.js";
 import { createWeaponState, requestAttack, updateWeapon } from "./combat.js";
 
 const DT = 1 / 120;
@@ -36,7 +36,14 @@ function summarize(sim, metrics) {
       : null,
     ruinWallContacts: metrics.ruinWallContacts,
     workingBandFrames: metrics.workingBandFrames,
-    faceHugFrames: metrics.faceHugFrames
+    faceHugFrames: metrics.faceHugFrames,
+    retreatFrames: metrics.retreatFrames,
+    retreatOpeningFrames: metrics.retreatOpeningFrames,
+    retreatClosingFrames: metrics.retreatClosingFrames,
+    boundaryRetreatFrames: metrics.boundaryRetreatFrames,
+    averageRetreatDistanceDelta: metrics.retreatFrames
+      ? Number((metrics.retreatDistanceDelta / metrics.retreatFrames).toFixed(3))
+      : null
   };
 }
 
@@ -90,6 +97,11 @@ export function runDuelRehearsal({ weapon = "sword", seconds = 18, start = "terr
     ruinWallContacts: 0,
     workingBandFrames: 0,
     faceHugFrames: 0,
+    retreatFrames: 0,
+    retreatOpeningFrames: 0,
+    retreatClosingFrames: 0,
+    boundaryRetreatFrames: 0,
+    retreatDistanceDelta: 0,
     minDistance: Infinity,
     maxDistance: 0
   };
@@ -139,7 +151,27 @@ export function runDuelRehearsal({ weapon = "sword", seconds = 18, start = "terr
       if (Math.floor(nextAttack * 10) % 4 === 0) strafeSign *= -1;
     }
 
+    const wasRetreating = d < bandMin;
     sim.step({ moveX, moveY, aimX: e.x, aimY: e.y }, DT);
+
+    if (wasRetreating && sim.roundState === "fight") {
+      const afterDistance = Math.hypot(sim.enemy.x - sim.player.x, sim.enemy.y - sim.player.y);
+      const delta = afterDistance - d;
+      metrics.retreatFrames++;
+      metrics.retreatDistanceDelta += delta;
+      if (delta > 0.05) metrics.retreatOpeningFrames++;
+      else if (delta < -0.05) metrics.retreatClosingFrames++;
+
+      const inset = 52 + sim.player.radius + 10;
+      if (
+        sim.player.x <= inset ||
+        sim.player.x >= WORLD.width - inset ||
+        sim.player.y <= inset ||
+        sim.player.y >= WORLD.height - inset
+      ) {
+        metrics.boundaryRetreatFrames++;
+      }
+    }
 
     if (sim.enemyBrain.mode === "disengage" || sim.enemyBrain.mode === "reset") {
       metrics.enemyBreatherFrames++;
@@ -191,6 +223,11 @@ export function runWallRehearsal({ weapon = "spear" } = {}) {
     ruinWallContacts: 0,
     workingBandFrames: 0,
     faceHugFrames: 0,
+    retreatFrames: 0,
+    retreatOpeningFrames: 0,
+    retreatClosingFrames: 0,
+    boundaryRetreatFrames: 0,
+    retreatDistanceDelta: 0,
     minDistance: Math.hypot(sim.enemy.x - sim.player.x, sim.enemy.y - sim.player.y),
     maxDistance: Math.hypot(sim.enemy.x - sim.player.x, sim.enemy.y - sim.player.y)
   };
