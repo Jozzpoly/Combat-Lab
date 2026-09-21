@@ -6,8 +6,9 @@ export function driveActor(actor, inputX, inputY, dt) {
   const input = normalize(inputX, inputY, 0, 0);
 
   if (input.length > 0) {
-    actor.vx += input.x * p.acceleration * dt;
-    actor.vy += input.y * p.acceleration * dt;
+    const strength = clamp(input.length, 0, 1);
+    actor.vx += input.x * p.acceleration * strength * dt;
+    actor.vy += input.y * p.acceleration * strength * dt;
   } else {
     const speed = Math.hypot(actor.vx, actor.vy);
     if (speed > 0) {

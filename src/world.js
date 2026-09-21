@@ -67,3 +67,61 @@ export function runRoute(actor, {
     blockedFrames
   };
 }
+
+
+export function circleRectPenetration(x, y, radius, rect) {
+  const nearestX = Math.max(rect.x, Math.min(x, rect.x + rect.w));
+  const nearestY = Math.max(rect.y, Math.min(y, rect.y + rect.h));
+  let dx = x - nearestX;
+  let dy = y - nearestY;
+  const distance = Math.hypot(dx, dy);
+
+  if (distance >= radius) return null;
+
+  if (distance > 1e-9) {
+    return {
+      nx: dx / distance,
+      ny: dy / distance,
+      depth: radius - distance
+    };
+  }
+
+  const toLeft = Math.abs(x - rect.x);
+  const toRight = Math.abs(rect.x + rect.w - x);
+  const toTop = Math.abs(y - rect.y);
+  const toBottom = Math.abs(rect.y + rect.h - y);
+  const minimum = Math.min(toLeft, toRight, toTop, toBottom);
+
+  if (minimum === toLeft) return { nx: -1, ny: 0, depth: radius + toLeft };
+  if (minimum === toRight) return { nx: 1, ny: 0, depth: radius + toRight };
+  if (minimum === toTop) return { nx: 0, ny: -1, depth: radius + toTop };
+  return { nx: 0, ny: 1, depth: radius + toBottom };
+}
+
+export function resolveActorWorld(actor, walls, iterations = 4) {
+  let contacts = 0;
+  const radius = actor.spec.body.radius;
+
+  for (let iteration = 0; iteration < iterations; iteration++) {
+    let changed = false;
+    for (const wall of walls) {
+      const hit = circleRectPenetration(actor.x, actor.y, radius, wall);
+      if (!hit) continue;
+
+      actor.x += hit.nx * hit.depth;
+      actor.y += hit.ny * hit.depth;
+
+      const inwardVelocity = actor.vx * hit.nx + actor.vy * hit.ny;
+      if (inwardVelocity < 0) {
+        actor.vx -= hit.nx * inwardVelocity;
+        actor.vy -= hit.ny * inwardVelocity;
+      }
+
+      contacts++;
+      changed = true;
+    }
+    if (!changed) break;
+  }
+
+  return contacts;
+}
