@@ -302,53 +302,127 @@ Only after an organism survives Owner play should the lab isolate narrower varia
 
 R0 and the LIVE / BOUNDED / CAPTURED spike remain warnings against entering attribution mode before there is anything worth attributing.
 
-## Roadmap
+## Combat Terrarium execution state
 
-### A. Research control — DONE
+### T0 — terrarium substrate — DONE
 
-- recover project intent and negative evidence;
-- reset stale R0/R1 authority;
-- stop automatic experiment-branch deployment from silently becoming public truth;
-- establish an explicit experiment protocol.
+The active branch now contains one integrated Ruined Gate world slice with:
 
-### B. Hypothesis formation — DONE FOR v1
+- responsive body locomotion;
+- persistent sword / spear weapon state;
+- static topology with open and constrained space;
+- one pressure-producing duelist;
+- shared simulation/event spine;
+- deterministic rehearsals and soak coverage.
 
-- falsified the earlier A/B/C framing;
-- separated intent expression from motion/contact realization;
-- recovered the missing discrete-intent + material-resolution quadrant;
-- defined four divergent organisms A/B/C/D;
-- kept target/assist/camera/evasion axes outside the first comparison;
-- defined shared situation and 30-second discriminators.
+This is substrate, not an accepted combat model.
 
-### C. Specimen design — DONE FOR v1
+### T1 — embodied strike/contact loop — MECHANISM-QUALIFIED
 
-`docs/DISCOVERY_CAMPAIGN_V1.md` defines the first campaign, implementation boundaries, qualification rules, build order and Owner evidence boundary.
+Agent-side evidence currently supports:
 
-### D. Campaign implementation — DONE FOR FIRST OWNER PASS
+- movement remains live during attacks;
+- wall contact constrains realized weapon motion;
+- fresh energetic weapon contact redirects motion;
+- sustained weapon contact is causal without becoming a binary global parry;
+- damaging geometry is distinct from the spear shaft;
+- thrust damage uses directional closing velocity at the actual contact point;
+- body motion materially changes realized impact consequence;
+- backing away cannot create damaging thrust merely from large absolute speed.
 
-The shared duel situation and all four organism-owned controllers/resolvers exist on the active experiment branch.
+These are mechanism claims only. They do not establish good feel.
 
-Qualification currently covers syntax/runtime health, geometry helpers, reset behavior, numeric stability, A/C continuous-intent divergence, B/D discrete-intent divergence, wall interaction, clash response and exact deployment provenance.
+### T2 — pressure / spatial play — ACTIVE
 
-### E. Owner feel campaign — ACTIVE
+The first accidental Owner exposure produced useful negative/positive evidence:
 
-The next material evidence must come from Owner play of the qualified four-corner specimen.
+- hit ownership / combat state was not readable enough;
+- opponent pressure was too relentless;
+- weight was positively perceived;
+- relatively fast lethality / meaningful hits were positively perceived.
 
-First pass should remain free-form. The useful observations are not numeric scores but:
+The duelist now uses a commit -> breathe/reposition rhythm while remaining dangerous in passive-pressure rehearsal.
 
-- what control strategy emerges naturally in each mode;
-- which modes collapse into the same felt strategy despite mechanical differences;
-- where responsiveness is lost;
-- whether material coupling creates useful decisions or merely lag/friction;
-- whether footwork and obstacle relation matter;
-- whether any mode produces immediate curiosity, mastery or desire to keep fighting;
-- whether all four are bad in ways that point to a missing combat language.
+Open question:
 
-Do not tune a disliked organism merely because it exists. A rejection is a valid campaign result.
+> does the fight create useful, readable spatial decisions rather than merely mechanically valid collisions?
 
-### F. Consolidation
+### T3 — second material setup — ACTIVE, PARTIAL MECHANISM EVIDENCE
 
-Use repeated material evidence to decide what deserves another experiment, what becomes a donor, and what is closed. Only after a combat language starts surviving Owner play should architectural extraction begin.
+Sword and spear now differ through more than damage/range constants:
+
+- spear has greater reach and inertia;
+- spear thrust uses an outer damaging region while the shaft remains non-damaging;
+- close face-hug range is a real disadvantage for the spear;
+- ruined-gate clearance distinguishes spear cut, spear thrust and sword cut;
+- movement into / away from a thrust changes consequence.
+
+#### Spear range-control falsifier — 2026-09-21
+
+A first qualification attempt appeared to show that spear combat collapsed almost entirely into face-hug range:
+
+- 18 s terrarium: 201 working-band frames vs 1392 face-hug frames;
+- 120 s soak: 1550 working-band frames vs 9779 face-hug frames.
+
+That was **not valid evidence against the spear mechanics**.
+
+Instrumentation showed the rehearsal controller was spending most retreat time blindly pushing into an outer world boundary:
+
+- open-field diagnostic: 1112 / 1277 retreat frames boundary-constrained;
+- terrarium: 1505 / 1718 retreat frames boundary-constrained.
+
+A deliberately simple one-step wall-aware space-making policy removed that controller artifact without changing combat laws, weapon tuning, damage or qualification thresholds.
+
+At commit `0a0d38108294b813e62fcd5a74a29b2ab980c414`:
+
+- CI: 29 / 29 PASS;
+- 18 s spear terrarium: 658 working-band vs 108 face-hug frames;
+- 120 s spear soak: 5102 working-band vs 826 face-hug frames;
+- boundary-constrained retreat in the 18 s terrarium fell to 6 frames.
+
+Interpretation boundary:
+
+> This demonstrates that the current spear mechanics can support a materially different range-preserving strategy under competent basic spatial footwork. It does **not** demonstrate that maintaining that range is intuitive, enjoyable, readable or worth mastering for the Owner.
+
+Do not rescue the spear by making the rehearsal increasingly omniscient. The next evidence must keep asking whether ordinary player-understandable movement is enough.
+
+### T4 — presentation / causality — ACTIVE
+
+Local HP, hit reactions, damage numbers and explicit prototype hit-ownership feedback were added after the accidental Owner exposure.
+
+Still unproven:
+
+- representative hits/misses are understandable with debug off;
+- blade / wall / body contacts are visually and temporally distinct enough;
+- weapon weight is readable without instrumentation.
+
+### T5 — agent rehearsal — ACTIVE
+
+Current agent-side gate includes:
+
+- syntax/runtime tests;
+- deterministic duel rehearsals;
+- passive-pressure rehearsal;
+- gate-clearance discriminator;
+- open-field range-control falsifier;
+- multi-minute soak;
+- deployment provenance controls.
+
+A green agent gate is necessary but not sufficient for Owner eligibility.
+
+### T6 — Owner eligibility — NOT REACHED
+
+Do not request another Owner test merely because the current branch is green.
+
+Before the next high-value Owner pass, agent-side work should defend that:
+
+- the deployed browser runtime matches the qualified SHA;
+- the fight remains readable with ordinary presentation;
+- sword and spear produce genuinely different but understandable spatial strategies;
+- pressure rhythm no longer feels like continuous adhesive aggression;
+- terrain changes decisions without the specimen becoming a pathfinding/debug exercise.
+
+The next Owner pass should test feel, desire, control intuition and combat language — not basic integration.
 
 ## Owner evidence — accidental early exposure, 2026-09-21
 
