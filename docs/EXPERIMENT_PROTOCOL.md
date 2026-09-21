@@ -63,6 +63,18 @@ Do not enter attribution mode merely because it is easier to make a clean experi
 
 Early over-isolation can remove the phenomenon we are trying to discover; R0 and the LIVE / BOUNDED / CAPTURED spike are preserved warnings of this failure mode.
 
+## 3.2 Classless-emergence check
+
+When an experiment claims to demonstrate a natural combat role, that role must not exist only because of a hidden class flag.
+
+Prefer shared explanatory properties such as body envelope, mass, equipment burden, acceleration, contact resistance, weapon geometry, shield coverage, stance and learned technique.
+
+Temporary anchor presets are allowed for discovery. They are **test points**, not classes.
+
+Before promotion, perform a continuity check by changing equipment/body properties or creating an awkward hybrid. If the role only survives at handcrafted presets, the classless-emergence claim failed.
+
+Do not confuse this with a ban on discrete learned abilities. The rule is narrower: a role cannot be called emergent if its base identity is produced by `if class == ...`.
+
 ## 4. Keep the situation comparable, not the mechanics identical
 
 A comparison may share:

@@ -1,7 +1,7 @@
 # Combat Lab — Research State
 
 **Authority:** current `main` research truth  
-**Status:** 2026-09-20  
+**Status:** 2026-09-21  
 **Purpose:** discover a combat language that may later inform **Feniks**. This repository is a laboratory, not the Feniks combat implementation.
 
 ## Current truth
@@ -41,11 +41,21 @@ The earlier state label `Owner feel campaign — ACTIVE` is retracted.
 
 Current active direction:
 
-> build an integrated **Combat Terrarium / small world slice** whose negative or positive Owner reaction would be meaningful evidence about Feniks combat.
+> **Ruined Gate Terrarium v1 is now REJECTED by Owner play. Do not tune it further as a product organism.**
 
-Authoritative refoundation document:
+Preserved rejected Owner specimen:
 
-- [Owner Specimen Refoundation](OWNER_SPECIMEN_REFOUNDATION.md)
+- branch: `experiment/combat-terrarium-v1`
+- Owner-tested public SHA: `47210b16cc9a32d2d53ca42875ca7af5c6b318b3`
+
+The next discovery question moves one level outward:
+
+> **Can distinct combat roles and strategies emerge from shared body + equipment + world rules, while controls remain responsive and no hard class flag decides what the character is?**
+
+Authoritative refoundation documents:
+
+- [Owner Specimen Refoundation](OWNER_SPECIMEN_REFOUNDATION.md) — why the Terrarium was built.
+- [Feniks Combat Refoundation — phenotype before attack engine](FENIKS_COMBAT_REFOUNDATION_2026-09-21.md) — why the Terrarium failed and what the next discovery object must test.
 
 Three implementation directions have already produced useful negative evidence:
 
@@ -436,36 +446,48 @@ Current agent-side gate includes:
 
 A green agent gate is necessary but not sufficient for Owner eligibility.
 
-### T6 — Owner eligibility — READY FOR NEXT OWNER PASS
+### T6 — Owner evidence — REJECTED
 
-The agent-side eligibility gate is now satisfied strongly enough that further feel tuning without Owner evidence would become speculative.
+The Owner played the exact provenance-verified candidate at `47210b16cc9a32d2d53ca42875ca7af5c6b318b3` and supplied a ~26 s recording.
 
-Defended before this pass:
+**Result: FAIL AS A COMBAT ORGANISM.**
 
-- multi-minute deterministic fight/reset rehearsal remains finite and stable;
-- exact-SHA Pages deployment / cache provenance is verified;
-- public browser probes reproduce the qualified Node rehearsal signatures;
-- sword and spear produce materially different spacing signatures from the same combat laws;
-- spear range control was falsified against a boundary-trapped autopilot artifact rather than tuned to pass;
-- Ruined Gate distinguishes spear cut, spear thrust and sword cut through actual clearance;
-- movement contributes directionally to impact consequence;
-- weapon contact redirects motion without becoming a persistent binary parry;
-- opponent pressure contains explicit commit -> breathe/reposition phases while remaining dangerous;
-- same-step body hits are measured from one shared pre-impact state rather than player-first execution order;
-- normal presentation distinguishes hit / took / trade / round outcome, while debug can inspect recent causal contact.
+The Owner's direct judgement was that it remained effectively unplayable, very bad and not remotely good enough to continue by tuning.
 
-What is **not** qualified and is now the purpose of Owner play:
+Video-level observations:
 
-- whether combat is enjoyable or desirable to continue;
-- whether controls feel natural and responsive;
-- whether weight is satisfying rather than sluggish;
-- whether pressure rhythm actually feels less adhesive;
-- whether sword vs spear creates interesting mastery rather than maintenance/kiting;
-- whether hit ownership and misses are readable in real play;
-- whether the Ruined Gate makes terrain tactically meaningful;
-- whether this embodied-intent organism deserves continuation at all.
+- the Owner remained on the sword rather than naturally exploring the second weapon;
+- close engagement repeatedly collapsed into the same adhesive melee swirl;
+- a won exchange did not produce a richer second encounter — the same basic fight shape returned;
+- Ruined Gate geometry existed but rarely became an interesting player decision;
+- hit ownership feedback explained events better, but did not create richer agency.
 
-A negative Owner reaction is a valid high-value result. Do not polish this organism merely because it has reached the test gate.
+Interpretation:
+
+> The Terrarium became a better-instrumented and more mechanically defensible version of an organism whose possibility space was still too poor.
+
+Do **not** respond by tuning:
+
+- aggression;
+- damage;
+- sword timing;
+- recovery;
+- spear range;
+- HP;
+- feedback intensity.
+
+Preserve useful donors:
+
+- movement remains live during attacks;
+- causal weapon/world contact;
+- directional body-motion contribution to impact;
+- exact-SHA deployment/provenance;
+- same-step symmetric hit authority;
+- positive Owner signal for weight and relatively fast consequence.
+
+Demote everything else back to hypothesis.
+
+The next active phase is **Phenotype Combat Ecology refoundation**. See `FENIKS_COMBAT_REFOUNDATION_2026-09-21.md`.
 
 ## Owner evidence — accidental early exposure, 2026-09-21
 
