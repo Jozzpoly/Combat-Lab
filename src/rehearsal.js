@@ -47,7 +47,7 @@ function frontPolicy(player, guard, dt) {
   moveToward(player, 0, 28, 1, dt, CELL_WALLS);
 }
 
-function sidePolicy(player, dt) {
+function sidePolicy(player, policyState, dt) {
   player.brace = 0;
   const waypoints = [
     { x: 95, y: 145 },
@@ -55,12 +55,17 @@ function sidePolicy(player, dt) {
     { x: 0, y: 28 }
   ];
 
-  let target = waypoints[0];
-  if (Math.hypot(player.x - waypoints[0].x, player.y - waypoints[0].y) < 12) {
-    target = waypoints[1];
+  if (
+    policyState.sidePhase === 0 &&
+    Math.hypot(player.x - waypoints[0].x, player.y - waypoints[0].y) < 14
+  ) {
+    policyState.sidePhase = 1;
   }
-  if (player.y < 58) target = waypoints[2];
+  if (policyState.sidePhase === 1 && player.y < 58) {
+    policyState.sidePhase = 2;
+  }
 
+  const target = waypoints[policyState.sidePhase];
   player.facing = Math.atan2(target.y - player.y, target.x - player.x);
   moveToward(player, target.x, target.y, 1, dt, CELL_WALLS);
 }
@@ -101,11 +106,12 @@ export function runCrossCell(spec, strategy, {
   let bracedFrames = 0;
   let reachedAt = null;
   let minimumY = player.y;
+  const policyState = { sidePhase: 0 };
 
   const frames = Math.ceil(seconds / dt);
   for (let frame = 0; frame < frames; frame++) {
     if (strategy === "front") frontPolicy(player, guard, dt);
-    else if (strategy === "side") sidePolicy(player, dt);
+    else if (strategy === "side") sidePolicy(player, policyState, dt);
     else throw new Error("unknown strategy: " + strategy);
 
     guardPolicy(guard, player, dt);
@@ -143,6 +149,7 @@ export function runCrossCell(spec, strategy, {
     bracedFrames,
     guardFinalX: Number(guard.x.toFixed(2)),
     guardFinalY: Number(guard.y.toFixed(2)),
+    sidePhase: policyState.sidePhase,
     finite: [
       player.x, player.y, player.vx, player.vy,
       guard.x, guard.y, guard.vx, guard.vy
