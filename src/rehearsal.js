@@ -1,17 +1,17 @@
-import { normalize } from "./math.js";
 import {
   ANCHOR_FIXTURES,
-  createActor,
-  withEquipment
+  createActor
 } from "./phenotype.js";
+import { driveActorInWorld } from "./world.js";
 import {
-  resolveActorShieldContact,
-  resolveBodyOverlap
-} from "./contact.js";
+  moveToward,
+  resolveCellPair,
+  updatePressureGuardMotion
+} from "./cell.js";
 import {
-  driveActorInWorld,
-  resolveActorWorld
-} from "./world.js";
+  CELL_WALLS,
+  PRESSURE_SPEC
+} from "./cell-config.js";
 import {
   createWeaponRuntime,
   requestCompactAttack,
@@ -19,38 +19,11 @@ import {
   stepCompactAttack
 } from "./weapon.js";
 
-export const CELL_WALLS = Object.freeze([
-  // Horizontal barrier with a generous central choke and a genuinely tight side route.
-  Object.freeze({ id: "barrier-left", x: -140, y: 70, w: 112, h: 30 }),
-  Object.freeze({ id: "barrier-middle", x: 28, y: 70, w: 50, h: 30 }),
-  Object.freeze({ id: "barrier-right", x: 112, y: 70, w: 28, h: 30 })
-]);
-
-const PRESSURE_SPEC = Object.freeze({
-  label: "Shared pressure body",
-  body: Object.freeze({
-    radius: 17,
-    mass: 68,
-    locomotorDrive: 7200,
-    turnDrive: 560,
-    support: 0.55
-  }),
-  equipment: Object.freeze([
-    Object.freeze({ kind: "plain-gear", mass: 7 })
-  ]),
-  weapon: Object.freeze({ ...ANCHOR_FIXTURES.skirmisher.weapon })
-});
-
-function moveToward(actor, x, y, strength, dt, walls) {
-  const d = normalize(x - actor.x, y - actor.y, 0, 0);
-  driveActorInWorld(actor, d.x * strength, d.y * strength, dt, walls);
-}
-
 function frontPolicy(player, guard, dt) {
   const distance = Math.hypot(guard.x - player.x, guard.y - player.y);
   player.brace = distance < 66 ? 1 : 0;
   player.facing = Math.atan2(guard.y - player.y, guard.x - player.x);
-  moveToward(player, 0, 28, 1, dt, CELL_WALLS);
+  moveToward(player, 0, 28, 1, dt);
 }
 
 function sidePolicy(player, policyState, dt) {
@@ -73,20 +46,7 @@ function sidePolicy(player, policyState, dt) {
 
   const target = waypoints[policyState.sidePhase];
   player.facing = Math.atan2(target.y - player.y, target.x - player.x);
-  moveToward(player, target.x, target.y, 1, dt, CELL_WALLS);
-}
-
-function guardPolicy(guard, player, dt) {
-  guard.brace = 0.85;
-
-  // Guard the central relation rather than omnisciently hunting the flank.
-  const playerInCentralRelation = Math.abs(player.x) < 42 && player.y > guard.y;
-  const targetX = 0;
-  const targetY = playerInCentralRelation ? Math.min(132, player.y - 34) : 86;
-  const strength = playerInCentralRelation ? 0.62 : 0.42;
-
-  guard.facing = Math.atan2(player.y - guard.y, player.x - guard.x);
-  moveToward(guard, targetX, targetY, strength, dt, CELL_WALLS);
+  moveToward(player, target.x, target.y, 1, dt);
 }
 
 export function runCrossCell(spec, strategy, {
@@ -125,18 +85,12 @@ export function runCrossCell(spec, strategy, {
     else if (strategy === "side") sidePolicy(player, policyState, dt);
     else throw new Error("unknown strategy: " + strategy);
 
-    guardPolicy(guard, player, dt);
+    updatePressureGuardMotion(guard, player, dt);
 
-    const shieldContact = resolveActorShieldContact(player, guard);
-    if (shieldContact.contact) {
-      shieldContacts++;
-    } else {
-      const body = resolveBodyOverlap(player, guard);
-      if (body.contact) bodyContacts++;
-    }
-
-    worldContacts += resolveActorWorld(player, CELL_WALLS);
-    worldContacts += resolveActorWorld(guard, CELL_WALLS);
+    const contact = resolveCellPair(player, guard);
+    if (contact.shieldContact) shieldContacts++;
+    if (contact.bodyContact) bodyContacts++;
+    worldContacts += contact.worldContacts;
 
     // One shared compact attack supplies consequence to frontal pressure.
     // The guard is not granted a special anti-skirmisher rule: the strike

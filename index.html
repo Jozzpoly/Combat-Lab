@@ -3,25 +3,52 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Combat Lab — Hypothesis Formation</title>
-<style>
-  :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
-  body { margin:0; min-height:100vh; display:grid; place-items:center; background:#101114; color:#ececf1; }
-  main { width:min(760px, calc(100% - 40px)); padding:36px; border:1px solid #2d3038; border-radius:18px; background:#17191f; box-shadow:0 20px 60px #0007; }
-  h1 { margin:0 0 12px; font-size:clamp(30px,5vw,52px); letter-spacing:-.03em; }
-  p { line-height:1.55; color:#c6c8d0; }
-  strong { color:#fff; }
-  .status { display:inline-block; margin:8px 0 20px; padding:7px 10px; border:1px solid #4a4e58; border-radius:999px; font-size:13px; letter-spacing:.08em; text-transform:uppercase; }
-</style>
+<title>Combat Lab — Phenotype Cell P1</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 <main>
-  <div class="status">Hypothesis formation</div>
-  <h1>Combat Lab</h1>
-  <p><strong>No active combat specimen is currently qualified.</strong></p>
-  <p>R0 failed as a combat experiment. R1 failed Owner feel. The later LIVE / BOUNDED / CAPTURED micro-spike was also rejected because its modes were not meaningfully distinguishable in play.</p>
-  <p>The current work is upstream of implementation: identify genuinely different <strong>player-to-body-to-weapon combat languages</strong> before building another specimen.</p>
-  <p>This page intentionally represents research truth instead of leaving a failed experiment live.</p>
+  <header>
+    <div>
+      <div class="kicker">COMBAT LAB · PHENOTYPE ECOLOGY P1 · AGENT REHEARSAL</div>
+      <h1>Cross / Clear Cell</h1>
+    </div>
+    <div class="warning">
+      Not Owner-qualified. This exists to test whether shared body + equipment + world laws create different play before another Owner build is requested.
+    </div>
+  </header>
+
+  <section class="frame">
+    <div class="hud">
+      <div>
+        <div id="phenotype">—</div>
+        <div id="hp">—</div>
+        <div id="detail">—</div>
+      </div>
+      <div id="status">runtime starting…</div>
+    </div>
+
+    <canvas id="game" width="960" height="640" aria-label="Phenotype combat ecology cell"></canvas>
+
+    <div class="bottom">
+      <div class="controls">
+        <strong>WASD</strong> move · <strong>mouse</strong> face ·
+        <strong>LMB</strong> compact strike · <strong>Shift</strong> brace ·
+        <strong>R</strong> reset
+      </div>
+      <div class="buttons">
+        <button data-phenotype="bulwark"><strong>1</strong> Bulwark anchor</button>
+        <button data-phenotype="skirmisher"><strong>2</strong> Skirmisher anchor</button>
+        <button data-phenotype="hybrid"><strong>3</strong> Hybrid continuity</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="note">
+    Same compact weapon family for all three fixtures. Anchor labels are research presets, not class authority.
+  </div>
+  <div id="probe"></div>
 </main>
+<script type="module" src="app.js"></script>
 </body>
 </html>
