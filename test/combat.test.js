@@ -227,7 +227,7 @@ test("body motion contributes to realized impact consequence", () => {
     retreating
   }));
 
-  assert.ok(advancing.speed > stationary.speed + 100);
+  assert.ok(advancing.speed > stationary.speed * 1.8);
   assert.ok(advancing.damage > stationary.damage);
   assert.equal(retreating, null);
 });
