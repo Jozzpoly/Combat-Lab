@@ -173,7 +173,10 @@ export function createTerrariumSimulation({ playerWeaponId = "sword", autoReset 
       emit
     );
 
-    if (!weaponContact?.contact) {
+    // Weapon contact is causal through the weapon dynamics. A fresh,
+    // high-energy clash may intercept this instant; sustained contact is
+    // not a magical global damage-off switch.
+    if (!weaponContact?.impact) {
       resolveWeaponHit(p, sim.playerWeapon, e, playerFrame, emit);
       resolveWeaponHit(e, sim.enemyWeapon, p, enemyFrame, emit);
     }
