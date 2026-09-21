@@ -510,6 +510,42 @@ Immediate response:
 
 External corroboration found during follow-up research: Bare Mettle's September 2026 Exanima notes describe an AI regression where improved AI "attacked almost relentlessly", which they judged less fun and corrected by reducing aggression / increasing behavioral variety. This supports the general pressure-rhythm lesson, not direct imitation of Exanima.
 
+## Active experiment checkpoint — Phenotype Combat Ecology v0
+
+Active branch:
+
+- `experiment/phenotype-combat-ecology-v0`
+
+Current evidence:
+
+- P0 shared phenotype substrate is mechanism-qualified;
+- ordinary equipment burden continuously changes the same body's movement/contact derivation;
+- brace trades mobility/turn authority for physical contact authority without immunity;
+- body contact transfers closing motion;
+- shield is occupied frontal geometry and transfers motion rather than applying a hidden damage reduction state;
+- actual corridor geometry admits the light body and blocks the heavy body;
+- Bulwark, Skirmisher and continuity hybrid use one shared compact weapon family and one shared authored strike;
+- a threshold-free strategy matrix produced the first mechanical crossover:
+  - Bulwark frontal crossing: 1.667 s, 100 HP, 2 shield blocks; tight side-route failed;
+  - Skirmisher frontal crossing: 1.183 s, 32 HP after 2 hits;
+  - Skirmisher tight side-route: 1.100 s, 100 HP, 0 hits;
+  - continuity hybrid crosses frontally but does not fit the tight side-route.
+
+Interpretation boundary:
+
+> This is evidence that shared body + equipment + posture + world rules can mechanically create different strategy value without hard class authority. It is **not** evidence that the resulting play is intuitive, satisfying or Feniks-worthy.
+
+Interactive P1 state:
+
+- exact agent-rehearsal deploy SHA: `90f8e8886d024c69001f0f699fa593d6d6d67711`;
+- CI passed;
+- Pages build provenance verified exact SHA;
+- static public fetch verified the P1 HTML;
+- real browser module execution / visual render was **not qualified** because the Opera Browser Connector became unavailable during the rehearsal;
+- therefore P1 remains **NOT OWNER-ELIGIBLE**.
+
+Public truth should remain `main` until browser/runtime rehearsal and the next product-integrity gate are actually defended.
+
 ## State invariant
 
 A failed specimen is evidence, not a foundation.
