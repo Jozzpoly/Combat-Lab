@@ -148,6 +148,11 @@ h1 {
   color: #d7efe1;
 }
 
+#eventLabel.visible[data-kind="trade"] {
+  color: #f0d5b4;
+  text-shadow: 0 0 16px rgba(240,213,180,.24);
+}
+
 #eventLabel.visible[data-kind="clash"] {
   color: #eef4f7;
 }
