@@ -16,8 +16,8 @@ export const WORLD = Object.freeze({
     { id: "west", x: 0, y: 0, w: 52, h: 1080 },
     { id: "east", x: 1708, y: 0, w: 52, h: 1080 },
 
-    { id: "ruin-upper", x: 790, y: 150, w: 44, h: 300 },
-    { id: "ruin-lower", x: 790, y: 620, w: 44, h: 270 },
+    { id: "ruin-upper", x: 790, y: 150, w: 44, h: 325 },
+    { id: "ruin-lower", x: 790, y: 595, w: 44, h: 295 },
 
     { id: "broken-wall", x: 1110, y: 350, w: 270, h: 38 },
     { id: "side-wall", x: 1320, y: 388, w: 38, h: 220 },
