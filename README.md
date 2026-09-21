@@ -18,15 +18,19 @@ None of these is a foundation to continue.
 
 ## Current phase
 
-The four-corner **A/B/C/D discovery artifact is complete only as a mechanism probe**. It is not an Owner-ready combat specimen.
+The four-corner **A/B/C/D discovery artifact remains mechanism evidence only**.
 
-The active product-research phase is now **Combat Terrarium v1**: a small integrated world slice built around embodied intent, persistent weapon/contact state, live locomotion, meaningful opponent pressure and spatial terrain consequence.
+**Combat Terrarium v1 / Ruined Gate is now rejected by Owner play.** Its exact tested SHA `47210b16cc9a32d2d53ca42875ca7af5c6b318b3` is preserved as negative product evidence plus a bounded mechanism donor. Do not continue tuning it.
 
-The active question is broader than attack steering:
+The active research phase is **Phenotype Combat Ecology refoundation**.
 
-> **What player-to-body-to-weapon control language makes melee combat feel responsive, embodied, spatially meaningful and worth mastering in Feniks?**
+The new question is:
 
-Responsiveness and player agency have veto over simulation elegance. Movement during attacks remains a strong default. Nontarget combat matters; aim assistance / soft focus / target-lock remain open questions. Universal dodge-roll / i-frame combat is not an assumed foundation. Body, weapon, terrain, mass and contact matter only where their consequences are perceivable and useful in play.
+> **Can distinct combat roles and strategies emerge from shared body + equipment + world rules, while controls remain responsive and no hard class flag decides what the character is?**
+
+This deliberately moves outward from attack-engine design toward Feniks's broader character/world relationship: natural roles without hard classes, body/equipment identity, material space, movement, weapon geometry and future progression pressure.
+
+See [Feniks Combat Refoundation — phenotype before attack engine](docs/FENIKS_COMBAT_REFOUNDATION_2026-09-21.md).
 
 ## Project control
 
@@ -34,7 +38,8 @@ Read these before substantial continuation:
 
 - [Research state](docs/RESEARCH_STATE.md) — current truth, negative evidence, Owner-confirmed pressures and active roadmap.
 - [Discovery Campaign v1](docs/DISCOVERY_CAMPAIGN_V1.md) — preserved four-corner mechanism-probe design; no longer the Owner-test roadmap.
-- [Owner Specimen Refoundation](docs/OWNER_SPECIMEN_REFOUNDATION.md) — recovered Owner intent, donor/research synthesis, Combat Terrarium definition and the real Owner-eligibility gate.
+- [Owner Specimen Refoundation](docs/OWNER_SPECIMEN_REFOUNDATION.md) — historical rationale for the now-rejected Combat Terrarium.
+- [Feniks Combat Refoundation](docs/FENIKS_COMBAT_REFOUNDATION_2026-09-21.md) — current correction: classless phenotype / combat-ecology research direction.
 - [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) — hypothesis gate, evidence boundaries, branch hygiene, deployment discipline and the meaning of short Owner commands such as “kontynuuj”.
 
 ## Deployment

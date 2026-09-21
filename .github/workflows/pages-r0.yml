@@ -8,7 +8,7 @@ on:
       - completed
     branches:
       - main
-      - experiment/combat-terrarium-v1
+      - experiment/phenotype-combat-ecology-v0
   workflow_dispatch:
     inputs:
       source_ref:
