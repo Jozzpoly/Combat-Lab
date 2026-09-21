@@ -332,6 +332,23 @@ Agent-side evidence currently supports:
 
 These are mechanism claims only. They do not establish good feel.
 
+#### Same-step hit authority correction — 2026-09-21
+
+A review of the hit resolver found a hidden order bias: the player body hit was applied before the duelist body hit. A lethal player hit could therefore set the duelist to `alive=false` before the duelist's already-committed same-step strike was evaluated, and the first knockback could also contaminate the second impact calculation.
+
+This was corrected by separating **contact measurement** from **consequence application**:
+
+- both body-hit candidates are measured from one shared pre-impact state;
+- both committed consequences are then applied;
+- legitimate same-step trades survive;
+- if both actors die in that shared step, the round resolves as a draw / double-down rather than silently awarding player-first authority.
+
+A deterministic regression test now proves that two simultaneous committed lethal contacts both resolve. The full suite passes 30 / 30, while existing sword/spear rehearsal signatures remain unchanged.
+
+Interpretation boundary:
+
+> This removes an implementation-order artifact. It does not claim that trades are desirable at any particular frequency; their gameplay value remains an Owner-level feel question.
+
 ### T2 — pressure / spatial play — ACTIVE
 
 The first accidental Owner exposure produced useful negative/positive evidence:
