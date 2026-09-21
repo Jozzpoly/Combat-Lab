@@ -78,6 +78,11 @@ export function createTerrariumSimulation({ playerWeaponId = "sword", autoReset 
     const enriched = { ...event, at: sim.totalTime, generation: sim.generation };
     sim.events.push(enriched);
     sim.pendingEvents.push(enriched);
+
+    if (event.type === "body-hit" && event.target === "duelist" && sim.enemyBrain) {
+      sim.enemyBrain.recoveryTimer = Math.max(sim.enemyBrain.recoveryTimer, 0.34);
+      sim.enemyBrain.readiness = 0;
+    }
     if (sim.events.length > 500) sim.events.shift();
   }
 
@@ -142,6 +147,14 @@ export function createTerrariumSimulation({ playerWeaponId = "sword", autoReset 
     updateFacing(p, dt);
 
     const enemyInput = updateDuelistAI(sim.enemyBrain, e, sim.enemyWeapon, p, dt);
+    if (enemyInput.attackStarted) {
+      emit({
+        type: "attack-intent",
+        actor: "duelist",
+        action: sim.enemyWeapon.action?.type || "unknown",
+        weapon: sim.enemyWeapon.config.id
+      });
+    }
     driveBody(e, enemyInput.moveX, enemyInput.moveY, dt, 1);
     updateFacing(e, dt);
 
