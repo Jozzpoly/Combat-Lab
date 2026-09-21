@@ -350,6 +350,27 @@ Do not tune a disliked organism merely because it exists. A rejection is a valid
 
 Use repeated material evidence to decide what deserves another experiment, what becomes a donor, and what is closed. Only after a combat language starts surviving Owner play should architectural extraction begin.
 
+## Owner evidence — accidental early exposure, 2026-09-21
+
+The Owner played a still-pre-qualification Ruined Gate build before being asked to test it. This is **valid evidence about that build**, not acceptance of the terrarium.
+
+Observed Owner feedback:
+
+- combat state / hit ownership was not readable enough; the Owner initially felt they were continuously losing and only near the end used HP to infer who was actually ahead;
+- the opponent felt too aggressive and pressed too continuously;
+- the sense of **weight** was positively received;
+- relatively **fast lethality / meaningful hits** was positively received;
+- Mount & Blade and Exanima are useful here primarily as philosophical references for weight, consequence and meaningful contact, **not as combat systems to copy**.
+
+Immediate response:
+
+- preserve lethality instead of solving pressure with HP inflation;
+- introduce commit -> breathe/reposition rhythm in the duelist;
+- make hit ownership locally explicit during prototyping;
+- keep developing world-grounded weapon/space consequences.
+
+External corroboration found during follow-up research: Bare Mettle's September 2026 Exanima notes describe an AI regression where improved AI "attacked almost relentlessly", which they judged less fun and corrected by reducing aggression / increasing behavioral variety. This supports the general pressure-rhythm lesson, not direct imitation of Exanima.
+
 ## State invariant
 
 A failed specimen is evidence, not a foundation.
