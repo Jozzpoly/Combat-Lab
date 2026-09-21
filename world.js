@@ -56,7 +56,8 @@ export function createBody({
     maxHp: hp,
     alive: true,
     hitFlash: 0,
-    impactFlash: 0
+    impactFlash: 0,
+    lastDamage: 0
   };
 }
 
