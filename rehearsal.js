@@ -40,8 +40,42 @@ function summarize(sim, metrics) {
   };
 }
 
-export function runDuelRehearsal({ weapon = "sword", seconds = 18 } = {}) {
-  const sim = createTerrariumSimulation({ playerWeaponId: weapon, autoReset: true });
+function configureDuelStart(sim, start) {
+  if (start !== "open-field") return;
+
+  // Controlled falsifier: same combat laws and opponent, but remove the
+  // ruined-gate approach/topology from the initial range-control question.
+  sim.player.x = 300;
+  sim.player.y = 500;
+  sim.player.vx = 0;
+  sim.player.vy = 0;
+  sim.player.facing = Math.PI * 0.5;
+  sim.player.desiredFacing = Math.PI * 0.5;
+
+  sim.enemy.x = 300;
+  sim.enemy.y = 820;
+  sim.enemy.vx = 0;
+  sim.enemy.vy = 0;
+  sim.enemy.facing = -Math.PI * 0.5;
+  sim.enemy.desiredFacing = -Math.PI * 0.5;
+
+  sim.playerWeapon.angle = sim.player.facing + sim.playerWeapon.config.guardOffset;
+  sim.playerWeapon.angularVelocity = 0;
+  sim.playerWeapon.radialVelocity = 0;
+  sim.playerWeapon.lastSegment = null;
+
+  sim.enemyWeapon.angle = sim.enemy.facing + sim.enemyWeapon.config.guardOffset;
+  sim.enemyWeapon.angularVelocity = 0;
+  sim.enemyWeapon.radialVelocity = 0;
+  sim.enemyWeapon.lastSegment = null;
+}
+
+export function runDuelRehearsal({ weapon = "sword", seconds = 18, start = "terrarium" } = {}) {
+  const sim = createTerrariumSimulation({
+    playerWeaponId: weapon,
+    autoReset: start === "terrarium"
+  });
+  configureDuelStart(sim, start);
   const metrics = {
     seconds,
     playerHits: 0,
