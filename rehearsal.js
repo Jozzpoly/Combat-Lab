@@ -166,6 +166,68 @@ export function runWallRehearsal({ weapon = "spear" } = {}) {
 }
 
 
+
+export function runPassivePressureRehearsal({ seconds = 18 } = {}) {
+  const sim = createTerrariumSimulation({ playerWeaponId: "sword", autoReset: false });
+  const attackTimes = [];
+  let enemyHits = 0;
+  let enemyBreatherFrames = 0;
+  let roundEndedAt = null;
+  let minDistance = Infinity;
+
+  const steps = Math.floor(seconds / DT);
+  for (let i = 0; i < steps; i++) {
+    const p = sim.player;
+    const e = sim.enemy;
+    const distance = Math.hypot(e.x - p.x, e.y - p.y);
+    minDistance = Math.min(minDistance, distance);
+
+    sim.step({
+      moveX: 0,
+      moveY: 0,
+      aimX: e.x,
+      aimY: e.y
+    }, DT);
+
+    if (sim.enemyBrain.mode === "disengage" || sim.enemyBrain.mode === "reset") {
+      enemyBreatherFrames++;
+    }
+
+    for (const event of sim.drainEvents()) {
+      if (event.type === "attack-intent" && event.actor === "duelist") {
+        attackTimes.push(event.at);
+      } else if (event.type === "body-hit" && event.attacker === "duelist") {
+        enemyHits++;
+      } else if (event.type === "round-end" && event.winner === "enemy") {
+        roundEndedAt = event.at;
+      }
+    }
+
+    if (roundEndedAt !== null) break;
+  }
+
+  const gaps = [];
+  for (let i = 1; i < attackTimes.length; i++) gaps.push(attackTimes[i] - attackTimes[i - 1]);
+
+  return {
+    seconds: Number(Math.min(seconds, sim.totalTime).toFixed(2)),
+    finite: [
+      sim.player.x, sim.player.y,
+      sim.enemy.x, sim.enemy.y,
+      sim.player.hp, sim.enemy.hp
+    ].every(Number.isFinite),
+    enemyHits,
+    enemyAttackIntents: attackTimes.length,
+    enemyBreatherFrames,
+    minEnemyAttackGap: gaps.length ? Number(Math.min(...gaps).toFixed(2)) : null,
+    maxEnemyAttackGap: gaps.length ? Number(Math.max(...gaps).toFixed(2)) : null,
+    minDistance: Number(minDistance.toFixed(1)),
+    playerHp: sim.player.hp,
+    playerDied: roundEndedAt !== null,
+    timeToPlayerDeath: roundEndedAt === null ? null : Number(roundEndedAt.toFixed(2))
+  };
+}
+
 export function runGateClearanceRehearsal({ weapon = "spear", action = "cut" } = {}) {
   const body = createBody({
     id: "gate-probe",
@@ -219,6 +281,7 @@ export function runNamedRehearsal(name) {
   if (name === "duel-sword") return runDuelRehearsal({ weapon: "sword" });
   if (name === "duel-spear") return runDuelRehearsal({ weapon: "spear" });
   if (name === "wall-spear") return runWallRehearsal({ weapon: "spear" });
+  if (name === "passive-pressure") return runPassivePressureRehearsal();
   if (name === "gate-spear-cut") return runGateClearanceRehearsal({ weapon: "spear", action: "cut" });
   if (name === "gate-spear-thrust") return runGateClearanceRehearsal({ weapon: "spear", action: "thrust" });
   if (name === "gate-sword-cut") return runGateClearanceRehearsal({ weapon: "sword", action: "cut" });
