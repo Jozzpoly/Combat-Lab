@@ -12,6 +12,12 @@ import {
   driveActorInWorld,
   resolveActorWorld
 } from "./world.js";
+import {
+  createWeaponRuntime,
+  requestCompactAttack,
+  resolveCompactStrike,
+  stepCompactAttack
+} from "./weapon.js";
 
 export const CELL_WALLS = Object.freeze([
   // Horizontal barrier with a generous central choke and a genuinely tight side route.
@@ -99,12 +105,17 @@ export function runCrossCell(spec, strategy, {
     y: 88,
     facing: Math.PI / 2
   });
+  const guardWeapon = createWeaponRuntime();
+  let guardAttackTimer = 0.18;
 
   let bodyContacts = 0;
   let shieldContacts = 0;
   let worldContacts = 0;
   let bracedFrames = 0;
+  let hitsTaken = 0;
+  let shieldBlocks = 0;
   let reachedAt = null;
+  let diedAt = null;
   let minimumY = player.y;
   const policyState = { sidePhase: 0 };
 
@@ -127,8 +138,30 @@ export function runCrossCell(spec, strategy, {
     worldContacts += resolveActorWorld(player, CELL_WALLS);
     worldContacts += resolveActorWorld(guard, CELL_WALLS);
 
+    // One shared compact attack supplies consequence to frontal pressure.
+    // The guard is not granted a special anti-skirmisher rule: the strike
+    // meets whatever body/shield geometry the current loadout actually has.
+    const distance = Math.hypot(player.x - guard.x, player.y - guard.y);
+    const centralThreat = Math.abs(player.x) < 46 && distance < 86;
+    guardAttackTimer -= dt;
+    if (centralThreat && guardAttackTimer <= 0) {
+      if (requestCompactAttack(guardWeapon)) {
+        guardAttackTimer = 0.78;
+      }
+    }
+
+    stepCompactAttack(guardWeapon, dt);
+    const strike = resolveCompactStrike(guard, guardWeapon, player);
+    if (strike?.type === "body-hit") hitsTaken++;
+    if (strike?.type === "shield-block") shieldBlocks++;
+
     if (player.brace > 0.5) bracedFrames++;
     minimumY = Math.min(minimumY, player.y);
+
+    if (diedAt === null && player.hp <= 0) {
+      diedAt = (frame + 1) * dt;
+      break;
+    }
 
     if (reachedAt === null && player.y < 52) {
       reachedAt = (frame + 1) * dt;
@@ -147,6 +180,11 @@ export function runCrossCell(spec, strategy, {
     shieldContacts,
     worldContacts,
     bracedFrames,
+    hitsTaken,
+    shieldBlocks,
+    hp: player.hp,
+    died: diedAt !== null,
+    diedAt: diedAt === null ? null : Number(diedAt.toFixed(3)),
     guardFinalX: Number(guard.x.toFixed(2)),
     guardFinalY: Number(guard.y.toFixed(2)),
     sidePhase: policyState.sidePhase,
