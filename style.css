@@ -120,16 +120,36 @@ h1 {
 }
 
 #eventLabel {
-  min-height: 17px;
+  min-height: 20px;
   color: transparent;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: .09em;
-  transition: color .08s linear;
+  font-size: 13px;
+  font-weight: 850;
+  letter-spacing: .07em;
+  transition: color .06s linear, text-shadow .06s linear;
 }
 
 #eventLabel.visible {
   color: #e6edf1;
+  text-shadow: 0 0 14px rgba(230,237,241,.16);
+}
+
+#eventLabel.visible[data-kind="hit"] {
+  color: #cfe6ff;
+  text-shadow: 0 0 16px rgba(128,180,255,.30);
+}
+
+#eventLabel.visible[data-kind="took"],
+#eventLabel.visible[data-kind="lost"] {
+  color: #ffb0a4;
+  text-shadow: 0 0 16px rgba(224,110,98,.32);
+}
+
+#eventLabel.visible[data-kind="won"] {
+  color: #d7efe1;
+}
+
+#eventLabel.visible[data-kind="clash"] {
+  color: #eef4f7;
 }
 
 .weapon-label {
