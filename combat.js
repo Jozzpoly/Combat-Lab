@@ -1,7 +1,9 @@
 import {
   angleDelta,
   clamp,
+  dot,
   lerp,
+  pointSegmentDistance,
   segmentIntersectsRect,
   segmentsIntersection,
   sweptSegmentCircleHit,
@@ -483,10 +485,38 @@ export function resolveWeaponHit(attacker, weapon, target, frame, emit) {
   );
   if (!hit) return null;
 
-  const tipVelocity = pointVelocity(attacker, weapon, frame.segment.bx, frame.segment.by);
-  const relativeVx = tipVelocity.x - target.vx;
-  const relativeVy = tipVelocity.y - target.vy;
-  const speed = Math.hypot(relativeVx, relativeVy);
+  // Use the actual damaging contact location, not unconditional tip speed.
+  const contact = pointSegmentDistance(
+    target.x,
+    target.y,
+    currentDamageSegment
+  );
+
+  const contactVelocity = pointVelocity(
+    attacker,
+    weapon,
+    contact.x,
+    contact.y
+  );
+
+  const relativeVx = contactVelocity.x - target.vx;
+  const relativeVy = contactVelocity.y - target.vy;
+
+  let speed = 0;
+  if (actionType === "thrust") {
+    // A thrust only gains impact from motion that closes distance outward
+    // along the weapon axis. Retraction / backing away cannot become damage
+    // merely because its absolute velocity is large.
+    const axisX = Math.cos(weapon.angle);
+    const axisY = Math.sin(weapon.angle);
+    speed = Math.max(0, dot(relativeVx, relativeVy, axisX, axisY));
+  } else {
+    // Cut energy is measured along the realized sweep direction.
+    const swingSign = -Math.sign(weapon.action?.side || 1);
+    const tangentX = -Math.sin(weapon.angle) * swingSign;
+    const tangentY = Math.cos(weapon.angle) * swingSign;
+    speed = Math.max(0, dot(relativeVx, relativeVy, tangentX, tangentY));
+  }
 
   const requiredHitSpeed = actionType === "thrust"
     ? (weapon.config.thrustHitSpeed ?? weapon.config.hitSpeed)
@@ -534,8 +564,8 @@ export function resolveWeaponHit(attacker, weapon, target, frame, emit) {
     damage,
     speed,
     distance: Math.hypot(target.x - attacker.x, target.y - attacker.y),
-    x: frame.segment.bx,
-    y: frame.segment.by
+    x: contact.x,
+    y: contact.y
   };
   emit?.(event);
   return event;
