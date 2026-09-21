@@ -11,3 +11,5 @@ Agent rehearsal redeploy after spear working-envelope fix.
 Agent browser rehearsal after Owner feedback: pressure rhythm, hit readability, episodic wall contact.
 
 Agent browser rehearsal after falsifying boundary-trapped spear autopilot; wall-aware range-control mechanism is CI-qualified, gameplay remains Owner-unqualified.
+
+Agent browser rehearsal after hit-ownership hierarchy pass: semantic hit/took/trade cues and simultaneous-hit aggregation; still not Owner-qualified.
