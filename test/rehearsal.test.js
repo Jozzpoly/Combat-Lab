@@ -28,6 +28,8 @@ test("spear rehearsal forms an actual pressured encounter", () => {
   assert.ok(result.playerHits + result.enemyHits + result.clashes >= 3);
   assert.ok(result.enemyAttackIntents >= 3);
   assert.ok(result.enemyBreatherFrames >= 120);
+  assert.ok(result.workingBandFrames >= 120);
+  assert.ok(result.faceHugFrames < result.workingBandFrames);
 });
 
 test("long weapon rehearsal materially negotiates a wall", () => {
