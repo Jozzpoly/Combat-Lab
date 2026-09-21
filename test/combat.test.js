@@ -220,6 +220,10 @@ test("body motion contributes to realized impact consequence", () => {
 
   assert.ok(advancing);
   assert.ok(retreating);
+  console.log("BODY_MOTION_IMPACT", JSON.stringify({
+    advancing: { speed: advancing.speed, damage: advancing.damage },
+    retreating: { speed: retreating.speed, damage: retreating.damage }
+  }));
   assert.ok(advancing.speed > retreating.speed + 150);
   assert.ok(advancing.damage > retreating.damage);
 });
