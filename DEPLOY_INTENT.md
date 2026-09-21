@@ -9,3 +9,5 @@ Episodic blade contact, lower lethality, weapon action identity and ruined-gate 
 Agent rehearsal redeploy after spear working-envelope fix.
 
 Agent browser rehearsal after Owner feedback: pressure rhythm, hit readability, episodic wall contact.
+
+Agent browser rehearsal after falsifying boundary-trapped spear autopilot; wall-aware range-control mechanism is CI-qualified, gameplay remains Owner-unqualified.
