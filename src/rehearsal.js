@@ -165,6 +165,7 @@ export function runCrossCell(spec, strategy, {
 
     if (reachedAt === null && player.y < 52) {
       reachedAt = (frame + 1) * dt;
+      break;
     }
   }
 
