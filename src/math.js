@@ -33,3 +33,20 @@ export function segmentIntersection(a, b) {
     u
   };
 }
+
+export function pointSegmentDistance(px, py, seg) {
+  const dx = seg.bx - seg.ax;
+  const dy = seg.by - seg.ay;
+  const lengthSq = dx * dx + dy * dy;
+  const t = lengthSq > 1e-9
+    ? clamp(((px - seg.ax) * dx + (py - seg.ay) * dy) / lengthSq, 0, 1)
+    : 0;
+  const x = seg.ax + dx * t;
+  const y = seg.ay + dy * t;
+  return {
+    x,
+    y,
+    t,
+    distance: Math.hypot(px - x, py - y)
+  };
+}

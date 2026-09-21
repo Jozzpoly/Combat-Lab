@@ -10,6 +10,7 @@ import {
 } from "../src/phenotype.js";
 import {
   resolveBodyOverlap,
+  resolveActorShieldContact,
   shieldIntercept
 } from "../src/contact.js";
 import { runRoute } from "../src/world.js";
@@ -166,4 +167,70 @@ test("route envelope is demonstrated by actual world collision, not a diameter p
   assert.ok(lightResult.y < 70, `light body should enter corridor; y=${lightResult.y}`);
   assert.ok(heavyResult.y > 120, `heavy body should be stopped at corridor mouth; y=${heavyResult.y}`);
   assert.ok(heavyResult.blockedFrames > lightResult.blockedFrames);
+});
+
+
+test("closing body contact transfers motion through the same authority model", () => {
+  const heavy = createActor(ANCHOR_FIXTURES.bulwark, { x: 0, y: 0 });
+  const light = createActor(ANCHOR_FIXTURES.skirmisher, { x: 30, y: 0 });
+  light.vx = -120;
+
+  const result = resolveBodyOverlap(heavy, light);
+
+  assert.equal(result.contact, true);
+  assert.ok(result.closingSpeed > 100);
+  assert.ok(result.impulse > 0);
+  assert.ok(heavy.vx < 0, "heavy body should still yield; it is not infinite mass");
+  assert.ok(light.vx > -120, "light body should lose closing speed through contact");
+});
+
+test("brace reduces physical yield under the same incoming body contact", () => {
+  const neutralHeavy = createActor(ANCHOR_FIXTURES.bulwark, { x: 0, y: 0 });
+  const neutralLight = createActor(ANCHOR_FIXTURES.skirmisher, { x: 30, y: 0 });
+  neutralLight.vx = -120;
+  resolveBodyOverlap(neutralHeavy, neutralLight);
+
+  const bracedHeavy = createActor(ANCHOR_FIXTURES.bulwark, { x: 0, y: 0 });
+  bracedHeavy.brace = 1;
+  const bracedLight = createActor(ANCHOR_FIXTURES.skirmisher, { x: 30, y: 0 });
+  bracedLight.vx = -120;
+  resolveBodyOverlap(bracedHeavy, bracedLight);
+
+  assert.ok(Math.abs(bracedHeavy.vx) < Math.abs(neutralHeavy.vx));
+  assert.ok(Math.abs(bracedLight.vx) < Math.abs(neutralLight.vx));
+  assert.notEqual(bracedHeavy.vx, 0, "brace must not create an immovable wall");
+});
+
+test("shield is an occupied contact surface that transfers motion instead of reducing damage", () => {
+  const defender = createActor(ANCHOR_FIXTURES.bulwark, { x: 0, y: 0, facing: 0 });
+  const mover = createActor(ANCHOR_FIXTURES.skirmisher, { x: 38, y: 0 });
+  mover.vx = -100;
+
+  const result = resolveActorShieldContact(defender, mover);
+
+  assert.equal(result.contact, true);
+  assert.ok(result.overlap > 0);
+  assert.ok(result.impulse > 0);
+  assert.ok(defender.x < 0, "shield carrier should physically yield");
+  assert.ok(mover.x > 38, "incoming body should be displaced by occupied shield space");
+  assert.ok(defender.vx < 0);
+  assert.ok(mover.vx > -100);
+});
+
+test("brace strengthens the same shield contact without a shield-specific brace rule", () => {
+  const neutral = createActor(ANCHOR_FIXTURES.bulwark, { x: 0, y: 0, facing: 0 });
+  const neutralMover = createActor(ANCHOR_FIXTURES.skirmisher, { x: 38, y: 0 });
+  neutralMover.vx = -100;
+  const neutralResult = resolveActorShieldContact(neutral, neutralMover);
+
+  const braced = createActor(ANCHOR_FIXTURES.bulwark, { x: 0, y: 0, facing: 0 });
+  braced.brace = 1;
+  const bracedMover = createActor(ANCHOR_FIXTURES.skirmisher, { x: 38, y: 0 });
+  bracedMover.vx = -100;
+  const bracedResult = resolveActorShieldContact(braced, bracedMover);
+
+  assert.ok(bracedResult.defenderAuthority > neutralResult.defenderAuthority);
+  assert.ok(bracedResult.defenderYield < neutralResult.defenderYield);
+  assert.ok(Math.abs(braced.vx) < Math.abs(neutral.vx));
+  assert.ok(bracedResult.moverYield > neutralResult.moverYield);
 });
