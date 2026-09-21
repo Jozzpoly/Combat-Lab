@@ -4,7 +4,8 @@ import assert from "node:assert/strict";
 import {
   runDuelRehearsal,
   runWallRehearsal,
-  runGateClearanceRehearsal
+  runGateClearanceRehearsal,
+  runPassivePressureRehearsal
 } from "../rehearsal.js";
 
 test("sword rehearsal forms an actual pressured encounter", () => {
@@ -67,4 +68,17 @@ test("ruined gate changes which long-weapon action is viable", () => {
   assert.ok(spearCut.ruinWallContacts > 0);
   assert.equal(spearThrust.ruinWallContacts, 0);
   assert.ok(spearCut.ruinWallContacts > swordCut.ruinWallContacts);
+});
+
+
+test("duelist remains dangerous without becoming attack spam", () => {
+  const result = runPassivePressureRehearsal({ seconds: 18 });
+  console.log("REHEARSAL_PASSIVE_PRESSURE", JSON.stringify(result));
+
+  assert.equal(result.finite, true);
+  assert.ok(result.minDistance < 120);
+  assert.ok(result.enemyAttackIntents >= 3);
+  assert.ok(result.enemyHits >= 2);
+  assert.ok(result.enemyBreatherFrames >= 120);
+  assert.ok(result.minEnemyAttackGap === null || result.minEnemyAttackGap >= 0.82);
 });
