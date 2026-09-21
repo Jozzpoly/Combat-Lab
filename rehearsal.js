@@ -1,4 +1,6 @@
 import { createTerrariumSimulation } from "./simulation.js";
+import { createBody } from "./world.js";
+import { createWeaponState, requestAttack, updateWeapon } from "./combat.js";
 
 const DT = 1 / 120;
 
@@ -151,9 +153,62 @@ export function runWallRehearsal({ weapon = "spear" } = {}) {
   return summarize(sim, metrics);
 }
 
+
+export function runGateClearanceRehearsal({ weapon = "spear", action = "cut" } = {}) {
+  const body = createBody({
+    id: "gate-probe",
+    x: 720,
+    y: 535,
+    radius: 18,
+    mass: 1
+  });
+  body.facing = 0;
+  body.desiredFacing = 0;
+
+  const weaponState = createWeaponState(body, weapon);
+  const events = [];
+  const accepted = requestAttack(body, weaponState, action);
+  let wallContacts = 0;
+  let ruinWallContacts = 0;
+  let maxReach = weaponState.reach;
+  let maxAbsAngle = Math.abs(weaponState.angle);
+
+  for (let i = 0; i < Math.floor(1.25 / DT); i++) {
+    updateWeapon(body, weaponState, DT, event => {
+      events.push(event);
+      if (event.type === "weapon-wall") {
+        wallContacts++;
+        if (event.wall === "ruin-upper" || event.wall === "ruin-lower") ruinWallContacts++;
+      }
+    });
+    maxReach = Math.max(maxReach, weaponState.reach);
+    maxAbsAngle = Math.max(maxAbsAngle, Math.abs(weaponState.angle));
+  }
+
+  return {
+    weapon,
+    action,
+    accepted,
+    finite: [
+      body.x, body.y,
+      weaponState.angle,
+      weaponState.angularVelocity,
+      weaponState.reach,
+      weaponState.radialVelocity
+    ].every(Number.isFinite),
+    wallContacts,
+    ruinWallContacts,
+    maxReach: Number(maxReach.toFixed(1)),
+    maxAbsAngle: Number(maxAbsAngle.toFixed(3))
+  };
+}
+
 export function runNamedRehearsal(name) {
   if (name === "duel-sword") return runDuelRehearsal({ weapon: "sword" });
   if (name === "duel-spear") return runDuelRehearsal({ weapon: "spear" });
   if (name === "wall-spear") return runWallRehearsal({ weapon: "spear" });
+  if (name === "gate-spear-cut") return runGateClearanceRehearsal({ weapon: "spear", action: "cut" });
+  if (name === "gate-spear-thrust") return runGateClearanceRehearsal({ weapon: "spear", action: "thrust" });
+  if (name === "gate-sword-cut") return runGateClearanceRehearsal({ weapon: "sword", action: "cut" });
   throw new Error("Unknown rehearsal: " + name);
 }
