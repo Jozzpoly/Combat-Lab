@@ -93,10 +93,11 @@ function tone(kind, strength = 1) {
   osc.stop(now + duration + 0.02);
 }
 
-function announce(text, seconds = 0.42) {
+function announce(text, seconds = 0.42, kind = "neutral") {
   fx.lastEvent = text;
   fx.lastEventTimer = seconds;
   eventLabel.textContent = text;
+  eventLabel.dataset.kind = kind;
   eventLabel.classList.add("visible");
 }
 
@@ -121,7 +122,7 @@ function onSimulationEvent(event) {
   if (event.type === "blade-clash") {
     spawnContact(event.x, event.y, "clash", clamp(event.relativeSpeed / 420, 0.5, 1.3));
     tone("clash", clamp(event.relativeSpeed / 320, 0.55, 1.2));
-    announce("BLADE CONTACT", 0.28);
+    announce("BLADE CONTACT", 0.28, "clash");
     return;
   }
 
@@ -139,11 +140,13 @@ function onSimulationEvent(event) {
       isPlayer: event.target === "player"
     });
 
+    const playerDealtHit = event.attacker === "player";
     announce(
-      event.attacker === "player"
+      playerDealtHit
         ? "YOU HIT · " + event.damage
         : "YOU TOOK · " + event.damage,
-      0.48
+      0.52,
+      playerDealtHit ? "hit" : "took"
     );
     return;
   }
@@ -158,12 +161,16 @@ function onSimulationEvent(event) {
   }
 
   if (event.type === "round-end") {
-    announce(event.winner === "player" ? "OPENING WON" : "DOWN", 1.1);
+    announce(
+      event.winner === "player" ? "OPENING WON" : "DOWN",
+      1.1,
+      event.winner === "player" ? "won" : "lost"
+    );
     return;
   }
 
   if (event.type === "weapon-equip" && event.actor === "player") {
-    announce(WEAPONS[event.weapon].label.toUpperCase(), 0.65);
+    announce(WEAPONS[event.weapon].label.toUpperCase(), 0.65, "equip");
   }
 }
 
@@ -372,17 +379,20 @@ function drawBody(body, isPlayer) {
 
   // Body-local state is intentionally explicit in this early specimen.
   const hpRatio = clamp(body.hp / body.maxHp, 0, 1);
-  const barW = 44;
-  const barY = s.y - body.radius - 15;
+  const barW = 48;
+  const barH = 5;
+  const barY = s.y - body.radius - 16;
 
-  ctx.fillStyle = "rgba(6,8,9,.72)";
-  ctx.fillRect(s.x - barW / 2, barY, barW, 4);
+  ctx.fillStyle = "rgba(6,8,9,.78)";
+  ctx.fillRect(s.x - barW / 2, barY, barW, barH);
   ctx.fillStyle = isPlayer ? "#80b4ff" : "#e06e62";
-  ctx.fillRect(s.x - barW / 2, barY, barW * hpRatio, 4);
+  ctx.fillRect(s.x - barW / 2, barY, barW * hpRatio, barH);
 
   if (body.impactFlash > 0) {
     const alpha = clamp(body.impactFlash / 0.34, 0, 1);
-    ctx.strokeStyle = `rgba(255,255,255,${0.18 + alpha * 0.55})`;
+    ctx.strokeStyle = isPlayer
+      ? `rgba(255,150,132,${0.24 + alpha * 0.68})`
+      : `rgba(145,201,255,${0.24 + alpha * 0.68})`;
     ctx.lineWidth = 2 + alpha * 2;
     ctx.beginPath();
     ctx.arc(s.x, s.y, body.radius + 8 + (1 - alpha) * 8, 0, Math.PI * 2);
@@ -480,7 +490,7 @@ function drawParticles() {
 
   ctx.save();
   ctx.textAlign = "center";
-  ctx.font = "800 15px ui-monospace, SFMono-Regular, Consolas, monospace";
+  ctx.font = "800 17px ui-monospace, SFMono-Regular, Consolas, monospace";
   for (const text of fx.damageTexts) {
     const s = worldToScreen(text.x, text.y);
     const alpha = clamp(text.life / text.maxLife, 0, 1);
