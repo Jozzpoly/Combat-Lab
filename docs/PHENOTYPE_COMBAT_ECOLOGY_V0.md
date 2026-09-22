@@ -612,6 +612,38 @@ The third anchor must earn itself after the body/equipment premise survives.
 
 ---
 
+## P1 interactive checkpoint — agent-side only
+
+Interactive cell commit lineage reached temporary rehearsal deployment at:
+
+- `90f8e8886d024c69001f0f699fa593d6d6d67711`
+
+Agent-side evidence:
+
+- branch CI PASS;
+- Pages build checked out the exact SHA above;
+- public `COMMIT.txt` returned that exact SHA during the temporary rehearsal deployment;
+- static Pages fetch returned the expected **Phenotype Cell P1** HTML;
+- deterministic Node matrix still produced the preserved strategy crossover.
+
+Unproven evidence:
+
+- Opera Browser Connector became unavailable before a real rendered/browser interaction pass;
+- therefore live browser module execution, controls, visual readability and actual feel remain **not qualified**;
+- P1 is **not Owner-eligible**.
+
+After the temporary rehearsal, public Pages was restored to `main`.
+
+Verified public reset:
+
+- main/public SHA: `d6bf10464c0d309a2745a47e4431034d51759e1c`;
+- Pages build PASS;
+- Pages deploy PASS;
+- public `COMMIT.txt` returned the same SHA;
+- public page again reports that no active combat specimen is qualified.
+
+Next research action must continue on this experiment branch, not on public `main`, and must not request Owner play until the missing browser/runtime and product-integrity evidence is defended.
+
 ## Working invariant
 
 > **The first victory is not “we built a tank and a rogue.”  
