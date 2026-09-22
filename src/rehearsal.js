@@ -68,7 +68,7 @@ export function runNeutralRehearsal({ seconds = 20, dt = 1 / 120 } = {}) {
     worldContacts += stepActorWorld(player, BROKEN_YARD, dt);
 
     for (const threat of threats) {
-      const events = updatePressure(threat, player, BROKEN_YARD, dt);
+      const events = updatePressure(threat, player, BROKEN_YARD, dt, threats);
       transitions += events.length;
       seenStates.add(threat.state);
       worldContacts += resolveActorWorld(threat, BROKEN_YARD);
