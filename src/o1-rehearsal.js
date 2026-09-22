@@ -221,9 +221,9 @@ export function runO1StakePolicy(allowBrace, {
   seconds = 18,
   dt = 1 / 120
 } = {}) {
-  const objective = { x:450, y:548, radius:14, hp:1 };
+  const objective = { x:450, y:480, radius:14, hp:1 };
   const state = createO1State({
-    playerStart:{ x:450, y:485, facing:-Math.PI/2 },
+    playerStart:{ x:450, y:415, facing:-Math.PI/2 },
     threatStarts:[
       { id:"north", x:315, y:175, facing:Math.PI/2 },
       { id:"east", x:805, y:355, facing:Math.PI }
@@ -264,11 +264,11 @@ export function runO1LineHold(allowBrace, {
   dt = 1 / 120
 } = {}) {
   const state = createO1State({
-    playerStart:{ x:450, y:480, facing:-Math.PI/2 },
+    playerStart:{ x:450, y:430, facing:-Math.PI/2 },
     threatStarts:[
-      { id:"north", x:450, y:350, facing:Math.PI/2 }
+      { id:"north", x:450, y:340, facing:Math.PI/2 }
     ],
-    objective:{ x:450, y:548, radius:14, hp:1 }
+    objective:{ x:450, y:500, radius:14, hp:1 }
   });
 
   const counts={shieldBlocks:0,shieldContacts:0,objectiveHits:0};
