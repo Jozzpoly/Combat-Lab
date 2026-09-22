@@ -123,12 +123,14 @@ export function runO2Policy(policyName,{
   dt=1/120,
   playerStart,
   threatStarts,
-  world
+  world,
+  threatSpec
 }={}) {
   const state=createO2State({
     ...(playerStart?{playerStart}:{}),
     ...(threatStarts?{threatStarts}:{}),
-    ...(world?{world}:{})
+    ...(world?{world}:{}),
+    ...(threatSpec?{threatSpec}:{})
   });
 
   let policy;
