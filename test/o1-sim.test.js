@@ -12,7 +12,7 @@ import {
   stepO1Attack,
   O1_ATTACK_PROBES
 } from "../src/o1.js";
-import { runO1AdaptiveStake, runO1AggressiveStake, runO1ForwardIntercept, runO1LineHold, runO1Policy, runO1StakePolicy } from "../src/o1-rehearsal.js";
+import { runO1AdaptiveStake, runO1AggressiveStake, runO1ForwardIntercept, runO1LineHold, runO1Policy, runO1ShieldDriveStake, runO1StakePolicy } from "../src/o1-rehearsal.js";
 import { createO1State, playerInterposesObjective, stepO1State } from "../src/o1-sim.js";
 import { pressurePhysicalReach } from "../src/pressure.js";
 
@@ -207,6 +207,38 @@ test("single-contact compact action cannot cleave several bodies in one attack",
   const strikes=events.filter(e=>e.type==="player-strike");
   assert.equal(strikes.length,1);
   assert.equal(state.threats.filter(x=>x.hp<=0).length,1);
+});
+
+test("O1 final existing-law probe checks whether braced shield drive can actually break pressure",()=>{
+  const close5=[
+    {id:"north",x:450,y:315,facing:Math.PI/2},
+    {id:"north-east",x:540,y:340,facing:Math.PI*0.75},
+    {id:"east",x:560,y:415,facing:Math.PI},
+    {id:"west",x:340,y:415,facing:0},
+    {id:"north-west",x:360,y:340,facing:Math.PI*0.25}
+  ];
+
+  const result={
+    bracedDrive:runO1ShieldDriveStake({
+      braceEnabled:true,
+      threatStarts:close5
+    }),
+    unbracedDrive:runO1ShieldDriveStake({
+      braceEnabled:false,
+      threatStarts:close5
+    }),
+    noAttackChase:runO1AggressiveStake({
+      threatStarts:close5,
+      attackEnabled:false
+    })
+  };
+
+  console.log("O1_SHIELD_DRIVE_FALSIFIER",JSON.stringify(result));
+
+  for(const value of Object.values(result)){
+    assert.equal(value.finite,true);
+    assert.equal(value.attackActions,0);
+  }
 });
 
 test("O1 adaptive brace falsifier checks whether sticky stance is a controller artifact",()=>{
