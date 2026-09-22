@@ -22,15 +22,17 @@ The four-corner **A/B/C/D discovery artifact remains mechanism evidence only**.
 
 **Combat Terrarium v1 / Ruined Gate is now rejected by Owner play.** Its exact tested SHA `47210b16cc9a32d2d53ca42875ca7af5c6b318b3` is preserved as negative product evidence plus a bounded mechanism donor. Do not continue tuning it.
 
-The active research phase is **Phenotype Combat Ecology refoundation**.
+Phenotype Combat Ecology P0/P1 is now preserved as **mechanism evidence / donor material**, not the active product direction. It demonstrated useful classless body/equipment/contact relations, but its strategy crossover was too dependent on an authored route/policy cell to justify continuing toward Owner qualification.
 
-The new question is:
+The active research phase is **Whole Combat Organism Discovery**.
 
-> **Can distinct combat roles and strategies emerge from shared body + equipment + world rules, while controls remain responsive and no hard class flag decides what the character is?**
+The primary question is:
 
-This deliberately moves outward from attack-engine design toward Feniks's broader character/world relationship: natural roles without hard classes, body/equipment identity, material space, movement, weapon geometry and future progression pressure.
+> **What whole combat organism makes the player want to fight again because body, weapon, movement, opponent and place jointly create readable, useful possibilities?**
 
-See [Feniks Combat Refoundation — phenotype before attack engine](docs/FENIKS_COMBAT_REFOUNDATION_2026-09-21.md).
+Classless specialization remains an important Feniks constraint, but it returns to a secondary falsifier after a combat organism has actually earned deeper investment.
+
+See [Research state](docs/RESEARCH_STATE.md) for the recovery correction and evidence boundary.
 
 ## Project control
 
