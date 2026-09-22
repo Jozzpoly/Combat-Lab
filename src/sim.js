@@ -31,7 +31,8 @@ export function createA0State({
   playerStart={x:450,y:500,facing:-Math.PI/2},
   adversarySpec=BASE_ADVERSARY_SPEC,
   adversaryStart={id:"adversary",x:450,y:150,facing:Math.PI/2},
-  adversaryEntries=null
+  adversaryEntries=null,
+  resolveAdversaryPairs=true
 }={}){
   const player=createPlayerCombatState(
     createActor(
@@ -52,6 +53,7 @@ export function createA0State({
     world,
     player,
     adversaries,
+    resolveAdversaryPairs,
     time:0,
     result:"active",
     events:[]
@@ -107,16 +109,18 @@ export function stepA0(state,input,dt=1/120){
   for(const adversary of living){
     resolveActorPair(player,adversary);
   }
-  for(let i=0;i<living.length;i++){
-    for(let j=i+1;j<living.length;j++){
-      const contact=resolveActorPair(living[i],living[j]);
-      if(contact){
-        events.push({
-          type:"adversary-body-contact",
-          a:living[i].id,
-          b:living[j].id,
-          depth:contact.depth
-        });
+  if(state.resolveAdversaryPairs){
+    for(let i=0;i<living.length;i++){
+      for(let j=i+1;j<living.length;j++){
+        const contact=resolveActorPair(living[i],living[j]);
+        if(contact){
+          events.push({
+            type:"adversary-body-contact",
+            a:living[i].id,
+            b:living[j].id,
+            depth:contact.depth
+          });
+        }
       }
     }
   }
