@@ -234,7 +234,10 @@ export function runO1StakePolicy(allowBrace, {
   const counts = { shieldBlocks:0, bodyHits:0, objectiveHits:0, kills:0 };
   const frames = Math.ceil(seconds / dt);
   for(let frame=0;frame<frames && state.result==="active";frame++){
-    const events = stepO1State(state, stakeGuardPolicy(state, allowBrace), dt);
+    const events = stepO1State(state, stakeInterceptPolicy(state, {
+      allowBrace,
+      interceptRadius:64
+    }), dt);
     for(const event of events){
       if(event.type==="shield-block") counts.shieldBlocks++;
       if(event.type==="body-hit") counts.bodyHits++;
