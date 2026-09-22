@@ -184,22 +184,31 @@ function pairReader(state){
   return moveTowardTarget(state,nearest(state).enemy,0.42);
 }
 
-export function createA2PairState(){
+export function createA2PairState({
+  entries=[
+    {spec:LIGHT_STRIKER_SPEC,start:A2_PAIR_START.light},
+    {spec:HEAVY_CRUSHER_SPEC,start:A2_PAIR_START.heavy}
+  ],
+  resolveAdversaryPairs=true
+}={}){
   return createA0State({
     world:A2_OPEN_WORLD,
     playerStart:A2_PAIR_START.player,
-    adversaryEntries:[
-      {spec:LIGHT_STRIKER_SPEC,start:A2_PAIR_START.light},
-      {spec:HEAVY_CRUSHER_SPEC,start:A2_PAIR_START.heavy}
-    ]
+    adversaryEntries:entries,
+    resolveAdversaryPairs
   });
 }
 
 export function runA2Policy(policyName,{
   seconds=18,
-  dt=1/120
+  dt=1/120,
+  entries,
+  resolveAdversaryPairs=true
 }={}){
-  const state=createA2PairState();
+  const state=createA2PairState({
+    ...(entries?{entries}:{}),
+    resolveAdversaryPairs
+  });
 
   let policy;
   if(policyName==="nearest-mash") policy=nearestMash;
