@@ -34,6 +34,13 @@ export const O1_ATTACK = Object.freeze({
   damage: 60
 });
 
+export const O1_ATTACK_PROBES = Object.freeze({
+  current: O1_ATTACK,
+  compactClose: Object.freeze({ ...O1_ATTACK, reach: 30 }),
+  deliberate: Object.freeze({ ...O1_ATTACK, windup: 0.20 }),
+  twoHit: Object.freeze({ ...O1_ATTACK, damage: 30 })
+});
+
 export const O1_DAMAGE = Object.freeze({
   playerHp: 100,
   pressureHit: 34
@@ -49,7 +56,12 @@ function segmentClosestPoint(px, py, ax, ay, bx, by) {
   return { x: ax + abx * t, y: ay + aby * t, t };
 }
 
-export function createO1Player({ x = 450, y = 535, facing = -Math.PI / 2 } = {}) {
+export function createO1Player({
+  x = 450,
+  y = 535,
+  facing = -Math.PI / 2,
+  attackSpec = O1_ATTACK
+} = {}) {
   const actor = createActor(O1_PLAYER_SPEC, {
     id: "player",
     kind: "player",
@@ -60,6 +72,7 @@ export function createO1Player({ x = 450, y = 535, facing = -Math.PI / 2 } = {})
   actor.hp = O1_DAMAGE.playerHp;
   actor.maxHp = O1_DAMAGE.playerHp;
   actor.braced = false;
+  actor.attackSpec = attackSpec;
   actor.attack = {
     phase: "idle",
     time: 0,
@@ -257,7 +270,7 @@ export function requestO1Attack(player) {
   const attack = player.attack;
   if (!attack || attack.phase !== "idle") return false;
   attack.phase = "windup";
-  attack.time = O1_ATTACK.windup;
+  attack.time = player.attackSpec.windup;
   attack.serial++;
   attack.hitIds.clear();
   return true;
@@ -272,10 +285,10 @@ export function stepO1Attack(player, dt) {
 
   if (attack.phase === "windup") {
     attack.phase = "active";
-    attack.time += O1_ATTACK.active;
+    attack.time += player.attackSpec.active;
   } else if (attack.phase === "active") {
     attack.phase = "recover";
-    attack.time += O1_ATTACK.recover;
+    attack.time += player.attackSpec.recover;
   } else {
     attack.phase = "idle";
     attack.time = 0;
@@ -298,18 +311,18 @@ export function probeO1Strike(player, threat) {
   const dx = threat.x - player.x;
   const dy = threat.y - player.y;
   const distance = Math.hypot(dx, dy);
-  const maxDistance = player.spec.radius + O1_ATTACK.reach + threat.spec.radius;
+  const maxDistance = player.spec.radius + player.attackSpec.reach + threat.spec.radius;
   if (distance > maxDistance) return null;
 
   const angle = Math.atan2(dy, dx);
   const diff = Math.abs(wrapAngle(angle - player.facing));
-  if (diff > O1_ATTACK.halfAngle) return null;
+  if (diff > player.attackSpec.halfAngle) return null;
 
   return {
     type: "player-strike",
     target: threat.id,
-    x: player.x + Math.cos(player.facing) * Math.min(distance, player.spec.radius + O1_ATTACK.reach),
-    y: player.y + Math.sin(player.facing) * Math.min(distance, player.spec.radius + O1_ATTACK.reach)
+    x: player.x + Math.cos(player.facing) * Math.min(distance, player.spec.radius + player.attackSpec.reach),
+    y: player.y + Math.sin(player.facing) * Math.min(distance, player.spec.radius + player.attackSpec.reach)
   };
 }
 
@@ -317,7 +330,7 @@ export function applyO1Strike(player, threat, hit) {
   if (!hit || hit.type !== "player-strike") return null;
 
   player.attack.hitIds.add(threat.id);
-  threat.hp = Math.max(0, threat.hp - O1_ATTACK.damage);
+  threat.hp = Math.max(0, threat.hp - player.attackSpec.damage);
   if (threat.hp <= 0) {
     threat.vx = 0;
     threat.vy = 0;
@@ -326,7 +339,7 @@ export function applyO1Strike(player, threat, hit) {
 
   return {
     ...hit,
-    damage: O1_ATTACK.damage,
+    damage: player.attackSpec.damage,
     hp: threat.hp,
     killed: threat.hp <= 0
   };
