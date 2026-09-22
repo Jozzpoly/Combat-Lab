@@ -44,7 +44,7 @@ function step(dt) {
   stepActorWorld(player, BROKEN_YARD, dt);
 
   for(const threat of threats) {
-    const emitted=updatePressure(threat, player, BROKEN_YARD, dt);
+    const emitted=updatePressure(threat, player, BROKEN_YARD, dt, threats);
     for(const e of emitted) events.push({...e,life:.45});
   }
 
