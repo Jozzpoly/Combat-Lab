@@ -525,7 +525,7 @@ No Owner deployment before this gate.
 
 ---
 
-## W1 checkpoint — neutral Broken Yard substrate — MECHANICALLY ADEQUATE, BROWSER REHEARSAL PENDING
+## W1 checkpoint — neutral Broken Yard substrate — MECHANICALLY ADEQUATE, BROWSER RUNTIME PASS
 
 Current pre-browser checkpoint:
 
@@ -562,12 +562,22 @@ Interpretation boundary:
 
 > W1 is now good enough mechanically to inspect as a **situation substrate**. It does not prove that multi-body pressure is visually legible, pleasant or product-worthy.
 
-Before W2 / O1 implementation, perform one exact-SHA browser render rehearsal and ask only:
+Exact-SHA agent browser rehearsal:
 
-- do the three bodies remain visually individuated rather than reading as a blob?
-- are windup / lunge / recover readable at normal speed?
-- does Broken Yard read as a place with multiple relations rather than a scripted route diagram?
-- is there any obvious runtime/render/input failure hidden by Node tests?
+- deployed source: `ba408d52549175b06d10d5387eb7f331717cc630`;
+- branch CI: 6 / 6 PASS;
+- Pages build log checked out exactly that SHA;
+- Pages deploy PASS;
+- Opera loaded the W1 page and its dynamic accessibility state changed at runtime;
+- live state exposed pressure bodies in changing phases such as `recover`, proving that JS module loading and the simulation/render loop are executing in the real browser.
+
+Evidence boundary:
+
+- browser runtime / module execution: **PASS**;
+- canvas visual legibility: **UNPROVEN** — the screenshot connector returned image bytes but no inspectable visual surface in this run;
+- therefore no claim is made that the bodies remain visually individuated, threat phases read well at speed, or Broken Yard already reads as a convincing place.
+
+W1 is sufficient as an **internal situation substrate**, not as an Owner specimen. W2 may proceed, but O1 must earn its own visual/product-integrity gate before any Owner play.
 
 No Owner play is authorized by this checkpoint.
 
