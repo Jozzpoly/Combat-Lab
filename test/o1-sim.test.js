@@ -181,6 +181,29 @@ test("O1 pressure trigger can be grounded in committed lunge geometry",()=>{
 });
 
 
+test("O1 combined offense constraints test whether aggression dominance is merely one-axis tuning",()=>{
+  const names=[
+    "compactDeliberate",
+    "compactTwoHit",
+    "deliberateTwoHit",
+    "compactDeliberateTwoHit",
+    "slowerThanThreatTell"
+  ];
+  const result={};
+  for(const name of names){
+    const attackSpec=O1_ATTACK_PROBES[name];
+    result[name]={
+      hold:runO1StakePolicy(true,{playerAttackSpec:attackSpec}),
+      aggressive:runO1AggressiveStake({playerAttackSpec:attackSpec})
+    };
+  }
+  console.log("O1_OFFENSE_FACTORIAL",JSON.stringify(result));
+  for(const pair of Object.values(result)){
+    assert.equal(pair.hold.finite,true);
+    assert.equal(pair.aggressive.finite,true);
+  }
+});
+
 test("O1 offense attribution identifies what lets click-forward erase spatial pressure",()=>{
   const result={};
   for(const [name,attackSpec] of Object.entries(O1_ATTACK_PROBES)){
