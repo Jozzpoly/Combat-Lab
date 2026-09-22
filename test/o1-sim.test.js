@@ -127,3 +127,15 @@ test("spatial stake does not pre-author brace as the only possible answer",()=>{
   console.log("O1_STAKE_POSSIBILITY_REDTEAM",JSON.stringify(result));
   for(const value of Object.values(result)) assert.equal(value.finite,true);
 });
+
+
+test("spatial-stake attribution separates contact support from locomotion profile",()=>{
+  const result={
+    bracedNormal:runO1StakePolicy(true),
+    unbracedNormal:runO1StakePolicy(false),
+    supportOffSlowMovement:runO1StakePolicy(false,{movementBracedOverride:true}),
+    supportOnFastMovement:runO1StakePolicy(true,{movementBracedOverride:false})
+  };
+  console.log("O1_STAKE_SUPPORT_ISOLATION",JSON.stringify(result));
+  for(const value of Object.values(result)) assert.equal(value.finite,true);
+});
