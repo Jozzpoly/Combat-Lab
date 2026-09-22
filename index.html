@@ -3,25 +3,29 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Combat Lab — Whole Combat Organism Discovery</title>
-<style>
-  :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
-  body { margin:0; min-height:100vh; display:grid; place-items:center; background:#101114; color:#ececf1; }
-  main { width:min(760px, calc(100% - 40px)); padding:36px; border:1px solid #2d3038; border-radius:18px; background:#17191f; box-shadow:0 20px 60px #0007; }
-  h1 { margin:0 0 12px; font-size:clamp(30px,5vw,52px); letter-spacing:-.03em; }
-  p { line-height:1.55; color:#c6c8d0; }
-  strong { color:#fff; }
-  .status { display:inline-block; margin:8px 0 20px; padding:7px 10px; border:1px solid #4a4e58; border-radius:999px; font-size:13px; letter-spacing:.08em; text-transform:uppercase; }
-</style>
+<title>Combat Lab — Broken Yard W1</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 <main>
-  <div class="status">Whole combat organism discovery</div>
-  <h1>Combat Lab</h1>
-  <p><strong>No active combat specimen is currently qualified.</strong></p>
-  <p>R0 and R1 failed. The A/B/C/D mechanism probe never earned product authority. Ruined Gate Terrarium v1 reached an Owner gate and was rejected as a combat organism.</p>
-  <p>Phenotype Combat Ecology P0/P1 is preserved as mechanism evidence: body, equipment, contact and shield relations can matter without hard class flags, but its authored route/policy crossover did not earn product authority.</p>
-  <p>The active frontier is now to discover a <strong>whole combat organism worth fighting in again</strong> — where body, weapon, movement, opponent and place create useful possibilities before we return to clean attribution or classless-progression proofs.</p>
+<header>
+  <div>
+    <div class="kicker">COMBAT LAB · WHOLE ORGANISMS v0 · W1 AGENT REHEARSAL</div>
+    <h1>Broken Yard</h1>
+  </div>
+  <div class="warning">Not an Owner candidate. This build tests only whether the shared place + multi-body pressure situation is legible before O1/O2 combat is attached.</div>
+</header>
+<section class="frame">
+  <div class="hud">
+    <div id="status">starting…</div>
+    <div id="detail">—</div>
+  </div>
+  <canvas id="game" width="900" height="620" aria-label="Broken Yard neutral pressure rehearsal"></canvas>
+  <div class="bottom"><strong>WASD</strong> move · <strong>mouse</strong> face · <strong>R</strong> reset · no player attack in W1</div>
+</section>
+<div class="note">Both pressure bodies and the player use the same initial body radius. No route is intentionally gated by phenotype or class. Threat windup/lunge/recovery is shown only to make the situation inspectable.</div>
+<div id="probe"></div>
 </main>
+<script type="module" src="app.js"></script>
 </body>
 </html>
