@@ -189,12 +189,13 @@ export function createA2PairState({
     {spec:LIGHT_STRIKER_SPEC,start:A2_PAIR_START.light},
     {spec:HEAVY_CRUSHER_SPEC,start:A2_PAIR_START.heavy}
   ],
+  playerStart=A2_PAIR_START.player,
   resolveAdversaryPairs=true,
   adversaryActionsHitPeers=true
 }={}){
   return createA0State({
     world:A2_OPEN_WORLD,
-    playerStart:A2_PAIR_START.player,
+    playerStart,
     adversaryEntries:entries,
     resolveAdversaryPairs,
     adversaryActionsHitPeers
@@ -205,11 +206,13 @@ export function runA2Policy(policyName,{
   seconds=18,
   dt=1/120,
   entries,
+  playerStart,
   resolveAdversaryPairs=true,
   adversaryActionsHitPeers=true
 }={}){
   const state=createA2PairState({
     ...(entries?{entries}:{}),
+    ...(playerStart?{playerStart}:{}),
     resolveAdversaryPairs,
     adversaryActionsHitPeers
   });
