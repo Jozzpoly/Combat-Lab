@@ -39,6 +39,57 @@ test("O2 same-step committed body hit survives lethal thrust",()=>{
   assert.ok(state.player.hp<state.player.maxHp);
 });
 
+test("O2 backward-kite attribution separates boundary funnel from reach structure",()=>{
+  const openWorld={
+    width:1800,
+    height:1400,
+    inset:28,
+    walls:[]
+  };
+  const openStart={
+    x:900,
+    y:900,
+    facing:-Math.PI/2
+  };
+  const openThreats=[
+    {id:"north",x:900,y:650,facing:Math.PI/2},
+    {id:"north-east",x:1040,y:700,facing:Math.PI*0.75},
+    {id:"north-west",x:760,y:700,facing:Math.PI*0.25}
+  ];
+
+  const ringThreats=[
+    {id:"north",x:450,y:315,facing:Math.PI/2},
+    {id:"east",x:575,y:455,facing:Math.PI},
+    {id:"west",x:325,y:455,facing:0},
+    {id:"north-east",x:540,y:350,facing:Math.PI*0.75}
+  ];
+
+  const result={
+    openBackward:runO2Policy("backward-kite",{
+      world:openWorld,
+      playerStart:openStart,
+      threatStarts:openThreats
+    }),
+    openMixed:runO2Policy("mixed-lane",{
+      world:openWorld,
+      playerStart:openStart,
+      threatStarts:openThreats
+    }),
+    ringBackward:runO2Policy("backward-kite",{
+      threatStarts:ringThreats
+    }),
+    ringMixed:runO2Policy("mixed-lane",{
+      threatStarts:ringThreats
+    })
+  };
+
+  console.log("O2_KITE_ATTRIBUTION",JSON.stringify(result));
+
+  for(const value of Object.values(result)){
+    assert.equal(value.finite,true);
+  }
+});
+
 test("O2 K1 red-team policies are finite diagnostics",()=>{
   const result={
     backwardKite:runO2Policy("backward-kite"),
