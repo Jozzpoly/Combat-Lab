@@ -81,11 +81,13 @@ export function runO1Policy(policyName, {
   seconds = 18,
   dt = 1 / 120,
   playerStart,
-  threatStarts
+  threatStarts,
+  objective
 } = {}) {
   const state = createO1State({
     ...(playerStart ? { playerStart } : {}),
-    ...(threatStarts ? { threatStarts } : {})
+    ...(threatStarts ? { threatStarts } : {}),
+    ...(objective ? { objective } : {})
   });
   let policy;
   if (policyName === "active-guard") policy = state => activeGuardPolicy(state, true);
@@ -100,7 +102,8 @@ export function runO1Policy(policyName, {
     bodyHits: 0,
     playerStrikes: 0,
     kills: 0,
-    boundaryFrames: 0
+    boundaryFrames: 0,
+    objectiveHits: 0
   };
 
   const frames = Math.ceil(seconds / dt);
@@ -120,6 +123,7 @@ export function runO1Policy(policyName, {
       if (event.type === "shield-block") counts.shieldBlocks++;
       if (event.type === "shield-contact") counts.shieldContacts++;
       if (event.type === "body-hit") counts.bodyHits++;
+      if (event.type === "objective-hit") counts.objectiveHits++;
       if (event.type === "player-strike") {
         counts.playerStrikes++;
         if (event.killed) counts.kills++;
@@ -133,6 +137,7 @@ export function runO1Policy(policyName, {
     time: Number(state.time.toFixed(3)),
     hp: state.player.hp,
     livingThreats: state.threats.filter(t => t.hp > 0).length,
+    objectiveHp: state.objective?.hp ?? null,
     ...counts,
     player: {
       x: Number(state.player.x.toFixed(2)),
@@ -147,6 +152,108 @@ export function runO1Policy(policyName, {
     })),
     finite: [state.player, ...state.threats].every(a =>
       [a.x, a.y, a.vx, a.vy, a.facing].every(Number.isFinite)
+    )
+  };
+}
+
+
+function nearestToObjective(state) {
+  const objective = state.objective;
+  let best = null;
+  let bestDistance = Infinity;
+  for (const threat of state.threats) {
+    if (threat.hp <= 0) continue;
+    const d = Math.hypot(threat.x - objective.x, threat.y - objective.y);
+    if (d < bestDistance) {
+      best = threat;
+      bestDistance = d;
+    }
+  }
+  return best;
+}
+
+function stakeGuardPolicy(state, allowBrace) {
+  const objective = state.objective;
+  const threat = nearestToObjective(state);
+  if (!objective || !threat) {
+    return { moveX:0, moveY:0, aimX:state.player.x, aimY:state.player.y };
+  }
+
+  const fromObjective = normalize(
+    threat.x - objective.x,
+    threat.y - objective.y,
+    0,
+    -1
+  );
+  const intercept = {
+    x: objective.x + fromObjective.x * 64,
+    y: objective.y + fromObjective.y * 64
+  };
+  const toIntercept = normalize(
+    intercept.x - state.player.x,
+    intercept.y - state.player.y,
+    0,
+    0
+  );
+  const playerThreatDistance = Math.hypot(
+    threat.x - state.player.x,
+    threat.y - state.player.y
+  );
+  const interceptDistance = Math.hypot(
+    intercept.x - state.player.x,
+    intercept.y - state.player.y
+  );
+
+  const brace = allowBrace && playerThreatDistance < 104 && interceptDistance < 42;
+  const attack = threat.state === "recover" && playerThreatDistance < 86;
+
+  return {
+    moveX: toIntercept.x * (interceptDistance > 18 ? 0.72 : 0.08),
+    moveY: toIntercept.y * (interceptDistance > 18 ? 0.72 : 0.08),
+    aimX: threat.x,
+    aimY: threat.y,
+    brace,
+    attack
+  };
+}
+
+export function runO1StakePolicy(allowBrace, {
+  seconds = 18,
+  dt = 1 / 120
+} = {}) {
+  const objective = { x:450, y:548, radius:14, hp:1 };
+  const state = createO1State({
+    playerStart:{ x:450, y:485, facing:-Math.PI/2 },
+    threatStarts:[
+      { id:"north", x:315, y:175, facing:Math.PI/2 },
+      { id:"east", x:805, y:355, facing:Math.PI }
+    ],
+    objective
+  });
+
+  const counts = { shieldBlocks:0, bodyHits:0, objectiveHits:0, kills:0 };
+  const frames = Math.ceil(seconds / dt);
+  for(let frame=0;frame<frames && state.result==="active";frame++){
+    const events = stepO1State(state, stakeGuardPolicy(state, allowBrace), dt);
+    for(const event of events){
+      if(event.type==="shield-block") counts.shieldBlocks++;
+      if(event.type==="body-hit") counts.bodyHits++;
+      if(event.type==="objective-hit") counts.objectiveHits++;
+      if(event.type==="player-strike" && event.killed) counts.kills++;
+    }
+  }
+
+  return {
+    braced:allowBrace,
+    result:state.result,
+    time:Number(state.time.toFixed(3)),
+    hp:state.player.hp,
+    objectiveHp:state.objective.hp,
+    livingThreats:state.threats.filter(t=>t.hp>0).length,
+    ...counts,
+    player:{x:Number(state.player.x.toFixed(2)),y:Number(state.player.y.toFixed(2))},
+    finite:[state.player,...state.threats].every(a =>
+      [a.x,a.y,a.vx,a.vy,a.facing].every(Number.isFinite)
     )
   };
 }
