@@ -1,5 +1,6 @@
 import { normalize } from "./math.js";
 import { createO1State, stepO1State } from "./o1-sim.js";
+import { pressurePhysicalReach } from "./pressure.js";
 
 function nearestLiving(state) {
   let best = null;
@@ -228,12 +229,13 @@ export function runO1StakePolicy(allowBrace, {
   seconds = 18,
   dt = 1 / 120,
   movementBracedOverride,
-  playerAttackSpec
+  playerAttackSpec,
+  threatStarts
 } = {}) {
   const objective = { x:450, y:480, radius:14, hp:1 };
   const state = createO1State({
     playerStart:{ x:450, y:415, facing:-Math.PI/2 },
-    threatStarts:[
+    threatStarts:threatStarts ?? [
       { id:"north", x:315, y:175, facing:Math.PI/2 },
       { id:"east", x:805, y:355, facing:Math.PI }
     ],
@@ -361,7 +363,20 @@ export function runO1ForwardIntercept({
 }
 
 
-function aggressiveStakePolicy(state) {
+function pressureDiagnosticSnapshot(state) {
+  const living=state.threats.filter(t=>t.hp>0);
+  const committed=living.filter(t=>t.state==="windup" || t.state==="lunge").length;
+  const local=living.filter(t=>{
+    const playerDistance=Math.hypot(
+      t.x-state.player.x,
+      t.y-state.player.y
+    );
+    return playerDistance <= pressurePhysicalReach(t,state.player) + 10;
+  }).length;
+  return {committed,local};
+}
+
+function aggressiveStakePolicy(state, {attackEnabled=true} = {}) {
   const objective=state.objective;
   const threat=nearestToObjective(state);
   if(!objective || !threat){
@@ -384,18 +399,20 @@ function aggressiveStakePolicy(state) {
     aimX:threat.x,
     aimY:threat.y,
     brace:false,
-    attack:distance<82
+    attack:attackEnabled && distance<82
   };
 }
 
 export function runO1AggressiveStake({
   seconds=18,
   dt=1/120,
-  playerAttackSpec
+  playerAttackSpec,
+  threatStarts,
+  attackEnabled=true
 }={}){
   const state=createO1State({
     playerStart:{x:450,y:415,facing:-Math.PI/2},
-    threatStarts:[
+    threatStarts:threatStarts ?? [
       {id:"north",x:315,y:175,facing:Math.PI/2},
       {id:"east",x:805,y:355,facing:Math.PI}
     ],
@@ -403,19 +420,62 @@ export function runO1AggressiveStake({
     ...(playerAttackSpec ? { playerAttackSpec } : {})
   });
 
-  const counts={shieldBlocks:0,bodyHits:0,objectiveHits:0,kills:0};
+  const counts={
+    shieldBlocks:0,
+    bodyHits:0,
+    objectiveHits:0,
+    kills:0,
+    maxConcurrentCommitted:0,
+    framesConcurrent2Plus:0,
+    maxLocalThreats:0,
+    framesLocal2Plus:0,
+    firstCommitTime:null,
+    firstKillTime:null,
+    firstObjectiveHitTime:null
+  };
   const frames=Math.ceil(seconds/dt);
   for(let frame=0;frame<frames && state.result==="active";frame++){
-    const events=stepO1State(state,aggressiveStakePolicy(state),dt);
+    const events=stepO1State(
+      state,
+      aggressiveStakePolicy(state,{attackEnabled}),
+      dt
+    );
+
+    const pressure=pressureDiagnosticSnapshot(state);
+    counts.maxConcurrentCommitted=Math.max(
+      counts.maxConcurrentCommitted,
+      pressure.committed
+    );
+    counts.maxLocalThreats=Math.max(
+      counts.maxLocalThreats,
+      pressure.local
+    );
+    if(pressure.committed>=2) counts.framesConcurrent2Plus++;
+    if(pressure.local>=2) counts.framesLocal2Plus++;
+    if(pressure.committed>0 && counts.firstCommitTime===null) {
+      counts.firstCommitTime=Number(state.time.toFixed(3));
+    }
+
     for(const event of events){
       if(event.type==="shield-block") counts.shieldBlocks++;
       if(event.type==="body-hit") counts.bodyHits++;
-      if(event.type==="objective-hit") counts.objectiveHits++;
-      if(event.type==="player-strike" && event.killed) counts.kills++;
+      if(event.type==="objective-hit"){
+        counts.objectiveHits++;
+        if(counts.firstObjectiveHitTime===null) {
+          counts.firstObjectiveHitTime=Number(state.time.toFixed(3));
+        }
+      }
+      if(event.type==="player-strike" && event.killed){
+        counts.kills++;
+        if(counts.firstKillTime===null) {
+          counts.firstKillTime=Number(state.time.toFixed(3));
+        }
+      }
     }
   }
 
   return {
+    attackEnabled,
     result:state.result,
     time:Number(state.time.toFixed(3)),
     hp:state.player.hp,
