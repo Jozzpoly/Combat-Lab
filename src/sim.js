@@ -30,7 +30,8 @@ export function createA0State({
   world=ADVERSARIAL_YARD,
   playerStart={x:450,y:500,facing:-Math.PI/2},
   adversarySpec=BASE_ADVERSARY_SPEC,
-  adversaryStart={id:"adversary",x:450,y:150,facing:Math.PI/2}
+  adversaryStart={id:"adversary",x:450,y:150,facing:Math.PI/2},
+  adversaryEntries=null
 }={}){
   const player=createPlayerCombatState(
     createActor(
@@ -38,12 +39,19 @@ export function createA0State({
       {id:"player",kind:"player",...playerStart}
     )
   );
-  const adversary=createAdversary(adversarySpec,adversaryStart);
+  const adversaries=adversaryEntries
+    ? adversaryEntries.map(entry =>
+        createAdversary(
+          entry.spec ?? BASE_ADVERSARY_SPEC,
+          entry.start
+        )
+      )
+    : [createAdversary(adversarySpec,adversaryStart)];
 
   return {
     world,
     player,
-    adversaries:[adversary],
+    adversaries,
     time:0,
     result:"active",
     events:[]
@@ -101,7 +109,15 @@ export function stepA0(state,input,dt=1/120){
   }
   for(let i=0;i<living.length;i++){
     for(let j=i+1;j<living.length;j++){
-      resolveActorPair(living[i],living[j]);
+      const contact=resolveActorPair(living[i],living[j]);
+      if(contact){
+        events.push({
+          type:"adversary-body-contact",
+          a:living[i].id,
+          b:living[j].id,
+          depth:contact.depth
+        });
+      }
     }
   }
   resolveActorWorld(player,world);
