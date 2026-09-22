@@ -357,3 +357,70 @@ export function runO1ForwardIntercept({
     )
   };
 }
+
+
+function aggressiveStakePolicy(state) {
+  const objective=state.objective;
+  const threat=nearestToObjective(state);
+  if(!objective || !threat){
+    return {moveX:0,moveY:0,aimX:state.player.x,aimY:state.player.y};
+  }
+
+  const to=normalize(
+    threat.x-state.player.x,
+    threat.y-state.player.y,
+    0,-1
+  );
+  const distance=Math.hypot(
+    threat.x-state.player.x,
+    threat.y-state.player.y
+  );
+
+  return {
+    moveX:to.x*0.92,
+    moveY:to.y*0.92,
+    aimX:threat.x,
+    aimY:threat.y,
+    brace:false,
+    attack:distance<82
+  };
+}
+
+export function runO1AggressiveStake({
+  seconds=18,
+  dt=1/120
+}={}){
+  const state=createO1State({
+    playerStart:{x:450,y:415,facing:-Math.PI/2},
+    threatStarts:[
+      {id:"north",x:315,y:175,facing:Math.PI/2},
+      {id:"east",x:805,y:355,facing:Math.PI}
+    ],
+    objective:{x:450,y:480,radius:14,hp:1}
+  });
+
+  const counts={shieldBlocks:0,bodyHits:0,objectiveHits:0,kills:0};
+  const frames=Math.ceil(seconds/dt);
+  for(let frame=0;frame<frames && state.result==="active";frame++){
+    const events=stepO1State(state,aggressiveStakePolicy(state),dt);
+    for(const event of events){
+      if(event.type==="shield-block") counts.shieldBlocks++;
+      if(event.type==="body-hit") counts.bodyHits++;
+      if(event.type==="objective-hit") counts.objectiveHits++;
+      if(event.type==="player-strike" && event.killed) counts.kills++;
+    }
+  }
+
+  return {
+    result:state.result,
+    time:Number(state.time.toFixed(3)),
+    hp:state.player.hp,
+    objectiveHp:state.objective.hp,
+    livingThreats:state.threats.filter(t=>t.hp>0).length,
+    ...counts,
+    player:{x:Number(state.player.x.toFixed(2)),y:Number(state.player.y.toFixed(2))},
+    finite:[state.player,...state.threats].every(a =>
+      [a.x,a.y,a.vx,a.vy,a.facing].every(Number.isFinite)
+    )
+  };
+}
