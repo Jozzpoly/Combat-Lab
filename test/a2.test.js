@@ -98,6 +98,36 @@ test("A2 peer-collision ablation checks whether pair value actually uses body oc
   }
 });
 
+test("A2b material action authority is compared against player-only targeting",()=>{
+  const policies=[
+    "nearest-mash",
+    "orbit-nearest",
+    "focus-light",
+    "focus-heavy",
+    "pair-reader"
+  ];
+  const result={};
+
+  for(const policy of policies){
+    result[policy]={
+      playerOnly:runA2Policy(policy,{
+        adversaryActionsHitPeers:false
+      }),
+      allBodies:runA2Policy(policy,{
+        adversaryActionsHitPeers:true
+      })
+    };
+  }
+
+  console.log("A2B_MATERIAL_ACTION_ABLATION",JSON.stringify(result));
+
+  for(const pair of Object.values(result)){
+    assert.equal(pair.playerOnly.finite,true);
+    assert.equal(pair.allBodies.finite,true);
+    assert.equal(pair.playerOnly.friendlyHits,0);
+  }
+});
+
 test("A2 has no world obstacle available to manufacture pair value",()=>{
   const state=createA2PairState();
   assert.equal(state.world.walls.length,0);
