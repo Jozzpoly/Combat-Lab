@@ -159,6 +159,67 @@ Primary falsifiers:
 
 ---
 
+## 5.1 A1 v0 result — PARAMETER-ONLY ADVERSARY ANCHORS FAIL
+
+The first light/heavy anchors used the same realized attack mechanism and differed only through body and attack constants.
+
+After removing two apparatus confounders:
+
+- the initial Broken Yard direct route was blocked by the short wall;
+- the first phase-reader controller contained a fixed distance that accidentally matched the heavy trigger better than the light trigger;
+
+the anchors were rehearsed in a clean open field.
+
+Result:
+
+- chase + mash clears both;
+- retreat + strike clears both;
+- orbit + strike clears both;
+- stand + mash clears both;
+- phase-aware play clears both.
+
+There are timing / HP differences, but no robust motor-strategy divergence.
+
+Therefore:
+
+> **A1 v0 fails the adversary-identity discriminator. Different constants did not create different combat questions.**
+
+Do not rescue this by:
+
+- increasing HP;
+- increasing damage;
+- making one anchor arbitrarily faster/slower;
+- adding more enemies;
+- tuning policy thresholds until one matrix cell flips.
+
+### Correction
+
+Shared laws do **not** require every adversary to realize the same attack geometry.
+
+A stronger adversary-first hypothesis may share:
+
+- seek / prepare / commit / recover lifecycle;
+- body/world truth;
+- same-step consequence discipline;
+- common collision/contact rules;
+
+while allowing **equipment/action realization** to differ qualitatively.
+
+Next A1 attempt should compare at least:
+
+- a narrow dash-line commitment with real overshoot;
+- a broad slower sweep / space-denial commitment.
+
+This is not a hidden enemy-class branch if the behavior is selected by an explicit action/equipment model that any compatible body could use.
+
+The discriminator remains unchanged:
+
+> **does ordinary player strategy change because the opponent creates a different spatial problem?**
+
+Do not proceed to the pair organism until this survives.
+
+---
+
 ## 6. Pair phenomenon
 
 The first product-level reason to put both in one fight is not "more enemies".
