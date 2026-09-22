@@ -203,7 +203,7 @@ export function settlePressureAfterContact(threat, velocityScale = 0.32) {
   threat.attackResolved = true;
 }
 
-export function resolvePressureAgainstO1(player, threat) {
+export function resolvePressurePhysical(player, threat) {
   if (threat.hp <= 0) return null;
 
   const shield = resolveShieldContact(player, threat);
@@ -219,13 +219,11 @@ export function resolvePressureAgainstO1(player, threat) {
   if (!body) return null;
 
   if (threat.state === "lunge" && !threat.attackResolved) {
-    player.hp = Math.max(0, player.hp - O1_DAMAGE.pressureHit);
     settlePressureAfterContact(threat, 0.40);
     return {
-      type: "body-hit",
+      type: "body-hit-candidate",
       attacker: threat.id,
       damage: O1_DAMAGE.pressureHit,
-      hp: player.hp,
       x: (player.x + threat.x) * 0.5,
       y: (player.y + threat.y) * 0.5,
       ...body
@@ -233,6 +231,23 @@ export function resolvePressureAgainstO1(player, threat) {
   }
 
   return { type: "body-contact", ...body };
+}
+
+export function applyPressureHit(player, candidate) {
+  if (!candidate || candidate.type !== "body-hit-candidate") return null;
+  player.hp = Math.max(0, player.hp - candidate.damage);
+  return {
+    ...candidate,
+    type: "body-hit",
+    hp: player.hp
+  };
+}
+
+export function resolvePressureAgainstO1(player, threat) {
+  const event = resolvePressurePhysical(player, threat);
+  return event?.type === "body-hit-candidate"
+    ? applyPressureHit(player, event)
+    : event;
 }
 
 export function requestO1Attack(player) {
@@ -295,9 +310,8 @@ export function probeO1Strike(player, threat) {
   };
 }
 
-export function resolveO1Strike(player, threat) {
-  const hit = probeO1Strike(player, threat);
-  if (!hit) return null;
+export function applyO1Strike(player, threat, hit) {
+  if (!hit || hit.type !== "player-strike") return null;
 
   player.attack.hitIds.add(threat.id);
   threat.hp = Math.max(0, threat.hp - O1_ATTACK.damage);
@@ -313,6 +327,10 @@ export function resolveO1Strike(player, threat) {
     hp: threat.hp,
     killed: threat.hp <= 0
   };
+}
+
+export function resolveO1Strike(player, threat) {
+  return applyO1Strike(player, threat, probeO1Strike(player, threat));
 }
 
 export function resetThreatAttackAuthority(threat) {
