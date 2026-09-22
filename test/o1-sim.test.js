@@ -62,3 +62,35 @@ test("integrated O1 policies are finite diagnostic probes, not a score",()=>{
     matrix.mobileYield.playerStrikes>0
   );
 });
+
+
+test("O1 pressure-density red-team probes brace relevance without retuning mechanics",()=>{
+  const layouts={
+    standard2:undefined,
+    triAngle:[
+      {id:"north",x:315,y:175,facing:Math.PI/2},
+      {id:"east",x:805,y:355,facing:Math.PI},
+      {id:"west",x:95,y:390,facing:0}
+    ],
+    triNorth:[
+      {id:"north-west",x:250,y:175,facing:Math.PI/2},
+      {id:"north-mid",x:450,y:230,facing:Math.PI/2},
+      {id:"north-east",x:650,y:175,facing:Math.PI/2}
+    ]
+  };
+
+  const result={};
+  for(const [name,threatStarts] of Object.entries(layouts)){
+    result[name]={
+      braced:runO1Policy("active-guard",{threatStarts}),
+      unbraced:runO1Policy("active-unbraced",{threatStarts})
+    };
+  }
+
+  console.log("O1_BRACE_PRESSURE_REDTEAM",JSON.stringify(result));
+
+  for(const pair of Object.values(result)){
+    assert.equal(pair.braced.finite,true);
+    assert.equal(pair.unbraced.finite,true);
+  }
+});
