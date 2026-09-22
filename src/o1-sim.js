@@ -45,11 +45,13 @@ export function stepO1State(state, input, dt = 1 / 120) {
   const player = state.player;
   player.braced = Boolean(input.brace);
 
+  const movementBraced = input.movementBraced ?? player.braced;
+
   if (input.aimX !== undefined && input.aimY !== undefined) {
-    faceO1Player(player, input.aimX, input.aimY, dt);
+    faceO1Player(player, input.aimX, input.aimY, dt, movementBraced);
   }
 
-  driveO1Player(player, input.moveX || 0, input.moveY || 0, dt);
+  driveO1Player(player, input.moveX || 0, input.moveY || 0, dt, movementBraced);
   if (input.attack) requestO1Attack(player);
   stepActorWorld(player, BROKEN_YARD, dt);
 
