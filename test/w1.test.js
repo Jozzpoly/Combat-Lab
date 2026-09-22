@@ -16,7 +16,7 @@ test("broken yard exposes more than one broad traversable relation",()=>{
     {x:450,y:535},{x:300,y:420},{x:300,y:330},{x:410,y:240},{x:300,y:100}
   ];
   const right=[
-    {x:450,y:535},{x:560,y:450},{x:760,y:350},{x:700,y:320},{x:650,y:235},{x:600,y:100}
+    {x:450,y:535},{x:820,y:500},{x:840,y:330},{x:840,y:235},{x:650,y:235},{x:600,y:100}
   ];
   assert.equal(routePolylineClear(left),true);
   assert.equal(routePolylineClear(right),true);
@@ -62,6 +62,9 @@ test("neutral multi-body rehearsal stays finite and exercises pressure states",(
   assert.equal(result.finite,true);
   assert.ok(result.transitions>10);
   assert.ok(result.pairContacts>0);
+  assert.ok(result.playerContactEpisodes>1);
+  assert.ok(result.playerThreatContactFrames < 20 * 120 * 0.60);
+  assert.ok(result.maxPlayerContactStreak < 120 * 2.0);
   assert.ok(result.seenStates.includes("windup"));
   assert.ok(result.seenStates.includes("lunge"));
   assert.ok(result.seenStates.includes("recover"));
