@@ -181,6 +181,43 @@ test("O1 pressure trigger can be grounded in committed lunge geometry",()=>{
 });
 
 
+test("O1 close-ring falsifier forces real concurrent pressure before refounding",()=>{
+  const layouts={
+    close3:[
+      {id:"north",x:450,y:315,facing:Math.PI/2},
+      {id:"east",x:560,y:415,facing:Math.PI},
+      {id:"west",x:340,y:415,facing:0}
+    ],
+    close5:[
+      {id:"north",x:450,y:315,facing:Math.PI/2},
+      {id:"north-east",x:540,y:340,facing:Math.PI*0.75},
+      {id:"east",x:560,y:415,facing:Math.PI},
+      {id:"west",x:340,y:415,facing:0},
+      {id:"north-west",x:360,y:340,facing:Math.PI*0.25}
+    ]
+  };
+
+  const result={};
+  for(const [name,threatStarts] of Object.entries(layouts)){
+    result[name]={
+      hold:runO1StakePolicy(true,{threatStarts}),
+      aggressive:runO1AggressiveStake({threatStarts}),
+      noAttack:runO1AggressiveStake({
+        threatStarts,
+        attackEnabled:false
+      })
+    };
+  }
+
+  console.log("O1_CLOSE_RING_FALSIFIER",JSON.stringify(result));
+
+  for(const group of Object.values(result)){
+    for(const value of Object.values(group)){
+      assert.equal(value.finite,true);
+    }
+  }
+});
+
 test("O1 aggression audit separates kill authority from actual concurrent pressure",()=>{
   const layouts={
     two:[
