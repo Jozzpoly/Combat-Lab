@@ -1035,6 +1035,110 @@ No Owner play before K2 passes product-integrity review.
 
 ---
 
+## 6.2 O2 v0 verdict — WHOLE-ORGANISM FAIL, CAUSAL KERNEL DONOR RETAINED
+
+Final O2 red-team result falsifies the current REACH / THREAT organism before Owner play.
+
+### What the O2 kernel successfully demonstrated
+
+Retain as bounded donor evidence:
+
+- persistent spear geometry exists outside damage frames;
+- idle spear geometry has no passive damage authority;
+- thrust damage belongs to an outer tip region rather than the whole shaft;
+- one thrust action can be bounded to one solid damaging target;
+- wall geometry can truncate the useful spear relation;
+- close clearance can create zero-damage displacement;
+- locomotion remains live during thrust and clearance;
+- same-step committed hostile contact can survive player attack resolution;
+- clearance spam does not itself clear pressure and does not grant immunity.
+
+These are causal-kernel findings only.
+
+### K1 first result
+
+Against ordinary W1 pressure:
+
+- backward-kite: CLEAR, 100 HP;
+- mixed lane / clearance: CLEAR, 100 HP;
+- forward chase: DOWN;
+- clearance spam: DOWN;
+- passive: DOWN.
+
+At first this looked like a world-boundary exploit because backward-kite accumulated many boundary frames.
+
+A deeper open-space probe then exposed an apparatus mismatch:
+
+- player max speed: **235**;
+- inherited W1 pressure approach speed: **148**.
+
+With stock W1 pressure, pure retreat can simply disengage forever.
+
+### Pursuit-speed sweep
+
+The pressure envelope was swept without changing O2 weapon laws.
+
+At pressure speeds below / equal to player speed:
+
+- backward retreat simply cancels engagement;
+- no thrust is required;
+- no body hit occurs.
+
+Once pursuit becomes faster than the player:
+
+- **1.08x player speed:** backward-kite CLEAR, 100 HP;
+- **1.15x:** backward-kite CLEAR, 100 HP;
+- **1.25x:** backward-kite CLEAR, 100 HP.
+
+The faster direct pursuit becomes, the more reliably it feeds pressure bodies into the spear's long axis.
+
+At the same speeds:
+
+- mixed lane play can also clear, but often pays one or two body hits;
+- forward chase remains bad through most of the envelope, but at the highest pursuit speed even it begins to clear.
+
+Therefore there is no broad speed envelope in which ordinary direct pursuit makes backward-kite non-dominant while preserving the intended O2 distinction.
+
+### O2 conclusion
+
+> **O2 v0 fails its own pre-registered hard falsifier: pure backwards movement + thrust remains the safest / simplest winning strategy once engagement is forced.**
+
+Do not rescue O2 by:
+
+- enclosing the player in a smaller arena;
+- reducing backwards movement by arbitrary input penalty;
+- teaching AI a hidden spear threat radius;
+- making enemies politely sidestep the active tip;
+- increasing pursuit speed until a desired matrix appears;
+- adding stamina or retreat tax;
+- reducing thrust damage merely to prolong the same loop.
+
+The O2 weapon kernel remains useful donor material.
+
+The whole organism does not earn Owner attention.
+
+### Campaign-level finding
+
+O1 and O2 failed for different local reasons, but they share one methodological dependency:
+
+> both were asked to reveal rich combat against the same generic **cheap pressure** abstraction.
+
+This repeats a warning already present in the Feniks combat refoundation:
+
+- opponent pressure should stop being one generic duelist / generic pressure body;
+- the world should ask different questions through materially different participants;
+- opponent identity is part of the whole organism, not just interchangeable test force.
+
+Current cheap-pressure infrastructure is therefore reclassified as:
+
+> **useful mechanism / stress-test donor, not sufficient product-discovery opponent substrate.**
+
+Do not mechanically implement O3 against the same pressure cell.
+
+Before another Owner-facing candidate exists, the next lane must make the **adversary itself part of the combat hypothesis**.
+
+---
+
 # 7. Organism O3 — LINE / IMPULSE
 
 **Reserve candidate. Do not implement in the first pair unless O1/O2 fail to provide enough divergence or a later continuation explicitly promotes it.**
