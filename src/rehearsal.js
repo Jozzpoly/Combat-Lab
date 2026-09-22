@@ -27,13 +27,22 @@ export function runNeutralRehearsal({ seconds = 20, dt = 1 / 120 } = {}) {
   ];
   const waypoints = [
     { x: 300, y: 470 },
-    { x: 470, y: 350 },
-    { x: 405, y: 235 },
-    { x: 650, y: 190 },
-    { x: 690, y: 365 },
+    { x: 300, y: 330 },
+    { x: 410, y: 330 },
+    { x: 410, y: 240 },
+    { x: 380, y: 230 },
+    { x: 300, y: 160 },
+    { x: 380, y: 230 },
+    { x: 520, y: 230 },
+    { x: 650, y: 180 },
+    { x: 840, y: 235 },
+    { x: 840, y: 330 },
+    { x: 790, y: 360 },
+    { x: 820, y: 500 },
     { x: 450, y: 520 }
   ];
   let waypoint = 0;
+  let waypointAdvances = 0;
   let pairContacts = 0;
   let worldContacts = 0;
   let transitions = 0;
@@ -50,7 +59,10 @@ export function runNeutralRehearsal({ seconds = 20, dt = 1 / 120 } = {}) {
     const target = waypoints[waypoint];
     const dx = target.x - player.x;
     const dy = target.y - player.y;
-    if (Math.hypot(dx, dy) < 25) waypoint = (waypoint + 1) % waypoints.length;
+    if (Math.hypot(dx, dy) < 25) {
+      waypoint = (waypoint + 1) % waypoints.length;
+      waypointAdvances++;
+    }
     faceToward(player, target.x, target.y, dt);
     driveActor(player, dx, dy, dt);
     worldContacts += stepActorWorld(player, BROKEN_YARD, dt);
@@ -90,6 +102,7 @@ export function runNeutralRehearsal({ seconds = 20, dt = 1 / 120 } = {}) {
     pairContacts,
     worldContacts,
     transitions,
+    waypointAdvances,
     playerThreatContactFrames,
     threatThreatContactFrames,
     playerContactEpisodes,
