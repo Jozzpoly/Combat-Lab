@@ -12,6 +12,7 @@ import {
   stepO1Attack
 } from "../src/o1.js";
 import { runO1AggressiveStake, runO1ForwardIntercept, runO1LineHold, runO1Policy, runO1StakePolicy } from "../src/o1-rehearsal.js";
+import { playerInterposesObjective } from "../src/o1-sim.js";
 
 test("same-step committed strike and side hit both survive application order",()=>{
   const player=createO1Player({x:300,y:300,facing:-Math.PI/2});
@@ -149,4 +150,20 @@ test("aggressive click-forward policy red-teams whether stance has any reason to
   console.log("O1_AGGRESSION_REDTEAM",JSON.stringify(result));
   assert.equal(result.hold.finite,true);
   assert.equal(result.aggressive.finite,true);
+});
+
+
+test("stake pressure targets the player only when they materially interpose",()=>{
+  const player=createO1Player({x:450,y:420,facing:-Math.PI/2});
+  const threat=createO1Threat("t",{x:450,y:340,facing:Math.PI/2});
+  const objective={x:450,y:500,radius:14,hp:1};
+
+  assert.equal(playerInterposesObjective(threat,player,objective),true);
+
+  player.x=560;
+  assert.equal(playerInterposesObjective(threat,player,objective),false);
+
+  player.x=450;
+  player.y=320;
+  assert.equal(playerInterposesObjective(threat,player,objective),false);
 });
