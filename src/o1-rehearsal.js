@@ -33,7 +33,10 @@ function activeGuardPolicy(state, allowBrace = true) {
     aimX: threat.x,
     aimY: threat.y,
     brace,
-    attack
+    attack,
+    ...(movementBracedOverride === undefined
+      ? {}
+      : { movementBraced: movementBracedOverride })
   };
 }
 
@@ -172,7 +175,11 @@ function nearestToObjective(state) {
   return best;
 }
 
-function stakeInterceptPolicy(state, { allowBrace, interceptRadius }) {
+function stakeInterceptPolicy(state, {
+  allowBrace,
+  interceptRadius,
+  movementBracedOverride
+}) {
   const objective = state.objective;
   const threat = nearestToObjective(state);
   if (!objective || !threat) {
@@ -213,13 +220,17 @@ function stakeInterceptPolicy(state, { allowBrace, interceptRadius }) {
     aimX: threat.x,
     aimY: threat.y,
     brace,
-    attack
+    attack,
+    ...(movementBracedOverride === undefined
+      ? {}
+      : { movementBraced: movementBracedOverride })
   };
 }
 
 export function runO1StakePolicy(allowBrace, {
   seconds = 18,
-  dt = 1 / 120
+  dt = 1 / 120,
+  movementBracedOverride
 } = {}) {
   const objective = { x:450, y:480, radius:14, hp:1 };
   const state = createO1State({
@@ -236,7 +247,8 @@ export function runO1StakePolicy(allowBrace, {
   for(let frame=0;frame<frames && state.result==="active";frame++){
     const events = stepO1State(state, stakeInterceptPolicy(state, {
       allowBrace,
-      interceptRadius:64
+      interceptRadius:64,
+      movementBracedOverride
     }), dt);
     for(const event of events){
       if(event.type==="shield-block") counts.shieldBlocks++;
