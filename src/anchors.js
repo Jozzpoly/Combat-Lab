@@ -9,15 +9,18 @@ export const LIGHT_STRIKER_SPEC=Object.freeze({
     hp:100
   }),
   attack:Object.freeze({
-    triggerRange:80,
+    model:"dash-line",
+    triggerRange:82,
     prepareHalfAngle:0.62,
     windup:0.15,
-    commitDuration:0.16,
-    commitSpeed:335,
-    reach:18,
-    halfWidth:9,
+    commitDuration:0.18,
+    commitSpeed:345,
+    reach:20,
+    halfWidth:8,
+    sweepArc:0,
     damage:34,
-    recover:0.72
+    recover:0.76,
+    recoveryVelocityScale:0.72
   })
 });
 
@@ -32,15 +35,18 @@ export const HEAVY_CRUSHER_SPEC=Object.freeze({
     hp:100
   }),
   attack:Object.freeze({
-    triggerRange:112,
-    prepareHalfAngle:0.82,
-    windup:0.38,
-    commitDuration:0.24,
-    commitSpeed:225,
-    reach:38,
-    halfWidth:26,
+    model:"sweep-arc",
+    triggerRange:118,
+    prepareHalfAngle:0.92,
+    windup:0.42,
+    commitDuration:0.46,
+    commitSpeed:72,
+    reach:78,
+    halfWidth:11,
+    sweepArc:2.35,
     damage:50,
-    recover:0.88
+    recover:0.94,
+    recoveryVelocityScale:0.12
   })
 });
 
