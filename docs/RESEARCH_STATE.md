@@ -1,12 +1,184 @@
 # Combat Lab — Research State
 
 **Authority:** current `main` research truth  
-**Status:** 2026-09-21  
+**Status:** 2026-09-22  
 **Purpose:** discover a combat language that may later inform **Feniks**. This repository is a laboratory, not the Feniks combat implementation.
 
 ## Current truth
 
 There is **no accepted Feniks combat model** in this repository.
+
+## Whole Combat Organisms v0 — W1 checkpoint
+
+Active branch:
+
+- `experiment/whole-combat-organisms-v0`
+
+Neutral situation substrate:
+
+- exact agent-rehearsal deployment: `ba408d52549175b06d10d5387eb7f331717cc630`;
+- branch checkpoint after evidence capture: `0b064d5d7d18be48fe2b264d46d11e6df0a745ec`;
+- 6 / 6 deterministic W1 checks PASS;
+- Pages build checked out the exact rehearsal SHA and deploy completed successfully;
+- Opera executed the real browser module/runtime loop and exposed changing pressure states.
+
+What W1 is:
+
+> a neutral Broken Yard situation substrate with one responsive player body, two cheap pressure bodies, real body/world occupancy and readable state-machine commitment/recovery — intentionally without player attack or HP authority.
+
+What W1 is not:
+
+- combat evidence;
+- Owner evidence;
+- proof that Broken Yard is visually legible or fun;
+- proof that multi-pressure is the right Feniks encounter structure.
+
+Important negative/apparatus evidence was retained instead of hidden:
+
+- initial route probes crossed world geometry;
+- the first deterministic path itself crossed a wall;
+- pressure initially face-hugged the player for excessive contact time;
+- after disengage, pressure bodies themselves formed a persistent blob;
+- the peer-separation edit briefly introduced a code-level ReferenceError;
+- each issue was corrected without lowering the pre-existing gate.
+
+Final deterministic 20 s signature at `6257789d...`:
+
+- `waypointAdvances = 33`;
+- `playerThreatContactFrames = 317 / 2400`;
+- `playerContactEpisodes = 8`;
+- `maxPlayerContactStreak = 115` (~0.96 s);
+- `threatThreatContactFrames = 539 / 2400`;
+- `pairContacts = 595`;
+- `worldContacts = 499`;
+- all pressure phases observed;
+- finite state throughout.
+
+Evidence boundary:
+
+- mechanism / deterministic rehearsal: **PASS**;
+- exact deploy provenance: **PASS**;
+- browser module/runtime execution: **PASS**;
+- canvas visual legibility: **UNPROVEN** because the screenshot connector did not provide an inspectable visual surface in this run;
+- Owner eligibility: **NO**.
+
+W1 served its purpose and W2/O1 has now been fully red-teamed.
+
+## W2 — O1 HOLD / BREAK — WHOLE-ORGANISM FAIL, MECHANISM DONOR RETAINED
+
+Final O1 v0 research checkpoint:
+
+- active branch checkpoint: `227e7003ce75db62c170a69c81097ae4673ddd28`;
+- final existing-law diagnostic suite before verdict: **35 / 35 PASS** at `c69d609408ccfc7527472b9afe5bad4b75658134`;
+- Owner play: **NOT REQUESTED**.
+
+What survived as mechanism evidence:
+
+- continuously present directional shield geometry;
+- frontal shield contact can consume a lunge's damage path without binary parry cancellation;
+- both bodies remain physically displaced by shield contact;
+- brace can alter frontal yield without global infinite mass;
+- side/rear commitment bypasses frontal shield relation;
+- readable windup can be escaped by leaving actual threat geometry;
+- late sidestep does not create magic evasion;
+- same-step committed consequences can resolve without execution-order authority;
+- true multi-angle concurrency changes the pressure problem;
+- finite solid-target budgets expose and remove accidental compact cleave.
+
+Why the whole organism failed:
+
+- under serial pressure, brace was behaviorally irrelevant;
+- aggressive click-forward dominated deliberate hold;
+- attack reach / timing / lethality changes, including combined changes, did not fix the structural dominance;
+- weak serial pressure could be neutralized by mobile shield orientation even with player attacks disabled;
+- close-five concurrency finally created defensive value, but the promising stance result depended on compact multi-target cleave;
+- removing cleave caused the stance result to collapse;
+- adaptive brace timing did not rescue it;
+- proactive braced shield-drive did **not** produce BREAK — it died faster than unbraced movement under the same close-five pressure.
+
+Final shield-drive falsifier:
+
+- braced drive: DOWN in 1.583 s;
+- unbraced drive: DOWN in 2.758 s;
+- attack-disabled chase: DOWN in 2.758 s.
+
+Therefore:
+
+> **O1 v0 did not produce a robust HOLD / BREAK whole combat organism.**
+
+Do not revive it through brace buffs, stamina, guard-break, shield-bash rescue buttons, arbitrary enemy HP, or reinstating cleave.
+
+O1 remains a useful donor package. A future Feniks combat may still contain shield / stance / physical tanking behavior; this verdict is specific to the tested organism.
+
+### W3 — O2 REACH / THREAT — WHOLE-ORGANISM FAIL, KERNEL DONOR RETAINED
+
+Preserved campaign checkpoint:
+
+- branch checkpoint: `375974c3403387b3ebf4ca8c6c68355cbc6618a2`;
+- Owner play: **NOT REQUESTED**.
+
+O2 causal-kernel evidence remains useful:
+
+- persistent spear geometry without passive damage;
+- outer-tip thrust authority rather than whole-shaft damage;
+- one solid damaging target per thrust;
+- wall truncation / clearance consequence;
+- zero-damage close clearance displacement;
+- live locomotion;
+- same-step committed consequence discipline.
+
+The whole organism failed its pre-registered backward-kite falsifier.
+
+The key pressure-speed sweep showed two regimes:
+
+1. when direct pursuit is slower than / equal to player movement, retreat simply cancels engagement;
+2. once pursuit becomes faster, direct chase feeds bodies into the spear axis and backward + thrust clears safely at 100 HP across multiple faster pursuit speeds.
+
+Representative deep-open results:
+
+- pressure 1.08x player speed: backward-kite CLEAR, 100 HP;
+- pressure 1.15x: backward-kite CLEAR, 100 HP;
+- pressure 1.25x: backward-kite CLEAR, 100 HP.
+
+This was achieved without world-boundary dependence.
+
+Therefore:
+
+> **O2 v0 does not create robust REACH / THREAT play; its simplest winning strategy remains backwards movement + thrust.**
+
+Do not rescue it with hidden spear-aware AI, arbitrary backwards penalties, tighter arena boundaries, stamina taxes or pursuit-speed tuning.
+
+### Campaign-level correction — GENERIC CHEAP PRESSURE IS NOT A DISCOVERY OPPONENT
+
+O1 and O2 failed for different local reasons, but both depended on the same generic W1 cheap-pressure abstraction.
+
+That abstraction is now reclassified as:
+
+> **useful mechanism / stress-test infrastructure, not sufficient opponent substrate for product-level combat discovery.**
+
+This corrects a regression against the Feniks combat refoundation, which had already warned that opponent pressure should stop being one generic duelist / pressure body.
+
+The next discovery lane must treat **adversary identity as part of the whole organism**.
+
+Do not mechanically implement O3 against the same pressure cell.
+
+### Active frontier — ADVERSARIAL COMBAT ORGANISM v1
+
+The next question is:
+
+> **Can a small fight become worth reading and mastering when the opponent is itself a materially distinct combat body with understandable intent, limitations and spatial consequences — rather than a generic pursuit force?**
+
+The next lane should use one or two deliberately distinct adversaries only if they create qualitatively different decisions.
+
+Candidate first pressure mix from the existing Feniks refoundation:
+
+- one light / fast pressure body;
+- one heavier space-holding body.
+
+These are not classes and must not become hidden role flags.
+
+The immediate work is **hypothesis design + clean experimental lane**, not O3 implementation and not Owner deployment.
+
 
 ## Recovery correction — 2026-09-22
 

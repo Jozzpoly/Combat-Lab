@@ -1,6 +1,0 @@
-{
-  "name":"combat-lab-whole-organisms-v0",
-  "private":true,
-  "type":"module",
-  "scripts":{"test":"node --check app.js && node --test"}
-}
