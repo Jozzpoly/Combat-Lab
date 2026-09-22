@@ -707,6 +707,7 @@ export function runO1AggressiveStake({
     hp:state.player.hp,
     objectiveHp:state.objective.hp,
     livingThreats:state.threats.filter(t=>t.hp>0).length,
+    attackActions:state.player.attack.serial,
     ...counts,
     player:{x:Number(state.player.x.toFixed(2)),y:Number(state.player.y.toFixed(2))},
     finite:[state.player,...state.threats].every(a =>
