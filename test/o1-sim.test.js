@@ -44,6 +44,7 @@ test("same-step committed strike and side hit both survive application order",()
 test("integrated O1 policies are finite diagnostic probes, not a score",()=>{
   const matrix={
     activeGuard:runO1Policy("active-guard"),
+    activeUnbraced:runO1Policy("active-unbraced"),
     mobileYield:runO1Policy("mobile-yield"),
     staticBrace:runO1Policy("static-brace")
   };
