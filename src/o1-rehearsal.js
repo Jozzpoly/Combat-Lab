@@ -33,10 +33,7 @@ function activeGuardPolicy(state, allowBrace = true) {
     aimX: threat.x,
     aimY: threat.y,
     brace,
-    attack,
-    ...(movementBracedOverride === undefined
-      ? {}
-      : { movementBraced: movementBracedOverride })
+    attack
   };
 }
 
