@@ -27,10 +27,14 @@ export const O1_ENCOUNTER_START = Object.freeze({
 export function createO1State({
   playerStart = O1_ENCOUNTER_START.player,
   threatStarts = O1_ENCOUNTER_START.threats,
-  objective = null
+  objective = null,
+  playerAttackSpec
 } = {}) {
   return {
-    player: createO1Player(playerStart),
+    player: createO1Player({
+      ...playerStart,
+      ...(playerAttackSpec ? { attackSpec: playerAttackSpec } : {})
+    }),
     threats: threatStarts.map(t => createO1Threat(t.id, t)),
     objective: objective ? { ...objective } : null,
     events: [],
