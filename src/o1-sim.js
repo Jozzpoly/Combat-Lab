@@ -168,7 +168,25 @@ export function stepO1State(state, input, dt = 1 / 120) {
 
   // Apply already-measured committed consequences. Order no longer decides whether
   // the other side's already-committed event disappears.
-  for (const { threat, candidate } of strikeCandidates) {
+  //
+  // Some diagnostic compact actions have a finite solid-contact budget. When that
+  // budget is finite, the nearest valid body consumes the remaining authority
+  // before farther bodies can be hit by the same action.
+  let applicableStrikeCandidates = strikeCandidates;
+  const targetBudget = player.attackSpec.maxTargetsPerAction ?? Infinity;
+  if (Number.isFinite(targetBudget)) {
+    const remaining = Math.max(0, targetBudget - player.attack.hitIds.size);
+    applicableStrikeCandidates = [...strikeCandidates]
+      .sort((a, b) => {
+        const da = (a.threat.x - player.x) ** 2 + (a.threat.y - player.y) ** 2;
+        const db = (b.threat.x - player.x) ** 2 + (b.threat.y - player.y) ** 2;
+        if (Math.abs(da - db) > 1e-9) return da - db;
+        return a.threat.id.localeCompare(b.threat.id);
+      })
+      .slice(0, remaining);
+  }
+
+  for (const { threat, candidate } of applicableStrikeCandidates) {
     const event = applyO1Strike(player, threat, candidate);
     if (event) frameEvents.push(event);
   }
