@@ -1,8 +1,10 @@
 # Phenotype Combat Ecology v0 — first falsifier campaign
 
 **Date:** 2026-09-21  
-**Status:** active design / implementation authority  
+**Status:** RETIRED AS PRODUCT DIRECTION — preserved mechanism donor / historical falsifier  
 **Branch:** `experiment/phenotype-combat-ecology-v0`
+
+> **Recovery correction — 2026-09-22:** full project-history recovery demoted this campaign from active product direction. P0/P1 remains useful evidence for body/equipment/contact mechanisms, but its authored route/policy strategy crossover is not strong enough to justify progression toward Owner eligibility. The active lane is now `experiment/whole-combat-organisms-v0`. Do not continue tuning this branch as the next combat organism.
 
 ## 0. Campaign purpose
 
