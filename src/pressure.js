@@ -12,6 +12,15 @@ export const PRESSURE_TIMING = Object.freeze({
   lungeSpeed: 290
 });
 
+export function pressurePhysicalReach(actor, target) {
+  const targetRadius = target?.spec?.radius ?? target?.radius ?? 0;
+  return (
+    PRESSURE_TIMING.lungeSpeed * PRESSURE_TIMING.lunge +
+    actor.spec.radius +
+    targetRadius
+  );
+}
+
 function steerAngle(actor, base, world) {
   for (const offset of OFFSETS) {
     const angle = base + offset;
@@ -66,7 +75,9 @@ function enter(actor, state, time) {
   actor.stateTime = time;
 }
 
-export function updatePressure(actor, player, world, dt, peers = []) {
+export function updatePressure(actor, player, world, dt, peers = [], {
+  triggerDistance = PRESSURE_TIMING.triggerDistance
+} = {}) {
   const events = [];
   faceToward(actor, player.x, player.y, dt);
   const distance = Math.hypot(player.x - actor.x, player.y - actor.y);
@@ -74,7 +85,7 @@ export function updatePressure(actor, player, world, dt, peers = []) {
   if (actor.state === "approach") {
     const steer = applyPeerSeparation(actor, steerToward(actor, player, world), peers);
     driveActor(actor, steer.x, steer.y, dt);
-    if (distance <= PRESSURE_TIMING.triggerDistance) {
+    if (distance <= triggerDistance) {
       enter(actor, "windup", PRESSURE_TIMING.windup);
       actor.vx *= 0.35;
       actor.vy *= 0.35;
