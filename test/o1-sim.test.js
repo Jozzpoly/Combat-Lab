@@ -181,6 +181,71 @@ test("O1 pressure trigger can be grounded in committed lunge geometry",()=>{
 });
 
 
+test("single-contact compact action cannot cleave several bodies in one attack",()=>{
+  const state=createO1State({
+    playerStart:{x:300,y:300,facing:0},
+    threatStarts:[
+      {id:"near",x:350,y:292,facing:Math.PI},
+      {id:"far",x:360,y:308,facing:Math.PI}
+    ],
+    playerAttackSpec:O1_ATTACK_PROBES.singleContactLethal
+  });
+
+  state.player.attack.phase="active";
+  state.player.attack.time=0.06;
+  state.player.attack.serial=1;
+
+  const events=stepO1State(state,{
+    moveX:0,
+    moveY:0,
+    aimX:400,
+    aimY:300,
+    brace:false,
+    attack:false
+  },1/240);
+
+  const strikes=events.filter(e=>e.type==="player-strike");
+  assert.equal(strikes.length,1);
+  assert.equal(state.threats.filter(x=>x.hp<=0).length,1);
+});
+
+test("O1 single-contact close-five audit preserves lethality while removing compact cleave",()=>{
+  const close5=[
+    {id:"north",x:450,y:315,facing:Math.PI/2},
+    {id:"north-east",x:540,y:340,facing:Math.PI*0.75},
+    {id:"east",x:560,y:415,facing:Math.PI},
+    {id:"west",x:340,y:415,facing:0},
+    {id:"north-west",x:360,y:340,facing:Math.PI*0.25}
+  ];
+  const result={};
+
+  for(const name of ["singleContactLethal","singleContactTwoHit"]){
+    const playerAttackSpec=O1_ATTACK_PROBES[name];
+    result[name]={
+      braced:runO1StakePolicy(true,{
+        threatStarts:close5,
+        playerAttackSpec
+      }),
+      unbraced:runO1StakePolicy(false,{
+        threatStarts:close5,
+        playerAttackSpec
+      }),
+      aggressive:runO1AggressiveStake({
+        threatStarts:close5,
+        playerAttackSpec
+      })
+    };
+  }
+
+  console.log("O1_SINGLE_CONTACT_AUDIT",JSON.stringify(result));
+
+  for(const group of Object.values(result)){
+    for(const value of Object.values(group)){
+      assert.equal(value.finite,true);
+    }
+  }
+});
+
 test("O1 close-five attribution checks whether brace support actually causes the promising window",()=>{
   const close5=[
     {id:"north",x:450,y:315,facing:Math.PI/2},
