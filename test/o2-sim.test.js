@@ -16,6 +16,7 @@ test("O2 same-step committed body hit survives lethal thrust",()=>{
   // Put the side threat into a committed contact and make thrust immediately active.
   const side=state.threats.find(t=>t.id==="side");
   side.state="lunge";
+  side.stateTime=0.10;
   side.vx=-290;
   side.attackResolved=false;
 
