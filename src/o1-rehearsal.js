@@ -173,6 +173,64 @@ function nearestToObjective(state) {
   return best;
 }
 
+function adaptiveStakePolicy(state, {
+  interceptRadius=64
+} = {}) {
+  const objective=state.objective;
+  const threat=nearestToObjective(state);
+  if(!objective || !threat){
+    return {moveX:0,moveY:0,aimX:state.player.x,aimY:state.player.y,brace:false};
+  }
+
+  const fromObjective=normalize(
+    threat.x-objective.x,
+    threat.y-objective.y,
+    0,-1
+  );
+  const intercept={
+    x:objective.x+fromObjective.x*interceptRadius,
+    y:objective.y+fromObjective.y*interceptRadius
+  };
+  const toIntercept=normalize(
+    intercept.x-state.player.x,
+    intercept.y-state.player.y,
+    0,0
+  );
+  const playerThreatDistance=Math.hypot(
+    threat.x-state.player.x,
+    threat.y-state.player.y
+  );
+  const interceptDistance=Math.hypot(
+    intercept.x-state.player.x,
+    intercept.y-state.player.y
+  );
+  const committed=threat.state==="windup" || threat.state==="lunge";
+
+  // Brace is a response to actual commitment. Approach/recovery are movement
+  // windows: release support, regain locomotion and reposition.
+  const brace=
+    committed &&
+    playerThreatDistance<104 &&
+    interceptDistance<46;
+
+  const attack=
+    threat.state==="recover" &&
+    playerThreatDistance<86;
+
+  const moveStrength=brace
+    ? (interceptDistance>16 ? 0.12 : 0)
+    : (interceptDistance>18 ? 0.72 : 0.08);
+
+  return {
+    moveX:toIntercept.x*moveStrength,
+    moveY:toIntercept.y*moveStrength,
+    aimX:threat.x,
+    aimY:threat.y,
+    brace,
+    attack
+  };
+}
+
 function stakeInterceptPolicy(state, {
   allowBrace,
   interceptRadius,
@@ -261,6 +319,64 @@ export function runO1StakePolicy(allowBrace, {
 
   return {
     braced:allowBrace,
+    result:state.result,
+    time:Number(state.time.toFixed(3)),
+    hp:state.player.hp,
+    objectiveHp:state.objective.hp,
+    livingThreats:state.threats.filter(t=>t.hp>0).length,
+    attackActions:state.player.attack.serial,
+    ...counts,
+    player:{x:Number(state.player.x.toFixed(2)),y:Number(state.player.y.toFixed(2))},
+    finite:[state.player,...state.threats].every(a =>
+      [a.x,a.y,a.vx,a.vy,a.facing].every(Number.isFinite)
+    )
+  };
+}
+
+
+export function runO1AdaptiveStake({
+  seconds=18,
+  dt=1/120,
+  playerAttackSpec,
+  threatStarts
+}={}) {
+  const state=createO1State({
+    playerStart:{x:450,y:415,facing:-Math.PI/2},
+    threatStarts:threatStarts ?? [
+      {id:"north",x:315,y:175,facing:Math.PI/2},
+      {id:"east",x:805,y:355,facing:Math.PI}
+    ],
+    objective:{x:450,y:480,radius:14,hp:1},
+    ...(playerAttackSpec ? {playerAttackSpec} : {})
+  });
+
+  const counts={
+    shieldBlocks:0,
+    shieldContacts:0,
+    bodyHits:0,
+    objectiveHits:0,
+    kills:0,
+    bracedFrames:0,
+    freeFrames:0
+  };
+
+  const frames=Math.ceil(seconds/dt);
+  for(let frame=0;frame<frames && state.result==="active";frame++){
+    const input=adaptiveStakePolicy(state);
+    if(input.brace) counts.bracedFrames++;
+    else counts.freeFrames++;
+
+    const events=stepO1State(state,input,dt);
+    for(const event of events){
+      if(event.type==="shield-block") counts.shieldBlocks++;
+      if(event.type==="shield-contact") counts.shieldContacts++;
+      if(event.type==="body-hit") counts.bodyHits++;
+      if(event.type==="objective-hit") counts.objectiveHits++;
+      if(event.type==="player-strike" && event.killed) counts.kills++;
+    }
+  }
+
+  return {
     result:state.result,
     time:Number(state.time.toFixed(3)),
     hp:state.player.hp,
