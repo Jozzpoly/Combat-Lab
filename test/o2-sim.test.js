@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import { createO2State, stepO2State } from "../src/o2-sim.js";
+import { O2_PLAYER_SPEC, O2_PRESSURE_SPEC } from "../src/o2.js";
 import { runO2Policy } from "../src/o2-rehearsal.js";
 
 test("O2 same-step committed body hit survives lethal thrust",()=>{
@@ -39,7 +40,7 @@ test("O2 same-step committed body hit survives lethal thrust",()=>{
   assert.ok(state.player.hp<state.player.maxHp);
 });
 
-test("O2 deep-open falsifier removes practical boundary support from backwards kiting",()=>{
+test("O2 deep-open stock W1 pressure reveals locomotion disengagement precondition failure",()=>{
   const deepWorld={
     width:5000,
     height:5000,
@@ -58,30 +59,90 @@ test("O2 deep-open falsifier removes practical boundary support from backwards k
     {id:"east",x:2820,y:2520,facing:Math.PI}
   ];
 
-  const result={
-    backward:runO2Policy("backward-kite",{
-      world:deepWorld,
-      playerStart,
-      threatStarts
-    }),
-    mixed:runO2Policy("mixed-lane",{
-      world:deepWorld,
-      playerStart,
-      threatStarts
-    }),
-    chase:runO2Policy("forward-chase",{
-      world:deepWorld,
-      playerStart,
-      threatStarts
-    })
+  const backward=runO2Policy("backward-kite",{
+    seconds:6,
+    world:deepWorld,
+    playerStart,
+    threatStarts
+  });
+
+  console.log("O2_DEEP_OPEN_STOCK_PRESSURE",JSON.stringify(backward));
+
+  assert.equal(backward.finite,true);
+  assert.equal(backward.boundaryFrames,0);
+  assert.equal(backward.hp,100);
+  assert.equal(backward.bodyHits,0);
+  assert.equal(backward.actionSerial,0);
+  assert.equal(backward.result,"active");
+});
+
+test("O2 pursuit-speed envelope asks when K1 begins testing combat instead of escape",()=>{
+  const deepWorld={
+    width:8000,
+    height:8000,
+    inset:28,
+    walls:[]
   };
+  const playerStart={
+    x:4000,
+    y:4200,
+    facing:-Math.PI/2
+  };
+  const threatStarts=[
+    {id:"north",x:4000,y:3850,facing:Math.PI/2},
+    {id:"north-east",x:4180,y:3920,facing:Math.PI*0.75},
+    {id:"north-west",x:3820,y:3920,facing:Math.PI*0.25},
+    {id:"east",x:4320,y:4120,facing:Math.PI}
+  ];
 
-  console.log("O2_DEEP_OPEN_KITE",JSON.stringify(result));
+  const ratios=[0.80,1.00,1.08,1.15,1.25];
+  const result={};
 
-  for(const value of Object.values(result)){
-    assert.equal(value.finite,true);
+  for(const ratio of ratios){
+    const maxSpeed=O2_PLAYER_SPEC.maxSpeed*ratio;
+    const threatSpec={
+      ...O2_PRESSURE_SPEC,
+      maxSpeed,
+      acceleration:Math.max(
+        O2_PRESSURE_SPEC.acceleration,
+        maxSpeed*8
+      )
+    };
+    const key="x"+ratio.toFixed(2);
+    result[key]={
+      speed:Number(maxSpeed.toFixed(1)),
+      backward:runO2Policy("backward-kite",{
+        seconds:12,
+        world:deepWorld,
+        playerStart,
+        threatStarts,
+        threatSpec
+      }),
+      mixed:runO2Policy("mixed-lane",{
+        seconds:12,
+        world:deepWorld,
+        playerStart,
+        threatStarts,
+        threatSpec
+      }),
+      chase:runO2Policy("forward-chase",{
+        seconds:12,
+        world:deepWorld,
+        playerStart,
+        threatStarts,
+        threatSpec
+      })
+    };
   }
-  assert.equal(result.backward.boundaryFrames,0);
+
+  console.log("O2_PURSUIT_SPEED_SWEEP",JSON.stringify(result));
+
+  for(const group of Object.values(result)){
+    for(const value of [group.backward,group.mixed,group.chase]){
+      assert.equal(value.finite,true);
+      assert.equal(value.boundaryFrames,0);
+    }
+  }
 });
 
 test("O2 backward-kite attribution separates boundary funnel from reach structure",()=>{
