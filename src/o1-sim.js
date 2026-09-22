@@ -1,5 +1,5 @@
 import { BROKEN_YARD } from "./yard.js";
-import { updatePressure } from "./pressure.js";
+import { pressurePhysicalReach, updatePressure } from "./pressure.js";
 import { resolveActorPair, resolveActorWorld, stepActorWorld } from "./world.js";
 import {
   applyO1Strike,
@@ -70,6 +70,16 @@ function pressureTargetFor(state, threat) {
   const objective = state.objective;
   if (!objective || objective.hp <= 0) return state.player;
 
+  const playerDistance = Math.hypot(
+    state.player.x - threat.x,
+    state.player.y - threat.y
+  );
+  const localReach = pressurePhysicalReach(threat, state.player);
+
+  // Primary intent remains the stake. A nearby armed body is only a temporary
+  // local concern: no persistent target ownership or taunt state is created.
+  if (playerDistance <= localReach + 10) return state.player;
+
   return playerInterposesObjective(threat, state.player, objective)
     ? state.player
     : objective;
@@ -101,7 +111,8 @@ export function stepO1State(state, input, dt = 1 / 120) {
       pressureTarget,
       BROKEN_YARD,
       dt,
-      state.threats
+      state.threats,
+      { triggerDistance: pressurePhysicalReach(threat, pressureTarget) }
     ));
   }
 
