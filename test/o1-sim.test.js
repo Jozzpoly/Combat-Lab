@@ -12,7 +12,7 @@ import {
   stepO1Attack,
   O1_ATTACK_PROBES
 } from "../src/o1.js";
-import { runO1AggressiveStake, runO1ForwardIntercept, runO1LineHold, runO1Policy, runO1StakePolicy } from "../src/o1-rehearsal.js";
+import { runO1AdaptiveStake, runO1AggressiveStake, runO1ForwardIntercept, runO1LineHold, runO1Policy, runO1StakePolicy } from "../src/o1-rehearsal.js";
 import { createO1State, playerInterposesObjective, stepO1State } from "../src/o1-sim.js";
 import { pressurePhysicalReach } from "../src/pressure.js";
 
@@ -207,6 +207,47 @@ test("single-contact compact action cannot cleave several bodies in one attack",
   const strikes=events.filter(e=>e.type==="player-strike");
   assert.equal(strikes.length,1);
   assert.equal(state.threats.filter(x=>x.hp<=0).length,1);
+});
+
+test("O1 adaptive brace falsifier checks whether sticky stance is a controller artifact",()=>{
+  const close5=[
+    {id:"north",x:450,y:315,facing:Math.PI/2},
+    {id:"north-east",x:540,y:340,facing:Math.PI*0.75},
+    {id:"east",x:560,y:415,facing:Math.PI},
+    {id:"west",x:340,y:415,facing:0},
+    {id:"north-west",x:360,y:340,facing:Math.PI*0.25}
+  ];
+
+  const result={};
+  for(const name of ["singleContactLethal","singleContactTwoHit"]){
+    const playerAttackSpec=O1_ATTACK_PROBES[name];
+    result[name]={
+      stickyBrace:runO1StakePolicy(true,{
+        threatStarts:close5,
+        playerAttackSpec
+      }),
+      adaptiveBrace:runO1AdaptiveStake({
+        threatStarts:close5,
+        playerAttackSpec
+      }),
+      unbraced:runO1StakePolicy(false,{
+        threatStarts:close5,
+        playerAttackSpec
+      }),
+      aggressive:runO1AggressiveStake({
+        threatStarts:close5,
+        playerAttackSpec
+      })
+    };
+  }
+
+  console.log("O1_ADAPTIVE_BRACE_AUDIT",JSON.stringify(result));
+
+  for(const group of Object.values(result)){
+    for(const value of Object.values(group)){
+      assert.equal(value.finite,true);
+    }
+  }
 });
 
 test("O1 single-contact attribution separates support from posture cost",()=>{
