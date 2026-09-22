@@ -35,6 +35,46 @@ test("A1 anchor interpolation remains finite between extremes",()=>{
   }
 });
 
+test("A1 open-field matrix removes route blocker before judging adversary identity",()=>{
+  const openWorld={
+    width:1200,
+    height:900,
+    inset:28,
+    walls:[]
+  };
+  const playerStart={x:600,y:650,facing:-Math.PI/2};
+  const adversaryStart={id:"enemy",x:600,y:250,facing:Math.PI/2};
+  const policies=[
+    "chase-mash",
+    "retreat-strike",
+    "orbit-strike",
+    "stand-mash",
+    "phase-reader"
+  ];
+
+  const result={light:{},heavy:{}};
+  for(const policy of policies){
+    result.light[policy]=runA1Policy(LIGHT_STRIKER_SPEC,policy,{
+      world:openWorld,
+      playerStart,
+      adversaryStart
+    });
+    result.heavy[policy]=runA1Policy(HEAVY_CRUSHER_SPEC,policy,{
+      world:openWorld,
+      playerStart,
+      adversaryStart
+    });
+  }
+
+  console.log("A1_OPEN_FIELD_MATRIX",JSON.stringify(result));
+
+  for(const family of Object.values(result)){
+    for(const value of Object.values(family)){
+      assert.equal(value.finite,true);
+    }
+  }
+});
+
 test("A1 policy matrix checks whether light and heavy already provoke different strategy",()=>{
   const policies=[
     "chase-mash",
