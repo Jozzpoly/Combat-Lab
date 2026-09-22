@@ -181,6 +181,57 @@ test("O1 pressure trigger can be grounded in committed lunge geometry",()=>{
 });
 
 
+test("O1 close-five attribution checks whether brace support actually causes the promising window",()=>{
+  const close5=[
+    {id:"north",x:450,y:315,facing:Math.PI/2},
+    {id:"north-east",x:540,y:340,facing:Math.PI*0.75},
+    {id:"east",x:560,y:415,facing:Math.PI},
+    {id:"west",x:340,y:415,facing:0},
+    {id:"north-west",x:360,y:340,facing:Math.PI*0.25}
+  ];
+
+  const specs={
+    compactDeliberate:O1_ATTACK_PROBES.compactDeliberate,
+    compactDeliberateTwoHit:O1_ATTACK_PROBES.compactDeliberateTwoHit
+  };
+
+  const result={};
+  for(const [name,playerAttackSpec] of Object.entries(specs)){
+    result[name]={
+      braced:runO1StakePolicy(true,{
+        threatStarts:close5,
+        playerAttackSpec
+      }),
+      unbraced:runO1StakePolicy(false,{
+        threatStarts:close5,
+        playerAttackSpec
+      }),
+      supportOffSlowMovement:runO1StakePolicy(false,{
+        threatStarts:close5,
+        playerAttackSpec,
+        movementBracedOverride:true
+      }),
+      supportOnFastMovement:runO1StakePolicy(true,{
+        threatStarts:close5,
+        playerAttackSpec,
+        movementBracedOverride:false
+      }),
+      aggressive:runO1AggressiveStake({
+        threatStarts:close5,
+        playerAttackSpec
+      })
+    };
+  }
+
+  console.log("O1_CLOSE5_BRACE_ATTRIBUTION",JSON.stringify(result));
+
+  for(const group of Object.values(result)){
+    for(const value of Object.values(group)){
+      assert.equal(value.finite,true);
+    }
+  }
+});
+
 test("O1 close-five offense audit checks whether spatial value survives longer pressure",()=>{
   const close5=[
     {id:"north",x:450,y:315,facing:Math.PI/2},
