@@ -189,13 +189,15 @@ export function createA2PairState({
     {spec:LIGHT_STRIKER_SPEC,start:A2_PAIR_START.light},
     {spec:HEAVY_CRUSHER_SPEC,start:A2_PAIR_START.heavy}
   ],
-  resolveAdversaryPairs=true
+  resolveAdversaryPairs=true,
+  adversaryActionsHitPeers=true
 }={}){
   return createA0State({
     world:A2_OPEN_WORLD,
     playerStart:A2_PAIR_START.player,
     adversaryEntries:entries,
-    resolveAdversaryPairs
+    resolveAdversaryPairs,
+    adversaryActionsHitPeers
   });
 }
 
@@ -203,11 +205,13 @@ export function runA2Policy(policyName,{
   seconds=18,
   dt=1/120,
   entries,
-  resolveAdversaryPairs=true
+  resolveAdversaryPairs=true,
+  adversaryActionsHitPeers=true
 }={}){
   const state=createA2PairState({
     ...(entries?{entries}:{}),
-    resolveAdversaryPairs
+    resolveAdversaryPairs,
+    adversaryActionsHitPeers
   });
 
   let policy;
@@ -226,6 +230,10 @@ export function runA2Policy(policyName,{
     kills:[],
     pairContactFrames:0,
     pairContactEvents:0,
+    friendlyHits:0,
+    friendlyKills:0,
+    friendlyDamage:0,
+    friendlyPairs:[],
     simultaneousCommits:0,
     boundaryFrames:0
   };
@@ -255,6 +263,17 @@ export function runA2Policy(policyName,{
       if(event.type==="adversary-body-contact"){
         metrics.pairContactEvents++;
         pairContactThisFrame=true;
+      }
+      if(event.type==="adversary-friendly-hit"){
+        metrics.friendlyHits++;
+        metrics.friendlyDamage+=event.damage;
+        if(event.killed) metrics.friendlyKills++;
+        metrics.friendlyPairs.push({
+          attacker:event.attacker,
+          target:event.target,
+          at:Number(state.time.toFixed(3)),
+          killed:event.killed
+        });
       }
     }
     if(pairContactThisFrame) metrics.pairContactFrames++;
