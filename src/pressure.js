@@ -32,12 +32,41 @@ function steerAway(actor, target, world) {
   return steerAngle(actor, Math.atan2(actor.y - target.y, actor.x - target.x), world);
 }
 
+function applyPeerSeparation(actor, desired, peers) {
+  let sx = 0;
+  let sy = 0;
+  let weight = 0;
+
+  for (const peer of peers) {
+    if (!peer || peer === actor) continue;
+    const dx = actor.x - peer.x;
+    const dy = actor.y - peer.y;
+    const distance = Math.hypot(dx, dy);
+    if (distance <= 1e-6 || distance >= 62) continue;
+
+    const strength = (62 - distance) / 62;
+    sx += dx / distance * strength;
+    sy += dy / distance * strength;
+    weight += strength;
+  }
+
+  if (weight <= 0) return desired;
+
+  const combined = normalize(
+    desired.x + sx * 0.95,
+    desired.y + sy * 0.95,
+    desired.x,
+    desired.y
+  );
+  return { x: combined.x, y: combined.y };
+}
+
 function enter(actor, state, time) {
   actor.state = state;
   actor.stateTime = time;
 }
 
-export function updatePressure(actor, player, world, dt) {
+export function updatePressure(actor, player, world, dt, peers = []) {
   const events = [];
   faceToward(actor, player.x, player.y, dt);
   const distance = Math.hypot(player.x - actor.x, player.y - actor.y);
