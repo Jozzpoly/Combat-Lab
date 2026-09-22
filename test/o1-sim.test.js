@@ -11,7 +11,7 @@ import {
   resolvePressurePhysical,
   stepO1Attack
 } from "../src/o1.js";
-import { runO1LineHold, runO1Policy, runO1StakePolicy } from "../src/o1-rehearsal.js";
+import { runO1ForwardIntercept, runO1LineHold, runO1Policy, runO1StakePolicy } from "../src/o1-rehearsal.js";
 
 test("same-step committed strike and side hit both survive application order",()=>{
   const player=createO1Player({x:300,y:300,facing:-Math.PI/2});
@@ -115,4 +115,15 @@ test("direct line-hold falsifier isolates brace support from route coverage",()=
   console.log("O1_LINE_HOLD_REDTEAM",JSON.stringify(result));
   assert.equal(result.braced.finite,true);
   assert.equal(result.unbraced.finite,true);
+});
+
+
+test("spatial stake does not pre-author brace as the only possible answer",()=>{
+  const result={
+    closeBraced:runO1StakePolicy(true),
+    closeUnbraced:runO1StakePolicy(false),
+    forwardUnbraced:runO1ForwardIntercept()
+  };
+  console.log("O1_STAKE_POSSIBILITY_REDTEAM",JSON.stringify(result));
+  for(const value of Object.values(result)) assert.equal(value.finite,true);
 });
