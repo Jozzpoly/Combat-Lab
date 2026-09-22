@@ -3,6 +3,7 @@ import { BROKEN_YARD } from "./yard.js";
 import { updatePressure } from "./pressure.js";
 import { resolveActorPair, resolveActorWorld, stepActorWorld } from "./world.js";
 import {
+  O2_PRESSURE_SPEC,
   applyO2Clearance,
   applyO2Thrust,
   createO2Player,
@@ -33,7 +34,8 @@ export const O2_DEFAULT_START = Object.freeze({
 export function createO2State({
   playerStart=O2_DEFAULT_START.player,
   threatStarts=O2_DEFAULT_START.threats,
-  world=BROKEN_YARD
+  world=BROKEN_YARD,
+  threatSpec=O2_PRESSURE_SPEC
 }={}) {
   const player=createO2Player(playerStart);
   player.hp=O2_DAMAGE.playerHp;
@@ -41,8 +43,9 @@ export function createO2State({
 
   return {
     player,
-    threats:threatStarts.map(t=>createO2Threat(t.id,t)),
+    threats:threatStarts.map(t=>createO2Threat(t.id,t,threatSpec)),
     world,
+    threatSpec,
     time:0,
     result:"active",
     events:[]
