@@ -122,16 +122,16 @@ export function createO2Threat(id,{
   x,
   y,
   facing=Math.PI/2
-}) {
-  const actor=createActor(O2_PRESSURE_SPEC,{
+}, spec=O2_PRESSURE_SPEC) {
+  const actor=createActor(spec,{
     id,
     kind:"pressure",
     x,
     y,
     facing
   });
-  actor.hp=O2_PRESSURE_SPEC.hp;
-  actor.maxHp=O2_PRESSURE_SPEC.hp;
+  actor.hp=spec.hp ?? O2_PRESSURE_SPEC.hp;
+  actor.maxHp=actor.hp;
   actor.attackResolved=false;
   return actor;
 }
