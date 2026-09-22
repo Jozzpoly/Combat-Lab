@@ -494,6 +494,36 @@ function pressureDiagnosticSnapshot(state) {
   return {committed,local};
 }
 
+function shieldDriveStakePolicy(state, braceEnabled) {
+  const objective=state.objective;
+  const threat=nearestToObjective(state);
+  if(!objective || !threat){
+    return {
+      moveX:0,
+      moveY:0,
+      aimX:state.player.x,
+      aimY:state.player.y,
+      brace:braceEnabled,
+      attack:false
+    };
+  }
+
+  const to=normalize(
+    threat.x-state.player.x,
+    threat.y-state.player.y,
+    0,-1
+  );
+
+  return {
+    moveX:to.x*0.86,
+    moveY:to.y*0.86,
+    aimX:threat.x,
+    aimY:threat.y,
+    brace:braceEnabled,
+    attack:false
+  };
+}
+
 function aggressiveStakePolicy(state, {attackEnabled=true} = {}) {
   const objective=state.objective;
   const threat=nearestToObjective(state);
@@ -520,6 +550,84 @@ function aggressiveStakePolicy(state, {attackEnabled=true} = {}) {
     attack:attackEnabled && distance<82
   };
 }
+
+export function runO1ShieldDriveStake({
+  braceEnabled=true,
+  seconds=18,
+  dt=1/120,
+  threatStarts
+}={}) {
+  const state=createO1State({
+    playerStart:{x:450,y:415,facing:-Math.PI/2},
+    threatStarts:threatStarts ?? [
+      {id:"north",x:315,y:175,facing:Math.PI/2},
+      {id:"east",x:805,y:355,facing:Math.PI}
+    ],
+    objective:{x:450,y:480,radius:14,hp:1}
+  });
+
+  const counts={
+    shieldBlocks:0,
+    shieldContacts:0,
+    bodyHits:0,
+    objectiveHits:0,
+    bracedFrames:0
+  };
+
+  const frames=Math.ceil(seconds/dt);
+  for(let frame=0;frame<frames && state.result==="active";frame++){
+    const input=shieldDriveStakePolicy(state,braceEnabled);
+    if(input.brace) counts.bracedFrames++;
+
+    const events=stepO1State(state,input,dt);
+    for(const event of events){
+      if(event.type==="shield-block") counts.shieldBlocks++;
+      if(event.type==="shield-contact") counts.shieldContacts++;
+      if(event.type==="body-hit") counts.bodyHits++;
+      if(event.type==="objective-hit") counts.objectiveHits++;
+    }
+  }
+
+  const objective=state.objective;
+  const living=state.threats.filter(t=>t.hp>0);
+  const objectiveDistances=living.map(t =>
+    Math.hypot(t.x-objective.x,t.y-objective.y)
+  );
+
+  return {
+    braceEnabled,
+    result:state.result,
+    time:Number(state.time.toFixed(3)),
+    hp:state.player.hp,
+    objectiveHp:objective.hp,
+    livingThreats:living.length,
+    attackActions:state.player.attack.serial,
+    ...counts,
+    nearestThreatToObjective:objectiveDistances.length
+      ? Number(Math.min(...objectiveDistances).toFixed(2))
+      : null,
+    meanThreatDistanceToObjective:objectiveDistances.length
+      ? Number((
+          objectiveDistances.reduce((a,b)=>a+b,0) /
+          objectiveDistances.length
+        ).toFixed(2))
+      : null,
+    player:{
+      x:Number(state.player.x.toFixed(2)),
+      y:Number(state.player.y.toFixed(2))
+    },
+    threats:state.threats.map(t=>({
+      id:t.id,
+      x:Number(t.x.toFixed(2)),
+      y:Number(t.y.toFixed(2)),
+      state:t.state
+    })),
+    finite:[state.player,...state.threats].every(a =>
+      [a.x,a.y,a.vx,a.vy,a.facing].every(Number.isFinite)
+    )
+  };
+}
+
 
 export function runO1AggressiveStake({
   seconds=18,
