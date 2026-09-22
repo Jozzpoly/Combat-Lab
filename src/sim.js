@@ -32,7 +32,8 @@ export function createA0State({
   adversarySpec=BASE_ADVERSARY_SPEC,
   adversaryStart={id:"adversary",x:450,y:150,facing:Math.PI/2},
   adversaryEntries=null,
-  resolveAdversaryPairs=true
+  resolveAdversaryPairs=true,
+  adversaryActionsHitPeers=true
 }={}){
   const player=createPlayerCombatState(
     createActor(
@@ -54,6 +55,7 @@ export function createA0State({
     player,
     adversaries,
     resolveAdversaryPairs,
+    adversaryActionsHitPeers,
     time:0,
     result:"active",
     events:[]
@@ -95,17 +97,48 @@ export function stepA0(state,input,dt=1/120){
 
   const incoming=[];
   const outgoing=[];
-  for(const adversary of state.adversaries){
-    if(adversary.hp<=0) continue;
-    const inCandidate=probeAdversaryHit(adversary,player,world);
-    if(inCandidate) incoming.push({actor:adversary,candidate:inCandidate});
+  const living=state.adversaries.filter(x=>x.hp>0);
+
+  for(const adversary of living){
+    const solidCandidates=[];
+
+    const playerCandidate=probeAdversaryHit(adversary,player,world);
+    if(playerCandidate){
+      solidCandidates.push({
+        actor:adversary,
+        target:player,
+        candidate:playerCandidate
+      });
+    }
+
+    if(state.adversaryActionsHitPeers){
+      for(const target of living){
+        if(target===adversary) continue;
+        const candidate=probeAdversaryHit(adversary,target,world);
+        if(candidate){
+          solidCandidates.push({
+            actor:adversary,
+            target,
+            candidate
+          });
+        }
+      }
+    }
+
+    solidCandidates.sort((a,b)=>{
+      const dt=a.candidate.contactT-b.candidate.contactT;
+      if(Math.abs(dt)>1e-9) return dt;
+      return a.target.id.localeCompare(b.target.id);
+    });
+    if(solidCandidates.length){
+      incoming.push(solidCandidates[0]);
+    }
 
     const outCandidate=probePlayerStrike(player,adversary,world);
     if(outCandidate) outgoing.push({actor:adversary,candidate:outCandidate});
   }
 
   // Body contact is separate from attack authority.
-  const living=state.adversaries.filter(x=>x.hp>0);
   for(const adversary of living){
     resolveActorPair(player,adversary);
   }
@@ -134,8 +167,8 @@ export function stepA0(state,input,dt=1/120){
   }
 
   // Already-measured hostile commitments survive a simultaneous lethal strike.
-  for(const {actor,candidate} of incoming){
-    const event=applyAdversaryHit(actor,player,candidate);
+  for(const {actor,target,candidate} of incoming){
+    const event=applyAdversaryHit(actor,target,candidate);
     if(event) events.push(event);
   }
 
