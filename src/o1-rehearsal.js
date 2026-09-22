@@ -79,9 +79,14 @@ function staticBracePolicy(state) {
 
 export function runO1Policy(policyName, {
   seconds = 18,
-  dt = 1 / 120
+  dt = 1 / 120,
+  playerStart,
+  threatStarts
 } = {}) {
-  const state = createO1State();
+  const state = createO1State({
+    ...(playerStart ? { playerStart } : {}),
+    ...(threatStarts ? { threatStarts } : {})
+  });
   let policy;
   if (policyName === "active-guard") policy = state => activeGuardPolicy(state, true);
   else if (policyName === "active-unbraced") policy = state => activeGuardPolicy(state, false);
