@@ -11,7 +11,7 @@ import {
   resolvePressurePhysical,
   stepO1Attack
 } from "../src/o1.js";
-import { runO1Policy } from "../src/o1-rehearsal.js";
+import { runO1Policy, runO1StakePolicy } from "../src/o1-rehearsal.js";
 
 test("same-step committed strike and side hit both survive application order",()=>{
   const player=createO1Player({x:300,y:300,facing:-Math.PI/2});
@@ -93,4 +93,15 @@ test("O1 pressure-density red-team probes brace relevance without retuning mecha
     assert.equal(pair.braced.finite,true);
     assert.equal(pair.unbraced.finite,true);
   }
+});
+
+
+test("spatial-stake falsifier checks whether brace matters when displacement has a cost",()=>{
+  const result={
+    braced:runO1StakePolicy(true),
+    unbraced:runO1StakePolicy(false)
+  };
+  console.log("O1_SPATIAL_STAKE_REDTEAM",JSON.stringify(result));
+  assert.equal(result.braced.finite,true);
+  assert.equal(result.unbraced.finite,true);
 });
