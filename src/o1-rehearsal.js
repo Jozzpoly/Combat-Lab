@@ -227,7 +227,8 @@ function stakeInterceptPolicy(state, {
 export function runO1StakePolicy(allowBrace, {
   seconds = 18,
   dt = 1 / 120,
-  movementBracedOverride
+  movementBracedOverride,
+  playerAttackSpec
 } = {}) {
   const objective = { x:450, y:480, radius:14, hp:1 };
   const state = createO1State({
@@ -236,7 +237,8 @@ export function runO1StakePolicy(allowBrace, {
       { id:"north", x:315, y:175, facing:Math.PI/2 },
       { id:"east", x:805, y:355, facing:Math.PI }
     ],
-    objective
+    objective,
+    ...(playerAttackSpec ? { playerAttackSpec } : {})
   });
 
   const counts = { shieldBlocks:0, bodyHits:0, objectiveHits:0, kills:0 };
@@ -388,7 +390,8 @@ function aggressiveStakePolicy(state) {
 
 export function runO1AggressiveStake({
   seconds=18,
-  dt=1/120
+  dt=1/120,
+  playerAttackSpec
 }={}){
   const state=createO1State({
     playerStart:{x:450,y:415,facing:-Math.PI/2},
@@ -396,7 +399,8 @@ export function runO1AggressiveStake({
       {id:"north",x:315,y:175,facing:Math.PI/2},
       {id:"east",x:805,y:355,facing:Math.PI}
     ],
-    objective:{x:450,y:480,radius:14,hp:1}
+    objective:{x:450,y:480,radius:14,hp:1},
+    ...(playerAttackSpec ? { playerAttackSpec } : {})
   });
 
   const counts={shieldBlocks:0,bodyHits:0,objectiveHits:0,kills:0};
