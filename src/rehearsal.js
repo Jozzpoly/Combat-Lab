@@ -64,6 +64,45 @@ function standMash(state){
   };
 }
 
+function delayedBackstepReader(state,delay){
+  const enemy=enemyOf(state);
+  if(!enemy) return {moveX:0,moveY:0,...aim(null,state.player)};
+  const d=normalize(enemy.x-state.player.x,enemy.y-state.player.y,0,-1);
+  const distance=Math.hypot(enemy.x-state.player.x,enemy.y-state.player.y);
+  const attack=enemy.adversarySpec.attack;
+  const prepareElapsed=enemy.mode==="prepare"
+    ? Math.max(0,attack.windup-enemy.modeTime)
+    : 0;
+  const react=
+    enemy.mode==="commit" ||
+    (enemy.mode==="prepare" && prepareElapsed>=delay);
+
+  if(react){
+    return {
+      moveX:-d.x,
+      moveY:-d.y,
+      ...aim(enemy,state.player),
+      strike:false
+    };
+  }
+
+  if(enemy.mode==="recover"){
+    return {
+      moveX:d.x*0.82,
+      moveY:d.y*0.82,
+      ...aim(enemy,state.player),
+      strike:distance<90&&!state.player.action
+    };
+  }
+
+  return {
+    moveX:d.x*0.54,
+    moveY:d.y*0.54,
+    ...aim(enemy,state.player),
+    strike:false
+  };
+}
+
 function backstepReader(state){
   const enemy=enemyOf(state);
   if(!enemy) return {moveX:0,moveY:0,...aim(null,state.player)};
@@ -151,6 +190,9 @@ export function runA1Policy(spec,policyName,{
   else if(policyName==="stand-mash") policy=standMash;
   else if(policyName==="phase-reader") policy=phaseReader;
   else if(policyName==="backstep-reader") policy=backstepReader;
+  else if(policyName==="backstep-delay-080") policy=state=>delayedBackstepReader(state,0.08);
+  else if(policyName==="backstep-delay-160") policy=state=>delayedBackstepReader(state,0.16);
+  else if(policyName==="backstep-delay-240") policy=state=>delayedBackstepReader(state,0.24);
   else throw new Error("unknown A1 policy: "+policyName);
 
   const metrics={
