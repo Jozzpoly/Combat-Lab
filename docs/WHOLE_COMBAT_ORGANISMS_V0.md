@@ -617,6 +617,55 @@ If the stance/position distinction survives **single-contact lethal strikes**, O
 
 ---
 
+## 5.5 O1 single-contact result — PRIOR STANCE SUCCESS DOES NOT SURVIVE CLEAVE REMOVAL
+
+The compact attack was given a diagnostic solid-contact budget of one body per action while preserving the same broad lethality / timing probes.
+
+### Single-contact lethal
+
+Close-five result:
+
+- sticky full brace: **BREACH**, 32 HP, 3/5 kills;
+- adaptive brace (brace only during actual commitment): **BREACH**, 66 HP, 3/5 kills;
+- unbraced deliberate interception: **CLEAR**, 100 HP, 5/5 kills;
+- aggressive click-forward: **CLEAR**, 66 HP.
+
+Support/movement attribution also showed:
+
+- support off + slow movement: CLEAR, 100 HP;
+- support on + fast movement: CLEAR, 100 HP;
+- the coupled full-brace package was uniquely worse.
+
+Therefore the earlier full-brace advantage was not robust to removal of multi-target cleave.
+
+### Single-contact two-hit
+
+- sticky brace: BREACH;
+- adaptive brace: DOWN;
+- unbraced: BREACH;
+- aggressive: DOWN.
+
+No tested policy produced a surviving clear.
+
+### Interpretation
+
+This closes two rescue hypotheses:
+
+1. the prior result was not merely a sticky-brace controller artifact;
+2. the prior result does not survive when a compact strike stops acting as small-area cleave.
+
+Current evidence therefore says:
+
+> **The existing O1 implementation has demonstrated directional shield/contact mechanics, but has not demonstrated a robust HOLD / BREAK combat organism.**
+
+Before retiring this implementation family, one final existing-law question remains:
+
+> Does proactive **braced shield drive**, without damage, create a real BREAK affordance by displacing concurrent pressure more effectively than ordinary unbraced movement?
+
+No new combat law should be added before answering it.
+
+---
+
 # 6. Organism O2 — REACH / THREAT
 
 Internal research label only.
