@@ -179,6 +179,14 @@ These are not classes and must not become hidden role flags.
 
 The immediate work is **hypothesis design + clean experimental lane**, not O3 implementation and not Owner deployment.
 
+Hypothesis card now active:
+
+- [Adversarial Combat Organism v1](ADVERSARIAL_COMBAT_ORGANISM_V1.md)
+
+Its first discriminator is opponent legibility, not difficulty:
+
+> **does the player naturally treat a light overcommitting body and a heavy space-holding body differently under one shared adversary law?**
+
 
 ## Recovery correction — 2026-09-22
 
