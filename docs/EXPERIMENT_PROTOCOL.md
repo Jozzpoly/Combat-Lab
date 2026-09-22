@@ -63,7 +63,33 @@ Do not enter attribution mode merely because it is easier to make a clean experi
 
 Early over-isolation can remove the phenomenon we are trying to discover; R0 and the LIVE / BOUNDED / CAPTURED spike are preserved warnings of this failure mode.
 
-## 3.2 Classless-emergence check
+## 3.2 Possibility-richness gate
+
+Before a discovery specimen earns Owner attention, ask whether it contains a **possibility surface**, not merely a mechanism demonstration.
+
+A useful whole organism should normally permit several materially different legal responses to pressure, such as combinations of:
+
+- approach / retreat / angle change;
+- hold / yield / displace;
+- attack / threaten / interrupt;
+- use of reach, cover, choke, obstruction or open space;
+- bypass, reposition or terrain exploitation.
+
+The specimen fails this gate when its claimed strategy is substantially pre-authored by the test apparatus itself.
+
+Warning signs:
+
+- one route exists mainly so one preset fits and another does not;
+- AI threat is active only inside a hand-authored lane that encodes the intended answer;
+- an automated policy knows the solution before the organism has demonstrated that a player could discover it;
+- labels, HUD text or test instructions tell the Owner which role or strategy to enact;
+- the same interaction would remain after replacing the combat organism with a generic movement puzzle.
+
+Discovery specimens may still be small and authored. The requirement is not sandbox breadth. The requirement is that **multiple useful possibilities arise from the organism/world relationship rather than from the test script declaring the correct move**.
+
+A mechanism cell may intentionally violate this gate. If it does, classify it as mechanism evidence and do not promote it to Owner-product evidence.
+
+## 3.3 Classless-emergence check
 
 When an experiment claims to demonstrate a natural combat role, that role must not exist only because of a hidden class flag.
 
