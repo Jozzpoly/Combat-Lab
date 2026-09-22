@@ -257,6 +257,140 @@ This attacks the long-running tank fantasy directly:
 
 ---
 
+## 5.1 O1 deeper contract — stance is contact negotiation, not defense state
+
+Historical Owner intent makes the first O1 implementation stricter than the initial outline.
+
+The valuable idea is **not**:
+
+> heavy actor + slower locomotion + Shift multiplies collision resistance.
+
+The intended pressure is:
+
+> **the same body can negotiate contact differently depending on equipment geometry, facing, posture and current intent, while remaining continuously controllable.**
+
+### Shield truth
+
+The shield exists continuously as frontal occupied geometry.
+
+It does not appear only while Shift is held.
+
+Consequences:
+
+- a frontal incoming body/attack may meet shield geometry before body geometry;
+- side/rear pressure bypasses that relation naturally;
+- shield coverage is directional and can be lost by bad facing;
+- shield contact may displace both participants;
+- no hidden `damage *= 0.5` authority is allowed.
+
+### Brace truth
+
+Brace is a **support/contact posture**, not immunity.
+
+First implementation approximation:
+
+- brace changes support only for a contact actually realized through the shield relation;
+- it must not globally increase body mass or collision authority;
+- player still yields under sufficient frontal momentum;
+- attacker still yields as well;
+- movement remains live;
+- turning / translational authority may be reduced modestly while braced, but not to create animation lock;
+- side/rear body contact uses ordinary shared body rules regardless of brace.
+
+This is deliberately narrower than the retired Phenotype P1 `contactAuthority * braceMultiplier` abstraction.
+
+### Contact-mode falsifier
+
+O1 fails immediately if all important outcomes can be predicted from:
+
+> brace held = hard body; brace released = soft body.
+
+The interesting outcome must depend on **where contact occurs and how the body/shield are oriented**.
+
+### First three legal tactical affordances
+
+These are affordance probes, not claims that a player will naturally discover them.
+
+#### A — HOLD
+
+A frontal committed threat reaches shield geometry while the player is correctly oriented.
+
+Expected:
+
+- shield contact happens before body-hit;
+- both actors move;
+- braced player yields less than unbraced player;
+- no infinite wall;
+- repeated pressure can still move or surround the player.
+
+#### B — YIELD / LET PASS
+
+During readable enemy commitment, the player releases the frontal relation by moving/angling away.
+
+Expected:
+
+- the committed lunge can miss or overshoot;
+- enemy enters recovery;
+- no dodge button or i-frame state exists;
+- success comes from leaving the actual threat path.
+
+#### C — BREAK / ADVANCE
+
+The player uses body + shield relation to advance into a recovering or poorly aligned threat.
+
+Expected:
+
+- heavier/forward-supported contact can move the hostile body;
+- this may split two nearby hostiles or alter their approach;
+- displacement is not a damage ability;
+- this must remain useful somewhere outside the broken gate.
+
+If O1 cannot support all three as legal actions in the same world, it lacks possibility richness.
+
+### Static-turtle red-team
+
+A stationary braced player in open space must **not** be a universal solution.
+
+Agent rehearsal should place pressure from materially different approach angles.
+
+Expected:
+
+- frontal attacks may be intercepted;
+- uncovered side/rear attacks remain dangerous;
+- merely holding brace without managing facing/position eventually loses health or position.
+
+Do not fix a static-turtle failure with stamina, cooldown or arbitrary guard-break until geometry/contact has first been falsified.
+
+### Lethality
+
+Carry forward Terrarium's only robust positive signal:
+
+- impacts matter;
+- no sponge.
+
+Initial pressure:
+
+- hostile committed body-hit: approximately one third of player health;
+- clean short-weapon hit may remove a cheap hostile in one strong contact.
+
+Exact values are disposable. The product pressure is that a positional mistake matters immediately and an exposed cheap threat does not require repetitive chopping.
+
+### O1 presentation pressure
+
+Before Owner eligibility, normal presentation must make these distinctions visible without debug telemetry:
+
+- shield location and orientation;
+- brace posture;
+- enemy windup;
+- enemy committed lunge;
+- shield contact vs body hit;
+- enemy recovery / vulnerability;
+- dead/removed threat.
+
+Research labels such as `HOLD/BREAK` must not appear in the eventual Owner-facing build.
+
+---
+
 # 6. Organism O2 — REACH / THREAT
 
 Internal research label only.
