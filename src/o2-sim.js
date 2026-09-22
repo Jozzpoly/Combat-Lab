@@ -32,7 +32,8 @@ export const O2_DEFAULT_START = Object.freeze({
 
 export function createO2State({
   playerStart=O2_DEFAULT_START.player,
-  threatStarts=O2_DEFAULT_START.threats
+  threatStarts=O2_DEFAULT_START.threats,
+  world=BROKEN_YARD
 }={}) {
   const player=createO2Player(playerStart);
   player.hp=O2_DAMAGE.playerHp;
@@ -41,6 +42,7 @@ export function createO2State({
   return {
     player,
     threats:threatStarts.map(t=>createO2Threat(t.id,t)),
+    world,
     time:0,
     result:"active",
     events:[]
@@ -99,7 +101,7 @@ export function stepO2State(state,input,dt=1/120) {
   if(input.thrust) requestO2Action(player,"thrust");
   else if(input.clearance) requestO2Action(player,"clearance");
 
-  stepActorWorld(player,BROKEN_YARD,dt);
+  stepActorWorld(player,state.world,dt);
 
   const frameEvents=[];
   for(const threat of state.threats){
@@ -109,7 +111,7 @@ export function stepO2State(state,input,dt=1/120) {
     frameEvents.push(...updatePressure(
       threat,
       player,
-      BROKEN_YARD,
+      state.world,
       dt,
       state.threats
     ));
@@ -129,7 +131,7 @@ export function stepO2State(state,input,dt=1/120) {
     }
   }
   for(const actor of [player,...livingBefore]) {
-    resolveActorWorld(actor,BROKEN_YARD);
+    resolveActorWorld(actor,state.world);
   }
 
   stepO2Action(player,dt);
@@ -138,7 +140,7 @@ export function stepO2State(state,input,dt=1/120) {
   if(action.type==="thrust" && action.active){
     const candidates=[];
     for(const threat of livingBefore){
-      const candidate=probeO2Thrust(player,threat);
+      const candidate=probeO2Thrust(player,threat,{world:state.world});
       if(candidate) candidates.push({threat,candidate});
     }
 
