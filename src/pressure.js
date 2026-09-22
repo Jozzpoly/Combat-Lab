@@ -12,8 +12,7 @@ export const PRESSURE_TIMING = Object.freeze({
   lungeSpeed: 290
 });
 
-function steerToward(actor, target, world) {
-  const base = Math.atan2(target.y - actor.y, target.x - actor.x);
+function steerAngle(actor, base, world) {
   for (const offset of OFFSETS) {
     const angle = base + offset;
     const x = actor.x + Math.cos(angle) * 30;
@@ -22,8 +21,15 @@ function steerToward(actor, target, world) {
       return { x: Math.cos(angle), y: Math.sin(angle) };
     }
   }
-  const fallback = normalize(target.x - actor.x, target.y - actor.y, 0, 0);
-  return { x: fallback.x, y: fallback.y };
+  return { x: Math.cos(base), y: Math.sin(base) };
+}
+
+function steerToward(actor, target, world) {
+  return steerAngle(actor, Math.atan2(target.y - actor.y, target.x - actor.x), world);
+}
+
+function steerAway(actor, target, world) {
+  return steerAngle(actor, Math.atan2(actor.y - target.y, actor.x - target.x), world);
 }
 
 function enter(actor, state, time) {
@@ -66,7 +72,13 @@ export function updatePressure(actor, player, world, dt) {
       events.push({ type: "pressure-recover", actor: actor.id });
     }
   } else if (actor.state === "recover") {
-    driveActor(actor, 0, 0, dt);
+    const shouldDisengage = distance < 96 && actor.stateTime > PRESSURE_TIMING.recover * 0.28;
+    if (shouldDisengage) {
+      const steer = steerAway(actor, player, world);
+      driveActor(actor, steer.x * 0.62, steer.y * 0.62, dt);
+    } else {
+      driveActor(actor, 0, 0, dt);
+    }
     actor.stateTime -= dt;
     if (actor.stateTime <= 0) {
       enter(actor, "approach", 0);
