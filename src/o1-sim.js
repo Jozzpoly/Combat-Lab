@@ -39,6 +39,42 @@ export function createO1State({
   };
 }
 
+
+export function playerInterposesObjective(threat, player, objective) {
+  if (!objective) return false;
+
+  const abx = objective.x - threat.x;
+  const aby = objective.y - threat.y;
+  const denom = abx * abx + aby * aby;
+  if (denom <= 1e-9) return false;
+
+  const apx = player.x - threat.x;
+  const apy = player.y - threat.y;
+  const t = (apx * abx + apy * aby) / denom;
+  if (t <= 0 || t >= 1) return false;
+
+  const closestX = threat.x + abx * t;
+  const closestY = threat.y + aby * t;
+  const lateral = Math.hypot(player.x - closestX, player.y - closestY);
+  const distance = Math.hypot(player.x - threat.x, player.y - threat.y);
+
+  const corridor =
+    player.spec.radius +
+    threat.spec.radius +
+    10;
+
+  return lateral <= corridor && distance <= 112;
+}
+
+function pressureTargetFor(state, threat) {
+  const objective = state.objective;
+  if (!objective || objective.hp <= 0) return state.player;
+
+  return playerInterposesObjective(threat, state.player, objective)
+    ? state.player
+    : objective;
+}
+
 export function stepO1State(state, input, dt = 1 / 120) {
   if (state.result !== "active") return [];
 
@@ -59,10 +95,14 @@ export function stepO1State(state, input, dt = 1 / 120) {
   for (const threat of state.threats) {
     if (threat.hp <= 0) continue;
     resetThreatAttackAuthority(threat);
-    const pressureTarget = state.objective && state.objective.hp > 0
-      ? state.objective
-      : player;
-    frameEvents.push(...updatePressure(threat, pressureTarget, BROKEN_YARD, dt, state.threats));
+    const pressureTarget = pressureTargetFor(state, threat);
+    frameEvents.push(...updatePressure(
+      threat,
+      pressureTarget,
+      BROKEN_YARD,
+      dt,
+      state.threats
+    ));
   }
 
   const incomingCandidates = [];
