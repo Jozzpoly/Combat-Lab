@@ -38,7 +38,34 @@ export const O1_ATTACK_PROBES = Object.freeze({
   current: O1_ATTACK,
   compactClose: Object.freeze({ ...O1_ATTACK, reach: 30 }),
   deliberate: Object.freeze({ ...O1_ATTACK, windup: 0.20 }),
-  twoHit: Object.freeze({ ...O1_ATTACK, damage: 30 })
+  twoHit: Object.freeze({ ...O1_ATTACK, damage: 30 }),
+  compactDeliberate: Object.freeze({
+    ...O1_ATTACK,
+    reach: 30,
+    windup: 0.20
+  }),
+  compactTwoHit: Object.freeze({
+    ...O1_ATTACK,
+    reach: 30,
+    damage: 30
+  }),
+  deliberateTwoHit: Object.freeze({
+    ...O1_ATTACK,
+    windup: 0.20,
+    damage: 30
+  }),
+  compactDeliberateTwoHit: Object.freeze({
+    ...O1_ATTACK,
+    reach: 30,
+    windup: 0.20,
+    damage: 30
+  }),
+  slowerThanThreatTell: Object.freeze({
+    ...O1_ATTACK,
+    reach: 30,
+    windup: 0.30,
+    damage: 30
+  })
 });
 
 export const O1_DAMAGE = Object.freeze({
