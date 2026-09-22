@@ -501,6 +501,57 @@ This remains **agent-side falsification only**. No Owner play.
 
 ---
 
+## 5.3 O1 close-ring result — CONCURRENCY CREATES FIRST DEFENSIVE VALUE
+
+The final no-law-change falsifier forced pressure to begin much closer and from several angles.
+
+This materially changed the result.
+
+### Close-3
+
+With three threats close enough to create real overlap in commitment:
+
+- aggressive max concurrent committed threats: 3;
+- 43 frames with 2+ committed threats;
+- hold clear: 1.092 s, 100 HP;
+- aggressive clear: 1.108 s, 100 HP;
+- attack-disabled aggressive movement eventually breaches the stake at 5.208 s.
+
+Interpretation:
+
+- concurrency is now real;
+- mobile shield alone no longer neutralizes the encounter forever;
+- three threats still do **not** create a meaningful hold-vs-aggression distinction.
+
+### Close-5
+
+With five close threats:
+
+- max concurrent committed threats: 4;
+- 59 frames with 2+ committed threats;
+- max local threats: 5;
+- hold clear: 1.458 s, 100 HP;
+- aggressive clear: 1.475 s, **66 HP** after one body hit;
+- attack-disabled aggressive movement dies at 2.758 s after three body hits.
+
+This is the first integrated evidence that genuinely concurrent multi-angle pressure creates material defensive value for deliberate spatial handling.
+
+Therefore the previous diagnosis is refined:
+
+> **O1 is not yet falsified as a family. Serial pressure falsified it; true concurrency produces the first hold-related consequence.**
+
+However, promotion is still blocked.
+
+Five cheap threats dying in roughly 1.5 s means offense may still be collapsing the possibility surface before spatial play can develop.
+
+Next question:
+
+> **Is this rapid erasure caused by the current short-weapon contract / multi-target cleave, and does the defensive distinction survive when offense cannot delete concurrent pressure almost immediately?**
+
+Do not change pressure or brace before answering that.
+
+---
+
 # 6. Organism O2 — REACH / THREAT
 
 Internal research label only.
