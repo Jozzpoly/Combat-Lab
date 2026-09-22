@@ -257,3 +257,48 @@ export function runO1StakePolicy(allowBrace, {
     )
   };
 }
+
+
+export function runO1LineHold(allowBrace, {
+  seconds = 12,
+  dt = 1 / 120
+} = {}) {
+  const state = createO1State({
+    playerStart:{ x:450, y:480, facing:-Math.PI/2 },
+    threatStarts:[
+      { id:"north", x:450, y:350, facing:Math.PI/2 }
+    ],
+    objective:{ x:450, y:548, radius:14, hp:1 }
+  });
+
+  const counts={shieldBlocks:0,shieldContacts:0,objectiveHits:0};
+  const frames=Math.ceil(seconds/dt);
+  for(let frame=0;frame<frames && state.result==="active";frame++){
+    const events=stepO1State(state,{
+      moveX:0,
+      moveY:0,
+      aimX:450,
+      aimY:350,
+      brace:allowBrace,
+      attack:false
+    },dt);
+    for(const event of events){
+      if(event.type==="shield-block") counts.shieldBlocks++;
+      if(event.type==="shield-contact") counts.shieldContacts++;
+      if(event.type==="objective-hit") counts.objectiveHits++;
+    }
+  }
+
+  return {
+    braced:allowBrace,
+    result:state.result,
+    time:Number(state.time.toFixed(3)),
+    objectiveHp:state.objective.hp,
+    playerY:Number(state.player.y.toFixed(2)),
+    threatY:Number(state.threats[0].y.toFixed(2)),
+    ...counts,
+    finite:[state.player,...state.threats].every(a =>
+      [a.x,a.y,a.vx,a.vy,a.facing].every(Number.isFinite)
+    )
+  };
+}
