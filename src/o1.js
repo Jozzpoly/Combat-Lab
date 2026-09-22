@@ -65,6 +65,19 @@ export const O1_ATTACK_PROBES = Object.freeze({
     reach: 30,
     windup: 0.30,
     damage: 30
+  }),
+  singleContactLethal: Object.freeze({
+    ...O1_ATTACK,
+    reach: 30,
+    windup: 0.20,
+    maxTargetsPerAction: 1
+  }),
+  singleContactTwoHit: Object.freeze({
+    ...O1_ATTACK,
+    reach: 30,
+    windup: 0.20,
+    damage: 30,
+    maxTargetsPerAction: 1
   })
 });
 
@@ -334,6 +347,9 @@ export function attackProgress(player) {
 export function probeO1Strike(player, threat) {
   if (!player.attack || player.attack.phase !== "active") return null;
   if (threat.hp <= 0 || player.attack.hitIds.has(threat.id)) return null;
+
+  const targetBudget = player.attackSpec.maxTargetsPerAction ?? Infinity;
+  if (player.attack.hitIds.size >= targetBudget) return null;
 
   const dx = threat.x - player.x;
   const dy = threat.y - player.y;
