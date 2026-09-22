@@ -126,7 +126,7 @@ function pointSegmentDistance(px,py,ax,ay,bx,by){
     : 0;
   const x=ax+dx*t;
   const y=ay+dy*t;
-  return {x,y,distance:Math.hypot(px-x,py-y)};
+  return {x,y,t,distance:Math.hypot(px-x,py-y)};
 }
 
 export function adversaryThreatSegment(actor){
@@ -160,8 +160,9 @@ export function adversaryThreatSegment(actor){
   };
 }
 
-export function probeAdversaryHit(actor,player,world){
+export function probeAdversaryHit(actor,target,world){
   if(actor.mode!=="commit" || actor.attackResolved || actor.hp<=0) return null;
+  if(!target || target===actor || target.hp<=0) return null;
 
   const attack=actor.adversarySpec.attack;
   const segment=adversaryThreatSegment(actor);
@@ -175,29 +176,51 @@ export function probeAdversaryHit(actor,player,world){
   )) return null;
 
   const contact=pointSegmentDistance(
-    player.x,player.y,
+    target.x,target.y,
     segment.ax,segment.ay,
     segment.bx,segment.by
   );
-  if(contact.distance>player.spec.radius+attack.halfWidth) return null;
+  const hitRadius=target.spec.radius+attack.halfWidth;
+  if(contact.distance>hitRadius) return null;
+
+  const length=Math.hypot(
+    segment.bx-segment.ax,
+    segment.by-segment.ay
+  );
+  const along=contact.t*length;
+  const entryOffset=Math.sqrt(
+    Math.max(0,hitRadius*hitRadius-contact.distance*contact.distance)
+  );
+  const entryDistance=Math.max(0,along-entryOffset);
 
   return {
     type:"adversary-hit-candidate",
     attacker:actor.id,
+    target:target.id,
     model:attack.model,
     x:contact.x,
     y:contact.y,
-    damage:attack.damage
+    damage:attack.damage,
+    contactT:length>1e-9?entryDistance/length:0
   };
 }
 
-export function applyAdversaryHit(actor,player,candidate){
+export function applyAdversaryHit(actor,target,candidate){
   if(!candidate) return null;
   actor.attackResolved=true;
-  player.hp=Math.max(0,player.hp-candidate.damage);
+  target.hp=Math.max(0,target.hp-candidate.damage);
+
+  const friendly=target.kind==="adversary";
+  if(friendly&&target.hp<=0){
+    target.vx=0;
+    target.vy=0;
+    target.mode="down";
+  }
+
   return {
     ...candidate,
-    type:"adversary-hit",
-    hp:player.hp
+    type:friendly?"adversary-friendly-hit":"adversary-hit",
+    hp:target.hp,
+    killed:target.hp<=0
   };
 }
