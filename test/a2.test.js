@@ -207,6 +207,44 @@ test("A2b layout sweep checks whether material cross-interaction is robust rathe
   }
 });
 
+test("A2b body-screen possibility probe uses positions only and no player attacks",()=>{
+  const sameFront=[
+    {
+      spec:LIGHT_STRIKER_SPEC,
+      start:{id:"light",x:625,y:300,facing:Math.PI/2}
+    },
+    {
+      spec:HEAVY_CRUSHER_SPEC,
+      start:{id:"heavy",x:785,y:300,facing:Math.PI/2}
+    }
+  ];
+  const result={};
+
+  for(const policy of ["screen-heavy","screen-light"]){
+    result[policy]={
+      playerOnly:runA2Policy(policy,{
+        seconds:8,
+        entries:sameFront,
+        adversaryActionsHitPeers:false
+      }),
+      allBodies:runA2Policy(policy,{
+        seconds:8,
+        entries:sameFront,
+        adversaryActionsHitPeers:true
+      })
+    };
+  }
+
+  console.log("A2B_BODY_SCREEN_PROBE",JSON.stringify(result));
+
+  for(const pair of Object.values(result)){
+    assert.equal(pair.playerOnly.finite,true);
+    assert.equal(pair.allBodies.finite,true);
+    assert.equal(pair.playerOnly.playerHits,0);
+    assert.equal(pair.allBodies.playerHits,0);
+  }
+});
+
 test("A2 has no world obstacle available to manufacture pair value",()=>{
   const state=createA2PairState();
   assert.equal(state.world.walls.length,0);
