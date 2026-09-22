@@ -109,20 +109,22 @@ test("short strike is lethal to a cheap exposed threat, misses rear and does not
   assert.equal(miss,null);
 });
 
-test("yielding laterally during commitment can leave the actual lunge path without i-frames",()=>{
+test("reading windup and yielding laterally can leave the committed path without i-frames",()=>{
   const player=createO1Player({x:450,y:430,facing:-Math.PI/2});
   const threat=createO1Threat("t",{x:450,y:350,facing:Math.PI/2});
   const dt=1/120;
   let bodyHits=0;
   let shieldBlocks=0;
+  let sawWindup=false;
   let sawLunge=false;
 
   for(let frame=0;frame<180;frame++){
     const emitted=updatePressure(threat,player,BROKEN_YARD,dt,[threat]);
+    if(emitted.some(e=>e.type==="pressure-windup")) sawWindup=true;
     if(emitted.some(e=>e.type==="pressure-lunge")) sawLunge=true;
 
-    // Stay readable until commitment, then actually leave the committed line.
-    if(sawLunge) driveO1Player(player,1,0,dt);
+    // React to the readable tell, then keep moving while the attack commits.
+    if(sawWindup) driveO1Player(player,1,0,dt);
     else driveO1Player(player,0,0,dt);
 
     stepActorWorld(player,BROKEN_YARD,dt);
@@ -134,10 +136,37 @@ test("yielding laterally during commitment can leave the actual lunge path witho
     resetThreatAttackAuthority(threat);
   }
 
+  assert.equal(sawWindup,true);
   assert.equal(sawLunge,true);
   assert.equal(bodyHits,0);
   assert.equal(shieldBlocks,0);
   assert.equal(player.hp,O1_DAMAGE.playerHp);
+});
+
+test("late sidestep after lunge release does not grant magic evasion",()=>{
+  const player=createO1Player({x:450,y:430,facing:-Math.PI/2});
+  const threat=createO1Threat("t",{x:450,y:350,facing:Math.PI/2});
+  const dt=1/120;
+  let contacts=0;
+  let sawLunge=false;
+
+  for(let frame=0;frame<120;frame++){
+    const emitted=updatePressure(threat,player,BROKEN_YARD,dt,[threat]);
+    if(emitted.some(e=>e.type==="pressure-lunge")) sawLunge=true;
+
+    if(sawLunge) driveO1Player(player,1,0,dt);
+    else driveO1Player(player,0,0,dt);
+
+    stepActorWorld(player,BROKEN_YARD,dt);
+    const event=resolvePressureAgainstO1(player,threat);
+    if(event?.type==="shield-block" || event?.type==="body-hit") contacts++;
+    resolveActorWorld(player,BROKEN_YARD);
+    resolveActorWorld(threat,BROKEN_YARD);
+    resetThreatAttackAuthority(threat);
+  }
+
+  assert.equal(sawLunge,true);
+  assert.ok(contacts>0);
 });
 
 test("stationary open-space brace is not a universal solution against multi-angle pressure",()=>{
