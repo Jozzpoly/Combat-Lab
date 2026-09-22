@@ -46,7 +46,7 @@ test("pressure body exposes readable commitment and recovery without damage auth
   const seen=new Set([enemy.state]);
   const events=[];
   for(let i=0;i<Math.ceil((PRESSURE_TIMING.windup+PRESSURE_TIMING.lunge+PRESSURE_TIMING.recover+0.5)*120);i++){
-    events.push(...updatePressure(enemy,player,BROKEN_YARD,1/120));
+    events.push(...updatePressure(enemy,player,BROKEN_YARD,1/120,[enemy]));
     seen.add(enemy.state);
   }
   assert.ok(seen.has("windup"));
@@ -66,6 +66,7 @@ test("neutral multi-body rehearsal stays finite and exercises pressure states",(
   assert.ok(result.playerContactEpisodes>1);
   assert.ok(result.playerThreatContactFrames < 20 * 120 * 0.60);
   assert.ok(result.maxPlayerContactStreak < 120 * 2.0);
+  assert.ok(result.threatThreatContactFrames < 20 * 120 * 0.25);
   assert.ok(result.seenStates.includes("windup"));
   assert.ok(result.seenStates.includes("lunge"));
   assert.ok(result.seenStates.includes("recover"));
