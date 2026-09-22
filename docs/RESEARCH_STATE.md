@@ -8,6 +8,68 @@
 
 There is **no accepted Feniks combat model** in this repository.
 
+## Recovery correction — 2026-09-22
+
+A full project-history recovery changed the active research strategy.
+
+### Phenotype Combat Ecology P0/P1 — RETAINED AS MECHANISM DONOR, NOT ACTIVE PRODUCT DIRECTION
+
+Preserved branch / checkpoint:
+
+- branch: `experiment/phenotype-combat-ecology-v0`
+- last clean checkpoint before strategic demotion: `e82b55866cdd31ff7769c353cf2f6eab8d9cc3fa`
+- temporary interactive P1 rehearsal lineage included `90f8e8886d024c69001f0f699fa593d6d6d67711`
+
+What P0/P1 actually demonstrated:
+
+- body/equipment mass can flow through one shared movement/contact derivation;
+- shield can exist as directional occupied geometry rather than hidden damage reduction;
+- brace can trade movement/turn authority for greater resistance to displacement without infinite mass;
+- body envelope can matter to world access;
+- a continuity hybrid can interpolate numerically without a hard class flag;
+- an authored pressure cell can exploit these properties to produce different mechanical outcomes.
+
+What it did **not** demonstrate:
+
+- that the resulting combat is enjoyable, readable or worth mastering;
+- that the anchor presets define a genuinely continuous build ecology rather than coordinated fixture bundles;
+- that the observed strategy crossover emerges from ordinary play rather than from authored route/policy structure;
+- that heavy play is more than "the same fighter, slower but harder to move";
+- that the current `brace` abstraction captures the richer stance/contact behavior Feniks may want;
+- that classlessness should be the primary discovery objective before a valuable combat organism exists.
+
+Fresh code review found a specific evidence boundary: the P1 matrix uses authored front/side policies, a deliberately size-discriminating side route and a central-threat condition. That is valid **mechanism evidence**, but too close to a route/policy proof to qualify as emergent combat ecology.
+
+Therefore:
+
+> **Do not continue P1 toward Owner eligibility merely by adding browser QA, polish or more matrix tuning.**
+
+P0/P1 remains a donor package for future whole organisms.
+
+### Active discovery frontier — WHOLE COMBAT ORGANISMS
+
+The primary question is now:
+
+> **What whole combat organism makes the player want to fight again because body, weapon, movement, opponent and place jointly create readable, useful possibilities?**
+
+Secondary constraint, not primary objective:
+
+> **Can a surviving combat language later support body/equipment/progression-driven specialization without hard class authority?**
+
+This returns classlessness to its proper role: an important Feniks constraint and later falsifier, not a substitute for finding combat worth having.
+
+Discovery should compare a small number of deliberately divergent **whole organisms**. They may differ in body, equipment, weapon behavior, pressure, terrain and control vocabulary when those differences are necessary to expose genuinely different play.
+
+Do not force the same weapon/action model across candidates merely to make attribution clean. Attribution comes only after a phenomenon survives Owner play.
+
+### Promotion order
+
+1. find a whole organism with real possibility richness;
+2. establish that natural play produces curiosity / mastery / desire to repeat;
+3. only then isolate which mechanisms created the valuable phenomenon;
+4. only then pressure-test classless continuity, progression coupling and broader Feniks integration.
+
+
 ### Mechanism Probe v1 — QUALIFIED AS MECHANISM EVIDENCE, NOT OWNER-ELIGIBLE
 
 Preserved specimen:
@@ -48,11 +110,13 @@ Preserved rejected Owner specimen:
 - branch: `experiment/combat-terrarium-v1`
 - Owner-tested public SHA: `47210b16cc9a32d2d53ca42875ca7af5c6b318b3`
 
-The next discovery question moves one level outward:
+The earlier phenotype question is now preserved as a **bounded mechanism question**, not the active product frontier:
 
 > **Can distinct combat roles and strategies emerge from shared body + equipment + world rules, while controls remain responsive and no hard class flag decides what the character is?**
 
-Authoritative refoundation documents:
+It produced useful mechanism evidence, but full recovery showed that pursuing it as the next product lane risks repeating premature attribution.
+
+Authoritative historical/refoundation documents:
 
 - [Owner Specimen Refoundation](OWNER_SPECIMEN_REFOUNDATION.md) — why the Terrarium was built.
 - [Feniks Combat Refoundation — phenotype before attack engine](FENIKS_COMBAT_REFOUNDATION_2026-09-21.md) — why the Terrarium failed and what the next discovery object must test.
