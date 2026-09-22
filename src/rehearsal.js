@@ -64,6 +64,38 @@ function standMash(state){
   };
 }
 
+function backstepReader(state){
+  const enemy=enemyOf(state);
+  if(!enemy) return {moveX:0,moveY:0,...aim(null,state.player)};
+  const d=normalize(enemy.x-state.player.x,enemy.y-state.player.y,0,-1);
+  const distance=Math.hypot(enemy.x-state.player.x,enemy.y-state.player.y);
+
+  if(enemy.mode==="prepare"||enemy.mode==="commit"){
+    return {
+      moveX:-d.x,
+      moveY:-d.y,
+      ...aim(enemy,state.player),
+      strike:false
+    };
+  }
+
+  if(enemy.mode==="recover"){
+    return {
+      moveX:d.x*0.82,
+      moveY:d.y*0.82,
+      ...aim(enemy,state.player),
+      strike:distance<90&&!state.player.action
+    };
+  }
+
+  return {
+    moveX:d.x*0.54,
+    moveY:d.y*0.54,
+    ...aim(enemy,state.player),
+    strike:false
+  };
+}
+
 function phaseReader(state){
   const enemy=enemyOf(state);
   if(!enemy) return {moveX:0,moveY:0,...aim(null,state.player)};
@@ -118,6 +150,7 @@ export function runA1Policy(spec,policyName,{
   else if(policyName==="orbit-strike") policy=orbitStrike;
   else if(policyName==="stand-mash") policy=standMash;
   else if(policyName==="phase-reader") policy=phaseReader;
+  else if(policyName==="backstep-reader") policy=backstepReader;
   else throw new Error("unknown A1 policy: "+policyName);
 
   const metrics={
