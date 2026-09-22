@@ -42,6 +42,7 @@ Read these before substantial continuation:
 - [Discovery Campaign v1](docs/DISCOVERY_CAMPAIGN_V1.md) — preserved four-corner mechanism-probe design; no longer the Owner-test roadmap.
 - [Owner Specimen Refoundation](docs/OWNER_SPECIMEN_REFOUNDATION.md) — historical rationale for the now-rejected Combat Terrarium.
 - [Feniks Combat Refoundation](docs/FENIKS_COMBAT_REFOUNDATION_2026-09-21.md) — current correction: classless phenotype / combat-ecology research direction.
+- [Whole Combat Organisms v0](docs/WHOLE_COMBAT_ORGANISMS_V0.md) — active discovery campaign: divergent whole organisms before attribution.
 - [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) — hypothesis gate, evidence boundaries, branch hygiene, deployment discipline and the meaning of short Owner commands such as “kontynuuj”.
 
 ## Deployment
