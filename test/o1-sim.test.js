@@ -181,6 +181,44 @@ test("O1 pressure trigger can be grounded in committed lunge geometry",()=>{
 });
 
 
+test("O1 close-five offense audit checks whether spatial value survives longer pressure",()=>{
+  const close5=[
+    {id:"north",x:450,y:315,facing:Math.PI/2},
+    {id:"north-east",x:540,y:340,facing:Math.PI*0.75},
+    {id:"east",x:560,y:415,facing:Math.PI},
+    {id:"west",x:340,y:415,facing:0},
+    {id:"north-west",x:360,y:340,facing:Math.PI*0.25}
+  ];
+  const names=[
+    "current",
+    "twoHit",
+    "compactDeliberate",
+    "compactDeliberateTwoHit",
+    "slowerThanThreatTell"
+  ];
+  const result={};
+  for(const name of names){
+    const attackSpec=O1_ATTACK_PROBES[name];
+    result[name]={
+      hold:runO1StakePolicy(true,{
+        threatStarts:close5,
+        playerAttackSpec:attackSpec
+      }),
+      aggressive:runO1AggressiveStake({
+        threatStarts:close5,
+        playerAttackSpec:attackSpec
+      })
+    };
+  }
+
+  console.log("O1_CLOSE5_OFFENSE_AUDIT",JSON.stringify(result));
+
+  for(const pair of Object.values(result)){
+    assert.equal(pair.hold.finite,true);
+    assert.equal(pair.aggressive.finite,true);
+  }
+});
+
 test("O1 close-ring falsifier forces real concurrent pressure before refounding",()=>{
   const layouts={
     close3:[
