@@ -15,14 +15,14 @@ function nearestLiving(state) {
   return { threat: best, distance };
 }
 
-function activeGuardPolicy(state) {
+function activeGuardPolicy(state, allowBrace = true) {
   const { threat, distance } = nearestLiving(state);
   if (!threat) return { moveX: 0, moveY: 0, aimX: state.player.x, aimY: state.player.y };
 
   const dx = threat.x - state.player.x;
   const dy = threat.y - state.player.y;
   const d = normalize(dx, dy, 0, -1);
-  const brace = distance < 104;
+  const brace = allowBrace && distance < 104;
   const attack = threat.state === "recover" && distance < 86;
 
   // Seek pressure while free, become spatially deliberate once contact is near.
@@ -83,7 +83,8 @@ export function runO1Policy(policyName, {
 } = {}) {
   const state = createO1State();
   let policy;
-  if (policyName === "active-guard") policy = activeGuardPolicy;
+  if (policyName === "active-guard") policy = state => activeGuardPolicy(state, true);
+  else if (policyName === "active-unbraced") policy = state => activeGuardPolicy(state, false);
   else if (policyName === "mobile-yield") policy = mobileYieldPolicy;
   else if (policyName === "static-brace") policy = staticBracePolicy;
   else throw new Error("unknown O1 policy: " + policyName);
@@ -101,7 +102,7 @@ export function runO1Policy(policyName, {
   for (let frame = 0; frame < frames && state.result === "active"; frame++) {
     const events = stepO1State(state, policy(state), dt);
 
-    const boundaryMargin = 58;
+    const boundaryMargin = 28;
     const p = state.player;
     if (
       p.x < 28 + p.spec.radius + boundaryMargin ||
