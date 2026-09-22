@@ -134,6 +134,55 @@ function orbitNearest(state){
   };
 }
 
+function screenWith(state,blockerId,attackerId){
+  const blocker=byId(state,blockerId);
+  const attacker=byId(state,attackerId);
+
+  if(!blocker||!attacker){
+    const target=nearest(state).enemy;
+    if(!target) return moveTowardTarget(state,null);
+    const away=normalize(
+      state.player.x-target.x,
+      state.player.y-target.y,
+      0,1
+    );
+    return {
+      moveX:away.x,
+      moveY:away.y,
+      aimX:target.x,
+      aimY:target.y,
+      strike:false
+    };
+  }
+
+  // Stand on the far side of blocker from attacker. This uses only visible
+  // body positions; no attack phase, trigger range or hidden AI state.
+  const line=normalize(
+    blocker.x-attacker.x,
+    blocker.y-attacker.y,
+    0,1
+  );
+  const spacing=
+    blocker.spec.radius+
+    state.player.spec.radius+
+    24;
+  const desiredX=blocker.x+line.x*spacing;
+  const desiredY=blocker.y+line.y*spacing;
+  const move=normalize(
+    desiredX-state.player.x,
+    desiredY-state.player.y,
+    0,0
+  );
+
+  return {
+    moveX:move.x,
+    moveY:move.y,
+    aimX:attacker.x,
+    aimY:attacker.y,
+    strike:false
+  };
+}
+
 function pairReader(state){
   const light=byId(state,"light");
   const heavy=byId(state,"heavy");
@@ -224,6 +273,8 @@ export function runA2Policy(policyName,{
   else if(policyName==="focus-light") policy=s=>focusPolicy(s,"light");
   else if(policyName==="focus-heavy") policy=s=>focusPolicy(s,"heavy");
   else if(policyName==="pair-reader") policy=pairReader;
+  else if(policyName==="screen-heavy") policy=s=>screenWith(s,"heavy","light");
+  else if(policyName==="screen-light") policy=s=>screenWith(s,"light","heavy");
   else throw new Error("unknown A2 policy: "+policyName);
 
   const metrics={
