@@ -172,7 +172,7 @@ function nearestToObjective(state) {
   return best;
 }
 
-function stakeGuardPolicy(state, allowBrace) {
+function stakeInterceptPolicy(state, { allowBrace, interceptRadius }) {
   const objective = state.objective;
   const threat = nearestToObjective(state);
   if (!objective || !threat) {
@@ -186,8 +186,8 @@ function stakeGuardPolicy(state, allowBrace) {
     -1
   );
   const intercept = {
-    x: objective.x + fromObjective.x * 64,
-    y: objective.y + fromObjective.y * 64
+    x: objective.x + fromObjective.x * interceptRadius,
+    y: objective.y + fromObjective.y * interceptRadius
   };
   const toIntercept = normalize(
     intercept.x - state.player.x,
@@ -297,6 +297,49 @@ export function runO1LineHold(allowBrace, {
     playerY:Number(state.player.y.toFixed(2)),
     threatY:Number(state.threats[0].y.toFixed(2)),
     ...counts,
+    finite:[state.player,...state.threats].every(a =>
+      [a.x,a.y,a.vx,a.vy,a.facing].every(Number.isFinite)
+    )
+  };
+}
+
+
+export function runO1ForwardIntercept({
+  seconds = 18,
+  dt = 1 / 120
+} = {}) {
+  const state=createO1State({
+    playerStart:{x:450,y:415,facing:-Math.PI/2},
+    threatStarts:[
+      {id:"north",x:315,y:175,facing:Math.PI/2},
+      {id:"east",x:805,y:355,facing:Math.PI}
+    ],
+    objective:{x:450,y:480,radius:14,hp:1}
+  });
+
+  const counts={shieldBlocks:0,bodyHits:0,objectiveHits:0,kills:0};
+  const frames=Math.ceil(seconds/dt);
+  for(let frame=0;frame<frames && state.result==="active";frame++){
+    const events=stepO1State(state,stakeInterceptPolicy(state,{
+      allowBrace:false,
+      interceptRadius:150
+    }),dt);
+    for(const event of events){
+      if(event.type==="shield-block") counts.shieldBlocks++;
+      if(event.type==="body-hit") counts.bodyHits++;
+      if(event.type==="objective-hit") counts.objectiveHits++;
+      if(event.type==="player-strike" && event.killed) counts.kills++;
+    }
+  }
+
+  return {
+    result:state.result,
+    time:Number(state.time.toFixed(3)),
+    hp:state.player.hp,
+    objectiveHp:state.objective.hp,
+    livingThreats:state.threats.filter(t=>t.hp>0).length,
+    ...counts,
+    player:{x:Number(state.player.x.toFixed(2)),y:Number(state.player.y.toFixed(2))},
     finite:[state.player,...state.threats].every(a =>
       [a.x,a.y,a.vx,a.vy,a.facing].every(Number.isFinite)
     )
