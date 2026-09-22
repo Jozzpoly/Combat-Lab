@@ -220,6 +220,67 @@ Do not proceed to the pair organism until this survives.
 
 ---
 
+## 5.2 A1 v1 result — QUALITATIVE ACTION GEOMETRY CREATES FIRST STRATEGY CROSSOVER
+
+A1 was refounded so adversary identity was not only a row of constants.
+
+Both anchors still use the shared lifecycle:
+
+- seek;
+- prepare;
+- commit;
+- recover.
+
+But action/equipment realization now differs:
+
+- light anchor: **dash-line** with locked commitment and meaningful carry into recovery;
+- heavy anchor: **sweep-arc** with slow body advance and a real rotating threat segment.
+
+The action model is independent from body identity in code. A light body can be instantiated with sweep equipment and a heavy body with dash equipment.
+
+### Open-field crossover
+
+With the same player and same simple strike:
+
+**Light dash-line**
+
+- orbit-strike: CLEAR, **100 HP**;
+- backstep-reader: CLEAR, **66 HP**.
+
+**Heavy sweep-arc**
+
+- orbit-strike: **DOWN**;
+- backstep-reader: CLEAR, **100 HP**.
+
+This is the first A1 result where the motor strategy itself crosses over qualitatively.
+
+### Reaction-delay red-team
+
+Heavy backstep was then delayed after visible prepare:
+
+- immediate: CLEAR, 100 HP;
+- 80 ms delay: CLEAR, 100 HP;
+- 160 ms delay: CLEAR, 100 HP;
+- 240 ms delay: CLEAR, 50 HP.
+
+The clean response therefore does not require zero-latency internal-state access.
+
+Evidence boundary:
+
+> This qualifies **mechanical / temporal possibility**, not human readability.
+
+The automated policy still reads the internal phase. A future browser specimen must make prepare / commit legible through normal motion and presentation before any Owner claim.
+
+### A1 status
+
+> **A1 v1 passes the agent-side strategy-divergence gate.**
+
+It does **not** qualify gameplay, fun, mastery or Owner readiness.
+
+Proceed to A2 pair interaction first in open space. Do not use terrain to manufacture pair value.
+
+---
+
 ## 6. Pair phenomenon
 
 The first product-level reason to put both in one fight is not "more enemies".
