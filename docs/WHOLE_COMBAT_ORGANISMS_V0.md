@@ -552,6 +552,71 @@ Do not change pressure or brace before answering that.
 
 ---
 
+## 5.4 O1 brace attribution — STANCE BECOMES RELEVANT ONLY UNDER SUSTAINED CONCURRENCY
+
+The close-five pressure window was re-run while independently varying:
+
+- contact support (`player.braced`);
+- brace locomotion/turn profile (`movementBraced`);
+- attack contract.
+
+### Compact deliberate one-hit
+
+All deliberate interception variants clear with full HP:
+
+- full brace: clear 2.500 s;
+- unbraced: clear 4.058 s;
+- **support off + slow movement:** clear 2.083 s;
+- **support on + fast movement:** clear 6.425 s;
+- aggressive: clear 3.175 s, 66 HP.
+
+Interpretation:
+
+> When cheap threats can still be erased in one clean hit, brace support itself is **not** necessary. Positioning/timing and movement profile dominate before sustained contact matters.
+
+Do not claim O1 stance success from this regime.
+
+### Compact deliberate two-hit
+
+The same close-five pressure with longer-lived threats creates a qualitatively different result:
+
+- **full brace + slow posture:** CLEAR, 32 HP, objective intact;
+- unbraced normal: BREACH;
+- **support off + the same slow movement profile:** BREACH;
+- **support on + fast movement:** BREACH;
+- aggressive click-forward: DOWN, 0 kills.
+
+This isolates an important interaction:
+
+- slow posture alone is insufficient;
+- contact support alone at the fast movement profile is insufficient;
+- the combined brace package survives and clears where the isolated variants fail.
+
+Therefore:
+
+> **Integrated stance relevance is now demonstrated in one narrow sustained-concurrency regime.**
+
+This is still not Owner evidence and not yet proof of a good combat organism.
+
+### New artifact boundary — multi-target cleave
+
+In the two-hit close-five clear:
+
+- five threats require nominally ten damaging contacts;
+- full brace recorded only seven attack actions.
+
+The current sector-style compact action can damage multiple bodies during one action.
+
+That may be a valid future weapon behavior, but it is an unisolated source of pressure erasure and cannot silently carry O1.
+
+Next falsifier:
+
+> preserve meaningful lethality while limiting a compact strike to one solid target per action.
+
+If the stance/position distinction survives **single-contact lethal strikes**, O1 becomes substantially more credible without introducing HP sponge.
+
+---
+
 # 6. Organism O2 — REACH / THREAT
 
 Internal research label only.
