@@ -857,6 +857,38 @@ O2 must not use any of these as its product thesis:
 - passive idle-spear damage;
 - retreat-to-boundary as successful defense.
 
+### K1 apparatus correction — W1 pressure is not an engagement opponent
+
+The first K1 deep-open retreat probe exposed a substrate mismatch before it exposed an O2 combat property:
+
+- O2 player max speed inherited from W1: **235**;
+- W1 pressure max approach speed: **148**.
+
+A player moving directly away therefore has ~59% more top speed than ordinary W1 approach.
+
+In a 5000×5000 open diagnostic the backward policy:
+
+- survived 16 s at 100 HP;
+- received 0 body hits;
+- performed 0 attacks;
+- never entered thrust range;
+- eventually reached the distant world boundary only after simply outrunning all pressure.
+
+Therefore:
+
+> **The stock W1 pressure body cannot be used to falsify O2 backward kiting in open space. It measures locomotion disengagement, not reach combat.**
+
+Do not fix this by enclosing the player in a smaller arena.
+
+Before changing O2 weapon laws, sweep pursuit speed relative to player speed and ask whether there is a broad engagement envelope where:
+
+- retreat cannot cancel combat indefinitely;
+- mixed lane/pivot play remains viable;
+- forward chase remains materially worse;
+- no special AI knowledge of spear reach is introduced.
+
+If no such envelope exists, treat that as an O2 organism failure.
+
 ### O2 player vocabulary
 
 First causal kernel:
