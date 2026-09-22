@@ -110,29 +110,74 @@ Do not revive it through brace buffs, stamina, guard-break, shield-bash rescue b
 
 O1 remains a useful donor package. A future Feniks combat may still contain shield / stance / physical tanking behavior; this verdict is specific to the tested organism.
 
-### Active technical frontier — W3 / O2 REACH / THREAT
+### W3 — O2 REACH / THREAT — WHOLE-ORGANISM FAIL, KERNEL DONOR RETAINED
 
-Proceed to a genuinely sibling organism, not an O1 patch and not Terrarium spear reheated.
+Preserved campaign checkpoint:
 
-O2 may reuse only shared substrate / discipline that genuinely belongs to the world:
+- branch checkpoint: `375974c3403387b3ebf4ca8c6c68355cbc6618a2`;
+- Owner play: **NOT REQUESTED**.
 
-- Broken Yard geometry;
-- actor/world occupancy;
-- cheap pressure-state infrastructure;
-- same-step consequence discipline;
-- browser/deployment tooling.
+O2 causal-kernel evidence remains useful:
 
-Do **not** inherit by default:
+- persistent spear geometry without passive damage;
+- outer-tip thrust authority rather than whole-shaft damage;
+- one solid damaging target per thrust;
+- wall truncation / clearance consequence;
+- zero-damage close clearance displacement;
+- live locomotion;
+- same-step committed consequence discipline.
 
-- O1 shield;
-- O1 brace;
-- O1 short strike;
-- O1 stake controller;
-- O1 pressure-density tuning.
+The whole organism failed its pre-registered backward-kite falsifier.
 
-The immediate O2 question is:
+The key pressure-speed sweep showed two regimes:
 
-> **Can a long weapon create useful decisions before the attack button — through reach, approach lane, obstruction and collapse — without degenerating into backwards-kite range maintenance?**
+1. when direct pursuit is slower than / equal to player movement, retreat simply cancels engagement;
+2. once pursuit becomes faster, direct chase feeds bodies into the spear axis and backward + thrust clears safely at 100 HP across multiple faster pursuit speeds.
+
+Representative deep-open results:
+
+- pressure 1.08x player speed: backward-kite CLEAR, 100 HP;
+- pressure 1.15x: backward-kite CLEAR, 100 HP;
+- pressure 1.25x: backward-kite CLEAR, 100 HP.
+
+This was achieved without world-boundary dependence.
+
+Therefore:
+
+> **O2 v0 does not create robust REACH / THREAT play; its simplest winning strategy remains backwards movement + thrust.**
+
+Do not rescue it with hidden spear-aware AI, arbitrary backwards penalties, tighter arena boundaries, stamina taxes or pursuit-speed tuning.
+
+### Campaign-level correction — GENERIC CHEAP PRESSURE IS NOT A DISCOVERY OPPONENT
+
+O1 and O2 failed for different local reasons, but both depended on the same generic W1 cheap-pressure abstraction.
+
+That abstraction is now reclassified as:
+
+> **useful mechanism / stress-test infrastructure, not sufficient opponent substrate for product-level combat discovery.**
+
+This corrects a regression against the Feniks combat refoundation, which had already warned that opponent pressure should stop being one generic duelist / pressure body.
+
+The next discovery lane must treat **adversary identity as part of the whole organism**.
+
+Do not mechanically implement O3 against the same pressure cell.
+
+### Active frontier — ADVERSARIAL COMBAT ORGANISM v1
+
+The next question is:
+
+> **Can a small fight become worth reading and mastering when the opponent is itself a materially distinct combat body with understandable intent, limitations and spatial consequences — rather than a generic pursuit force?**
+
+The next lane should use one or two deliberately distinct adversaries only if they create qualitatively different decisions.
+
+Candidate first pressure mix from the existing Feniks refoundation:
+
+- one light / fast pressure body;
+- one heavier space-holding body.
+
+These are not classes and must not become hidden role flags.
+
+The immediate work is **hypothesis design + clean experimental lane**, not O3 implementation and not Owner deployment.
 
 
 ## Recovery correction — 2026-09-22
