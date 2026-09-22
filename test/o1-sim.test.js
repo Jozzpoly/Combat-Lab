@@ -11,7 +11,7 @@ import {
   resolvePressurePhysical,
   stepO1Attack
 } from "../src/o1.js";
-import { runO1ForwardIntercept, runO1LineHold, runO1Policy, runO1StakePolicy } from "../src/o1-rehearsal.js";
+import { runO1AggressiveStake, runO1ForwardIntercept, runO1LineHold, runO1Policy, runO1StakePolicy } from "../src/o1-rehearsal.js";
 
 test("same-step committed strike and side hit both survive application order",()=>{
   const player=createO1Player({x:300,y:300,facing:-Math.PI/2});
@@ -138,4 +138,15 @@ test("spatial-stake attribution separates contact support from locomotion profil
   };
   console.log("O1_STAKE_SUPPORT_ISOLATION",JSON.stringify(result));
   for(const value of Object.values(result)) assert.equal(value.finite,true);
+});
+
+
+test("aggressive click-forward policy red-teams whether stance has any reason to exist",()=>{
+  const result={
+    hold:runO1StakePolicy(true),
+    aggressive:runO1AggressiveStake()
+  };
+  console.log("O1_AGGRESSION_REDTEAM",JSON.stringify(result));
+  assert.equal(result.hold.finite,true);
+  assert.equal(result.aggressive.finite,true);
 });
