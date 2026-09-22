@@ -391,6 +391,116 @@ Research labels such as `HOLD/BREAK` must not appear in the eventual Owner-facin
 
 ---
 
+## 5.2 O1 red-team finding — CURRENT ORGANISM FAILS TO MAKE HOLD MATTER
+
+Evidence through `1fd14ff06ab6e5088c8c14471cef286a9f66bc9a` falsifies the current O1 pressure organism as a candidate for Owner play.
+
+### Brace is not behaviorally necessary
+
+Across the normal two-threat encounter and 3-angle / 3-north variants:
+
+- braced and unbraced active policies both clear with full HP;
+- clear times remain very close;
+- the unbraced policy is sometimes faster;
+- the spatial-stake objective remains intact in both cases.
+
+The isolated line-hold probe proves that brace **does** change displacement mechanically, but the integrated organism does not create a meaningful reason to care about that difference.
+
+Therefore:
+
+> **mechanical brace effect = proven; gameplay relevance of brace in current O1 = falsified.**
+
+### Aggression dominates the stake
+
+A direct click-forward policy that chases the nearest stake threat and attacks whenever locally possible:
+
+- clears the default stake in ~1.5 s with full HP;
+- is faster than the deliberate hold policy;
+- preserves the objective;
+- initially requires no shield blocks at all.
+
+Single-axis attack changes did not remove this dominance:
+
+- shorter reach;
+- longer windup;
+- two-hit lethality.
+
+Combined attack constraints also failed to reverse it:
+
+- shorter reach + longer windup;
+- shorter reach + two-hit;
+- longer windup + two-hit;
+- shorter reach + longer windup + two-hit;
+- even a 0.30 s windup, longer than the hostile tell.
+
+Aggressive play still clears safely.
+
+This closes the hypothesis that O1 can be rescued by ordinary short-weapon tuning.
+
+### More important: killing is not the only cause
+
+The aggression/concurrency audit disabled player attacks entirely.
+
+With the default two-threat stake:
+
+- 18 s elapsed;
+- player HP remained 100;
+- objective remained intact;
+- 24 shield blocks occurred;
+- 0 body hits;
+- 0 objective hits;
+- both threats remained alive.
+
+So merely moving aggressively toward pressure while facing it with the continuously present shield can indefinitely neutralize the current encounter.
+
+### Current pressure is effectively serial
+
+The same audit increased population from 2 to 5 without changing mechanics.
+
+Even at five threats:
+
+- maximum simultaneously committed threats: 2;
+- frames with 2+ committed threats: 8;
+- maximum locally dangerous threats: 2;
+- frames with 2+ local threats: 11.
+
+At 2–4 threats, concurrency was effectively one-at-a-time.
+
+Thus the current pressure organism does not yet create the multi-angle pressure that HOLD / BREAK is supposed to negotiate.
+
+### Current diagnosis
+
+Do **not** respond by:
+
+- buffing brace;
+- adding stamina;
+- adding guard break;
+- increasing enemy HP;
+- slowing the player;
+- weakening damage by arbitrary percentages;
+- declaring that mobile shield coverage is wrong merely because the test failed.
+
+The current failure is more structural:
+
+> **a continuously oriented mobile shield plus largely serial cheap pressure allows the player to erase spatial stakes without needing to choose a place to hold.**
+
+### Final falsifier before refounding O1 pressure
+
+Without changing combat laws, construct a diagnostic close-ring start that creates genuinely concurrent approach / commitment from several angles.
+
+Ask:
+
+1. does concurrency actually rise?
+2. does attack-disabled mobile shield still neutralize the encounter?
+3. does aggressive killing still erase pressure?
+4. does deliberate hold gain any material advantage?
+
+If true concurrent pressure still fails to make spatial choice matter, retire the current O1 pressure family instead of tuning it further.
+
+This remains **agent-side falsification only**. No Owner play.
+
+---
+
 # 6. Organism O2 — REACH / THREAT
 
 Internal research label only.
