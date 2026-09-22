@@ -6,6 +6,7 @@ import {
   LIGHT_STRIKER_SPEC,
   interpolateAdversarySpec
 } from "../src/anchors.js";
+import { createAdversary, adversaryThreatSegment } from "../src/adversary.js";
 import { runA1Policy } from "../src/rehearsal.js";
 
 test("A1 anchors share HP and schema rather than role-specific survivability",()=>{
@@ -20,6 +21,59 @@ test("A1 anchors share HP and schema rather than role-specific survivability",()
   );
   assert.equal(Object.hasOwn(LIGHT_STRIKER_SPEC,"role"),false);
   assert.equal(Object.hasOwn(HEAVY_CRUSHER_SPEC,"role"),false);
+});
+
+test("A1 action model belongs to equipment contract rather than body identity",()=>{
+  const lightSweep={
+    body:LIGHT_STRIKER_SPEC.body,
+    attack:HEAVY_CRUSHER_SPEC.attack
+  };
+  const heavyDash={
+    body:HEAVY_CRUSHER_SPEC.body,
+    attack:LIGHT_STRIKER_SPEC.attack
+  };
+
+  const a=createAdversary(lightSweep,{id:"a",x:300,y:300,facing:0});
+  const b=createAdversary(heavyDash,{id:"b",x:300,y:300,facing:0});
+
+  assert.equal(a.adversarySpec.attack.model,"sweep-arc");
+  assert.equal(b.adversarySpec.attack.model,"dash-line");
+  assert.equal(a.spec, LIGHT_STRIKER_SPEC.body);
+  assert.equal(b.spec, HEAVY_CRUSHER_SPEC.body);
+});
+
+test("A1 sweep geometry actually rotates while dash geometry stays locked",()=>{
+  const dash=createAdversary(LIGHT_STRIKER_SPEC,{
+    id:"dash",
+    x:300,
+    y:300,
+    facing:0
+  });
+  dash.mode="commit";
+  dash.commitFacing=0;
+  dash.commitX=1;
+  dash.commitY=0;
+  dash.commitElapsed=0.03;
+
+  const d0=adversaryThreatSegment(dash);
+  dash.commitElapsed=0.14;
+  const d1=adversaryThreatSegment(dash);
+  assert.ok(Math.abs(d1.angle-d0.angle)<1e-9);
+
+  const sweep=createAdversary(HEAVY_CRUSHER_SPEC,{
+    id:"sweep",
+    x:300,
+    y:300,
+    facing:0
+  });
+  sweep.mode="commit";
+  sweep.commitFacing=0;
+  sweep.commitElapsed=0.03;
+  const s0=adversaryThreatSegment(sweep);
+  sweep.commitElapsed=0.38;
+  const s1=adversaryThreatSegment(sweep);
+
+  assert.ok(Math.abs(s1.angle-s0.angle)>1.0);
 });
 
 test("A1 anchor interpolation remains finite between extremes",()=>{
