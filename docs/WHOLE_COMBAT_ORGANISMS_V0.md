@@ -525,6 +525,54 @@ No Owner deployment before this gate.
 
 ---
 
+## W1 checkpoint — neutral Broken Yard substrate — MECHANICALLY ADEQUATE, BROWSER REHEARSAL PENDING
+
+Current pre-browser checkpoint:
+
+- code head before this note: `6257789d49a7a0c013148a537270395303442a3b`;
+- 6 / 6 deterministic W1 checks PASS;
+- player and both pressure bodies begin with the same body radius;
+- two broad yard relations are geometrically traversable without phenotype gates;
+- pressure state machine exercises `approach → windup → lunge → recover`;
+- player has no attack or HP authority in W1;
+- the neutral 20 s rehearsal is finite and advances through the yard rather than remaining blocked.
+
+Important apparatus failures found and corrected before this checkpoint:
+
+1. the first right-route proof crossed the south obstruction;
+2. the first rehearsal path crossed the east wall and falsely generated thousands of wall contacts;
+3. the first pressure recover remained too adhesive, producing 2699 pair-contact frames;
+4. after bounded disengage, player adhesion dropped sharply;
+5. the two pressure bodies then revealed a separate blob problem;
+6. local peer separation was added only during ordinary approach/recover steering, not as formation/flank authority.
+
+Latest deterministic rehearsal signature:
+
+- `waypointAdvances = 33`;
+- `playerThreatContactFrames = 317 / 2400`;
+- `playerContactEpisodes = 8`;
+- `maxPlayerContactStreak = 115` (~0.96 s);
+- `threatThreatContactFrames = 539 / 2400`;
+- `pairContacts = 595`;
+- `worldContacts = 499`;
+- all pressure phases observed;
+- finite state throughout.
+
+Interpretation boundary:
+
+> W1 is now good enough mechanically to inspect as a **situation substrate**. It does not prove that multi-body pressure is visually legible, pleasant or product-worthy.
+
+Before W2 / O1 implementation, perform one exact-SHA browser render rehearsal and ask only:
+
+- do the three bodies remain visually individuated rather than reading as a blob?
+- are windup / lunge / recover readable at normal speed?
+- does Broken Yard read as a place with multiple relations rather than a scripted route diagram?
+- is there any obvious runtime/render/input failure hidden by Node tests?
+
+No Owner play is authorized by this checkpoint.
+
+---
+
 ## Working invariant
 
 > **We are not trying to prove that our mechanics can support combat. We are trying to discover combat worth supporting.**
