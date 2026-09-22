@@ -1,6 +1,6 @@
 import { normalize } from "./math.js";
 import { createO2State, stepO2State } from "./o2-sim.js";
-import { o2ActionState } from "./o2.js";
+import { o2ActionState, spearSegment } from "./o2.js";
 
 function nearestLiving(state) {
   let best=null;
@@ -122,11 +122,13 @@ export function runO2Policy(policyName,{
   seconds=16,
   dt=1/120,
   playerStart,
-  threatStarts
+  threatStarts,
+  world
 }={}) {
   const state=createO2State({
     ...(playerStart?{playerStart}:{}),
-    ...(threatStarts?{threatStarts}:{})
+    ...(threatStarts?{threatStarts}:{}),
+    ...(world?{world}:{})
   });
 
   let policy;
@@ -151,13 +153,18 @@ export function runO2Policy(policyName,{
     const events=stepO2State(state,policy(state),dt);
 
     const p=state.player;
+    const activeWorld=state.world;
     const margin=28;
     if(
-      p.x < 28+p.spec.radius+margin ||
-      p.x > 900-28-p.spec.radius-margin ||
-      p.y < 28+p.spec.radius+margin ||
-      p.y > 620-28-p.spec.radius-margin
+      p.x < activeWorld.inset+p.spec.radius+margin ||
+      p.x > activeWorld.width-activeWorld.inset-p.spec.radius-margin ||
+      p.y < activeWorld.inset+p.spec.radius+margin ||
+      p.y > activeWorld.height-activeWorld.inset-p.spec.radius-margin
     ) counts.boundaryFrames++;
+
+    if(spearSegment(p,{world:activeWorld}).blocked) {
+      counts.wallBlockedFrames++;
+    }
 
     for(const event of events){
       if(event.type==="o2-thrust-hit"){
