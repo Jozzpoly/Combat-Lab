@@ -13,6 +13,7 @@ import {
 } from "../src/o1.js";
 import { runO1AggressiveStake, runO1ForwardIntercept, runO1LineHold, runO1Policy, runO1StakePolicy } from "../src/o1-rehearsal.js";
 import { playerInterposesObjective } from "../src/o1-sim.js";
+import { pressurePhysicalReach } from "../src/pressure.js";
 
 test("same-step committed strike and side hit both survive application order",()=>{
   const player=createO1Player({x:300,y:300,facing:-Math.PI/2});
@@ -166,4 +167,14 @@ test("stake pressure targets the player only when they materially interpose",()=
   player.x=450;
   player.y=320;
   assert.equal(playerInterposesObjective(threat,player,objective),false);
+});
+
+
+test("O1 pressure trigger can be grounded in committed lunge geometry",()=>{
+  const player=createO1Player({x:0,y:0,facing:0});
+  const threat=createO1Threat("t",{x:100,y:0,facing:Math.PI});
+  const reach=pressurePhysicalReach(threat,player);
+
+  assert.ok(reach>75);
+  assert.ok(reach<90);
 });
