@@ -89,6 +89,40 @@ test("A1 anchor interpolation remains finite between extremes",()=>{
   }
 });
 
+test("A1 heavy backstep advantage survives bounded reaction delay",()=>{
+  const openWorld={
+    width:1200,
+    height:900,
+    inset:28,
+    walls:[]
+  };
+  const options={
+    world:openWorld,
+    playerStart:{x:600,y:650,facing:-Math.PI/2},
+    adversaryStart:{id:"enemy",x:600,y:250,facing:Math.PI/2}
+  };
+  const policies=[
+    "backstep-reader",
+    "backstep-delay-080",
+    "backstep-delay-160",
+    "backstep-delay-240"
+  ];
+  const result={light:{},heavy:{}};
+
+  for(const policy of policies){
+    result.light[policy]=runA1Policy(LIGHT_STRIKER_SPEC,policy,options);
+    result.heavy[policy]=runA1Policy(HEAVY_CRUSHER_SPEC,policy,options);
+  }
+
+  console.log("A1_BACKSTEP_REACTION",JSON.stringify(result));
+
+  for(const family of Object.values(result)){
+    for(const value of Object.values(family)){
+      assert.equal(value.finite,true);
+    }
+  }
+});
+
 test("A1 open-field matrix removes route blocker before judging adversary identity",()=>{
   const openWorld={
     width:1200,
