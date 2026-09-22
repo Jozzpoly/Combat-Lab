@@ -8,6 +8,63 @@
 
 There is **no accepted Feniks combat model** in this repository.
 
+## Whole Combat Organisms v0 — W1 checkpoint
+
+Active branch:
+
+- `experiment/whole-combat-organisms-v0`
+
+Neutral situation substrate:
+
+- exact agent-rehearsal deployment: `ba408d52549175b06d10d5387eb7f331717cc630`;
+- branch checkpoint after evidence capture: `0b064d5d7d18be48fe2b264d46d11e6df0a745ec`;
+- 6 / 6 deterministic W1 checks PASS;
+- Pages build checked out the exact rehearsal SHA and deploy completed successfully;
+- Opera executed the real browser module/runtime loop and exposed changing pressure states.
+
+What W1 is:
+
+> a neutral Broken Yard situation substrate with one responsive player body, two cheap pressure bodies, real body/world occupancy and readable state-machine commitment/recovery — intentionally without player attack or HP authority.
+
+What W1 is not:
+
+- combat evidence;
+- Owner evidence;
+- proof that Broken Yard is visually legible or fun;
+- proof that multi-pressure is the right Feniks encounter structure.
+
+Important negative/apparatus evidence was retained instead of hidden:
+
+- initial route probes crossed world geometry;
+- the first deterministic path itself crossed a wall;
+- pressure initially face-hugged the player for excessive contact time;
+- after disengage, pressure bodies themselves formed a persistent blob;
+- the peer-separation edit briefly introduced a code-level ReferenceError;
+- each issue was corrected without lowering the pre-existing gate.
+
+Final deterministic 20 s signature at `6257789d...`:
+
+- `waypointAdvances = 33`;
+- `playerThreatContactFrames = 317 / 2400`;
+- `playerContactEpisodes = 8`;
+- `maxPlayerContactStreak = 115` (~0.96 s);
+- `threatThreatContactFrames = 539 / 2400`;
+- `pairContacts = 595`;
+- `worldContacts = 499`;
+- all pressure phases observed;
+- finite state throughout.
+
+Evidence boundary:
+
+- mechanism / deterministic rehearsal: **PASS**;
+- exact deploy provenance: **PASS**;
+- browser module/runtime execution: **PASS**;
+- canvas visual legibility: **UNPROVEN** because the screenshot connector did not provide an inspectable visual surface in this run;
+- Owner eligibility: **NO**.
+
+Next active technical step is **W2 — O1 HOLD / BREAK**, using W1 only as a situation substrate. Do not add O2, O3, progression or classless-role proof until O1 has been agent-red-teamed for possibility richness and obvious failure modes.
+
+
 ## Recovery correction — 2026-09-22
 
 A full project-history recovery changed the active research strategy.
