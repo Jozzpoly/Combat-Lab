@@ -666,6 +666,109 @@ No new combat law should be added before answering it.
 
 ---
 
+## 5.6 O1 v0 verdict — WHOLE-ORGANISM FAIL, MECHANISM DONOR RETAINED
+
+Final existing-law checkpoint:
+
+- branch commit: `c69d609408ccfc7527472b9afe5bad4b75658134`;
+- deterministic suite: **35 / 35 PASS**;
+- no Owner play was requested.
+
+### What O1 v0 successfully demonstrated
+
+Retain as bounded donor evidence:
+
+- continuously present directional shield geometry;
+- frontal shield contact can consume a lunge's damage path without binary parry cancellation;
+- both bodies continue to displace under shield contact;
+- brace can alter frontal contact yield without global infinite mass;
+- side/rear committed contact bypasses the frontal shield relation;
+- readable windup can be escaped through actual geometry without i-frames;
+- a late sidestep does not create magic evasion;
+- simultaneous committed consequences can be applied without execution-order authority;
+- real multi-angle concurrency materially changes the pressure problem;
+- short lethal contact can preserve the desired non-sponge pressure;
+- finite target-contact budgets can remove accidental compact cleave.
+
+These are mechanisms / design pressures, not a combat model.
+
+### What falsified the organism
+
+The integrated HOLD / BREAK thesis did not survive progressively stronger tests.
+
+1. **Serial pressure made brace irrelevant.**
+   Braced and unbraced active policies both cleared safely.
+
+2. **Aggressive click-forward dominated.**
+   Attack reach, windup and lethality changes — independently and factorially — did not remove the dominance.
+
+3. **Mobile shield alone could neutralize weak serial pressure.**
+   With attacks disabled, the player could protect the default stake for the full rehearsal.
+
+4. **True close concurrency finally created defensive value.**
+   At five simultaneous threats, deliberate hold preserved more HP than aggression.
+
+5. **That value depended heavily on offensive erasure.**
+   Five threats could die in fewer actions than nominal contacts required because the compact sector action cleaved several bodies.
+
+6. **Removing cleave destroyed the prior stance result.**
+   With one solid target per compact action:
+   - braced single-contact lethal play breached;
+   - unbraced play could clear;
+   - adaptive brace still breached;
+   - two-hit single-contact variants broadly failed.
+
+7. **Adaptive stance timing did not rescue it.**
+   The failure was not merely an autopilot holding brace too long.
+
+8. **Existing-law BREAK did not exist.**
+   A proactive braced forward shield-drive, with attacks disabled, died in **1.583 s** under close-five pressure.
+   Unbraced drive / no-attack chase lasted **2.758 s**.
+   Bracing did not create useful formation-breaking displacement.
+
+### Product conclusion
+
+> **O1 v0 is not a whole combat organism worth Owner attention.**
+
+Do not continue by:
+
+- buffing brace;
+- adding stamina / guard-break;
+- adding shield-bash as a rescue button;
+- increasing enemy HP;
+- adding more pressure merely until the desired answer appears;
+- restoring multi-target cleave just because it produced a favorable matrix.
+
+A future Feniks combat may still contain excellent shield / stance / physical tanking behavior.
+
+This verdict is narrower:
+
+> **the current O1 law set + Broken Yard pressure + short-weapon vocabulary did not produce robust HOLD / BREAK play.**
+
+Preserve the code and evidence as donor material.
+
+### Next move
+
+Proceed to **O2 REACH / THREAT as a genuinely sibling organism**, not an O1 patch.
+
+O2 may reuse:
+
+- Broken Yard world substrate;
+- basic actor/world occupancy;
+- cheap pressure state-machine infrastructure;
+- same-step consequence discipline;
+- deployment/rehearsal tooling.
+
+O2 must **not** inherit by default:
+
+- O1 shield;
+- O1 brace;
+- O1 short strike;
+- O1 stake controller;
+- O1 pressure-density tuning.
+
+---
+
 # 6. Organism O2 — REACH / THREAT
 
 Internal research label only.
