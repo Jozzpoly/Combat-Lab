@@ -1,4 +1,4 @@
-import { angleDelta, normalize } from "./math.js";
+import { angleDelta, clamp, normalize } from "./math.js";
 import { createActor, driveActor, faceToward, integrateActor } from "./actor.js";
 import { resolveActorWorld, segmentBlocked } from "./world.js";
 
@@ -13,6 +13,7 @@ export const BASE_ADVERSARY_SPEC=Object.freeze({
     hp:60
   }),
   attack:Object.freeze({
+    model:"dash-line",
     triggerRange:92,
     prepareHalfAngle:0.65,
     windup:0.24,
@@ -20,8 +21,10 @@ export const BASE_ADVERSARY_SPEC=Object.freeze({
     commitSpeed:255,
     reach:28,
     halfWidth:13,
+    sweepArc:0,
     damage:34,
-    recover:0.58
+    recover:0.58,
+    recoveryVelocityScale:0.34
   })
 });
 
@@ -37,6 +40,8 @@ export function createAdversary(spec=BASE_ADVERSARY_SPEC,{
   actor.modeTime=0;
   actor.commitX=0;
   actor.commitY=1;
+  actor.commitFacing=facing;
+  actor.commitElapsed=0;
   actor.attackResolved=false;
   return actor;
 }
@@ -46,6 +51,7 @@ function enter(actor,mode,time=0){
   actor.modeTime=time;
   if(mode==="commit"){
     actor.attackResolved=false;
+    actor.commitElapsed=0;
   }
 }
 
@@ -77,17 +83,24 @@ export function updateAdversary(actor,player,world,dt,emit){
       );
       actor.commitX=d.x;
       actor.commitY=d.y;
+      actor.commitFacing=actor.facing;
       actor.vx=d.x*attack.commitSpeed;
       actor.vy=d.y*attack.commitSpeed;
       enter(actor,"commit",attack.commitDuration);
-      emit?.({type:"adversary-commit",actor:actor.id});
+      emit?.({
+        type:"adversary-commit",
+        actor:actor.id,
+        model:attack.model
+      });
     }
   }else if(actor.mode==="commit"){
     // Commitment is spatially real: no target re-homing until recovery.
+    actor.commitElapsed+=dt;
     actor.modeTime-=dt;
     if(actor.modeTime<=0){
-      actor.vx*=0.34;
-      actor.vy*=0.34;
+      const carry=attack.recoveryVelocityScale ?? 0.34;
+      actor.vx*=carry;
+      actor.vy*=carry;
       enter(actor,"recover",attack.recover);
       emit?.({type:"adversary-recover",actor:actor.id});
     }
@@ -116,27 +129,62 @@ function pointSegmentDistance(px,py,ax,ay,bx,by){
   return {x,y,distance:Math.hypot(px-x,py-y)};
 }
 
+export function adversaryThreatSegment(actor){
+  const attack=actor.adversarySpec.attack;
+  let angle=actor.commitFacing;
+
+  if(attack.model==="sweep-arc"){
+    const progress=clamp(
+      actor.commitElapsed/Math.max(1e-9,attack.commitDuration),
+      0,
+      1
+    );
+    angle=
+      actor.commitFacing-
+      attack.sweepArc*0.5+
+      attack.sweepArc*progress;
+  }
+
+  const fx=Math.cos(angle);
+  const fy=Math.sin(angle);
+  const startX=actor.x+fx*actor.spec.radius;
+  const startY=actor.y+fy*actor.spec.radius;
+
+  return {
+    ax:startX,
+    ay:startY,
+    bx:startX+fx*attack.reach,
+    by:startY+fy*attack.reach,
+    angle,
+    model:attack.model
+  };
+}
+
 export function probeAdversaryHit(actor,player,world){
   if(actor.mode!=="commit" || actor.attackResolved || actor.hp<=0) return null;
 
   const attack=actor.adversarySpec.attack;
-  const startX=actor.x+actor.commitX*actor.spec.radius;
-  const startY=actor.y+actor.commitY*actor.spec.radius;
-  const endX=startX+actor.commitX*attack.reach;
-  const endY=startY+actor.commitY*attack.reach;
+  const segment=adversaryThreatSegment(actor);
 
-  if(segmentBlocked(world,startX,startY,endX,endY)) return null;
+  if(segmentBlocked(
+    world,
+    segment.ax,
+    segment.ay,
+    segment.bx,
+    segment.by
+  )) return null;
 
   const contact=pointSegmentDistance(
     player.x,player.y,
-    startX,startY,
-    endX,endY
+    segment.ax,segment.ay,
+    segment.bx,segment.by
   );
   if(contact.distance>player.spec.radius+attack.halfWidth) return null;
 
   return {
     type:"adversary-hit-candidate",
     attacker:actor.id,
+    model:attack.model,
     x:contact.x,
     y:contact.y,
     damage:attack.damage
