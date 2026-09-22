@@ -90,16 +90,29 @@ export function runO1Policy(policyName, {
 
   const counts = {
     shieldBlocks: 0,
+    shieldContacts: 0,
     bodyHits: 0,
     playerStrikes: 0,
-    kills: 0
+    kills: 0,
+    boundaryFrames: 0
   };
 
   const frames = Math.ceil(seconds / dt);
   for (let frame = 0; frame < frames && state.result === "active"; frame++) {
     const events = stepO1State(state, policy(state), dt);
+
+    const boundaryMargin = 58;
+    const p = state.player;
+    if (
+      p.x < 28 + p.spec.radius + boundaryMargin ||
+      p.x > 900 - 28 - p.spec.radius - boundaryMargin ||
+      p.y < 28 + p.spec.radius + boundaryMargin ||
+      p.y > 620 - 28 - p.spec.radius - boundaryMargin
+    ) counts.boundaryFrames++;
+
     for (const event of events) {
       if (event.type === "shield-block") counts.shieldBlocks++;
+      if (event.type === "shield-contact") counts.shieldContacts++;
       if (event.type === "body-hit") counts.bodyHits++;
       if (event.type === "player-strike") {
         counts.playerStrikes++;
