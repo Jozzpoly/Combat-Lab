@@ -829,6 +829,180 @@ It also reuses the strongest Terrarium spear questions without inheriting Terrar
 
 ---
 
+## 6.1 O2 deeper contract — ANTI-TERRARIUM REACH / THREAT
+
+O2 is **not** the Terrarium spear with a better controller.
+
+Terrarium already demonstrated that:
+
+- an outer damaging spear tip can exist;
+- the shaft can remain physical/non-damaging;
+- long-weapon clearance can differ materially from sword clearance;
+- competent footwork can maintain a range band;
+- body movement can contribute to realized impact.
+
+Terrarium Owner play still rejected the whole organism.
+
+Therefore those facts are donors only.
+
+### Explicit anti-inheritance rules
+
+O2 must not use any of these as its product thesis:
+
+- a fixed `workingBand` the player is expected to maintain;
+- an agent controller whose main competence is retreating to an optimal numeric distance;
+- one duelist politely presenting a reach puzzle;
+- "spear = sword with longer range and a close dead zone";
+- enemy AI that sees a hidden spear threat field and voluntarily avoids it;
+- passive idle-spear damage;
+- retreat-to-boundary as successful defense.
+
+### O2 player vocabulary
+
+First causal kernel:
+
+- responsive WASD;
+- mouse facing / spear orientation;
+- **primary thrust** — long, narrow, lethal on one valid solid contact;
+- **clearance action** — compact, non-lethal pole/haft displacement for collapsed pressure;
+- no dodge;
+- no i-frames;
+- no target lock;
+- movement remains live during both actions.
+
+The two actions must solve different spatial failures:
+
+> thrust converts a prepared lane into consequence;
+
+> clearance buys local room after the lane has already collapsed.
+
+Clearance is not a second damage attack.
+
+### Spear truth
+
+The weapon has visible persistent geometry between actions, but idle geometry does **not** damage and does not automatically repel AI.
+
+The first implementation may be authored/kinematic rather than rigid-body simulated.
+
+Required causal facts:
+
+- the shaft and tip have real world coordinates;
+- walls / obstructions can truncate or prevent the useful long relation;
+- thrust damage belongs to an outer tip segment, not the entire shaft;
+- close bodies can be inside the useful thrust envelope;
+- a thrust consumes at most one solid damaging target per action;
+- no range-stat bonus is needed to explain a hit.
+
+### Threat before attack
+
+The first O2 hypothesis does **not** require magical pre-attack AI avoidance.
+
+"Threat" initially means:
+
+> the player can arrange body + spear + world so that a future thrust has a useful lane, and pressure has to physically traverse that lane to collapse it.
+
+Decisions before attack may therefore come from:
+
+- orientation;
+- lane geometry;
+- obstruction;
+- current approach vectors;
+- whether the player gives ground or pivots;
+- whether pressure has already entered the bad close region.
+
+If real play later needs enemies to perceive the spear as a threat, that becomes a separate cognition/behavior experiment.
+
+### Clearance contract
+
+Clearance must:
+
+- operate only in close relation;
+- produce bounded displacement;
+- deal zero damage in v0;
+- preserve player vulnerability;
+- have real windup / recovery;
+- not grant immunity or teleportation;
+- not become spammable permanent crowd-control;
+- be allowed to contact more than one close body only if its authored sweep geometry actually reaches them.
+
+This action exists to test:
+
+> can surrendering damage output to recover local space be a meaningful choice?
+
+### World relation
+
+Broken Yard remains a substrate, not a sacred map.
+
+For O2 the important world relation is **obstruction ambivalence**:
+
+- a pillar/wall can split several approaches and make a narrow lane readable;
+- the same obstruction can block or shorten a long thrust;
+- open space makes long alignment easy but gives pressure more ways around the line.
+
+If obstacle play is only beneficial or only annoying, the world relation is too shallow.
+
+### First legal O2 affordances
+
+Agent-side possibility probes must make all of these legal without telling the final Owner to perform them:
+
+**LANE / THRUST**  
+Prepare a clean long relation and punish a committed approach.
+
+**GIVE / PIVOT**  
+Move or rotate around obstruction so pressure cannot collapse from several angles at once.
+
+**COLLAPSE / CLEAR**  
+When pressure reaches the shaft/close body region, surrender damage and use clearance to create room.
+
+No one policy has to dominate.
+
+### Hard falsifiers
+
+O2 v0 fails if any of these survives serious red-team:
+
+- pure backwards movement clears safely while leaning on world boundary;
+- forward click-spam is as good as preparing lanes;
+- thrust success is mainly a numeric distance-maintenance task;
+- clearance spam stunlocks pressure;
+- idle spear geometry passively solves approach;
+- obstacle advantage comes only from broken AI pathing;
+- wall contact produces mostly accidental frustration rather than useful decisions;
+- the organism requires hidden AI respect for the spear to function.
+
+### First implementation order
+
+**O2-K0 — causal weapon kernel**
+
+Prove only:
+
+- persistent visible spear geometry;
+- outer-tip single-contact thrust;
+- close dead region as geometry, not stat debuff;
+- wall truncation / denial;
+- zero-damage close clearance displacement;
+- live locomotion;
+- no passive weapon damage.
+
+**O2-K1 — local pressure interaction**
+
+Cross the kernel with ordinary W1 pressure, without stake / O1 shield / O1 brace.
+
+Red-team:
+
+- backward kite;
+- forward chase;
+- clearance spam;
+- passive/no-action;
+- obstacle pivot.
+
+**O2-K2 — possibility-rich organism**
+
+Only if K1 survives, build a short multi-pressure encounter where at least three legal responses exist.
+
+No Owner play before K2 passes product-integrity review.
+
+---
+
 # 7. Organism O3 — LINE / IMPULSE
 
 **Reserve candidate. Do not implement in the first pair unless O1/O2 fail to provide enough divergence or a later continuation explicitly promotes it.**
