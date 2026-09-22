@@ -9,7 +9,8 @@ import {
   probeO1Strike,
   requestO1Attack,
   resolvePressurePhysical,
-  stepO1Attack
+  stepO1Attack,
+  O1_ATTACK_PROBES
 } from "../src/o1.js";
 import { runO1AggressiveStake, runO1ForwardIntercept, runO1LineHold, runO1Policy, runO1StakePolicy } from "../src/o1-rehearsal.js";
 import { playerInterposesObjective } from "../src/o1-sim.js";
@@ -177,4 +178,20 @@ test("O1 pressure trigger can be grounded in committed lunge geometry",()=>{
 
   assert.ok(reach>75);
   assert.ok(reach<90);
+});
+
+
+test("O1 offense attribution identifies what lets click-forward erase spatial pressure",()=>{
+  const result={};
+  for(const [name,attackSpec] of Object.entries(O1_ATTACK_PROBES)){
+    result[name]={
+      hold:runO1StakePolicy(true,{playerAttackSpec:attackSpec}),
+      aggressive:runO1AggressiveStake({playerAttackSpec:attackSpec})
+    };
+  }
+  console.log("O1_OFFENSE_ATTRIBUTION",JSON.stringify(result));
+  for(const pair of Object.values(result)){
+    assert.equal(pair.hold.finite,true);
+    assert.equal(pair.aggressive.finite,true);
+  }
 });
