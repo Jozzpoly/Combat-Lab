@@ -12,6 +12,7 @@ import {
   requestO1Attack,
   resetThreatAttackAuthority,
   resolvePressurePhysical,
+  settlePressureAfterContact,
   stepO1Attack
 } from "./o1.js";
 
@@ -25,11 +26,13 @@ export const O1_ENCOUNTER_START = Object.freeze({
 
 export function createO1State({
   playerStart = O1_ENCOUNTER_START.player,
-  threatStarts = O1_ENCOUNTER_START.threats
+  threatStarts = O1_ENCOUNTER_START.threats,
+  objective = null
 } = {}) {
   return {
     player: createO1Player(playerStart),
     threats: threatStarts.map(t => createO1Threat(t.id, t)),
+    objective: objective ? { ...objective } : null,
     events: [],
     time: 0,
     result: "active"
@@ -54,7 +57,10 @@ export function stepO1State(state, input, dt = 1 / 120) {
   for (const threat of state.threats) {
     if (threat.hp <= 0) continue;
     resetThreatAttackAuthority(threat);
-    frameEvents.push(...updatePressure(threat, player, BROKEN_YARD, dt, state.threats));
+    const pressureTarget = state.objective && state.objective.hp > 0
+      ? state.objective
+      : player;
+    frameEvents.push(...updatePressure(threat, pressureTarget, BROKEN_YARD, dt, state.threats));
   }
 
   const incomingCandidates = [];
@@ -64,6 +70,26 @@ export function stepO1State(state, input, dt = 1 / 120) {
     if (!event) continue;
     if (event.type === "body-hit-candidate") incomingCandidates.push(event);
     else frameEvents.push(event);
+  }
+
+  // A fragile spatial stake is intentionally simple: pressure can commit through
+  // to it only if player body/shield contact did not already consume that lunge.
+  const objectiveCandidates = [];
+  if (state.objective && state.objective.hp > 0) {
+    for (const threat of state.threats) {
+      if (threat.hp <= 0 || threat.state !== "lunge" || threat.attackResolved) continue;
+      const distance = Math.hypot(
+        threat.x - state.objective.x,
+        threat.y - state.objective.y
+      );
+      if (distance < threat.spec.radius + state.objective.radius) {
+        objectiveCandidates.push({
+          type: "objective-hit-candidate",
+          attacker: threat.id
+        });
+        settlePressureAfterContact(threat, 0.30);
+      }
+    }
   }
 
   // Cheap threats still occupy each other physically.
@@ -93,9 +119,19 @@ export function stepO1State(state, input, dt = 1 / 120) {
     const event = applyPressureHit(player, candidate);
     if (event) frameEvents.push(event);
   }
+  for (const candidate of objectiveCandidates) {
+    if (!state.objective || state.objective.hp <= 0) continue;
+    state.objective.hp = Math.max(0, state.objective.hp - 1);
+    frameEvents.push({
+      ...candidate,
+      type: "objective-hit",
+      hp: state.objective.hp
+    });
+  }
 
   state.time += dt;
   if (player.hp <= 0) state.result = "down";
+  else if (state.objective && state.objective.hp <= 0) state.result = "breach";
   else if (state.threats.every(t => t.hp <= 0)) state.result = "clear";
 
   state.events.push(...frameEvents);
