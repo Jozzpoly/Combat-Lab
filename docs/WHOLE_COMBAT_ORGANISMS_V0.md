@@ -717,6 +717,121 @@ No Owner play is authorized by this checkpoint.
 
 ---
 
+## W2 O1 deep-falsification checkpoint — SPATIAL STAKE REQUIRED
+
+The first O1 implementation deliberately began with the existing Broken Yard **small pressure clear** objective.
+
+That objective falsified the initial stance hypothesis.
+
+### Clear-objective result
+
+With identical shield, damage and target-selection logic:
+
+| Probe | Result | HP | Notes |
+| --- | --- | ---: | --- |
+| active guard / brace allowed | clear 2.442 s | 100 | 2 kills |
+| identical active controller / brace disabled | clear 2.425 s | 100 | 2 kills |
+
+Increasing pressure density did not rescue the distinction.
+
+Across 3-angle and 3-north layouts both variants still cleared with 100 HP and nearly identical times.
+
+**Finding:**
+
+> A clear objective did not care enough about displacement / position for stance support to become gameplay. The shield geometry + one-hit recovery punish dominated the organism.
+
+This is not a reason to increase the brace multiplier.
+
+### Binary-parry correction
+
+The first shield implementation also contained a hidden conceptual regression:
+
+> first shield contact immediately forced the hostile lunge into recovery.
+
+That was effectively a binary parry despite physical presentation.
+
+Corrected rule:
+
+- shield interception consumes that lunge's body-hit authority;
+- it does **not** cancel the lunge state;
+- physical shield contact can continue for the remainder of the committed motion;
+- recovery begins from the pressure body's normal timer.
+
+After correction the active-guard probe accumulated 65 sustained shield-contact frames rather than two instantaneous parry-like events.
+
+### Spatial-stake falsifier
+
+A fragile rear relation was then added **only as a diagnostic stake**.
+
+The same active intercept controller was run with brace enabled vs disabled. No damage, shield geometry, hostile lethality or player attack values changed.
+
+After removing an accidental world-boundary support artifact:
+
+| Probe | Result | Player HP | Stake | Kills |
+| --- | --- | ---: | ---: | ---: |
+| brace enabled | **CLEAR 3.142 s** | 100 | intact | 2 |
+| brace disabled | **BREACH 2.742 s** | 100 | destroyed | 0 |
+
+The movement policy itself is the same; the braced variant also accepts reduced movement/turn authority.
+
+### Direct line-hold support probe
+
+With one hostile, no player attack and one stake directly behind the player:
+
+- braced player moved from `y430 → 458.21` after 12 s;
+- unbraced player moved from `y430 → 490.63`;
+- stake at `y500`;
+- both remained finite;
+- the braced shield held the pressure body substantially farther from the protected relation.
+
+The direct probe is mechanism evidence only. One body in one line can still act as a geometric wall even without brace, so the whole-organism discriminator requires several approach relations.
+
+### Current interpretation
+
+> **The O1 stance kernel is not dead. The old clear objective was wrong for the phenomenon.**
+
+O1's interesting question is no longer:
+
+> does brace reduce displacement?
+
+It is:
+
+> **can a player actively protect / control a material relation by choosing where to intercept, when to brace, when to yield, and when to kill — without the interaction collapsing into a route puzzle or tower-defense script?**
+
+This makes position itself consequential while keeping:
+
+- no taunt;
+- no aggro permission;
+- no i-frames;
+- no stamina requirement;
+- no hidden damage reduction;
+- no static invulnerability.
+
+### New immediate W2 build
+
+The first internal interactive O1 build therefore uses:
+
+- Broken Yard;
+- one fragile material stake in open space, away from world boundaries;
+- two pressure bodies approaching from different relations;
+- continuous directional shield geometry;
+- local brace support;
+- live movement and facing;
+- one short lethal strike;
+- clear / breach / down resolution.
+
+This is **still not Owner-eligible**.
+
+Next red-team questions:
+
+1. does the interaction read as combat, or as escort/tower-defense puzzle solving?
+2. can the player use at least three legal responses: hold, reposition/yield, kill/break?
+3. does brace create useful choice rather than a mandatory always-on state?
+4. does the fragile stake merely force the expected answer?
+5. can the organism remain valuable if the stake later becomes a companion / backline actor rather than a research marker?
+
+---
+
 ## Working invariant
 
 > **We are not trying to prove that our mechanics can support combat. We are trying to discover combat worth supporting.**
