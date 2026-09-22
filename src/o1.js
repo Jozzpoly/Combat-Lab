@@ -209,7 +209,10 @@ export function resolvePressurePhysical(player, threat) {
   const shield = resolveShieldContact(player, threat);
   if (shield) {
     if (threat.state === "lunge" && !threat.attackResolved) {
-      settlePressureAfterContact(threat);
+      // The shield consumes this lunge's body-hit authority, but does not
+      // magically cancel the attack state. Momentum/contact can continue
+      // until the pressure body's normal lunge timer reaches recovery.
+      threat.attackResolved = true;
       return { ...shield, type: "shield-block", attacker: threat.id };
     }
     return shield;
