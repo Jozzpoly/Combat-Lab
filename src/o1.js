@@ -87,14 +87,14 @@ export function createO1Threat(id, {
   return actor;
 }
 
-export function driveO1Player(player, inputX, inputY, dt) {
-  return driveActor(player, inputX, inputY, dt, player.braced
+export function driveO1Player(player, inputX, inputY, dt, movementBraced = player.braced) {
+  return driveActor(player, inputX, inputY, dt, movementBraced
     ? { accelerationScale: 0.78, speedScale: 0.66, brakingScale: 1.08 }
     : undefined);
 }
 
-export function faceO1Player(player, x, y, dt) {
-  return faceToward(player, x, y, dt, player.braced
+export function faceO1Player(player, x, y, dt, movementBraced = player.braced) {
+  return faceToward(player, x, y, dt, movementBraced
     ? { turnScale: 0.56 }
     : undefined);
 }
