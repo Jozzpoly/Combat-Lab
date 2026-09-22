@@ -103,7 +103,8 @@ test("A1 open-field matrix removes route blocker before judging adversary identi
     "retreat-strike",
     "orbit-strike",
     "stand-mash",
-    "phase-reader"
+    "phase-reader",
+    "backstep-reader"
   ];
 
   const result={light:{},heavy:{}};
@@ -135,7 +136,8 @@ test("A1 policy matrix checks whether light and heavy already provoke different 
     "retreat-strike",
     "orbit-strike",
     "stand-mash",
-    "phase-reader"
+    "phase-reader",
+    "backstep-reader"
   ];
   const result={light:{},heavy:{}};
 
@@ -159,6 +161,8 @@ test("A1 anchors are mechanically distinct without HP difference",()=>{
   assert.ok(HEAVY_CRUSHER_SPEC.body.mass>LIGHT_STRIKER_SPEC.body.mass*2.5);
   assert.ok(HEAVY_CRUSHER_SPEC.body.radius>LIGHT_STRIKER_SPEC.body.radius+8);
   assert.ok(HEAVY_CRUSHER_SPEC.attack.windup>LIGHT_STRIKER_SPEC.attack.windup*2);
-  assert.ok(HEAVY_CRUSHER_SPEC.attack.halfWidth>LIGHT_STRIKER_SPEC.attack.halfWidth*2);
+  assert.notEqual(HEAVY_CRUSHER_SPEC.attack.model,LIGHT_STRIKER_SPEC.attack.model);
+  assert.ok(HEAVY_CRUSHER_SPEC.attack.sweepArc>2);
+  assert.equal(LIGHT_STRIKER_SPEC.attack.sweepArc,0);
   assert.ok(HEAVY_CRUSHER_SPEC.attack.recover>LIGHT_STRIKER_SPEC.attack.recover);
 });
