@@ -1,7 +1,7 @@
 # Combat Lab — Research State
 
 **Authority:** current `main` research truth  
-**Status:** 2026-09-21  
+**Status:** 2026-09-22  
 **Purpose:** discover a combat language that may later inform **Feniks**. This repository is a laboratory, not the Feniks combat implementation.
 
 ## Current truth
@@ -62,7 +62,77 @@ Evidence boundary:
 - canvas visual legibility: **UNPROVEN** because the screenshot connector did not provide an inspectable visual surface in this run;
 - Owner eligibility: **NO**.
 
-Next active technical step is **W2 — O1 HOLD / BREAK**, using W1 only as a situation substrate. Do not add O2, O3, progression or classless-role proof until O1 has been agent-red-teamed for possibility richness and obvious failure modes.
+W1 served its purpose and W2/O1 has now been fully red-teamed.
+
+## W2 — O1 HOLD / BREAK — WHOLE-ORGANISM FAIL, MECHANISM DONOR RETAINED
+
+Final O1 v0 research checkpoint:
+
+- active branch checkpoint: `227e7003ce75db62c170a69c81097ae4673ddd28`;
+- final existing-law diagnostic suite before verdict: **35 / 35 PASS** at `c69d609408ccfc7527472b9afe5bad4b75658134`;
+- Owner play: **NOT REQUESTED**.
+
+What survived as mechanism evidence:
+
+- continuously present directional shield geometry;
+- frontal shield contact can consume a lunge's damage path without binary parry cancellation;
+- both bodies remain physically displaced by shield contact;
+- brace can alter frontal yield without global infinite mass;
+- side/rear commitment bypasses frontal shield relation;
+- readable windup can be escaped by leaving actual threat geometry;
+- late sidestep does not create magic evasion;
+- same-step committed consequences can resolve without execution-order authority;
+- true multi-angle concurrency changes the pressure problem;
+- finite solid-target budgets expose and remove accidental compact cleave.
+
+Why the whole organism failed:
+
+- under serial pressure, brace was behaviorally irrelevant;
+- aggressive click-forward dominated deliberate hold;
+- attack reach / timing / lethality changes, including combined changes, did not fix the structural dominance;
+- weak serial pressure could be neutralized by mobile shield orientation even with player attacks disabled;
+- close-five concurrency finally created defensive value, but the promising stance result depended on compact multi-target cleave;
+- removing cleave caused the stance result to collapse;
+- adaptive brace timing did not rescue it;
+- proactive braced shield-drive did **not** produce BREAK — it died faster than unbraced movement under the same close-five pressure.
+
+Final shield-drive falsifier:
+
+- braced drive: DOWN in 1.583 s;
+- unbraced drive: DOWN in 2.758 s;
+- attack-disabled chase: DOWN in 2.758 s.
+
+Therefore:
+
+> **O1 v0 did not produce a robust HOLD / BREAK whole combat organism.**
+
+Do not revive it through brace buffs, stamina, guard-break, shield-bash rescue buttons, arbitrary enemy HP, or reinstating cleave.
+
+O1 remains a useful donor package. A future Feniks combat may still contain shield / stance / physical tanking behavior; this verdict is specific to the tested organism.
+
+### Active technical frontier — W3 / O2 REACH / THREAT
+
+Proceed to a genuinely sibling organism, not an O1 patch and not Terrarium spear reheated.
+
+O2 may reuse only shared substrate / discipline that genuinely belongs to the world:
+
+- Broken Yard geometry;
+- actor/world occupancy;
+- cheap pressure-state infrastructure;
+- same-step consequence discipline;
+- browser/deployment tooling.
+
+Do **not** inherit by default:
+
+- O1 shield;
+- O1 brace;
+- O1 short strike;
+- O1 stake controller;
+- O1 pressure-density tuning.
+
+The immediate O2 question is:
+
+> **Can a long weapon create useful decisions before the attack button — through reach, approach lane, obstruction and collapse — without degenerating into backwards-kite range maintenance?**
 
 
 ## Recovery correction — 2026-09-22
