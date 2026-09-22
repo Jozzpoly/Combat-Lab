@@ -181,6 +181,56 @@ test("O1 pressure trigger can be grounded in committed lunge geometry",()=>{
 });
 
 
+test("O1 aggression audit separates kill authority from actual concurrent pressure",()=>{
+  const layouts={
+    two:[
+      {id:"north",x:315,y:175,facing:Math.PI/2},
+      {id:"east",x:805,y:355,facing:Math.PI}
+    ],
+    three:[
+      {id:"north",x:315,y:175,facing:Math.PI/2},
+      {id:"east",x:805,y:355,facing:Math.PI},
+      {id:"west",x:95,y:390,facing:0}
+    ],
+    four:[
+      {id:"north",x:315,y:175,facing:Math.PI/2},
+      {id:"north-mid",x:450,y:230,facing:Math.PI/2},
+      {id:"east",x:805,y:355,facing:Math.PI},
+      {id:"west",x:95,y:390,facing:0}
+    ],
+    five:[
+      {id:"north-west",x:250,y:175,facing:Math.PI/2},
+      {id:"north-mid",x:450,y:230,facing:Math.PI/2},
+      {id:"north-east",x:650,y:175,facing:Math.PI/2},
+      {id:"east",x:805,y:355,facing:Math.PI},
+      {id:"west",x:95,y:390,facing:0}
+    ]
+  };
+
+  const result={
+    noAttack:runO1AggressiveStake({
+      threatStarts:layouts.two,
+      attackEnabled:false
+    }),
+    density:{}
+  };
+
+  for(const [name,threatStarts] of Object.entries(layouts)){
+    result.density[name]={
+      hold:runO1StakePolicy(true,{threatStarts}),
+      aggressive:runO1AggressiveStake({threatStarts})
+    };
+  }
+
+  console.log("O1_PRESSURE_CONCURRENCY_AUDIT",JSON.stringify(result));
+
+  assert.equal(result.noAttack.finite,true);
+  for(const pair of Object.values(result.density)){
+    assert.equal(pair.hold.finite,true);
+    assert.equal(pair.aggressive.finite,true);
+  }
+});
+
 test("O1 combined offense constraints test whether aggression dominance is merely one-axis tuning",()=>{
   const names=[
     "compactDeliberate",
