@@ -37,6 +37,12 @@ export function runNeutralRehearsal({ seconds = 20, dt = 1 / 120 } = {}) {
   let pairContacts = 0;
   let worldContacts = 0;
   let transitions = 0;
+  let playerThreatContactFrames = 0;
+  let threatThreatContactFrames = 0;
+  let playerContactEpisodes = 0;
+  let playerContactStreak = 0;
+  let maxPlayerContactStreak = 0;
+  let wasPlayerContact = false;
   const seenStates = new Set();
 
   const frames = Math.ceil(seconds / dt);
@@ -56,6 +62,25 @@ export function runNeutralRehearsal({ seconds = 20, dt = 1 / 120 } = {}) {
       worldContacts += resolveActorWorld(threat, BROKEN_YARD);
     }
 
+    const playerContact = threats.some(t =>
+      Math.hypot(t.x - player.x, t.y - player.y) <
+      t.spec.radius + player.spec.radius + 0.5
+    );
+    const threatContact =
+      Math.hypot(threats[0].x - threats[1].x, threats[0].y - threats[1].y) <
+      threats[0].spec.radius + threats[1].spec.radius + 0.5;
+
+    if (playerContact) {
+      playerThreatContactFrames++;
+      playerContactStreak++;
+      maxPlayerContactStreak = Math.max(maxPlayerContactStreak, playerContactStreak);
+      if (!wasPlayerContact) playerContactEpisodes++;
+    } else {
+      playerContactStreak = 0;
+    }
+    wasPlayerContact = playerContact;
+    if (threatContact) threatThreatContactFrames++;
+
     pairContacts += resolvePairs([player, ...threats]);
     for (const actor of [player, ...threats]) worldContacts += resolveActorWorld(actor, BROKEN_YARD);
   }
@@ -65,6 +90,10 @@ export function runNeutralRehearsal({ seconds = 20, dt = 1 / 120 } = {}) {
     pairContacts,
     worldContacts,
     transitions,
+    playerThreatContactFrames,
+    threatThreatContactFrames,
+    playerContactEpisodes,
+    maxPlayerContactStreak,
     seenStates: [...seenStates].sort(),
     player: { x: Number(player.x.toFixed(2)), y: Number(player.y.toFixed(2)) },
     threats: threats.map(a => ({ id:a.id, state:a.state, x:Number(a.x.toFixed(2)), y:Number(a.y.toFixed(2)) }))
