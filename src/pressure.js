@@ -43,7 +43,7 @@ export function updatePressure(actor, player, world, dt) {
   const distance = Math.hypot(player.x - actor.x, player.y - actor.y);
 
   if (actor.state === "approach") {
-    const steer = steerToward(actor, player, world);
+    const steer = applyPeerSeparation(actor, steerToward(actor, player, world), peers);
     driveActor(actor, steer.x, steer.y, dt);
     if (distance <= PRESSURE_TIMING.triggerDistance) {
       enter(actor, "windup", PRESSURE_TIMING.windup);
@@ -74,7 +74,7 @@ export function updatePressure(actor, player, world, dt) {
   } else if (actor.state === "recover") {
     const shouldDisengage = distance < 96 && actor.stateTime > PRESSURE_TIMING.recover * 0.28;
     if (shouldDisengage) {
-      const steer = steerAway(actor, player, world);
+      const steer = applyPeerSeparation(actor, steerAway(actor, player, world), peers);
       driveActor(actor, steer.x * 0.62, steer.y * 0.62, dt);
     } else {
       driveActor(actor, 0, 0, dt);
