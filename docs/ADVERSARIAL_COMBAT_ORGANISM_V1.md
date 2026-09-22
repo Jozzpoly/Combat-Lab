@@ -303,6 +303,90 @@ Friendly body collision may exist because bodies occupy space, but the pair must
 
 ---
 
+## 6.1 A2 open-pair result — FAIL AS INTERACTING PAIR
+
+The first A2 pair used the qualified A1 dash-line light anchor and sweep-arc heavy anchor together in a completely open field.
+
+No coordination, terrain or formation logic was added.
+
+### Simple-policy result
+
+The mixed pair remained clearable by every tested simple policy:
+
+- nearest-mash: CLEAR, 16 HP;
+- retreat-all: CLEAR, 16 HP, with substantial boundary reliance;
+- orbit-nearest: CLEAR, 50 HP;
+- focus-light: CLEAR, 16 HP;
+- focus-heavy: CLEAR, 16 HP;
+- phase-aware pair-reader: CLEAR, 66 HP.
+
+Focus order barely changed the cost.
+
+### Same-type comparison
+
+The mixed pair sat between same-type extremes:
+
+- light + light was broadly easier;
+- heavy + heavy killed the simple policies;
+- light + heavy produced intermediate pressure.
+
+This is useful difficulty evidence, but not evidence that the mixed pair creates a qualitatively new combat relation.
+
+### Peer-contact ablation
+
+The stronger falsifier removed adversary↔adversary body collision.
+
+Results:
+
+- nearest-mash was exactly unchanged;
+- pair-reader was exactly unchanged;
+- orbit timing changed somewhat, but result and player HP remained the same.
+
+The pair-reader generated **zero adversary↔adversary body-contact frames** even with physical peer collision enabled.
+
+Therefore:
+
+> **A2-open currently behaves like two independent commitments / health bars, not an interacting combat organism.**
+
+Do not add terrain merely to manufacture pair value.
+
+### Structural confound discovered after the ablation
+
+A deeper authority audit found that adversary attack geometry is currently special-cased to the player:
+
+> a dash-line / sweep-arc can hit the player, but cannot hit another adversary occupying the same material geometry.
+
+That means the simulator asks the player to exploit opponent placement while the action resolver forbids the opponents' actions from materially interacting.
+
+This is a stronger confound than lethality tuning.
+
+### A2b material-action falsifier
+
+Before changing HP, damage, arena or AI:
+
+- remove player-only target authority from adversary commits;
+- each committed action may resolve against the **first solid body** on its actual threat geometry;
+- player and adversary bodies use the same geometric hit query;
+- one commit still consumes at most one solid target;
+- no AI gains knowledge of friendly-fire lines;
+- no coordination / avoidance is scripted.
+
+Then compare:
+
+- current player-only authority;
+- material all-body authority.
+
+Primary falsifiers:
+
+- nothing changes because the actions still never interact;
+- friendly fire becomes random noise / free kills rather than readable positional consequence;
+- the player can trivially kite enemies into deleting each other every time;
+- pair value exists only under a hand-authored crossing start.
+
+Only if A2b creates a robust, nontrivial relation should terrain re-enter.
+
+---
+
 ## 7. World relation
 
 Build a small place, not a puzzle lane.
