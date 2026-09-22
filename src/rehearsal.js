@@ -89,8 +89,10 @@ function phaseReader(state){
   }
 
   return {
-    moveX:d.x*(distance>96?0.54:0),
-    moveY:d.y*(distance>96?0.54:0),
+    // During seek, keep closing until the adversary itself exposes prepare.
+    // Do not bake either anchor's trigger distance into the controller.
+    moveX:d.x*0.54,
+    moveY:d.y*0.54,
     ...aim(enemy,state.player),
     strike:false
   };
