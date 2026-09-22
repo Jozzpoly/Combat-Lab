@@ -39,6 +39,51 @@ test("O2 same-step committed body hit survives lethal thrust",()=>{
   assert.ok(state.player.hp<state.player.maxHp);
 });
 
+test("O2 deep-open falsifier removes practical boundary support from backwards kiting",()=>{
+  const deepWorld={
+    width:5000,
+    height:5000,
+    inset:28,
+    walls:[]
+  };
+  const playerStart={
+    x:2500,
+    y:2600,
+    facing:-Math.PI/2
+  };
+  const threatStarts=[
+    {id:"north",x:2500,y:2250,facing:Math.PI/2},
+    {id:"north-east",x:2680,y:2320,facing:Math.PI*0.75},
+    {id:"north-west",x:2320,y:2320,facing:Math.PI*0.25},
+    {id:"east",x:2820,y:2520,facing:Math.PI}
+  ];
+
+  const result={
+    backward:runO2Policy("backward-kite",{
+      world:deepWorld,
+      playerStart,
+      threatStarts
+    }),
+    mixed:runO2Policy("mixed-lane",{
+      world:deepWorld,
+      playerStart,
+      threatStarts
+    }),
+    chase:runO2Policy("forward-chase",{
+      world:deepWorld,
+      playerStart,
+      threatStarts
+    })
+  };
+
+  console.log("O2_DEEP_OPEN_KITE",JSON.stringify(result));
+
+  for(const value of Object.values(result)){
+    assert.equal(value.finite,true);
+  }
+  assert.equal(result.backward.boundaryFrames,0);
+});
+
 test("O2 backward-kite attribution separates boundary funnel from reach structure",()=>{
   const openWorld={
     width:1800,
