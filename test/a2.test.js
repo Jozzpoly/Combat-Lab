@@ -128,6 +128,85 @@ test("A2b material action authority is compared against player-only targeting",(
   }
 });
 
+test("A2b layout sweep checks whether material cross-interaction is robust rather than staged",()=>{
+  const layouts={
+    splitNorth:{
+      playerStart:{x:700,y:760,facing:-Math.PI/2},
+      entries:[
+        {
+          spec:LIGHT_STRIKER_SPEC,
+          start:{id:"light",x:520,y:300,facing:Math.PI/2}
+        },
+        {
+          spec:HEAVY_CRUSHER_SPEC,
+          start:{id:"heavy",x:880,y:330,facing:Math.PI/2}
+        }
+      ]
+    },
+    sameFront:{
+      playerStart:{x:700,y:760,facing:-Math.PI/2},
+      entries:[
+        {
+          spec:LIGHT_STRIKER_SPEC,
+          start:{id:"light",x:625,y:300,facing:Math.PI/2}
+        },
+        {
+          spec:HEAVY_CRUSHER_SPEC,
+          start:{id:"heavy",x:785,y:300,facing:Math.PI/2}
+        }
+      ]
+    },
+    staggered:{
+      playerStart:{x:700,y:760,facing:-Math.PI/2},
+      entries:[
+        {
+          spec:LIGHT_STRIKER_SPEC,
+          start:{id:"light",x:700,y:300,facing:Math.PI/2}
+        },
+        {
+          spec:HEAVY_CRUSHER_SPEC,
+          start:{id:"heavy",x:920,y:470,facing:Math.PI}
+        }
+      ]
+    },
+    opposed:{
+      playerStart:{x:700,y:650,facing:-Math.PI/2},
+      entries:[
+        {
+          spec:LIGHT_STRIKER_SPEC,
+          start:{id:"light",x:390,y:540,facing:0}
+        },
+        {
+          spec:HEAVY_CRUSHER_SPEC,
+          start:{id:"heavy",x:1010,y:540,facing:Math.PI}
+        }
+      ]
+    }
+  };
+
+  const policies=["nearest-mash","orbit-nearest","pair-reader"];
+  const result={};
+
+  for(const [layoutName,layout] of Object.entries(layouts)){
+    result[layoutName]={};
+    for(const policy of policies){
+      result[layoutName][policy]=runA2Policy(policy,{
+        entries:layout.entries,
+        playerStart:layout.playerStart,
+        adversaryActionsHitPeers:true
+      });
+    }
+  }
+
+  console.log("A2B_LAYOUT_SWEEP",JSON.stringify(result));
+
+  for(const layout of Object.values(result)){
+    for(const value of Object.values(layout)){
+      assert.equal(value.finite,true);
+    }
+  }
+});
+
 test("A2 has no world obstacle available to manufacture pair value",()=>{
   const state=createA2PairState();
   assert.equal(state.world.walls.length,0);
