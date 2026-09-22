@@ -13,7 +13,7 @@ test("W1 uses equal initial body envelopes so route access is not a phenotype ga
 
 test("broken yard exposes more than one broad traversable relation",()=>{
   const left=[
-    {x:450,y:535},{x:300,y:420},{x:300,y:330},{x:410,y:240},{x:300,y:100}
+    {x:450,y:535},{x:300,y:420},{x:300,y:330},{x:410,y:330},{x:410,y:240},{x:380,y:230},{x:300,y:100}
   ];
   const right=[
     {x:450,y:535},{x:820,y:500},{x:840,y:330},{x:840,y:235},{x:650,y:235},{x:600,y:100}
@@ -61,6 +61,7 @@ test("neutral multi-body rehearsal stays finite and exercises pressure states",(
   console.log("BROKEN_YARD_W1",JSON.stringify(result));
   assert.equal(result.finite,true);
   assert.ok(result.transitions>10);
+  assert.ok(result.waypointAdvances>5);
   assert.ok(result.pairContacts>0);
   assert.ok(result.playerContactEpisodes>1);
   assert.ok(result.playerThreatContactFrames < 20 * 120 * 0.60);
