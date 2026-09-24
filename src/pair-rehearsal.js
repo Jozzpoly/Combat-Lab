@@ -248,8 +248,7 @@ export function createA2PairState({
   ],
   playerStart=A2_PAIR_START.player,
   resolveAdversaryPairs=true,
-  adversaryActionsHitPeers=true,
-  screenTangentOffset=0
+  adversaryActionsHitPeers=true
 }={}){
   return createA0State({
     world:A2_OPEN_WORLD,
@@ -266,7 +265,8 @@ export function runA2Policy(policyName,{
   entries,
   playerStart,
   resolveAdversaryPairs=true,
-  adversaryActionsHitPeers=true
+  adversaryActionsHitPeers=true,
+  screenTangentOffset=0
 }={}){
   const state=createA2PairState({
     ...(entries?{entries}:{}),
