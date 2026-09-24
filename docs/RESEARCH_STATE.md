@@ -361,36 +361,77 @@ Important correction:
 
 The missing candidate is **decision persistence**, not merely longer physical decay.
 
-### Active frontier — CONTINUOUS READINESS R0 DESIGN
+### CONTINUOUS READINESS R0 — CAUSAL-KERNEL QUALIFIED
 
-New working hypothesis:
+Primary hypothesis / result:
 
-> **The result of one exchange should be the physical starting condition of the next, not a disturbance that the controller automatically erases.**
+- [CONTINUOUS READINESS R0 — No Auto-Neutral Causal Kernel](CONTINUOUS_READINESS_R0.md)
+- final evidence checkpoint: `eceb858fa25944c3c09e0eaf27358d2c76007fa0`;
+- deterministic suite: **12 / 12 PASS**;
+- Owner play: **NOT REQUESTED**.
 
-R0 is a mechanism kernel only.
+Defended mechanism claims:
 
-It must test:
+- FREE vs WALL first outcomes create materially different starting readiness for an identical second COMMIT;
+- identical second action paths differ substantially;
+- pose-only inheritance remains strong after inherited angular/radial velocity is deliberately erased;
+- erasing both pose and velocity collapses the history difference to zero;
+- ordinary GUIDE lets readiness history decay naturally rather than permanently;
+- matched AUTO-NEUTRAL restores equivalence much faster;
+- a broad GUIDE-authority sweep exposes a machine-side tradeoff between state memory and intentional recovery;
+- sharp aim does not instantly erase history in the reference regime;
+- locomotion remains responsive during COMMIT;
+- 20 s / 21-impact wall-contact soak is finite, bounded and deterministic.
 
-- no automatic guard / idle-pose restoration;
-- contact / miss outcomes leave distinct deterministic weapon states;
-- an identical second action starts from the actual inherited state;
-- the player can intentionally convert/recover state while locomotion remains responsive;
-- free aim cannot erase readiness instantly;
-- persistent state remains stable / explainable rather than physics-noisy.
+Critical evidence:
 
-Required ablation:
+- full history distance at 0.24 s: **2.537**;
+- pose-only: **1.393**;
+- velocity-only: **1.705**;
+- both erased: **0**;
+- ordinary GUIDE history distance:
+  - 0.65 s: **1.514**;
+  - 1.00 s: **0.433**;
+  - 1.60 s: **0.077**;
+- matched AUTO-NEUTRAL ratio:
+  - 0.40 s: **0.162**;
+  - 0.65 s: **0.027**;
+  - 1.00 s: **0.003**.
 
-> **AUTO-NEUTRAL** — deliberately restore the old attractor and prove that second-action divergence collapses.
+Interpretation:
 
-Hard stops:
+> **the campaign now has evidence for persistent readiness beyond residual inertia: contact can change the physical starting condition of the next action without a hidden token or canonical guard reset.**
 
-- controller chore;
-- physics mush;
-- one best guard;
-- instant aim erasure;
-- timer substitution;
-- passive hazard;
-- damage reintroduction before the kernel is defended.
+Evidence boundary:
+
+- control feel: **UNPROVEN**;
+- readability: **UNPROVEN**;
+- combat value: **UNPROVEN**;
+- Feniks suitability: **UNPROVEN**.
+
+### Active frontier — READINESS UNDER PRESSURE R1 DESIGN
+
+Do not add HP/damage.
+
+Do not build a full fight.
+
+Next question:
+
+> **When a readable adversarial commitment creates real urgency, does inherited weapon readiness change what the player should intentionally do next, or does movement / GUIDE / COMMIT reduce back to another single dominant response?**
+
+R1 must be a bounded pressure mechanism cell.
+
+It must:
+
+- reuse R0 readiness without auto-neutral;
+- introduce one readable committed adversarial action, not generic face-hug pursuit;
+- preserve responsive locomotion;
+- make at least two different inherited readiness states face the same next pressure;
+- compare response options without telling a future Owner the answer;
+- include an AUTO-NEUTRAL ablation;
+- include a movement-only / no-weapon-authority baseline;
+- avoid HP, damage and kill/clear objectives;
+- avoid target-lock / parry-window semantics.
 
 Owner deployment remains **NO**.
 
