@@ -13,7 +13,9 @@ import {
 import {
   compareHistories,
   runGuideSweep,
+  runInheritanceAttribution,
   runIntentionalGuideRecovery,
+  runPersistenceTimeSweep,
   runSoak
 } from "../src/r0-rehearsal.js";
 
@@ -81,6 +83,38 @@ test("R0 AUTO-NEUTRAL ablation collapses much of history before second commit",(
     neutral.secondStartDistance<
     inherited.secondStartDistance*0.45
   );
+});
+
+test("R0 attribution separates inherited pose from residual kinetic energy",()=>{
+  const result=runInheritanceAttribution({
+    guideAuthority:0.38,
+    interludeSeconds:0.24
+  });
+
+  console.log("R0_INHERITANCE_ATTRIBUTION",JSON.stringify(result));
+
+  for(const value of Object.values(result)){
+    assert.ok(Number.isFinite(value.secondStartDistance));
+  }
+
+  // Full inheritance must differ from deliberately erased inheritance.
+  assert.ok(
+    result.full.secondStartDistance>
+    result.none.secondStartDistance
+  );
+});
+
+test("R0 persistence time sweep maps how long history survives ordinary GUIDE",()=>{
+  const sweep=runPersistenceTimeSweep({
+    guideAuthority:0.38
+  });
+  console.log("R0_PERSISTENCE_TIME_SWEEP",JSON.stringify(sweep));
+
+  for(const row of sweep){
+    assert.ok(Number.isFinite(row.secondStartDistance));
+  }
+
+  assert.ok(sweep[0].secondStartDistance>0.2);
 });
 
 test("R0 guide authority sweep maps persistence vs aim erasure without a magic qualification constant",()=>{
