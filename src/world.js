@@ -83,3 +83,36 @@ export function segmentRectFirstT(ax,ay,bx,by,rect,padding=0){
 
   return clamp(t0,0,1);
 }
+
+export function resolveLineActorPair(a,b){
+  const dx=b.x-a.x;
+  const dy=b.y-a.y;
+  const distance=Math.hypot(dx,dy);
+  const required=a.spec.radius+b.spec.radius;
+  if(distance>=required) return null;
+
+  const nx=distance>1e-9?dx/distance:1;
+  const ny=distance>1e-9?dy/distance:0;
+  const depth=required-Math.max(distance,1e-9);
+  const invA=1/Math.max(1,a.spec.mass);
+  const invB=1/Math.max(1,b.spec.mass);
+  const total=invA+invB;
+
+  const moveA=depth*invA/total;
+  const moveB=depth*invB/total;
+  a.x-=nx*moveA;
+  a.y-=ny*moveA;
+  b.x+=nx*moveB;
+  b.y+=ny*moveB;
+
+  const relative=(b.vx-a.vx)*nx+(b.vy-a.vy)*ny;
+  if(relative<0){
+    const impulse=-relative/total;
+    a.vx-=nx*impulse*invA;
+    a.vy-=ny*impulse*invA;
+    b.vx+=nx*impulse*invB;
+    b.vy+=ny*impulse*invB;
+  }
+
+  return {nx,ny,depth,moveA,moveB};
+}
