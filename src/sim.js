@@ -33,7 +33,8 @@ export function createA0State({
   adversaryStart={id:"adversary",x:450,y:150,facing:Math.PI/2},
   adversaryEntries=null,
   resolveAdversaryPairs=true,
-  adversaryActionsHitPeers=true
+  adversaryActionsHitPeers=true,
+  adversaryFriendlyDamageScale=1
 }={}){
   const player=createPlayerCombatState(
     createActor(
@@ -56,6 +57,7 @@ export function createA0State({
     adversaries,
     resolveAdversaryPairs,
     adversaryActionsHitPeers,
+    adversaryFriendlyDamageScale,
     time:0,
     result:"active",
     events:[]
@@ -168,7 +170,14 @@ export function stepA0(state,input,dt=1/120){
 
   // Already-measured hostile commitments survive a simultaneous lethal strike.
   for(const {actor,target,candidate} of incoming){
-    const event=applyAdversaryHit(actor,target,candidate);
+    const appliedCandidate=
+      target.kind==="adversary"
+        ? {
+            ...candidate,
+            damage:candidate.damage*state.adversaryFriendlyDamageScale
+          }
+        : candidate;
+    const event=applyAdversaryHit(actor,target,appliedCandidate);
     if(event) events.push(event);
   }
 
