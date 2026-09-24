@@ -192,7 +192,7 @@ export function applyProjectileBodyImpact(projectile,body,{
   };
 }
 
-export function stepProjectile(
+export function probeProjectileStep(
   projectile,
   bodies,
   world=LINE_TEST_WORLD,
@@ -204,7 +204,6 @@ export function stepProjectile(
   const ay=projectile.y;
   const bx=ax+projectile.vx*dt;
   const by=ay+projectile.vy*dt;
-
   const solid=firstSolidCandidate(
     projectile,
     bodies,
@@ -212,23 +211,47 @@ export function stepProjectile(
     ax,ay,bx,by
   );
 
-  projectile.age+=dt;
-
   if(!solid){
-    projectile.x=bx;
-    projectile.y=by;
+    return {
+      type:"projectile-flight",
+      projectile:projectile.id,
+      dt,
+      ax,ay,bx,by,
+      solid:null
+    };
+  }
+
+  return {
+    type:"projectile-impact-candidate",
+    projectile:projectile.id,
+    dt,
+    ax,ay,bx,by,
+    x:ax+(bx-ax)*solid.t,
+    y:ay+(by-ay)*solid.t,
+    solid
+  };
+}
+
+export function applyProjectileStep(projectile,probe){
+  if(!probe || !projectile.alive) return null;
+
+  projectile.age+=probe.dt;
+
+  if(!probe.solid){
+    projectile.x=probe.bx;
+    projectile.y=probe.by;
     return null;
   }
 
-  projectile.x=ax+(bx-ax)*solid.t;
-  projectile.y=ay+(by-ay)*solid.t;
+  projectile.x=probe.x;
+  projectile.y=probe.y;
   projectile.alive=false;
 
-  if(solid.kind==="wall"){
+  if(probe.solid.kind==="wall"){
     return {
       type:"projectile-wall-hit",
       projectile:projectile.id,
-      wall:solid.id,
+      wall:probe.solid.id,
       x:projectile.x,
       y:projectile.y
     };
@@ -236,8 +259,20 @@ export function stepProjectile(
 
   return applyProjectileBodyImpact(
     projectile,
-    solid.body,
+    probe.solid.body,
     {x:projectile.x,y:projectile.y}
+  );
+}
+
+export function stepProjectile(
+  projectile,
+  bodies,
+  world=LINE_TEST_WORLD,
+  dt=1/120
+){
+  return applyProjectileStep(
+    projectile,
+    probeProjectileStep(projectile,bodies,world,dt)
   );
 }
 
