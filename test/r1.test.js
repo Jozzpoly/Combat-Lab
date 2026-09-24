@@ -9,6 +9,7 @@ import {
 } from "../src/r1-sim.js";
 import {
   runR1CrossedMatrix,
+  runR1MaterialScaleSweep,
   runR1Policy,
   summarizeR1Matrix
 } from "../src/r1-rehearsal.js";
@@ -166,6 +167,19 @@ test("R1 K2 exploratory crossed readiness matrix",()=>{
     matrix.wall.west["lateral-evade"]
   ];
   assert.ok(lateral.some(x=>x.result==="body-miss"));
+});
+
+test("R1 K2 broad material-authority sweep maps whether contact can change dash outcome",()=>{
+  const sweep=runR1MaterialScaleSweep();
+  console.log("R1_MATERIAL_SCALE_SWEEP",JSON.stringify(sweep));
+
+  for(const row of sweep){
+    assert.ok(Number.isFinite(row.materialScale));
+    assert.ok(row.bodyMisses>=0&&row.bodyMisses<=4);
+    assert.ok(row.toolContactCells>=0&&row.toolContactCells<=4);
+  }
+
+  assert.equal(sweep[0].bodyMisses,0);
 });
 
 test("R1 K2 material-contact ablation can be compared without hidden parry cancellation",()=>{
