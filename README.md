@@ -43,11 +43,22 @@ The first diagnostic, **EXCHANGE GRAMMAR E0 / Mirrored Access Contest**, has alr
 
 Therefore E0 v0 does **not** proceed to damage reintroduction.
 
-The active frontier is **E0b SET / DRIVE design**:
+**EXCHANGE GRAMMAR E0b / SET + DRIVE has now also failed as a reusable exchange grammar.**
 
-> **Can a persistent directional support/contact relation exist before commitment, so DRIVE must negotiate or sacrifice spatial authority instead of acting as a universal forward shove?**
+Directional SET is real mechanism evidence: centered support changes blind DRIVE from a crossing into a held relation, and support sacrifice is a measurable local trade. But across the broad start sweep:
 
-This must not recreate O1 brace, an immovable wall, binary parry, global mass multiplier or hidden class authority.
+- blind BREACH DRIVE still crosses 6 / 7 starts;
+- directional and omnidirectional support both produce 6 / 7 crosses;
+- captured and homing angle-switch DRIVE both produce 7 / 7 crosses;
+- the off-center cells record near-full support at contact, so the failure is not just slow defender orientation.
+
+The ACCESS + one-defender situation therefore collapses into a central supported wall or lateral bypass. Do not rescue it through narrower lanes or stronger SET constants.
+
+The active frontier is now a **persistent afterstate / readiness audit**:
+
+> **Why do mechanically meaningful contacts keep returning toward neutral pursuit instead of leaving a legible state that changes the next decision?**
+
+Before another implementation, re-audit the rejected Terrarium and other donor mechanisms for what actually persists after miss/contact/block and what their action controllers automatically restore to neutral.
 
 See [Research state](docs/RESEARCH_STATE.md) for the recovery correction and evidence boundary.
 
@@ -63,6 +74,7 @@ Read these before substantial continuation:
 - [LINE / IMPULSE Organism v0](docs/LINE_IMPULSE_ORGANISM_V0.md) — preserved projectile/impulse kernel and L1 whole-organism failure.
 - [Cross-Campaign Combat Audit](docs/CROSS_CAMPAIGN_COMBAT_AUDIT_2026-09-24.md) — synthesis of recurring failure modes and the exchange-before-consequence thesis.
 - [Exchange Grammar E0](docs/EXCHANGE_GRAMMAR_E0.md) — preserved ACCESS / material DRIVE donors and the blind-BREACH-mash falsification.
+- [Exchange Grammar E0b — SET / DRIVE](docs/EXCHANGE_GRAMMAR_E0B_SET_DRIVE.md) — directional-support donor evidence and the central-wall / lateral-bypass failure.
 - [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) — hypothesis gate, evidence boundaries, branch hygiene, deployment discipline and the meaning of short Owner commands such as “kontynuuj”.
 
 ## Deployment
