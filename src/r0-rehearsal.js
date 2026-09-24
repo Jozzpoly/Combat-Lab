@@ -156,7 +156,7 @@ export function compareHistories(options={}){
 }
 
 export function runGuideSweep(){
-  const authorities=[0,0.08,0.18,0.38,0.75,1.25,2.0];
+  const authorities=[0,0.08,0.18,0.38,0.75,1.25,2,3.5,6,10,16];
   return authorities.map(guideAuthority=>{
     const inherited=compareHistories({
       guideAuthority,
