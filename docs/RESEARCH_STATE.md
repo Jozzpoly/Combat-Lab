@@ -236,6 +236,14 @@ Pre-code requirements:
 
 Owner deployment remains **NO**.
 
+Active hypothesis card:
+
+- [LINE / IMPULSE Organism v0](LINE_IMPULSE_ORGANISM_V0.md)
+
+Immediate gate:
+
+> **L0 must prove projectile / first-solid-body / impulse truth without already building an encounter.**
+
 
 ## Recovery correction — 2026-09-22
 
