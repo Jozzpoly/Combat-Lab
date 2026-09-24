@@ -27,7 +27,8 @@ export function startDrive(actor){
 export function stepDriveAction(actor,dt,{
   homing=false,
   aimX,
-  aimY
+  aimY,
+  carryScale=1
 }={}){
   const action=actor.action;
 
@@ -46,7 +47,7 @@ export function stepDriveAction(actor,dt,{
       action.contactResolved=false;
 
       const mass=Math.max(1,actor.spec.mass);
-      const delta=DRIVE_SPEC.carryImpulse/mass;
+      const delta=DRIVE_SPEC.carryImpulse*Math.max(0,carryScale)/mass;
       actor.vx+=action.commitX*delta;
       actor.vy+=action.commitY*delta;
 
