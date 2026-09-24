@@ -66,8 +66,6 @@ test("E0 simultaneous DRIVE contacts are measured before consequence",()=>{
     actor.action.contactResolved=false;
   }
 
-  const py=state.player.y;
-  const ay=state.adversary.y;
   const events=stepE0(state,{
     moveX:0,moveY:0,
     aimX:state.adversary.x,
@@ -78,8 +76,10 @@ test("E0 simultaneous DRIVE contacts are measured before consequence",()=>{
   assert.ok(events.filter(e=>e.type==="drive-contact").length>=2);
   assert.equal(state.player.action.contactResolved,true);
   assert.equal(state.adversary.action.contactResolved,true);
-  assert.notEqual(state.player.y,py);
-  assert.notEqual(state.adversary.y,ay);
+  assert.ok(Math.abs(state.player.vy)>1);
+  assert.ok(Math.abs(state.adversary.vy)>1);
+  assert.ok(state.player.vy<0);
+  assert.ok(state.adversary.vy>0);
 });
 
 test("E0 exploratory mirrored policy matrix remains finite and boundary-independent",()=>{
