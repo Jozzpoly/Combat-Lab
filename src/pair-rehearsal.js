@@ -134,7 +134,7 @@ function orbitNearest(state){
   };
 }
 
-function screenWith(state,blockerId,attackerId){
+function screenWith(state,blockerId,attackerId,tangentOffset=0){
   const blocker=byId(state,blockerId);
   const attacker=byId(state,attackerId);
 
@@ -166,8 +166,16 @@ function screenWith(state,blockerId,attackerId){
     blocker.spec.radius+
     state.player.spec.radius+
     24;
-  const desiredX=blocker.x+line.x*spacing;
-  const desiredY=blocker.y+line.y*spacing;
+  const tangentX=-line.y;
+  const tangentY=line.x;
+  const desiredX=
+    blocker.x+
+    line.x*spacing+
+    tangentX*tangentOffset;
+  const desiredY=
+    blocker.y+
+    line.y*spacing+
+    tangentY*tangentOffset;
   const move=normalize(
     desiredX-state.player.x,
     desiredY-state.player.y,
@@ -240,7 +248,8 @@ export function createA2PairState({
   ],
   playerStart=A2_PAIR_START.player,
   resolveAdversaryPairs=true,
-  adversaryActionsHitPeers=true
+  adversaryActionsHitPeers=true,
+  screenTangentOffset=0
 }={}){
   return createA0State({
     world:A2_OPEN_WORLD,
@@ -273,8 +282,18 @@ export function runA2Policy(policyName,{
   else if(policyName==="focus-light") policy=s=>focusPolicy(s,"light");
   else if(policyName==="focus-heavy") policy=s=>focusPolicy(s,"heavy");
   else if(policyName==="pair-reader") policy=pairReader;
-  else if(policyName==="screen-heavy") policy=s=>screenWith(s,"heavy","light");
-  else if(policyName==="screen-light") policy=s=>screenWith(s,"light","heavy");
+  else if(policyName==="screen-heavy") policy=s=>screenWith(
+    s,
+    "heavy",
+    "light",
+    screenTangentOffset
+  );
+  else if(policyName==="screen-light") policy=s=>screenWith(
+    s,
+    "light",
+    "heavy",
+    screenTangentOffset
+  );
   else throw new Error("unknown A2 policy: "+policyName);
 
   const metrics={
