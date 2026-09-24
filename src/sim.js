@@ -29,13 +29,13 @@ export function createE0State({
   const player=createActor({
     id:"player",
     x:600,
-    y:deny?535:260,
+    y:deny?1885:1610,
     facing:deny?-Math.PI/2:Math.PI/2
   });
   const adversary=createActor({
     id:"adversary",
     x:600,
-    y:deny?260:535,
+    y:deny?1610:1885,
     facing:deny?Math.PI/2:-Math.PI/2
   });
 
@@ -104,9 +104,11 @@ function adversaryInput(state){
     };
   }
 
-  // In BREACH the adversary is a defender.
+  // In BREACH the adversary defends a fixed band before access.
+  // It may track the player's lateral angle, but does not voluntarily
+  // retreat toward its own access line to preserve a player-relative offset.
   const desiredX=player.x;
-  const desiredY=Math.min(world.accessY-78,player.y+74);
+  const desiredY=world.accessY-115;
   const distance=Math.hypot(player.x-adversary.x,player.y-adversary.y);
   return {
     moveX:(desiredX-adversary.x)*0.006,
