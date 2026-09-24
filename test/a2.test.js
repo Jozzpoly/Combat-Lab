@@ -387,6 +387,91 @@ test("A2b interception value is separated from friendly-fire damage",()=>{
   }
 });
 
+test("A2b sampled quantized screen perception tests solver dependence",()=>{
+  const layouts={
+    splitNorth:{
+      playerStart:{x:700,y:760,facing:-Math.PI/2},
+      entries:[
+        {spec:LIGHT_STRIKER_SPEC,start:{id:"light",x:520,y:300,facing:Math.PI/2}},
+        {spec:HEAVY_CRUSHER_SPEC,start:{id:"heavy",x:880,y:330,facing:Math.PI/2}}
+      ]
+    },
+    sameFront:{
+      playerStart:{x:700,y:760,facing:-Math.PI/2},
+      entries:[
+        {spec:LIGHT_STRIKER_SPEC,start:{id:"light",x:625,y:300,facing:Math.PI/2}},
+        {spec:HEAVY_CRUSHER_SPEC,start:{id:"heavy",x:785,y:300,facing:Math.PI/2}}
+      ]
+    },
+    staggered:{
+      playerStart:{x:700,y:760,facing:-Math.PI/2},
+      entries:[
+        {spec:LIGHT_STRIKER_SPEC,start:{id:"light",x:700,y:300,facing:Math.PI/2}},
+        {spec:HEAVY_CRUSHER_SPEC,start:{id:"heavy",x:920,y:470,facing:Math.PI}}
+      ]
+    },
+    opposed:{
+      playerStart:{x:700,y:650,facing:-Math.PI/2},
+      entries:[
+        {spec:LIGHT_STRIKER_SPEC,start:{id:"light",x:390,y:540,facing:0}},
+        {spec:HEAVY_CRUSHER_SPEC,start:{id:"heavy",x:1010,y:540,facing:Math.PI}}
+      ]
+    }
+  };
+  const offsets=[-36,-24,0,24,36];
+  const result={};
+
+  for(const [layoutName,layout] of Object.entries(layouts)){
+    result[layoutName]={};
+    for(const basePolicy of ["screen-heavy","screen-light"]){
+      const sampledPolicy=basePolicy+"-sampled";
+      result[layoutName][basePolicy]={};
+      for(const offset of offsets){
+        result[layoutName][basePolicy][offset]={
+          playerOnly:runA2Policy(basePolicy,{
+            seconds:8,
+            entries:layout.entries,
+            playerStart:layout.playerStart,
+            adversaryActionsHitPeers:false,
+            screenTangentOffset:offset
+          }),
+          continuous:runA2Policy(basePolicy,{
+            seconds:8,
+            entries:layout.entries,
+            playerStart:layout.playerStart,
+            adversaryActionsHitPeers:true,
+            adversaryFriendlyDamageScale:0,
+            screenTangentOffset:offset
+          }),
+          sampled:runA2Policy(sampledPolicy,{
+            seconds:8,
+            entries:layout.entries,
+            playerStart:layout.playerStart,
+            adversaryActionsHitPeers:true,
+            adversaryFriendlyDamageScale:0,
+            screenTangentOffset:offset,
+            screenSampleInterval:0.20,
+            screenQuantize:24
+          })
+        };
+      }
+    }
+  }
+
+  console.log("A2B_SAMPLED_SCREEN",JSON.stringify(result));
+
+  for(const layout of Object.values(result)){
+    for(const policy of Object.values(layout)){
+      for(const trio of Object.values(policy)){
+        assert.equal(trio.playerOnly.finite,true);
+        assert.equal(trio.continuous.finite,true);
+        assert.equal(trio.sampled.finite,true);
+        assert.equal(trio.sampled.friendlyDamage,0);
+      }
+    }
+  }
+});
+
 test("A2b interception-only body screen generalizes across ordinary pair layouts",()=>{
   const layouts={
     splitNorth:{
