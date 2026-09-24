@@ -515,3 +515,163 @@ Those remain future Owner evidence after a real playable organism exists.
 ## Working invariant
 
 > **Commitment should gain one relation by giving up another.**
+
+
+---
+
+## 15. Final agent-side verdict — FAIL AS EXCHANGE GRAMMAR, SUPPORT DONOR RETAINED
+
+Final evidence checkpoint:
+
+- E0b substrate: `9a95a89dfcf1d99b9af86c6b64d5e1a67ef400b4`;
+- broad geometry probe: `23648d2b161f9118f57108461a582774393ecbfa`;
+- contaminated broad no-SET-cost probe removed: `16f0ba1011dd3c5565be9a5ab4b95ee179ca386d`;
+- final contact-conditioned attribution: `f0ad558a0e9b44baac9646198f1589900c646d24`;
+- final deterministic suite: **7 / 7 PASS**;
+- Owner play: **NOT REQUESTED**.
+
+### What survived
+
+Directional SET is a real causal contact law.
+
+Mechanism evidence:
+
+- SET support is derived continuously from contact direction and actor facing;
+- support changes directional inverse mass rather than global body mass;
+- aligned SET yields materially less to the same DRIVE than side / unsupported contact;
+- SET remains movable and turnable;
+- DRIVE can sacrifice support without receiving execution priority;
+- same-step contact discipline remains symmetric;
+- removing support at the centered BREACH changes:
+  - directional SET: **BLOCKED after 6 s**;
+  - no support: **CROSSED in 1.85 s**.
+
+Contact-conditioned broad attribution confirms that SET is not merely decorative:
+
+- at offsets ±300: ~0.05 s delay vs no support;
+- at ±180: ~0.309 s delay;
+- at ±90: ~0.075 s delay;
+- at 0: outcome changes from crossed to blocked.
+
+This is valuable donor evidence for future stance / support / body-contact work.
+
+### What failed
+
+The whole E0b hypothesis required directional support to create a reusable pre-commitment relation rather than a central body wall.
+
+The broad-start evidence instead produces two regimes.
+
+**Centered relation**
+
+- blind DRIVE is blocked;
+- no-support DRIVE crosses;
+- support is genuinely causal.
+
+**Off-center relation**
+
+- blind DRIVE crosses **6 / 7** broad starts;
+- angle-left crosses **6 / 7**;
+- angle-switch crosses **7 / 7**;
+- directional SET and omnidirectional SET both cross **6 / 7**;
+- no-support crosses **7 / 7**.
+
+The defender was not simply failing to face the breacher:
+
+- SET was held continuously;
+- defender tracks laterally;
+- defender aims toward the breacher;
+- recorded support on DRIVE contacts is ~0.998–1.0 in the passing cells.
+
+Therefore the off-center result is not explained by missing orientation acquisition.
+
+### Directionality failed to become product-level value
+
+Matched broad ablation:
+
+- directional SET: **6 / 7 crossed**;
+- omnidirectional support: **6 / 7 crossed**.
+
+Outcome difference: none across the broad sweep.
+
+The continuous directional law is physically real, but the access situation does not make that directionality strategically decisive.
+
+### Captured commitment still did not earn a cost
+
+With genuine SET angle pressure present:
+
+- captured angle-switch DRIVE: **7 / 7 crossed**;
+- homing angle-switch DRIVE: **7 / 7 crossed**;
+- times are effectively identical.
+
+Thus E0b did not rescue E0's missing captured-direction cost.
+
+### Support sacrifice is real but too local
+
+SET -> DRIVE with support sacrifice:
+
+- **6 / 7 crossed**.
+
+Ablation allowing DRIVE to keep support:
+
+- **7 / 7 crossed**.
+
+The trade exists, but only changes the centered cell and does not create a broad possibility surface.
+
+### Structural interpretation
+
+E0b exposes a deeper problem with ACCESS + one defender body as the diagnostic object:
+
+> **if contact is forced on the defender's central relation, support can become a wall; if the relation is broad enough to avoid a scripted choke, simple lateral bypass dominates before directional support becomes the exchange.**
+
+Fixing this by:
+
+- narrowing the access lane;
+- increasing SET support;
+- increasing body radius;
+- slowing the breacher;
+- speeding defender tracking;
+
+would tune the apparatus toward the desired answer rather than demonstrate a general exchange grammar.
+
+Therefore:
+
+> **E0b FAILS its own blind-DRIVE, no-orientation-value and captured-commitment falsifiers.**
+
+Do not proceed to damage reintroduction.
+
+Do not build E0c by tuning SET constants.
+
+### Donors retained
+
+Retain:
+
+- ACCESS as evidence that retreat can concede world-grounded value;
+- directional support / contact resistance as a material stance donor;
+- support sacrifice during commitment as a potentially useful local trade;
+- same-step symmetric contact authority.
+
+Do not retain as product assumptions:
+
+- access-line contest;
+- generic DRIVE;
+- SET as the missing exchange grammar;
+- one-body denial as a universal combat model.
+
+### Next research boundary
+
+Return one level above the access apparatus.
+
+The next investigation must explain why failed organisms repeatedly reset toward:
+
+> **approach / collide / resolve / return to neutral pursuit**
+
+even when the local contact mechanism is physically meaningful.
+
+Highest-value question:
+
+> **Can combat consequence leave a persistent, legible readiness / exposure / positional afterstate that ordinary locomotion cannot instantly erase, without introducing hidden advantage tokens or arbitrary animation lock?**
+
+This is a research question only.
+
+Do not implement it until prior Terrarium / weapon-contact donors are re-audited so we do not accidentally rebuild the same spring-to-neutral attack loop.
+
