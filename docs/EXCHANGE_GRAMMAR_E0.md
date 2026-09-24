@@ -1,0 +1,488 @@
+# EXCHANGE GRAMMAR E0 — Mirrored Access Contest
+
+**Date:** 2026-09-24  
+**Status:** active hypothesis card; implementation not started  
+**Owner play:** not eligible  
+**Source:** cross-campaign audit `CROSS_CAMPAIGN_COMBAT_AUDIT_2026-09-24.md`
+
+## 0. Purpose
+
+E0 is not a proposed Feniks combat mode.
+
+It is a diagnostic whole situation designed to answer one structural question before another weapon organism is built:
+
+> **Can readable intent, responsive movement, commitment, material contact and inherited afterstate create a meaningful exchange when HP is temporarily prevented from dominating the result?**
+
+E0 deliberately removes:
+
+- kill / clear objective;
+- damage progression;
+- weapon archetype identity;
+- terrain choke advantage;
+- class roles.
+
+If the exchange is still poor, adding sword / spear / shield / projectile content is not justified.
+
+---
+
+## 1. Local contested value — ACCESS
+
+The local value is **access through space**.
+
+No capture timer.
+
+No abstract score zone.
+
+No body-size-only route.
+
+The world is initially a broad open strip with a wide access line behind one actor.
+
+The same geometry is tested in two mirrored situations.
+
+### DENY
+
+The adversary attempts to cross the access line behind the player.
+
+The player succeeds by preventing the crossing for a short bounded exchange window.
+
+Retreat remains legal.
+
+But retreat can concede the line.
+
+### BREACH
+
+The player attempts to cross the access line behind the adversary.
+
+The adversary tries to deny access.
+
+Retreat remains legal.
+
+But retreat directly gives up progress toward access.
+
+These are not two combat modes.
+
+They are mirrored diagnostics of one exchange law.
+
+If the law only works when the player is defender or only when the player is attacker, record that asymmetry rather than hiding it.
+
+---
+
+## 2. Why ACCESS beats the other candidate stakes for E0
+
+### Not a choke test
+
+The initial space is deliberately wide.
+
+No doorway is required.
+
+The body / commitment relation must create the contest.
+
+### Not a capture-point game
+
+There is no accumulating control meter.
+
+The line only identifies whether access was actually gained.
+
+### Not an escort-defense test
+
+No extra vulnerable target is needed.
+
+Co-op / protection can pressure the grammar later if E0 survives.
+
+### Not an HP duel
+
+Killing the other actor cannot bypass the question.
+
+### Retreat has a world-grounded concession
+
+The experiment does not punish retreat mechanically.
+
+It allows retreat to change the state of the objective.
+
+---
+
+## 3. Player action surface
+
+Keep it minimal:
+
+- responsive WASD;
+- free mouse facing;
+- one **committed contact action**;
+- no dodge;
+- no i-frames;
+- no block/parry button;
+- no target lock;
+- no stamina;
+- no HP.
+
+The contact action is diagnostic.
+
+It is not named sword / shield bash / spear thrust.
+
+Working label:
+
+> **DRIVE**
+
+The input expresses:
+
+> **I commit my occupied contact relation in this facing direction.**
+
+---
+
+## 4. DRIVE — commitment without animation lock
+
+The critical requirement is:
+
+> **commitment must affect the next relation without setting `canMove=false`.**
+
+First candidate realization:
+
+### Prepare
+
+Very short readable preparation.
+
+During prepare:
+
+- locomotion remains live;
+- facing remains controllable;
+- no contact authority yet.
+
+### Commit
+
+The contact direction is captured at commit start.
+
+During commit:
+
+- the **contact vector / contact shape** no longer homes;
+- locomotion input remains live;
+- body can still move;
+- the committed contact relation follows the body's realized position but not a new aim direction;
+- no hidden invulnerability;
+- no forced hit.
+
+A bad commitment can therefore:
+
+- miss;
+- pass beside the opponent;
+- be redirected by contact;
+- leave the actor on a worse angle;
+- carry the actor too far relative to access.
+
+### Recover
+
+No arbitrary freeze.
+
+The action cannot immediately recommit at full authority.
+
+Locomotion remains live.
+
+The actor inherits:
+
+- position;
+- velocity;
+- facing;
+- contact displacement;
+
+from what actually happened.
+
+The recovery exists to preserve consequence of commitment, not to manufacture vulnerability by disabling controls.
+
+---
+
+## 5. Material contact truth
+
+E0 should reuse only well-defended donor laws:
+
+- first-solid-body contact;
+- same-step consequence symmetry;
+- body mass;
+- body radius / occupied space;
+- bounded displacement;
+- no infinite mass;
+- no phase-through;
+- no binary parry cancellation.
+
+A DRIVE contact may produce:
+
+- attacker yield;
+- defender yield;
+- both yield;
+- glancing redirection;
+- no useful contact if geometry misses.
+
+It must not produce:
+
+- stun flag;
+- knockdown state;
+- guaranteed attack cancel;
+- damage;
+- hidden "winner" token.
+
+The next state should emerge from the physical result.
+
+---
+
+## 6. Initial bodies
+
+E0 begins with approximately comparable bodies.
+
+Do not start with tank vs skirmisher.
+
+Reason:
+
+> first determine whether the exchange grammar itself creates meaningful access negotiation.
+
+Body / equipment asymmetry belongs to later donor pressure.
+
+Initial differences may exist only where necessary to make adversary behavior legible.
+
+---
+
+## 7. Adversary intent
+
+The adversary must not be generic face-hug pursuit.
+
+It needs a visible local objective:
+
+- in DENY: cross the access line;
+- in BREACH: prevent the player crossing.
+
+It may use the same DRIVE contract.
+
+Required adversary lifecycle:
+
+> **approach / set relation -> prepare -> commit -> inherit result -> reassess**
+
+Important:
+
+- no hidden future-read of player input;
+- no teleport correction;
+- no aim homing during committed contact;
+- no "respect radius";
+- no polite feeding of a scripted solution.
+
+The adversary may choose among a small number of readable approach angles.
+
+It should not instantly recompute the perfect contact line every frame after commitment.
+
+---
+
+## 8. Exchange states are descriptive, not authoritative
+
+For analysis we may describe:
+
+- NEUTRAL;
+- THREAT;
+- COMMITMENT;
+- RESOLUTION;
+- ADVANTAGE / DISADVANTAGE;
+- RESET.
+
+These must not become hidden gameplay flags that decide what actors are allowed to do.
+
+They are observations derived from:
+
+- geometry;
+- intent/action state;
+- access relation;
+- velocity;
+- facing;
+- distance.
+
+Especially:
+
+> **ADVANTAGE must be visible in the world state, not awarded by a combat state machine.**
+
+---
+
+## 9. Meaningful inherited afterstate
+
+This is the central E0 discriminator.
+
+A successful exchange must make the next decision different.
+
+Candidate afterstates include:
+
+- one actor displaced off the direct access line;
+- one actor overextended past the other;
+- one actor gains lateral angle to the access line;
+- one actor is forced to yield ground but still blocks a second route;
+- both bodies separate into a new orientation;
+- a failed DRIVE gives the other actor a temporary route window.
+
+No explicit opening token is required.
+
+The afterstate is useful only if ordinary movement / geometry can exploit it before everything resets to the same pursuit relation.
+
+---
+
+## 10. 30-second machine-level discriminator
+
+Before any Owner build exists, deterministic rehearsal should be able to show more than one useful response in both mirrored roles.
+
+### DENY candidate responses
+
+- meet the commit and contest contact;
+- yield laterally and re-intercept;
+- let the attacker overextend and recover the line;
+- pre-position off-center to change approach geometry.
+
+### BREACH candidate responses
+
+- direct committed challenge;
+- angle around a prepared defender;
+- provoke / out-position a bad commit;
+- yield temporarily to create a better second entry.
+
+These are candidate observations, not scripted policies that define success.
+
+---
+
+## 11. Pre-registered red-team
+
+E0 fails if any of these survive serious testing.
+
+### Face-hug mash
+
+Holding forward + DRIVE whenever ready wins both roles reliably.
+
+### Permanent retreat
+
+Backing away indefinitely preserves the objective as defender or somehow advances it as breacher.
+
+### Drive spam
+
+Recommitting on cooldown is as good as reading the relation.
+
+### Static wall
+
+Defender can stand still in the middle and become an impenetrable collider without reading intent.
+
+### Orbit cheese
+
+Pure circling exploits tracking rather than negotiating commitment.
+
+### One-angle script
+
+One fixed lateral move solves every commitment.
+
+### Contact noise
+
+Small collision jitter / pinball decides access more often than deliberate positioning.
+
+### Reset collapse
+
+After every contact, both actors simply return to the same neutral pursuit relation with no usable inherited state.
+
+### Apparatus answer
+
+The access line / starting positions encode one obvious correct policy.
+
+---
+
+## 12. Required ablations
+
+Before E0 can be considered exchange-qualified, compare:
+
+### No DRIVE
+
+Movement/body contact only.
+
+If this already produces the same strategic result, DRIVE adds no exchange value.
+
+### No committed direction
+
+Allow DRIVE to home continuously.
+
+If homing preserves the same behavior, commitment was fake.
+
+### No displacement
+
+Keep contact detection but remove material displacement.
+
+If the same policies work, the claimed afterstate is not material.
+
+### No recovery consequence
+
+Allow immediate recommit.
+
+If spam becomes dominant only here, recovery may be carrying legitimate commitment value.
+
+### Wide-start sweep
+
+Vary starting lateral position.
+
+The exchange must not depend on one exact centerline setup.
+
+---
+
+## 13. Success gate for E0
+
+E0 is not successful because one clever policy wins.
+
+Minimum evidence target:
+
+- DENY has at least **three materially distinct useful responses** across a broad start sweep;
+- BREACH has at least **three materially distinct useful responses** across a broad start sweep;
+- no single blind policy dominates both roles;
+- retreat changes access outcome rather than merely delaying time;
+- DRIVE changes outcomes relative to movement-only;
+- captured commitment direction matters relative to homing;
+- displacement creates measurable inherited afterstate;
+- immediate recommit ablation exposes spam pressure;
+- results do not rely on world boundary;
+- results do not rely on a narrow doorway;
+- results do not rely on HP.
+
+This is still agent-side evidence only.
+
+---
+
+## 14. Stop rule
+
+If E0 fails to create a reusable access exchange:
+
+- do not add damage;
+- do not add weapons;
+- do not add shield;
+- do not add terrain;
+- do not add progression;
+- do not add co-op.
+
+Return to the exchange thesis.
+
+If E0 survives:
+
+> **E1 must reintroduce fast, meaningful damage without altering the access/commitment grammar.**
+
+That is the real falsifier.
+
+If damage causes the old collapse again, E0 was only a non-lethal movement/contact game.
+
+---
+
+## 15. Feniks boundary
+
+Nothing here means Feniks combat should revolve around access lines or a generic DRIVE action.
+
+E0 is intentionally abstract.
+
+Its job is to establish whether this deeper grammar is viable:
+
+> **intent -> relation -> commitment -> material resolution -> inherited next state -> consequence**
+
+Only surviving structure may later be donated into:
+
+- shield / body holding;
+- melee weapons;
+- reach;
+- projectile pressure;
+- magic;
+- co-op;
+- progression.
+
+---
+
+## Working invariant
+
+> **Retreat may refuse contact, but it should not preserve every valuable relation for free.**
