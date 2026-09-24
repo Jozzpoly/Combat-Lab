@@ -255,58 +255,74 @@ Do not proceed to the planned obstruction / cover phase.
 
 The complete evidence record is preserved in `docs/LINE_IMPULSE_ORGANISM_V0.md`.
 
-### Cross-campaign combat discovery audit — SYNTHESIS COMPLETE, E0 DESIGN ACTIVE
+### Cross-campaign combat discovery audit — SYNTHESIS COMPLETE
 
 Primary audit:
 
 - [Cross-Campaign Combat Discovery Audit — Exchange Before Consequence](CROSS_CAMPAIGN_COMBAT_AUDIT_2026-09-24.md)
 - synthesis commit: `271c60a600604c26a89e4e6eaaff825c74cd7eb5`
 
-Recovered repeated pattern:
-
-1. causal / material relations can be valid but disappear once ordinary offense resolves pressure first;
-2. retreat / range control can cancel engagement when the only durable local stake is HP / survival;
-3. defensive mechanisms often prevent one event but fail to create a useful inherited next state;
-4. HP-clear objectives compress every other relation into "does this kill faster?";
-5. changing weapon/body/opponent families has not yet produced a reusable exchange grammar.
-
-New working thesis:
+Working thesis remains:
 
 > **EXCHANGE BEFORE CONSEQUENCE**
 
-Candidate exchange structure:
+### EXCHANGE GRAMMAR E0 v0 — FAIL, ACCESS + MATERIAL DRIVE DONORS RETAINED
 
-- PERCEIVE — read intent / threat / local stake;
-- CHOOSE — multiple legal responses before contact;
-- COMMIT — action changes the next relation without arbitrary `canMove=false`;
-- RESOLVE — material world decides miss / contact / interception / displacement / clean hit;
-- INHERIT — result changes the next spatial decision instead of resetting immediately to pursuit.
+Primary record:
 
-Important consequence:
+- [EXCHANGE GRAMMAR E0 — Mirrored Access Contest](EXCHANGE_GRAMMAR_E0.md)
+- final attribution: `e15670db86b5a60dcff2e57b02478e333c3aa09b`;
+- lateral falsifier: `240375ca756c43488205be9acd39b77b2b3aeb22`;
+- deterministic suite: **6 / 6 PASS**;
+- Owner play: **NOT REQUESTED**.
 
-> **fast lethality is still allowed; clean damage should be relatively meaningful and earned by the exchange rather than replacing it.**
+What survived:
 
-New engagement pressure:
+- ACCESS gives retreat a world-grounded concession:
+  - DENY retreat -> breached in 1.783 s;
+  - BREACH retreat -> blocked after 6 s;
+  - zero boundary dependence;
+- material DRIVE can change access outcome;
+- with the same full-authority defender:
+  - normal player DRIVE -> crossed 2.225 s;
+  - player DRIVE disabled -> blocked;
+  - DRIVE state with carry=0 and contact displacement=0 -> blocked;
+- recovery measurably limits spam;
+- same-step opposing commitments preserve symmetric consequence.
 
-> **retreat remains legal and responsive, but should visibly concede something world-grounded rather than being punished by stamina / backwards-speed tax.**
+What failed:
 
-Potential concessions include position, access, protection, line, initiative or local control.
+- BREACH forward + DRIVE whenever ready crossed **7 / 7** lateral starts;
+- captured vs homing DRIVE crossed **7 / 7** with identical times;
+- the commitment direction therefore has no demonstrated strategic cost;
+- the access objective gives forward DRIVE mostly upside;
+- inherited afterstate is not rich enough to defeat blind aggressive commitment.
 
-### Active frontier — EXCHANGE GRAMMAR E0 DESIGN
+Therefore:
 
-Do **not** implement another weapon archetype.
+> **do not proceed to E1 damage reintroduction.**
 
-Do **not** code E0 until these are resolved sharply enough to pre-register:
+### Active frontier — E0b SET / DRIVE DESIGN
 
-1. what minimal local value is contested;
-2. what creates commitment without animation lock;
-3. what minimum afterstate makes the next choice different;
-4. what counts as winning a relation while HP is disabled diagnostically;
-5. how adversary intent remains readable without becoming a telegraph puzzle.
+Do not tune E0 v0.
 
-E0 may temporarily disable HP as a diagnostic, but this is **not** a proposal that Feniks combat should be non-lethal.
+The next question is narrower:
 
-E1, if E0 survives, must reintroduce high-consequence damage without changing the exchange grammar and must prove that damage does not collapse the possibility surface again.
+> **Can a persistent, directional SET / SUPPORT relation create a real pre-commitment spatial claim, so DRIVE must negotiate or sacrifice something rather than acting as a universal forward shove?**
+
+This is a hypothesis only.
+
+It must explicitly avoid recreating O1 brace:
+
+- no immovable wall;
+- no binary block/parry;
+- no global mass multiplier;
+- no hidden class authority;
+- movement remains live;
+- orientation / contact geometry matter;
+- a badly oriented SET must be bypassable;
+- a good SET must create a material response to blind DRIVE;
+- same actor can SET or DRIVE.
 
 Owner deployment remains **NO**.
 
