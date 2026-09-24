@@ -140,7 +140,8 @@ function makeSampledScreenPolicy(
   {
     tangentOffset=0,
     sampleInterval=0.20,
-    quantize=24
+    quantize=24,
+    allowStrike=false
   }={}
 ){
   let nextSample=-Infinity;
@@ -207,12 +208,34 @@ function makeSampledScreenPolicy(
       0,0
     );
 
+    let aimX=observed.attackerX;
+    let aimY=observed.attackerY;
+    let strike=false;
+
+    if(allowStrike){
+      const toBlocker=Math.hypot(
+        observed.blockerX-state.player.x,
+        observed.blockerY-state.player.y
+      );
+      const toAttacker=Math.hypot(
+        observed.attackerX-state.player.x,
+        observed.attackerY-state.player.y
+      );
+      if(toBlocker<toAttacker){
+        aimX=observed.blockerX;
+        aimY=observed.blockerY;
+        strike=toBlocker<86&&!state.player.action;
+      }else{
+        strike=toAttacker<86&&!state.player.action;
+      }
+    }
+
     return {
       moveX:move.x,
       moveY:move.y,
-      aimX:observed.attackerX,
-      aimY:observed.attackerY,
-      strike:false
+      aimX,
+      aimY,
+      strike
     };
   };
 }
@@ -399,6 +422,26 @@ export function runA2Policy(policyName,{
       tangentOffset:screenTangentOffset,
       sampleInterval:screenSampleInterval,
       quantize:screenQuantize
+    }
+  );
+  else if(policyName==="screen-heavy-sampled-strike") policy=makeSampledScreenPolicy(
+    "heavy",
+    "light",
+    {
+      tangentOffset:screenTangentOffset,
+      sampleInterval:screenSampleInterval,
+      quantize:screenQuantize,
+      allowStrike:true
+    }
+  );
+  else if(policyName==="screen-light-sampled-strike") policy=makeSampledScreenPolicy(
+    "light",
+    "heavy",
+    {
+      tangentOffset:screenTangentOffset,
+      sampleInterval:screenSampleInterval,
+      quantize:screenQuantize,
+      allowStrike:true
     }
   );
   else throw new Error("unknown A2 policy: "+policyName);
