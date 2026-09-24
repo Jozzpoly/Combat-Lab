@@ -160,7 +160,9 @@ export function runE0Policy({
   playerDisplacementScale=1,
   adversaryDisplacementScale=1,
   playerRecoveryScale=1,
-  adversaryRecoveryScale=1
+  adversaryRecoveryScale=1,
+  playerX=600,
+  adversaryX=600
 }={}){
   const state=createE0State({
     role,
@@ -173,7 +175,9 @@ export function runE0Policy({
     playerDisplacementScale,
     adversaryDisplacementScale,
     playerRecoveryScale,
-    adversaryRecoveryScale
+    adversaryRecoveryScale,
+    playerX,
+    adversaryX
   });
 
   const metrics={
