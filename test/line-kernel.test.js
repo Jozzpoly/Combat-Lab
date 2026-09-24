@@ -13,6 +13,8 @@ import {
   beginDraw,
   createLinePlayer,
   impactDeltaSpeedForMass,
+  applyProjectileStep,
+  probeProjectileStep,
   releaseDraw,
   stepDraw,
   stepProjectile
@@ -187,6 +189,25 @@ test("L0 impact delta speed is bounded even for tiny mass",()=>{
     impactDeltaSpeedForMass(HEAVY.mass)<
     impactDeltaSpeedForMass(LIGHT.mass)
   );
+});
+
+test("L0 projectile contact can be measured before consequence is applied",()=>{
+  const player=createLinePlayer({x:200,y:350,facing:0});
+  const target=createLineActor(LIGHT,{id:"target",x:310,y:350,facing:Math.PI});
+  const shot=readyShot(player);
+
+  const probe=probeProjectileStep(shot,[target],OPEN_WORLD,0.20);
+
+  assert.equal(probe.type,"projectile-impact-candidate");
+  assert.equal(target.hp,100);
+  assert.equal(target.vx,0);
+  assert.equal(shot.alive,true);
+
+  const event=applyProjectileStep(shot,probe);
+  assert.equal(event.type,"projectile-body-hit");
+  assert.equal(target.hp,60);
+  assert.ok(target.vx>0);
+  assert.equal(shot.alive,false);
 });
 
 test("L0 first-solid ordering uses actual swept path and does not tunnel",()=>{
