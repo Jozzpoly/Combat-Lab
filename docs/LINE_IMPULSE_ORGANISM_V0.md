@@ -339,6 +339,36 @@ Prove only:
 
 No full enemy encounter.
 
+## 10.1 L0 result — CAUSAL KERNEL QUALIFIED
+
+Checkpoint:
+
+- kernel commit: `d78ba1f0111d51cfcc4f99dc8f0da7a75656719c`;
+- deterministic suite: **10 / 10 PASS**;
+- Owner play: **NOT REQUESTED**.
+
+L0 demonstrated:
+
+- deterministic hold-to-draw / release semantics;
+- early release produces no shot;
+- locomotion remains live during draw;
+- projectile travel is finite, not hitscan;
+- swept collision prevents tunneling through a small body at a large timestep;
+- first solid wall consumes a shot before a body behind it;
+- first solid body consumes a shot before farther bodies;
+- one projectile affects one solid target;
+- the same damage / impulse contract displaces a light body materially more than a heavy body through mass alone;
+- impulse delta speed is bounded;
+- impact changes velocity without introducing stun, i-frames or forced state cancellation.
+
+Evidence boundary:
+
+> **projectile / line / impulse mechanism = qualified; combat organism = untested.**
+
+Before L1, projectile contact measurement is being separated from consequence application so same-step committed hostile contact cannot be erased by execution order.
+
+---
+
 ### L1 — committed rusher interaction
 
 One light dash-line adversary in open space.
