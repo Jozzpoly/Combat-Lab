@@ -213,7 +213,7 @@ test("A2b first-solid-body authority can intercept a committed heavy sweep befor
   const makeState=(adversaryActionsHitPeers)=>{
     const state=createA0State({
       world:openWorld,
-      playerStart:{x:430,y:300,facing:Math.PI},
+      playerStart:{x:425,y:300,facing:Math.PI},
       adversaryEntries:[
         {
           spec:HEAVY_CRUSHER_SPEC,
@@ -282,7 +282,7 @@ test("A2b body interception has a bounded spatial tolerance rather than one-pixe
   for(const offset of offsets){
     const state=createA0State({
       world:openWorld,
-      playerStart:{x:430,y:300,facing:Math.PI},
+      playerStart:{x:425,y:300,facing:Math.PI},
       adversaryEntries:[
         {
           spec:HEAVY_CRUSHER_SPEC,
