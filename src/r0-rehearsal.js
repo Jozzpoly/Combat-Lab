@@ -55,7 +55,8 @@ export function runTwoCommitSequence({
   autoNeutral=false,
   interludeSeconds=0.24,
   secondCommitAngle=-0.92,
-  sharpAimAfterFirst=null
+  sharpAimAfterFirst=null,
+  inheritanceMode="full"
 }={}){
   const state=createR0State();
   setBodyFacingIntent(state,0);
@@ -70,6 +71,24 @@ export function runTwoCommitSequence({
 
   // Remove the fixture after the first realized outcome. R0 is asking
   // whether the inherited state itself changes what happens next.
+  //
+  // Attribution modes deliberately separate persistent pose from residual
+  // kinetic energy. They are diagnostic ablations, not player-facing rules.
+  if(inheritanceMode==="pose-only"){
+    state.weapon.angularVelocity=0;
+    state.weapon.radialVelocity=0;
+  }else if(inheritanceMode==="velocity-only"){
+    state.weapon.angle=0.34;
+    state.weapon.reach=82;
+  }else if(inheritanceMode==="none"){
+    state.weapon.angle=0.34;
+    state.weapon.reach=82;
+    state.weapon.angularVelocity=0;
+    state.weapon.radialVelocity=0;
+  }else if(inheritanceMode!=="full"){
+    throw new Error("unknown inheritance mode: "+inheritanceMode);
+  }
+
   if(Number.isFinite(sharpAimAfterFirst)){
     setGuideIntent(state,sharpAimAfterFirst,82);
   }
@@ -153,6 +172,58 @@ export function compareHistories(options={}){
       wall.secondStart
     )
   };
+}
+
+export function runInheritanceAttribution({
+  guideAuthority=0.38,
+  interludeSeconds=0.24
+}={}){
+  const modes=["full","pose-only","velocity-only","none"];
+  const result={};
+
+  for(const inheritanceMode of modes){
+    result[inheritanceMode]=compareHistories({
+      guideAuthority,
+      interludeSeconds,
+      inheritanceMode
+    });
+  }
+
+  return Object.fromEntries(
+    Object.entries(result).map(([mode,value])=>[
+      mode,
+      {
+        secondStartDistance:Number(
+          value.secondStartDistance.toFixed(4)
+        ),
+        freeStart:value.free.secondStart,
+        wallStart:value.wall.secondStart,
+        freeSecondPath:value.free.secondPath,
+        wallSecondPath:value.wall.secondPath
+      }
+    ])
+  );
+}
+
+export function runPersistenceTimeSweep({
+  guideAuthority=0.38
+}={}){
+  const intervals=[0,0.08,0.16,0.24,0.40,0.65,1.0,1.6,2.5];
+  return intervals.map(interludeSeconds=>{
+    const value=compareHistories({
+      guideAuthority,
+      interludeSeconds,
+      inheritanceMode:"full"
+    });
+    return {
+      interludeSeconds,
+      secondStartDistance:Number(
+        value.secondStartDistance.toFixed(4)
+      ),
+      freeAngle:Number(value.free.secondStart.angle.toFixed(4)),
+      wallAngle:Number(value.wall.secondStart.angle.toFixed(4))
+    };
+  });
 }
 
 export function runGuideSweep(){
