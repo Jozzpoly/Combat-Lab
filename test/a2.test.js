@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import { HEAVY_CRUSHER_SPEC, LIGHT_STRIKER_SPEC } from "../src/anchors.js";
+import { createA0State, stepA0 } from "../src/sim.js";
 import { A2_PAIR_START, createA2PairState, runA2Policy } from "../src/pair-rehearsal.js";
 
 test("A2 pair state contains one light and one heavy adversary under shared simulation",()=>{
@@ -205,6 +206,131 @@ test("A2b layout sweep checks whether material cross-interaction is robust rathe
       assert.equal(value.finite,true);
     }
   }
+});
+
+test("A2b first-solid-body authority can intercept a committed heavy sweep before the player",()=>{
+  const openWorld={width:900,height:700,inset:20,walls:[]};
+  const makeState=(adversaryActionsHitPeers)=>{
+    const state=createA0State({
+      world:openWorld,
+      playerStart:{x:430,y:300,facing:Math.PI},
+      adversaryEntries:[
+        {
+          spec:HEAVY_CRUSHER_SPEC,
+          start:{id:"heavy",x:300,y:300,facing:0}
+        },
+        {
+          spec:LIGHT_STRIKER_SPEC,
+          start:{id:"light",x:360,y:300,facing:0}
+        }
+      ],
+      resolveAdversaryPairs:false,
+      adversaryActionsHitPeers
+    });
+
+    const heavy=state.adversaries.find(x=>x.id==="heavy");
+    heavy.mode="commit";
+    heavy.modeTime=0.20;
+    heavy.commitFacing=0;
+    heavy.commitX=1;
+    heavy.commitY=0;
+    heavy.commitElapsed=HEAVY_CRUSHER_SPEC.attack.commitDuration*0.5;
+    heavy.vx=0;
+    heavy.vy=0;
+    heavy.attackResolved=false;
+
+    return state;
+  };
+
+  const playerOnly=makeState(false);
+  const material=makeState(true);
+
+  const input={moveX:0,moveY:0,aimX:300,aimY:300,strike:false};
+  const playerOnlyEvents=stepA0(playerOnly,input,1/240);
+  const materialEvents=stepA0(material,input,1/240);
+
+  assert.ok(playerOnlyEvents.some(e =>
+    e.type==="adversary-hit" && e.attacker==="heavy"
+  ));
+  assert.equal(
+    playerOnlyEvents.some(e=>e.type==="adversary-friendly-hit"),
+    false
+  );
+
+  assert.ok(materialEvents.some(e =>
+    e.type==="adversary-friendly-hit" &&
+    e.attacker==="heavy" &&
+    e.target==="light"
+  ));
+  assert.equal(
+    materialEvents.some(e =>
+      e.type==="adversary-hit" && e.attacker==="heavy"
+    ),
+    false
+  );
+
+  assert.equal(playerOnly.player.hp,50);
+  assert.equal(material.player.hp,100);
+  assert.equal(material.adversaries.find(x=>x.id==="light").hp,50);
+});
+
+test("A2b body interception has a bounded spatial tolerance rather than one-pixel collinearity",()=>{
+  const openWorld={width:900,height:700,inset:20,walls:[]};
+  const offsets=[0,8,16,24,32,40];
+  const result={};
+
+  for(const offset of offsets){
+    const state=createA0State({
+      world:openWorld,
+      playerStart:{x:430,y:300,facing:Math.PI},
+      adversaryEntries:[
+        {
+          spec:HEAVY_CRUSHER_SPEC,
+          start:{id:"heavy",x:300,y:300,facing:0}
+        },
+        {
+          spec:LIGHT_STRIKER_SPEC,
+          start:{id:"light",x:360,y:300+offset,facing:0}
+        }
+      ],
+      resolveAdversaryPairs:false,
+      adversaryActionsHitPeers:true
+    });
+
+    const heavy=state.adversaries.find(x=>x.id==="heavy");
+    heavy.mode="commit";
+    heavy.modeTime=0.20;
+    heavy.commitFacing=0;
+    heavy.commitX=1;
+    heavy.commitY=0;
+    heavy.commitElapsed=HEAVY_CRUSHER_SPEC.attack.commitDuration*0.5;
+    heavy.vx=0;
+    heavy.vy=0;
+    heavy.attackResolved=false;
+
+    const events=stepA0(
+      state,
+      {moveX:0,moveY:0,aimX:300,aimY:300,strike:false},
+      1/240
+    );
+
+    result[offset]={
+      playerHp:state.player.hp,
+      lightHp:state.adversaries.find(x=>x.id==="light").hp,
+      friendly:events.some(e=>e.type==="adversary-friendly-hit"),
+      playerHit:events.some(e=>e.type==="adversary-hit")
+    };
+  }
+
+  console.log("A2B_INTERCEPTION_TOLERANCE",JSON.stringify(result));
+
+  assert.equal(result[0].friendly,true);
+  assert.equal(result[16].friendly,true);
+  assert.equal(result[24].friendly,true);
+  assert.equal(result[32].friendly,false);
+  assert.equal(result[40].friendly,false);
+  assert.equal(result[32].playerHit,true);
+  assert.equal(result[40].playerHit,true);
 });
 
 test("A2b body-screen possibility probe uses positions only and no player attacks",()=>{
