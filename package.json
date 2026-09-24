@@ -1,0 +1,8 @@
+{
+  "name": "combat-lab-continuous-readiness-r0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}
