@@ -438,6 +438,189 @@ This is still agent-side evidence only.
 
 ---
 
+## 13.1 E0 v0 result — ACCESS SURVIVES, DRIVE GRAMMAR FAILS
+
+Final clean checkpoint:
+
+- final attribution commit: `e15670db86b5a60dcff2e57b02478e333c3aa09b`;
+- broad lateral falsifier: `240375ca756c43488205be9acd39b77b2b3aeb22`;
+- deterministic suite: **6 / 6 PASS**;
+- Owner play: **NOT REQUESTED**;
+- browser deployment: **NOT WARRANTED**.
+
+### Apparatus corrections before interpretation
+
+The first exploratory build exposed three apparatus problems that were corrected before product interpretation:
+
+1. the simultaneous-contact test incorrectly expected same-frame position change rather than velocity consequence;
+2. retreat policies could reach a world boundary;
+3. the BREACH defender voluntarily retreated toward its own access line to preserve a player-relative offset.
+
+After correction:
+
+- the world is large enough that tested access outcomes are boundary-independent;
+- the BREACH defender holds a fixed band before access;
+- same-step opposing DRIVE contacts are measured before either consequence is applied.
+
+### ACCESS stake finding — SUPPORTED AS DONOR
+
+The contested-value hypothesis survived its first direct falsifier.
+
+In DENY:
+
+- pure retreat concedes access in **1.783 s**;
+- zero boundary frames;
+- no attack / damage rule is required to punish retreat.
+
+In BREACH:
+
+- pure retreat remains **BLOCKED after 6 s**;
+- zero boundary frames.
+
+Therefore:
+
+> **ACCESS gives retreat a world-grounded concession without stamina, backwards-speed penalty or shrinking arena.**
+
+This is a useful donor finding.
+
+It does not prove the whole exchange grammar.
+
+### Matched player DRIVE attribution
+
+The defender remained unchanged while only the player's DRIVE components were ablated.
+
+**Normal player DRIVE**
+- CROSSED in **2.225 s**.
+
+**Player DRIVE disabled**
+- BLOCKED after **6 s**;
+- stopped ~25.8 px before access.
+
+**Player DRIVE action present but both material consequences removed**
+- carry = 0;
+- contact displacement = 0;
+- BLOCKED after **6 s**;
+- same ~25.8 px margin.
+
+Therefore:
+
+> **the breach effect is materially carried, not created by entering an action state.**
+
+The two material pathways are partially redundant:
+
+**No carry, contact displacement retained**
+- CROSSED in **2.300 s**.
+
+**Carry retained, no contact displacement**
+- CROSSED in **2.942 s**.
+
+Thus either can currently provide enough forward consequence to breach.
+
+**No recovery**
+- CROSSED in **2.067 s**;
+- more drive/contact events.
+
+Recovery therefore constrains spam somewhat, but does not create the strategic discriminator.
+
+### Broad lateral-start falsifier — FAIL
+
+Offsets:
+
+- -300;
+- -180;
+- -90;
+- 0;
+- +90;
+- +180;
+- +300 px.
+
+Results:
+
+**DENY blind mash**
+- HELD in only **1 / 7** starts.
+
+**BREACH blind direct-mash**
+- CROSSED in **7 / 7** starts.
+
+**BREACH angle-left**
+- captured direction: CROSSED **7 / 7**;
+- homing direction: CROSSED **7 / 7**;
+- exact crossing times were identical at every tested offset.
+
+Therefore the captured-direction commitment has no demonstrated strategic cost in the current organism.
+
+The stronger failure is:
+
+> **BREACH is solved robustly by forward movement + DRIVE whenever ready.**
+
+This directly triggers the pre-registered **face-hug mash / drive-spam** concern for the BREACH half of the mirrored exchange.
+
+### E0 v0 verdict
+
+> **EXCHANGE GRAMMAR E0 v0 FAILS AS A REUSABLE EXCHANGE GRAMMAR.**
+
+What survives:
+
+- ACCESS as a minimal world-grounded contested value;
+- retreat can concede value without an artificial movement tax;
+- material DRIVE can change access outcome;
+- DRIVE value depends on actual material consequence;
+- recovery measurably restrains action frequency;
+- same-step opposing commitments can remain symmetric.
+
+What fails:
+
+- BREACH has a blind dominant forward+DRIVE policy across the full lateral sweep;
+- captured commitment direction is behaviorally indistinguishable from homing in the tested breach relation;
+- a committed action has too little downside / exposure relative to its access objective;
+- inherited afterstate does not force a new decision strongly enough;
+- the exchange remains closer to a committed shove contest than to a reusable combat grammar.
+
+### Why this is not a request to tune DRIVE
+
+Do not rescue E0 v0 by:
+
+- reducing DRIVE impulse;
+- lengthening recovery;
+- making defender DRIVE stronger;
+- narrowing the access lane;
+- adding damage;
+- adding HP;
+- making the defender faster;
+- giving the defender hidden reaction advantage.
+
+Those changes can make the matrix harder without fixing the structural problem.
+
+### New question exposed by E0
+
+ACCESS solved one half of the audit problem:
+
+> retreat can be legal while conceding something valuable.
+
+The unresolved half is:
+
+> **what persistent relation exists before commitment so a forward DRIVE can lose something other than time?**
+
+Current candidate:
+
+> **SET / SUPPORT as a continuously legible contact claim, with DRIVE sacrificing some of that support for forward consequence.**
+
+This is not permission to copy O1 brace.
+
+A new test would need to show:
+
+- SET is not a binary block/parry;
+- SET does not become an immovable wall;
+- DRIVE into a good SET can lose angle / access;
+- DRIVE around a badly oriented SET can win;
+- the same actor can SET or DRIVE;
+- all consequences arise from shared contact/support rules;
+- no damage is needed to manufacture the distinction.
+
+Do not implement until a fresh E0b hypothesis card pre-registers these falsifiers.
+
+---
+
 ## 14. Stop rule
 
 If E0 fails to create a reusable access exchange:
