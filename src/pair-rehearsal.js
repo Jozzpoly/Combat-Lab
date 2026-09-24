@@ -248,14 +248,16 @@ export function createA2PairState({
   ],
   playerStart=A2_PAIR_START.player,
   resolveAdversaryPairs=true,
-  adversaryActionsHitPeers=true
+  adversaryActionsHitPeers=true,
+  adversaryFriendlyDamageScale=1
 }={}){
   return createA0State({
     world:A2_OPEN_WORLD,
     playerStart,
     adversaryEntries:entries,
     resolveAdversaryPairs,
-    adversaryActionsHitPeers
+    adversaryActionsHitPeers,
+    adversaryFriendlyDamageScale
   });
 }
 
@@ -266,13 +268,15 @@ export function runA2Policy(policyName,{
   playerStart,
   resolveAdversaryPairs=true,
   adversaryActionsHitPeers=true,
+  adversaryFriendlyDamageScale=1,
   screenTangentOffset=0
 }={}){
   const state=createA2PairState({
     ...(entries?{entries}:{}),
     ...(playerStart?{playerStart}:{}),
     resolveAdversaryPairs,
-    adversaryActionsHitPeers
+    adversaryActionsHitPeers,
+    adversaryFriendlyDamageScale
   });
 
   let policy;
