@@ -303,6 +303,115 @@ export function runIntentionalGuideRecovery({
   };
 }
 
+export function runMatchedNeutralTimeSweep({
+  guideAuthority=0.38
+}={}){
+  const intervals=[0.08,0.16,0.24,0.40,0.65,1.0];
+  return intervals.map(interludeSeconds=>{
+    const inherited=compareHistories({
+      guideAuthority,
+      interludeSeconds,
+      autoNeutral:false
+    });
+    const neutral=compareHistories({
+      guideAuthority,
+      interludeSeconds,
+      autoNeutral:true
+    });
+    return {
+      interludeSeconds,
+      inherited:Number(inherited.secondStartDistance.toFixed(4)),
+      autoNeutral:Number(neutral.secondStartDistance.toFixed(4)),
+      ratio:Number((
+        neutral.secondStartDistance/
+        Math.max(1e-9,inherited.secondStartDistance)
+      ).toFixed(4))
+    };
+  });
+}
+
+export function runControlTradeoffSweep(){
+  const authorities=[0.08,0.18,0.38,0.75,1.25,2,3.5,6];
+  return authorities.map(guideAuthority=>{
+    const histories=compareHistories({
+      guideAuthority,
+      interludeSeconds:0.24
+    });
+    const recovery=runIntentionalGuideRecovery({
+      guideAuthority,
+      seconds:1.2,
+      targetAngle:-0.75
+    });
+    return {
+      guideAuthority,
+      historyDistance:Number(
+        histories.secondStartDistance.toFixed(4)
+      ),
+      recoveryTime:recovery.firstUseful
+    };
+  });
+}
+
+export function runContactSoak({
+  seconds=20,
+  guideAuthority=0.75
+}={}){
+  const state=createR0State();
+  let nextCommit=0;
+  let target=0.92;
+  let impacts=0;
+  let maxOmega=0;
+  let maxRadial=0;
+  let minReach=Infinity;
+  let maxReach=-Infinity;
+
+  const frames=Math.round(seconds*120);
+  for(let i=0;i<frames;i++){
+    const t=i/120;
+
+    if(t>=nextCommit&&!state.weapon.action){
+      target=target>0?-0.92:0.92;
+      setGuideIntent(state,target,82);
+      requestCommit(state,target);
+      nextCommit=t+0.64;
+    }
+
+    const event=stepWeapon(state,{
+      dt:1/120,
+      guideAuthority,
+      walls:[R0_WALL]
+    });
+    if(event) impacts++;
+
+    maxOmega=Math.max(
+      maxOmega,
+      Math.abs(state.weapon.angularVelocity)
+    );
+    maxRadial=Math.max(
+      maxRadial,
+      Math.abs(state.weapon.radialVelocity)
+    );
+    minReach=Math.min(minReach,state.weapon.reach);
+    maxReach=Math.max(maxReach,state.weapon.reach);
+  }
+
+  return {
+    impacts,
+    maxOmega:Number(maxOmega.toFixed(3)),
+    maxRadial:Number(maxRadial.toFixed(3)),
+    minReach:Number(minReach.toFixed(3)),
+    maxReach:Number(maxReach.toFixed(3)),
+    wallEngaged:state.weapon.wallEngaged,
+    final:snapshotReadiness(state),
+    finite:[
+      state.weapon.angle,
+      state.weapon.angularVelocity,
+      state.weapon.reach,
+      state.weapon.radialVelocity
+    ].every(Number.isFinite)
+  };
+}
+
 export function runSoak({
   seconds=20,
   guideAuthority=0.38
