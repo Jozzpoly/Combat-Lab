@@ -336,25 +336,133 @@ Structural conclusion:
 
 Do not rescue E0b through lane narrowing, stronger support, larger bodies, movement-speed tuning or another SET constant sweep.
 
-### Active frontier — PERSISTENT AFTERSTATE / READINESS AUDIT
+### Persistent afterstate / readiness audit — SYNTHESIS COMPLETE
 
-Do not implement E0c.
+Primary record:
 
-Highest-value unresolved question:
+- [Persistent Afterstate / Readiness Audit](PERSISTENT_AFTERSTATE_READINESS_AUDIT_2026-09-25.md)
+- audit commit: `7d640f2b80e3283a7a45f7a28966846cad523d5b`
 
-> **Why do our combat organisms repeatedly return toward neutral pursuit after a contact, miss, block or displacement instead of inheriting a legible state that changes the next decision?**
+Cross-donor finding:
 
-Before a new hypothesis card:
+> **Prior organisms often preserved physical state briefly, but their controllers repeatedly attracted combat back toward authored neutral / idle / approach semantics.**
 
-- re-audit Ruined Gate / Terrarium persistent weapon state;
-- re-audit O1/O2 recovery and contact aftermath;
-- distinguish actual persistent afterstate from authored cooldown / recovery state;
-- identify what ordinary locomotion currently erases immediately;
-- reconnect this with Feniks weapon identity, body/posture, progression and co-op pressure.
+Exact evidence:
 
-Candidate direction to falsify, not assume:
+- Terrarium weapon clash / wall / hit changed real weapon velocity, but spring targets still returned to canonical guard / idle reach;
+- O1 player attack always returned `windup -> active -> recover -> idle`, while pressure recovery returned to `approach`;
+- O2 action state became `null` after recovery and spear reach returned to `idleReach`;
+- O2 clearance created real displacement, but neither player action grammar nor pressure intent inherited that displacement as the next tactical state;
+- shared responsive locomotion could quickly dominate inherited contact velocity.
 
-> **a continuous readiness / exposure relation may be more important than another defensive or offensive action.**
+Important correction:
+
+> **Do not solve this by adding inertia, longer recovery, stamina or control lock.**
+
+The missing candidate is **decision persistence**, not merely longer physical decay.
+
+### CONTINUOUS READINESS R0 — CAUSAL-KERNEL QUALIFIED
+
+Primary hypothesis / result:
+
+- [CONTINUOUS READINESS R0 — No Auto-Neutral Causal Kernel](CONTINUOUS_READINESS_R0.md)
+- final evidence checkpoint: `eceb858fa25944c3c09e0eaf27358d2c76007fa0`;
+- deterministic suite: **12 / 12 PASS**;
+- Owner play: **NOT REQUESTED**.
+
+Defended mechanism claims:
+
+- FREE vs WALL first outcomes create materially different starting readiness for an identical second COMMIT;
+- identical second action paths differ substantially;
+- pose-only inheritance remains strong after inherited angular/radial velocity is deliberately erased;
+- erasing both pose and velocity collapses the history difference to zero;
+- ordinary GUIDE lets readiness history decay naturally rather than permanently;
+- matched AUTO-NEUTRAL restores equivalence much faster;
+- a broad GUIDE-authority sweep exposes a machine-side tradeoff between state memory and intentional recovery;
+- sharp aim does not instantly erase history in the reference regime;
+- locomotion remains responsive during COMMIT;
+- 20 s / 21-impact wall-contact soak is finite, bounded and deterministic.
+
+Critical evidence:
+
+- full history distance at 0.24 s: **2.537**;
+- pose-only: **1.393**;
+- velocity-only: **1.705**;
+- both erased: **0**;
+- ordinary GUIDE history distance:
+  - 0.65 s: **1.514**;
+  - 1.00 s: **0.433**;
+  - 1.60 s: **0.077**;
+- matched AUTO-NEUTRAL ratio:
+  - 0.40 s: **0.162**;
+  - 0.65 s: **0.027**;
+  - 1.00 s: **0.003**.
+
+Interpretation:
+
+> **the campaign now has evidence for persistent readiness beyond residual inertia: contact can change the physical starting condition of the next action without a hidden token or canonical guard reset.**
+
+Evidence boundary:
+
+- control feel: **UNPROVEN**;
+- readability: **UNPROVEN**;
+- combat value: **UNPROVEN**;
+- Feniks suitability: **UNPROVEN**.
+
+### READINESS UNDER PRESSURE R1 — FAIL, R0 DONOR SURVIVES
+
+Primary record:
+
+- [READINESS UNDER PRESSURE R1](READINESS_UNDER_PRESSURE_R1.md)
+- final material sweep: `92c231f57635076b54e189b2770c2479d0e85a2d`;
+- deterministic suite: **19 / 19 PASS**;
+- Owner play: **NOT REQUESTED**.
+
+Defended narrow facts:
+
+- mirrored EAST/WEST rusher uses readable prepare + non-homing locked dash;
+- readiness history changes actual tool/body contact geometry;
+- COMMIT-only material contact changes rusher trajectory without hidden cancel;
+- ordinary lateral movement leaves the locked dash geometry without i-frames.
+
+Failure:
+
+- immediate COMMIT: all 4 history × side cells still end in player body contact;
+- GUIDE THEN COMMIT: same 4 / 4 body contacts;
+- LATERAL EVADE: 4 / 4 body misses, requiring ~108 units movement;
+- full bounded tool material authority creates ~9–13 units lateral rusher deviation but **0 / 4** body-miss upgrades;
+- scales beyond 1 correctly saturate at the designed 105 delta-speed cap and still do not change outcome.
+
+Conclusion:
+
+> **R1 made readiness affect contact, but not what the player should do.**
+
+Do not tune impulse / rusher constants until this changes.
+
+R0 continuous readiness remains qualified.
+
+### Active frontier — READINESS FOLLOW-THROUGH / AFTERSTATE DESIGN
+
+New highest-value question:
+
+> **Can inherited player readiness change which follow-up is naturally available after an opponent's own committed action has already created a real physical afterstate?**
+
+This deliberately moves away from asking readiness to act as a parry.
+
+Candidate pressure shape:
+
+- movement remains the primary way to leave incoming locked threat geometry;
+- the adversary's own commitment creates overextension / separation / orientation;
+- no hidden vulnerable token;
+- no HP/damage initially;
+- readiness determines whether an immediate follow-up contact is geometrically available or whether the player must GUIDE / reposition first.
+
+Before implementation:
+
+- define what opponent afterstate is genuinely physical rather than timer-awarded;
+- mirror the situation so one readiness state cannot be globally best;
+- pre-register follow-up spam / timing-window / one-best-guard falsifiers;
+- keep AUTO-NEUTRAL and pose-only attribution available only after a follow-up phenomenon exists.
 
 Owner deployment remains **NO**.
 

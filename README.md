@@ -54,11 +54,42 @@ Directional SET is real mechanism evidence: centered support changes blind DRIVE
 
 The ACCESS + one-defender situation therefore collapses into a central supported wall or lateral bypass. Do not rescue it through narrower lanes or stronger SET constants.
 
-The active frontier is now a **persistent afterstate / readiness audit**:
+The persistent-afterstate audit is now complete.
 
-> **Why do mechanically meaningful contacts keep returning toward neutral pursuit instead of leaving a legible state that changes the next decision?**
+It found a recurring **neutral attractor** across Terrarium, O1 and O2:
 
-Before another implementation, re-audit the rejected Terrarium and other donor mechanisms for what actually persists after miss/contact/block and what their action controllers automatically restore to neutral.
+- physical contact state often persisted briefly;
+- controller semantics then restored guard / idle / approach;
+- the previous exchange rarely became the meaningful starting condition of the next decision.
+
+That led to **CONTINUOUS READINESS R0 / NO AUTO-NEUTRAL**.
+
+R0 is now **CAUSAL-KERNEL QUALIFIED**:
+
+- FREE vs WALL history materially changes an identical second COMMIT;
+- pose-only inheritance remains strong after residual weapon velocity is erased;
+- ordinary GUIDE can intentionally transform readiness without canonical reset;
+- AUTO-NEUTRAL collapses history much faster;
+- responsive locomotion remains live;
+- repeated wall-contact soak is bounded and deterministic.
+
+This is mechanism evidence only. Handling feel and combat value remain unproven.
+
+The first pressure test, **READINESS UNDER PRESSURE R1**, is already falsified:
+
+- readiness history changes whether tool/body contact occurs;
+- real tool contact changes rusher trajectory;
+- but full bounded material authority produces **0 / 4 body-miss upgrades**;
+- GUIDE THEN COMMIT also leaves 4 / 4 body contacts;
+- ordinary lateral movement remains the only effective response in that cell.
+
+Do not rescue R1 through stronger impulse or rusher tuning.
+
+The active frontier is now **READINESS FOLLOW-THROUGH / AFTERSTATE DESIGN**:
+
+> **Can inherited player readiness change which follow-up is naturally available after an opponent's own committed action has already created a real physical afterstate?**
+
+This deliberately stops asking readiness to behave like a parry / interruption system.
 
 See [Research state](docs/RESEARCH_STATE.md) for the recovery correction and evidence boundary.
 
@@ -75,6 +106,9 @@ Read these before substantial continuation:
 - [Cross-Campaign Combat Audit](docs/CROSS_CAMPAIGN_COMBAT_AUDIT_2026-09-24.md) — synthesis of recurring failure modes and the exchange-before-consequence thesis.
 - [Exchange Grammar E0](docs/EXCHANGE_GRAMMAR_E0.md) — preserved ACCESS / material DRIVE donors and the blind-BREACH-mash falsification.
 - [Exchange Grammar E0b — SET / DRIVE](docs/EXCHANGE_GRAMMAR_E0B_SET_DRIVE.md) — directional-support donor evidence and the central-wall / lateral-bypass failure.
+- [Persistent Afterstate / Readiness Audit](docs/PERSISTENT_AFTERSTATE_READINESS_AUDIT_2026-09-25.md) — cross-donor neutral-attractor diagnosis.
+- [Continuous Readiness R0](docs/CONTINUOUS_READINESS_R0.md) — qualified no-auto-neutral causal kernel and evidence boundary.
+- [Readiness Under Pressure R1](docs/READINESS_UNDER_PRESSURE_R1.md) — mirrored dash-pressure failure; readiness changed contact geometry but not the pressure outcome.
 - [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) — hypothesis gate, evidence boundaries, branch hygiene, deployment discipline and the meaning of short Owner commands such as “kontynuuj”.
 
 ## Deployment
