@@ -32,13 +32,17 @@ export const L1_OPEN_WORLD=Object.freeze({
 export function createL1State({
   world=L1_OPEN_WORLD,
   playerStart={x:4000,y:4400,facing:-Math.PI/2},
-  rusherStart={id:"rusher",x:4000,y:3900,facing:Math.PI/2}
+  rusherStart={id:"rusher",x:4000,y:3900,facing:Math.PI/2},
+  projectileDamageScale=1,
+  projectileImpulseScale=1
 }={}){
   return {
     world,
     player:createLinePlayer(playerStart),
     rusher:createLightRusher(rusherStart),
     projectiles:[],
+    projectileDamageScale,
+    projectileImpulseScale,
     time:0,
     result:"active",
     events:[]
@@ -79,6 +83,8 @@ export function stepL1(state,input,dt=1/120){
   }else if(player.draw.held){
     const shot=releaseDraw(player);
     if(shot){
+      shot.damage*=state.projectileDamageScale;
+      shot.impulse*=state.projectileImpulseScale;
       state.projectiles.push(shot);
       events.push({
         type:"shot-fired",
