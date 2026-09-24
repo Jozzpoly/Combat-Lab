@@ -13,8 +13,11 @@ import {
 import {
   compareHistories,
   runGuideSweep,
+  runContactSoak,
+  runControlTradeoffSweep,
   runInheritanceAttribution,
   runIntentionalGuideRecovery,
+  runMatchedNeutralTimeSweep,
   runPersistenceTimeSweep,
   runSoak
 } from "../src/r0-rehearsal.js";
@@ -171,6 +174,60 @@ test("R0 sharp aim change does not instantly erase distinct readiness at candida
   console.log("R0_SHARP_AIM",JSON.stringify(baseline));
 
   assert.ok(baseline.secondStartDistance>0.20);
+});
+
+test("R0 AUTO-NEUTRAL matched-time sweep erases history faster than ordinary GUIDE",()=>{
+  const sweep=runMatchedNeutralTimeSweep({
+    guideAuthority:0.38
+  });
+  console.log("R0_MATCHED_NEUTRAL_SWEEP",JSON.stringify(sweep));
+
+  for(const row of sweep){
+    assert.ok(Number.isFinite(row.inherited));
+    assert.ok(Number.isFinite(row.autoNeutral));
+    assert.ok(Number.isFinite(row.ratio));
+  }
+
+  const last=sweep[sweep.length-1];
+  assert.ok(last.autoNeutral<last.inherited);
+});
+
+test("R0 control tradeoff sweep maps recoverability against history without selecting feel by metric",()=>{
+  const sweep=runControlTradeoffSweep();
+  console.log("R0_CONTROL_TRADEOFF",JSON.stringify(sweep));
+
+  for(const row of sweep){
+    assert.ok(Number.isFinite(row.historyDistance));
+    assert.ok(
+      row.recoveryTime===null ||
+      Number.isFinite(row.recoveryTime)
+    );
+  }
+
+  assert.ok(sweep.some(row=>
+    row.historyDistance>0.8 &&
+    row.recoveryTime!==null &&
+    row.recoveryTime<0.5
+  ));
+});
+
+test("R0 stationary contact soak exercises repeated wall episodes without energy pumping",()=>{
+  const first=runContactSoak({
+    seconds:20,
+    guideAuthority:0.75
+  });
+  const second=runContactSoak({
+    seconds:20,
+    guideAuthority:0.75
+  });
+
+  console.log("R0_CONTACT_SOAK",JSON.stringify(first));
+
+  assert.equal(first.finite,true);
+  assert.ok(first.impacts>=5);
+  assert.ok(first.maxOmega<30);
+  assert.ok(first.maxRadial<600);
+  assert.deepEqual(first,second);
 });
 
 test("R0 repeated commits and wall contacts remain finite and bounded",()=>{
