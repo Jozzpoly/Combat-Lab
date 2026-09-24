@@ -9,15 +9,42 @@ function expectedOverrunAngle(side){
   return side==="east"?Math.PI:0;
 }
 
+function minimalEvadeVector(state){
+  if(state.rusher.mode!=="commit") return {x:0,y:0};
+
+  const r=state.rusher;
+  const p=state.player.body;
+  const nx=-r.commitY;
+  const ny=r.commitX;
+  const signed=
+    (p.x-r.commitStartX)*nx+
+    (p.y-r.commitStartY)*ny;
+  const required=18+r.radius+6;
+
+  if(Math.abs(signed)>=required){
+    return {x:0,y:0};
+  }
+
+  // Pick one deterministic side of the line so EAST/WEST runs remain
+  // comparable. This is movement out of real threat geometry, not a
+  // hidden dodge state.
+  const sign=ny>=0?1:-1;
+  return {
+    x:nx*sign,
+    y:ny*sign
+  };
+}
+
 function inputFor(policy,state){
   const angle=r2RusherAngle(state);
   const incoming=state.rusher.mode==="commit";
   const followPhase=state.rusher.mode==="return";
+  const evade=minimalEvadeVector(state);
 
   if(policy==="evade-only"){
     return {
-      moveX:0,
-      moveY:incoming?1:0,
+      moveX:evade.x,
+      moveY:evade.y,
       bodyFacing:angle,
       guideAngle:undefined,
       commit:false,
@@ -31,8 +58,8 @@ function inputFor(policy,state){
       state.toolContacts===0 &&
       !state.player.weapon.action;
     return {
-      moveX:0,
-      moveY:incoming?1:0,
+      moveX:evade.x,
+      moveY:evade.y,
       bodyFacing:angle,
       guideAngle:commit?angle:undefined,
       commit,
@@ -49,8 +76,8 @@ function inputFor(policy,state){
       state.toolContacts===0 &&
       !state.player.weapon.action;
     return {
-      moveX:0,
-      moveY:incoming?1:0,
+      moveX:evade.x,
+      moveY:evade.y,
       bodyFacing:angle,
       guideAngle,
       commit,
