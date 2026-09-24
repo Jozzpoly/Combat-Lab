@@ -1,8 +1,0 @@
-{
-  "name": "combat-lab-exchange-grammar-e0b",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "test": "node --test"
-  }
-}
