@@ -441,3 +441,200 @@ R1 still does **not** qualify combat feel.
 ## Working invariant
 
 > **Readiness matters only if pressure makes the inherited state change a real choice, not just a trajectory.**
+
+
+---
+
+## 19. R1 result — FAIL AS PRESSURE CELL, R0 READINESS DONOR SURVIVES
+
+Final evidence checkpoint:
+
+- mirrored pressure cell: `df27aa139e4489fa8e152a348a135610f527532e`;
+- contact timing / material sweep: `92c231f57635076b54e189b2770c2479d0e85a2d`;
+- deterministic suite: **19 / 19 PASS**;
+- Owner play: **NOT REQUESTED**.
+
+### 19.1 K0/K1 substrate behaved as intended
+
+Qualified narrow facts:
+
+- EAST/WEST pressure is mirrored;
+- rusher has readable prepare;
+- dash direction captures once and does not home;
+- no HP/damage model exists;
+- player locomotion remains live;
+- COMMIT-only tool/body contact exists;
+- tool contact does not cancel `rusher.mode = commit`;
+- same-step body contact cannot be retroactively erased by tool consequence;
+- zero material displacement can preserve the contact event while removing velocity consequence.
+
+Thus the failure below is not caused by hidden parry authority.
+
+### 19.2 Readiness changes contact geometry
+
+Base crossed matrix, immediate COMMIT:
+
+**FREE × EAST**
+- tool contacts: 0;
+- player body contact: yes.
+
+**FREE × WEST**
+- tool contacts: 1;
+- player body contact: yes.
+
+**WALL × EAST**
+- tool contacts: 1;
+- player body contact: yes.
+
+**WALL × WEST**
+- tool contacts: 1;
+- player body contact: yes.
+
+Therefore inherited readiness is not semantically dead under pressure.
+
+It changes which material tool/body contacts actually occur.
+
+### 19.3 GUIDE did not change the pressure outcome
+
+GUIDE THEN COMMIT produced the same player-body-contact outcome in all four crossed cells.
+
+It changed some local contact geometry / displacement, but did not create a different useful response.
+
+This means:
+
+> **R1 did not demonstrate that intentional readiness conversion changes what the player should do next.**
+
+### 19.4 Movement remains a real independent answer
+
+LATERAL EVADE:
+
+- body miss in all tested mirrored cells;
+- no tool contact;
+- ~107.95 units maximum player displacement.
+
+This is useful evidence:
+
+- the dash is not unavoidable;
+- no dodge/i-frame state is required;
+- ordinary movement can leave the locked threat geometry.
+
+It also means the pressure cell has one clearly effective response while the readiness responses fail to alter outcome.
+
+### 19.5 Material contact is real but not consequence-bearing enough
+
+Broad material-authority sweep used immediate COMMIT in all four history × side cells.
+
+At material scale:
+
+- 0.00: 0 / 4 body misses;
+- 0.35: 0 / 4;
+- 0.70: 0 / 4;
+- 1.00: 0 / 4.
+
+At full material law:
+
+- FREE × WEST lateral rusher deviation: ~9.15;
+- WALL × EAST: ~11.17;
+- WALL × WEST: ~12.89.
+
+The designed material law caps rusher delta speed at **105**.
+
+Therefore scales 1.4 / 2 / 3 / 4 correctly saturate at the same authority and still produce:
+
+- **0 / 4 body misses**.
+
+This is important.
+
+The sweep does not say contact was fake.
+
+It says:
+
+> **within the predesigned bounded material law, tool contact changes trajectory but not the pressure result.**
+
+### 19.6 Do not tune through the falsifier
+
+Do not rescue R1 by changing:
+
+- tool impulse cap;
+- rusher speed;
+- rusher mass;
+- body radii;
+- start distance;
+- prepare duration;
+- commit duration;
+
+until a body-miss matrix appears.
+
+Those are all capable of manufacturing a threshold.
+
+R1 asked whether already-defended readiness + bounded material contact naturally changed response value under one committed pressure pulse.
+
+It did not.
+
+### 19.7 Why K3 is not warranted
+
+The pre-registered K3 plan included:
+
+- AUTO-NEUTRAL;
+- pose-only;
+- velocity-only;
+- warning-window sweep;
+- broad perturbation.
+
+Those are attribution tools for a phenomenon that first has to exist.
+
+Current R1 has:
+
+- readiness-dependent contact geometry;
+- no readiness-dependent pressure outcome.
+
+Running more attribution against the same failed consequence would optimize a mechanism cell around a missing phenomenon.
+
+Stop here.
+
+### 19.8 Product interpretation
+
+R1 accidentally asked continuous readiness to earn itself as:
+
+> **a defensive interruption / parry-like way to nullify an incoming body commitment.**
+
+That is not required by the R0 hypothesis and may be a poor use of readiness.
+
+The stronger remaining hypothesis is different:
+
+> **persistent readiness may matter more in exploiting the afterstate created by an exchange than in canceling the exchange before it happens.**
+
+Example research pressure:
+
+- player avoids / survives committed geometry through ordinary movement;
+- adversary's own commitment leaves real overextension / separation / orientation;
+- player's inherited weapon readiness determines which follow-up relation is naturally available;
+- no hidden "vulnerable" token is required.
+
+This should be tested before increasing interception force.
+
+### 19.9 Verdict
+
+Status:
+
+> **READINESS UNDER PRESSURE R1 = FAIL AS MECHANISM CELL.**
+
+Retain:
+
+- mirrored locked dash donor;
+- ordinary movement as real evasion;
+- readiness-dependent tool-contact geometry;
+- same-step contact discipline.
+
+R0 status remains:
+
+> **CAUSAL-KERNEL QUALIFIED.**
+
+Owner eligibility remains:
+
+> **NO.**
+
+Next frontier:
+
+> **audit/design readiness as FOLLOW-THROUGH / exploitation of inherited opponent afterstate rather than defensive cancellation.**
+
