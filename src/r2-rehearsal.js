@@ -1,3 +1,4 @@
+import { readinessDistance } from "./readiness.js";
 import {
   createR2State,
   r2RusherAngle,
@@ -241,6 +242,112 @@ export function runR2CrossedMatrix(){
     }
   }
   return result;
+}
+
+export function runR2GuideRetentionSweep(){
+  const authorities=[0.18,0.38,0.75,1.25];
+  const result=[];
+
+  for(const guideAuthority of authorities){
+    const cells={};
+    for(const history of ["free","wall"]){
+      cells[history]={};
+      for(const side of ["east","west"]){
+        cells[history][side]={
+          immediate:runR2Policy({
+            history,
+            side,
+            policy:"evade-immediate-follow",
+            guideAuthority
+          }),
+          guided:runR2Policy({
+            history,
+            side,
+            policy:"evade-guide-follow",
+            guideAuthority
+          })
+        };
+      }
+    }
+
+    result.push({
+      guideAuthority,
+      commitEndHistoryDistanceEast:Number(
+        readinessDistance(
+          cells.free.east.immediate.readinessAtCommitEnd,
+          cells.wall.east.immediate.readinessAtCommitEnd
+        ).toFixed(4)
+      ),
+      commitEndHistoryDistanceWest:Number(
+        readinessDistance(
+          cells.free.west.immediate.readinessAtCommitEnd,
+          cells.wall.west.immediate.readinessAtCommitEnd
+        ).toFixed(4)
+      ),
+      immediate:{
+        freeEast:cells.free.east.immediate.result,
+        freeWest:cells.free.west.immediate.result,
+        wallEast:cells.wall.east.immediate.result,
+        wallWest:cells.wall.west.immediate.result
+      },
+      guided:{
+        freeEast:cells.free.east.guided.result,
+        freeWest:cells.free.west.guided.result,
+        wallEast:cells.wall.east.guided.result,
+        wallWest:cells.wall.west.guided.result
+      },
+      guidedDelays:{
+        freeEast:cells.free.east.guided.followSinceCommitEnd,
+        freeWest:cells.free.west.guided.followSinceCommitEnd,
+        wallEast:cells.wall.east.guided.followSinceCommitEnd,
+        wallWest:cells.wall.west.guided.followSinceCommitEnd
+      }
+    });
+  }
+
+  return result;
+}
+
+export function runR2PrepareRetentionSweep({
+  guideAuthority=0.38
+}={}){
+  const prepares=[0,0.08,0.16,0.32,0.48,0.72];
+  return prepares.map(prepare=>{
+    const free=runR2Policy({
+      history:"free",
+      side:"east",
+      policy:"evade-immediate-follow",
+      guideAuthority,
+      prepare
+    });
+    const wall=runR2Policy({
+      history:"wall",
+      side:"east",
+      policy:"evade-immediate-follow",
+      guideAuthority,
+      prepare
+    });
+
+    return {
+      prepare,
+      commitEndHistoryDistance:Number(
+        readinessDistance(
+          free.readinessAtCommitEnd,
+          wall.readinessAtCommitEnd
+        ).toFixed(4)
+      ),
+      freeResult:free.result,
+      wallResult:wall.result,
+      freeStartAngle:Number(free.readinessStart.angle.toFixed(4)),
+      wallStartAngle:Number(wall.readinessStart.angle.toFixed(4)),
+      freeCommitEndAngle:Number(
+        free.readinessAtCommitEnd.angle.toFixed(4)
+      ),
+      wallCommitEndAngle:Number(
+        wall.readinessAtCommitEnd.angle.toFixed(4)
+      )
+    };
+  });
 }
 
 export function summarizeR2Matrix(matrix){
