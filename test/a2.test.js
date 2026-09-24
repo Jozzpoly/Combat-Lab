@@ -387,7 +387,7 @@ test("A2b interception value is separated from friendly-fire damage",()=>{
   }
 });
 
-test("A2b sampled quantized screen perception tests solver dependence",()=>{
+test("A2b sampled quantized screen perception uses matched authority baselines",()=>{
   const layouts={
     splitNorth:{
       playerStart:{x:700,y:760,facing:-Math.PI/2},
@@ -427,31 +427,35 @@ test("A2b sampled quantized screen perception tests solver dependence",()=>{
       const sampledPolicy=basePolicy+"-sampled";
       result[layoutName][basePolicy]={};
       for(const offset of offsets){
+        const common={
+          seconds:8,
+          entries:layout.entries,
+          playerStart:layout.playerStart,
+          adversaryFriendlyDamageScale:0,
+          screenTangentOffset:offset
+        };
+        const sampledCommon={
+          ...common,
+          screenSampleInterval:0.20,
+          screenQuantize:24
+        };
+
         result[layoutName][basePolicy][offset]={
-          playerOnly:runA2Policy(basePolicy,{
-            seconds:8,
-            entries:layout.entries,
-            playerStart:layout.playerStart,
-            adversaryActionsHitPeers:false,
-            screenTangentOffset:offset
+          exactPlayerOnly:runA2Policy(basePolicy,{
+            ...common,
+            adversaryActionsHitPeers:false
           }),
-          continuous:runA2Policy(basePolicy,{
-            seconds:8,
-            entries:layout.entries,
-            playerStart:layout.playerStart,
-            adversaryActionsHitPeers:true,
-            adversaryFriendlyDamageScale:0,
-            screenTangentOffset:offset
+          exactIntercept:runA2Policy(basePolicy,{
+            ...common,
+            adversaryActionsHitPeers:true
           }),
-          sampled:runA2Policy(sampledPolicy,{
-            seconds:8,
-            entries:layout.entries,
-            playerStart:layout.playerStart,
-            adversaryActionsHitPeers:true,
-            adversaryFriendlyDamageScale:0,
-            screenTangentOffset:offset,
-            screenSampleInterval:0.20,
-            screenQuantize:24
+          sampledPlayerOnly:runA2Policy(sampledPolicy,{
+            ...sampledCommon,
+            adversaryActionsHitPeers:false
+          }),
+          sampledIntercept:runA2Policy(sampledPolicy,{
+            ...sampledCommon,
+            adversaryActionsHitPeers:true
           })
         };
       }
@@ -466,7 +470,7 @@ test("A2b sampled quantized screen perception tests solver dependence",()=>{
 
   const summary={
     totalCells:0,
-    continuousBenefitCells:0,
+    exactBenefitCells:0,
     sampledBenefitCells:0,
     retainedBenefitCells:0,
     sampledFriendlyHitCells:0,
@@ -478,49 +482,54 @@ test("A2b sampled quantized screen perception tests solver dependence",()=>{
     for(const [policyName,policy] of Object.entries(layout)){
       const bucket={
         cells:0,
-        continuousBenefit:0,
+        exactBenefit:0,
         sampledBenefit:0,
         retainedBenefit:0,
         sampledFriendlyHit:0
       };
-      for(const trio of Object.values(policy)){
-        const cBenefit=benefit(trio.playerOnly,trio.continuous);
-        const sBenefit=benefit(trio.playerOnly,trio.sampled);
+
+      for(const quartet of Object.values(policy)){
+        const exactBenefit=benefit(
+          quartet.exactPlayerOnly,
+          quartet.exactIntercept
+        );
+        const sampledBenefit=benefit(
+          quartet.sampledPlayerOnly,
+          quartet.sampledIntercept
+        );
+
         bucket.cells++;
         summary.totalCells++;
-        if(cBenefit){
-          bucket.continuousBenefit++;
-          summary.continuousBenefitCells++;
+
+        if(exactBenefit){
+          bucket.exactBenefit++;
+          summary.exactBenefitCells++;
         }
-        if(sBenefit){
+        if(sampledBenefit){
           bucket.sampledBenefit++;
           summary.sampledBenefitCells++;
         }
-        if(cBenefit&&sBenefit){
+        if(exactBenefit&&sampledBenefit){
           bucket.retainedBenefit++;
           summary.retainedBenefitCells++;
         }
-        if(trio.sampled.friendlyHits>0){
+        if(quartet.sampledIntercept.friendlyHits>0){
           bucket.sampledFriendlyHit++;
           summary.sampledFriendlyHitCells++;
         }
+
+        assert.equal(quartet.exactPlayerOnly.finite,true);
+        assert.equal(quartet.exactIntercept.finite,true);
+        assert.equal(quartet.sampledPlayerOnly.finite,true);
+        assert.equal(quartet.sampledIntercept.finite,true);
+        assert.equal(quartet.sampledIntercept.friendlyDamage,0);
       }
+
       summary.byLayout[layoutName][policyName]=bucket;
     }
   }
 
-  console.log("A2B_SAMPLED_SUMMARY",JSON.stringify(summary));
-
-  for(const layout of Object.values(result)){
-    for(const policy of Object.values(layout)){
-      for(const trio of Object.values(policy)){
-        assert.equal(trio.playerOnly.finite,true);
-        assert.equal(trio.continuous.finite,true);
-        assert.equal(trio.sampled.finite,true);
-        assert.equal(trio.sampled.friendlyDamage,0);
-      }
-    }
-  }
+  console.log("A2B_SAMPLED_MATCHED_SUMMARY",JSON.stringify(summary));
 });
 
 test("A2b interception-only body screen generalizes across ordinary pair layouts",()=>{
