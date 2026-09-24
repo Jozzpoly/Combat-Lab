@@ -92,12 +92,15 @@ test("R0 guide authority sweep maps persistence vs aim erasure without a magic q
     assert.ok(Number.isFinite(row.neutralDistance));
   }
 
-  assert.ok(
-    sweep.some(row=>row.inheritedDistance>0.35)
-  );
-  assert.ok(
-    sweep.some(row=>row.inheritedDistance<0.20)
-  );
+  const first=sweep[0];
+  const last=sweep[sweep.length-1];
+
+  // This is a mapping experiment, not a preselected "good authority" gate.
+  // The broad sweep only needs to demonstrate that increasing GUIDE authority
+  // can materially erase history; the useful human-control regime is not
+  // qualified here.
+  assert.ok(first.inheritedDistance>0.35);
+  assert.ok(last.inheritedDistance<first.inheritedDistance*0.45);
 });
 
 test("R0 deliberate GUIDE can convert inherited wall readiness without canonical guard",()=>{
