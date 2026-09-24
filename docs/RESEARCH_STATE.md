@@ -218,21 +218,77 @@ Do not rescue this lane with enemy HP, reduced player damage, stamina, dodge/par
 
 The complete evidence record is preserved in `docs/ADVERSARIAL_COMBAT_ORGANISM_V1.md`.
 
-### Active frontier — LINE / IMPULSE organism
+### LINE / IMPULSE Organism v0 — WHOLE-ORGANISM FAIL, KERNEL DONOR RETAINED
 
-The next discovery question is deliberately outside the repeated compact-melee loop:
+Final preserved checkpoint:
 
-> **Can projectile travel, first-solid-body line truth, cover / obstruction and bounded impact displacement create a combat language where line management and interruption matter before raw HP subtraction?**
+- verdict: `994ebadd5a8ac4e2066a128627ec2693948772c5`;
+- corrected engaged diagnostic: `0750c317d4e8a3d9dfe0da7c1aa567ffcdf8a698`;
+- final deterministic suite: **17 / 17 PASS**;
+- Owner play: **NOT REQUESTED**.
 
-This is **not** permission to build "the same melee attack at longer range".
+What survived:
 
-Pre-code requirements:
+- finite projectile travel and swept collision;
+- first-solid-body / first-solid-wall authority;
+- deterministic draw / release with live locomotion;
+- bounded impulse with mass-dependent displacement;
+- no hidden stun / i-frames / forced attack cancellation;
+- projectile contact can be measured before consequence application for same-step authority;
+- a light rusher donor with readable prepare and non-homing locked dash.
 
-- write a fresh whole-organism hypothesis card;
-- define a 30-second player-facing discriminator;
-- pre-register projectile-spam, backwards-kite, binary cover-peek and pinball/stunlock falsifiers;
-- retain adversary identity as part of the organism rather than returning to generic pursuit;
-- reuse A1/A2b only as explicit donors, never as inherited authority.
+What failed:
+
+- stand + fire deletes the rusher before meaningful engagement;
+- max-rate fire is effectively identical to stand + fire;
+- backwards kite + lethal fire clears safely before engagement;
+- removing impulse leaves lethal outcomes essentially unchanged;
+- impulse-only timing on prepare / commit does not create additional commitment misses;
+- lateral movement creates misses, but adding commit-timed impulse does not improve that result;
+- backwards retreat + repeated **zero-damage** impulse holds the rusher out of engagement for 10 s at 100 HP with zero boundary support.
+
+Therefore:
+
+> **LINE / IMPULSE v0 fails projectile-spam, backwards-kite and ranged-HP-subtraction falsifiers.**
+
+Do not proceed to the planned obstruction / cover phase.
+
+The complete evidence record is preserved in `docs/LINE_IMPULSE_ORGANISM_V0.md`.
+
+### Active frontier — CROSS-CAMPAIGN COMBAT DISCOVERY AUDIT
+
+Do not implement another weapon archetype yet.
+
+Current repeated pattern:
+
+1. offense can erase a spatial relation before it develops into play;
+2. movement / range control can suppress engagement rather than negotiate it;
+3. mechanically valid defensive / material relations often survive in isolation but disappear from the full fight;
+4. parameter or content additions repeatedly risk hiding this instead of fixing it.
+
+The next task is to recover all surviving evidence from:
+
+- Ruined Gate Terrarium;
+- Phenotype Combat Ecology;
+- O1 HOLD / BREAK;
+- O2 REACH / THREAT;
+- Adversarial Combat Organism v1;
+- LINE / IMPULSE v0;
+
+and ask a more fundamental question:
+
+> **What must a Feniks combat exchange make the player perceive, choose and commit to before consequence, so offense, movement and world relations cannot trivially bypass one another?**
+
+The audit must reconnect this with Owner-confirmed Feniks pressures:
+
+- responsive movement;
+- no universal i-frame dodge;
+- physical / material consequence without simulation fetish;
+- classless specialization through body / equipment / learned capability;
+- progression that can deepen play instead of only scaling numbers;
+- terrain / body / weapon identity;
+- future co-op and asymmetric roles;
+- fast consequence without letting damage erase the decision space.
 
 Owner deployment remains **NO**.
 
