@@ -484,6 +484,159 @@ If modest perception delay / spatial imprecision destroys the phenomenon, retain
 
 ---
 
+## 6.3 A2b coarse-perception result — MATERIAL POSSIBILITY SURVIVES, BUT NOT AS COMBAT ADVANTAGE
+
+A2b's body-screen policy was then degraded to approximate perception:
+
+- body positions sampled every **200 ms**;
+- positions quantized to a **24 px** grid;
+- no access to prepare / commit / recover state;
+- no friendly damage.
+
+Matched authority comparison was required:
+
+- sampled player-only;
+- sampled intercept-only.
+
+Across 40 layout / blocker / offset cells:
+
+- exact screen policy produced material player benefit in **6 / 40** cells;
+- sampled / quantized policy produced benefit in **8 / 40** cells;
+- **4 / 6** exact-benefit cells survived the coarse observer;
+- sampled interception events occurred in **28 / 40** cells.
+
+This is enough to reject the claim that body screening is only a frame-perfect geometry solver artifact.
+
+The effect remains strongly spatial / conditional rather than universal.
+
+### Final A2b combat-loop gate
+
+The same sampled / quantized screen policy was then allowed to use the ordinary compact player strike against the nearest visible body.
+
+Important boundaries:
+
+- no hidden attack-phase reads;
+- no friendly damage;
+- same movement policy in player-only and all-body conditions;
+- 4 layouts;
+- heavy and light blocker relations;
+- 3 lateral offsets each;
+- **24 matched combat cells**.
+
+Result:
+
+> **0 / 24 cells gained any combat outcome benefit from material interception.**
+
+Specifically:
+
+- 0 clear upgrades;
+- 0 HP advantages;
+- 0 reductions in player hits;
+- 0 survival-time advantages attributable to all-body authority.
+
+The body-screen mechanism still exists physically, but ordinary lethal offense changes / deletes the pair relation before screening changes the actual fight.
+
+Therefore:
+
+> **A2b qualifies as material-world donor evidence, not as the missing pair-combat phenomenon.**
+
+---
+
+## 6.4 Adversarial Combat Organism v1 verdict — WHOLE-ORGANISM FAIL, DONORS RETAINED
+
+### What survived
+
+**A1 v1 single-adversary strategy divergence**
+
+- light dash-line punishes backstep less and rewards lateral orbit;
+- heavy sweep-arc punishes orbit and rewards giving ground;
+- heavy backstep remains viable with bounded reaction delay;
+- action geometry is equipment/action data, not a hidden enemy-class branch.
+
+**A2b material action truth**
+
+- adversary commitments can resolve against first solid body;
+- body interception has bounded spatial tolerance;
+- another enemy can materially screen the player;
+- interception value can exist with **zero friendly damage**;
+- some screen benefit survives coarse positional perception;
+- heavy/light body geometry creates asymmetric screening value without a class flag.
+
+These are valuable Feniks donor mechanisms.
+
+### What failed as a whole organism
+
+The mixed light + heavy pair never became more than the sum of independent pressure plus occasional material cross-contact.
+
+- A2 open pair was clearable by all tested simple policies.
+- Focus order barely mattered.
+- Peer body collision was mostly irrelevant.
+- Enabling all-body attack authority created real cross-interaction but only sporadically in ordinary fights.
+- Body-screen positioning could improve survival while the player **did not attack**.
+- Once ordinary compact offense was restored, the material screen had **0 / 24 measurable fight-outcome effects**.
+
+This is not an argument against:
+
+- heterogeneous enemies;
+- first-solid-body combat truth;
+- friendly body obstruction;
+- dash / sweep action diversity;
+- future classless body roles.
+
+The narrower conclusion is:
+
+> **player + compact lethal melee strike + dash/sweep pair did not produce a whole combat organism worth Owner attention.**
+
+### Cross-campaign warning
+
+O1 and A2b independently expose a similar pressure:
+
+> **spatial defensive relations can become meaningful in isolation, then disappear once ordinary offense deletes pressure faster than the relation matters.**
+
+Do not treat this as a universal theorem yet.
+
+It is strong enough to prohibit another immediate patch around the same compact-melee attack abstraction.
+
+Do not rescue Adversarial v1 by:
+
+- increasing enemy HP;
+- lowering player damage;
+- adding stamina;
+- adding dodge/parry;
+- adding terrain to force screen value;
+- adding more enemies;
+- scripting formations;
+- making friendly fire more lethal.
+
+### Promotion status
+
+- A0 shared substrate: mechanism-qualified;
+- A1 v1 single-adversary divergence: agent-side possibility-qualified;
+- A2/A2b pair organism: **FAIL**;
+- Owner eligibility: **NO**;
+- browser deployment: **NOT WARRANTED**.
+
+### Next frontier
+
+Reconsider the reserved **LINE / IMPULSE** organism from a clean product hypothesis.
+
+Do not implement it as:
+
+> "the same compact melee loop, but projectile=true."
+
+The next lane should explicitly test whether:
+
+- projectile travel / obstruction;
+- first-solid-body line truth;
+- opponent body placement;
+- cover;
+- impact displacement / interruption;
+- close-pressure vulnerability;
+
+can create a different decision language before returning to melee attribution.
+
+---
+
 ## 7. World relation
 
 Build a small place, not a puzzle lane.
