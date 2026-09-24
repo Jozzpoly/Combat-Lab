@@ -30,11 +30,24 @@ O1 HOLD/BREAK, O2 REACH/THREAT and **Adversarial Combat Organism v1** have now a
 
 The **LINE / IMPULSE v0** organism has also been falsified agent-side. Its projectile / first-solid-body / mass-dependent impulse kernel remains donor evidence, but lethal play collapsed into ranged HP deletion and impulse-only retreat could suppress engagement.
 
-The active frontier is now a **cross-campaign combat-discovery audit**, not another immediate weapon prototype.
+The cross-campaign combat-discovery audit is now complete.
 
-> **What must a Feniks combat exchange make the player perceive, choose and commit to before consequence, so offense, movement and world relations cannot trivially bypass one another?**
+Its working thesis is **EXCHANGE BEFORE CONSEQUENCE**: fast, meaningful damage may remain, but it should confirm a won combat relation rather than replace the need to win one.
 
-Classless specialization, progression, terrain, body identity and future co-op remain important constraints, but they should deepen a valuable combat exchange rather than substitute for finding one.
+The first diagnostic, **EXCHANGE GRAMMAR E0 / Mirrored Access Contest**, has already been falsified as a reusable exchange grammar:
+
+- `ACCESS` successfully made retreat concede something world-grounded without stamina or backwards-speed penalties;
+- material `DRIVE` genuinely changed access outcomes;
+- but blind forward `DRIVE` solved BREACH across 7 / 7 broad lateral starts;
+- captured commitment direction was behaviorally indistinguishable from homing in that sweep.
+
+Therefore E0 v0 does **not** proceed to damage reintroduction.
+
+The active frontier is **E0b SET / DRIVE design**:
+
+> **Can a persistent directional support/contact relation exist before commitment, so DRIVE must negotiate or sacrifice spatial authority instead of acting as a universal forward shove?**
+
+This must not recreate O1 brace, an immovable wall, binary parry, global mass multiplier or hidden class authority.
 
 See [Research state](docs/RESEARCH_STATE.md) for the recovery correction and evidence boundary.
 
@@ -48,6 +61,8 @@ Read these before substantial continuation:
 - [Feniks Combat Refoundation](docs/FENIKS_COMBAT_REFOUNDATION_2026-09-21.md) — current correction: classless phenotype / combat-ecology research direction.
 - [Adversarial Combat Organism v1](docs/ADVERSARIAL_COMBAT_ORGANISM_V1.md) — preserved A1/A2b evidence and final whole-organism failure.
 - [LINE / IMPULSE Organism v0](docs/LINE_IMPULSE_ORGANISM_V0.md) — preserved projectile/impulse kernel and L1 whole-organism failure.
+- [Cross-Campaign Combat Audit](docs/CROSS_CAMPAIGN_COMBAT_AUDIT_2026-09-24.md) — synthesis of recurring failure modes and the exchange-before-consequence thesis.
+- [Exchange Grammar E0](docs/EXCHANGE_GRAMMAR_E0.md) — preserved ACCESS / material DRIVE donors and the blind-BREACH-mash falsification.
 - [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) — hypothesis gate, evidence boundaries, branch hygiene, deployment discipline and the meaning of short Owner commands such as “kontynuuj”.
 
 ## Deployment

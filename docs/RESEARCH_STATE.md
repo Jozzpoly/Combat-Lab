@@ -255,43 +255,76 @@ Do not proceed to the planned obstruction / cover phase.
 
 The complete evidence record is preserved in `docs/LINE_IMPULSE_ORGANISM_V0.md`.
 
-### Active frontier — CROSS-CAMPAIGN COMBAT DISCOVERY AUDIT
+### Cross-campaign combat discovery audit — SYNTHESIS COMPLETE
 
-Do not implement another weapon archetype yet.
+Primary audit:
 
-Current repeated pattern:
+- [Cross-Campaign Combat Discovery Audit — Exchange Before Consequence](CROSS_CAMPAIGN_COMBAT_AUDIT_2026-09-24.md)
+- synthesis commit: `271c60a600604c26a89e4e6eaaff825c74cd7eb5`
 
-1. offense can erase a spatial relation before it develops into play;
-2. movement / range control can suppress engagement rather than negotiate it;
-3. mechanically valid defensive / material relations often survive in isolation but disappear from the full fight;
-4. parameter or content additions repeatedly risk hiding this instead of fixing it.
+Working thesis remains:
 
-The next task is to recover all surviving evidence from:
+> **EXCHANGE BEFORE CONSEQUENCE**
 
-- Ruined Gate Terrarium;
-- Phenotype Combat Ecology;
-- O1 HOLD / BREAK;
-- O2 REACH / THREAT;
-- Adversarial Combat Organism v1;
-- LINE / IMPULSE v0;
+### EXCHANGE GRAMMAR E0 v0 — FAIL, ACCESS + MATERIAL DRIVE DONORS RETAINED
 
-and ask a more fundamental question:
+Primary record:
 
-> **What must a Feniks combat exchange make the player perceive, choose and commit to before consequence, so offense, movement and world relations cannot trivially bypass one another?**
+- [EXCHANGE GRAMMAR E0 — Mirrored Access Contest](EXCHANGE_GRAMMAR_E0.md)
+- final attribution: `e15670db86b5a60dcff2e57b02478e333c3aa09b`;
+- lateral falsifier: `240375ca756c43488205be9acd39b77b2b3aeb22`;
+- deterministic suite: **6 / 6 PASS**;
+- Owner play: **NOT REQUESTED**.
 
-The audit must reconnect this with Owner-confirmed Feniks pressures:
+What survived:
 
-- responsive movement;
-- no universal i-frame dodge;
-- physical / material consequence without simulation fetish;
-- classless specialization through body / equipment / learned capability;
-- progression that can deepen play instead of only scaling numbers;
-- terrain / body / weapon identity;
-- future co-op and asymmetric roles;
-- fast consequence without letting damage erase the decision space.
+- ACCESS gives retreat a world-grounded concession:
+  - DENY retreat -> breached in 1.783 s;
+  - BREACH retreat -> blocked after 6 s;
+  - zero boundary dependence;
+- material DRIVE can change access outcome;
+- with the same full-authority defender:
+  - normal player DRIVE -> crossed 2.225 s;
+  - player DRIVE disabled -> blocked;
+  - DRIVE state with carry=0 and contact displacement=0 -> blocked;
+- recovery measurably limits spam;
+- same-step opposing commitments preserve symmetric consequence.
+
+What failed:
+
+- BREACH forward + DRIVE whenever ready crossed **7 / 7** lateral starts;
+- captured vs homing DRIVE crossed **7 / 7** with identical times;
+- the commitment direction therefore has no demonstrated strategic cost;
+- the access objective gives forward DRIVE mostly upside;
+- inherited afterstate is not rich enough to defeat blind aggressive commitment.
+
+Therefore:
+
+> **do not proceed to E1 damage reintroduction.**
+
+### Active frontier — E0b SET / DRIVE DESIGN
+
+Do not tune E0 v0.
+
+The next question is narrower:
+
+> **Can a persistent, directional SET / SUPPORT relation create a real pre-commitment spatial claim, so DRIVE must negotiate or sacrifice something rather than acting as a universal forward shove?**
+
+This is a hypothesis only.
+
+It must explicitly avoid recreating O1 brace:
+
+- no immovable wall;
+- no binary block/parry;
+- no global mass multiplier;
+- no hidden class authority;
+- movement remains live;
+- orientation / contact geometry matter;
+- a badly oriented SET must be bypassable;
+- a good SET must create a material response to blind DRIVE;
+- same actor can SET or DRIVE.
 
 Owner deployment remains **NO**.
-
 
 ## Recovery correction — 2026-09-22
 
