@@ -19,10 +19,16 @@ import {
 export function createE0State({
   role="deny",
   world=E0_WORLD,
-  driveEnabled=true,
-  homingDrive=false,
-  displacementScale=1,
-  recoveryScale=1
+  playerDriveEnabled=true,
+  adversaryDriveEnabled=true,
+  playerHomingDrive=false,
+  adversaryHomingDrive=false,
+  playerCarryScale=1,
+  adversaryCarryScale=1,
+  playerDisplacementScale=1,
+  adversaryDisplacementScale=1,
+  playerRecoveryScale=1,
+  adversaryRecoveryScale=1
 }={}){
   const deny=role==="deny";
 
@@ -44,10 +50,16 @@ export function createE0State({
     world,
     player,
     adversary,
-    driveEnabled,
-    homingDrive,
-    displacementScale,
-    recoveryScale,
+    playerDriveEnabled,
+    adversaryDriveEnabled,
+    playerHomingDrive,
+    adversaryHomingDrive,
+    playerCarryScale,
+    adversaryCarryScale,
+    playerDisplacementScale,
+    adversaryDisplacementScale,
+    playerRecoveryScale,
+    adversaryRecoveryScale,
     time:0,
     result:"active",
     events:[]
@@ -58,26 +70,27 @@ function crossedAccess(actor,world){
   return actor.y>=world.accessY;
 }
 
-function applyInput(actor,input,opponent,dt,state){
+function applyInput(actor,input,opponent,dt,state,tuning){
   if(Number.isFinite(input.aimX)&&Number.isFinite(input.aimY)){
     faceToward(actor,input.aimX,input.aimY,dt);
   }
 
   driveMove(actor,input.moveX||0,input.moveY||0,dt);
 
-  if(state.driveEnabled&&input.drive&&actor.action.mode==="idle"){
+  if(tuning.enabled&&input.drive&&actor.action.mode==="idle"){
     startDrive(actor);
   }
 
   const event=stepDriveAction(actor,dt,{
-    homing:state.homingDrive,
+    homing:tuning.homing,
     aimX:opponent.x,
-    aimY:opponent.y
+    aimY:opponent.y,
+    carryScale:tuning.carryScale
   });
 
   if(
     actor.action.mode==="recover" &&
-    state.recoveryScale===0
+    tuning.recoveryScale===0
   ){
     actor.action.mode="idle";
     actor.action.time=0;
@@ -129,7 +142,13 @@ export function stepE0(state,playerInput,dt=1/120){
     playerInput,
     state.adversary,
     dt,
-    state
+    state,
+    {
+      enabled:state.playerDriveEnabled,
+      homing:state.playerHomingDrive,
+      carryScale:state.playerCarryScale,
+      recoveryScale:state.playerRecoveryScale
+    }
   );
   if(pAction) events.push(pAction);
 
@@ -138,15 +157,21 @@ export function stepE0(state,playerInput,dt=1/120){
     adversaryInput(state),
     state.player,
     dt,
-    state
+    state,
+    {
+      enabled:state.adversaryDriveEnabled,
+      homing:state.adversaryHomingDrive,
+      carryScale:state.adversaryCarryScale,
+      recoveryScale:state.adversaryRecoveryScale
+    }
   );
   if(aAction) events.push(aAction);
 
   // Measure both committed contacts before either consequence is applied.
-  const pHit=state.driveEnabled
+  const pHit=state.playerDriveEnabled
     ? probeDriveContact(state.player,state.adversary)
     : null;
-  const aHit=state.driveEnabled
+  const aHit=state.adversaryDriveEnabled
     ? probeDriveContact(state.adversary,state.player)
     : null;
 
@@ -155,7 +180,7 @@ export function stepE0(state,playerInput,dt=1/120){
       state.player,
       state.adversary,
       pHit,
-      {displacementScale:state.displacementScale}
+      {displacementScale:state.playerDisplacementScale}
     );
     if(e) events.push(e);
   }
@@ -164,7 +189,7 @@ export function stepE0(state,playerInput,dt=1/120){
       state.adversary,
       state.player,
       aHit,
-      {displacementScale:state.displacementScale}
+      {displacementScale:state.adversaryDisplacementScale}
     );
     if(e) events.push(e);
   }
