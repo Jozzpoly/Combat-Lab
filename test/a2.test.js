@@ -333,6 +333,60 @@ test("A2b body interception has a bounded spatial tolerance rather than one-pixe
   assert.equal(result[40].playerHit,true);
 });
 
+test("A2b interception value is separated from friendly-fire damage",()=>{
+  const sameFront=[
+    {
+      spec:LIGHT_STRIKER_SPEC,
+      start:{id:"light",x:625,y:300,facing:Math.PI/2}
+    },
+    {
+      spec:HEAVY_CRUSHER_SPEC,
+      start:{id:"heavy",x:785,y:300,facing:Math.PI/2}
+    }
+  ];
+  const offsets=[-36,-24,0,24];
+  const result={};
+
+  for(const policy of ["screen-heavy","screen-light"]){
+    result[policy]={};
+    for(const offset of offsets){
+      result[policy][offset]={
+        playerOnly:runA2Policy(policy,{
+          seconds:8,
+          entries:sameFront,
+          adversaryActionsHitPeers:false,
+          screenTangentOffset:offset
+        }),
+        interceptOnly:runA2Policy(policy,{
+          seconds:8,
+          entries:sameFront,
+          adversaryActionsHitPeers:true,
+          adversaryFriendlyDamageScale:0,
+          screenTangentOffset:offset
+        }),
+        damaging:runA2Policy(policy,{
+          seconds:8,
+          entries:sameFront,
+          adversaryActionsHitPeers:true,
+          adversaryFriendlyDamageScale:1,
+          screenTangentOffset:offset
+        })
+      };
+    }
+  }
+
+  console.log("A2B_INTERCEPT_VS_DAMAGE",JSON.stringify(result));
+
+  for(const policy of Object.values(result)){
+    for(const trio of Object.values(policy)){
+      assert.equal(trio.playerOnly.finite,true);
+      assert.equal(trio.interceptOnly.finite,true);
+      assert.equal(trio.damaging.finite,true);
+      assert.equal(trio.interceptOnly.friendlyDamage,0);
+    }
+  }
+});
+
 test("A2b coarse body-screen sweep checks robustness to imperfect lateral placement",()=>{
   const sameFront=[
     {
