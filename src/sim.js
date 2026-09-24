@@ -28,19 +28,21 @@ export function createE0State({
   playerDisplacementScale=1,
   adversaryDisplacementScale=1,
   playerRecoveryScale=1,
-  adversaryRecoveryScale=1
+  adversaryRecoveryScale=1,
+  playerX=600,
+  adversaryX=600
 }={}){
   const deny=role==="deny";
 
   const player=createActor({
     id:"player",
-    x:600,
+    x:playerX,
     y:deny?1885:1610,
     facing:deny?-Math.PI/2:Math.PI/2
   });
   const adversary=createActor({
     id:"adversary",
-    x:600,
+    x:adversaryX,
     y:deny?1610:1885,
     facing:deny?Math.PI/2:-Math.PI/2
   });
