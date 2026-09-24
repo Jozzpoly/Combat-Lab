@@ -96,9 +96,19 @@ function lateralCommitShot(state){
 export function runL1Policy(policyName,{
   seconds=12,
   dt=1/120,
-  world=L1_OPEN_WORLD
+  world=L1_OPEN_WORLD,
+  playerStart,
+  rusherStart,
+  projectileDamageScale=1,
+  projectileImpulseScale=1
 }={}){
-  const state=createL1State({world});
+  const state=createL1State({
+    world,
+    ...(playerStart?{playerStart}:{}),
+    ...(rusherStart?{rusherStart}:{}),
+    projectileDamageScale,
+    projectileImpulseScale
+  });
 
   let policy;
   if(policyName==="stand-fire") policy=standFire;
