@@ -1,8 +1,8 @@
 export const E0_WORLD=Object.freeze({
   width:1200,
-  height:800,
+  height:4000,
   inset:30,
-  accessY:650
+  accessY:2000
 });
 
 export function resolveWorld(actor,world=E0_WORLD){
