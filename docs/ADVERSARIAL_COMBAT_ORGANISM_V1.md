@@ -387,6 +387,103 @@ Only if A2b creates a robust, nontrivial relation should terrain re-enter.
 
 ---
 
+## 6.2 A2b result — MATERIAL BODY SCREEN EXISTS, DISCOVERABILITY STILL UNPROVEN
+
+A2b removed player-only authority from adversary commits.
+
+Committed dash/sweep geometry can resolve against the **first solid body**, whether that body is the player or another adversary.
+
+No AI receives friendly-fire awareness or avoidance.
+
+### Direct mechanism evidence
+
+A controlled heavy-sweep cell proved actual interception:
+
+- without peer authority, the committed sweep hits the player for 50;
+- with all-body authority, a light body standing in front takes the same commit and the player remains unharmed.
+
+The spatial tolerance is bounded rather than pixel-perfect:
+
+- blocker lateral offset 0 / 8 / 16 / 24 px: interception succeeds;
+- 32 / 40 px: blocker no longer intersects and the player receives the hit.
+
+This is mechanism evidence, not pair-organism evidence.
+
+### Friendly damage ablation
+
+Peer interception was then separated from friendly-fire damage.
+
+With **friendly damage scaled to zero**, a peer body still consumes the committed attack.
+
+This matters because it separates two hypotheses:
+
+- "enemies kill each other for free";
+- "another material body can genuinely occupy the attack relation."
+
+In the strongest same-front screen-heavy case:
+
+- player-only authority: DOWN at 7.525 s;
+- intercept-only, zero friendly damage: ACTIVE after 8 s at 16 HP;
+- both adversaries remain at 100 HP;
+- six peer interceptions occur.
+
+Therefore:
+
+> **body-screen value does not require friendly-fire damage.**
+
+### Generalization across ordinary layouts
+
+The same position-only screen policies were tested across:
+
+- splitNorth;
+- sameFront;
+- staggered;
+- opposed;
+
+with multiple lateral offsets and **zero friendly damage**.
+
+Material benefit appears in 3 / 4 layout families, but not universally.
+
+Examples:
+
+- sameFront, heavy screen: one offset changes DOWN -> ACTIVE at 8 s;
+- staggered, heavy screen: one offset changes DOWN -> ACTIVE at 50 HP;
+- staggered, light screen: several offsets extend survival by ~1.1 s;
+- opposed, heavy screen: survival extends from ~3.44 s to ~4.98 s;
+- splitNorth: interception events occur but do not improve player outcome.
+
+This is a useful property, not a defect:
+
+> **screening is a spatial affordance, not a global defensive buff.**
+
+The heavy body is also materially more useful as a blocker than the light body in the current pair, emerging from body/action geometry rather than a role flag.
+
+### Evidence boundary
+
+A2b now demonstrates:
+
+- real first-solid-body action authority;
+- bounded screen tolerance;
+- interception value independent of friendly damage;
+- transfer beyond one staged starting layout.
+
+It still does **not** demonstrate human-scale discoverability.
+
+The current screen policy:
+
+- knows which visible body it wants as blocker;
+- knows which visible body is the attacker;
+- recomputes their exact positions every simulation frame;
+- moves continuously toward the exact far-side relation.
+
+Next falsifier:
+
+> **does body-screen value survive sampled / quantized positional knowledge with no hidden attack-state access?**
+
+If modest perception delay / spatial imprecision destroys the phenomenon, retain A2b as mechanism evidence and do not promote it to A3.
+
+---
+
 ## 7. World relation
 
 Build a small place, not a puzzle lane.
