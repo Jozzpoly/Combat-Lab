@@ -458,7 +458,58 @@ test("A2b sampled quantized screen perception tests solver dependence",()=>{
     }
   }
 
-  console.log("A2B_SAMPLED_SCREEN",JSON.stringify(result));
+  const benefit=(base,value) =>
+    value.enemyHits<base.enemyHits ||
+    (value.result==="active" && base.result==="down") ||
+    value.time>base.time+0.05 ||
+    value.playerHp>base.playerHp;
+
+  const summary={
+    totalCells:0,
+    continuousBenefitCells:0,
+    sampledBenefitCells:0,
+    retainedBenefitCells:0,
+    sampledFriendlyHitCells:0,
+    byLayout:{}
+  };
+
+  for(const [layoutName,layout] of Object.entries(result)){
+    summary.byLayout[layoutName]={};
+    for(const [policyName,policy] of Object.entries(layout)){
+      const bucket={
+        cells:0,
+        continuousBenefit:0,
+        sampledBenefit:0,
+        retainedBenefit:0,
+        sampledFriendlyHit:0
+      };
+      for(const trio of Object.values(policy)){
+        const cBenefit=benefit(trio.playerOnly,trio.continuous);
+        const sBenefit=benefit(trio.playerOnly,trio.sampled);
+        bucket.cells++;
+        summary.totalCells++;
+        if(cBenefit){
+          bucket.continuousBenefit++;
+          summary.continuousBenefitCells++;
+        }
+        if(sBenefit){
+          bucket.sampledBenefit++;
+          summary.sampledBenefitCells++;
+        }
+        if(cBenefit&&sBenefit){
+          bucket.retainedBenefit++;
+          summary.retainedBenefitCells++;
+        }
+        if(trio.sampled.friendlyHits>0){
+          bucket.sampledFriendlyHit++;
+          summary.sampledFriendlyHitCells++;
+        }
+      }
+      summary.byLayout[layoutName][policyName]=bucket;
+    }
+  }
+
+  console.log("A2B_SAMPLED_SUMMARY",JSON.stringify(summary));
 
   for(const layout of Object.values(result)){
     for(const policy of Object.values(layout)){
