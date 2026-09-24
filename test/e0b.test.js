@@ -260,7 +260,13 @@ test("E0b broad matched ablations isolate directionality support sacrifice and c
     angleCaptured:compact(result.angleCaptured),
     angleHoming:compact(result.angleHoming),
     sacrifice:compact(result.setDriveSacrifice),
-    keepSupport:compact(result.setDriveKeepsSupport)
+    keepSupport:compact(result.setDriveKeepsSupport),
+    maxBoundaryByGroup:Object.fromEntries(
+      Object.entries(result).map(([name,group])=>[
+        name,
+        Math.max(...group.map(x=>x.boundaryFrames))
+      ])
+    )
   };
 
   console.log("E0B_BROAD_ABLATION_SUMMARY",JSON.stringify(summary));
