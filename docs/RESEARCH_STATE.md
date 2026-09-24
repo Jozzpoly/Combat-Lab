@@ -255,43 +255,60 @@ Do not proceed to the planned obstruction / cover phase.
 
 The complete evidence record is preserved in `docs/LINE_IMPULSE_ORGANISM_V0.md`.
 
-### Active frontier — CROSS-CAMPAIGN COMBAT DISCOVERY AUDIT
+### Cross-campaign combat discovery audit — SYNTHESIS COMPLETE, E0 DESIGN ACTIVE
 
-Do not implement another weapon archetype yet.
+Primary audit:
 
-Current repeated pattern:
+- [Cross-Campaign Combat Discovery Audit — Exchange Before Consequence](CROSS_CAMPAIGN_COMBAT_AUDIT_2026-09-24.md)
+- synthesis commit: `271c60a600604c26a89e4e6eaaff825c74cd7eb5`
 
-1. offense can erase a spatial relation before it develops into play;
-2. movement / range control can suppress engagement rather than negotiate it;
-3. mechanically valid defensive / material relations often survive in isolation but disappear from the full fight;
-4. parameter or content additions repeatedly risk hiding this instead of fixing it.
+Recovered repeated pattern:
 
-The next task is to recover all surviving evidence from:
+1. causal / material relations can be valid but disappear once ordinary offense resolves pressure first;
+2. retreat / range control can cancel engagement when the only durable local stake is HP / survival;
+3. defensive mechanisms often prevent one event but fail to create a useful inherited next state;
+4. HP-clear objectives compress every other relation into "does this kill faster?";
+5. changing weapon/body/opponent families has not yet produced a reusable exchange grammar.
 
-- Ruined Gate Terrarium;
-- Phenotype Combat Ecology;
-- O1 HOLD / BREAK;
-- O2 REACH / THREAT;
-- Adversarial Combat Organism v1;
-- LINE / IMPULSE v0;
+New working thesis:
 
-and ask a more fundamental question:
+> **EXCHANGE BEFORE CONSEQUENCE**
 
-> **What must a Feniks combat exchange make the player perceive, choose and commit to before consequence, so offense, movement and world relations cannot trivially bypass one another?**
+Candidate exchange structure:
 
-The audit must reconnect this with Owner-confirmed Feniks pressures:
+- PERCEIVE — read intent / threat / local stake;
+- CHOOSE — multiple legal responses before contact;
+- COMMIT — action changes the next relation without arbitrary `canMove=false`;
+- RESOLVE — material world decides miss / contact / interception / displacement / clean hit;
+- INHERIT — result changes the next spatial decision instead of resetting immediately to pursuit.
 
-- responsive movement;
-- no universal i-frame dodge;
-- physical / material consequence without simulation fetish;
-- classless specialization through body / equipment / learned capability;
-- progression that can deepen play instead of only scaling numbers;
-- terrain / body / weapon identity;
-- future co-op and asymmetric roles;
-- fast consequence without letting damage erase the decision space.
+Important consequence:
+
+> **fast lethality is still allowed; clean damage should be relatively meaningful and earned by the exchange rather than replacing it.**
+
+New engagement pressure:
+
+> **retreat remains legal and responsive, but should visibly concede something world-grounded rather than being punished by stamina / backwards-speed tax.**
+
+Potential concessions include position, access, protection, line, initiative or local control.
+
+### Active frontier — EXCHANGE GRAMMAR E0 DESIGN
+
+Do **not** implement another weapon archetype.
+
+Do **not** code E0 until these are resolved sharply enough to pre-register:
+
+1. what minimal local value is contested;
+2. what creates commitment without animation lock;
+3. what minimum afterstate makes the next choice different;
+4. what counts as winning a relation while HP is disabled diagnostically;
+5. how adversary intent remains readable without becoming a telegraph puzzle.
+
+E0 may temporarily disable HP as a diagnostic, but this is **not** a proposal that Feniks combat should be non-lethal.
+
+E1, if E0 survives, must reintroduce high-consequence damage without changing the exchange grammar and must prove that damage does not collapse the possibility surface again.
 
 Owner deployment remains **NO**.
-
 
 ## Recovery correction — 2026-09-22
 
