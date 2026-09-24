@@ -26,11 +26,15 @@ Phenotype Combat Ecology P0/P1 is now preserved as **mechanism evidence / donor 
 
 The active research phase is **Whole Combat Organism Discovery**.
 
-The primary question is:
+O1 HOLD/BREAK, O2 REACH/THREAT and **Adversarial Combat Organism v1** have now all been falsified agent-side as whole organisms. Their surviving mechanisms remain donors; none earned Owner testing.
 
-> **What whole combat organism makes the player want to fight again because body, weapon, movement, opponent and place jointly create readable, useful possibilities?**
+The active frontier is a genuinely different **LINE / IMPULSE** organism:
 
-Classless specialization remains an important Feniks constraint, but it returns to a secondary falsifier after a combat organism has actually earned deeper investment.
+> **Can projectile travel, first-solid-body line truth, cover / obstruction and bounded impact displacement create a combat language where line management and interruption matter before raw HP subtraction?**
+
+This must not become "the same compact melee loop, but projectile=true".
+
+Classless specialization remains an important Feniks constraint, but it stays secondary until a combat organism actually earns deeper investment.
 
 See [Research state](docs/RESEARCH_STATE.md) for the recovery correction and evidence boundary.
 
@@ -42,6 +46,7 @@ Read these before substantial continuation:
 - [Discovery Campaign v1](docs/DISCOVERY_CAMPAIGN_V1.md) — preserved four-corner mechanism-probe design; no longer the Owner-test roadmap.
 - [Owner Specimen Refoundation](docs/OWNER_SPECIMEN_REFOUNDATION.md) — historical rationale for the now-rejected Combat Terrarium.
 - [Feniks Combat Refoundation](docs/FENIKS_COMBAT_REFOUNDATION_2026-09-21.md) — current correction: classless phenotype / combat-ecology research direction.
+- [Adversarial Combat Organism v1](docs/ADVERSARIAL_COMBAT_ORGANISM_V1.md) — preserved A1/A2b evidence and final whole-organism failure.
 - [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) — hypothesis gate, evidence boundaries, branch hygiene, deployment discipline and the meaning of short Owner commands such as “kontynuuj”.
 
 ## Deployment

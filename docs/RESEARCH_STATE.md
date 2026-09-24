@@ -162,30 +162,79 @@ The next discovery lane must treat **adversary identity as part of the whole org
 
 Do not mechanically implement O3 against the same pressure cell.
 
-### Active frontier — ADVERSARIAL COMBAT ORGANISM v1
+### Adversarial Combat Organism v1 — WHOLE-ORGANISM FAIL, DONORS RETAINED
 
-The next question is:
+Final preserved checkpoint:
 
-> **Can a small fight become worth reading and mastering when the opponent is itself a materially distinct combat body with understandable intent, limitations and spatial consequences — rather than a generic pursuit force?**
+- active-lane verdict: `2fc9d4bbf06b178805442b96f44defeb1952ef05`;
+- final combat-loop gate before verdict: `bdc9c7634b8a290b93bf23bb74fd48dff5675fb9`;
+- deterministic suite at final combat gate: **31 / 31 PASS**;
+- Owner play: **NOT REQUESTED**.
 
-The next lane should use one or two deliberately distinct adversaries only if they create qualitatively different decisions.
+What survived:
 
-Candidate first pressure mix from the existing Feniks refoundation:
+**A1 v1 — adversary action diversity**
 
-- one light / fast pressure body;
-- one heavier space-holding body.
+- a light `dash-line` and heavy `sweep-arc` can use one shared seek -> prepare -> commit -> recover lifecycle;
+- action geometry is equipment/action data rather than a hidden enemy class branch;
+- open-field strategy crossover was real:
+  - light: lateral orbit can clear cleanly while backstep pays a hit;
+  - heavy: lateral orbit can fail while giving ground / backstep clears;
+- heavy backstep remained viable under bounded reaction delay, so the discriminator did not require zero-latency internal-state access.
 
-These are not classes and must not become hidden role flags.
+**A2b — first-solid-body material authority**
 
-The immediate work is **hypothesis design + clean experimental lane**, not O3 implementation and not Owner deployment.
+- adversary commits can resolve against the first solid body rather than special-casing the player;
+- another adversary can materially intercept a committed hit;
+- direct heavy-sweep interception survived lateral blocker error through ~24 px and failed beyond it;
+- body-screen value can exist with **zero friendly damage**;
+- interception-only benefit appeared in 3 / 4 ordinary layout families;
+- coarse sampled / quantized positional knowledge preserved part of the effect.
 
-Hypothesis card now active:
+These are valuable donor mechanisms.
 
-- [Adversarial Combat Organism v1](ADVERSARIAL_COMBAT_ORGANISM_V1.md)
+What failed:
 
-Its first discriminator is opponent legibility, not difficulty:
+- the mixed light + heavy pair remained broadly two independent attack relations / health bars;
+- focus order barely changed the fight;
+- peer body collision alone contributed little;
+- material cross-interaction was real but sparse;
+- screen positioning could matter while the player withheld offense;
+- once the same coarse screen policy also used the ordinary compact lethal strike, all-body authority produced **0 / 24 combat-outcome improvements**:
+  - 0 clear upgrades;
+  - 0 HP advantages;
+  - 0 reductions in player hits;
+  - 0 survival-time advantages.
 
-> **does the player naturally treat a light overcommitting body and a heavy space-holding body differently under one shared adversary law?**
+Therefore:
+
+> **Adversarial Combat Organism v1 does not earn Owner attention.**
+
+Cross-campaign warning:
+
+> **O1 and A2b independently show that a spatial defensive relation can become meaningful in isolation and then disappear when ordinary compact offense removes pressure faster than the relation matters.**
+
+Do not rescue this lane with enemy HP, reduced player damage, stamina, dodge/parry, terrain, more enemies, scripted formations or stronger friendly fire.
+
+The complete evidence record is preserved in `docs/ADVERSARIAL_COMBAT_ORGANISM_V1.md`.
+
+### Active frontier — LINE / IMPULSE organism
+
+The next discovery question is deliberately outside the repeated compact-melee loop:
+
+> **Can projectile travel, first-solid-body line truth, cover / obstruction and bounded impact displacement create a combat language where line management and interruption matter before raw HP subtraction?**
+
+This is **not** permission to build "the same melee attack at longer range".
+
+Pre-code requirements:
+
+- write a fresh whole-organism hypothesis card;
+- define a 30-second player-facing discriminator;
+- pre-register projectile-spam, backwards-kite, binary cover-peek and pinball/stunlock falsifiers;
+- retain adversary identity as part of the organism rather than returning to generic pursuit;
+- reuse A1/A2b only as explicit donors, never as inherited authority.
+
+Owner deployment remains **NO**.
 
 
 ## Recovery correction — 2026-09-22
