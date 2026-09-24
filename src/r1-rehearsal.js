@@ -94,6 +94,7 @@ export function runR1Policy({
 
   const start=r1Snapshot(state);
   let commitEvent=null;
+  let firstToolContact=null;
   let maxPlayerDisplacement=0;
   let maxRusherLateral=0;
   const initialRusherY=state.rusher.y;
@@ -110,6 +111,17 @@ export function runR1Policy({
     for(const event of events){
       if(event.type==="rusher-commit"&&!commitEvent){
         commitEvent=event;
+      }
+      if(event.type==="tool-contact"&&!firstToolContact){
+        firstToolContact={
+          at:state.time,
+          rusherX:state.rusher.x,
+          rusherY:state.rusher.y,
+          commitRemaining:state.rusher.mode==="commit"
+            ? state.rusher.time
+            : null,
+          deltaSpeed:event.deltaSpeed
+        };
       }
     }
 
@@ -145,6 +157,17 @@ export function runR1Policy({
     rusherFinalSpeed:Number(
       Math.hypot(end.rusher.vx,end.rusher.vy).toFixed(2)
     ),
+    firstToolContact:firstToolContact
+      ? {
+          at:Number(firstToolContact.at.toFixed(4)),
+          rusherX:Number(firstToolContact.rusherX.toFixed(2)),
+          rusherY:Number(firstToolContact.rusherY.toFixed(2)),
+          commitRemaining:firstToolContact.commitRemaining===null
+            ? null
+            : Number(firstToolContact.commitRemaining.toFixed(4)),
+          deltaSpeed:Number(firstToolContact.deltaSpeed.toFixed(2))
+        }
+      : null,
     committedLineAngle:
       committedLineAngle===null
         ? null
@@ -192,6 +215,36 @@ export function runR1CrossedMatrix({
     }
   }
   return result;
+}
+
+export function runR1MaterialScaleSweep(){
+  const scales=[0,0.35,0.7,1,1.4,2,3,4];
+  return scales.map(materialScale=>{
+    const cells=[];
+    for(const history of ["free","wall"]){
+      for(const side of ["east","west"]){
+        cells.push(runR1Policy({
+          history,
+          side,
+          policy:"immediate-commit",
+          materialScale
+        }));
+      }
+    }
+    return {
+      materialScale,
+      bodyMisses:cells.filter(x=>x.result==="body-miss").length,
+      toolContactCells:cells.filter(x=>x.toolContacts>0).length,
+      cells:cells.map(x=>({
+        history:x.history,
+        side:x.side,
+        result:x.result,
+        toolContacts:x.toolContacts,
+        lateral:x.maxRusherLateral,
+        firstToolContact:x.firstToolContact
+      }))
+    };
+  });
 }
 
 export function summarizeR1Matrix(matrix){
