@@ -302,37 +302,61 @@ Therefore:
 
 > **do not proceed to E1 damage reintroduction.**
 
-### Active frontier — E0b SET / DRIVE DESIGN
+### EXCHANGE GRAMMAR E0b — FAIL, DIRECTIONAL SUPPORT DONOR RETAINED
 
-Do not tune E0 v0.
-
-The next question is narrower:
-
-> **Can a persistent, directional SET / SUPPORT relation create a real pre-commitment spatial claim, so DRIVE must negotiate or sacrifice something rather than acting as a universal forward shove?**
-
-This is a hypothesis only.
-
-It must explicitly avoid recreating O1 brace:
-
-- no immovable wall;
-- no binary block/parry;
-- no global mass multiplier;
-- no hidden class authority;
-- movement remains live;
-- orientation / contact geometry matter;
-- a badly oriented SET must be bypassable;
-- a good SET must create a material response to blind DRIVE;
-- same actor can SET or DRIVE.
-
-Owner deployment remains **NO**.
-
-Active hypothesis card:
+Primary record:
 
 - [EXCHANGE GRAMMAR E0b — SET / DRIVE](EXCHANGE_GRAMMAR_E0B_SET_DRIVE.md)
+- final contact-conditioned attribution: `f0ad558a0e9b44baac9646198f1589900c646d24`;
+- deterministic suite: **7 / 7 PASS**;
+- Owner play: **NOT REQUESTED**.
 
-Immediate gate:
+What survived:
 
-> **Directional SET must make blind DRIVE negotiate orientation without becoming an immovable wall, and DRIVE must gain forward consequence by sacrificing support rather than by receiving priority.**
+- directional SET is a real contact law rather than a global mass multiplier;
+- aligned support materially reduces yield;
+- support remains movable / turnable;
+- support sacrifice during DRIVE is a real local trade;
+- centered BREACH changes from **CROSSED 1.85 s** with zero support to **BLOCKED after 6 s** with directional SET;
+- ACCESS remains useful donor evidence for world-grounded retreat concession.
+
+What failed:
+
+- blind BREACH DRIVE still crosses **6 / 7** broad starts;
+- angle-switch crosses **7 / 7**;
+- directional and omnidirectional support both produce **6 / 7** broad crosses;
+- captured and homing angle-switch DRIVE both produce **7 / 7** crosses with effectively identical times;
+- support sacrifice vs retaining support changes only the centered cell.
+
+Contact-conditioned attribution shows support is active (~0.998–1.0) in the off-center cells, so the broad failure is not caused by the defender simply failing to orient.
+
+Structural conclusion:
+
+> **ACCESS + one defending body collapses into either a central supported wall or lateral bypass. It did not create a reusable exchange grammar.**
+
+Do not rescue E0b through lane narrowing, stronger support, larger bodies, movement-speed tuning or another SET constant sweep.
+
+### Active frontier — PERSISTENT AFTERSTATE / READINESS AUDIT
+
+Do not implement E0c.
+
+Highest-value unresolved question:
+
+> **Why do our combat organisms repeatedly return toward neutral pursuit after a contact, miss, block or displacement instead of inheriting a legible state that changes the next decision?**
+
+Before a new hypothesis card:
+
+- re-audit Ruined Gate / Terrarium persistent weapon state;
+- re-audit O1/O2 recovery and contact aftermath;
+- distinguish actual persistent afterstate from authored cooldown / recovery state;
+- identify what ordinary locomotion currently erases immediately;
+- reconnect this with Feniks weapon identity, body/posture, progression and co-op pressure.
+
+Candidate direction to falsify, not assume:
+
+> **a continuous readiness / exposure relation may be more important than another defensive or offensive action.**
+
+Owner deployment remains **NO**.
 
 ## Recovery correction — 2026-09-22
 
