@@ -445,6 +445,177 @@ This is a mechanism-discovery diagnostic, not a new product configuration.
 
 ---
 
+## 11.2 L1 engaged ablation — IMPULSE DOES NOT EARN THE ORGANISM
+
+After fixing diagnostic plumbing, the same engaged-start experiment was repeated correctly.
+
+Checkpoint:
+
+- corrected engaged diagnostic: `0750c317d4e8a3d9dfe0da7c1aa567ffcdf8a698`;
+- deterministic suite: **17 / 17 PASS**;
+- world boundary use: zero in all engaged diagnostics.
+
+### Impulse-only
+
+Projectile damage was set to zero while retaining the same projectile speed and impulse.
+
+Results:
+
+**max-rate fire, stationary**
+- DOWN at 2.825 s;
+- 11 projectile impacts;
+- 3 rusher hits;
+- 3 commits;
+- 0 missed commits.
+
+**fire on prepare**
+- DOWN at 2.825 s;
+- 3 projectile impacts;
+- 3 rusher hits;
+- 0 missed commits.
+
+**fire on commit**
+- DOWN at 2.825 s;
+- 2 projectile impacts;
+- 3 rusher hits;
+- 0 missed commits.
+
+**lateral movement only**
+- DOWN at 4.367 s;
+- 4 commits;
+- 1 missed commit.
+
+**lateral movement + commit shot**
+- DOWN at 4.250 s;
+- 3 projectile impacts during commit;
+- 4 commits;
+- 1 missed commit.
+
+Thus the tested projectile impulse adds no demonstrated commitment-breaking value beyond the lateral movement that already creates the miss.
+
+### Backwards retreat + impulse-only
+
+The opposite failure appears when continuous retreat is added:
+
+- ACTIVE after 10 s;
+- player HP 100;
+- rusher HP 80;
+- 40 shots / 39 projectile impacts;
+- only 1 prepare / 1 commit;
+- that single commit missed;
+- 0 rusher hits;
+- 0 boundary frames.
+
+This is not a kill loop.
+
+It is worse for the hypothesis:
+
+> **repeated physical impulse plus backwards movement can suppress engagement indefinitely without creating a fight.**
+
+### Normal vs damage-only
+
+The same engaged policies were compared with:
+
+- normal projectile: damage + impulse;
+- damage-only projectile: identical damage, zero impulse.
+
+Results were effectively the same in every tested policy:
+
+- max-rate: both CLEAR at 0.558 s, 100 HP;
+- backwards kite: both CLEAR at 0.642 s, 100 HP;
+- fire on prepare: both CLEAR at 1.558 s, 66 HP;
+- fire on commit: both CLEAR at 1.717 s, 32 HP;
+- lateral + commit shot: same hits / misses / HP, only ~0.05 s clear-time difference.
+
+Therefore:
+
+> **the current lethal fight is carried by ranged HP subtraction; the tested impulse is not responsible for its strategy.**
+
+This directly triggers pre-registered hard falsifiers:
+
+- projectile spam;
+- backwards kite;
+- ranged HP subtraction;
+- physical disengagement / effective impulse-lock under retreat.
+
+Do not proceed to L2 obstruction.
+
+Do not tune:
+
+- rusher HP;
+- projectile damage;
+- draw time;
+- impulse magnitude;
+- pursuit speed;
+- arena size;
+
+to manufacture a favorable matrix after this result.
+
+---
+
+## 11.3 LINE / IMPULSE Organism v0 verdict — WHOLE-ORGANISM FAIL, KERNEL DONOR RETAINED
+
+What survives:
+
+### L0 projectile / world kernel
+
+- finite projectile travel;
+- swept collision / no tunneling;
+- first-solid-body / first-solid-wall authority;
+- deterministic draw / release;
+- live locomotion during draw;
+- one-projectile / one-solid-target consequence;
+- bounded impact impulse;
+- mass-dependent displacement from one shared law;
+- projectile consequence can be measured before application for same-step authority;
+- no hidden stun, i-frames or forced state cancel.
+
+### L1 adversary donor
+
+- light rusher uses a readable prepare;
+- commit direction locks and does not home;
+- same-step projectile impact does not erase an already committed hostile hit.
+
+What failed:
+
+- a normal lethal projectile deletes the rusher before meaningful engagement;
+- timing the shot to prepare / commit does not outperform ranged damage in a new qualitative way;
+- removing impulse leaves lethal fight outcomes essentially unchanged;
+- impulse-only does not reliably create commitment misses;
+- backwards retreat + repeated impulse can suppress engagement without boundary support.
+
+Product conclusion:
+
+> **LINE / IMPULSE v0 does not produce a combat organism worth Owner attention.**
+
+Owner eligibility: **NO**.  
+Browser deployment: **NOT WARRANTED**.
+
+### Campaign-level implication
+
+This is now broader than one bad projectile constant.
+
+Across several independent organisms, we repeatedly see one of two collapses:
+
+1. **offense deletes the relation before spatial play develops**, or
+2. **movement + spacing lets the player suppress engagement instead of interacting with it**.
+
+This suggests the next move should not be another immediate weapon archetype.
+
+The campaign needs a higher-level refoundation of:
+
+- what counts as a combat exchange;
+- how offense earns consequence;
+- how engagement remains voluntary/responsive without becoming infinitely suppressible;
+- how player and adversary intent become readable before resolution;
+- how Feniks progression / body / equipment axes could deepen that language rather than merely scale damage or speed.
+
+Next step:
+
+> **perform a cross-campaign combat-discovery audit before implementing another organism.**
+
+---
+
 ### L2 — obstruction relation
 
 Only after L1 survives.
