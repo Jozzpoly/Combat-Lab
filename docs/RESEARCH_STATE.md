@@ -409,29 +409,60 @@ Evidence boundary:
 - combat value: **UNPROVEN**;
 - Feniks suitability: **UNPROVEN**.
 
-### Active frontier — READINESS UNDER PRESSURE R1 DESIGN
+### READINESS UNDER PRESSURE R1 — FAIL, R0 DONOR SURVIVES
 
-Do not add HP/damage.
+Primary record:
 
-Do not build a full fight.
+- [READINESS UNDER PRESSURE R1](READINESS_UNDER_PRESSURE_R1.md)
+- final material sweep: `92c231f57635076b54e189b2770c2479d0e85a2d`;
+- deterministic suite: **19 / 19 PASS**;
+- Owner play: **NOT REQUESTED**.
 
-Next question:
+Defended narrow facts:
 
-> **When a readable adversarial commitment creates real urgency, does inherited weapon readiness change what the player should intentionally do next, or does movement / GUIDE / COMMIT reduce back to another single dominant response?**
+- mirrored EAST/WEST rusher uses readable prepare + non-homing locked dash;
+- readiness history changes actual tool/body contact geometry;
+- COMMIT-only material contact changes rusher trajectory without hidden cancel;
+- ordinary lateral movement leaves the locked dash geometry without i-frames.
 
-R1 must be a bounded pressure mechanism cell.
+Failure:
 
-It must:
+- immediate COMMIT: all 4 history × side cells still end in player body contact;
+- GUIDE THEN COMMIT: same 4 / 4 body contacts;
+- LATERAL EVADE: 4 / 4 body misses, requiring ~108 units movement;
+- full bounded tool material authority creates ~9–13 units lateral rusher deviation but **0 / 4** body-miss upgrades;
+- scales beyond 1 correctly saturate at the designed 105 delta-speed cap and still do not change outcome.
 
-- reuse R0 readiness without auto-neutral;
-- introduce one readable committed adversarial action, not generic face-hug pursuit;
-- preserve responsive locomotion;
-- make at least two different inherited readiness states face the same next pressure;
-- compare response options without telling a future Owner the answer;
-- include an AUTO-NEUTRAL ablation;
-- include a movement-only / no-weapon-authority baseline;
-- avoid HP, damage and kill/clear objectives;
-- avoid target-lock / parry-window semantics.
+Conclusion:
+
+> **R1 made readiness affect contact, but not what the player should do.**
+
+Do not tune impulse / rusher constants until this changes.
+
+R0 continuous readiness remains qualified.
+
+### Active frontier — READINESS FOLLOW-THROUGH / AFTERSTATE DESIGN
+
+New highest-value question:
+
+> **Can inherited player readiness change which follow-up is naturally available after an opponent's own committed action has already created a real physical afterstate?**
+
+This deliberately moves away from asking readiness to act as a parry.
+
+Candidate pressure shape:
+
+- movement remains the primary way to leave incoming locked threat geometry;
+- the adversary's own commitment creates overextension / separation / orientation;
+- no hidden vulnerable token;
+- no HP/damage initially;
+- readiness determines whether an immediate follow-up contact is geometrically available or whether the player must GUIDE / reposition first.
+
+Before implementation:
+
+- define what opponent afterstate is genuinely physical rather than timer-awarded;
+- mirror the situation so one readiness state cannot be globally best;
+- pre-register follow-up spam / timing-window / one-best-guard falsifiers;
+- keep AUTO-NEUTRAL and pose-only attribution available only after a follow-up phenomenon exists.
 
 Owner deployment remains **NO**.
 
