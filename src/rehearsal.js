@@ -97,20 +97,14 @@ function breachPolicy(name,state){
     };
   }
 
-  if(name==="angle-left"){
+  if(name==="angle-left"||name==="angle-right"){
+    const side=name==="angle-left"?-1:1;
+    const targetX=600+side*190;
+    const error=targetX-state.player.x;
+    const moveX=Math.max(-1,Math.min(1,error*0.018));
     return {
-      moveX:-0.72,
-      moveY:0.78,
-      aimX:state.adversary.x,
-      aimY:state.adversary.y,
-      drive:driveWhenClose(state,86)
-    };
-  }
-
-  if(name==="angle-right"){
-    return {
-      moveX:0.72,
-      moveY:0.78,
+      moveX,
+      moveY:0.82,
       aimX:state.adversary.x,
       aimY:state.adversary.y,
       drive:driveWhenClose(state,86)
