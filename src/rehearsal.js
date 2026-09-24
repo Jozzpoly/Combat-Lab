@@ -151,17 +151,29 @@ export function runE0Policy({
   policy,
   seconds=6,
   dt=1/120,
-  driveEnabled=true,
-  homingDrive=false,
-  displacementScale=1,
-  recoveryScale=1
+  playerDriveEnabled=true,
+  adversaryDriveEnabled=true,
+  playerHomingDrive=false,
+  adversaryHomingDrive=false,
+  playerCarryScale=1,
+  adversaryCarryScale=1,
+  playerDisplacementScale=1,
+  adversaryDisplacementScale=1,
+  playerRecoveryScale=1,
+  adversaryRecoveryScale=1
 }={}){
   const state=createE0State({
     role,
-    driveEnabled,
-    homingDrive,
-    displacementScale,
-    recoveryScale
+    playerDriveEnabled,
+    adversaryDriveEnabled,
+    playerHomingDrive,
+    adversaryHomingDrive,
+    playerCarryScale,
+    adversaryCarryScale,
+    playerDisplacementScale,
+    adversaryDisplacementScale,
+    playerRecoveryScale,
+    adversaryRecoveryScale
   });
 
   const metrics={
