@@ -487,3 +487,196 @@ After R0:
 ## Working invariant
 
 > **Simple intent, inherited physical state, no automatic semantic reset.**
+
+
+---
+
+## 17. R0 result — CAUSAL KERNEL QUALIFIED, HUMAN HANDLING UNPROVEN
+
+Final agent-side evidence checkpoint:
+
+- first kernel: `558c5984dad4394f0d850afcba0888fa1a5b935d`;
+- broad GUIDE mapping correction: `ac28a9b636d7b3d6b7c127be9d00f9ae076a589b`;
+- pose / velocity attribution + persistence lifetime: `44f264d6c70b8c2cbdafbb301d10373effe09876`;
+- matched neutral / control tradeoff / repeated-contact stability: `eceb858fa25944c3c09e0eaf27358d2c76007fa0`;
+- deterministic suite: **12 / 12 PASS**;
+- Owner play: **NOT REQUESTED**.
+
+### 17.1 First outcome changes the actual next action
+
+With GUIDE authority `0.38` and a 0.24 s inter-action interval:
+
+**FREE first commit**
+- second-start angle: 2.469 rad;
+- angular velocity: 4.000;
+- reach: 91.15;
+- second commit path: **2.583 rad**.
+
+**WALL first commit**
+- one real wall impact;
+- second-start angle: 0.214 rad;
+- angular velocity: 4.144;
+- reach: 85.29;
+- second commit path: **1.019 rad**.
+
+Composite readiness distance before the identical second commit:
+
+- **2.537**.
+
+Thus:
+
+> **an identical second intent no longer starts from an equivalent semantic/physical state.**
+
+### 17.2 The effect is not only residual inertia
+
+Matched attribution after the first outcome:
+
+- full inherited state: **2.537** readiness distance;
+- pose-only, with angular/radial velocity deliberately zeroed: **1.393**;
+- velocity-only, with pose/reach deliberately equalized: **1.705**;
+- pose + velocity both erased: **0.000**.
+
+Pose-only second paths remain different:
+
+- FREE history: 1.568 rad;
+- WALL history: 0.993 rad.
+
+Therefore:
+
+> **persistent readiness is carried by configuration as well as residual kinetic energy.**
+
+This rejects the narrow explanation "the system only remembers because the weapon is still moving."
+
+### 17.3 History decays naturally under ordinary GUIDE
+
+At GUIDE authority `0.38`, FREE/WALL readiness distance after equal inter-action intervals:
+
+- 0.00 s: 2.816;
+- 0.08 s: 2.831;
+- 0.16 s: 2.737;
+- 0.24 s: 2.537;
+- 0.40 s: 2.525;
+- 0.65 s: 1.514;
+- 1.00 s: 0.433;
+- 1.60 s: 0.077;
+- 2.50 s: 0.011.
+
+The relation is therefore persistent but not permanent.
+
+The early curve is dynamic / oscillatory rather than a monotonic scalar cooldown, which is expected for a continuous state and must remain a future feel/readability risk.
+
+### 17.4 AUTO-NEUTRAL erases history much faster
+
+Matched-time comparison at the same GUIDE reference:
+
+| interval | inherited GUIDE | AUTO-NEUTRAL | ratio |
+|---:|---:|---:|---:|
+| 0.08 s | 2.831 | 1.974 | 0.697 |
+| 0.16 s | 2.737 | 2.195 | 0.802 |
+| 0.24 s | 2.537 | 1.963 | 0.774 |
+| 0.40 s | 2.525 | 0.409 | 0.162 |
+| 0.65 s | 1.514 | 0.041 | 0.027 |
+| 1.00 s | 0.433 | 0.001 | 0.003 |
+
+AUTO-NEUTRAL is not instantly convergent because it remains a physical spring rather than a teleport.
+
+But after a short physical transient it overwhelmingly restores equivalence.
+
+This supports the neutral-attractor diagnosis.
+
+### 17.5 Control authority exposes a broad tradeoff, not one magic value
+
+Machine-side mapping:
+
+| GUIDE authority | history at 0.24 s | deliberate wall-state recovery |
+|---:|---:|---:|
+| 0.08 | 4.137 | 0.767 s |
+| 0.18 | 3.929 | 0.442 s |
+| 0.38 | 2.537 | 0.275 s |
+| 0.75 | 2.172 | 0.142 s |
+| 1.25 | 1.442 | 0.100 s |
+| 2.00 | 1.014 | 0.075 s |
+| 3.50 | 0.812 | 0.050 s |
+| 6.00 | 0.738 | 0.042 s |
+
+This is **not** a feel qualification.
+
+It demonstrates only that the kernel does not force the binary choice:
+
+- "history matters but weapon is unrecoverable";
+- "weapon is controllable but history instantly disappears."
+
+A broad machine-side region contains both measurable history and bounded intentional conversion.
+
+Which part, if any, feels good remains Owner evidence later.
+
+### 17.6 Sharp aim does not instantly erase readiness
+
+At GUIDE authority `0.38`, after sharply changing aim and allowing 0.08 s:
+
+- FREE vs WALL second-start readiness distance: **3.453**.
+
+Thus the ordinary aim layer is not acting as an instantaneous hidden reset in the tested regime.
+
+### 17.7 Locomotion remains independent and responsive
+
+During active COMMIT:
+
+- body movement remained live;
+- deterministic test reached >150 movement speed and >20 units translation during the short action window.
+
+R0 did not obtain weapon-state persistence by locking locomotion.
+
+### 17.8 Repeated material contact is stable
+
+Stationary 20 s wall-contact soak:
+
+- **21 fresh wall impacts**;
+- max angular speed: **7.181**;
+- max radial speed: **61.262**;
+- reach remained bounded: 82.08–92.89;
+- finite state throughout;
+- exact deterministic repeat reproduced the same result.
+
+No energy pumping was observed in this diagnostic.
+
+### 17.9 Evidence boundary
+
+R0 now qualifies these mechanism claims:
+
+- no-auto-neutral continuous readiness can exist stably;
+- first-action environment/contact can change the actual starting state of the next action;
+- inherited pose itself matters independently of residual velocity;
+- ordinary finite GUIDE can transform readiness without requiring a canonical guard;
+- stronger GUIDE progressively trades history for faster intentional recovery;
+- explicit AUTO-NEUTRAL recreates the older convergence behavior;
+- body locomotion can remain responsive while weapon readiness persists.
+
+R0 does **not** qualify:
+
+- intuitive controls;
+- satisfying weapon feel;
+- human readability;
+- desirable mental load;
+- a good combat exchange;
+- a Feniks weapon model;
+- any damage/hit-authority model.
+
+### 17.10 Promotion decision
+
+Status:
+
+> **CONTINUOUS READINESS R0 = CAUSAL-KERNEL QUALIFIED.**
+
+Owner eligibility:
+
+> **NO.**
+
+Next frontier:
+
+> **design the smallest adversarial pressure cell that can falsify whether inherited readiness creates a real choice under pressure rather than merely different deterministic trajectories.**
+
+Do not add HP/damage yet.
+
+Do not build a full combat organism yet.
+
