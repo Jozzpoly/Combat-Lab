@@ -390,6 +390,61 @@ If backwards kite dominates, stop.
 
 If every timely shot nullifies every dash, stop.
 
+## 11.1 L1 first matrix — CURRENT COMBAT CONTRACT FAILS BEFORE COMMITMENT
+
+Initial L1 checkpoint:
+
+- integration commit: `8077f9bc7680930a83ffd22733ce747d540daabc`;
+- deterministic suite: **15 / 15 PASS**;
+- world boundary use: zero in all tested policies.
+
+The default start placed the player and rusher ~500 px apart.
+
+Results:
+
+- stand + fire: CLEAR in **0.875 s**, 100 HP;
+- max-rate fire: CLEAR in **0.875 s**, 100 HP;
+- backwards kite + fire: CLEAR in **1.000 s**, 100 HP;
+- in all three cases the rusher entered **0 prepare / 0 commit** states.
+
+Two projectile hits killed the 80 HP rusher before engagement existed.
+
+Timing policies only became meaningful because they voluntarily withheld the shot:
+
+- fire on prepare: CLEAR, 66 HP;
+- fire on commit: CLEAR, 32 HP;
+- lateral + commit shot: CLEAR, 66 HP, one real missed commit;
+- lateral movement with no shot: DOWN after three hits, but generated one real miss.
+
+Interpretation:
+
+> **The first L1 combat contract fails the pre-registered projectile-spam / ranged-HP-subtraction gate.**
+
+Do not rescue this result by increasing rusher HP or reducing projectile damage until a target matrix appears.
+
+### Diagnostic next question
+
+The deeper LINE / IMPULSE hypothesis can still be falsified independently of lethality.
+
+Run an **engaged-start, impulse-only** diagnostic:
+
+- projectile damage = 0;
+- same projectile speed;
+- same impulse;
+- rusher starts close enough to enter readable commitment;
+- no world boundary support.
+
+Ask:
+
+1. does max-rate impulse create a physical stunlock / permanent disengagement?
+2. does release timing relative to prepare / commit materially change missed-commit rate or player survival?
+3. can lateral movement remain a separate legal answer?
+4. does impulse change commitment geometry without a hidden attack cancel?
+
+This is a mechanism-discovery diagnostic, not a new product configuration.
+
+---
+
 ### L2 — obstruction relation
 
 Only after L1 survives.
