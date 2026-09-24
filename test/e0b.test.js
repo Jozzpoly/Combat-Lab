@@ -185,6 +185,94 @@ test("E0b broad-start red team measures blind DRIVE and static SET without tunin
   assert.equal(summary.maxBoundary,0);
 });
 
+test("E0b broad matched ablations isolate directionality support sacrifice and captured commitment",()=>{
+  const offsets=[-300,-180,-90,0,90,180,300];
+  const result={
+    blindDirectional:[],
+    blindOmni:[],
+    blindNoSupport:[],
+    blindNoSetCost:[],
+    setDriveSacrifice:[],
+    setDriveKeepsSupport:[],
+    angleCaptured:[],
+    angleHoming:[]
+  };
+
+  for(const offset of offsets){
+    const playerX=800-offset/2;
+    const adversaryX=800+offset/2;
+    const common={role:"breach",playerX,adversaryX};
+
+    result.blindDirectional.push(runPolicy({
+      ...common,policy:"blind-drive"
+    }));
+    result.blindOmni.push(runPolicy({
+      ...common,policy:"blind-drive",
+      omnidirectionalSupport:true
+    }));
+    result.blindNoSupport.push(runPolicy({
+      ...common,policy:"blind-drive",
+      supportScale:0
+    }));
+    result.blindNoSetCost.push(runPolicy({
+      ...common,policy:"blind-drive",
+      setMoveScale:1,
+      setTurnScale:1
+    }));
+
+    result.setDriveSacrifice.push(runPolicy({
+      ...common,policy:"set-drive",
+      driveKeepsSupport:false
+    }));
+    result.setDriveKeepsSupport.push(runPolicy({
+      ...common,policy:"set-drive",
+      driveKeepsSupport:true
+    }));
+
+    result.angleCaptured.push(runPolicy({
+      ...common,policy:"angle-switch",
+      homingDrive:false
+    }));
+    result.angleHoming.push(runPolicy({
+      ...common,policy:"angle-switch",
+      homingDrive:true
+    }));
+  }
+
+  const crossed=arr=>arr.filter(x=>x.result==="crossed").length;
+  const compact=arr=>arr.map(x=>({
+    result:x.result,
+    time:x.time,
+    margin:x.accessMargin,
+    contacts:x.playerDriveContacts
+  }));
+
+  const summary={
+    offsets,
+    blindDirectionalCrossed:crossed(result.blindDirectional),
+    blindOmniCrossed:crossed(result.blindOmni),
+    blindNoSupportCrossed:crossed(result.blindNoSupport),
+    blindNoSetCostCrossed:crossed(result.blindNoSetCost),
+    setDriveSacrificeCrossed:crossed(result.setDriveSacrifice),
+    setDriveKeepsSupportCrossed:crossed(result.setDriveKeepsSupport),
+    angleCapturedCrossed:crossed(result.angleCaptured),
+    angleHomingCrossed:crossed(result.angleHoming),
+    angleCaptured:compact(result.angleCaptured),
+    angleHoming:compact(result.angleHoming),
+    sacrifice:compact(result.setDriveSacrifice),
+    keepSupport:compact(result.setDriveKeepsSupport)
+  };
+
+  console.log("E0B_BROAD_ABLATION_SUMMARY",JSON.stringify(summary));
+
+  for(const group of Object.values(result)){
+    for(const value of group){
+      assert.equal(value.finite,true);
+      assert.equal(value.boundaryFrames,0);
+    }
+  }
+});
+
 test("E0b matched ablations expose support orientation mobility and commitment trade",()=>{
   const base={
     role:"breach",
