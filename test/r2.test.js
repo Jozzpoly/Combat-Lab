@@ -8,7 +8,9 @@ import {
 } from "../src/r2-sim.js";
 import {
   runR2CrossedMatrix,
+  runR2GuideRetentionSweep,
   runR2Policy,
+  runR2PrepareRetentionSweep,
   summarizeR2Matrix
 } from "../src/r2-rehearsal.js";
 
@@ -78,6 +80,27 @@ test("R2 K0 physical turnaround duration is derived and mirrored",()=>{
   assert.ok(Math.abs(
     east.opportunityDuration-west.opportunityDuration
   )<0.03);
+});
+
+test("R2 K1 maps readiness retention across R0-qualified GUIDE authority range",()=>{
+  const sweep=runR2GuideRetentionSweep();
+  console.log("R2_GUIDE_RETENTION_SWEEP",JSON.stringify(sweep));
+
+  for(const row of sweep){
+    assert.ok(Number.isFinite(row.commitEndHistoryDistanceEast));
+    assert.ok(Number.isFinite(row.commitEndHistoryDistanceWest));
+  }
+});
+
+test("R2 K1 maps readiness retention against prepare duration before changing pressure",()=>{
+  const sweep=runR2PrepareRetentionSweep({
+    guideAuthority:0.38
+  });
+  console.log("R2_PREPARE_RETENTION_SWEEP",JSON.stringify(sweep));
+
+  for(const row of sweep){
+    assert.ok(Number.isFinite(row.commitEndHistoryDistance));
+  }
 });
 
 test("R2 K1 exploratory crossed follow-through matrix",()=>{
