@@ -27,6 +27,8 @@ export function createR2Rusher(side="east",{
     time:prepare,
     commitX:-sign,
     commitY:0,
+    commitStartX:sign*120,
+    commitStartY:0,
     returnAcceleration,
     turnaroundObserved:false
   };
@@ -63,6 +65,8 @@ export function stepR2Rusher(rusher,player,dt){
       );
       rusher.commitX=d.x;
       rusher.commitY=d.y;
+      rusher.commitStartX=rusher.x;
+      rusher.commitStartY=rusher.y;
       rusher.vx=d.x*R2_RUSHER_SPEC.commitSpeed;
       rusher.vy=d.y*R2_RUSHER_SPEC.commitSpeed;
       rusher.mode="commit";
