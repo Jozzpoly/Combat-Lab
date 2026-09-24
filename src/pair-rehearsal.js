@@ -134,6 +134,89 @@ function orbitNearest(state){
   };
 }
 
+function makeSampledScreenPolicy(
+  blockerId,
+  attackerId,
+  {
+    tangentOffset=0,
+    sampleInterval=0.20,
+    quantize=24
+  }={}
+){
+  let nextSample=-Infinity;
+  let observed=null;
+
+  const q=value =>
+    quantize>0
+      ? Math.round(value/quantize)*quantize
+      : value;
+
+  return state=>{
+    const blocker=byId(state,blockerId);
+    const attacker=byId(state,attackerId);
+
+    if(!blocker||!attacker){
+      const target=nearest(state).enemy;
+      if(!target) return moveTowardTarget(state,null);
+      const away=normalize(
+        state.player.x-target.x,
+        state.player.y-target.y,
+        0,1
+      );
+      return {
+        moveX:away.x,
+        moveY:away.y,
+        aimX:target.x,
+        aimY:target.y,
+        strike:false
+      };
+    }
+
+    if(!observed || state.time>=nextSample){
+      observed={
+        blockerX:q(blocker.x),
+        blockerY:q(blocker.y),
+        attackerX:q(attacker.x),
+        attackerY:q(attacker.y)
+      };
+      nextSample=state.time+sampleInterval;
+    }
+
+    const line=normalize(
+      observed.blockerX-observed.attackerX,
+      observed.blockerY-observed.attackerY,
+      0,1
+    );
+    const spacing=
+      blocker.spec.radius+
+      state.player.spec.radius+
+      24;
+    const tangentX=-line.y;
+    const tangentY=line.x;
+    const desiredX=
+      observed.blockerX+
+      line.x*spacing+
+      tangentX*tangentOffset;
+    const desiredY=
+      observed.blockerY+
+      line.y*spacing+
+      tangentY*tangentOffset;
+    const move=normalize(
+      desiredX-state.player.x,
+      desiredY-state.player.y,
+      0,0
+    );
+
+    return {
+      moveX:move.x,
+      moveY:move.y,
+      aimX:observed.attackerX,
+      aimY:observed.attackerY,
+      strike:false
+    };
+  };
+}
+
 function screenWith(state,blockerId,attackerId,tangentOffset=0){
   const blocker=byId(state,blockerId);
   const attacker=byId(state,attackerId);
@@ -269,7 +352,9 @@ export function runA2Policy(policyName,{
   resolveAdversaryPairs=true,
   adversaryActionsHitPeers=true,
   adversaryFriendlyDamageScale=1,
-  screenTangentOffset=0
+  screenTangentOffset=0,
+  screenSampleInterval=0.20,
+  screenQuantize=24
 }={}){
   const state=createA2PairState({
     ...(entries?{entries}:{}),
@@ -297,6 +382,24 @@ export function runA2Policy(policyName,{
     "light",
     "heavy",
     screenTangentOffset
+  );
+  else if(policyName==="screen-heavy-sampled") policy=makeSampledScreenPolicy(
+    "heavy",
+    "light",
+    {
+      tangentOffset:screenTangentOffset,
+      sampleInterval:screenSampleInterval,
+      quantize:screenQuantize
+    }
+  );
+  else if(policyName==="screen-light-sampled") policy=makeSampledScreenPolicy(
+    "light",
+    "heavy",
+    {
+      tangentOffset:screenTangentOffset,
+      sampleInterval:screenSampleInterval,
+      quantize:screenQuantize
+    }
   );
   else throw new Error("unknown A2 policy: "+policyName);
 
