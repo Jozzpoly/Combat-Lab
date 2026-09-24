@@ -336,25 +336,61 @@ Structural conclusion:
 
 Do not rescue E0b through lane narrowing, stronger support, larger bodies, movement-speed tuning or another SET constant sweep.
 
-### Active frontier — PERSISTENT AFTERSTATE / READINESS AUDIT
+### Persistent afterstate / readiness audit — SYNTHESIS COMPLETE
 
-Do not implement E0c.
+Primary record:
 
-Highest-value unresolved question:
+- [Persistent Afterstate / Readiness Audit](PERSISTENT_AFTERSTATE_READINESS_AUDIT_2026-09-25.md)
+- audit commit: `7d640f2b80e3283a7a45f7a28966846cad523d5b`
 
-> **Why do our combat organisms repeatedly return toward neutral pursuit after a contact, miss, block or displacement instead of inheriting a legible state that changes the next decision?**
+Cross-donor finding:
 
-Before a new hypothesis card:
+> **Prior organisms often preserved physical state briefly, but their controllers repeatedly attracted combat back toward authored neutral / idle / approach semantics.**
 
-- re-audit Ruined Gate / Terrarium persistent weapon state;
-- re-audit O1/O2 recovery and contact aftermath;
-- distinguish actual persistent afterstate from authored cooldown / recovery state;
-- identify what ordinary locomotion currently erases immediately;
-- reconnect this with Feniks weapon identity, body/posture, progression and co-op pressure.
+Exact evidence:
 
-Candidate direction to falsify, not assume:
+- Terrarium weapon clash / wall / hit changed real weapon velocity, but spring targets still returned to canonical guard / idle reach;
+- O1 player attack always returned `windup -> active -> recover -> idle`, while pressure recovery returned to `approach`;
+- O2 action state became `null` after recovery and spear reach returned to `idleReach`;
+- O2 clearance created real displacement, but neither player action grammar nor pressure intent inherited that displacement as the next tactical state;
+- shared responsive locomotion could quickly dominate inherited contact velocity.
 
-> **a continuous readiness / exposure relation may be more important than another defensive or offensive action.**
+Important correction:
+
+> **Do not solve this by adding inertia, longer recovery, stamina or control lock.**
+
+The missing candidate is **decision persistence**, not merely longer physical decay.
+
+### Active frontier — CONTINUOUS READINESS R0 DESIGN
+
+New working hypothesis:
+
+> **The result of one exchange should be the physical starting condition of the next, not a disturbance that the controller automatically erases.**
+
+R0 is a mechanism kernel only.
+
+It must test:
+
+- no automatic guard / idle-pose restoration;
+- contact / miss outcomes leave distinct deterministic weapon states;
+- an identical second action starts from the actual inherited state;
+- the player can intentionally convert/recover state while locomotion remains responsive;
+- free aim cannot erase readiness instantly;
+- persistent state remains stable / explainable rather than physics-noisy.
+
+Required ablation:
+
+> **AUTO-NEUTRAL** — deliberately restore the old attractor and prove that second-action divergence collapses.
+
+Hard stops:
+
+- controller chore;
+- physics mush;
+- one best guard;
+- instant aim erasure;
+- timer substitution;
+- passive hazard;
+- damage reintroduction before the kernel is defended.
 
 Owner deployment remains **NO**.
 
