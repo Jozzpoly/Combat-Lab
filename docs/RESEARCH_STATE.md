@@ -326,6 +326,14 @@ It must explicitly avoid recreating O1 brace:
 
 Owner deployment remains **NO**.
 
+Active hypothesis card:
+
+- [EXCHANGE GRAMMAR E0b — SET / DRIVE](EXCHANGE_GRAMMAR_E0B_SET_DRIVE.md)
+
+Immediate gate:
+
+> **Directional SET must make blind DRIVE negotiate orientation without becoming an immovable wall, and DRIVE must gain forward consequence by sacrificing support rather than by receiving priority.**
+
 ## Recovery correction — 2026-09-22
 
 A full project-history recovery changed the active research strategy.
