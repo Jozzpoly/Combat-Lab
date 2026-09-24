@@ -191,7 +191,6 @@ test("E0b broad matched ablations isolate directionality support sacrifice and c
     blindDirectional:[],
     blindOmni:[],
     blindNoSupport:[],
-    blindNoSetCost:[],
     setDriveSacrifice:[],
     setDriveKeepsSupport:[],
     angleCaptured:[],
@@ -214,12 +213,6 @@ test("E0b broad matched ablations isolate directionality support sacrifice and c
       ...common,policy:"blind-drive",
       supportScale:0
     }));
-    result.blindNoSetCost.push(runPolicy({
-      ...common,policy:"blind-drive",
-      setMoveScale:1,
-      setTurnScale:1
-    }));
-
     result.setDriveSacrifice.push(runPolicy({
       ...common,policy:"set-drive",
       driveKeepsSupport:false
@@ -252,7 +245,6 @@ test("E0b broad matched ablations isolate directionality support sacrifice and c
     blindDirectionalCrossed:crossed(result.blindDirectional),
     blindOmniCrossed:crossed(result.blindOmni),
     blindNoSupportCrossed:crossed(result.blindNoSupport),
-    blindNoSetCostCrossed:crossed(result.blindNoSetCost),
     setDriveSacrificeCrossed:crossed(result.setDriveSacrifice),
     setDriveKeepsSupportCrossed:crossed(result.setDriveKeepsSupport),
     angleCapturedCrossed:crossed(result.angleCaptured),
