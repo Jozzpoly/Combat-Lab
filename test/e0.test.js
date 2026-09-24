@@ -115,6 +115,73 @@ test("E0 exploratory mirrored policy matrix remains finite and boundary-independ
   assert.ok(result["deny:retreat"].accessMargin<120);
 });
 
+test("E0 blind mash and captured-direction falsifier sweep lateral starts",()=>{
+  const offsets=[-300,-180,-90,0,90,180,300];
+  const result={
+    denyMash:[],
+    breachMash:[],
+    breachCaptured:[],
+    breachHoming:[]
+  };
+
+  for(const offset of offsets){
+    const playerX=600-offset/2;
+    const adversaryX=600+offset/2;
+
+    result.denyMash.push(runE0Policy({
+      role:"deny",
+      policy:"mash",
+      playerX,
+      adversaryX
+    }));
+
+    result.breachMash.push(runE0Policy({
+      role:"breach",
+      policy:"direct-mash",
+      playerX,
+      adversaryX
+    }));
+
+    result.breachCaptured.push(runE0Policy({
+      role:"breach",
+      policy:"angle-left",
+      playerX,
+      adversaryX,
+      playerHomingDrive:false
+    }));
+
+    result.breachHoming.push(runE0Policy({
+      role:"breach",
+      policy:"angle-left",
+      playerX,
+      adversaryX,
+      playerHomingDrive:true
+    }));
+  }
+
+  const summary={
+    offsets,
+    denyMashHeld:result.denyMash.filter(x=>x.result==="held").length,
+    breachMashCrossed:result.breachMash.filter(x=>x.result==="crossed").length,
+    capturedCrossed:result.breachCaptured.filter(x=>x.result==="crossed").length,
+    homingCrossed:result.breachHoming.filter(x=>x.result==="crossed").length,
+    capturedTimes:result.breachCaptured.map(x=>x.time),
+    homingTimes:result.breachHoming.map(x=>x.time),
+    denyBoundary:result.denyMash.reduce((n,x)=>n+x.boundaryFrames,0),
+    breachBoundary:result.breachMash.reduce((n,x)=>n+x.boundaryFrames,0)
+  };
+
+  console.log("E0_LATERAL_START_SWEEP",JSON.stringify(summary));
+
+  for(const group of Object.values(result)){
+    for(const value of group){
+      assert.equal(value.finite,true);
+    }
+  }
+  assert.equal(summary.denyBoundary,0);
+  assert.equal(summary.breachBoundary,0);
+});
+
 test("E0 matched player DRIVE ablations keep defender authority constant",()=>{
   const variants={
     normal:runE0Policy({
