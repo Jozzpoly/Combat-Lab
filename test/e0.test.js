@@ -115,27 +115,49 @@ test("E0 exploratory mirrored policy matrix remains finite and boundary-independ
   assert.ok(result["deny:retreat"].accessMargin<120);
 });
 
-test("E0 ablation scaffold exposes no-drive homing no-displacement and no-recovery variants",()=>{
+test("E0 matched player DRIVE ablations keep defender authority constant",()=>{
   const variants={
-    normal:runE0Policy({role:"breach",policy:"direct-mash"}),
-    noDrive:runE0Policy({
-      role:"breach",policy:"no-drive-direct",driveEnabled:false
+    normal:runE0Policy({
+      role:"breach",
+      policy:"direct-mash"
     }),
-    homing:runE0Policy({
-      role:"breach",policy:"direct-mash",homingDrive:true
+    playerNoDrive:runE0Policy({
+      role:"breach",
+      policy:"direct-mash",
+      playerDriveEnabled:false
     }),
-    noDisplacement:runE0Policy({
-      role:"breach",policy:"direct-mash",displacementScale:0
+    playerNoCarry:runE0Policy({
+      role:"breach",
+      policy:"direct-mash",
+      playerCarryScale:0
     }),
-    noRecovery:runE0Policy({
-      role:"breach",policy:"direct-mash",recoveryScale:0
+    playerNoDisplacement:runE0Policy({
+      role:"breach",
+      policy:"direct-mash",
+      playerDisplacementScale:0
+    }),
+    playerHoming:runE0Policy({
+      role:"breach",
+      policy:"direct-mash",
+      playerHomingDrive:true
+    }),
+    playerNoRecovery:runE0Policy({
+      role:"breach",
+      policy:"direct-mash",
+      playerRecoveryScale:0
     })
   };
 
-  console.log("E0_ABLATION_SCAFFOLD",JSON.stringify(variants));
+  console.log("E0_MATCHED_DRIVE_ABLATIONS",JSON.stringify(variants));
 
   for(const value of Object.values(variants)){
     assert.equal(value.finite,true);
     assert.equal(value.boundaryFrames,0);
   }
+
+  assert.equal(variants.normal.result,"crossed");
+  assert.equal(variants.playerNoDrive.result,"blocked");
+  assert.ok(variants.normal.playerContacts>0);
+  assert.equal(variants.playerNoDrive.playerContacts,0);
 });
+
