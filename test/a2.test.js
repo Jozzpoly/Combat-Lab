@@ -387,6 +387,121 @@ test("A2b interception value is separated from friendly-fire damage",()=>{
   }
 });
 
+test("A2b coarse screen plus ordinary strike tests whether material placement enters combat loop",()=>{
+  const layouts={
+    splitNorth:{
+      playerStart:{x:700,y:760,facing:-Math.PI/2},
+      entries:[
+        {spec:LIGHT_STRIKER_SPEC,start:{id:"light",x:520,y:300,facing:Math.PI/2}},
+        {spec:HEAVY_CRUSHER_SPEC,start:{id:"heavy",x:880,y:330,facing:Math.PI/2}}
+      ]
+    },
+    sameFront:{
+      playerStart:{x:700,y:760,facing:-Math.PI/2},
+      entries:[
+        {spec:LIGHT_STRIKER_SPEC,start:{id:"light",x:625,y:300,facing:Math.PI/2}},
+        {spec:HEAVY_CRUSHER_SPEC,start:{id:"heavy",x:785,y:300,facing:Math.PI/2}}
+      ]
+    },
+    staggered:{
+      playerStart:{x:700,y:760,facing:-Math.PI/2},
+      entries:[
+        {spec:LIGHT_STRIKER_SPEC,start:{id:"light",x:700,y:300,facing:Math.PI/2}},
+        {spec:HEAVY_CRUSHER_SPEC,start:{id:"heavy",x:920,y:470,facing:Math.PI}}
+      ]
+    },
+    opposed:{
+      playerStart:{x:700,y:650,facing:-Math.PI/2},
+      entries:[
+        {spec:LIGHT_STRIKER_SPEC,start:{id:"light",x:390,y:540,facing:0}},
+        {spec:HEAVY_CRUSHER_SPEC,start:{id:"heavy",x:1010,y:540,facing:Math.PI}}
+      ]
+    }
+  };
+  const offsets=[-24,0,24];
+  const result={};
+
+  const benefit=(base,value) =>
+    (value.result==="clear" && base.result!=="clear") ||
+    value.enemyHits<base.enemyHits ||
+    (value.result==="active" && base.result==="down") ||
+    value.time>base.time+0.05 ||
+    value.playerHp>base.playerHp;
+
+  const summary={
+    totalCells:0,
+    benefitCells:0,
+    clearUpgrades:0,
+    hpOrHitBenefits:0,
+    byLayout:{}
+  };
+
+  for(const [layoutName,layout] of Object.entries(layouts)){
+    result[layoutName]={};
+    summary.byLayout[layoutName]={};
+
+    for(const basePolicy of ["screen-heavy","screen-light"]){
+      const policy=basePolicy+"-sampled-strike";
+      result[layoutName][basePolicy]={};
+      const bucket={cells:0,benefit:0,clearUpgrade:0,hpOrHitBenefit:0};
+
+      for(const offset of offsets){
+        const common={
+          seconds:10,
+          entries:layout.entries,
+          playerStart:layout.playerStart,
+          adversaryFriendlyDamageScale:0,
+          screenTangentOffset:offset,
+          screenSampleInterval:0.20,
+          screenQuantize:24
+        };
+
+        const playerOnly=runA2Policy(policy,{
+          ...common,
+          adversaryActionsHitPeers:false
+        });
+        const intercept=runA2Policy(policy,{
+          ...common,
+          adversaryActionsHitPeers:true
+        });
+
+        result[layoutName][basePolicy][offset]={playerOnly,intercept};
+
+        const hasBenefit=benefit(playerOnly,intercept);
+        const clearUpgrade=
+          intercept.result==="clear" &&
+          playerOnly.result!=="clear";
+        const hpOrHitBenefit=
+          intercept.enemyHits<playerOnly.enemyHits ||
+          intercept.playerHp>playerOnly.playerHp;
+
+        bucket.cells++;
+        summary.totalCells++;
+        if(hasBenefit){
+          bucket.benefit++;
+          summary.benefitCells++;
+        }
+        if(clearUpgrade){
+          bucket.clearUpgrade++;
+          summary.clearUpgrades++;
+        }
+        if(hpOrHitBenefit){
+          bucket.hpOrHitBenefit++;
+          summary.hpOrHitBenefits++;
+        }
+
+        assert.equal(playerOnly.finite,true);
+        assert.equal(intercept.finite,true);
+        assert.equal(intercept.friendlyDamage,0);
+      }
+
+      summary.byLayout[layoutName][basePolicy]=bucket;
+    }
+  }
+
+  console.log("A2B_SCREEN_COMBAT_SUMMARY",JSON.stringify(summary));
+});
+
 test("A2b sampled quantized screen perception uses matched authority baselines",()=>{
   const layouts={
     splitNorth:{
