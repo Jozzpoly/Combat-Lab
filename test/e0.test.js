@@ -203,6 +203,12 @@ test("E0 matched player DRIVE ablations keep defender authority constant",()=>{
       policy:"direct-mash",
       playerDisplacementScale:0
     }),
+    playerNoMaterialConsequence:runE0Policy({
+      role:"breach",
+      policy:"direct-mash",
+      playerCarryScale:0,
+      playerDisplacementScale:0
+    }),
     playerHoming:runE0Policy({
       role:"breach",
       policy:"direct-mash",
@@ -224,6 +230,7 @@ test("E0 matched player DRIVE ablations keep defender authority constant",()=>{
 
   assert.equal(variants.normal.result,"crossed");
   assert.equal(variants.playerNoDrive.result,"blocked");
+  assert.equal(variants.playerNoMaterialConsequence.result,"blocked");
   assert.ok(variants.normal.playerContacts>0);
   assert.equal(variants.playerNoDrive.playerContacts,0);
 });
