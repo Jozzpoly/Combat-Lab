@@ -159,6 +159,15 @@ test("E0b broad-start red team measures blind DRIVE and static SET without tunin
   }
 
   const count=(arr,label)=>arr.filter(x=>x.result===label).length;
+  const compact=arr=>arr.map(x=>({
+    result:x.result,
+    time:x.time,
+    margin:x.accessMargin,
+    support:x.maxAdversarySupport,
+    px:x.player.x,
+    ax:x.adversary.x
+  }));
+
   const summary={
     offsets,
     denyStaticSetHeld:count(result.denyStaticSet,"held"),
@@ -167,6 +176,8 @@ test("E0b broad-start red team measures blind DRIVE and static SET without tunin
     breachBlindDriveCrossed:count(result.breachBlindDrive,"crossed"),
     breachAngleLeftCrossed:count(result.breachAngleLeft,"crossed"),
     breachAngleSwitchCrossed:count(result.breachAngleSwitch,"crossed"),
+    breachBlindDrive:compact(result.breachBlindDrive),
+    denySetTrack:compact(result.denySetTrack),
     maxBoundary:Math.max(...Object.values(result).flat().map(x=>x.boundaryFrames))
   };
 
