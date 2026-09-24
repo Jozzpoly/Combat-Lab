@@ -333,6 +333,52 @@ test("A2b body interception has a bounded spatial tolerance rather than one-pixe
   assert.equal(result[40].playerHit,true);
 });
 
+test("A2b coarse body-screen sweep checks robustness to imperfect lateral placement",()=>{
+  const sameFront=[
+    {
+      spec:LIGHT_STRIKER_SPEC,
+      start:{id:"light",x:625,y:300,facing:Math.PI/2}
+    },
+    {
+      spec:HEAVY_CRUSHER_SPEC,
+      start:{id:"heavy",x:785,y:300,facing:Math.PI/2}
+    }
+  ];
+  const offsets=[-36,-24,-12,0,12,24,36];
+  const result={};
+
+  for(const policy of ["screen-heavy","screen-light"]){
+    result[policy]={};
+    for(const offset of offsets){
+      result[policy][offset]={
+        playerOnly:runA2Policy(policy,{
+          seconds:8,
+          entries:sameFront,
+          adversaryActionsHitPeers:false,
+          screenTangentOffset:offset
+        }),
+        allBodies:runA2Policy(policy,{
+          seconds:8,
+          entries:sameFront,
+          adversaryActionsHitPeers:true,
+          screenTangentOffset:offset
+        })
+      };
+    }
+  }
+
+  console.log("A2B_COARSE_SCREEN_SWEEP",JSON.stringify(result));
+
+  for(const policy of Object.values(result)){
+    for(const pair of Object.values(policy)){
+      assert.equal(pair.playerOnly.finite,true);
+      assert.equal(pair.allBodies.finite,true);
+      assert.equal(pair.playerOnly.playerHits,0);
+      assert.equal(pair.allBodies.playerHits,0);
+    }
+  }
+});
+
 test("A2b body-screen possibility probe uses positions only and no player attacks",()=>{
   const sameFront=[
     {
