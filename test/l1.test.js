@@ -84,6 +84,84 @@ test("L1 same-step projectile impact cannot erase already committed rusher hit",
   assert.ok(r.hp<LIGHT_RUSHER_SPEC.body.hp);
 });
 
+test("L1 engaged impulse-only diagnostic separates physical interruption from lethality",()=>{
+  const playerStart={x:4000,y:4400,facing:-Math.PI/2};
+  const rusherStart={id:"rusher",x:4000,y:4220,facing:Math.PI/2};
+  const policies=[
+    "max-rate-fire",
+    "backward-kite-fire",
+    "lateral-only",
+    "fire-on-prepare",
+    "fire-on-commit",
+    "lateral-commit-shot"
+  ];
+  const result={};
+
+  for(const policy of policies){
+    result[policy]=runL1Policy(policy,{
+      seconds:10,
+      playerStart,
+      rusherStart,
+      projectileDamageScale:0,
+      projectileImpulseScale:1
+    });
+  }
+
+  console.log("L1_IMPULSE_ONLY_ENGAGED",JSON.stringify(result));
+
+  for(const value of Object.values(result)){
+    assert.equal(value.finite,true);
+    assert.equal(value.boundaryFrames,0);
+    assert.equal(value.rusherHp,LIGHT_RUSHER_SPEC.body.hp);
+  }
+
+  // This diagnostic is only useful if actual commitments occur.
+  assert.ok(
+    Object.values(result).some(value=>value.commits>0)
+  );
+});
+
+test("L1 engaged damage-only ablation reveals whether impulse changes the same firing policies",()=>{
+  const playerStart={x:4000,y:4400,facing:-Math.PI/2};
+  const rusherStart={id:"rusher",x:4000,y:4220,facing:Math.PI/2};
+  const policies=[
+    "max-rate-fire",
+    "backward-kite-fire",
+    "fire-on-prepare",
+    "fire-on-commit",
+    "lateral-commit-shot"
+  ];
+  const result={};
+
+  for(const policy of policies){
+    result[policy]={
+      normal:runL1Policy(policy,{
+        seconds:10,
+        playerStart,
+        rusherStart,
+        projectileDamageScale:1,
+        projectileImpulseScale:1
+      }),
+      damageOnly:runL1Policy(policy,{
+        seconds:10,
+        playerStart,
+        rusherStart,
+        projectileDamageScale:1,
+        projectileImpulseScale:0
+      })
+    };
+  }
+
+  console.log("L1_IMPULSE_ABLATION_ENGAGED",JSON.stringify(result));
+
+  for(const pair of Object.values(result)){
+    assert.equal(pair.normal.finite,true);
+    assert.equal(pair.damageOnly.finite,true);
+    assert.equal(pair.normal.boundaryFrames,0);
+    assert.equal(pair.damageOnly.boundaryFrames,0);
+  }
+});
+
 test("L1 policy matrix exposes spam kite movement and timing falsifiers",()=>{
   const policies=[
     "stand-fire",
