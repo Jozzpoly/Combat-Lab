@@ -117,7 +117,7 @@ R3 is now **JOINT-AFTERSTATE CAUSAL-KERNEL QUALIFIED**:
 
 This remains mechanism evidence only. It does not establish good combat, useful pressure decisions or Owner-worthy feel.
 
-Before opening R4, the active campaign is **R3 OWNER CONTACT SPECIMEN**: expose the already-qualified R3 causal kernel to direct human control without changing its contact law. This is an instrumentation / translation campaign, not R4. The hard boundary is **R3 kernel qualified ≠ R3 human phenomenon qualified**.
+Before opening R4, the active campaign is **R3 OWNER CONTACT SPECIMEN**: expose the already-qualified R3 causal kernel to direct human control without changing its contact law. This is an instrumentation / translation campaign, not R4. The hard boundary is **R3 kernel qualified ≠ R3 human phenomenon qualified**. Machine qualification is complete at deployed specimen `b51aad2dbc6475237b9fb22fdb0ed24b82bb6827`; the next evidence must come from raw Owner observation.
 
 See [Research state](docs/RESEARCH_STATE.md) for the recovery correction and evidence boundary.
 

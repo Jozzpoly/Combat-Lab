@@ -141,3 +141,106 @@ Do not ask the Owner to "look for R3" or explain the intended result before raw 
 - **Perceptible but chore-like / sticky / arbitrary:** preserve the causal donor and stop treating R3 as a promising human combat direction.
 - **Perceptible and interesting:** open a separate R4 hypothesis for minimal adversarial pressure.
 - **Unexpected behavior dominates:** follow that evidence instead of forcing the R4 roadmap.
+
+
+---
+
+## 7. Machine qualification — 2026-09-25
+
+Exact Owner-observation specimen:
+
+- source / deployed SHA: `b51aad2dbc6475237b9fb22fdb0ed24b82bb6827`;
+- branch: `experiment/whole-combat-organisms-v0`;
+- public Pages target: `https://jozzpoly.github.io/Combat-Lab/`.
+
+### 7.1 Kernel fidelity
+
+**PASS**
+
+The exact qualified R3 blobs were restored from the preserved post-qualification lineage rather than reimplemented from memory.
+
+CI result at the observation specimen:
+
+- full R3 deterministic regression suite;
+- five Owner-specimen control/apparatus checks;
+- **15 / 15 PASS**.
+
+The press-medium reference and sustained-soak signatures remain unchanged.
+
+### 7.2 Deliberate-entry correction
+
+The first resumed specimen checkpoint `722341f1f21fa4174492f94e6df4628baea4061d` was machine-clean but a Chromium rehearsal exposed an apparatus error:
+
+> the partner's time-based GUIDE could bring the tools into contact without any Owner action.
+
+That is not a kernel failure, but it contaminates the human observation.
+
+Checkpoint `b51aad2dbc6475237b9fb22fdb0ed24b82bb6827` changes presentation geometry only:
+
+- participant centers start at x = -82 / +82;
+- the R3 solver and constants are unchanged;
+- 120 idle simulation frames produce zero contact frames in CI.
+
+### 7.3 Exact artifact runtime
+
+**PASS for runtime / input / observability plumbing.**
+
+Pages build:
+
+- checked out exact SHA `b51aad2dbc6475237b9fb22fdb0ed24b82bb6827`;
+- emitted matching `COMMIT.txt`;
+- versioned the deployed JS/CSS module URLs by that SHA;
+- completed build and deploy successfully.
+
+The exact Pages artifact was then exercised in Chromium with its normal ES-module graph preserved.
+
+Observed:
+
+- after 1.3 s idle: **SEPARATED**;
+- deliberate movement + GUIDE / COMMIT: **CONTACT reached**;
+- ordinary movement away: **SEPARATED**;
+- no missing module requests;
+- no page errors;
+- no console warnings/errors.
+
+The Opera Browser Connector remained disconnected despite retries. That is recorded as tooling unavailability, not evidence about the specimen.
+
+### 7.4 Recovered earlier Owner-contact lineage
+
+A workflow-history audit found a previously prepared but later superseded Owner-contact lineage that was no longer reachable from the active branch tip:
+
+- `fe76e7a16e2ce31a98ab0c84e2119fac5e5d22bf` — repaired complete campaign tree;
+- `2b56e5c5e9e14fa8269d260d45e827b36640d6d5` — earlier exact deployed specimen;
+- `a64f250e6e82d30dfad47f12e45d08451fd1c224` — recorded deployment boundary.
+
+No Owner play was recorded there. Real-browser input / visual qualification was explicitly left unproven because Opera was disconnected, and the branch was later superseded by the R3 reset.
+
+This lineage is retained as **apparatus / provenance evidence**, not Owner evidence.
+
+Useful comparison:
+
+- the earlier specimen already understood the correct campaign boundary and deliberately started participants separated;
+- its Owner gate had only one structural source-text test beyond the ten R3 regressions (**11 / 11 total**);
+- its partner body used tiny sinusoidal movement inputs, but R3 body input is normalized before acceleration, so those small amplitudes did not represent small movement magnitudes as their source appearance might suggest;
+- the resumed specimen therefore does not silently inherit that body-motion presentation. It keeps the partner body stationary and gives its material tool transparent, time-only GUIDE intent.
+
+The stationary body is an apparatus boundary, not a claim about combat. The partner tool remains active and physically coupled; R4, if earned, must replace this presentation partner with genuine adversarial pressure.
+
+### 7.5 Promotion boundary
+
+Machine status:
+
+- kernel fidelity: **PASS**;
+- input/runtime plumbing: **PASS**;
+- observability plumbing: **PASS**;
+- exact deployment provenance: **PASS**.
+
+Human status:
+
+- perceptibility: **UNPROVEN**;
+- controllability / stickiness: **UNPROVEN**;
+- interest: **UNPROVEN**;
+- combat value: **UNPROVEN**;
+- Feniks fit: **UNPROVEN**.
+
+The next valid evidence is the Owner's raw first observation. Do not tune before it.

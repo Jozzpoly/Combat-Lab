@@ -597,7 +597,24 @@ Primary campaign record:
 
 - [R3 Owner Contact Specimen](R3_OWNER_CONTACT_SPECIMEN.md)
 
-Owner deployment is **AUTHORIZED FOR OBSERVATION ONLY** once the specimen preserves the R3 regression gate and exact deploy provenance.
+Owner deployment is **QUALIFIED FOR OBSERVATION ONLY** at exact deployed specimen `b51aad2dbc6475237b9fb22fdb0ed24b82bb6827`.
+
+Machine evidence at that exact specimen:
+
+- R3 regression + Owner specimen suite: **15 / 15 PASS**;
+- initial state remains separated without Owner input;
+- deliberate ordinary entry can create material CONTACT;
+- ordinary locomotion can break the relation again;
+- exact Pages artifact loads its versioned ES-module graph in Chromium without missing modules, page errors or console errors;
+- Pages build checked out and deployed the exact source SHA.
+
+Browser-connector boundary:
+
+- Opera Browser Connector remained disconnected after repeated retries;
+- this is tooling unavailability, not product evidence;
+- the exact deployed Pages artifact was therefore exercised in local Chromium with routed artifact modules rather than claiming a live public-URL observation.
+
+Human phenomenon / feel remains **UNPROVEN** until Owner play.
 
 ## Recovery correction — 2026-09-22
 
