@@ -117,7 +117,7 @@ R3 is now **JOINT-AFTERSTATE CAUSAL-KERNEL QUALIFIED**:
 
 This remains mechanism evidence only. It does not establish good combat, useful pressure decisions or Owner-worthy feel.
 
-The next frontier is **joint relation under minimal adversarial pressure**, but no R4 implementation is active yet.
+Before opening R4, the active campaign is **R3 OWNER CONTACT SPECIMEN**: expose the already-qualified R3 causal kernel to direct human control without changing its contact law. This is an instrumentation / translation campaign, not R4. The hard boundary is **R3 kernel qualified ≠ R3 human phenomenon qualified**.
 
 See [Research state](docs/RESEARCH_STATE.md) for the recovery correction and evidence boundary.
 
@@ -140,6 +140,7 @@ Read these before substantial continuation:
 - [Readiness Follow-Through R2](docs/READINESS_FOLLOW_THROUGH_R2.md) — physical-overrun donor plus the K1 failure where pressure side, not inherited readiness, determined immediate follow-up.
 - [Joint Relational Afterstate Audit](docs/JOINT_RELATIONAL_AFTERSTATE_AUDIT_2026-09-25.md) — synthesis of blade, shield, body-screen and world-contact donors.
 - [Relational Manifold R3](docs/RELATIONAL_MANIFOLD_R3.md) — qualified two-tool joint-afterstate causal kernel and current evidence boundary.
+- [R3 Owner Contact Specimen](docs/R3_OWNER_CONTACT_SPECIMEN.md) — active human-observation campaign; direct control over the qualified kernel without adversarial-pressure semantics.
 - [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) — hypothesis gate, evidence boundaries, branch hygiene, deployment discipline and the meaning of short Owner commands such as “kontynuuj”.
 
 ## Deployment

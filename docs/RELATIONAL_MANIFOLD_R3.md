@@ -1,8 +1,8 @@
 # RELATIONAL MANIFOLD R3 — Joint Afterstate Causal Kernel
 
 **Date:** 2026-09-25  
-**Status:** active hypothesis card; pre-implementation  
-**Owner play:** not eligible  
+**Status:** JOINT-AFTERSTATE CAUSAL KERNEL QUALIFIED; Owner Contact Specimen campaign active  
+**Owner play:** not yet performed; kernel qualification does not qualify the human-facing phenomenon  
 **Source:** `JOINT_RELATIONAL_AFTERSTATE_AUDIT_2026-09-25.md`
 
 ## 0. Purpose
@@ -600,3 +600,41 @@ Do not build a full combat organism yet.
 
 Do not add a bind UI, parry timing, stamina or scripted cooperation.
 
+
+
+---
+
+## 17. Human-facing qualification boundary — 2026-09-25
+
+The agent-side result above is not a feel result.
+
+Hard boundary:
+
+> **R3 kernel qualified ≠ R3 human phenomenon qualified.**
+
+Before opening the previously proposed minimal-adversarial-pressure step, Combat Lab now runs a smaller **Owner Contact Specimen** campaign.
+
+The specimen may expose the qualified kernel through:
+
+- direct human locomotion;
+- direct GUIDE;
+- discrete COMMIT from the actual inherited tool state;
+- a transparent deterministic partner-tool rhythm that is independent of player state;
+- material contact point / short motion traces for causal observability;
+- manual reset only.
+
+It must not add:
+
+- HP or damage;
+- stamina;
+- parry / bind state;
+- hidden advantage;
+- contact win/loss semantics;
+- adversarial AI;
+- scripted cooperation;
+- automatic neutralization;
+- pre-Owner feel tuning.
+
+The next record is [R3 Owner Contact Specimen](R3_OWNER_CONTACT_SPECIMEN.md).
+
+If Owner observation is negative, that negative human evidence is not softened by this document's machine-qualified causal result.

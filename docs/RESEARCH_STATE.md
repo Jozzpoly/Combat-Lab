@@ -1,7 +1,7 @@
 # Combat Lab — Research State
 
 **Authority:** current `main` research truth  
-**Status:** 2026-09-22  
+**Status:** 2026-09-25  
 **Purpose:** discover a combat language that may later inform **Feniks**. This repository is a laboratory, not the Feniks combat implementation.
 
 ## Current truth
@@ -558,26 +558,46 @@ Important boundary:
 - aim alone may not untangle a crossing relation while bodies remain fixed;
 - whether that is readable possibility or physics-wrestling chore is entirely unproven.
 
-### Current frontier — JOINT RELATION UNDER MINIMAL ADVERSARIAL PRESSURE, NO IMPLEMENTATION YET
+### Current frontier — R3 OWNER CONTACT SPECIMEN, BEFORE R4
 
-Do not open R4 code yet.
+The mechanically qualified R3 kernel has not yet been observed by the Owner as a human-facing phenomenon.
 
-Next design question:
+Hard boundary:
 
-> **Can entering, maintaining, escaping or exploiting one shared material relation create a useful adversarial choice that ordinary movement alone does not dominate?**
+> **R3 kernel qualified ≠ R3 human phenomenon qualified.**
 
-Before implementation, the next hypothesis card must preserve:
+The active campaign therefore pauses the previously proposed R4 pressure step and performs a smaller translation test first:
 
-- no HP/damage initially;
-- no bind mode or special contact input;
-- no scripted cooperation;
-- ordinary locomotion remains valid;
-- movement-only matched control;
-- local-neutral-reset ablation;
-- pressure must not simply force permanent contact;
-- shared relation must change what at least one ordinary next choice is useful for.
+- restore the exact qualified R3 kernel from its preserved evidence checkpoint;
+- expose one participant to direct human locomotion + GUIDE + COMMIT;
+- give the other tool a transparent, deterministic, player-independent guide rhythm so it is not a dead static wall and not an adversarial AI;
+- add only causal observability: material tool geometry, contact point, short motion traces and raw contact duration;
+- preserve manual reset and inherited physical state;
+- add no HP, damage, stamina, parry window, bind state, hidden advantage, target script or feel tuning.
 
-Owner deployment remains **NO**.
+Machine qualification may establish only:
+
+- exact kernel restoration;
+- deterministic/runtime health;
+- input plumbing;
+- deploy provenance;
+- observability plumbing.
+
+It may not establish feel, readability, useful combat choice or Feniks fit.
+
+First Owner observation is intentionally weakly instructed. A negative result such as "sticky", "invisible", "arbitrary" or "physics wrestling" is decisive product evidence even while the causal kernel remains mechanically qualified.
+
+Only after Owner evidence do we decide whether to:
+
+- repair the translation / control surface;
+- retain R3 only as a donor kernel;
+- or open minimal adversarial-pressure R4.
+
+Primary campaign record:
+
+- [R3 Owner Contact Specimen](R3_OWNER_CONTACT_SPECIMEN.md)
+
+Owner deployment is **AUTHORIZED FOR OBSERVATION ONLY** once the specimen preserves the R3 regression gate and exact deploy provenance.
 
 ## Recovery correction — 2026-09-22
 

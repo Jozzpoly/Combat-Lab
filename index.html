@@ -3,25 +3,33 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Combat Lab — Whole Combat Organism Discovery</title>
-<style>
-  :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
-  body { margin:0; min-height:100vh; display:grid; place-items:center; background:#101114; color:#ececf1; }
-  main { width:min(760px, calc(100% - 40px)); padding:36px; border:1px solid #2d3038; border-radius:18px; background:#17191f; box-shadow:0 20px 60px #0007; }
-  h1 { margin:0 0 12px; font-size:clamp(30px,5vw,52px); letter-spacing:-.03em; }
-  p { line-height:1.55; color:#c6c8d0; }
-  strong { color:#fff; }
-  .status { display:inline-block; margin:8px 0 20px; padding:7px 10px; border:1px solid #4a4e58; border-radius:999px; font-size:13px; letter-spacing:.08em; text-transform:uppercase; }
-</style>
+<title>Combat Lab — R3 Owner Contact Specimen</title>
+<link rel="stylesheet" href="./style.css">
 </head>
 <body>
 <main>
-  <div class="status">Whole combat organism discovery</div>
-  <h1>Combat Lab</h1>
-  <p><strong>No active combat specimen is currently qualified.</strong></p>
-  <p>R0 and R1 failed. The A/B/C/D mechanism probe never earned product authority. Ruined Gate Terrarium v1 reached an Owner gate and was rejected as a combat organism.</p>
-  <p>Phenotype Combat Ecology P0/P1 is preserved as mechanism evidence: body, equipment, contact and shield relations can matter without hard class flags, but its authored route/policy crossover did not earn product authority.</p>
-  <p>The active frontier is now to discover a <strong>whole combat organism worth fighting in again</strong> — where body, weapon, movement, opponent and place create useful possibilities before we return to clean attribution or classless-progression proofs.</p>
+  <header>
+    <div>
+      <div class="eyebrow">Combat Lab · R3 Owner Contact Specimen</div>
+      <h1>Shared contact, direct control</h1>
+      <p class="boundary">Kernel: qualified · Human phenomenon / feel: <strong>UNPROVEN</strong></p>
+    </div>
+    <button id="reset" type="button">Reset (R)</button>
+  </header>
+
+  <section class="stage">
+    <canvas aria-label="R3 contact specimen"></canvas>
+    <div class="hud">
+      <div><span>relation</span><strong id="contact-status" data-on="0">SEPARATED</strong></div>
+      <div><span>contact time</span><strong id="contact-duration">—</strong></div>
+    </div>
+  </section>
+
+  <footer>
+    <p><strong>WASD</strong> move · <strong>mouse</strong> guide tool · <strong>left click</strong> commit · <strong>R</strong> reset</p>
+    <p class="note">B uses a slow deterministic guide rhythm. It does not inspect you, choose tactics, or contain a bind/parry state. No HP or damage exists here.</p>
+  </footer>
 </main>
+<script type="module" src="./app.js"></script>
 </body>
 </html>
