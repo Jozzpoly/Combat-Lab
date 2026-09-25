@@ -429,3 +429,194 @@ Still no Owner eligibility.
 ## Working invariant
 
 > **Survive with movement; exploit with the state the exchange actually left you in.**
+
+
+---
+
+## 19. Final agent-side verdict — FAIL AS FOLLOW-THROUGH HYPOTHESIS, PHYSICAL OVERRUN DONOR RETAINED
+
+Final evidence lineage:
+
+- hypothesis card: `487c7885e75da9b27350564054199cdc52d2569f`;
+- initial physical-overrun cell: `d8ce276b8fc75f087b5b0d81def2fc418683e348`;
+- geometric evade correction: `a7b247268d4d50535e25e0a16924abfbf6d94450`;
+- readiness retention map: `7d936a265f3e37edc6b6ad9f243a2359dce3c8d7`;
+- pre-registered retention falsifier: `4b97bd184138e2f319aa13c0a436a6d2b2455f76`;
+- deterministic suite at final checkpoint: **25 / 25 PASS**;
+- Owner play: **NOT REQUESTED**.
+
+### 19.1 K0 survived
+
+The physical overrun substrate is real and does not depend on a recovery timer.
+
+After the locked dash misses through ordinary lateral movement:
+
+- incoming player body contact: **false**;
+- minimal deterministic evade displacement: ~**49.2** units;
+- dash commit ends at ~**0.792 s**;
+- rusher still carries away-motion at commit end;
+- closing velocity becomes positive again only at ~**1.275 s**;
+- physically derived opportunity duration: ~**0.483 s**;
+- EAST/WEST mirror is symmetric.
+
+No hidden:
+
+- vulnerable flag;
+- counter timer;
+- recovery freeze;
+- i-frame;
+- forced cancel.
+
+Retain this as a pressure / overrun donor.
+
+### 19.2 Readiness was still present at the opportunity boundary
+
+R2 does **not** fail because R0 history had already vanished.
+
+At GUIDE authority `0.38`, FREE/WALL readiness distance at dash commit end remains:
+
+- prepare 0.00 s: **1.1082**;
+- prepare 0.08 s: **0.6620**;
+- prepare 0.16 s: **0.4525**;
+- prepare 0.32 s: **0.4036**;
+- prepare 0.48 s: **0.3863**;
+- prepare 0.72 s: **0.1715**.
+
+Guide-authority sweep at the baseline pressure:
+
+- 0.18: **0.5999**;
+- 0.38: **0.4036**;
+- 0.75: **0.0384**;
+- 1.25: **0.0020**.
+
+Thus the reference regime still carries a measurable readiness history when the physical follow-through opportunity begins.
+
+### 19.3 K1 failed its core requirement
+
+Pre-registered K1 asked whether **identical immediate follow-up intent** would have different physical availability because of FREE vs WALL inherited readiness.
+
+It did not.
+
+With the matched minimal evade path:
+
+**EAST overrun**
+
+- FREE + immediate follow: **no follow contact**;
+- WALL + immediate follow: **no follow contact**.
+
+**WEST overrun**
+
+- FREE + immediate follow: **pre-turnaround contact**;
+- WALL + immediate follow: **pre-turnaround contact**.
+
+Therefore:
+
+> **pressure-side geometry determines immediate follow-up availability before readiness history does.**
+
+This is the decisive R2 result.
+
+The history difference is real but does not change what the player should immediately do.
+
+### 19.4 The hypothesis card required stopping here
+
+R2 section 17 explicitly pre-registered:
+
+> **Stop if K1 has no contextual follow-up phenomenon.**
+
+K1 has no FREE/WALL contextual outcome difference.
+
+Therefore R2 does not earn K3 promotion.
+
+Later GUIDE probes are retained as diagnostics only; they cannot retroactively change the K1 gate.
+
+### 19.5 GUIDE diagnostics do not rescue the lane
+
+At `guideAuthority=0.18`, GUIDE-before-follow produced one contextual cell:
+
+- EAST FREE: no contact;
+- EAST WALL: pre-turnaround contact.
+
+But:
+
+- WEST FREE/WALL both contact;
+- at `0.38` and above, guided follow contacts in all four history × side cells;
+- by 0.75–1.25, FREE/WALL readiness at commit end is almost erased.
+
+Thus the later map trends toward:
+
+> **either a narrow parameter-specific asymmetry or GUIDE trivialization, not a robust readiness-dependent possibility surface.**
+
+Do not select `0.18` as a magic value.
+
+### 19.6 What survives
+
+Retain:
+
+- R0 continuous-readiness causal kernel;
+- movement as primary escape from locked threat geometry;
+- physical overrun with no hidden recovery timer;
+- closing-velocity-derived turnaround observation;
+- minimum geometric evade instrumentation;
+- evidence that ordinary pressure time can naturally decay readiness.
+
+Do not retain as demonstrated gameplay law:
+
+- readiness as immediate post-dash exploitation grammar;
+- mirrored overrun as the missing combat organism;
+- rusher-side reversal as a sufficient readiness discriminator.
+
+### 19.7 Cross-R1/R2 correction
+
+R1 and R2 fail on opposite sides of the same question.
+
+R1:
+
+> readiness changes material contact, but **movement still decides survival**.
+
+R2:
+
+> after movement decides survival, **pressure geometry still decides immediate follow-through**.
+
+This suggests the mistake is not merely choosing the wrong moment for readiness.
+
+A deeper possibility is:
+
+> **isolated player-weapon readiness may be too local to become strategically important while the opponent remains a simple independent moving target.**
+
+The next research question should therefore not be:
+
+- stronger readiness;
+- slower GUIDE;
+- different rusher speed;
+- larger tool;
+- another counter window.
+
+Instead re-open the broader exchange object:
+
+> **What persistent relation can be jointly owned by both actors / weapon / place, such that the result of one interaction constrains both sides' next possibilities rather than only preserving the player's tool state?**
+
+Examples to audit, not implement blindly:
+
+- sustained mutual contact / bind geometry;
+- body + weapon occupation of a shared line;
+- support / obstruction that one actor cannot unilaterally erase;
+- terrain-mediated contact state;
+- two-body positional relation that survives independent aim correction.
+
+This is a synthesis frontier, not authorization for R3 implementation.
+
+### 19.8 Status
+
+> **READINESS FOLLOW-THROUGH R2 = FAIL AS HYPOTHESIS.**
+
+> **R0 CONTINUOUS READINESS remains causal-kernel qualified.**
+
+Owner eligibility:
+
+> **NO.**
+
+Do not add HP/damage.
+
+Do not tune the rusher.
+
+Do not open R3 before the cross-failure relation audit is written.
