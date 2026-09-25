@@ -1,5 +1,8 @@
 # Adversarial Combat Organism v1
 
+> **HISTORICAL RECORD — NOT CURRENT AUTHORITY.**
+> This file preserves the campaign state at its date. Current truth lives in `README.md` and `docs/RESEARCH_STATE.md`.
+
 **Status:** active hypothesis design  
 **Owner play:** not eligible  
 **Predecessor:** Whole Combat Organisms v0 — O1/O2 both falsified agent-side
