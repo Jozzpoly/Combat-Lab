@@ -37,3 +37,28 @@ test("S0 safety rails are intentionally much wider than its anchor range",()=>{
   assert.equal(bodyFromScale(-10).scale,0.05);
   assert.equal(bodyFromScale(100).scale,8);
 });
+
+
+test("S0 extreme safety-rail bodies remain finite under live world movement",()=>{
+  for(const scale of [0.05,8]){
+    const instance=embodiedScaleFieldV0.create();
+    instance.inspector.set("scale",scale);
+
+    for(let i=0;i<3000;i++){
+      const keys=[];
+      if(i%480<240) keys.push("KeyD");
+      else keys.push("KeyS");
+      instance.step({...idle,keys},1/120);
+    }
+
+    const snap=instance.snapshot();
+    for(const value of [
+      snap.player.x,snap.player.y,snap.player.vx,snap.player.vy,
+      snap.player.r,snap.player.mass,snap.player.acceleration,
+      snap.player.braking,snap.player.maxSpeed
+    ]){
+      assert.ok(Number.isFinite(value),`non-finite value at scale ${scale}`);
+    }
+    assert.equal(snap.player.scale,scale);
+  }
+});

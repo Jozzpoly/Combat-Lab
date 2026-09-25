@@ -143,12 +143,23 @@ try{
   if(!first.inspectorVisible || !first.parameterVisible) throw new Error(`Workbench Inspector missing: ${JSON.stringify(first)}`);
 
   await evaluate(`(()=>{
+    const slider=document.querySelector('[data-param-id="scale"] .parameter-slider');
+    slider.value="0.65";
+    slider.dispatchEvent(new Event("input",{bubbles:true}));
+  })()`);
+
+  await waitFor("Workbench slider edits live S0 scale",async()=>{
+    const scale=await evaluate("window.__combatLabRuntime?.snapshot?.player?.scale");
+    return Math.abs(Number(scale)-0.65)<1e-9;
+  });
+
+  await evaluate(`(()=>{
     const input=document.querySelector('[data-param-id="scale"] .parameter-number');
     input.value="3.25";
     input.dispatchEvent(new Event("change",{bubbles:true}));
   })()`);
 
-  await waitFor("Inspector edits live S0 scale",async()=>{
+  await waitFor("Inspector number edit changes live S0 scale",async()=>{
     const r=await evaluate(`({
       scale:window.__combatLabRuntime?.snapshot?.player?.scale,
       extreme:!document.querySelector('[data-param-id="scale"] .extreme-badge')?.hidden
