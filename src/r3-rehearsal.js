@@ -484,3 +484,112 @@ export function pressReference(){
     guideAuthority:0.48
   });
 }
+
+
+function runOneSideIntentVariant({
+  perturb="none",
+  guideAuthority=0.48
+}={}){
+  const state=createState();
+  setGuide(state.a,0.34);
+  setGuide(state.b,Math.PI-0.34);
+  requestCommit(state.a,0.34);
+  requestCommit(state.b,Math.PI-0.34);
+
+  let perturbed=false;
+  let perturbFrame=null;
+  let releaseFrame=null;
+  const maxFrames=Math.round(1.8/DT);
+
+  for(let i=0;i<maxFrames;i++){
+    const releasing=
+      releaseFrame!==null &&
+      i>=releaseFrame;
+
+    stepState(state,{
+      dt:DT,
+      guideAuthority,
+      contactEnabled:true,
+      aMoveX:releasing?-1:0,
+      bMoveX:releasing?1:0
+    });
+
+    if(
+      !perturbed &&
+      state.contact.engaged &&
+      state.contact.currentDuration>=0.30
+    ){
+      if(perturb==="a"){
+        setGuide(state.a,0.52);
+      }else if(perturb==="b"){
+        setGuide(state.b,Math.PI-0.52);
+      }
+      perturbed=true;
+      perturbFrame=i+1;
+    }
+
+    if(
+      perturbed &&
+      releaseFrame===null &&
+      i-(perturbFrame??i)>=Math.round(0.16/DT)
+    ){
+      releaseFrame=i+1;
+    }
+
+    if(
+      releaseFrame!==null &&
+      !state.contact.engaged &&
+      state.contact.separatedFor>=0.06
+    ){
+      break;
+    }
+  }
+
+  return {
+    a:snapshotActor(state.a),
+    b:snapshotActor(state.b),
+    impacts:state.contact.impacts,
+    maxDuration:Number(
+      state.contact.maxDuration.toFixed(4)
+    ),
+    separated:!state.contact.engaged
+  };
+}
+
+export function coupledIntentProbe(){
+  const baseline=runOneSideIntentVariant({
+    perturb:"none"
+  });
+  const aPerturb=runOneSideIntentVariant({
+    perturb:"a"
+  });
+  const bPerturb=runOneSideIntentVariant({
+    perturb:"b"
+  });
+
+  return {
+    baseline,
+    aPerturb,
+    bPerturb,
+    crossResponse:{
+      bFromA:Number(actorReadinessDistance(
+        aPerturb.b,
+        baseline.b
+      ).toFixed(4)),
+      aFromB:Number(actorReadinessDistance(
+        bPerturb.a,
+        baseline.a
+      ).toFixed(4))
+    },
+    ownResponse:{
+      a:Number(actorReadinessDistance(
+        aPerturb.a,
+        baseline.a
+      ).toFixed(4)),
+      b:Number(actorReadinessDistance(
+        bPerturb.b,
+        baseline.b
+      ).toFixed(4))
+    }
+  };
+}
