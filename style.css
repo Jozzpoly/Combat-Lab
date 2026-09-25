@@ -17,10 +17,14 @@
   --radius: 12px;
 }
 * { box-sizing: border-box; }
-html, body { min-height: 100%; }
+html, body {
+  min-height: 100%;
+  height: 100%;
+}
 body {
   margin: 0;
   min-height: 100vh;
+  overflow: hidden;
   background:
     radial-gradient(circle at 18% -10%, rgba(80,130,180,.08), transparent 32%),
     var(--bg);
@@ -44,10 +48,14 @@ button:hover:not(:disabled) {
 button:disabled { opacity: .45; cursor: default; }
 .app-shell {
   width: min(1540px, calc(100vw - 28px));
+  height: 100vh;
   margin: 0 auto;
-  padding: 14px 0 20px;
+  padding: 14px 0;
+  display: flex;
+  flex-direction: column;
 }
 .topbar {
+  flex: 0 0 58px;
   height: 58px;
   display: flex;
   justify-content: space-between;
@@ -104,15 +112,21 @@ button:disabled { opacity: .45; cursor: default; }
   color: #ffd0d0;
 }
 .workspace {
+  flex: 1 1 auto;
+  min-height: 0;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 370px;
   gap: 14px;
-  align-items: start;
+  align-items: stretch;
 }
 .stage-column {
   min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 .stage-heading {
+  flex: 0 0 auto;
   min-height: 84px;
   display: flex;
   align-items: end;
@@ -139,8 +153,9 @@ button:disabled { opacity: .45; cursor: default; }
   line-height: 1.45;
 }
 .viewport-card {
-  min-height: 650px;
-  height: calc(100vh - 190px);
+  flex: 1 1 auto;
+  min-height: 0;
+  height: auto;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   overflow: hidden;
@@ -151,10 +166,11 @@ canvas {
   display: block;
   width: 100%;
   height: 100%;
-  min-height: 650px;
+  min-height: 0;
   touch-action: none;
 }
 .stage-footer {
+  flex: 0 0 34px;
   min-height: 34px;
   display: flex;
   align-items: center;
@@ -172,9 +188,8 @@ canvas {
   opacity: .78;
 }
 .inspector {
-  position: sticky;
-  top: 14px;
-  max-height: calc(100vh - 28px);
+  min-height: 0;
+  height: 100%;
   overflow: auto;
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -399,15 +414,30 @@ canvas {
   line-height: 1.45;
 }
 @media (max-width: 1050px) {
+  body {
+    overflow: auto;
+  }
+  .app-shell {
+    height: auto;
+    min-height: 100vh;
+  }
   .workspace {
+    display: grid;
     grid-template-columns: 1fr;
   }
+  .stage-column {
+    display: block;
+  }
   .inspector {
-    position: static;
+    height: auto;
     max-height: none;
   }
   .viewport-card {
     height: 62vh;
+    min-height: 520px;
+  }
+  canvas {
+    min-height: 520px;
   }
 }
 @media (max-width: 680px) {
