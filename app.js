@@ -7,6 +7,7 @@ import {WorkbenchInspector} from "./src/core/workbench-inspector.js";
 import {ParameterSlotStore,formatParameterSlot} from "./src/core/parameter-state.js";
 import {substrateSmoke} from "./experiments/substrate-smoke.js";
 import {embodiedScaleFieldV0} from "./experiments/embodied-scale-field-v0.js";
+import {loadEnvelopeFieldB0} from "./experiments/load-envelope-field-b0.js";
 
 const canvas=document.querySelector("#lab");
 const ctx=canvas.getContext("2d");
@@ -34,6 +35,7 @@ const runtime=window.__combatLabRuntime;
 const registry=new ExperimentRegistry();
 registry.register(substrateSmoke);
 registry.register(embodiedScaleFieldV0);
+registry.register(loadEnvelopeFieldB0);
 
 const runner=new FixedStepRunner({dt:1/120,maxFrame:0.05,maxAccum:0.10});
 const input=new BrowserInput({pointerTarget:canvas});
@@ -121,7 +123,7 @@ for(const item of registry.list()){
   experimentSelect.append(option);
 }
 
-experimentSelect.value="embodied-scale-field-v0";
+experimentSelect.value="load-envelope-field-b0";
 loadExperiment(experimentSelect.value);
 experimentSelect.addEventListener("change",()=>loadExperiment(experimentSelect.value));
 

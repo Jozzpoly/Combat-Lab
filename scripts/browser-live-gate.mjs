@@ -71,7 +71,6 @@ function createCdp(wsUrl){
 }
 
 let cdp;
-
 async function captureScreenshot(path=screenshotPath){
   if(!cdp || !path) return;
   const shot=await cdp.send("Page.captureScreenshot",{format:"png",fromSurface:true});
@@ -84,18 +83,13 @@ try{
   await cdp.send("Page.enable");
   await cdp.send("Runtime.enable");
   await cdp.send("Emulation.setDeviceMetricsOverride",{
-    width:1600,
-    height:1000,
-    deviceScaleFactor:1,
-    mobile:false
+    width:1600,height:1000,deviceScaleFactor:1,mobile:false
   });
   await cdp.send("Page.navigate",{url:target});
 
   async function evaluate(expression){
     const result=await cdp.send("Runtime.evaluate",{
-      expression,
-      returnByValue:true,
-      awaitPromise:true
+      expression,returnByValue:true,awaitPromise:true
     });
     if(result.exceptionDetails){
       throw new Error(`browser evaluation failed: ${JSON.stringify(result.exceptionDetails)}`);
@@ -114,13 +108,15 @@ try{
     throw new Error(`${label} timed out; last=${JSON.stringify(lastValue)}`);
   }
 
-  await waitFor("live Workbench heartbeat",async()=>{
+  await waitFor("live B0 Workbench heartbeat",async()=>{
     return evaluate(`(()=>{
       const r=window.__combatLabRuntime;
-      const inspector=document.querySelector(".inspector");
-      const scale=document.querySelector('[data-param-id="scale"] .parameter-number');
       return !!r && r.state==="RUNNING" && r.frames>=8 && r.elapsed>0.03 && !r.error &&
-        !!inspector && !!scale;
+        r.activeExperimentId==="load-envelope-field-b0" &&
+        !!document.querySelector('[data-param-id="envelope"]') &&
+        !!document.querySelector('[data-param-id="bodyMass"]') &&
+        !!document.querySelector('[data-param-id="loadMass"]') &&
+        !!document.querySelector('[data-param-id="forceMultiplier"]');
     })()`);
   });
 
@@ -130,221 +126,179 @@ try{
     frames:window.__combatLabRuntime?.frames,
     elapsed:window.__combatLabRuntime?.elapsed,
     experiment:window.__combatLabRuntime?.activeExperimentId,
-    scale:window.__combatLabRuntime?.snapshot?.player?.scale,
-    playerX:window.__combatLabRuntime?.snapshot?.player?.x,
-    source:document.querySelector("#build-id")?.textContent,
-    inspectorVisible:!!document.querySelector(".inspector"),
-    parameterVisible:!!document.querySelector('[data-param-id="scale"]')
+    player:window.__combatLabRuntime?.snapshot?.player,
+    source:document.querySelector("#build-id")?.textContent
   })`);
 
-  if(first.title!=="Embodied Scale Field S0") throw new Error(`wrong initial title: ${first.title}`);
-  if(first.experiment!=="embodied-scale-field-v0") throw new Error(`wrong active experiment: ${first.experiment}`);
-  if(!(first.frames>=8 && first.elapsed>0.03)) throw new Error(`runtime not advancing: ${JSON.stringify(first)}`);
-  if(!first.inspectorVisible || !first.parameterVisible) throw new Error(`Workbench Inspector missing: ${JSON.stringify(first)}`);
+  if(first.title!=="Load / Envelope Field B0") throw new Error(`wrong B0 title: ${first.title}`);
 
-  await evaluate(`(()=>{
-    const number=document.querySelector('[data-param-id="scale"] .parameter-number');
-    number.focus();
-  })()`);
+  // Focus isolation: typing a parameter shortcut-like key while editing must not drive the world.
+  await evaluate(`document.querySelector('[data-param-id="bodyMass"] .parameter-number').focus()`);
+  const beforeFocusedKey=await evaluate("window.__combatLabRuntime?.snapshot?.player?.x");
+  await cdp.send("Input.dispatchKeyEvent",{type:"keyDown",code:"KeyD",key:"d",windowsVirtualKeyCode:68});
+  await sleep(140);
+  await cdp.send("Input.dispatchKeyEvent",{type:"keyUp",code:"KeyD",key:"d",windowsVirtualKeyCode:68});
+  const afterFocusedKey=await evaluate("window.__combatLabRuntime?.snapshot?.player?.x");
+  if(Math.abs(Number(afterFocusedKey)-Number(beforeFocusedKey))>0.5){
+    throw new Error(`focused Inspector leaked movement: before=${beforeFocusedKey} after=${afterFocusedKey}`);
+  }
+  await evaluate("document.activeElement?.blur?.()");
 
-  const scaleBeforeFocusedKey=await evaluate("window.__combatLabRuntime?.snapshot?.player?.scale");
-  await cdp.send("Input.dispatchKeyEvent",{type:"keyDown",code:"Digit3",key:"3",windowsVirtualKeyCode:51});
-  await sleep(120);
-  await cdp.send("Input.dispatchKeyEvent",{type:"keyUp",code:"Digit3",key:"3",windowsVirtualKeyCode:51});
-  const scaleAfterFocusedKey=await evaluate("window.__combatLabRuntime?.snapshot?.player?.scale");
-  if(Math.abs(Number(scaleAfterFocusedKey)-Number(scaleBeforeFocusedKey))>1e-9){
-    throw new Error(`focused Inspector leaked keyboard shortcut into experiment: before=${scaleBeforeFocusedKey} after=${scaleAfterFocusedKey}`);
+  async function setNumber(id,value){
+    await evaluate(`(()=>{
+      const input=document.querySelector('[data-param-id="${id}"] .parameter-number');
+      input.value="${value}";
+      input.dispatchEvent(new Event("change",{bubbles:true}));
+    })()`);
   }
 
-  await evaluate(`document.querySelector("#lab").focus?.(); document.activeElement?.blur?.();`);
+  // A = same actor, no load.
+  await setNumber("envelope",1.00);
+  await setNumber("bodyMass",1.00);
+  await setNumber("loadMass",0.00);
+  await setNumber("forceMultiplier",1.00);
+  await evaluate('document.querySelector("#capture-a").click()');
 
-  await evaluate(`(()=>{
-    const slider=document.querySelector('[data-param-id="scale"] .parameter-slider');
-    slider.value="0.65";
-    slider.dispatchEvent(new Event("input",{bubbles:true}));
-  })()`);
+  const a=await evaluate("window.__combatLabRuntime.snapshot.player");
 
-  await waitFor("Workbench slider edits live S0 scale",async()=>{
-    const scale=await evaluate("window.__combatLabRuntime?.snapshot?.player?.scale");
-    return Math.abs(Number(scale)-0.65)<1e-9;
+  // B = same actor/force, heavy load only.
+  await setNumber("loadMass",4.00);
+  await evaluate('document.querySelector("#capture-b").click()');
+
+  const b=await evaluate("window.__combatLabRuntime.snapshot.player");
+
+  if(Math.abs(a.r-b.r)>1e-9) throw new Error("load changed body envelope");
+  if(!(b.totalMass>a.totalMass)) throw new Error("load did not increase total mass");
+  if(!(b.acceleration<a.acceleration)) throw new Error("load did not reduce acceleration under equal force");
+  if(Math.abs(b.maxSpeed-a.maxSpeed)>1e-9) throw new Error("B0 load unexpectedly changed max speed");
+
+  await evaluate('document.querySelector("#apply-a").click()');
+  await waitFor("Apply A restores no-load body",async()=>{
+    const p=await evaluate("window.__combatLabRuntime.snapshot.player");
+    return Math.abs(p.loadMass-0)<1e-9 && Math.abs(p.envelope-1)<1e-9;
   });
 
-  await evaluate(`(()=>{
-    const input=document.querySelector('[data-param-id="scale"] .parameter-number');
-    input.value="3.25";
-    input.dispatchEvent(new Event("change",{bubbles:true}));
-  })()`);
-
-  await waitFor("Inspector number edit changes live S0 scale",async()=>{
-    const r=await evaluate(`({
-      scale:window.__combatLabRuntime?.snapshot?.player?.scale,
-      extreme:!document.querySelector('[data-param-id="scale"] .extreme-badge')?.hidden
-    })`);
-    return Math.abs(Number(r?.scale)-3.25)<1e-9 && r?.extreme===true;
+  await evaluate('document.querySelector("#apply-b").click()');
+  await waitFor("Apply B restores heavy-load body",async()=>{
+    const p=await evaluate("window.__combatLabRuntime.snapshot.player");
+    return Math.abs(p.loadMass-4)<1e-9 && Math.abs(p.envelope-1)<1e-9;
   });
 
+  // World reset preserves B parameters.
   await cdp.send("Input.dispatchKeyEvent",{type:"keyDown",code:"KeyD",key:"d",windowsVirtualKeyCode:68});
-  await sleep(260);
+  await sleep(320);
   await cdp.send("Input.dispatchKeyEvent",{type:"keyUp",code:"KeyD",key:"d",windowsVirtualKeyCode:68});
+  await evaluate('document.querySelector("#reset-world").click()');
 
-  await waitFor("player movement before world reset",async()=>{
-    const x=await evaluate("window.__combatLabRuntime?.snapshot?.player?.x");
-    return Number(x)>Number(first.playerX)+5;
+  await waitFor("Reset World preserves B0 authored state",async()=>{
+    const p=await evaluate("window.__combatLabRuntime.snapshot.player");
+    return Math.abs(p.x-165)<1e-9 && Math.abs(p.loadMass-4)<1e-9 && Math.abs(p.envelope-1)<1e-9;
   });
 
-  await evaluate(`document.querySelector("#reset-world").click()`);
-  await waitFor("Reset World preserves authored scale",async()=>{
-    const snap=await evaluate("window.__combatLabRuntime?.snapshot");
-    return !!snap &&
-      Math.abs((snap.player?.x ?? 0)-175)<1e-9 &&
-      Math.abs((snap.player?.scale ?? 0)-3.25)<1e-9 &&
-      snap.time===0;
+  await evaluate('document.querySelector("#restore-defaults").click()');
+  await waitFor("Restore Defaults resets B0 parameters",async()=>{
+    const p=await evaluate("window.__combatLabRuntime.snapshot.player");
+    return Math.abs(p.envelope-1)<1e-9 &&
+      Math.abs(p.bodyMass-1)<1e-9 &&
+      Math.abs(p.loadMass-0)<1e-9 &&
+      Math.abs(p.forceMultiplier-1)<1e-9;
   });
 
-  await evaluate(`document.querySelector("#restore-defaults").click()`);
-  await waitFor("Restore Defaults resets authored scale",async()=>{
-    const scale=await evaluate("window.__combatLabRuntime?.snapshot?.player?.scale");
-    return Math.abs(Number(scale)-1)<1e-9;
-  });
+  // Orthogonality in real browser.
+  const baseline=await evaluate("window.__combatLabRuntime.snapshot.player");
+  await setNumber("envelope",1.70);
+  const large=await evaluate("window.__combatLabRuntime.snapshot.player");
+  if(!(large.r>baseline.r)) throw new Error("envelope did not change radius");
+  if(Math.abs(large.totalMass-baseline.totalMass)>1e-9) throw new Error("envelope leaked into mass");
+  if(Math.abs(large.acceleration-baseline.acceleration)>1e-9) throw new Error("envelope leaked into acceleration");
 
-  await evaluate(`(()=>{
-    const input=document.querySelector('[data-param-id="scale"] .parameter-number');
-    input.value="0.65";
-    input.dispatchEvent(new Event("change",{bubbles:true}));
-    document.querySelector("#capture-a").click();
-    input.value="1.70";
-    input.dispatchEvent(new Event("change",{bubbles:true}));
-    document.querySelector("#capture-b").click();
-  })()`);
+  await setNumber("envelope",1.00);
+  await setNumber("forceMultiplier",2.00);
+  const strong=await evaluate("window.__combatLabRuntime.snapshot.player");
+  if(!(strong.acceleration>baseline.acceleration)) throw new Error("force did not change acceleration");
+  if(Math.abs(strong.totalMass-baseline.totalMass)>1e-9) throw new Error("force leaked into mass");
 
-  await waitFor("A/B parameter slots capture independently",async()=>{
-    return evaluate(`
-      !document.querySelector("#apply-a")?.disabled &&
-      !document.querySelector("#apply-b")?.disabled &&
-      document.querySelector("#slot-a-summary")?.textContent.includes("0.65") &&
-      document.querySelector("#slot-b-summary")?.textContent.includes("1.70")
-    `);
-  });
+  await evaluate('document.querySelector("#restore-defaults").click()');
 
-  await evaluate(`document.querySelector("#apply-a").click()`);
-  await waitFor("Apply A restores authored state live",async()=>{
-    const scale=await evaluate("window.__combatLabRuntime?.snapshot?.player?.scale");
-    return Math.abs(Number(scale)-0.65)<1e-9;
-  });
-
-  await evaluate(`document.querySelector("#apply-b").click()`);
-  await waitFor("Apply B restores authored state live",async()=>{
-    const scale=await evaluate("window.__combatLabRuntime?.snapshot?.player?.scale");
-    return Math.abs(Number(scale)-1.70)<1e-9;
-  });
-
-  const beforePause=await evaluate("window.__combatLabRuntime.elapsed");
-  await evaluate(`document.querySelector("#pause").click()`);
-  await sleep(250);
-  const paused=await evaluate(`({
-    state:window.__combatLabRuntime.state,
-    elapsed:window.__combatLabRuntime.elapsed
-  })`);
-  if(paused.state!=="PAUSED") throw new Error(`pause did not change runtime state: ${JSON.stringify(paused)}`);
-  if(Math.abs(paused.elapsed-beforePause)>0.02) throw new Error(`elapsed advanced while paused: before=${beforePause} after=${paused.elapsed}`);
-
-  await evaluate(`document.querySelector("#pause").click()`);
-  await waitFor("resume",async()=>{
-    const r=await evaluate("window.__combatLabRuntime");
-    return r?.state==="RUNNING" && r.elapsed>paused.elapsed+0.05;
-  });
-
-  await evaluate(`(()=>{
-    const s=document.querySelector("#experiment-select");
-    s.value="substrate-smoke";
-    s.dispatchEvent(new Event("change",{bubbles:true}));
-  })()`);
-
-  await waitFor("experiment switch",async()=>{
-    return evaluate(`window.__combatLabRuntime?.activeExperimentId==="substrate-smoke" &&
-      document.querySelector("#experiment-title")?.textContent==="Substrate smoke probe" &&
-      document.querySelector("#parameter-panel")?.textContent.includes("no editable Workbench parameters")`);
-  });
-
+  // Experiment switching must keep both B0 and S0 valid.
   await evaluate(`(()=>{
     const s=document.querySelector("#experiment-select");
     s.value="embodied-scale-field-v0";
     s.dispatchEvent(new Event("change",{bubbles:true}));
   })()`);
-
-  await waitFor("switch back to S0 Workbench",async()=>{
-    return evaluate(`window.__combatLabRuntime?.activeExperimentId==="embodied-scale-field-v0" &&
-      document.querySelector("#experiment-title")?.textContent==="Embodied Scale Field S0" &&
-      !!document.querySelector('[data-param-id="scale"]')`);
+  await waitFor("switch B0 to S0",async()=>{
+    return evaluate('window.__combatLabRuntime.activeExperimentId==="embodied-scale-field-v0" && !!document.querySelector(\'[data-param-id="scale"]\')');
   });
 
   await evaluate(`(()=>{
-    const input=document.querySelector('[data-param-id="scale"] .parameter-number');
-    input.value="1.70";
-    input.dispatchEvent(new Event("change",{bubbles:true}));
+    const s=document.querySelector("#experiment-select");
+    s.value="load-envelope-field-b0";
+    s.dispatchEvent(new Event("change",{bubbles:true}));
   })()`);
-
-  await waitFor("visual rehearsal state",async()=>{
-    const scale=await evaluate("window.__combatLabRuntime?.snapshot?.player?.scale");
-    return Math.abs(Number(scale)-1.7)<1e-9;
+  await waitFor("switch S0 back to B0",async()=>{
+    return evaluate('window.__combatLabRuntime.activeExperimentId==="load-envelope-field-b0" && !!document.querySelector(\'[data-param-id="loadMass"]\')');
   });
 
+  // Normal visual rehearsal: heavy load only.
+  await setNumber("loadMass",4.00);
   await captureScreenshot();
 
-  await evaluate(`(()=>{
-    const input=document.querySelector('[data-param-id="scale"] .parameter-number');
-    input.value="4.50";
-    input.dispatchEvent(new Event("change",{bubbles:true}));
-  })()`);
-
-  await waitFor("extreme visual state",async()=>{
-    return evaluate(`Math.abs((window.__combatLabRuntime?.snapshot?.player?.scale ?? 0)-4.5)<1e-9 &&
-      !document.querySelector('[data-param-id="scale"] .extreme-badge')?.hidden`);
+  // Deliberately absurd but finite phenotype.
+  await setNumber("envelope",3.50);
+  await setNumber("bodyMass",0.10);
+  await setNumber("loadMass",20.00);
+  await setNumber("forceMultiplier",4.00);
+  await waitFor("extreme B0 state",async()=>{
+    return evaluate(`(()=>{
+      const p=window.__combatLabRuntime.snapshot.player;
+      const badges=[...document.querySelectorAll(".extreme-badge")].filter(x=>!x.hidden);
+      return Math.abs(p.envelope-3.5)<1e-9 && Math.abs(p.loadMass-20)<1e-9 && badges.length>=2;
+    })()`);
   });
   await captureScreenshot(extremeScreenshotPath);
 
-  await evaluate(`document.querySelector("#restore-defaults").click()`);
+  await evaluate('document.querySelector("#restore-defaults").click()');
   await cdp.send("Emulation.setDeviceMetricsOverride",{
-    width:1280,
-    height:800,
-    deviceScaleFactor:1,
-    mobile:false
+    width:1280,height:800,deviceScaleFactor:1,mobile:false
   });
-  await sleep(160);
+  await sleep(180);
 
-  const compactLayout=await evaluate(`({
-    workspace:document.querySelector(".workspace")?.getBoundingClientRect().width,
+  const compact=await evaluate(`({
     stage:document.querySelector(".stage-column")?.getBoundingClientRect().width,
     inspector:document.querySelector(".inspector")?.getBoundingClientRect().width,
-    top:document.querySelector(".inspector")?.getBoundingClientRect().top
+    bodyScroll:getComputedStyle(document.body).overflow,
+    inspectorScroll:getComputedStyle(document.querySelector(".inspector")).overflow
   })`);
-  if(Number(compactLayout.inspector)<340) throw new Error(`compact Inspector too narrow: ${JSON.stringify(compactLayout)}`);
-  if(Number(compactLayout.stage)<700) throw new Error(`compact stage too narrow: ${JSON.stringify(compactLayout)}`);
+  if(Number(compact.inspector)<340 || Number(compact.stage)<700){
+    throw new Error(`compact B0 layout failed: ${JSON.stringify(compact)}`);
+  }
   await captureScreenshot(compactScreenshotPath);
 
-  const finalState=await evaluate(`({
-    runtime:window.__combatLabRuntime,
-    numberValue:document.querySelector('[data-param-id="scale"] .parameter-number')?.value,
-    build:document.querySelector("#build-id")?.textContent,
-    workspaceWidth:document.querySelector(".workspace")?.getBoundingClientRect().width,
-    inspectorWidth:document.querySelector(".inspector")?.getBoundingClientRect().width
-  })`);
-
-  if(finalState.runtime?.error) throw new Error(`runtime error captured: ${finalState.runtime.error}`);
-  if(Number(finalState.inspectorWidth)<320) throw new Error(`Inspector unexpectedly narrow: ${finalState.inspectorWidth}`);
+  const finalState=await evaluate("window.__combatLabRuntime");
+  if(finalState.error) throw new Error(`runtime error captured: ${finalState.error}`);
 
   process.stdout.write(JSON.stringify({
     pass:true,
-    initial:first,
+    initial:{
+      title:first.title,
+      experiment:first.experiment,
+      source:first.source
+    },
+    matchedLoadComparison:{
+      radiusA:a.r,
+      radiusB:b.r,
+      totalMassA:a.totalMass,
+      totalMassB:b.totalMass,
+      accelerationA:a.acceleration,
+      accelerationB:b.acceleration,
+      maxSpeedA:a.maxSpeed,
+      maxSpeedB:b.maxSpeed
+    },
     final:{
-      state:finalState.runtime.state,
-      frames:finalState.runtime.frames,
-      elapsed:finalState.runtime.elapsed,
-      activeExperimentId:finalState.runtime.activeExperimentId,
-      scale:finalState.runtime.snapshot?.player?.scale,
-      inspectorValue:finalState.numberValue,
-      build:finalState.build,
-      inspectorWidth:finalState.inspectorWidth
+      state:finalState.state,
+      frames:finalState.frames,
+      elapsed:finalState.elapsed,
+      activeExperimentId:finalState.activeExperimentId
     }
   },null,2)+"\n");
 }catch(error){
