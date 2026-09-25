@@ -441,28 +441,110 @@ Do not tune impulse / rusher constants until this changes.
 
 R0 continuous readiness remains qualified.
 
-### Active frontier — READINESS FOLLOW-THROUGH / AFTERSTATE DESIGN
+### READINESS FOLLOW-THROUGH R2 — FAIL, PHYSICAL OVERRUN DONOR RETAINED
 
-New highest-value question:
+Primary record:
 
-> **Can inherited player readiness change which follow-up is naturally available after an opponent's own committed action has already created a real physical afterstate?**
+- [READINESS FOLLOW-THROUGH R2](READINESS_FOLLOW_THROUGH_R2.md)
+- final falsifier: `4b97bd184138e2f319aa13c0a436a6d2b2455f76`;
+- deterministic suite: **25 / 25 PASS**;
+- Owner play: **NOT REQUESTED**.
 
-This deliberately moves away from asking readiness to act as a parry.
+What survived:
 
-Candidate pressure shape:
+- ordinary movement can leave the locked dash geometry;
+- the corrected minimum deterministic evade is ~49.2 units rather than the earlier over-evade ~108;
+- rusher overrun is genuinely physical;
+- no recovery timer defines the opportunity;
+- dash commit ends ~0.792 s and positive closing is naturally recovered ~1.275 s;
+- physical opportunity is ~0.483 s;
+- readiness history remains measurable at commit end in the reference regime.
 
-- movement remains the primary way to leave incoming locked threat geometry;
-- the adversary's own commitment creates overextension / separation / orientation;
-- no hidden vulnerable token;
-- no HP/damage initially;
-- readiness determines whether an immediate follow-up contact is geometrically available or whether the player must GUIDE / reposition first.
+What failed:
 
-Before implementation:
+- immediate follow-up is determined by pressure side, not FREE/WALL readiness history:
+  - EAST: FREE and WALL both no-contact;
+  - WEST: FREE and WALL both pre-turnaround contact;
+- this remains true while FREE/WALL readiness distance at commit end is still ~0.404 at the reference setting;
+- therefore history existed but did not change the immediate action opportunity;
+- the R2 card explicitly required stopping if K1 had no contextual follow-up phenomenon.
 
-- define what opponent afterstate is genuinely physical rather than timer-awarded;
-- mirror the situation so one readiness state cannot be globally best;
-- pre-register follow-up spam / timing-window / one-best-guard falsifiers;
-- keep AUTO-NEUTRAL and pose-only attribution available only after a follow-up phenomenon exists.
+Later GUIDE diagnostics do not rescue the result:
+
+- one low-authority cell at 0.18 shows a history-dependent guided contact;
+- at 0.38+ guided follow contacts all four cells;
+- higher GUIDE authority naturally erases readiness history.
+
+Do not tune GUIDE or rusher constants around the 0.18 cell.
+
+### Joint relational afterstate audit — SYNTHESIS COMPLETE
+
+Primary record:
+
+- [Joint Relational Afterstate Audit](JOINT_RELATIONAL_AFTERSTATE_AUDIT_2026-09-25.md)
+- synthesis commit: `4ec6c1afbc95e26a5a98e208bdb8fbc3477a124f`.
+
+Cross-donor result:
+
+> **local persistence is real, but strategic persistence likely requires a shared material relation rather than a stronger local readiness variable.**
+
+Re-audited donors:
+
+- Terrarium blade↔blade contact:
+  - genuinely mutual segment/contact geometry;
+  - both weapon velocities and both bodies changed;
+  - but each controller independently restored its own neutral target after separation.
+- Terrarium weapon↔wall:
+  - world co-owned the constraint while contact persisted;
+  - after separation the weapon returned to local control semantics.
+- O1 shield↔body:
+  - persistent occupied directional geometry with real yield/displacement;
+  - but the relation remained mostly defender-owned and attacker state returned to its own lifecycle.
+- A2b first-solid-body authority:
+  - strongest multi-actor relational donor;
+  - another body can genuinely consume a committed action even with zero friendly damage;
+  - but ordinary compact offense later removed the relation faster than it could matter.
+- ordinary body↔body:
+  - symmetric physical causality;
+  - weak next-decision persistence.
+
+Current missing property:
+
+> **a relational manifold: a material configuration jointly determined by multiple participants / tools / world geometry that changes all participants' next useful possibilities and leaves consequential afterstate when the relation breaks.**
+
+This is **not** a sword-lock / bind minigame proposal.
+
+Hard boundaries before any future R3:
+
+- no bind mode;
+- no hidden vulnerability token;
+- no one-side aim reset;
+- no static infinite-mass wall;
+- no physics-wrestling chore;
+- no passive block bubble;
+- no terrain-puzzle dependency;
+- no target-script cooperation;
+- no immediate return to equivalent neutral state after contact.
+
+### Current frontier — RELATIONAL EXCHANGE OBJECT DESIGN, NO IMPLEMENTATION YET
+
+Do not open R3 code yet.
+
+The next design step must first specify the smallest causal kernel that can answer:
+
+> **Can one material exchange leave both sides inside the same changed reality, such that identical next intents produce different realized actions for both participants because of their shared contact history?**
+
+Minimum future kernel pressure:
+
+- two responsive bodies;
+- two material tools or one tool + support/world surface;
+- continuous contact geometry;
+- no HP/damage;
+- no AI strategy beyond bounded deterministic opposing intent;
+- no special bind state;
+- independent-reset ablation.
+
+Only after that card is frozen should implementation begin.
 
 Owner deployment remains **NO**.
 

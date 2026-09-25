@@ -85,11 +85,31 @@ The first pressure test, **READINESS UNDER PRESSURE R1**, is already falsified:
 
 Do not rescue R1 through stronger impulse or rusher tuning.
 
-The active frontier is now **READINESS FOLLOW-THROUGH / AFTERSTATE DESIGN**:
+**READINESS FOLLOW-THROUGH R2 has now also failed as a follow-through hypothesis.**
 
-> **Can inherited player readiness change which follow-up is naturally available after an opponent's own committed action has already created a real physical afterstate?**
+The physical-overrun donor survived:
 
-This deliberately stops asking readiness to behave like a parry / interruption system.
+- ordinary movement leaves the locked dash geometry;
+- the corrected minimal evade is ~49.2 units;
+- the rusher genuinely overshoots;
+- no recovery timer defines the opportunity;
+- positive closing returns naturally after ~0.48 s.
+
+But the decisive K1 result is negative:
+
+- EAST immediate follow-up: FREE and WALL both fail to contact;
+- WEST immediate follow-up: FREE and WALL both contact before turnaround;
+- readiness history is still measurable at commit end, so the failure is not just history decay.
+
+Therefore pressure-side geometry decides the immediate follow-up before FREE/WALL readiness does. The R2 hypothesis card explicitly required stopping if K1 had no contextual history-dependent result.
+
+The subsequent **Joint Relational Afterstate Audit** is now complete.
+
+Its working conclusion is:
+
+> **local persistence is real, but strategic persistence may require a shared material relation jointly owned by actors / tools / world geometry, rather than a stronger local readiness variable.**
+
+No R3 implementation is active yet. The next step is to define the smallest causal kernel for a shared relational manifold and its independent-reset falsifier before writing code.
 
 See [Research state](docs/RESEARCH_STATE.md) for the recovery correction and evidence boundary.
 
@@ -109,6 +129,8 @@ Read these before substantial continuation:
 - [Persistent Afterstate / Readiness Audit](docs/PERSISTENT_AFTERSTATE_READINESS_AUDIT_2026-09-25.md) — cross-donor neutral-attractor diagnosis.
 - [Continuous Readiness R0](docs/CONTINUOUS_READINESS_R0.md) — qualified no-auto-neutral causal kernel and evidence boundary.
 - [Readiness Under Pressure R1](docs/READINESS_UNDER_PRESSURE_R1.md) — mirrored dash-pressure failure; readiness changed contact geometry but not the pressure outcome.
+- [Readiness Follow-Through R2](docs/READINESS_FOLLOW_THROUGH_R2.md) — physical-overrun donor plus the K1 failure where pressure side, not inherited readiness, determined immediate follow-up.
+- [Joint Relational Afterstate Audit](docs/JOINT_RELATIONAL_AFTERSTATE_AUDIT_2026-09-25.md) — synthesis of blade, shield, body-screen and world-contact donors; defines the current no-code relational frontier.
 - [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) — hypothesis gate, evidence boundaries, branch hygiene, deployment discipline and the meaning of short Owner commands such as “kontynuuj”.
 
 ## Deployment
