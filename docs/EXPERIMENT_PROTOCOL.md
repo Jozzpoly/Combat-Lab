@@ -213,3 +213,57 @@ Nothing becomes “Feniks combat” because:
 - it is the least bad current specimen.
 
 Promotion requires repeated Owner evidence that the player-facing combat language is valuable enough to deserve deeper investment.
+
+
+## 11. Owner exposure timing
+
+Machine-side falsification exists to prevent obviously invalid Owner tests. It must not become a substitute for human discovery.
+
+When a whole organism is:
+
+- stable enough to manipulate;
+- causally understandable enough that obvious runtime bugs will not dominate;
+- genuinely different at the phenomenon level;
+- safe to expose without contaminating the question with instructions;
+
+then prefer an **early raw Owner observation** over another long chain of agent-only tuning.
+
+Do not require exhaustive mechanistic attribution before the first human-facing discovery test.
+
+A short Owner reaction such as:
+
+- "this is dead";
+- "this is sticky";
+- "I don't understand what I can do";
+- "this is already something";
+
+may be more valuable than dozens of deterministic tests when the question is fundamentally experiential.
+
+Machine evidence remains authoritative only for the narrow facts it can actually establish.
+
+## 12. Execution-substrate refoundation rule
+
+A clean execution reset is allowed when accumulated implementation begins to bias what the lab can ask.
+
+A refoundation must preserve:
+
+- exact experiment SHAs;
+- Owner evidence;
+- falsifiers;
+- qualified causal kernels;
+- donor findings;
+- protocol lessons.
+
+It does **not** need to preserve:
+
+- current runtime architecture;
+- current player controller;
+- current actor representation;
+- attack/action abstractions;
+- weapon/contact semantics;
+- experiment numbering;
+- branch ancestry as design authority.
+
+The neutral substrate should share only machinery that cannot answer a combat hypothesis by construction.
+
+If a supposedly shared abstraction already assumes what an actor, attack, weapon, spell, projectile, hit, block or commitment is, it belongs in an experiment until multiple independent families justify promoting it.
