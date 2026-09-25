@@ -515,6 +515,36 @@ Dense evidence:
 
 Owner requested a solid professional stage closure after these narrow fixes, then readiness for further instructions.
 
+### B0 / Workbench stage closure — CLOSED
+
+Owner requested a solid professional closure after the first direct B0 recording.
+
+Closure candidate includes the narrow recording-driven polish only:
+
+- substantially widened permissive safety rails;
+- Owner-entered force 42 is now legal;
+- numeric UI always reflects runtime-applied truth after commit;
+- explicit `SAFETY RAIL` only at true numerical protection boundaries;
+- shorter B0 Inspector copy;
+- internal smoke probe separated from research experiments.
+
+Pre-deploy closure checkpoint:
+
+- `9a58da5f99202fb777f3a5a066dedeea86370cfb`;
+- 31 / 31 automated checks PASS;
+- live Chromium gate PASS;
+- normal / Owner-derived extreme / compact screenshots manually inspected.
+
+Canonical verdict:
+
+- Workbench foundation: **QUALIFIED FOR CURRENT RESEARCH USE**;
+- B0 decomposition direction: **POSITIVE OWNER SIGNAL / STAGE CLOSED**;
+- final Feniks semantics: **NOT DECIDED**;
+- A/B human usefulness: **UNPROVEN**;
+- next research direction: **OPEN — WAITING FOR OWNER INSTRUCTION**.
+
+See `docs/B0_WORKBENCH_STAGE_CLOSURE_2026-09-25.md`.
+
 ### Broader refoundation frontier
 
 No later combat family is preselected.

@@ -544,3 +544,23 @@ The recording also exposes a material Workbench truthfulness bug:
 Closure requires visible numeric state to always match applied authored state.
 
 See `B0_WORKBENCH_OWNER_RECORDING_FEEDBACK_2026-09-25.md`.
+
+
+## 15. Workbench stage closure
+
+The first real Owner session qualifies the Workbench interaction foundation for continued research use.
+
+Closure polish at `9a58da5f99202fb777f3a5a066dedeea86370cfb` resolves:
+
+- overly narrow B0 rails exposed by Owner force=42 input;
+- numeric field/runtime truth mismatch during clamp;
+- unnecessary B0 copy density;
+- diagnostic/research experiment presentation ambiguity.
+
+31 / 31 checks and the full live-browser gate pass after these fixes.
+
+Canonical Workbench verdict:
+
+> **QUALIFIED FOR CURRENT RESEARCH USE**
+
+This is a substrate verdict, not a claim that the Workbench feature set is complete forever.

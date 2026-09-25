@@ -225,3 +225,20 @@ Internal candidate `435660123365636458f5adf978c3ede728e095d8` passes 29/29 check
 Public-origin verification now PASSes for exact candidate `43c8a3fdf1bc12110e34c53159841b363b4414ea`.
 
 The candidate is Owner-observation eligible, but B0's human value remains unproven until direct play.
+
+
+## Current checkpoint — B0 / Workbench stage closed
+
+The first direct Owner recording on B0 was positive: **the direction is worth keeping**.
+
+Current closure status:
+
+- Workbench foundation: **qualified for current research use**;
+- B0 embodiment decomposition: **positive Owner signal / stage closed**;
+- final Feniks body/combat model: **not decided**;
+- next research direction: **open, waiting for Owner instruction**.
+
+See:
+
+- `docs/B0_WORKBENCH_OWNER_RECORDING_FEEDBACK_2026-09-25.md`
+- `docs/B0_WORKBENCH_STAGE_CLOSURE_2026-09-25.md`

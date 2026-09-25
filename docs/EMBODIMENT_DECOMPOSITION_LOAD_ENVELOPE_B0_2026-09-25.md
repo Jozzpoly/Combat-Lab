@@ -388,3 +388,33 @@ Material closure issue:
 - the focused numeric field can temporarily show the requested 42 while runtime already applies 8.
 
 See `B0_WORKBENCH_OWNER_RECORDING_FEEDBACK_2026-09-25.md`.
+
+
+## 16. Stage closure
+
+Owner requested closure after the first direct recording.
+
+Recording-driven final polish:
+
+- safety rails widened to envelope 12 / body mass 200 / load 200 / force 100;
+- Owner-entered force 42 is legal;
+- numeric field truthfulness fixed;
+- true numerical rail is explicitly labelled;
+- B0 panel copy reduced;
+- internal smoke probe separated from research experiments.
+
+Pre-deploy closure checkpoint:
+
+`9a58da5f99202fb777f3a5a066dedeea86370cfb`
+
+Evidence:
+
+- 31 / 31 checks PASS;
+- live Chromium gate PASS;
+- normal / Owner-derived extreme / compact visuals inspected.
+
+B0 stage verdict:
+
+> **POSITIVE OWNER SIGNAL / STAGE CLOSED**
+
+This does not promote B0 equations to final Feniks semantics.
