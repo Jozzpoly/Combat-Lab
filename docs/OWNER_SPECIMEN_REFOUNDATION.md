@@ -1,5 +1,8 @@
 # Combat Lab — Owner Specimen Refoundation
 
+> **HISTORICAL RECORD — NOT CURRENT AUTHORITY.**
+> Preserved for evidence, falsifiers, donor recovery and exact provenance. Any `active`, `current` or `next` wording below describes the document's original moment. Current truth lives in `README.md` and `docs/RESEARCH_STATE.md`.
+
 **Date:** 2026-09-20  
 **Status:** active product-research correction  
 **Scope:** Combat Lab -> Feniks combat discovery
