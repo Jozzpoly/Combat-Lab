@@ -480,6 +480,41 @@ Status:
 
 B0 is now **Owner-observation eligible**, but no positive experiential claim is made before Owner play.
 
+### B0 / Workbench Owner recording — POSITIVE DIRECTION, CLOSURE POLISH REQUIRED
+
+Owner recording:
+
+- 160.2 s direct Workbench play on exact public candidate `43c8a3fdf1bc12110e34c53159841b363b4414ea`.
+
+Explicit Owner verdict:
+
+> **"jest w dobrym kierunku"**
+
+Qualified from Owner behavior:
+
+- Workbench direct manipulation: **PASS**;
+- B0 parameter changes are human-discriminable enough to support continued exploration: **PASS, narrow**;
+- decomposition direction (envelope vs inertial burden vs locomotor authority): **POSITIVE OWNER SIGNAL**.
+
+Still unqualified:
+
+- final Feniks body model / equations;
+- traction / stance / rotation;
+- A/B human usefulness.
+
+Material closure findings:
+
+- current safety rails are too tight for real Owner exploration;
+- numeric fields can temporarily display a requested value different from the runtime-applied clamped value;
+- internal smoke probe should be visually separated from research experiments;
+- B0 panel copy can be denser/cleaner.
+
+Dense evidence:
+
+- `docs/B0_WORKBENCH_OWNER_RECORDING_FEEDBACK_2026-09-25.md`.
+
+Owner requested a solid professional stage closure after these narrow fixes, then readiness for further instructions.
+
 ### Broader refoundation frontier
 
 No later combat family is preselected.

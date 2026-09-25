@@ -360,3 +360,31 @@ Qualification:
 Therefore B0 has crossed the **apparatus/public-translation gate**.
 
 It has not crossed the human-discriminability gate.
+
+
+## 15. First direct Owner recording
+
+Exact candidate observed:
+
+`43c8a3fdf1bc12110e34c53159841b363b4414ea`
+
+Owner verdict:
+
+> "jest w dobrym kierunku"
+
+Dense video analysis qualifies:
+
+- direct Workbench use;
+- human-discriminable B0 axis changes;
+- spontaneous use of non-correlated phenotypes, including small/heavy/high-force and giant/heavy/high-force states;
+- positive direction for separating spatial envelope from inertial/load and locomotor properties.
+
+It does **not** qualify current B0 formulas as Feniks semantics.
+
+Material closure issue:
+
+- Owner explicitly entered Locomotor force 42 while the current safety rail was 8;
+- this proves the current permissive range is materially too narrow;
+- the focused numeric field can temporarily show the requested 42 while runtime already applies 8.
+
+See `B0_WORKBENCH_OWNER_RECORDING_FEEDBACK_2026-09-25.md`.

@@ -517,3 +517,30 @@ This time the public origin itself was verified to expose:
 The emitted artifact had already passed the full interaction gate before deploy.
 
 This combination is the minimum acceptable public translation evidence going forward.
+
+
+## 14. First Owner-use feedback
+
+The first 160.2 s Owner recording on the public B0 candidate provides narrow human qualification for the Workbench itself.
+
+Observed direct use includes:
+
+- parameter sliders / numbers;
+- per-parameter resets;
+- Reset World;
+- Debug;
+- experiment switching;
+- parameter slot A capture.
+
+Therefore:
+
+- direct-manipulation Workbench interaction: **OWNER-OBSERVED PASS**;
+- A/B comparison usefulness: **UNPROVEN** (only A capture observed; no complete A↔B comparison loop).
+
+The recording also exposes a material Workbench truthfulness bug:
+
+- requested out-of-rail numeric values can remain visible while runtime has clamped them.
+
+Closure requires visible numeric state to always match applied authored state.
+
+See `B0_WORKBENCH_OWNER_RECORDING_FEEDBACK_2026-09-25.md`.
