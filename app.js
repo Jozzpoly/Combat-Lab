@@ -74,6 +74,9 @@ function reset() {
   runner.reset();
   current.instance.reset();
   elapsed=0;
+  runtime.elapsed=0;
+  simTime.textContent="0.00 s";
+  simTime.dataset.elapsed="0.0000";
   last=performance.now();
   captureSnapshot();
 }
