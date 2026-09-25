@@ -1,6 +1,6 @@
 # Combat Lab vNext — Frontier Selection 2026-09-25
 
-**Status:** first vNext discovery frontier selected  
+**Status:** historical frontier-selection record; BODY / SCALE campaign executed through S0/B0 and closed  
 **Selected frontier:** BODY / SCALE  
 **Not selected as roadmap:** bow, magic, R3 follow-up remain open future fronts
 
