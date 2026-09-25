@@ -1,6 +1,6 @@
 # Combat Lab Refoundation Audit — 2026-09-25
 
-**Status:** active strategic audit; execution refoundation approved  
+**Status:** historical strategic audit; refoundation executed and superseded by current canonical state  
 **Scope:** Combat Lab as a research instrument  
 **Owner trigger:** explicit correction that Combat Lab is broader than hitting or swords; body size and many other combat families matter; a clean restart may be needed  
 **Pre-refoundation checkpoint:** `ba081120d2563f767e14cd5b61e07f6503a0627f`
