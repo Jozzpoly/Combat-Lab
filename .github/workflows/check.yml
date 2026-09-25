@@ -21,7 +21,7 @@ jobs:
             echo "No package.json on this branch; nothing to test."
           fi
 
-      - name: Browser module smoke when present
+      - name: Live browser runtime gate when present
         if: ${{ hashFiles('app.js') != '' }}
         shell: bash
         run: |
@@ -42,8 +42,4 @@ jobs:
             exit 1
           fi
 
-          "$CHROME"             --headless=new             --no-sandbox             --disable-gpu             --virtual-time-budget=1800             --dump-dom             http://127.0.0.1:4173/             > /tmp/combat-lab-dom.html
-
-          grep -q "Embodied Scale Field S0" /tmp/combat-lab-dom.html
-          grep -q "source: local" /tmp/combat-lab-dom.html
-          ! grep -q "Loading…" /tmp/combat-lab-dom.html
+          CHROME_BIN="$CHROME" node scripts/browser-live-gate.mjs http://127.0.0.1:4173/

@@ -32,12 +32,38 @@
         <span id="controls-text">—</span>
       </div>
       <div class="status">
-        <span id="run-state">RUNNING</span>
+        <span id="run-state">BOOTING</span>
         <span id="sim-time">0.00 s</span>
         <span id="build-id">source: local</span>
       </div>
     </footer>
   </main>
+  <script>
+    window.__combatLabRuntime = {
+      state: "BOOTING",
+      frames: 0,
+      error: null,
+      activeExperimentId: null,
+      snapshot: null
+    };
+
+    function markRuntimeError(reason) {
+      const runtime=window.__combatLabRuntime;
+      runtime.state="ERROR";
+      runtime.error=String(reason || "unknown runtime error");
+      document.documentElement.dataset.runtimeState="ERROR";
+      const status=document.querySelector("#run-state");
+      if (status) status.textContent="ERROR";
+    }
+
+    window.addEventListener("error",event=>{
+      markRuntimeError(event.error?.stack || event.message);
+    });
+
+    window.addEventListener("unhandledrejection",event=>{
+      markRuntimeError(event.reason?.stack || event.reason);
+    });
+  </script>
   <script type="module" src="./app.js"></script>
 </body>
 </html>

@@ -147,7 +147,14 @@ Research boundary:
 
 Do not modify body/scale semantics from this recording.
 
-First repair runtime translation and strengthen the live browser gate.
+Runtime repair is now active with a strict semantic boundary:
+
+- no BODY / SCALE experiment code is changed;
+- shell startup ordering is repaired;
+- BOOTING / RUNNING / PAUSED / ERROR is explicit;
+- browser runtime qualification now requires live frames, advancing simulation time, real Digit3 input changing S0 scale, reset restoring S0, pause/resume behavior, experiment switching, and zero captured runtime error.
+
+The repaired specimen must pass this gate before deployment.
 
 See `docs/S0_FIRST_OWNER_RECORDING_ANALYSIS_2026-09-25.md`.
 
