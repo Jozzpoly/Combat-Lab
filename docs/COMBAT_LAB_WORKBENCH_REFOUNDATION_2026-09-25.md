@@ -464,3 +464,32 @@ Status:
 > **internal Workbench checkpoint, not an Owner specimen.**
 
 Do not deploy or ask for Owner play merely because this checkpoint is green.
+
+
+## 12. B0 internal Workbench qualification
+
+The first multi-parameter client of the Workbench is **Load / Envelope Field B0**.
+
+Internal checkpoint before public rehearsal:
+
+`435660123365636458f5adf978c3ede728e095d8`
+
+The multi-parameter experiment exposed and corrected additional Workbench issues:
+
+- keyboard focus leakage from Inspector to world controls;
+- need for neutral A/B authored-parameter slots;
+- grid min-content horizontal overflow at compact desktop widths.
+
+Current Workbench gate now includes:
+
+- focus isolation;
+- direct slider + numeric editing;
+- parameter A/B capture/apply;
+- matched raw-input A/B comparison;
+- Reset World vs Restore Defaults;
+- experiment switching;
+- permissive extreme ranges;
+- 1600×1000 / extreme / 1280×800 visual rehearsal;
+- horizontal overflow audit.
+
+No Owner-facing qualification is claimed from this.

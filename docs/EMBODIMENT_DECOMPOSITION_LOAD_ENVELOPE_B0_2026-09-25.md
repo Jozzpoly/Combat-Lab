@@ -315,3 +315,27 @@ Even with a positive Owner signal, B0 cannot establish:
 Working invariant:
 
 > **Separate causes before deciding which correlations Feniks should restore.**
+
+
+## 13. Internal B0 result before public rehearsal
+
+Checkpoint:
+
+`435660123365636458f5adf978c3ede728e095d8`
+
+Machine/browser result:
+
+- 29 / 29 tests PASS;
+- live Chromium gate PASS;
+- matched no-load vs load=4 comparison preserves radius and max speed while changing total mass and acceleration;
+- matched raw-input movement separates in the expected direction;
+- envelope-only edits do not leak into mass/acceleration;
+- force-only edits do not leak into mass/envelope;
+- B0 remains finite at broad safety rails;
+- Workbench normal/extreme/compact layouts manually inspected.
+
+Interpretation:
+
+> B0 is internally coherent enough for **public rehearsal**, not yet for a human-value claim.
+
+The next evidence must first prove that the public origin actually serves and runs the intended candidate.

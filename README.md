@@ -216,3 +216,10 @@ Read these before substantial continuation:
 A failed specimen is evidence, not a foundation.
 
 Prefer a clean reset over accumulating mechanics around an unearned direction.
+
+
+## B0 public rehearsal candidate
+
+Internal candidate `435660123365636458f5adf978c3ede728e095d8` passes 29/29 checks plus live Workbench browser rehearsal.
+
+This is not yet an Owner-qualified specimen. The next gate is public-origin verification.

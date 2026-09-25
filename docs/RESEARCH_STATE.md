@@ -385,6 +385,51 @@ This experiment is currently an **internal design hypothesis only**.
 
 See `docs/EMBODIMENT_DECOMPOSITION_LOAD_ENVELOPE_B0_2026-09-25.md`.
 
+### B0 internal qualification — public rehearsal candidate
+
+Internal candidate checkpoint:
+
+- `435660123365636458f5adf978c3ede728e095d8`.
+
+Mechanism / Workbench evidence:
+
+- **29 / 29 automated checks PASS**;
+- B0 envelope is independent from mass and locomotor force;
+- carried load increases total mass without changing radius;
+- under equal force, load 0 vs load 4 yields:
+  - radius 18 / 18;
+  - total mass 1 / 5;
+  - acceleration 760 / 152;
+  - max speed 225 / 225;
+- same total mass currently treats body-vs-load distribution identically by explicit B0 boundary;
+- proportional mass + locomotor force can preserve open-space movement while retaining different contact mass;
+- directional locomotor authority is isotropic;
+- reference choke fit depends on envelope rather than mass;
+- heavier total mass yields less velocity change in matched contact;
+- extreme safety rails remain finite.
+
+Workbench / browser evidence:
+
+- Inspector keyboard focus is isolated from world input;
+- slider and numeric editing drive live authored parameters;
+- A/B parameter slots capture and restore configurations independently per experiment;
+- matched A/B raw-input run from Reset World produces materially different speed/travel for unloaded vs heavily loaded actor;
+- Reset World preserves authored parameters;
+- Restore Defaults resets authored parameters;
+- B0 <-> S0 switching PASS;
+- 1280×800 desktop Inspector has no horizontal overflow;
+- normal, extreme and compact Chromium screenshots were manually inspected.
+
+Status:
+
+- **B0 mechanism / internal apparatus: PASS**;
+- **B0 human discriminability / Feniks usefulness: UNPROVEN**;
+- **public origin freshness: not yet re-qualified**.
+
+Next step is a public rehearsal of the exact candidate, followed by public-origin verification.
+
+This is **not yet an Owner test request**.
+
 ### Broader refoundation frontier
 
 No later combat family is preselected.
