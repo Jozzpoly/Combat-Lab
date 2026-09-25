@@ -359,7 +359,8 @@ export function perturbationSweep(){
   const offsets=[-1.5,-0.75,0,0.75,1.5];
   return offsets.map(yOffset=>compareContactGhost({
     yOffset,
-    family:"sweep",
+    family:"press",
+    pressHoldSeconds:0.16,
     guideAuthority:0.48
   }));
 }
@@ -369,7 +370,8 @@ export function resetDecaySweep(){
   return seconds.map(resetSeconds=>{
     const result=compareContactGhost({
       yOffset:0,
-      family:"sweep",
+      family:"press",
+      pressHoldSeconds:0.16,
       guideAuthority:0.48,
       resetSeconds
     });
@@ -384,13 +386,89 @@ export function resetDecaySweep(){
 export function mirroredContactCheck(){
   const left=compareContactGhost({
     yOffset:-4,
-    family:"sweep",
+    family:"press",
+    pressHoldSeconds:0.16,
     guideAuthority:0.48
   });
   const right=compareContactGhost({
     yOffset:4,
-    family:"sweep",
+    family:"press",
+    pressHoldSeconds:0.16,
     guideAuthority:0.48
   });
   return {left,right};
+}
+
+
+export function runRepeatedContactSoak({
+  seconds=12,
+  guideAuthority=0.48
+}={}){
+  const state=createState();
+  const frames=Math.round(seconds/DT);
+  const halfPeriod=0.42;
+  let lastPhase=-1;
+  let maxOmega=0;
+  let maxDuration=0;
+  let engagedFrames=0;
+
+  for(let i=0;i<frames;i++){
+    const t=i*DT;
+    const phase=Math.floor(t/halfPeriod)%2;
+
+    if(phase!==lastPhase){
+      if(phase===0){
+        setGuide(state.a,0.34);
+        setGuide(state.b,Math.PI-0.34);
+        if(!state.a.tool.action) requestCommit(state.a,0.34);
+        if(!state.b.tool.action) requestCommit(state.b,Math.PI-0.34);
+      }else{
+        setGuide(state.a,0.78);
+        setGuide(state.b,Math.PI-0.78);
+        if(!state.a.tool.action) requestCommit(state.a,0.78);
+        if(!state.b.tool.action) requestCommit(state.b,Math.PI-0.78);
+      }
+      lastPhase=phase;
+    }
+
+    stepState(state,{
+      dt:DT,
+      guideAuthority,
+      contactEnabled:true
+    });
+
+    if(state.contact.engaged) engagedFrames++;
+    maxDuration=Math.max(
+      maxDuration,
+      state.contact.maxDuration
+    );
+    maxOmega=Math.max(
+      maxOmega,
+      Math.abs(state.a.tool.angularVelocity),
+      Math.abs(state.b.tool.angularVelocity)
+    );
+  }
+
+  return {
+    impacts:state.contact.impacts,
+    contactFrames:state.contact.frames,
+    engagedFrames,
+    maxDuration:Number(maxDuration.toFixed(4)),
+    maxOmega:Number(maxOmega.toFixed(4)),
+    a:snapshotActor(state.a),
+    b:snapshotActor(state.b),
+    finite:[
+      ...Object.values(snapshotActor(state.a)),
+      ...Object.values(snapshotActor(state.b))
+    ].every(Number.isFinite)
+  };
+}
+
+export function pressReference(){
+  return compareContactGhost({
+    yOffset:0,
+    family:"press",
+    pressHoldSeconds:0.16,
+    guideAuthority:0.48
+  });
 }
