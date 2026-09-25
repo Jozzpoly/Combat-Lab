@@ -23,9 +23,10 @@ export const TOOL=Object.freeze({
   commitD:8.5,
   maxAngularAccel:58,
   commitDuration:0.24,
-  restitution:0.10,
+  freshRestitution:0.10,
   friction:0.16,
-  penetrationBias:18
+  freshPenetrationBias:6,
+  sustainedPenetrationBias:0.8
 });
 
 export function createActor(id,x,y,facing,toolAngle){
@@ -244,6 +245,8 @@ export function resolveToolContact(state,dt,{enabled=true}={}){
     y:(closest.pa.y+closest.pb.y)*0.5
   };
 
+  const fresh=!c.engaged&&c.separatedFor>=0.04;
+
   const va=pointVelocity(state.a,aSeg,point);
   const vb=pointVelocity(state.b,bSeg,point);
   const rvx=vb.x-va.x;
@@ -260,9 +263,16 @@ export function resolveToolContact(state,dt,{enabled=true}={}){
   const denom=
     (raCross*raCross+rbCross*rbCross)/TOOL.inertia;
 
+  // Fresh energetic impact and sustained manifold contact are
+  // deliberately different. A persistent overlap is not treated as a new
+  // bounce every simulation step.
+  const restitution=fresh?TOOL.freshRestitution:0;
+  const penetrationBias=fresh
+    ? TOOL.freshPenetrationBias
+    : TOOL.sustainedPenetrationBias;
   const targetDelta=
-    Math.max(0,-(1+TOOL.restitution)*closing)+
-    penetration*TOOL.penetrationBias;
+    Math.max(0,-(1+restitution)*closing)+
+    Math.max(0,penetration)*penetrationBias;
   const j=denom>1e-9?targetDelta/denom:0;
 
   if(j>0){
@@ -295,7 +305,6 @@ export function resolveToolContact(state,dt,{enabled=true}={}){
     );
   }
 
-  const fresh=!c.engaged&&c.separatedFor>=0.04;
   if(fresh){
     c.impacts++;
     if(c.firstImpactTime===null) c.firstImpactTime=state.time;
