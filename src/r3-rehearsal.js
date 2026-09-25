@@ -36,15 +36,6 @@ function beginFirstInteraction(state,family){
   requestCommit(state.b,t.b);
 }
 
-function releasePress(state){
-  const a=-0.82;
-  const b=Math.PI+0.82;
-  setGuide(state.a,a);
-  setGuide(state.b,b);
-  if(!state.a.tool.action) requestCommit(state.a,a);
-  if(!state.b.tool.action) requestCommit(state.b,b);
-}
-
 function beginSecondInteraction(state){
   const aTarget=0.62;
   const bTarget=Math.PI-0.62;
@@ -66,7 +57,7 @@ function runFrames(state,frames,options){
 function runContactHistory({
   yOffset=0,
   family="sweep",
-  pressHoldSeconds=0.14,
+  pressHoldSeconds=0.08,
   guideAuthority=0.48,
   contactEnabled=true,
   maxSeconds=1.6
@@ -81,29 +72,29 @@ function runContactHistory({
   const maxFrames=Math.round(maxSeconds/DT);
 
   for(let i=0;i<maxFrames;i++){
-    if(
-      family==="press" &&
+    const releasing=
       releaseFrame!==null &&
-      i===releaseFrame
-    ){
-      releasePress(state);
-    }
+      i>=releaseFrame;
 
     stepState(state,{
       dt:DT,
       guideAuthority,
-      contactEnabled
+      contactEnabled,
+      aMoveX:releasing?-1:0,
+      bMoveX:releasing?1:0
     });
 
     if(state.contact.frames>0) sawContact=true;
 
     if(
-      family==="press" &&
+      family!=="glance" &&
       contactEnabled &&
       releaseFrame===null &&
       state.contact.engaged &&
       state.contact.currentDuration>=pressHoldSeconds
     ){
+      // Break the material relation through ordinary locomotion, not by
+      // weakening contact or entering a hidden escape state.
       releaseFrame=i+1;
     }
 
@@ -141,17 +132,15 @@ function runGhostForSchedule({
   beginFirstInteraction(state,family);
 
   for(let i=0;i<frames;i++){
-    if(
-      family==="press" &&
+    const releasing=
       releaseFrame!==null &&
-      i===releaseFrame
-    ){
-      releasePress(state);
-    }
+      i>=releaseFrame;
     stepState(state,{
       dt:DT,
       guideAuthority,
-      contactEnabled:false
+      contactEnabled:false,
+      aMoveX:releasing?-1:0,
+      bMoveX:releasing?1:0
     });
   }
   return state;
@@ -221,7 +210,7 @@ function runSecond(state,{
 export function compareContactGhost({
   yOffset=0,
   family="sweep",
-  pressHoldSeconds=0.14,
+  pressHoldSeconds=0.08,
   guideAuthority=0.48,
   interludeSeconds=0.08,
   resetSeconds=null
@@ -331,7 +320,8 @@ export function contactFamilySweep(){
       label:"brief-sweep",
       result:compareContactGhost({
         family:"sweep",
-        yOffset:0
+        yOffset:0,
+        pressHoldSeconds:0.04
       })
     },
     {
@@ -345,21 +335,21 @@ export function contactFamilySweep(){
       label:"press-short",
       result:compareContactGhost({
         family:"press",
-        pressHoldSeconds:0.06
+        pressHoldSeconds:0.08
       })
     },
     {
       label:"press-medium",
       result:compareContactGhost({
         family:"press",
-        pressHoldSeconds:0.14
+        pressHoldSeconds:0.16
       })
     },
     {
       label:"press-long",
       result:compareContactGhost({
         family:"press",
-        pressHoldSeconds:0.26
+        pressHoldSeconds:0.28
       })
     }
   ];
