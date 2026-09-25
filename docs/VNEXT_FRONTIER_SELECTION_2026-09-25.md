@@ -177,7 +177,24 @@ If body variation itself is dead or annoying, learn that before building weapon 
 
 If it is interesting, the next step can add the **smallest pressure relation** necessary to ask whether body differences alter fighting rather than merely navigation.
 
-## 4. Evidence boundary
+## 4. Machine qualification
+
+Exact pre-deploy checkpoint:
+
+- `59d214ce10c261586268e309c701036fa690db63`.
+
+Machine gate:
+
+- 10 / 10 tests PASS;
+- continuous scale derivation PASS;
+- body-envelope access discriminator PASS;
+- mass-weighted contact response PASS;
+- mixed scale/movement finite soak PASS;
+- real headless-Chromium module/runtime load PASS.
+
+Opera remained disconnected after retries. Do not treat that as experiment evidence.
+
+## 5. Evidence boundary
 
 Machine tests may qualify:
 

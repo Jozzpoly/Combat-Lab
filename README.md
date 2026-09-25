@@ -43,7 +43,7 @@ Neutral substrate checkpoint:
 There is currently:
 
 - a selected first vNext frontier: **BODY / SCALE**;
-- an active S0 body/world discovery field under implementation;
+- an S0 body/world discovery field that has passed its machine/browser gate and is ready for first Owner observation;
 - no active R4;
 - no accepted next weapon family;
 - no accepted Feniks combat architecture;

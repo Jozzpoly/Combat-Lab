@@ -65,6 +65,31 @@ This does not make body/scale the final combat foundation. It is selected becaus
 
 See `docs/VNEXT_FRONTIER_SELECTION_2026-09-25.md`.
 
+### S0 machine qualification
+
+Exact pre-deploy code checkpoint:
+
+- `59d214ce10c261586268e309c701036fa690db63`.
+
+Evidence:
+
+- **10 / 10 automated checks PASS**;
+- scale derivation is continuous and contains no class flag;
+- a small body can traverse the central opening while the large body is materially excluded under the same movement input;
+- mass-weighted body contact changes the lighter participant more than the heavier participant;
+- a long mixed scale/movement soak remains finite;
+- fixed-step runtime / registry / smoke substrate checks PASS;
+- headless Chromium served the real `index.html` + ES-module graph and replaced `Loading…` with `Embodied Scale Field S0`.
+
+Browser boundary:
+
+- Opera Browser Connector remained unavailable after repeated retries;
+- this is tooling unavailability, not S0 evidence.
+
+Human evidence remains **UNPROVEN**.
+
+The next valid evidence is a short raw Owner observation of S0.
+
 ### Broader refoundation frontier
 
 No later combat family is preselected.
