@@ -526,25 +526,56 @@ Hard boundaries before any future R3:
 - no target-script cooperation;
 - no immediate return to equivalent neutral state after contact.
 
-### Current frontier — RELATIONAL EXCHANGE OBJECT DESIGN, NO IMPLEMENTATION YET
+### RELATIONAL MANIFOLD R3 — JOINT-AFTERSTATE CAUSAL KERNEL QUALIFIED
 
-Do not open R3 code yet.
+Primary record:
 
-The next design step must first specify the smallest causal kernel that can answer:
+- [Relational Manifold R3](RELATIONAL_MANIFOLD_R3.md)
+- final evidence checkpoint: `f95b7798c40cf65460acb0a28f78069919c3ce66`;
+- deterministic suite: **10 / 10 PASS**;
+- Owner play: **NOT REQUESTED**.
 
-> **Can one material exchange leave both sides inside the same changed reality, such that identical next intents produce different realized actions for both participants because of their shared contact history?**
+Defended narrow facts:
 
-Minimum future kernel pressure:
+- a symmetric two-tool material relation can persist across many simulation steps without a bind mode;
+- ordinary locomotion can break that relation through geometry;
+- press-medium CONTACT vs matched GHOST leaves equal readiness divergence on both participants: **0.5099 / 0.5099**;
+- identical next COMMIT differs by **0.4835 rad** for both participants;
+- tiny lateral perturbations produce smooth mirrored families rather than chaotic flips;
+- independent local neutralization collapses joint tool history to ~0.0004 readiness distance / ~0.0003 next-path delta by 1.2 s;
+- six-second sustained contact remains finite with one fresh impact, no impact pumping and max angular speed ~0.666;
+- ordinary body separation breaks that long relation in ~0.158 s;
+- a one-side ordinary GUIDE perturbation produces a mirrored cross-response on the other tool (**0.0236** each direction).
 
-- two responsive bodies;
-- two material tools or one tool + support/world surface;
-- continuous contact geometry;
-- no HP/damage;
-- no AI strategy beyond bounded deterministic opposing intent;
-- no special bind state;
-- independent-reset ablation.
+Interpretation:
 
-Only after that card is frozen should implementation begin.
+> **the campaign now has mechanism evidence for a jointly owned material afterstate, not only player-local persistence.**
+
+Important boundary:
+
+- cross-contact influence is real but modest relative to own-tool handling;
+- longer maintained contact increases divergence in this simple kernel;
+- aim alone may not untangle a crossing relation while bodies remain fixed;
+- whether that is readable possibility or physics-wrestling chore is entirely unproven.
+
+### Current frontier — JOINT RELATION UNDER MINIMAL ADVERSARIAL PRESSURE, NO IMPLEMENTATION YET
+
+Do not open R4 code yet.
+
+Next design question:
+
+> **Can entering, maintaining, escaping or exploiting one shared material relation create a useful adversarial choice that ordinary movement alone does not dominate?**
+
+Before implementation, the next hypothesis card must preserve:
+
+- no HP/damage initially;
+- no bind mode or special contact input;
+- no scripted cooperation;
+- ordinary locomotion remains valid;
+- movement-only matched control;
+- local-neutral-reset ablation;
+- pressure must not simply force permanent contact;
+- shared relation must change what at least one ordinary next choice is useful for.
 
 Owner deployment remains **NO**.
 
