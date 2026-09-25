@@ -1,7 +1,7 @@
 # Combat Lab vNext — Neutral Execution Substrate
 
 **Date:** 2026-09-25  
-**Status:** design contract for refoundation  
+**Status:** implemented substrate contract; current until superseded by newer Owner evidence  
 **Authority:** subordinate to Owner evidence and `RESEARCH_STATE.md`
 
 ## 0. Purpose
