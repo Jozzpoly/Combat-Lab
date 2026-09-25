@@ -20,3 +20,30 @@ jobs:
           else
             echo "No package.json on this branch; nothing to test."
           fi
+
+      - name: Browser module smoke when present
+        if: ${{ hashFiles('index.html', 'app.js') != '' }}
+        shell: bash
+        run: |
+          python3 -m http.server 4173 > /tmp/combat-lab-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+
+          for i in {1..20}; do
+            if curl -fsS http://127.0.0.1:4173/ > /dev/null; then
+              break
+            fi
+            sleep 0.25
+          done
+
+          CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
+          if [ -z "$CHROME" ]; then
+            echo "No Chromium-family browser available on runner."
+            exit 1
+          fi
+
+          "$CHROME"             --headless=new             --no-sandbox             --disable-gpu             --virtual-time-budget=1800             --dump-dom             http://127.0.0.1:4173/             > /tmp/combat-lab-dom.html
+
+          grep -q "Embodied Scale Field S0" /tmp/combat-lab-dom.html
+          grep -q "source: local" /tmp/combat-lab-dom.html
+          ! grep -q "Loading…" /tmp/combat-lab-dom.html

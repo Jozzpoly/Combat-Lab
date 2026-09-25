@@ -1,6 +1,8 @@
 # Combat Lab
 
-Experimental laboratory for discovering combat language that may later inform **Feniks**.
+Experimental laboratory for discovering **embodied combat possibility** that may later inform **Feniks**.
+
+"Combat" here is deliberately broader than melee striking. The lab may investigate body scale and proportions, mass, reach, movement, contact, bows/projectiles, spears, axes, shields, magic, terrain, multiple actors, ranged/melee interaction and other systems whenever they change what fighting can become.
 
 Combat Lab is **not** the Feniks combat implementation. A prototype, branch or green CI run never becomes architecture by default.
 
@@ -16,7 +18,45 @@ Three lanes have already produced negative evidence:
 
 None of these is a foundation to continue.
 
-## Current phase
+## Current phase — Combat Lab vNext refoundation
+
+The active work is now **execution-substrate refoundation**, not another numbered melee experiment.
+
+Active refoundation branch:
+
+- `refoundation/combat-lab-vnext`
+
+Preserved pre-refoundation research branch:
+
+- `experiment/whole-combat-organisms-v0` frozen at `ba081120d2563f767e14cd5b61e07f6503a0627f`.
+
+The old branch remains recoverable evidence. It is **not** the foundation of vNext.
+
+Neutral substrate checkpoint:
+
+- `6f2ed95b102cba802c1701326c7b9026892a532c`;
+- fixed-step runtime, raw browser input, experiment registry, neutral canvas helpers and build provenance are implemented;
+- the only registered experiment is a non-combat smoke probe;
+- CI is green;
+- no Owner-facing combat claim is attached to this checkpoint.
+
+There is currently:
+
+- a selected first vNext frontier: **BODY / SCALE**;
+- an active S0 body/world discovery field under implementation;
+- no active R4;
+- no accepted next weapon family;
+- no accepted Feniks combat architecture;
+- no requirement that vNext reuse the R3 controller, contact solver, actor representation or runtime;
+- one early positive Owner signal from the R3 contact specimen, preserved as evidence rather than roadmap authority.
+
+The refoundation decision is deliberately asymmetric:
+
+> **keep the knowledge; reset the execution assumptions.**
+
+See [Combat Lab Refoundation Audit](docs/COMBAT_LAB_REFOUNDATION_AUDIT_2026-09-25.md), [vNext Execution Substrate](docs/COMBAT_LAB_VNEXT_EXECUTION_SUBSTRATE.md), and [vNext Frontier Selection](docs/VNEXT_FRONTIER_SELECTION_2026-09-25.md).
+
+## Preserved research history
 
 The four-corner **A/B/C/D discovery artifact remains mechanism evidence only**.
 
@@ -117,9 +157,23 @@ R3 is now **JOINT-AFTERSTATE CAUSAL-KERNEL QUALIFIED**:
 
 This remains mechanism evidence only. It does not establish good combat, useful pressure decisions or Owner-worthy feel.
 
-The next frontier is **joint relation under minimal adversarial pressure**, but no R4 implementation is active yet.
+Before opening R4, the active campaign is **R3 OWNER CONTACT SPECIMEN**: expose the already-qualified R3 causal kernel to direct human control without changing its contact law. This is an instrumentation / translation campaign, not R4. The hard boundary is **R3 kernel qualified ≠ R3 human phenomenon qualified**. Machine qualification is complete at deployed specimen `b51aad2dbc6475237b9fb22fdb0ed24b82bb6827`. First Owner observation produced an **early positive signal**: the raw phenomenon is interesting enough to keep working on, while Feniks' need for literal sword physics remains explicitly unproven. This is **not** sufficient to make R4 the automatic next campaign. Owner scope correction explicitly rejects treating the sword-contact lineage as the lab's spine. R3 is one promising donor/specimen among many possible combat families.
 
 See [Research state](docs/RESEARCH_STATE.md) for the recovery correction and evidence boundary.
+
+## Scope correction — 2026-09-25
+
+Owner correction:
+
+- Combat Lab is not primarily a "hitting" or sword-physics project;
+- character/body size itself is a major experimental variable;
+- future experiments may include bows, magic, axes, spears and other combat families;
+- the lab should investigate how body, equipment, world and action vocabulary interact, not optimize one melee kernel;
+- a substantial reset / refoundation of the lab remains a legitimate near-term option if the accumulated structure starts constraining discovery.
+
+A reset must not erase evidence. Failed and positive specimens remain historical donors even if the active implementation is rebuilt from a clean foundation.
+
+Therefore the next campaign is **not pre-committed to R4**. Before more implementation, recover the broader experiment space and decide whether R3 deserves a follow-up now, later, or only as a donor.
 
 ## Project control
 
@@ -140,6 +194,7 @@ Read these before substantial continuation:
 - [Readiness Follow-Through R2](docs/READINESS_FOLLOW_THROUGH_R2.md) — physical-overrun donor plus the K1 failure where pressure side, not inherited readiness, determined immediate follow-up.
 - [Joint Relational Afterstate Audit](docs/JOINT_RELATIONAL_AFTERSTATE_AUDIT_2026-09-25.md) — synthesis of blade, shield, body-screen and world-contact donors.
 - [Relational Manifold R3](docs/RELATIONAL_MANIFOLD_R3.md) — qualified two-tool joint-afterstate causal kernel and current evidence boundary.
+- [R3 Owner Contact Specimen](docs/R3_OWNER_CONTACT_SPECIMEN.md) — active human-observation campaign; direct control over the qualified kernel without adversarial-pressure semantics.
 - [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) — hypothesis gate, evidence boundaries, branch hygiene, deployment discipline and the meaning of short Owner commands such as “kontynuuj”.
 
 ## Deployment

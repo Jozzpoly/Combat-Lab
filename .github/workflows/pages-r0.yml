@@ -8,7 +8,7 @@ on:
       - completed
     branches:
       - main
-      - experiment/whole-combat-organisms-v0
+      - refoundation/combat-lab-vnext
   workflow_dispatch:
     inputs:
       source_ref:
@@ -59,7 +59,7 @@ jobs:
           for f in *.js; do
             if [ -f "$f" ]; then cp "$f" dist/; fi
           done
-          for d in src organisms; do
+          for d in src experiments organisms; do
             if [ -d "$d" ]; then cp -R "$d" dist/; fi
           done
           SOURCE_SHA="$(git rev-parse HEAD)"

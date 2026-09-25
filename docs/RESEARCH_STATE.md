@@ -1,12 +1,126 @@
 # Combat Lab — Research State
 
 **Authority:** current `main` research truth  
-**Status:** 2026-09-22  
-**Purpose:** discover a combat language that may later inform **Feniks**. This repository is a laboratory, not the Feniks combat implementation.
+**Status:** 2026-09-25  
+**Purpose:** discover embodied combat possibilities that may later inform **Feniks**. This repository is a laboratory, not the Feniks combat implementation.
+
+Combat Lab is intentionally broader than melee attacks or sword physics. Relevant variables include body scale/proportions, mass, locomotion, reach, weapon geometry, projectiles/bows, spears, axes, shields, magic, terrain, contact, multiple actors and the interaction between different combat families.
 
 ## Current truth
 
 There is **no accepted Feniks combat model** in this repository.
+
+## ACTIVE STATE — Combat Lab vNext execution refoundation
+
+**Decision:** proceed with a clean execution-substrate refoundation while preserving all research evidence.
+
+Active refoundation branch:
+
+- `refoundation/combat-lab-vnext`
+
+Frozen pre-refoundation branch checkpoint:
+
+- `experiment/whole-combat-organisms-v0` at `ba081120d2563f767e14cd5b61e07f6503a0627f`.
+
+Why this is necessary:
+
+- the active runtime had become an R3-specific Owner specimen rather than a neutral laboratory;
+- package/runtime naming and module ownership encoded the latest melee/contact hypothesis;
+- the branch had diverged heavily from `main` (233 commits ahead / 12 behind at the audit point);
+- historical experiments repeatedly concentrated on melee/contact/exchange despite the broader Feniks intent;
+- Owner evidence arrived too late in several campaigns relative to the amount of machine-side work.
+
+This is **not** a knowledge reset.
+
+Preserve exact SHAs, Owner observations, negative results, qualified mechanism donors, causal kernels and research protocol lessons.
+
+Do not automatically preserve current runtime structure, actor assumptions, attack abstractions, R3 solver semantics or experiment numbering.
+
+### Neutral substrate checkpoint
+
+Implementation checkpoint:
+
+- `6f2ed95b102cba802c1701326c7b9026892a532c`;
+- clean branch contains no inherited R3 runtime;
+- shared core currently owns fixed stepping, raw input capture, experiment lifecycle, canvas sizing/frame setup and build provenance;
+- `experiments/substrate-smoke.js` is intentionally a non-combat diagnostic;
+- CI PASS;
+- Pages workflow is being refit to carry the neutral `experiments/` directory and to whitelist the refoundation lane instead of the retired whole-combat lane.
+
+Evidence boundary:
+
+> **substrate plumbing can be machine-qualified; its usefulness for future combat discovery remains to be proven by the experiments it enables.**
+
+### First vNext frontier selected — BODY / SCALE
+
+The first post-refoundation discovery campaign is **EMBODIED SCALE FIELD S0**.
+
+It is intentionally a body/world field before attacks are added.
+
+Primary question:
+
+> **Can continuous changes in body scale and embodied mass create immediately perceptible differences in movement, access and contact without class flags, scripted correct routes or attack mechanics?**
+
+This does not make body/scale the final combat foundation. It is selected because actor/body assumptions have high leverage over later melee, ranged, magic, terrain and multi-actor work.
+
+See `docs/VNEXT_FRONTIER_SELECTION_2026-09-25.md`.
+
+### Broader refoundation frontier
+
+No later combat family is preselected.
+
+The next implementation after the neutral substrate must be chosen against the broader possibility map, including:
+
+- body size / envelope / mass;
+- locomotion and embodied handling;
+- shields / occupied space;
+- reach / polearms;
+- axes and materially different tool geometry;
+- bows / projectile / line-of-sight play;
+- magic that is not merely a projectile reskin;
+- terrain relations;
+- mixed modalities;
+- multiple actors / future co-op pressure;
+- persistent exchange / afterstate donors such as R3.
+
+See:
+
+- `docs/COMBAT_LAB_REFOUNDATION_AUDIT_2026-09-25.md`
+- `docs/COMBAT_LAB_VNEXT_EXECUTION_SUBSTRATE.md`
+
+
+### Owner scope correction — 2026-09-25
+
+The current R3 line must not become the project spine merely because it produced the first positive Owner signal.
+
+Owner intent is broader:
+
+> **Combat Lab is a laboratory for discovering combat as a whole embodied/systemic space, not a sword-combat project.**
+
+Important consequences:
+
+- character/body size is itself a high-value experimental dimension, not merely a balance parameter;
+- bows/projectiles, magic, axes, spears and other families are expected research territory;
+- interactions between combat modalities may matter more than optimizing any one weapon;
+- body/equipment/world relations remain first-class;
+- "combat" is not reducible to hit exchange, damage, or melee contact;
+- a clean refoundation/restart of the active implementation is acceptable if current lineage creates conceptual inertia.
+
+Restart does **not** mean discarding evidence. Preserve:
+
+- Owner FAILs;
+- qualified mechanism donors;
+- positive Owner signals;
+- exact specimen SHAs;
+- methodological lessons.
+
+But do not preserve accidental architecture, naming, branch lineage or implementation shape merely because it already exists.
+
+Current consequence:
+
+> **R4 is no longer the automatic next step.**
+
+R3 remains worth keeping and may receive a later adversarial follow-up, but the next campaign choice must be made against the broader Combat Lab possibility space.
 
 ## Whole Combat Organisms v0 — W1 checkpoint
 
@@ -558,26 +672,95 @@ Important boundary:
 - aim alone may not untangle a crossing relation while bodies remain fixed;
 - whether that is readable possibility or physics-wrestling chore is entirely unproven.
 
-### Current frontier — JOINT RELATION UNDER MINIMAL ADVERSARIAL PRESSURE, NO IMPLEMENTATION YET
+### Current frontier — R3 OWNER CONTACT SPECIMEN, BEFORE R4
 
-Do not open R4 code yet.
+The mechanically qualified R3 kernel has not yet been observed by the Owner as a human-facing phenomenon.
 
-Next design question:
+Hard boundary:
 
-> **Can entering, maintaining, escaping or exploiting one shared material relation create a useful adversarial choice that ordinary movement alone does not dominate?**
+> **R3 kernel qualified ≠ R3 human phenomenon qualified.**
 
-Before implementation, the next hypothesis card must preserve:
+The active campaign therefore pauses the previously proposed R4 pressure step and performs a smaller translation test first:
 
-- no HP/damage initially;
-- no bind mode or special contact input;
-- no scripted cooperation;
-- ordinary locomotion remains valid;
-- movement-only matched control;
-- local-neutral-reset ablation;
-- pressure must not simply force permanent contact;
-- shared relation must change what at least one ordinary next choice is useful for.
+- restore the exact qualified R3 kernel from its preserved evidence checkpoint;
+- expose one participant to direct human locomotion + GUIDE + COMMIT;
+- give the other tool a transparent, deterministic, player-independent guide rhythm so it is not a dead static wall and not an adversarial AI;
+- add only causal observability: material tool geometry, contact point, short motion traces and raw contact duration;
+- preserve manual reset and inherited physical state;
+- add no HP, damage, stamina, parry window, bind state, hidden advantage, target script or feel tuning.
 
-Owner deployment remains **NO**.
+Machine qualification may establish only:
+
+- exact kernel restoration;
+- deterministic/runtime health;
+- input plumbing;
+- deploy provenance;
+- observability plumbing.
+
+It may not establish feel, readability, useful combat choice or Feniks fit.
+
+First Owner observation is intentionally weakly instructed. A negative result such as "sticky", "invisible", "arbitrary" or "physics wrestling" is decisive product evidence even while the causal kernel remains mechanically qualified.
+
+Only after Owner evidence do we decide whether to:
+
+- repair the translation / control surface;
+- retain R3 only as a donor kernel;
+- or open minimal adversarial-pressure R4.
+
+Primary campaign record:
+
+- [R3 Owner Contact Specimen](R3_OWNER_CONTACT_SPECIMEN.md)
+
+Owner deployment is **QUALIFIED FOR OBSERVATION ONLY** at exact deployed specimen `b51aad2dbc6475237b9fb22fdb0ed24b82bb6827`.
+
+Machine evidence at that exact specimen:
+
+- R3 regression + Owner specimen suite: **15 / 15 PASS**;
+- initial state remains separated without Owner input;
+- deliberate ordinary entry can create material CONTACT;
+- ordinary locomotion can break the relation again;
+- exact Pages artifact loads its versioned ES-module graph in Chromium without missing modules, page errors or console errors;
+- Pages build checked out and deployed the exact source SHA.
+
+Browser-connector boundary:
+
+- Opera Browser Connector remained disconnected after repeated retries;
+- this is tooling unavailability, not product evidence;
+- the exact deployed Pages artifact was therefore exercised in local Chromium with routed artifact modules rather than claiming a live public-URL observation.
+
+First Owner observation is now recorded.
+
+Owner response to exact deployed specimen `b51aad2dbc6475237b9fb22fdb0ed24b82bb6827` is an **EARLY POSITIVE SIGNAL**:
+
+- the result is "already something";
+- it is "something we can work on";
+- the raw starting point is appealing;
+- whether Feniks needs this kind of sword physics remains explicitly uncertain.
+
+Therefore:
+
+> **R3 human phenomenon = interesting enough to continue researching.**
+
+This does **not** promote sword physics, R3, or any current control/contact law into Feniks combat.
+
+R3 now earns preservation and possible follow-up, but not priority by inertia.
+
+The next valid strategic question is broader:
+
+> **Which combat dimensions are currently most underexplored and most likely to reveal a qualitatively new possibility surface?**
+
+Candidates include, without implying an ordering:
+
+- body scale / body-envelope differences;
+- long reach / polearms;
+- axes and materially different weapon geometry;
+- bows / projectiles and ranged-space negotiation;
+- magic as a different action/world relation rather than a reskinned projectile;
+- shield/body/terrain relations;
+- mixed modalities and asymmetric participants;
+- R3-style shared material relation under pressure.
+
+Before implementing another lane, decide whether the current repository should continue incrementally or be refounded on a cleaner experimental substrate.
 
 ## Recovery correction — 2026-09-22
 
