@@ -9,10 +9,16 @@ import {
 export const OWNER_DT=1/120;
 
 export function createOwnerSpecimenState(){
-  return createState({
+  const state=createState({
     aAngle:0.78,
     bAngle:Math.PI-0.78
   });
+
+  // Presentation geometry only: start outside tool reach so the Owner has to
+  // enter the relation through ordinary movement / guidance.
+  state.a.x=-82;
+  state.b.x=82;
+  return state;
 }
 
 export function movementFromKeys(keys){

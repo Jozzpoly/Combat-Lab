@@ -96,6 +96,8 @@ Allowed presentation work:
 
 The second participant is deliberately not an opponent in this campaign.
 
+The specimen starts with the two tools outside contact reach, so the Owner must enter the relation through ordinary movement / guidance rather than receiving a preloaded bind.
+
 Its body is stationary and its material tool runs ordinary GUIDE toward a slow deterministic time function.
 
 This avoids two false positives:

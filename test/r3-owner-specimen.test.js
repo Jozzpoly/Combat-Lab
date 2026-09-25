@@ -59,3 +59,19 @@ test("Owner specimen COMMIT starts from current inherited state instead of canon
   assert.equal(state.a.tool.action.angle,0.36);
   assert.ok(Math.abs(state.a.tool.angle-before)<0.2);
 });
+
+
+test("Owner specimen starts outside contact and does not auto-create the relation",()=>{
+  const state=createOwnerSpecimenState();
+
+  for(let i=0;i<120;i++){
+    stepOwnerSpecimen(state,{
+      guideAngle:state.a.tool.guideAngle,
+      moveX:0,
+      moveY:0
+    });
+  }
+
+  assert.equal(state.contact.frames,0);
+  assert.equal(state.contact.engaged,false);
+});
