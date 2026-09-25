@@ -253,6 +253,12 @@ Gate: **PASS**.
 
 The next deploy is therefore a translation/runtime repair of the same S0 hypothesis, not a tuned replacement.
 
+## 4.5 Emitted-artifact browser gate
+
+Pages now runs the live browser gate **against the finished `dist/` artifact** after import versioning and provenance files are written.
+
+Deployment is blocked unless that emitted artifact itself behaves correctly.
+
 ## 5. Evidence boundary
 
 Machine tests may qualify:

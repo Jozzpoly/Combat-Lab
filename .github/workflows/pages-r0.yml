@@ -92,6 +92,33 @@ jobs:
           printf '%s\n' "$SOURCE_SHA" > dist/COMMIT.txt
           printf '%s\n' "${{ steps.source.outputs.label }}" > dist/BRANCH.txt
 
+      - name: Qualify emitted browser artifact
+        shell: bash
+        run: |
+          if [ ! -f dist/app.js ] || [ ! -f scripts/browser-live-gate.mjs ]; then
+            echo "No interactive specimen/browser gate on this source."
+            exit 0
+          fi
+
+          python3 -m http.server 4182 --directory dist > /tmp/combat-lab-dist-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+
+          for i in {1..20}; do
+            if curl -fsS http://127.0.0.1:4182/ > /dev/null; then
+              break
+            fi
+            sleep 0.25
+          done
+
+          CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
+          if [ -z "$CHROME" ]; then
+            echo "No Chromium-family browser available on runner."
+            exit 1
+          fi
+
+          CHROME_BIN="$CHROME" node scripts/browser-live-gate.mjs http://127.0.0.1:4182/
+
       - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v4

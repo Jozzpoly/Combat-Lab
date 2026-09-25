@@ -185,6 +185,21 @@ The new gate itself first caught a heartbeat/reset inconsistency and blocked pro
 
 This is the required evidence to redeploy the same S0 hypothesis for the first actual Owner body/scale observation.
 
+### Pages emitted-artifact gate
+
+The deployment pipeline now browser-qualifies the emitted `dist/` **after** SHA versioning and `COMMIT.txt` / `BRANCH.txt` generation, before artifact upload.
+
+For interactive specimens the emitted artifact must pass the same live gate:
+
+- live frame/time heartbeat;
+- real keyboard input;
+- reset;
+- pause/resume;
+- experiment switching;
+- zero captured runtime error.
+
+This closes the gap between source-tree browser qualification and the exact Pages artifact delivered to the Owner.
+
 ### Broader refoundation frontier
 
 No later combat family is preselected.
