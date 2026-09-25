@@ -430,6 +430,56 @@ Next step is a public rehearsal of the exact candidate, followed by public-origi
 
 This is **not yet an Owner test request**.
 
+### B0 exact public rehearsal — PASS
+
+Exact public candidate:
+
+- `43c8a3fdf1bc12110e34c53159841b363b4414ea`.
+
+CI / Pages:
+
+- check run `36190044122`: SUCCESS;
+- Pages run `36190077566`: SUCCESS;
+- Pages build checked out exact `43c8a3fdf1bc12110e34c53159841b363b4414ea`;
+- emitted browser-artifact gate: PASS;
+- Pages artifact ID: `10887478332`;
+- deploy: SUCCESS.
+
+Public-origin verification:
+
+- live `COMMIT.txt` returns exact `43c8a3fdf1bc12110e34c53159841b363b4414ea`;
+- live `BRANCH.txt` returns `refoundation/combat-lab-vnext`;
+- live page title: `Combat Lab vNext — Workbench`;
+- active public experiment: `Load / Envelope Field B0`;
+- public rendered Inspector includes:
+  - Body envelope;
+  - Intrinsic body mass;
+  - Carried load mass;
+  - Locomotor force;
+  - A/B parameter slots;
+  - derived and live state;
+- public runtime reports `RUNNING`, advancing simulation time and exact build identity.
+
+Verification-tool boundary:
+
+- standard web fetch could not access this GitHub Pages origin;
+- Opera remained disconnected after repeated retries;
+- narrow fallback fetch through TinyFish succeeded;
+- no metered TinyFish browser automation was used.
+
+Combined evidence:
+
+> exact public origin + exact emitted artifact + live rendered runtime now agree on the same B0 Workbench SHA.
+
+Status:
+
+- apparatus/runtime/public translation: **PASS**;
+- visual/internal Workbench quality: **PASS for current internal gate**;
+- B0 human discriminability/usefulness: **UNPROVEN**;
+- Feniks body/load semantics: **UNPROVEN**.
+
+B0 is now **Owner-observation eligible**, but no positive experiential claim is made before Owner play.
+
 ### Broader refoundation frontier
 
 No later combat family is preselected.

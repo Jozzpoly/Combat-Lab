@@ -493,3 +493,27 @@ Current Workbench gate now includes:
 - horizontal overflow audit.
 
 No Owner-facing qualification is claimed from this.
+
+
+## 13. First exact public Workbench rehearsal
+
+Exact public candidate:
+
+`43c8a3fdf1bc12110e34c53159841b363b4414ea`
+
+The public-origin rehearsal fixes the earlier process failure where a green pipeline was mistaken for proof of what the Owner actually received.
+
+This time the public origin itself was verified to expose:
+
+- the expected exact SHA;
+- the expected refoundation branch;
+- the Workbench title;
+- B0 as active experiment;
+- the Inspector parameter tree;
+- A/B state controls;
+- derived/live values;
+- RUNNING runtime with advancing simulation time.
+
+The emitted artifact had already passed the full interaction gate before deploy.
+
+This combination is the minimum acceptable public translation evidence going forward.

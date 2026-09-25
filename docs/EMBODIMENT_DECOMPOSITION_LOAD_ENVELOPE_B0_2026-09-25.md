@@ -339,3 +339,24 @@ Interpretation:
 > B0 is internally coherent enough for **public rehearsal**, not yet for a human-value claim.
 
 The next evidence must first prove that the public origin actually serves and runs the intended candidate.
+
+
+## 14. Exact public rehearsal
+
+Public candidate:
+
+`43c8a3fdf1bc12110e34c53159841b363b4414ea`
+
+Qualification:
+
+- CI PASS;
+- emitted Pages artifact interaction gate PASS;
+- deploy PASS;
+- public COMMIT / BRANCH provenance matches exact candidate;
+- public page renders B0 Workbench Inspector;
+- public runtime reports RUNNING with advancing simulation time;
+- public build identity matches exact candidate SHA.
+
+Therefore B0 has crossed the **apparatus/public-translation gate**.
+
+It has not crossed the human-discriminability gate.

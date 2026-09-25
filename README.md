@@ -222,4 +222,6 @@ Prefer a clean reset over accumulating mechanics around an unearned direction.
 
 Internal candidate `435660123365636458f5adf978c3ede728e095d8` passes 29/29 checks plus live Workbench browser rehearsal.
 
-This is not yet an Owner-qualified specimen. The next gate is public-origin verification.
+Public-origin verification now PASSes for exact candidate `43c8a3fdf1bc12110e34c53159841b363b4414ea`.
+
+The candidate is Owner-observation eligible, but B0's human value remains unproven until direct play.
