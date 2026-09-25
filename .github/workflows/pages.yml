@@ -1,0 +1,137 @@
+name: pages
+
+on:
+  workflow_run:
+    workflows:
+      - check
+    types:
+      - completed
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      source_ref:
+        description: Exact branch, tag or commit SHA to deploy
+        required: true
+        default: main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: combat-lab-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && contains(github.event.workflow_run.head_commit.message, '[deploy]')) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve explicit deploy source
+        id: source
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            SOURCE="${{ inputs.source_ref }}"
+            LABEL="${{ inputs.source_ref }}"
+          else
+            SOURCE="${{ github.event.workflow_run.head_sha }}"
+            LABEL="${{ github.event.workflow_run.head_branch }}"
+          fi
+          echo "source=$SOURCE" >> "$GITHUB_OUTPUT"
+          echo "label=$LABEL" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout exact deploy source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.source.outputs.source }}
+
+      - name: Prepare current specimen
+        shell: bash
+        run: |
+          rm -rf dist
+          mkdir dist
+          cp index.html dist/
+          if [ -f style.css ]; then cp style.css dist/; fi
+          for f in *.js; do
+            if [ -f "$f" ]; then cp "$f" dist/; fi
+          done
+          for d in src experiments; do
+            if [ -d "$d" ]; then cp -R "$d" dist/; fi
+          done
+          SOURCE_SHA="$(git rev-parse HEAD)"
+          export SOURCE_SHA
+          python - <<'PY'
+          from pathlib import Path
+          import os
+          import re
+
+          version = os.environ["SOURCE_SHA"]
+
+          index = Path("dist/index.html")
+          text = index.read_text(encoding="utf-8")
+          text = re.sub(
+              r'((?:src|href)=")([^"]+\.(?:js|css))(")',
+              lambda m: f'{m.group(1)}{m.group(2)}?v={version}{m.group(3)}',
+              text,
+          )
+          index.write_text(text, encoding="utf-8")
+
+          for path in Path("dist").rglob("*.js"):
+              text = path.read_text(encoding="utf-8")
+              text = re.sub(
+                  r'(from\s+["\'])(\.\.?/[^"\']+\.js)(["\'])',
+                  lambda m: f'{m.group(1)}{m.group(2)}?v={version}{m.group(3)}',
+                  text,
+              )
+              path.write_text(text, encoding="utf-8")
+          PY
+          printf '%s\n' "$SOURCE_SHA" > dist/COMMIT.txt
+          printf '%s\n' "${{ steps.source.outputs.label }}" > dist/BRANCH.txt
+
+      - name: Qualify emitted browser artifact
+        shell: bash
+        run: |
+          if [ ! -f dist/app.js ] || [ ! -f scripts/browser-live-gate.mjs ]; then
+            echo "No interactive specimen/browser gate on this source."
+            exit 0
+          fi
+
+          python3 -m http.server 4182 --directory dist > /tmp/combat-lab-dist-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+
+          for i in {1..20}; do
+            if curl -fsS http://127.0.0.1:4182/ > /dev/null; then
+              break
+            fi
+            sleep 0.25
+          done
+
+          CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
+          if [ -z "$CHROME" ]; then
+            echo "No Chromium-family browser available on runner."
+            exit 1
+          fi
+
+          CHROME_BIN="$CHROME" node scripts/browser-live-gate.mjs http://127.0.0.1:4182/
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./dist
+
+  deploy:
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && contains(github.event.workflow_run.head_commit.message, '[deploy]')) }}
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy explicit CI-qualified state
+        id: deployment
+        uses: actions/deploy-pages@v4
