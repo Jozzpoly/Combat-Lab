@@ -103,13 +103,21 @@ But the decisive K1 result is negative:
 
 Therefore pressure-side geometry decides the immediate follow-up before FREE/WALL readiness does. The R2 hypothesis card explicitly required stopping if K1 had no contextual history-dependent result.
 
-The subsequent **Joint Relational Afterstate Audit** is now complete.
+The subsequent **Joint Relational Afterstate Audit** led to **RELATIONAL MANIFOLD R3**.
 
-Its working conclusion is:
+R3 is now **JOINT-AFTERSTATE CAUSAL-KERNEL QUALIFIED**:
 
-> **local persistence is real, but strategic persistence may require a shared material relation jointly owned by actors / tools / world geometry, rather than a stronger local readiness variable.**
+- symmetric sustained two-tool contact exists without a bind mode;
+- press-medium CONTACT vs GHOST changes both participants' inherited readiness equally;
+- identical next COMMIT differs for both participants;
+- local neutral reset collapses that shared history;
+- sustained contact remains bounded and breaks through ordinary body movement;
+- small geometric perturbations remain smooth / mirrored;
+- ordinary intent on one side measurably propagates through contact to the other side.
 
-No R3 implementation is active yet. The next step is to define the smallest causal kernel for a shared relational manifold and its independent-reset falsifier before writing code.
+This remains mechanism evidence only. It does not establish good combat, useful pressure decisions or Owner-worthy feel.
+
+The next frontier is **joint relation under minimal adversarial pressure**, but no R4 implementation is active yet.
 
 See [Research state](docs/RESEARCH_STATE.md) for the recovery correction and evidence boundary.
 
@@ -130,7 +138,8 @@ Read these before substantial continuation:
 - [Continuous Readiness R0](docs/CONTINUOUS_READINESS_R0.md) — qualified no-auto-neutral causal kernel and evidence boundary.
 - [Readiness Under Pressure R1](docs/READINESS_UNDER_PRESSURE_R1.md) — mirrored dash-pressure failure; readiness changed contact geometry but not the pressure outcome.
 - [Readiness Follow-Through R2](docs/READINESS_FOLLOW_THROUGH_R2.md) — physical-overrun donor plus the K1 failure where pressure side, not inherited readiness, determined immediate follow-up.
-- [Joint Relational Afterstate Audit](docs/JOINT_RELATIONAL_AFTERSTATE_AUDIT_2026-09-25.md) — synthesis of blade, shield, body-screen and world-contact donors; defines the current no-code relational frontier.
+- [Joint Relational Afterstate Audit](docs/JOINT_RELATIONAL_AFTERSTATE_AUDIT_2026-09-25.md) — synthesis of blade, shield, body-screen and world-contact donors.
+- [Relational Manifold R3](docs/RELATIONAL_MANIFOLD_R3.md) — qualified two-tool joint-afterstate causal kernel and current evidence boundary.
 - [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) — hypothesis gate, evidence boundaries, branch hygiene, deployment discipline and the meaning of short Owner commands such as “kontynuuj”.
 
 ## Deployment
