@@ -32,7 +32,7 @@ Preserved pre-refoundation research branch:
 
 The old branch remains recoverable evidence. It is **not** the foundation of vNext.
 
-Final S0 Owner-observation deploy is issued only after the canonical `main` Pages run has completed, preventing deployment order from leaving the public URL on the wrong surface.
+Exact S0 public specimen is `3da498947b480c5da5a52530293afa818014b3c8`; Pages run `36172099859` succeeded and the emitted artifact identifies that exact SHA.
 
 Neutral substrate checkpoint:
 

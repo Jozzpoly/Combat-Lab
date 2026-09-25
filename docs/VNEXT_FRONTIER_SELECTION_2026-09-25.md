@@ -200,6 +200,22 @@ The initial exact-SHA S0 deploy succeeded, then `main` performed its normal auto
 
 No experiment behavior changed between those deploys.
 
+## 4.2 Final deployed gate
+
+Exact public specimen:
+
+- `3da498947b480c5da5a52530293afa818014b3c8`;
+- check `36172051949` SUCCESS;
+- Pages `36172099859` SUCCESS;
+- artifact `10880701771`;
+- emitted `COMMIT.txt` and versioned module graph match the exact specimen SHA.
+
+Public target:
+
+- `https://jozzpoly.github.io/Combat-Lab/`.
+
+No behavior was changed after machine/browser qualification.
+
 ## 5. Evidence boundary
 
 Machine tests may qualify:

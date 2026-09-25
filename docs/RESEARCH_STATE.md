@@ -98,6 +98,27 @@ The final Owner-observation deployment is intentionally re-issued from the curre
 
 This is deployment hygiene only; no S0 behavior was changed after the machine/browser qualification.
 
+### S0 deployed Owner gate
+
+Exact public observation specimen:
+
+- `3da498947b480c5da5a52530293afa818014b3c8`.
+
+Qualification:
+
+- branch check run `36172051949`: SUCCESS;
+- Pages run `36172099859`: SUCCESS;
+- Pages build checked out exact `3da498947b480c5da5a52530293afa818014b3c8`;
+- emitted artifact ID `10880701771`;
+- artifact `COMMIT.txt`: `3da498947b480c5da5a52530293afa818014b3c8`;
+- artifact `BRANCH.txt`: `refoundation/combat-lab-vnext`;
+- versioned CSS / JS module graph uses the same exact SHA;
+- public target: `https://jozzpoly.github.io/Combat-Lab/`.
+
+A redundant container-local Chromium run against the downloaded emitted artifact timed out in that container environment and is **not counted as experiment evidence**. The CI headless-Chromium gate on the actual source/module graph remains PASS.
+
+Owner feel / usefulness remains **UNPROVEN** until direct Owner observation.
+
 ### Broader refoundation frontier
 
 No later combat family is preselected.
