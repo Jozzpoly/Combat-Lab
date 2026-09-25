@@ -53,13 +53,7 @@ test("Pages deployment has one canonical workflow contract",()=>{
   assert.doesNotMatch(pages,/refoundation\/combat-lab-vnext/);
   assert.match(pages,/contains\(github\.event\.workflow_run\.head_commit\.message, '\[deploy\]'\)/);
 
-  // The legacy file may exist only while the cleanup campaign is still deleting
-  // the old GitHub file through UI. If present, it must be inert.
-  if(exists(".github/workflows/pages-r0.yml")){
-    const legacy=read(".github/workflows/pages-r0.yml");
-    assert.match(legacy,/legacy-pages-r0-disabled/);
-    assert.doesNotMatch(legacy,/deploy-pages/);
-  }
+  assert.equal(exists(".github/workflows/pages-r0.yml"),false,"legacy pages-r0 workflow must stay removed");
 });
 
 test("package identity no longer describes a temporary refoundation substrate",()=>{
