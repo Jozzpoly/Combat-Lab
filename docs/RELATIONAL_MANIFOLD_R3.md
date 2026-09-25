@@ -347,3 +347,256 @@ If R3 fails, return to the relational-afterstate audit rather than tuning contac
 ## Working invariant
 
 > **A meaningful exchange should be able to leave both sides inside the same changed reality.**
+
+
+---
+
+## 16. Final agent-side result — JOINT-AFTERSTATE CAUSAL KERNEL QUALIFIED
+
+Final evidence checkpoint:
+
+- hypothesis card: `cf4578e79cdb5c424af093554669c72772c8846c`;
+- first apparatus: `06c8d5e5c28f42fff0fc971d190a24a3fae31889`;
+- symmetric contact-normal correction: `a261431e6193c9aee5cb01c493500fda9fc0335a`;
+- ordinary locomotion release: `eb655f798629bbdc0de938010e27accaee19f035`;
+- sustained-manifold stability gate: `0de2752decbd511c0fd924980f61cc7eb933f35e`;
+- two-way ownership probe / final suite: `f95b7798c40cf65460acb0a28f78069919c3ce66`;
+- deterministic suite: **10 / 10 PASS**;
+- Owner play: **NOT REQUESTED**.
+
+### 16.1 Apparatus corrections were material
+
+The first contact solver produced a false one-side authority:
+
+- central mirrored CONTACT↔GHOST readiness:
+  - A: 3.10;
+  - B: 0.42.
+
+Cause:
+
+- exact segment intersections used a fallback normal derived from tool A.
+
+After replacing that with an episode-stable, symmetric A↔B manifold normal:
+
+- central readiness divergence became:
+  - A: **2.2298**;
+  - B: **2.2298**;
+- next-action path delta:
+  - A: **0.45 rad**;
+  - B: **0.45 rad**.
+
+This correction changed solver symmetry, not gameplay tuning.
+
+A second apparatus failure then appeared:
+
+- treating every overlap frame like a fresh impact caused short bounce-out contact;
+- after separating fresh impact from sustained contact, material segments correctly refused to pass through each other while bodies were fixed.
+
+That exposed a useful boundary:
+
+> **a material relation must be resolved through ordinary geometry / locomotion, not by weakening the contact law until tools ghost through one another.**
+
+The final rehearsal therefore breaks the relation by moving both bodies apart with ordinary locomotion, identically in CONTACT and GHOST histories.
+
+### 16.2 Press-medium reference creates joint inherited state
+
+Reference:
+
+- symmetric PRESS;
+- requested hold: 0.16 s;
+- actual contact episode: **0.275 s**;
+- one fresh impact;
+- **33 contact frames**;
+- ordinary body movement breaks the relation;
+- stable separation occurs without hidden release state.
+
+CONTACT vs matched GHOST afterstate:
+
+- readiness distance A: **0.5099**;
+- readiness distance B: **0.5099**.
+
+Identical next COMMIT:
+
+- path delta A: **0.4835 rad**;
+- path delta B: **0.4835 rad**.
+
+Therefore:
+
+> **one shared material history changes the realized next action of both participants.**
+
+This is the narrow R3 claim.
+
+### 16.3 Contact family is not one exact intersection
+
+Measured families:
+
+- brief sweep:
+  - contact ~0.1667 s;
+  - readiness 0.5801 / 0.5801;
+- glancing sweep:
+  - contact ~0.20 s;
+  - strongly asymmetric afterstate, as expected from oblique geometry;
+- press short:
+  - contact ~0.20 s;
+  - readiness 0.3028 / 0.3028;
+- press medium:
+  - contact ~0.275 s;
+  - readiness 0.5099 / 0.5099;
+- press long:
+  - contact ~0.375 s;
+  - readiness 0.6817 / 0.6817.
+
+Longer contact does increase divergence in this simple kernel, so duration remains a future confound / design pressure.
+
+Do not interpret the numeric ordering as a combat rule.
+
+### 16.4 Tiny perturbations form an interpretable family
+
+For press-medium lateral offsets from -1.5 to +1.5:
+
+- contact duration stays ~0.275 s;
+- readiness smoothly transfers between A and B;
+- next-path deltas remain ~0.44–0.49 rad;
+- sign/magnitude change is mirrored rather than chaotic.
+
+Central:
+
+- A/B readiness: 0.5099 / 0.5099;
+- A/B next-path delta: 0.4835 / 0.4835.
+
+At ±1.5:
+
+- one side moves toward ~0.477;
+- the other toward ~0.521;
+- the mirrored offset swaps those values.
+
+No microscopic-chaos artifact was observed in this diagnostic.
+
+### 16.5 Independent local reset recreates the neutral attractor
+
+Press-medium CONTACT↔GHOST tool-history under competent independent local neutralization:
+
+- 0.00 s:
+  - readiness 0.4544;
+  - next-path delta 0.4445;
+- 0.16 s:
+  - readiness 0.4156;
+  - next-path delta 0.2536;
+- 0.32 s:
+  - readiness 0.1636;
+  - next-path delta 0.0370;
+- 0.55 s:
+  - readiness 0.0339;
+  - next-path delta 0.0279;
+- 0.85 s:
+  - readiness 0.0042;
+  - next-path delta 0.0038;
+- 1.20 s:
+  - readiness **0.0004**;
+  - next-path delta **0.0003**.
+
+The decay is physical / oscillatory rather than a hidden timer.
+
+Result:
+
+> **independent local neutral attractors erase the shared tool history much faster than ordinary inherited play.**
+
+This directly connects R3 back to the Terrarium neutral-attractor diagnosis.
+
+### 16.6 Sustained contact is stable and does not pump impacts
+
+Six-second sustained PRESS soak:
+
+- one fresh impact;
+- **731** contact frames;
+- max contact duration: **6.0917 s**;
+- max tool angular speed: **0.6664**;
+- finite deterministic state;
+- no repeated impact pumping.
+
+After ordinary bodies move apart:
+
+- relation breaks;
+- stable separation takes **0.1583 s**.
+
+This rejects the narrow failure modes:
+
+- repeated impact spam;
+- contact-energy explosion;
+- hidden timed release;
+- permanently unbreakable bind under ordinary locomotion.
+
+Important boundary:
+
+> **aim/tool redirection alone may not be enough to untangle a material crossing relation when bodies remain fixed.**
+
+That is physically coherent but remains a future human-control / chore risk.
+
+### 16.7 Two-way ownership is real but modest
+
+After a sustained shared relation is established, changing ordinary GUIDE on only one side changes the other side's eventual tool state.
+
+Measured mirrored cross-response:
+
+- A intent -> B readiness change: **0.0236**;
+- B intent -> A readiness change: **0.0236**.
+
+Own-side response:
+
+- **0.1303**.
+
+Interpretation:
+
+> **the relation is genuinely coupled, but local handling authority remains stronger than cross-contact influence in this kernel.**
+
+Do not inflate the cross-contact force to make this number larger.
+
+Its product value is unproven.
+
+### 16.8 Evidence boundary
+
+R3 now qualifies:
+
+- continuous multi-frame two-tool contact without a bind mode;
+- symmetric material contact authority;
+- both tools inheriting shared contact history;
+- both identical next intents changing because of that history;
+- stable brief / medium / sustained contact families;
+- ordinary locomotion resolving the relation;
+- tiny-perturbation robustness;
+- independent local neutral reset collapsing shared tool history;
+- bounded long-duration sustained contact;
+- measurable two-way propagation of ordinary intent.
+
+R3 does **not** qualify:
+
+- fun;
+- readability;
+- intuitive control;
+- satisfying sword / shield / weapon feel;
+- useful adversarial choice;
+- damage / hit authority;
+- whether contact should occur this often;
+- whether the player should ever deliberately maintain such contact;
+- whether this belongs in Feniks.
+
+### 16.9 Promotion decision
+
+Status:
+
+> **RELATIONAL MANIFOLD R3 = JOINT-AFTERSTATE CAUSAL KERNEL QUALIFIED.**
+
+Owner eligibility:
+
+> **NO.**
+
+Next frontier:
+
+> **Can a minimal adversarial situation make entering, maintaining, escaping or exploiting a shared material relation produce a real choice that ordinary movement alone does not dominate?**
+
+Do not add HP/damage yet.
+
+Do not build a full combat organism yet.
+
+Do not add a bind UI, parry timing, stamina or scripted cooperation.
+
