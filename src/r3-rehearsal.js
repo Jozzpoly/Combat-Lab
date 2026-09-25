@@ -9,13 +9,40 @@ import {
 
 const DT=1/120;
 
-function beginFirstInteraction(state){
-  const aTarget=-0.72;
-  const bTarget=Math.PI+0.72;
-  setGuide(state.a,aTarget);
-  setGuide(state.b,bTarget);
-  requestCommit(state.a,aTarget);
-  requestCommit(state.b,bTarget);
+function firstTargets(family){
+  if(family==="press"){
+    return {
+      a:0.34,
+      b:Math.PI-0.34
+    };
+  }
+  if(family==="glance"){
+    return {
+      a:-0.52,
+      b:Math.PI+0.52
+    };
+  }
+  return {
+    a:-0.72,
+    b:Math.PI+0.72
+  };
+}
+
+function beginFirstInteraction(state,family){
+  const t=firstTargets(family);
+  setGuide(state.a,t.a);
+  setGuide(state.b,t.b);
+  requestCommit(state.a,t.a);
+  requestCommit(state.b,t.b);
+}
+
+function releasePress(state){
+  const a=-0.82;
+  const b=Math.PI+0.82;
+  setGuide(state.a,a);
+  setGuide(state.b,b);
+  if(!state.a.tool.action) requestCommit(state.a,a);
+  if(!state.b.tool.action) requestCommit(state.b,b);
 }
 
 function beginSecondInteraction(state){
@@ -38,19 +65,30 @@ function runFrames(state,frames,options){
 
 function runContactHistory({
   yOffset=0,
+  family="sweep",
+  pressHoldSeconds=0.14,
   guideAuthority=0.48,
   contactEnabled=true,
-  maxSeconds=1.2
+  maxSeconds=1.6
 }={}){
   const state=createState({yOffset});
-  beginFirstInteraction(state);
+  beginFirstInteraction(state,family);
 
   let sawContact=false;
   let sawSeparatedAfterContact=false;
   let stopFrame=null;
+  let releaseFrame=null;
   const maxFrames=Math.round(maxSeconds/DT);
 
   for(let i=0;i<maxFrames;i++){
+    if(
+      family==="press" &&
+      releaseFrame!==null &&
+      i===releaseFrame
+    ){
+      releasePress(state);
+    }
+
     stepState(state,{
       dt:DT,
       guideAuthority,
@@ -58,6 +96,17 @@ function runContactHistory({
     });
 
     if(state.contact.frames>0) sawContact=true;
+
+    if(
+      family==="press" &&
+      contactEnabled &&
+      releaseFrame===null &&
+      state.contact.engaged &&
+      state.contact.currentDuration>=pressHoldSeconds
+    ){
+      releaseFrame=i+1;
+    }
+
     if(
       sawContact &&
       !state.contact.engaged &&
@@ -67,11 +116,6 @@ function runContactHistory({
       stopFrame=i+1;
       break;
     }
-
-    if(!state.a.tool.action&&!state.b.tool.action){
-      // Keep ordinary GUIDE active after commit; do not force a reset.
-      // The loop may continue until real geometry separates.
-    }
   }
 
   if(stopFrame===null) stopFrame=maxFrames;
@@ -79,23 +123,37 @@ function runContactHistory({
   return {
     state,
     frames:stopFrame,
+    releaseFrame,
     duration:stopFrame*DT,
     sawContact,
     sawSeparatedAfterContact
   };
 }
 
-function runGhostForFrames({
+function runGhostForSchedule({
   yOffset=0,
+  family="sweep",
   guideAuthority=0.48,
-  frames
+  frames,
+  releaseFrame=null
 }){
   const state=createState({yOffset});
-  beginFirstInteraction(state);
-  runFrames(state,frames,{
-    guideAuthority,
-    contactEnabled:false
-  });
+  beginFirstInteraction(state,family);
+
+  for(let i=0;i<frames;i++){
+    if(
+      family==="press" &&
+      releaseFrame!==null &&
+      i===releaseFrame
+    ){
+      releasePress(state);
+    }
+    stepState(state,{
+      dt:DT,
+      guideAuthority,
+      contactEnabled:false
+    });
+  }
   return state;
 }
 
@@ -103,8 +161,9 @@ function neutralizeLocally(state,{
   guideAuthority=1.8,
   seconds=0.40
 }={}){
-  setGuide(state.a,-0.72);
-  setGuide(state.b,Math.PI+0.72);
+  // Matched local attractors, deliberately independent of contact history.
+  setGuide(state.a,0.78);
+  setGuide(state.b,Math.PI-0.78);
   runFrames(
     state,
     Math.round(seconds/DT),
@@ -161,23 +220,35 @@ function runSecond(state,{
 
 export function compareContactGhost({
   yOffset=0,
+  family="sweep",
+  pressHoldSeconds=0.14,
   guideAuthority=0.48,
   interludeSeconds=0.08,
-  independentReset=false
+  resetSeconds=null
 }={}){
   const contact=runContactHistory({
-    yOffset,guideAuthority,contactEnabled:true
-  });
-
-  const ghost=runGhostForFrames({
     yOffset,
+    family,
+    pressHoldSeconds,
     guideAuthority,
-    frames:contact.frames
+    contactEnabled:true
   });
 
-  if(independentReset){
-    neutralizeLocally(contact.state);
-    neutralizeLocally(ghost);
+  const ghost=runGhostForSchedule({
+    yOffset,
+    family,
+    guideAuthority,
+    frames:contact.frames,
+    releaseFrame:contact.releaseFrame
+  });
+
+  if(resetSeconds!==null){
+    neutralizeLocally(contact.state,{
+      seconds:resetSeconds
+    });
+    neutralizeLocally(ghost,{
+      seconds:resetSeconds
+    });
   }else{
     runFrames(
       contact.state,
@@ -218,8 +289,11 @@ export function compareContactGhost({
 
   return {
     yOffset,
+    family,
+    pressHoldSeconds,
     guideAuthority,
     historyDuration:Number(contact.duration.toFixed(4)),
+    releaseFrame:contact.releaseFrame,
     contact:{
       impacts:contact.state.contact.impacts,
       frames:contact.state.contact.frames,
@@ -252,42 +326,80 @@ export function compareContactGhost({
 }
 
 export function contactFamilySweep(){
-  const offsets=[-10,-4,0,4,10];
-  return offsets.map(yOffset=>compareContactGhost({
-    yOffset,
-    guideAuthority:0.48
-  }));
+  return [
+    {
+      label:"brief-sweep",
+      result:compareContactGhost({
+        family:"sweep",
+        yOffset:0
+      })
+    },
+    {
+      label:"glancing-sweep",
+      result:compareContactGhost({
+        family:"glance",
+        yOffset:10
+      })
+    },
+    {
+      label:"press-short",
+      result:compareContactGhost({
+        family:"press",
+        pressHoldSeconds:0.06
+      })
+    },
+    {
+      label:"press-medium",
+      result:compareContactGhost({
+        family:"press",
+        pressHoldSeconds:0.14
+      })
+    },
+    {
+      label:"press-long",
+      result:compareContactGhost({
+        family:"press",
+        pressHoldSeconds:0.26
+      })
+    }
+  ];
 }
 
 export function perturbationSweep(){
   const offsets=[-1.5,-0.75,0,0.75,1.5];
   return offsets.map(yOffset=>compareContactGhost({
     yOffset,
+    family:"sweep",
     guideAuthority:0.48
   }));
 }
 
-export function independentResetComparison(){
-  const inherited=compareContactGhost({
-    yOffset:0,
-    guideAuthority:0.48,
-    independentReset:false
+export function resetDecaySweep(){
+  const seconds=[0,0.16,0.32,0.55,0.85,1.20];
+  return seconds.map(resetSeconds=>{
+    const result=compareContactGhost({
+      yOffset:0,
+      family:"sweep",
+      guideAuthority:0.48,
+      resetSeconds
+    });
+    return {
+      resetSeconds,
+      distance:result.distance,
+      nextPathDelta:result.nextPathDelta
+    };
   });
-  const reset=compareContactGhost({
-    yOffset:0,
-    guideAuthority:0.48,
-    independentReset:true
-  });
-  return {inherited,reset};
 }
 
 export function mirroredContactCheck(){
   const left=compareContactGhost({
     yOffset:-4,
+    family:"sweep",
     guideAuthority:0.48
   });
   const right=compareContactGhost({
     yOffset:4,
+    family:"sweep",
     guideAuthority:0.48
   });
   return {left,right};
