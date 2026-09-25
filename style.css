@@ -520,3 +520,12 @@ canvas {
 .slot-heading > * {
   min-width: 0;
 }
+
+.parameter-slot,
+.slot-actions,
+.slot-actions > button {
+  min-width: 0;
+}
+.parameter-slot {
+  max-width: 100%;
+}
