@@ -292,6 +292,24 @@ The same rule applies to:
 
 ---
 
+## 10.1 First implementation checkpoint
+
+Checkpoint `6f2ed95b102cba802c1701326c7b9026892a532c` implements the minimum neutral shell:
+
+- fixed-step runner;
+- raw keyboard / pointer capture;
+- experiment registry;
+- canvas resize / frame helpers;
+- source provenance lookup;
+- one non-combat smoke probe;
+- automated lifecycle / stepping checks.
+
+This checkpoint intentionally contains no shared Actor, Weapon, Attack, HP, target, block or damage abstraction.
+
+CI is green.
+
+The substrate is not deployed yet and has no combat-product authority.
+
 ## 11. First frontier selection after substrate
 
 Do not automatically implement R4.

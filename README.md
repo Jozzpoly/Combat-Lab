@@ -32,6 +32,14 @@ Preserved pre-refoundation research branch:
 
 The old branch remains recoverable evidence. It is **not** the foundation of vNext.
 
+Neutral substrate checkpoint:
+
+- `6f2ed95b102cba802c1701326c7b9026892a532c`;
+- fixed-step runtime, raw browser input, experiment registry, neutral canvas helpers and build provenance are implemented;
+- the only registered experiment is a non-combat smoke probe;
+- CI is green;
+- no Owner-facing combat claim is attached to this checkpoint.
+
 There is currently:
 
 - no active R4;

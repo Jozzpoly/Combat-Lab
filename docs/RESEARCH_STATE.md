@@ -36,6 +36,21 @@ Preserve exact SHAs, Owner observations, negative results, qualified mechanism d
 
 Do not automatically preserve current runtime structure, actor assumptions, attack abstractions, R3 solver semantics or experiment numbering.
 
+### Neutral substrate checkpoint
+
+Implementation checkpoint:
+
+- `6f2ed95b102cba802c1701326c7b9026892a532c`;
+- clean branch contains no inherited R3 runtime;
+- shared core currently owns fixed stepping, raw input capture, experiment lifecycle, canvas sizing/frame setup and build provenance;
+- `experiments/substrate-smoke.js` is intentionally a non-combat diagnostic;
+- CI PASS;
+- Pages workflow is being refit to carry the neutral `experiments/` directory and to whitelist the refoundation lane instead of the retired whole-combat lane.
+
+Evidence boundary:
+
+> **substrate plumbing can be machine-qualified; its usefulness for future combat discovery remains to be proven by the experiments it enables.**
+
 ### Refoundation frontier
 
 No next combat family is preselected.
