@@ -259,6 +259,26 @@ Pages now runs the live browser gate **against the finished `dist/` artifact** a
 
 Deployment is blocked unless that emitted artifact itself behaves correctly.
 
+## 4.6 Repaired S0 final Owner gate
+
+Exact public specimen:
+
+- `f4c64e35f225b3a8d994f6ac05b5e7c02689cf6c`.
+
+Both source-tree and emitted-`dist/` live browser gates PASS.
+
+Pages run:
+
+- `36176248859` SUCCESS.
+
+Artifact:
+
+- `10881868542`.
+
+S0 experiment code is unchanged from the failed first Owner specimen.
+
+This is now eligible for a **true first Owner observation of BODY / SCALE**.
+
 ## 5. Evidence boundary
 
 Machine tests may qualify:

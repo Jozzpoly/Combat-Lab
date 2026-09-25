@@ -32,7 +32,7 @@ Preserved pre-refoundation research branch:
 
 The old branch remains recoverable evidence. It is **not** the foundation of vNext.
 
-Exact S0 public specimen was `3da498947b480c5da5a52530293afa818014b3c8`. Pages provenance was correct, but the first Owner recording showed the runtime never started. **S0 first Owner recording = product FAIL; BODY / SCALE = still unproven.**
+The first S0 public specimen `3da498947…` failed in Owner play because the runtime never started. The repaired public specimen is now `f4c64e35f225b3a8d994f6ac05b5e7c02689cf6c`; both source-tree and emitted-artifact live browser gates pass, while the S0 experiment implementation remains byte-identical. **BODY / SCALE itself is still unproven until Owner retest.**
 
 Neutral substrate checkpoint:
 

@@ -200,6 +200,32 @@ For interactive specimens the emitted artifact must pass the same live gate:
 
 This closes the gap between source-tree browser qualification and the exact Pages artifact delivered to the Owner.
 
+### Repaired S0 final Owner gate
+
+Exact public specimen:
+
+- `f4c64e35f225b3a8d994f6ac05b5e7c02689cf6c`.
+
+Qualification:
+
+- branch check run `36176211940`: SUCCESS;
+- source-tree live browser gate: PASS;
+- Pages run `36176248859`: SUCCESS;
+- Pages build checked out exact `f4c64e35f225b3a8d994f6ac05b5e7c02689cf6c`;
+- **emitted `dist/` live browser gate: PASS before upload**;
+- emitted gate observed title `Embodied Scale Field S0`, live elapsed time ~0.20 s, active experiment `embodied-scale-field-v0`, scale 1.0 and provenance `source: f4c64e35f225 · refoundation/combat-lab-vnext`;
+- the same gate exercised real Digit3 input, reset, pause/resume, experiment switching and zero captured runtime error;
+- Pages artifact ID `10881868542`;
+- deploy: SUCCESS.
+
+Preservation:
+
+- S0 experiment blob remains `d0ea720a1978fe385b0358c3b870f7cc10e335a8`, identical to the failed first Owner specimen.
+
+Therefore:
+
+> **runtime translation is re-qualified; BODY / SCALE itself remains unchanged and still awaits its first valid Owner observation.**
+
 ### Broader refoundation frontier
 
 No later combat family is preselected.

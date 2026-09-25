@@ -174,3 +174,22 @@ before and after the repair.
 Checkpoint `fd851a13d1f36776f15b513884047f5cc90ff3a5` passes the strengthened live-browser gate, including real input, reset, pause/resume and experiment switching.
 
 Therefore the next Owner observation remains a clean retest of the original S0 body/scale hypothesis.
+
+
+## 8. Final repaired observation gate
+
+The repaired public specimen is:
+
+`f4c64e35f225b3a8d994f6ac05b5e7c02689cf6c`
+
+Its exact emitted Pages `dist/` passed the strengthened live-browser gate before upload.
+
+Pages artifact:
+
+`10881868542`
+
+The gate verified live time/frames, real scale input, reset, pause/resume, experiment switching, provenance and no runtime error.
+
+The S0 experiment blob is still byte-identical to the failed first recording specimen.
+
+This closes the apparatus failure only. It does not add any positive BODY / SCALE Owner evidence.
