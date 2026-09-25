@@ -1,7 +1,7 @@
 # Combat Lab vNext — Workbench Refoundation
 
 **Date:** 2026-09-25  
-**Status:** active design authority before further gameplay experiments  
+**Status:** implemented Workbench design record; closure-qualified for current research use  
 **Owner trigger:** positive S0 body/world evidence followed by rejection of the rushed shortcut-driven S1 handoff  
 **Active implementation baseline:** `3e9648fe77c49994c49b60722aa9b2d550124d58`
 
