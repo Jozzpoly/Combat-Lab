@@ -20,6 +20,10 @@ None of these is a foundation to continue.
 
 ## Current phase — Combat Lab Workbench refoundation
 
+Current internal Workbench checkpoint: `c92e20b032aad50a74512b12b0d5f83dac39cf09`.
+
+It is intentionally **not deployed for Owner testing yet**.
+
 The active work is now **execution-substrate refoundation**, not another numbered melee experiment.
 
 Active refoundation branch:

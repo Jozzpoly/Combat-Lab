@@ -429,3 +429,38 @@ Only then decide whether an Owner observation is worth requesting.
 ## Working invariant
 
 > **The next discovery should come from manipulating the phenomenon, not from deciphering the apparatus.**
+
+
+## 11. W1/W2 internal qualification
+
+Checkpoint:
+
+`c92e20b032aad50a74512b12b0d5f83dac39cf09`
+
+Implemented:
+
+- coherent desktop viewport + Inspector layout;
+- optional-debug clean viewport;
+- data-driven numeric parameter control;
+- live slider and numeric entry;
+- anchors and per-parameter reset;
+- separate world reset / parameter-default reset;
+- read-only derived and live sections;
+- wide permissive safety rails with soft-range EXTREME indication;
+- S0 migration only.
+
+Validation:
+
+- 14 / 14 automated checks PASS;
+- live Chromium interaction gate PASS;
+- extreme 0.05 / 8.0 world soak finite;
+- visual rehearsal inspected at 1600×1000;
+- visual extreme rehearsal inspected at scale 4.5;
+- compact 1280×800 rehearsal inspected;
+- desktop double-scroll debt corrected.
+
+Status:
+
+> **internal Workbench checkpoint, not an Owner specimen.**
+
+Do not deploy or ask for Owner play merely because this checkpoint is green.

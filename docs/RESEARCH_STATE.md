@@ -296,6 +296,70 @@ The immediate implementation target is now **Combat Lab Workbench**, not another
 
 See `docs/COMBAT_LAB_WORKBENCH_REFOUNDATION_2026-09-25.md`.
 
+### Workbench W1/W2 internal checkpoint — NO DEPLOY
+
+Current internal checkpoint:
+
+- `c92e20b032aad50a74512b12b0d5f83dac39cf09`.
+
+What now exists:
+
+- persistent desktop Workbench shell;
+- large experiment viewport;
+- experiment selector;
+- right-side Lab Inspector;
+- generic experiment-authored numeric control rendering;
+- direct slider + numeric editing;
+- anchor buttons;
+- per-parameter reset;
+- separate `Reset World` and `Restore Defaults`;
+- derived/read-only values separated from authored parameters;
+- live state section;
+- optional debug overlay;
+- provenance/session drawer;
+- soft-range vs wide safety-rail behavior;
+- explicit EXTREME state that allows rather than rejects out-of-soft-range values.
+
+S0 is the only research phenomenon migrated into the Inspector.
+
+Its scale safety rails are now deliberately broad:
+
+- `0.05 .. 8.0`;
+
+while the convenient soft range remains:
+
+- `0.40 .. 2.00`.
+
+This broadening is an authoring/discovery affordance, not a new Feniks body-model claim.
+
+Internal qualification:
+
+- **14 / 14 automated checks PASS**;
+- real Chromium Workbench gate PASS;
+- slider changes live S0 state;
+- numeric entry changes live S0 state;
+- Reset World restores world position while preserving authored scale;
+- Restore Defaults restores authored scale;
+- pause/resume PASS;
+- experiment switching PASS;
+- safety-rail scale 0.05 and 8.0 remain finite under long world movement;
+- source screenshots inspected at 1600×1000, extreme scale 4.5 and compact desktop 1280×800;
+- compact desktop layout uses one Inspector scroll rather than page + Inspector double scroll.
+
+Evidence boundary:
+
+> **Workbench interaction substrate: internally qualified enough to continue development.**
+
+Not qualified:
+
+- public deployment freshness;
+- final visual design;
+- future body parameter decomposition;
+- any S1 gameplay claim;
+- Owner-ready status.
+
+**NO DEPLOY / NO OWNER TEST requested at this checkpoint.**
+
 ### Broader refoundation frontier
 
 No later combat family is preselected.
