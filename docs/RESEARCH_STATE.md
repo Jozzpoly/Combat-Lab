@@ -477,25 +477,74 @@ Later GUIDE diagnostics do not rescue the result:
 
 Do not tune GUIDE or rusher constants around the 0.18 cell.
 
-### Active frontier — JOINT RELATIONAL AFTERSTATE AUDIT
+### Joint relational afterstate audit — SYNTHESIS COMPLETE
 
-R0 showed that isolated player-tool readiness can persist.
+Primary record:
 
-R1 and R2 showed that persistence alone is not enough to become strategically decisive under a simple independent opponent.
+- [Joint Relational Afterstate Audit](JOINT_RELATIONAL_AFTERSTATE_AUDIT_2026-09-25.md)
+- synthesis commit: `4ec6c1afbc95e26a5a98e208bdb8fbc3477a124f`.
 
-New highest-value question:
+Cross-donor result:
 
-> **What afterstate can be jointly owned by both actors / weapon / place, so neither side can unilaterally reset the relation through ordinary movement or aim?**
+> **local persistence is real, but strategic persistence likely requires a shared material relation rather than a stronger local readiness variable.**
 
-Before implementation:
+Re-audited donors:
 
-- audit prior blade-clash / shield-contact / body-screen / wall-contact donors;
-- identify which relations were genuinely mutual vs merely local impulses;
-- separate sustained geometric constraint from binary parry/bind minigames;
-- ask how a shared relation can still preserve direct, responsive control;
-- test whether terrain or a second body can make the relation persist without timers/tokens.
+- Terrarium blade↔blade contact:
+  - genuinely mutual segment/contact geometry;
+  - both weapon velocities and both bodies changed;
+  - but each controller independently restored its own neutral target after separation.
+- Terrarium weapon↔wall:
+  - world co-owned the constraint while contact persisted;
+  - after separation the weapon returned to local control semantics.
+- O1 shield↔body:
+  - persistent occupied directional geometry with real yield/displacement;
+  - but the relation remained mostly defender-owned and attacker state returned to its own lifecycle.
+- A2b first-solid-body authority:
+  - strongest multi-actor relational donor;
+  - another body can genuinely consume a committed action even with zero friendly damage;
+  - but ordinary compact offense later removed the relation faster than it could matter.
+- ordinary body↔body:
+  - symmetric physical causality;
+  - weak next-decision persistence.
 
-Do not open R3 code until this audit exists.
+Current missing property:
+
+> **a relational manifold: a material configuration jointly determined by multiple participants / tools / world geometry that changes all participants' next useful possibilities and leaves consequential afterstate when the relation breaks.**
+
+This is **not** a sword-lock / bind minigame proposal.
+
+Hard boundaries before any future R3:
+
+- no bind mode;
+- no hidden vulnerability token;
+- no one-side aim reset;
+- no static infinite-mass wall;
+- no physics-wrestling chore;
+- no passive block bubble;
+- no terrain-puzzle dependency;
+- no target-script cooperation;
+- no immediate return to equivalent neutral state after contact.
+
+### Current frontier — RELATIONAL EXCHANGE OBJECT DESIGN, NO IMPLEMENTATION YET
+
+Do not open R3 code yet.
+
+The next design step must first specify the smallest causal kernel that can answer:
+
+> **Can one material exchange leave both sides inside the same changed reality, such that identical next intents produce different realized actions for both participants because of their shared contact history?**
+
+Minimum future kernel pressure:
+
+- two responsive bodies;
+- two material tools or one tool + support/world surface;
+- continuous contact geometry;
+- no HP/damage;
+- no AI strategy beyond bounded deterministic opposing intent;
+- no special bind state;
+- independent-reset ablation.
+
+Only after that card is frozen should implementation begin.
 
 Owner deployment remains **NO**.
 
