@@ -157,12 +157,24 @@ try{
   await setNumber("bodyMass",1.00);
   await setNumber("loadMass",0.00);
   await setNumber("forceMultiplier",1.00);
+
+  await waitFor("A parameter state propagated to runtime snapshot",async()=>{
+    const p=await evaluate("window.__combatLabRuntime.snapshot.player");
+    return Math.abs(p.envelope-1)<1e-9 &&
+      Math.abs(p.bodyMass-1)<1e-9 &&
+      Math.abs(p.loadMass-0)<1e-9 &&
+      Math.abs(p.forceMultiplier-1)<1e-9;
+  });
   await evaluate('document.querySelector("#capture-a").click()');
 
   const a=await evaluate("window.__combatLabRuntime.snapshot.player");
 
   // B = same actor/force, heavy load only.
   await setNumber("loadMass",4.00);
+  await waitFor("heavy load propagated to runtime snapshot",async()=>{
+    const p=await evaluate("window.__combatLabRuntime.snapshot.player");
+    return Math.abs(p.loadMass-4)<1e-9 && Math.abs(p.totalMass-5)<1e-9;
+  });
   await evaluate('document.querySelector("#capture-b").click()');
 
   const b=await evaluate("window.__combatLabRuntime.snapshot.player");
@@ -207,6 +219,10 @@ try{
   // Orthogonality in real browser.
   const baseline=await evaluate("window.__combatLabRuntime.snapshot.player");
   await setNumber("envelope",1.70);
+  await waitFor("envelope edit propagated",async()=>{
+    const p=await evaluate("window.__combatLabRuntime.snapshot.player");
+    return Math.abs(p.envelope-1.70)<1e-9;
+  });
   const large=await evaluate("window.__combatLabRuntime.snapshot.player");
   if(!(large.r>baseline.r)) throw new Error("envelope did not change radius");
   if(Math.abs(large.totalMass-baseline.totalMass)>1e-9) throw new Error("envelope leaked into mass");
@@ -214,6 +230,10 @@ try{
 
   await setNumber("envelope",1.00);
   await setNumber("forceMultiplier",2.00);
+  await waitFor("force edit propagated",async()=>{
+    const p=await evaluate("window.__combatLabRuntime.snapshot.player");
+    return Math.abs(p.envelope-1)<1e-9 && Math.abs(p.forceMultiplier-2)<1e-9;
+  });
   const strong=await evaluate("window.__combatLabRuntime.snapshot.player");
   if(!(strong.acceleration>baseline.acceleration)) throw new Error("force did not change acceleration");
   if(Math.abs(strong.totalMass-baseline.totalMass)>1e-9) throw new Error("force leaked into mass");
