@@ -54,6 +54,7 @@ function loadExperiment(id) {
   controlsText.textContent=current.definition.controls;
   runner.reset();
   elapsed=0;
+  runtime.elapsed=0;
   last=performance.now();
   captureSnapshot();
 }
