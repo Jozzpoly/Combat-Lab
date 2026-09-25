@@ -4,6 +4,7 @@ import {BrowserInput} from "./src/core/browser-input.js";
 import {resizeCanvas,beginCanvasFrame} from "./src/core/canvas.js";
 import {readBuildIdentity} from "./src/core/provenance.js";
 import {substrateSmoke} from "./experiments/substrate-smoke.js";
+import {embodiedScaleFieldV0} from "./experiments/embodied-scale-field-v0.js";
 
 const canvas=document.querySelector("#lab");
 const ctx=canvas.getContext("2d");
@@ -13,21 +14,41 @@ const controlsText=document.querySelector("#controls-text");
 const runState=document.querySelector("#run-state");
 const simTime=document.querySelector("#sim-time");
 const buildId=document.querySelector("#build-id");
+const experimentSelect=document.querySelector("#experiment-select");
 const pauseButton=document.querySelector("#pause");
 const resetButton=document.querySelector("#reset");
 const debugButton=document.querySelector("#debug");
 
 const registry=new ExperimentRegistry();
 registry.register(substrateSmoke);
+registry.register(embodiedScaleFieldV0);
 
-const {definition,instance}=registry.create("substrate-smoke");
 const runner=new FixedStepRunner({dt:1/120,maxFrame:0.05,maxAccum:0.10});
 const input=new BrowserInput({pointerTarget:canvas});
 input.attach();
 
-title.textContent=definition.title;
-purpose.textContent=definition.purpose;
-controlsText.textContent=definition.controls;
+for (const item of registry.list()) {
+  const option=document.createElement("option");
+  option.value=item.id;
+  option.textContent=item.title;
+  experimentSelect.append(option);
+}
+
+let current=null;
+
+function loadExperiment(id) {
+  current=registry.create(id);
+  title.textContent=current.definition.title;
+  purpose.textContent=current.definition.purpose;
+  controlsText.textContent=current.definition.controls;
+  runner.reset();
+  elapsed=0;
+  last=performance.now();
+}
+
+experimentSelect.value="embodied-scale-field-v0";
+loadExperiment(experimentSelect.value);
+experimentSelect.addEventListener("change",()=>loadExperiment(experimentSelect.value));
 
 let paused=false;
 let debug=false;
@@ -36,7 +57,7 @@ let last=performance.now();
 
 function reset() {
   runner.reset();
-  instance.reset();
+  current.instance.reset();
   elapsed=0;
   last=performance.now();
 }
@@ -64,14 +85,14 @@ function frame(now) {
   if (!paused) {
     const snapshot=input.snapshot();
     runner.advance(frameSeconds,dt=>{
-      instance.step(snapshot,dt);
+      current.instance.step(snapshot,dt);
       elapsed+=dt;
     });
   }
 
   const view=resizeCanvas(canvas);
   beginCanvasFrame(ctx,view);
-  instance.render(ctx,view,{debug});
+  current.instance.render(ctx,view,{debug});
   simTime.textContent=`${elapsed.toFixed(2)} s`;
 
   requestAnimationFrame(frame);

@@ -51,9 +51,23 @@ Evidence boundary:
 
 > **substrate plumbing can be machine-qualified; its usefulness for future combat discovery remains to be proven by the experiments it enables.**
 
-### Refoundation frontier
+### First vNext frontier selected — BODY / SCALE
 
-No next combat family is preselected.
+The first post-refoundation discovery campaign is **EMBODIED SCALE FIELD S0**.
+
+It is intentionally a body/world field before attacks are added.
+
+Primary question:
+
+> **Can continuous changes in body scale and embodied mass create immediately perceptible differences in movement, access and contact without class flags, scripted correct routes or attack mechanics?**
+
+This does not make body/scale the final combat foundation. It is selected because actor/body assumptions have high leverage over later melee, ranged, magic, terrain and multi-actor work.
+
+See `docs/VNEXT_FRONTIER_SELECTION_2026-09-25.md`.
+
+### Broader refoundation frontier
+
+No later combat family is preselected.
 
 The next implementation after the neutral substrate must be chosen against the broader possibility map, including:
 

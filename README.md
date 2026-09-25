@@ -42,6 +42,8 @@ Neutral substrate checkpoint:
 
 There is currently:
 
+- a selected first vNext frontier: **BODY / SCALE**;
+- an active S0 body/world discovery field under implementation;
 - no active R4;
 - no accepted next weapon family;
 - no accepted Feniks combat architecture;
@@ -52,7 +54,7 @@ The refoundation decision is deliberately asymmetric:
 
 > **keep the knowledge; reset the execution assumptions.**
 
-See [Combat Lab Refoundation Audit](docs/COMBAT_LAB_REFOUNDATION_AUDIT_2026-09-25.md) and [vNext Execution Substrate](docs/COMBAT_LAB_VNEXT_EXECUTION_SUBSTRATE.md).
+See [Combat Lab Refoundation Audit](docs/COMBAT_LAB_REFOUNDATION_AUDIT_2026-09-25.md), [vNext Execution Substrate](docs/COMBAT_LAB_VNEXT_EXECUTION_SUBSTRATE.md), and [vNext Frontier Selection](docs/VNEXT_FRONTIER_SELECTION_2026-09-25.md).
 
 ## Preserved research history
 
