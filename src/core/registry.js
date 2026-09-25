@@ -14,7 +14,9 @@ export class ExperimentRegistry {
   }
 
   list() {
-    return [...this.definitions.values()].map(({id,title,purpose="",controls=""})=>({id,title,purpose,controls}));
+    return [...this.definitions.values()].map(({id,title,purpose="",controls="",kind="research"})=>({
+      id,title,purpose,controls,kind
+    }));
   }
 
   create(id, context={}) {

@@ -152,6 +152,34 @@ try{
     })()`);
   }
 
+  // Owner recording regression: force=42 must be accepted and displayed truthfully.
+  await setNumber("forceMultiplier",42);
+  await waitFor("Owner force 42 remains applied and visible",async()=>{
+    return evaluate(`(()=>{
+      const p=window.__combatLabRuntime.snapshot.player;
+      const field=document.querySelector('[data-param-id="forceMultiplier"] .parameter-number');
+      const extreme=document.querySelector('[data-param-id="forceMultiplier"] .extreme-badge');
+      const safety=document.querySelector('[data-param-id="forceMultiplier"] .safety-badge');
+      return Math.abs(p.forceMultiplier-42)<1e-9 &&
+        Math.abs(Number(field.value)-42)<1e-9 &&
+        !extreme.hidden &&
+        safety.hidden;
+    })()`);
+  });
+
+  // A request beyond the real numerical safety rail must immediately show applied truth.
+  await setNumber("forceMultiplier",9999);
+  await waitFor("safety clamp is immediate and truthful",async()=>{
+    return evaluate(`(()=>{
+      const p=window.__combatLabRuntime.snapshot.player;
+      const field=document.querySelector('[data-param-id="forceMultiplier"] .parameter-number');
+      const safety=document.querySelector('[data-param-id="forceMultiplier"] .safety-badge');
+      return Math.abs(p.forceMultiplier-100)<1e-9 &&
+        Math.abs(Number(field.value)-100)<1e-9 &&
+        !safety.hidden;
+    })()`);
+  });
+
   // A = same actor, no load.
   await setNumber("envelope",1.00);
   await setNumber("bodyMass",1.00);
@@ -270,6 +298,19 @@ try{
 
   await evaluate('document.querySelector("#restore-defaults").click()');
 
+  const selectorGroups=await evaluate(`[...document.querySelectorAll("#experiment-select optgroup")].map(g=>({
+    label:g.label,
+    values:[...g.querySelectorAll("option")].map(o=>o.value)
+  }))`);
+  const researchGroup=selectorGroups.find(g=>g.label==="Research experiments");
+  const diagnosticGroup=selectorGroups.find(g=>g.label==="Internal diagnostics");
+  if(!researchGroup?.values.includes("load-envelope-field-b0") || !researchGroup?.values.includes("embodied-scale-field-v0")){
+    throw new Error(`research experiment grouping failed: ${JSON.stringify(selectorGroups)}`);
+  }
+  if(!diagnosticGroup?.values.includes("substrate-smoke")){
+    throw new Error(`diagnostic experiment grouping failed: ${JSON.stringify(selectorGroups)}`);
+  }
+
   // Experiment switching must keep both B0 and S0 valid.
   await evaluate(`(()=>{
     const s=document.querySelector("#experiment-select");
@@ -293,16 +334,20 @@ try{
   await setNumber("loadMass",4.00);
   await captureScreenshot();
 
-  // Deliberately absurd but finite phenotype.
-  await setNumber("envelope",3.50);
-  await setNumber("bodyMass",0.10);
-  await setNumber("loadMass",20.00);
-  await setNumber("forceMultiplier",4.00);
-  await waitFor("extreme B0 state",async()=>{
+  // Owner-derived extreme phenotype: wider than the old rails, still finite and explicitly allowed.
+  await setNumber("envelope",4.50);
+  await setNumber("bodyMass",20.00);
+  await setNumber("loadMass",4.00);
+  await setNumber("forceMultiplier",42.00);
+  await waitFor("Owner-derived extreme B0 state",async()=>{
     return evaluate(`(()=>{
       const p=window.__combatLabRuntime.snapshot.player;
       const badges=[...document.querySelectorAll(".extreme-badge")].filter(x=>!x.hidden);
-      return Math.abs(p.envelope-3.5)<1e-9 && Math.abs(p.loadMass-20)<1e-9 && badges.length>=2;
+      return Math.abs(p.envelope-4.5)<1e-9 &&
+        Math.abs(p.bodyMass-20)<1e-9 &&
+        Math.abs(p.loadMass-4)<1e-9 &&
+        Math.abs(p.forceMultiplier-42)<1e-9 &&
+        badges.length>=3;
     })()`);
   });
   await captureScreenshot(extremeScreenshotPath);

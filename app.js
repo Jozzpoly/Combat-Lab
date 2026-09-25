@@ -116,11 +116,27 @@ function loadExperiment(id){
   updateParameterSlots();
 }
 
-for(const item of registry.list()){
-  const option=document.createElement("option");
-  option.value=item.id;
-  option.textContent=item.title;
-  experimentSelect.append(option);
+const experimentGroups=[
+  {kind:"research",label:"Research experiments"},
+  {kind:"diagnostic",label:"Internal diagnostics"}
+];
+
+const experimentItems=registry.list();
+for(const group of experimentGroups){
+  const items=experimentItems.filter(item=>item.kind===group.kind);
+  if(items.length===0) continue;
+
+  const optgroup=document.createElement("optgroup");
+  optgroup.label=group.label;
+
+  for(const item of items){
+    const option=document.createElement("option");
+    option.value=item.id;
+    option.textContent=item.title;
+    optgroup.append(option);
+  }
+
+  experimentSelect.append(optgroup);
 }
 
 experimentSelect.value="load-envelope-field-b0";

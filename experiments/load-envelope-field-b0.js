@@ -4,10 +4,10 @@ const BASE_FORCE=760;
 const MAX_SPEED=225;
 
 const RAILS={
-  envelope:{softMin:0.50,softMax:2.00,hardMin:0.15,hardMax:4.50,step:0.01},
-  bodyMass:{softMin:0.50,softMax:2.00,hardMin:0.05,hardMax:20.00,step:0.05},
-  loadMass:{softMin:0.00,softMax:4.00,hardMin:0.00,hardMax:40.00,step:0.05},
-  forceMultiplier:{softMin:0.50,softMax:2.00,hardMin:0.05,hardMax:8.00,step:0.05}
+  envelope:{softMin:0.50,softMax:2.00,hardMin:0.05,hardMax:12.00,step:0.01},
+  bodyMass:{softMin:0.50,softMax:2.00,hardMin:0.01,hardMax:200.00,step:0.05},
+  loadMass:{softMin:0.00,softMax:4.00,hardMin:0.00,hardMax:200.00,step:0.05},
+  forceMultiplier:{softMin:0.50,softMax:2.00,hardMin:0.01,hardMax:100.00,step:0.05}
 };
 
 const OBSTACLES=[
@@ -284,6 +284,7 @@ function drawBody(ctx,t,body,fill,stroke){
 export const loadEnvelopeFieldB0={
   id:"load-envelope-field-b0",
   title:"Load / Envelope Field B0",
+  kind:"research",
   purpose:"Separate occupied body envelope, intrinsic mass, carried load and locomotor force before adding stance, traction or combat actions.",
   controls:"Parameters: Lab Inspector · A/B slots compare authored configurations",
 
@@ -296,11 +297,11 @@ export const loadEnvelopeFieldB0={
           {
             id:"geometry",
             label:"Body geometry",
-            description:"Occupied space only. B0 deliberately does not derive mass from envelope.",
+            description:"Occupied space only; independent from mass and locomotor force in B0.",
             controls:[
               {
                 id:"envelope",type:"number",label:"Body envelope",
-                description:"Changes current circular body radius and clearance without changing mass or locomotor force.",
+                description:"Radius / clearance only. Does not change mass or locomotor force.",
                 default:1,...RAILS.envelope,decimals:2,
                 anchors:[
                   {label:"Small",value:0.65},
@@ -313,11 +314,11 @@ export const loadEnvelopeFieldB0={
           {
             id:"mass",
             label:"Mass & load",
-            description:"Intrinsic body mass and carried load add into total inertial mass. They do not change body envelope in B0.",
+            description:"Body mass + carried load form total inertia; neither changes envelope.",
             controls:[
               {
                 id:"bodyMass",type:"number",label:"Intrinsic body mass",
-                description:"Actor mass before carried equipment/load.",
+                description:"Actor mass before equipment / carried load.",
                 default:1,...RAILS.bodyMass,decimals:2,
                 anchors:[
                   {label:"0.5×",value:0.50},
@@ -327,7 +328,7 @@ export const loadEnvelopeFieldB0={
               },
               {
                 id:"loadMass",type:"number",label:"Carried load mass",
-                description:"Firmly carried/worn load. Adds inertia without enlarging the current body-envelope placeholder.",
+                description:"Worn / carried mass. Adds inertia without enlarging the current envelope.",
                 default:0,...RAILS.loadMass,decimals:2,
                 anchors:[
                   {label:"None",value:0},
@@ -341,11 +342,11 @@ export const loadEnvelopeFieldB0={
           {
             id:"locomotion",
             label:"Locomotion",
-            description:"B0 uses force-limited velocity change. Max speed stays fixed so load does not silently alter two locomotor dimensions at once.",
+            description:"Force-limited acceleration / braking. Max speed stays fixed in B0.",
             controls:[
               {
                 id:"forceMultiplier",type:"number",label:"Locomotor force",
-                description:"Normalized actuator force available for accelerating, braking and redirecting velocity.",
+                description:"Actuator force for accelerating, braking and redirecting velocity.",
                 unit:"×",default:1,...RAILS.forceMultiplier,decimals:2,
                 anchors:[
                   {label:"0.5×",value:0.50},

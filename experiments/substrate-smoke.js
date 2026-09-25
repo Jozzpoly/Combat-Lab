@@ -7,6 +7,7 @@ function has(input,code) {
 export const substrateSmoke = {
   id:"substrate-smoke",
   title:"Substrate smoke probe",
+  kind:"diagnostic",
   purpose:"Exercises raw input, fixed stepping, reset, rendering and debug plumbing without defining combat semantics.",
   controls:"WASD / arrows move the probe · pointer is observed · Reset returns to center",
 

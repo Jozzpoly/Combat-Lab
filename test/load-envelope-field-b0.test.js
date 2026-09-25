@@ -118,12 +118,12 @@ test("B0 Workbench reset preserves all authored parameters",()=>{
   assert.equal(p.x,165);
 });
 
-test("B0 extreme safety rails remain finite during long mixed movement",()=>{
+test("B0 widened safety rails remain finite during long mixed movement",()=>{
   const instance=loadEnvelopeFieldB0.create();
-  instance.inspector.set("envelope",4.5);
-  instance.inspector.set("bodyMass",0.05);
-  instance.inspector.set("loadMass",40);
-  instance.inspector.set("forceMultiplier",8);
+  instance.inspector.set("envelope",12);
+  instance.inspector.set("bodyMass",0.01);
+  instance.inspector.set("loadMass",200);
+  instance.inspector.set("forceMultiplier",100);
 
   for(let i=0;i<5000;i++){
     const keys=[];
@@ -181,4 +181,33 @@ test("vector locomotor authority is directionally isotropic",()=>{
   const cardinalSpeed=Math.hypot(cardinal.player.vx,cardinal.player.vy);
   const diagonalSpeed=Math.hypot(diagonal.player.vx,diagonal.player.vy);
   assert.ok(Math.abs(cardinalSpeed-diagonalSpeed)<1e-9);
+});
+
+
+test("Owner-observed locomotor force 42 is legal rather than silently reduced",()=>{
+  const d=deriveEmbodiment({
+    envelope:1,
+    bodyMass:20,
+    loadMass:4,
+    forceMultiplier:42
+  });
+
+  assert.equal(d.forceMultiplier,42);
+  assert.equal(d.totalMass,24);
+  assert.ok(Number.isFinite(d.acceleration));
+});
+
+test("B0 still applies explicit numerical safety rails beyond the widened research range",()=>{
+  const d=deriveEmbodiment({
+    envelope:999,
+    bodyMass:9999,
+    loadMass:9999,
+    forceMultiplier:9999
+  });
+
+  assert.equal(d.envelope,12);
+  assert.equal(d.bodyMass,200);
+  assert.equal(d.loadMass,200);
+  assert.equal(d.forceMultiplier,100);
+  assert.ok(Number.isFinite(d.acceleration));
 });

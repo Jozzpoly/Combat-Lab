@@ -246,6 +246,7 @@ function drawBody(ctx,t,body,fill,stroke){
 export const embodiedScaleFieldV0={
   id:"embodied-scale-field-v0",
   title:"Embodied Scale Field S0",
+  kind:"research",
   purpose:"Explore whether continuous body scale changes create different spatial and contact possibilities before adding attacks.",
   controls:"Optional shortcuts: 1/2/3 scale anchors · [ / ] continuous scale",
 

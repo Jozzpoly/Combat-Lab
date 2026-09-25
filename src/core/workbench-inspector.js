@@ -183,6 +183,8 @@ export class WorkbenchInspector {
     const unit=control.unit ? el("span","parameter-unit",control.unit) : null;
     const extreme=el("span","extreme-badge","EXTREME");
     extreme.hidden=true;
+    const safety=el("span","safety-badge","SAFETY RAIL");
+    safety.hidden=true;
 
     const apply=value=>{
       const n=Number(value);
@@ -201,7 +203,7 @@ export class WorkbenchInspector {
 
     editor.append(range,number);
     if(unit) editor.append(unit);
-    editor.append(extreme);
+    editor.append(extreme,safety);
     wrap.append(editor);
 
     if(control.anchors?.length){
@@ -216,7 +218,7 @@ export class WorkbenchInspector {
     }
 
     this.numericBindings.push({
-      control,range,number,extreme
+      control,range,number,extreme,safety
     });
     this.editableIds.push(control.id);
 
@@ -258,24 +260,34 @@ export class WorkbenchInspector {
     if(!this.inspector) return;
 
     for(const binding of this.numericBindings){
-      const {control,range,number,extreme}=binding;
+      const {control,range,number,extreme,safety}=binding;
       const value=this.#get(control.id);
-      const {min,max}=displayRange(control,value);
+      const {min,max,hardMin,hardMax}=displayRange(control,value);
 
       if(force || Number(range.min)!==min || Number(range.max)!==max){
         range.min=String(min);
         range.max=String(max);
       }
 
-      if(document.activeElement!==number){
+      if(force || document.activeElement!==number){
         number.value=formatNumber(control,value);
       }
       range.value=String(value);
 
       const outside=value<control.softMin || value>control.softMax;
-      extreme.hidden=!outside;
-      extreme.title=outside
+      const eps=Math.max(1e-9,Math.abs(value)*1e-9);
+      const atUpperSafety=hardMax>control.softMax && Math.abs(value-hardMax)<=eps;
+      const atLowerSafety=hardMin<control.softMin && Math.abs(value-hardMin)<=eps;
+      const atSafety=atUpperSafety || atLowerSafety;
+
+      extreme.hidden=!outside || atSafety;
+      extreme.title=outside && !atSafety
         ? "Outside the convenient soft range. This is allowed."
+        : "";
+
+      safety.hidden=!atSafety;
+      safety.title=atSafety
+        ? "Numerical safety rail reached. The field shows the value actually applied."
         : "";
     }
 
