@@ -194,6 +194,12 @@ Machine gate:
 
 Opera remained disconnected after retries. Do not treat that as experiment evidence.
 
+## 4.1 Deployment hygiene
+
+The initial exact-SHA S0 deploy succeeded, then `main` performed its normal automatic Pages deploy afterward. A final S0 deploy is therefore issued only after the `main` run has completed.
+
+No experiment behavior changed between those deploys.
+
 ## 5. Evidence boundary
 
 Machine tests may qualify:

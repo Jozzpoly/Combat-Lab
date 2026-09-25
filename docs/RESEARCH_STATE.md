@@ -90,6 +90,14 @@ Human evidence remains **UNPROVEN**.
 
 The next valid evidence is a short raw Owner observation of S0.
 
+### Exact Owner-observation deployment
+
+The first branch deployment at `78de4144d93582bb87862c302b0412cf3ca01916` was provenance-correct, but a subsequent automatic `main` Pages deployment was allowed to finish and therefore could replace the public surface.
+
+The final Owner-observation deployment is intentionally re-issued from the current refoundation head after that `main` deployment completes.
+
+This is deployment hygiene only; no S0 behavior was changed after the machine/browser qualification.
+
 ### Broader refoundation frontier
 
 No later combat family is preselected.
