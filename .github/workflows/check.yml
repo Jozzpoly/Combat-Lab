@@ -12,6 +12,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+
       - name: Run experiment checks when present
         shell: bash
         run: |
@@ -21,7 +22,7 @@ jobs:
             echo "No package.json on this branch; nothing to test."
           fi
 
-      - name: Live browser runtime gate when present
+      - name: Live browser Workbench gate when present
         if: ${{ hashFiles('app.js') != '' }}
         shell: bash
         run: |
@@ -29,7 +30,7 @@ jobs:
           SERVER_PID=$!
           trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
 
-          for i in {1..20}; do
+          for i in {1..30}; do
             if curl -fsS http://127.0.0.1:4173/ > /dev/null; then
               break
             fi
@@ -42,4 +43,13 @@ jobs:
             exit 1
           fi
 
-          CHROME_BIN="$CHROME" node scripts/browser-live-gate.mjs http://127.0.0.1:4173/
+          CHROME_BIN="$CHROME" SCREENSHOT_PATH="workbench-source.png" \
+            node scripts/browser-live-gate.mjs http://127.0.0.1:4173/
+
+      - name: Upload Workbench rehearsal screenshot
+        if: ${{ always() && hashFiles('workbench-source.png') != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: workbench-source-screenshot
+          path: workbench-source.png
+          retention-days: 7

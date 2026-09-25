@@ -1,9 +1,11 @@
 import {spawn} from "node:child_process";
+import {writeFile} from "node:fs/promises";
 import {setTimeout as sleep} from "node:timers/promises";
 
 const target=process.argv[2] || "http://127.0.0.1:4173/";
 const chromeBin=process.env.CHROME_BIN;
-if (!chromeBin) throw new Error("CHROME_BIN is required");
+const screenshotPath=process.env.SCREENSHOT_PATH || "";
+if(!chromeBin) throw new Error("CHROME_BIN is required");
 
 const port=9222;
 const profile=`/tmp/combat-lab-chrome-${process.pid}`;
@@ -20,7 +22,7 @@ let stderr="";
 chrome.stderr.on("data",chunk=>{ stderr+=chunk.toString(); });
 
 async function waitForJsonList(){
-  for(let i=0;i<80;i++){
+  for(let i=0;i<220;i++){
     try{
       const r=await fetch(`http://127.0.0.1:${port}/json/list`);
       if(r.ok){
@@ -67,11 +69,24 @@ function createCdp(wsUrl){
 }
 
 let cdp;
+
+async function captureScreenshot(){
+  if(!cdp || !screenshotPath) return;
+  const shot=await cdp.send("Page.captureScreenshot",{format:"png",fromSurface:true});
+  await writeFile(screenshotPath,Buffer.from(shot.data,"base64"));
+}
+
 try{
   const page=await waitForJsonList();
   cdp=createCdp(page.webSocketDebuggerUrl);
   await cdp.send("Page.enable");
   await cdp.send("Runtime.enable");
+  await cdp.send("Emulation.setDeviceMetricsOverride",{
+    width:1600,
+    height:1000,
+    deviceScaleFactor:1,
+    mobile:false
+  });
   await cdp.send("Page.navigate",{url:target});
 
   async function evaluate(expression){
@@ -86,7 +101,7 @@ try{
     return result.result?.value;
   }
 
-  async function waitFor(label,predicate,{timeout=4000,interval=80}={}){
+  async function waitFor(label,predicate,{timeout=5000,interval=80}={}){
     const deadline=Date.now()+timeout;
     let lastValue;
     while(Date.now()<deadline){
@@ -97,10 +112,13 @@ try{
     throw new Error(`${label} timed out; last=${JSON.stringify(lastValue)}`);
   }
 
-  await waitFor("live RUNNING heartbeat",async()=>{
+  await waitFor("live Workbench heartbeat",async()=>{
     return evaluate(`(()=>{
       const r=window.__combatLabRuntime;
-      return !!r && r.state==="RUNNING" && r.frames>=8 && r.elapsed>0.03 && !r.error;
+      const inspector=document.querySelector(".inspector");
+      const scale=document.querySelector('[data-param-id="scale"] .parameter-number');
+      return !!r && r.state==="RUNNING" && r.frames>=8 && r.elapsed>0.03 && !r.error &&
+        !!inspector && !!scale;
     })()`);
   });
 
@@ -111,26 +129,53 @@ try{
     elapsed:window.__combatLabRuntime?.elapsed,
     experiment:window.__combatLabRuntime?.activeExperimentId,
     scale:window.__combatLabRuntime?.snapshot?.player?.scale,
-    source:document.querySelector("#build-id")?.textContent
+    playerX:window.__combatLabRuntime?.snapshot?.player?.x,
+    source:document.querySelector("#build-id")?.textContent,
+    inspectorVisible:!!document.querySelector(".inspector"),
+    parameterVisible:!!document.querySelector('[data-param-id="scale"]')
   })`);
 
   if(first.title!=="Embodied Scale Field S0") throw new Error(`wrong initial title: ${first.title}`);
   if(first.experiment!=="embodied-scale-field-v0") throw new Error(`wrong active experiment: ${first.experiment}`);
   if(!(first.frames>=8 && first.elapsed>0.03)) throw new Error(`runtime not advancing: ${JSON.stringify(first)}`);
+  if(!first.inspectorVisible || !first.parameterVisible) throw new Error(`Workbench Inspector missing: ${JSON.stringify(first)}`);
 
-  await cdp.send("Input.dispatchKeyEvent",{type:"keyDown",code:"Digit3",key:"3",windowsVirtualKeyCode:51});
-  await sleep(100);
-  await cdp.send("Input.dispatchKeyEvent",{type:"keyUp",code:"Digit3",key:"3",windowsVirtualKeyCode:51});
+  await evaluate(`(()=>{
+    const input=document.querySelector('[data-param-id="scale"] .parameter-number');
+    input.value="3.25";
+    input.dispatchEvent(new Event("change",{bubbles:true}));
+  })()`);
 
-  await waitFor("real experiment input",async()=>{
-    const scale=await evaluate("window.__combatLabRuntime?.snapshot?.player?.scale");
-    return Number(scale)>1.69;
+  await waitFor("Inspector edits live S0 scale",async()=>{
+    const r=await evaluate(`({
+      scale:window.__combatLabRuntime?.snapshot?.player?.scale,
+      extreme:!document.querySelector('[data-param-id="scale"] .extreme-badge')?.hidden
+    })`);
+    return Math.abs(Number(r?.scale)-3.25)<1e-9 && r?.extreme===true;
   });
 
-  await evaluate(`document.querySelector("#reset").click()`);
-  await waitFor("experiment reset",async()=>{
+  await cdp.send("Input.dispatchKeyEvent",{type:"keyDown",code:"KeyD",key:"d",windowsVirtualKeyCode:68});
+  await sleep(260);
+  await cdp.send("Input.dispatchKeyEvent",{type:"keyUp",code:"KeyD",key:"d",windowsVirtualKeyCode:68});
+
+  await waitFor("player movement before world reset",async()=>{
+    const x=await evaluate("window.__combatLabRuntime?.snapshot?.player?.x");
+    return Number(x)>Number(first.playerX)+5;
+  });
+
+  await evaluate(`document.querySelector("#reset-world").click()`);
+  await waitFor("Reset World preserves authored scale",async()=>{
     const snap=await evaluate("window.__combatLabRuntime?.snapshot");
-    return !!snap && Math.abs((snap.player?.scale ?? 0)-1)<1e-9 && snap.time===0;
+    return !!snap &&
+      Math.abs((snap.player?.x ?? 0)-175)<1e-9 &&
+      Math.abs((snap.player?.scale ?? 0)-3.25)<1e-9 &&
+      snap.time===0;
+  });
+
+  await evaluate(`document.querySelector("#restore-defaults").click()`);
+  await waitFor("Restore Defaults resets authored scale",async()=>{
+    const scale=await evaluate("window.__combatLabRuntime?.snapshot?.player?.scale");
+    return Math.abs(Number(scale)-1)<1e-9;
   });
 
   const beforePause=await evaluate("window.__combatLabRuntime.elapsed");
@@ -157,7 +202,8 @@ try{
 
   await waitFor("experiment switch",async()=>{
     return evaluate(`window.__combatLabRuntime?.activeExperimentId==="substrate-smoke" &&
-      document.querySelector("#experiment-title")?.textContent==="Substrate smoke probe"`);
+      document.querySelector("#experiment-title")?.textContent==="Substrate smoke probe" &&
+      document.querySelector("#parameter-panel")?.textContent.includes("no editable Workbench parameters")`);
   });
 
   await evaluate(`(()=>{
@@ -166,29 +212,56 @@ try{
     s.dispatchEvent(new Event("change",{bubbles:true}));
   })()`);
 
-  await waitFor("switch back to S0",async()=>{
+  await waitFor("switch back to S0 Workbench",async()=>{
     return evaluate(`window.__combatLabRuntime?.activeExperimentId==="embodied-scale-field-v0" &&
-      document.querySelector("#experiment-title")?.textContent==="Embodied Scale Field S0"`);
+      document.querySelector("#experiment-title")?.textContent==="Embodied Scale Field S0" &&
+      !!document.querySelector('[data-param-id="scale"]')`);
   });
 
-  const finalState=await evaluate("window.__combatLabRuntime");
-  if(finalState.error) throw new Error(`runtime error captured: ${finalState.error}`);
+  await evaluate(`(()=>{
+    const input=document.querySelector('[data-param-id="scale"] .parameter-number');
+    input.value="1.70";
+    input.dispatchEvent(new Event("change",{bubbles:true}));
+  })()`);
+
+  await waitFor("visual rehearsal state",async()=>{
+    const scale=await evaluate("window.__combatLabRuntime?.snapshot?.player?.scale");
+    return Math.abs(Number(scale)-1.7)<1e-9;
+  });
+
+  await captureScreenshot();
+
+  const finalState=await evaluate(`({
+    runtime:window.__combatLabRuntime,
+    numberValue:document.querySelector('[data-param-id="scale"] .parameter-number')?.value,
+    build:document.querySelector("#build-id")?.textContent,
+    workspaceWidth:document.querySelector(".workspace")?.getBoundingClientRect().width,
+    inspectorWidth:document.querySelector(".inspector")?.getBoundingClientRect().width
+  })`);
+
+  if(finalState.runtime?.error) throw new Error(`runtime error captured: ${finalState.runtime.error}`);
+  if(Number(finalState.inspectorWidth)<320) throw new Error(`Inspector unexpectedly narrow: ${finalState.inspectorWidth}`);
 
   process.stdout.write(JSON.stringify({
     pass:true,
     initial:first,
     final:{
-      state:finalState.state,
-      frames:finalState.frames,
-      elapsed:finalState.elapsed,
-      activeExperimentId:finalState.activeExperimentId
+      state:finalState.runtime.state,
+      frames:finalState.runtime.frames,
+      elapsed:finalState.runtime.elapsed,
+      activeExperimentId:finalState.runtime.activeExperimentId,
+      scale:finalState.runtime.snapshot?.player?.scale,
+      inspectorValue:finalState.numberValue,
+      build:finalState.build,
+      inspectorWidth:finalState.inspectorWidth
     }
   },null,2)+"\n");
-} catch(error){
+}catch(error){
+  try{ await captureScreenshot(); }catch{}
   process.stderr.write(String(error?.stack || error)+"\n");
   if(stderr) process.stderr.write("\nChrome stderr:\n"+stderr.slice(-5000));
   process.exitCode=1;
-} finally {
+}finally{
   try{ cdp?.close(); }catch{}
   chrome.kill("SIGTERM");
 }
