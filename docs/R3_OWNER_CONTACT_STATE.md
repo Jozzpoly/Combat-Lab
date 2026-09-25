@@ -73,8 +73,8 @@ This is the first positive Owner signal in the R3 line.
 What this DOES qualify:
 
 - the specimen was not rejected as immediately dead / irrelevant;
-- direct manipulation exposes enough of a phenomenon to justify another research question;
-- R4 may now be opened as a bounded adversarial-pressure experiment.
+- direct manipulation exposes enough of a phenomenon to preserve R3 as a promising donor / future lane;
+- the lab now has at least one human-positive material-contact seed.
 
 What this does NOT qualify:
 
@@ -86,15 +86,31 @@ What this does NOT qualify:
 - Feniks fit;
 - a requirement that Feniks use continuous physical blade contact.
 
+## Owner scope correction — same session
+
+The Owner explicitly corrected a sword-centric interpretation of this result.
+
+Combat Lab is not just about hitting or melee contact. It is expected to explore, among other things:
+
+- character/body size and other embodied differences;
+- bows;
+- magic;
+- axes;
+- spears;
+- multiple weapon/action families and their interactions.
+
+The Owner also considers a near-term clean restart/refoundation plausible.
+
+Therefore:
+
+> **do not open R4 automatically.**
+
+R3 is preserved as a positive seed, not promoted to the project spine.
+
 ## Next valid action
 
-Open a new bounded R4 hypothesis around the smallest useful question:
+Pause implementation momentum and re-evaluate the broader experiment space.
 
-> **Does the interesting part of R3 survive when the other participant has minimal adversarial intent, without special bind semantics or physics-chore incentives?**
+The next campaign should be chosen because it offers the highest information value for Combat Lab as a whole, not because it is the next numbered step after R3.
 
-Preserve the Owner's uncertainty as a design constraint. The next experiment must be capable of showing that the useful result is either:
-
-- a general material exchange principle worth carrying forward; or
-- merely an interesting sword-physics toy that Feniks does not need.
-
-Do not tune R3 toward realism before answering that distinction.
+A clean refoundation is allowed if it improves discovery, provided historical evidence and exact checkpoints remain recoverable.

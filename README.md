@@ -1,6 +1,8 @@
 # Combat Lab
 
-Experimental laboratory for discovering combat language that may later inform **Feniks**.
+Experimental laboratory for discovering **embodied combat possibility** that may later inform **Feniks**.
+
+"Combat" here is deliberately broader than melee striking. The lab may investigate body scale and proportions, mass, reach, movement, contact, bows/projectiles, spears, axes, shields, magic, terrain, multiple actors, ranged/melee interaction and other systems whenever they change what fighting can become.
 
 Combat Lab is **not** the Feniks combat implementation. A prototype, branch or green CI run never becomes architecture by default.
 
@@ -117,9 +119,23 @@ R3 is now **JOINT-AFTERSTATE CAUSAL-KERNEL QUALIFIED**:
 
 This remains mechanism evidence only. It does not establish good combat, useful pressure decisions or Owner-worthy feel.
 
-Before opening R4, the active campaign is **R3 OWNER CONTACT SPECIMEN**: expose the already-qualified R3 causal kernel to direct human control without changing its contact law. This is an instrumentation / translation campaign, not R4. The hard boundary is **R3 kernel qualified ≠ R3 human phenomenon qualified**. Machine qualification is complete at deployed specimen `b51aad2dbc6475237b9fb22fdb0ed24b82bb6827`. First Owner observation produced an **early positive signal**: the raw phenomenon is interesting enough to keep working on, while Feniks' need for literal sword physics remains explicitly unproven. This is sufficient to open a bounded R4 adversarial-pressure question, not to promote R3 into Feniks combat.
+Before opening R4, the active campaign is **R3 OWNER CONTACT SPECIMEN**: expose the already-qualified R3 causal kernel to direct human control without changing its contact law. This is an instrumentation / translation campaign, not R4. The hard boundary is **R3 kernel qualified ≠ R3 human phenomenon qualified**. Machine qualification is complete at deployed specimen `b51aad2dbc6475237b9fb22fdb0ed24b82bb6827`. First Owner observation produced an **early positive signal**: the raw phenomenon is interesting enough to keep working on, while Feniks' need for literal sword physics remains explicitly unproven. This is **not** sufficient to make R4 the automatic next campaign. Owner scope correction explicitly rejects treating the sword-contact lineage as the lab's spine. R3 is one promising donor/specimen among many possible combat families.
 
 See [Research state](docs/RESEARCH_STATE.md) for the recovery correction and evidence boundary.
+
+## Scope correction — 2026-09-25
+
+Owner correction:
+
+- Combat Lab is not primarily a "hitting" or sword-physics project;
+- character/body size itself is a major experimental variable;
+- future experiments may include bows, magic, axes, spears and other combat families;
+- the lab should investigate how body, equipment, world and action vocabulary interact, not optimize one melee kernel;
+- a substantial reset / refoundation of the lab remains a legitimate near-term option if the accumulated structure starts constraining discovery.
+
+A reset must not erase evidence. Failed and positive specimens remain historical donors even if the active implementation is rebuilt from a clean foundation.
+
+Therefore the next campaign is **not pre-committed to R4**. Before more implementation, recover the broader experiment space and decide whether R3 deserves a follow-up now, later, or only as a donor.
 
 ## Project control
 

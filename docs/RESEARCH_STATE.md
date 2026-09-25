@@ -2,11 +2,46 @@
 
 **Authority:** current `main` research truth  
 **Status:** 2026-09-25  
-**Purpose:** discover a combat language that may later inform **Feniks**. This repository is a laboratory, not the Feniks combat implementation.
+**Purpose:** discover embodied combat possibilities that may later inform **Feniks**. This repository is a laboratory, not the Feniks combat implementation.
+
+Combat Lab is intentionally broader than melee attacks or sword physics. Relevant variables include body scale/proportions, mass, locomotion, reach, weapon geometry, projectiles/bows, spears, axes, shields, magic, terrain, contact, multiple actors and the interaction between different combat families.
 
 ## Current truth
 
 There is **no accepted Feniks combat model** in this repository.
+
+### Owner scope correction — 2026-09-25
+
+The current R3 line must not become the project spine merely because it produced the first positive Owner signal.
+
+Owner intent is broader:
+
+> **Combat Lab is a laboratory for discovering combat as a whole embodied/systemic space, not a sword-combat project.**
+
+Important consequences:
+
+- character/body size is itself a high-value experimental dimension, not merely a balance parameter;
+- bows/projectiles, magic, axes, spears and other families are expected research territory;
+- interactions between combat modalities may matter more than optimizing any one weapon;
+- body/equipment/world relations remain first-class;
+- "combat" is not reducible to hit exchange, damage, or melee contact;
+- a clean refoundation/restart of the active implementation is acceptable if current lineage creates conceptual inertia.
+
+Restart does **not** mean discarding evidence. Preserve:
+
+- Owner FAILs;
+- qualified mechanism donors;
+- positive Owner signals;
+- exact specimen SHAs;
+- methodological lessons.
+
+But do not preserve accidental architecture, naming, branch lineage or implementation shape merely because it already exists.
+
+Current consequence:
+
+> **R4 is no longer the automatic next step.**
+
+R3 remains worth keeping and may receive a later adversarial follow-up, but the next campaign choice must be made against the broader Combat Lab possibility space.
 
 ## Whole Combat Organisms v0 — W1 checkpoint
 
@@ -629,14 +664,24 @@ Therefore:
 
 This does **not** promote sword physics, R3, or any current control/contact law into Feniks combat.
 
-The next frontier is now legitimately reopened as a separate R4 design question:
+R3 now earns preservation and possible follow-up, but not priority by inertia.
 
-> **Does the interesting part of the shared material relation survive minimal adversarial intent without bind semantics, hidden advantage, or physics-wrestling becoming the game?**
+The next valid strategic question is broader:
 
-The experiment should be able to falsify both possibilities:
+> **Which combat dimensions are currently most underexplored and most likely to reveal a qualitatively new possibility surface?**
 
-1. the value is a broader material-exchange principle that can survive abstraction away from literal sword physics;
-2. the value is mainly the novelty of manipulating physical swords and need not belong in Feniks.
+Candidates include, without implying an ordering:
+
+- body scale / body-envelope differences;
+- long reach / polearms;
+- axes and materially different weapon geometry;
+- bows / projectiles and ranged-space negotiation;
+- magic as a different action/world relation rather than a reskinned projectile;
+- shield/body/terrain relations;
+- mixed modalities and asymmetric participants;
+- R3-style shared material relation under pressure.
+
+Before implementing another lane, decide whether the current repository should continue incrementally or be refounded on a cleaner experimental substrate.
 
 ## Recovery correction — 2026-09-22
 
