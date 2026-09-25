@@ -112,3 +112,53 @@ test("R3 mirrored contact remains finite without one-side implementation authori
   assert.equal(result.left.finite,true);
   assert.equal(result.right.finite,true);
 });
+
+
+test("R3 press-medium reference leaves joint next-action history on both participants",()=>{
+  const result=pressReference();
+  console.log("R3_PRESS_REFERENCE",JSON.stringify({
+    contact:result.contact,
+    distance:result.distance,
+    nextPathDelta:result.nextPathDelta
+  }));
+
+  assert.equal(result.finite,true);
+  assert.equal(result.contact.separated,true);
+  assert.ok(result.contact.maxDuration>=0.20);
+  assert.ok(result.distance.a>0.30);
+  assert.ok(result.distance.b>0.30);
+  assert.ok(result.nextPathDelta.a>0.30);
+  assert.ok(result.nextPathDelta.b>0.30);
+});
+
+test("R3 independent local neutralization collapses press-medium joint tool history",()=>{
+  const sweep=resetDecaySweep();
+  const start=sweep[0];
+  const end=sweep.at(-1);
+
+  assert.ok(start.distance.a>0.30);
+  assert.ok(start.distance.b>0.30);
+  assert.ok(end.distance.a<0.02);
+  assert.ok(end.distance.b<0.02);
+  assert.ok(end.nextPathDelta.a<0.02);
+  assert.ok(end.nextPathDelta.b<0.02);
+});
+
+test("R3 repeated ordinary contact and disengage remains bounded and deterministic",()=>{
+  const first=runRepeatedContactSoak({
+    seconds:12,
+    guideAuthority:0.48
+  });
+  const second=runRepeatedContactSoak({
+    seconds:12,
+    guideAuthority:0.48
+  });
+
+  console.log("R3_SOAK",JSON.stringify(first));
+
+  assert.equal(first.finite,true);
+  assert.ok(first.impacts>=3);
+  assert.ok(first.contactFrames>20);
+  assert.ok(first.maxOmega<20);
+  assert.deepEqual(first,second);
+});
