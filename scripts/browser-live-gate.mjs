@@ -5,6 +5,8 @@ import {setTimeout as sleep} from "node:timers/promises";
 const target=process.argv[2] || "http://127.0.0.1:4173/";
 const chromeBin=process.env.CHROME_BIN;
 const screenshotPath=process.env.SCREENSHOT_PATH || "";
+const extremeScreenshotPath=process.env.EXTREME_SCREENSHOT_PATH || "";
+const compactScreenshotPath=process.env.COMPACT_SCREENSHOT_PATH || "";
 if(!chromeBin) throw new Error("CHROME_BIN is required");
 
 const port=9222;
@@ -70,10 +72,10 @@ function createCdp(wsUrl){
 
 let cdp;
 
-async function captureScreenshot(){
-  if(!cdp || !screenshotPath) return;
+async function captureScreenshot(path=screenshotPath){
+  if(!cdp || !path) return;
   const shot=await cdp.send("Page.captureScreenshot",{format:"png",fromSurface:true});
-  await writeFile(screenshotPath,Buffer.from(shot.data,"base64"));
+  await writeFile(path,Buffer.from(shot.data,"base64"));
 }
 
 try{
@@ -230,6 +232,37 @@ try{
   });
 
   await captureScreenshot();
+
+  await evaluate(`(()=>{
+    const input=document.querySelector('[data-param-id="scale"] .parameter-number');
+    input.value="4.50";
+    input.dispatchEvent(new Event("change",{bubbles:true}));
+  })()`);
+
+  await waitFor("extreme visual state",async()=>{
+    return evaluate(`Math.abs((window.__combatLabRuntime?.snapshot?.player?.scale ?? 0)-4.5)<1e-9 &&
+      !document.querySelector('[data-param-id="scale"] .extreme-badge')?.hidden`);
+  });
+  await captureScreenshot(extremeScreenshotPath);
+
+  await evaluate(`document.querySelector("#restore-defaults").click()`);
+  await cdp.send("Emulation.setDeviceMetricsOverride",{
+    width:1280,
+    height:800,
+    deviceScaleFactor:1,
+    mobile:false
+  });
+  await sleep(160);
+
+  const compactLayout=await evaluate(`({
+    workspace:document.querySelector(".workspace")?.getBoundingClientRect().width,
+    stage:document.querySelector(".stage-column")?.getBoundingClientRect().width,
+    inspector:document.querySelector(".inspector")?.getBoundingClientRect().width,
+    top:document.querySelector(".inspector")?.getBoundingClientRect().top
+  })`);
+  if(Number(compactLayout.inspector)<340) throw new Error(`compact Inspector too narrow: ${JSON.stringify(compactLayout)}`);
+  if(Number(compactLayout.stage)<700) throw new Error(`compact stage too narrow: ${JSON.stringify(compactLayout)}`);
+  await captureScreenshot(compactScreenshotPath);
 
   const finalState=await evaluate(`({
     runtime:window.__combatLabRuntime,

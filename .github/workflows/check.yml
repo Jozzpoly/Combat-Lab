@@ -43,13 +43,16 @@ jobs:
             exit 1
           fi
 
-          CHROME_BIN="$CHROME" SCREENSHOT_PATH="workbench-source.png" \
+          CHROME_BIN="$CHROME" \
+          SCREENSHOT_PATH="workbench-source.png" \
+          EXTREME_SCREENSHOT_PATH="workbench-extreme.png" \
+          COMPACT_SCREENSHOT_PATH="workbench-compact.png" \
             node scripts/browser-live-gate.mjs http://127.0.0.1:4173/
 
       - name: Upload Workbench rehearsal screenshot
-        if: ${{ always() && hashFiles('workbench-source.png') != '' }}
+        if: ${{ always() && hashFiles('workbench-*.png') != '' }}
         uses: actions/upload-artifact@v4
         with:
           name: workbench-source-screenshot
-          path: workbench-source.png
+          path: workbench-*.png
           retention-days: 7
