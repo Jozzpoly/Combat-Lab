@@ -58,7 +58,9 @@ export function createState({
       impacts:0,
       frames:0,
       firstImpactTime:null,
-      lastPoint:null
+      lastPoint:null,
+      normalX:null,
+      normalY:null
     },
     time:0
   };
@@ -157,15 +159,37 @@ function applyImpulse(actor,seg,point,ix,iy){
   actor.tool.angularVelocity+=torque/TOOL.inertia;
 }
 
-function fallbackNormal(state,aSeg){
-  let nx=-Math.sin(state.a.tool.angle);
-  let ny=Math.cos(state.a.tool.angle);
-  const toBx=state.b.x-aSeg.pivot.x;
-  const toBy=state.b.y-aSeg.pivot.y;
-  if(nx*toBx+ny*toBy<0){
-    nx=-nx;ny=-ny;
+function fallbackNormal(state,aSeg,bSeg){
+  // Zero centerline distance is geometrically ambiguous for ideal lines.
+  // Prefer the already established episode normal. On a fresh exact
+  // intersection, derive a symmetric A->B direction from both segment
+  // midpoints rather than privileging either tool.
+  if(
+    state.contact.engaged &&
+    Number.isFinite(state.contact.normalX) &&
+    Number.isFinite(state.contact.normalY)
+  ){
+    return {
+      x:state.contact.normalX,
+      y:state.contact.normalY
+    };
   }
-  return {x:nx,y:ny};
+
+  const aMid={
+    x:(aSeg.a.x+aSeg.b.x)*0.5,
+    y:(aSeg.a.y+aSeg.b.y)*0.5
+  };
+  const bMid={
+    x:(bSeg.a.x+bSeg.b.x)*0.5,
+    y:(bSeg.a.y+bSeg.b.y)*0.5
+  };
+  const d=normalize(
+    bMid.x-aMid.x,
+    bMid.y-aMid.y,
+    state.b.x-state.a.x,
+    state.b.y-state.a.y
+  );
+  return {x:d.x,y:d.y};
 }
 
 export function resolveToolContact(state,dt,{enabled=true}={}){
@@ -201,8 +225,19 @@ export function resolveToolContact(state,dt,{enabled=true}={}){
       y:closest.dy/closest.distance
     };
   }else{
-    normal=fallbackNormal(state,aSeg);
+    normal=fallbackNormal(state,aSeg,bSeg);
   }
+
+  // Keep the manifold normal consistently oriented A -> B.
+  const abx=bSeg.pivot.x-aSeg.pivot.x;
+  const aby=bSeg.pivot.y-aSeg.pivot.y;
+  if(normal.x*abx+normal.y*aby<0){
+    normal.x=-normal.x;
+    normal.y=-normal.y;
+  }
+
+  c.normalX=normal.x;
+  c.normalY=normal.y;
 
   const point={
     x:(closest.pa.x+closest.pb.x)*0.5,
