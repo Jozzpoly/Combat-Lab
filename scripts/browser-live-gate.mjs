@@ -328,7 +328,31 @@ try{
     throw new Error(`compact B0 layout failed: ${JSON.stringify(compact)}`);
   }
   if(Number(compact.inspectorScrollWidth)>Number(compact.inspectorClientWidth)+1){
-    throw new Error(`Inspector has horizontal overflow: ${JSON.stringify(compact)}`);
+    const overflowAudit=await evaluate(`(()=>{
+      const inspector=document.querySelector(".inspector");
+      const root=inspector.getBoundingClientRect();
+      const contentRight=root.left+inspector.clientWidth;
+      return [...inspector.querySelectorAll("*")]
+        .map(el=>{
+          const r=el.getBoundingClientRect();
+          return {
+            tag:el.tagName,
+            id:el.id || "",
+            cls:el.className || "",
+            left:Number(r.left.toFixed(1)),
+            right:Number(r.right.toFixed(1)),
+            width:Number(r.width.toFixed(1)),
+            scrollWidth:el.scrollWidth,
+            clientWidth:el.clientWidth,
+            overflowX:getComputedStyle(el).overflowX,
+            excess:Number((r.right-contentRight).toFixed(1))
+          };
+        })
+        .filter(x=>x.excess>1 || x.scrollWidth>x.clientWidth+1)
+        .sort((a,b)=>Math.max(b.excess,b.scrollWidth-b.clientWidth)-Math.max(a.excess,a.scrollWidth-a.clientWidth))
+        .slice(0,12);
+    })()`);
+    throw new Error(`Inspector has horizontal overflow: ${JSON.stringify(compact)} offenders=${JSON.stringify(overflowAudit)}`);
   }
   await captureScreenshot(compactScreenshotPath);
 
