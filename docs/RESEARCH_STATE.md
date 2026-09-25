@@ -276,6 +276,26 @@ See:
 - `docs/S0_SECOND_OWNER_RECORDING_DENSE_ANALYSIS_2026-09-25.md`;
 - `docs/EMBODIED_COMBAT_ECOLOGY_CAMPAIGN_2026-09-25.md`.
 
+### WORKBENCH RESET — post-S0
+
+The rushed post-S0 S1 execution lane has been discarded.
+
+Active branch was reset to:
+
+- `3e9648fe77c49994c49b60722aa9b2d550124d58`.
+
+This preserves the positive S0 BODY / WORLD evidence and removes S1 implementation / shortcut UX / premature Owner-gate work from the active line.
+
+The retained insight is narrower:
+
+- body envelope, mass/equipment burden and locomotor capability must eventually become separable research variables;
+- direct continuous manipulation is valuable;
+- Owner-facing controls must be permissive enough to support deliberate breakage.
+
+The immediate implementation target is now **Combat Lab Workbench**, not another gameplay specimen.
+
+See `docs/COMBAT_LAB_WORKBENCH_REFOUNDATION_2026-09-25.md`.
+
 ### Broader refoundation frontier
 
 No later combat family is preselected.

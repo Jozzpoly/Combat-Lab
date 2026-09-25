@@ -18,7 +18,7 @@ Three lanes have already produced negative evidence:
 
 None of these is a foundation to continue.
 
-## Current phase — Combat Lab vNext refoundation
+## Current phase — Combat Lab Workbench refoundation
 
 The active work is now **execution-substrate refoundation**, not another numbered melee experiment.
 
