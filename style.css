@@ -190,7 +190,8 @@ canvas {
 .inspector {
   min-height: 0;
   height: 100%;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: rgba(17,22,29,.96);
@@ -507,4 +508,15 @@ canvas {
 }
 .secondary-reset {
   color: var(--muted);
+}
+
+.parameter-editor,
+.parameter-anchors,
+.parameter-slots,
+.live-grid {
+  min-width: 0;
+}
+.parameter-editor > *,
+.slot-heading > * {
+  min-width: 0;
 }

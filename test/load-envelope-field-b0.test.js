@@ -143,3 +143,42 @@ test("B0 extreme safety rails remain finite during long mixed movement",()=>{
     assert.ok(Number.isFinite(value));
   }
 });
+
+
+test("more mass can preserve locomotor response when force rises proportionally",()=>{
+  const baseline=deriveEmbodiment({envelope:1,bodyMass:1,loadMass:0,forceMultiplier:1});
+  const heavyStrong=deriveEmbodiment({envelope:1,bodyMass:2,loadMass:0,forceMultiplier:2});
+
+  assert.equal(baseline.radius,heavyStrong.radius);
+  assert.equal(baseline.acceleration,heavyStrong.acceleration);
+  assert.equal(baseline.maxSpeed,heavyStrong.maxSpeed);
+  assert.ok(heavyStrong.totalMass>baseline.totalMass);
+
+  const a=createLoadEnvelopeState({contacts:false});
+  const b=createLoadEnvelopeState({contacts:false});
+  setEmbodimentParameter(b,"bodyMass",2);
+  setEmbodimentParameter(b,"forceMultiplier",2);
+
+  for(let i=0;i<120;i++){
+    stepLoadEnvelopeField(a,right,1/120);
+    stepLoadEnvelopeField(b,right,1/120);
+  }
+
+  assert.ok(Math.abs(a.player.vx-b.player.vx)<1e-9);
+  assert.ok(Math.abs(a.player.x-b.player.x)<1e-9);
+});
+
+test("vector locomotor authority is directionally isotropic",()=>{
+  const cardinal=createLoadEnvelopeState({contacts:false});
+  const diagonal=createLoadEnvelopeState({contacts:false});
+  const diag={...idle,keys:["KeyD","KeyS"]};
+
+  for(let i=0;i<12;i++){
+    stepLoadEnvelopeField(cardinal,right,1/120);
+    stepLoadEnvelopeField(diagonal,diag,1/120);
+  }
+
+  const cardinalSpeed=Math.hypot(cardinal.player.vx,cardinal.player.vy);
+  const diagonalSpeed=Math.hypot(diagonal.player.vx,diagonal.player.vy);
+  assert.ok(Math.abs(cardinalSpeed-diagonalSpeed)<1e-9);
+});

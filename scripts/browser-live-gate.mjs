@@ -196,6 +196,36 @@ try{
     return Math.abs(p.loadMass-4)<1e-9 && Math.abs(p.envelope-1)<1e-9;
   });
 
+  async function matchedDriveFromReset(slotSelector){
+    await evaluate(`document.querySelector("${slotSelector}").click()`);
+    await sleep(100);
+    await evaluate('document.querySelector("#reset-world").click()');
+    await sleep(100);
+
+    await cdp.send("Input.dispatchKeyEvent",{type:"keyDown",code:"KeyD",key:"d",windowsVirtualKeyCode:68});
+    await sleep(420);
+    await cdp.send("Input.dispatchKeyEvent",{type:"keyUp",code:"KeyD",key:"d",windowsVirtualKeyCode:68});
+    await sleep(80);
+
+    return evaluate(`({
+      x:window.__combatLabRuntime.snapshot.player.x,
+      speed:Math.hypot(
+        window.__combatLabRuntime.snapshot.player.vx,
+        window.__combatLabRuntime.snapshot.player.vy
+      )
+    })`);
+  }
+
+  const motionA=await matchedDriveFromReset("#apply-a");
+  const motionB=await matchedDriveFromReset("#apply-b");
+
+  if(!(motionA.speed>motionB.speed*1.8)){
+    throw new Error(`matched A/B movement did not separate strongly enough: A=${JSON.stringify(motionA)} B=${JSON.stringify(motionB)}`);
+  }
+  if(!(motionA.x>motionB.x+20)){
+    throw new Error(`matched A/B travel did not separate: A=${JSON.stringify(motionA)} B=${JSON.stringify(motionB)}`);
+  }
+
   // World reset preserves B parameters.
   await cdp.send("Input.dispatchKeyEvent",{type:"keyDown",code:"KeyD",key:"d",windowsVirtualKeyCode:68});
   await sleep(320);
@@ -283,14 +313,22 @@ try{
   });
   await sleep(180);
 
-  const compact=await evaluate(`({
-    stage:document.querySelector(".stage-column")?.getBoundingClientRect().width,
-    inspector:document.querySelector(".inspector")?.getBoundingClientRect().width,
-    bodyScroll:getComputedStyle(document.body).overflow,
-    inspectorScroll:getComputedStyle(document.querySelector(".inspector")).overflow
-  })`);
+  const compact=await evaluate(`(()=>{
+    const inspector=document.querySelector(".inspector");
+    return {
+      stage:document.querySelector(".stage-column")?.getBoundingClientRect().width,
+      inspector:inspector?.getBoundingClientRect().width,
+      bodyScroll:getComputedStyle(document.body).overflow,
+      inspectorOverflowX:getComputedStyle(inspector).overflowX,
+      inspectorScrollWidth:inspector?.scrollWidth,
+      inspectorClientWidth:inspector?.clientWidth
+    };
+  })()`);
   if(Number(compact.inspector)<340 || Number(compact.stage)<700){
     throw new Error(`compact B0 layout failed: ${JSON.stringify(compact)}`);
+  }
+  if(Number(compact.inspectorScrollWidth)>Number(compact.inspectorClientWidth)+1){
+    throw new Error(`Inspector has horizontal overflow: ${JSON.stringify(compact)}`);
   }
   await captureScreenshot(compactScreenshotPath);
 

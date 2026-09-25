@@ -285,7 +285,7 @@ export const loadEnvelopeFieldB0={
   id:"load-envelope-field-b0",
   title:"Load / Envelope Field B0",
   purpose:"Separate occupied body envelope, intrinsic mass, carried load and locomotor force before adding stance, traction or combat actions.",
-  controls:"Movement: WASD / arrows · experiment parameters live in Lab Inspector",
+  controls:"Parameters: Lab Inspector · A/B slots compare authored configurations",
 
   create(){
     let state=createLoadEnvelopeState();
