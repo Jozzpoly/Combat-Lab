@@ -48,6 +48,7 @@ test("R3 apparatus produces genuine multi-frame shared tool contact and separati
   assert.ok(result.contact.frames>=2);
   assert.ok(result.contact.maxDuration>=2/120);
   assert.equal(result.contact.separated,true);
+  assert.ok(result.historyDuration<1.6);
 });
 
 test("R3 exploratory contact family sweep stays finite",()=>{
