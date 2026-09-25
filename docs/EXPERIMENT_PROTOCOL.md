@@ -49,7 +49,7 @@ The test is player-facing: **would a player naturally behave differently?**
 
 Combat Lab uses two different experimental modes and must not confuse them.
 
-### Discovery mode — current phase
+### Discovery mode — default when opening an unresolved frontier
 
 When we do not yet know the right combat language, compare a few **deliberately divergent whole organisms**. Multiple coupled mechanics may differ if that is necessary to make the player-facing phenomena genuinely different.
 
