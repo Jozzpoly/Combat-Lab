@@ -1,5 +1,8 @@
 # CONTINUOUS READINESS R0 — No Auto-Neutral Causal Kernel
 
+> **HISTORICAL RECORD — NOT CURRENT AUTHORITY.**
+> This file preserves the campaign state at its date. Current truth lives in `README.md` and `docs/RESEARCH_STATE.md`.
+
 **Date:** 2026-09-25  
 **Status:** active hypothesis card; pre-implementation  
 **Owner play:** not eligible  
