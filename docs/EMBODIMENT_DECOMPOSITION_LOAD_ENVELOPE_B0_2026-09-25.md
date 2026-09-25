@@ -1,7 +1,7 @@
 # Embodiment Decomposition Audit — Load / Envelope B0
 
 **Date:** 2026-09-25  
-**Status:** active design hypothesis after Workbench refoundation  
+**Status:** stage closed; positive Owner direction signal; equations remain non-canonical  
 **Parent human evidence:** positive S0 BODY / WORLD signal  
 **Owner correction:** the same actor may keep essentially the same body size while equipment changes total mass; continuous permissive manipulation is valuable
 
