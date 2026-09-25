@@ -3,41 +3,92 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Combat Lab vNext — Refoundation Substrate</title>
+  <title>Combat Lab vNext — Workbench</title>
   <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-  <main class="shell">
-    <header>
-      <div>
-        <p class="eyebrow">Combat Lab vNext · neutral substrate</p>
-        <h1 id="experiment-title">Loading…</h1>
-        <p id="experiment-purpose" class="purpose"></p>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">CL</span>
+        <div>
+          <div class="brand-title">Combat Lab</div>
+          <div class="brand-subtitle">vNext Research Workbench</div>
+        </div>
       </div>
-      <div class="controls">
-        <select id="experiment-select" aria-label="Experiment"></select>
-        <button id="pause" type="button">Pause</button>
-        <button id="reset" type="button">Reset</button>
-        <button id="debug" type="button">Debug</button>
+      <div class="top-status">
+        <span id="run-state" class="status-pill" data-state="BOOTING">BOOTING</span>
+        <span id="sim-time" class="status-pill">0.00 s</span>
       </div>
     </header>
 
-    <section class="viewport">
-      <canvas id="lab" aria-label="Combat Lab experiment surface"></canvas>
-    </section>
+    <main class="workspace">
+      <section class="stage-column">
+        <div class="stage-heading">
+          <div>
+            <p class="eyebrow">ACTIVE EXPERIMENT</p>
+            <h1 id="experiment-title">Loading…</h1>
+            <p id="experiment-purpose" class="purpose"></p>
+          </div>
+        </div>
 
-    <footer>
-      <div>
-        <strong>Controls</strong>
-        <span id="controls-text">—</span>
-      </div>
-      <div class="status">
-        <span id="run-state">BOOTING</span>
-        <span id="sim-time">0.00 s</span>
-        <span id="build-id">source: local</span>
-      </div>
-    </footer>
-  </main>
+        <section class="viewport-card">
+          <canvas id="lab" aria-label="Combat Lab experiment surface"></canvas>
+        </section>
+
+        <div class="stage-footer">
+          <span class="movement-hint"><strong>Movement</strong> WASD / arrows</span>
+          <span id="controls-text" class="shortcut-hint">—</span>
+        </div>
+      </section>
+
+      <aside class="inspector" aria-label="Lab Inspector">
+        <div class="inspector-top">
+          <div>
+            <p class="eyebrow">LAB INSPECTOR</p>
+            <h2>Experiment controls</h2>
+          </div>
+          <label class="toggle-control">
+            <input id="debug" type="checkbox">
+            <span>Debug</span>
+          </label>
+        </div>
+
+        <section class="inspector-section experiment-section">
+          <label class="field-label" for="experiment-select">Experiment</label>
+          <select id="experiment-select" class="experiment-select"></select>
+          <div class="session-actions">
+            <button id="pause" type="button" class="primary-action">Pause</button>
+            <button id="reset-world" type="button">Reset World</button>
+          </div>
+        </section>
+
+        <div id="parameter-panel"></div>
+
+        <section class="inspector-section defaults-section">
+          <div class="section-heading compact">
+            <div>
+              <div class="section-title">Parameter state</div>
+              <p class="section-description">World reset preserves authored values. Restore Defaults resets the authored experiment parameters.</p>
+            </div>
+          </div>
+          <button id="restore-defaults" type="button" class="wide-action">Restore Defaults</button>
+        </section>
+
+        <div id="live-panel"></div>
+
+        <details class="inspector-section diagnostics">
+          <summary>Session & provenance</summary>
+          <div class="diagnostic-grid">
+            <span>Runtime</span><strong id="runtime-detail">BOOTING</strong>
+            <span>Simulation</span><strong id="sim-time-detail">0.00 s</strong>
+            <span>Build</span><strong id="build-id">source: local</strong>
+          </div>
+        </details>
+      </aside>
+    </main>
+  </div>
+
   <script>
     window.__combatLabRuntime = {
       state: "BOOTING",
@@ -53,7 +104,12 @@
       runtime.error=String(reason || "unknown runtime error");
       document.documentElement.dataset.runtimeState="ERROR";
       const status=document.querySelector("#run-state");
-      if (status) status.textContent="ERROR";
+      if (status) {
+        status.textContent="ERROR";
+        status.dataset.state="ERROR";
+      }
+      const detail=document.querySelector("#runtime-detail");
+      if(detail) detail.textContent="ERROR";
     }
 
     window.addEventListener("error",event=>{

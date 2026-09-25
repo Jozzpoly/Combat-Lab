@@ -1,7 +1,7 @@
 const WORLD={width:960,height:600};
 const BASE_RADIUS=18;
-const MIN_SCALE=0.60;
-const MAX_SCALE=1.80;
+const MIN_SCALE=0.05;
+const MAX_SCALE=8.00;
 const SCALE_RATE=0.55;
 
 const OBSTACLES=[
@@ -247,10 +247,88 @@ export const embodiedScaleFieldV0={
   id:"embodied-scale-field-v0",
   title:"Embodied Scale Field S0",
   purpose:"Explore whether continuous body scale changes create different spatial and contact possibilities before adding attacks.",
-  controls:"WASD / arrows move · 1/2/3 anchor scales · [ / ] vary scale continuously · Reset restarts the field",
+  controls:"Optional shortcuts: 1/2/3 scale anchors · [ / ] continuous scale",
 
   create(){
     let state=createScaleFieldState();
+
+    const inspector={
+      schema:{
+        groups:[
+          {
+            id:"body",
+            label:"Body",
+            description:"S0 keeps its original coupled law: body scale also derives mass and motor response. The coupling is visible here instead of hidden.",
+            controls:[
+              {
+                id:"scale",
+                type:"number",
+                label:"Body scale",
+                description:"Directly changes occupied body envelope. Values outside the convenient range are intentionally allowed.",
+                shortcut:"[ / ]",
+                default:1,
+                softMin:0.40,
+                softMax:2.00,
+                hardMin:MIN_SCALE,
+                hardMax:MAX_SCALE,
+                step:0.01,
+                decimals:2,
+                anchors:[
+                  {label:"Small",value:0.65},
+                  {label:"Base",value:1.00},
+                  {label:"Large",value:1.70}
+                ]
+              }
+            ]
+          }
+        ],
+        liveGroups:[
+          {
+            id:"derived",
+            label:"Derived from S0 law",
+            description:"Read-only consequences of the current coupled scale law.",
+            values:[
+              {id:"radius",label:"Radius",decimals:2},
+              {id:"mass",label:"Mass",decimals:3},
+              {id:"acceleration",label:"Acceleration",decimals:1},
+              {id:"braking",label:"Braking",decimals:1},
+              {id:"maxSpeed",label:"Max speed",decimals:1}
+            ]
+          },
+          {
+            id:"live",
+            label:"Live state",
+            values:[
+              {id:"speed",label:"Current speed",decimals:1},
+              {id:"contacts",label:"Contacts",decimals:0}
+            ]
+          }
+        ]
+      },
+      get(id){
+        if(id==="scale") return state.player.scale;
+        return undefined;
+      },
+      set(id,value){
+        if(id==="scale") setPlayerScale(state,value);
+      },
+      reset(id){
+        if(id==="scale") setPlayerScale(state,1);
+      },
+      restoreDefaults(){
+        setPlayerScale(state,1);
+      },
+      getLive(id){
+        if(id==="radius") return state.player.r;
+        if(id==="mass") return state.player.mass;
+        if(id==="acceleration") return state.player.acceleration;
+        if(id==="braking") return state.player.braking;
+        if(id==="maxSpeed") return state.player.maxSpeed;
+        if(id==="speed") return Math.hypot(state.player.vx,state.player.vy);
+        if(id==="contacts") return state.contacts;
+        return undefined;
+      }
+    };
 
     return {
       step(input,dt){
@@ -303,8 +381,12 @@ export const embodiedScaleFieldV0={
       },
 
       reset(){
+        const scale=state.player.scale;
         state=createScaleFieldState();
+        setPlayerScale(state,scale);
       },
+
+      inspector,
 
       snapshot(){
         return {

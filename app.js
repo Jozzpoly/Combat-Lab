@@ -3,6 +3,7 @@ import {ExperimentRegistry} from "./src/core/registry.js";
 import {BrowserInput} from "./src/core/browser-input.js";
 import {resizeCanvas,beginCanvasFrame} from "./src/core/canvas.js";
 import {readBuildIdentity} from "./src/core/provenance.js";
+import {WorkbenchInspector} from "./src/core/workbench-inspector.js";
 import {substrateSmoke} from "./experiments/substrate-smoke.js";
 import {embodiedScaleFieldV0} from "./experiments/embodied-scale-field-v0.js";
 
@@ -12,12 +13,15 @@ const title=document.querySelector("#experiment-title");
 const purpose=document.querySelector("#experiment-purpose");
 const controlsText=document.querySelector("#controls-text");
 const runState=document.querySelector("#run-state");
+const runtimeDetail=document.querySelector("#runtime-detail");
 const simTime=document.querySelector("#sim-time");
+const simTimeDetail=document.querySelector("#sim-time-detail");
 const buildId=document.querySelector("#build-id");
 const experimentSelect=document.querySelector("#experiment-select");
 const pauseButton=document.querySelector("#pause");
-const resetButton=document.querySelector("#reset");
-const debugButton=document.querySelector("#debug");
+const resetWorldButton=document.querySelector("#reset-world");
+const restoreDefaultsButton=document.querySelector("#restore-defaults");
+const debugInput=document.querySelector("#debug");
 const runtime=window.__combatLabRuntime;
 
 const registry=new ExperimentRegistry();
@@ -28,16 +32,25 @@ const runner=new FixedStepRunner({dt:1/120,maxFrame:0.05,maxAccum:0.10});
 const input=new BrowserInput({pointerTarget:canvas});
 input.attach();
 
+const inspector=new WorkbenchInspector({
+  parameterRoot:document.querySelector("#parameter-panel"),
+  liveRoot:document.querySelector("#live-panel"),
+  restoreButton:restoreDefaultsButton
+});
+
 let paused=false;
 let debug=false;
 let elapsed=0;
 let last=performance.now();
 let current=null;
+let nextInspectorSync=0;
 
 function updateRuntimeState(state){
   runtime.state=state;
   document.documentElement.dataset.runtimeState=state;
   runState.textContent=state;
+  runState.dataset.state=state;
+  runtimeDetail.textContent=state;
 }
 
 function captureSnapshot(){
@@ -46,20 +59,21 @@ function captureSnapshot(){
     : null;
 }
 
-function loadExperiment(id) {
+function loadExperiment(id){
   current=registry.create(id);
   runtime.activeExperimentId=id;
   title.textContent=current.definition.title;
   purpose.textContent=current.definition.purpose;
-  controlsText.textContent=current.definition.controls;
+  controlsText.textContent=current.definition.controls || "Direct controls available in Lab Inspector.";
   runner.reset();
   elapsed=0;
   runtime.elapsed=0;
   last=performance.now();
   captureSnapshot();
+  inspector.mount(current.instance);
 }
 
-for (const item of registry.list()) {
+for(const item of registry.list()){
   const option=document.createElement("option");
   option.value=item.id;
   option.textContent=item.title;
@@ -70,15 +84,17 @@ experimentSelect.value="embodied-scale-field-v0";
 loadExperiment(experimentSelect.value);
 experimentSelect.addEventListener("change",()=>loadExperiment(experimentSelect.value));
 
-function reset() {
+function resetWorld(){
   runner.reset();
   current.instance.reset();
   elapsed=0;
   runtime.elapsed=0;
   simTime.textContent="0.00 s";
+  simTimeDetail.textContent="0.00 s";
   simTime.dataset.elapsed="0.0000";
   last=performance.now();
   captureSnapshot();
+  inspector.sync(true);
 }
 
 pauseButton.addEventListener("click",()=>{
@@ -88,24 +104,23 @@ pauseButton.addEventListener("click",()=>{
   last=performance.now();
 });
 
-resetButton.addEventListener("click",reset);
+resetWorldButton.addEventListener("click",resetWorld);
 
-debugButton.addEventListener("click",()=>{
-  debug=!debug;
-  debugButton.textContent=debug ? "Debug on" : "Debug";
+debugInput.addEventListener("change",()=>{
+  debug=debugInput.checked;
 });
 
 readBuildIdentity().then(identity=>{
-  buildId.textContent=`source: ${identity.commit.slice(0,12)} · ${identity.branch}`;
+  buildId.textContent=`${identity.commit.slice(0,12)} · ${identity.branch}`;
 });
 
 updateRuntimeState("RUNNING");
 
-function frame(now) {
+function frame(now){
   const frameSeconds=(now-last)/1000;
   last=now;
 
-  if (!paused) {
+  if(!paused){
     const snapshot=input.snapshot();
     runner.advance(frameSeconds,dt=>{
       current.instance.step(snapshot,dt);
@@ -122,9 +137,16 @@ function frame(now) {
   runtime.elapsed=elapsed;
   runtime.lastFrameAt=now;
 
-  simTime.textContent=`${elapsed.toFixed(2)} s`;
+  const formatted=`${elapsed.toFixed(2)} s`;
+  simTime.textContent=formatted;
+  simTimeDetail.textContent=formatted;
   simTime.dataset.elapsed=elapsed.toFixed(4);
   document.documentElement.dataset.frameCount=String(runtime.frames);
+
+  if(now>=nextInspectorSync){
+    inspector.sync();
+    nextInspectorSync=now+80;
+  }
 
   requestAnimationFrame(frame);
 }
