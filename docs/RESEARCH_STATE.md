@@ -441,28 +441,61 @@ Do not tune impulse / rusher constants until this changes.
 
 R0 continuous readiness remains qualified.
 
-### Active frontier — READINESS FOLLOW-THROUGH / AFTERSTATE DESIGN
+### READINESS FOLLOW-THROUGH R2 — FAIL, PHYSICAL OVERRUN DONOR RETAINED
+
+Primary record:
+
+- [READINESS FOLLOW-THROUGH R2](READINESS_FOLLOW_THROUGH_R2.md)
+- final falsifier: `4b97bd184138e2f319aa13c0a436a6d2b2455f76`;
+- deterministic suite: **25 / 25 PASS**;
+- Owner play: **NOT REQUESTED**.
+
+What survived:
+
+- ordinary movement can leave the locked dash geometry;
+- the corrected minimum deterministic evade is ~49.2 units rather than the earlier over-evade ~108;
+- rusher overrun is genuinely physical;
+- no recovery timer defines the opportunity;
+- dash commit ends ~0.792 s and positive closing is naturally recovered ~1.275 s;
+- physical opportunity is ~0.483 s;
+- readiness history remains measurable at commit end in the reference regime.
+
+What failed:
+
+- immediate follow-up is determined by pressure side, not FREE/WALL readiness history:
+  - EAST: FREE and WALL both no-contact;
+  - WEST: FREE and WALL both pre-turnaround contact;
+- this remains true while FREE/WALL readiness distance at commit end is still ~0.404 at the reference setting;
+- therefore history existed but did not change the immediate action opportunity;
+- the R2 card explicitly required stopping if K1 had no contextual follow-up phenomenon.
+
+Later GUIDE diagnostics do not rescue the result:
+
+- one low-authority cell at 0.18 shows a history-dependent guided contact;
+- at 0.38+ guided follow contacts all four cells;
+- higher GUIDE authority naturally erases readiness history.
+
+Do not tune GUIDE or rusher constants around the 0.18 cell.
+
+### Active frontier — JOINT RELATIONAL AFTERSTATE AUDIT
+
+R0 showed that isolated player-tool readiness can persist.
+
+R1 and R2 showed that persistence alone is not enough to become strategically decisive under a simple independent opponent.
 
 New highest-value question:
 
-> **Can inherited player readiness change which follow-up is naturally available after an opponent's own committed action has already created a real physical afterstate?**
-
-This deliberately moves away from asking readiness to act as a parry.
-
-Candidate pressure shape:
-
-- movement remains the primary way to leave incoming locked threat geometry;
-- the adversary's own commitment creates overextension / separation / orientation;
-- no hidden vulnerable token;
-- no HP/damage initially;
-- readiness determines whether an immediate follow-up contact is geometrically available or whether the player must GUIDE / reposition first.
+> **What afterstate can be jointly owned by both actors / weapon / place, so neither side can unilaterally reset the relation through ordinary movement or aim?**
 
 Before implementation:
 
-- define what opponent afterstate is genuinely physical rather than timer-awarded;
-- mirror the situation so one readiness state cannot be globally best;
-- pre-register follow-up spam / timing-window / one-best-guard falsifiers;
-- keep AUTO-NEUTRAL and pose-only attribution available only after a follow-up phenomenon exists.
+- audit prior blade-clash / shield-contact / body-screen / wall-contact donors;
+- identify which relations were genuinely mutual vs merely local impulses;
+- separate sustained geometric constraint from binary parry/bind minigames;
+- ask how a shared relation can still preserve direct, responsive control;
+- test whether terrain or a second body can make the relation persist without timers/tokens.
+
+Do not open R3 code until this audit exists.
 
 Owner deployment remains **NO**.
 
