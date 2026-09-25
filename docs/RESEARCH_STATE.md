@@ -119,6 +119,38 @@ A redundant container-local Chromium run against the downloaded emitted artifact
 
 Owner feel / usefulness remains **UNPROVEN** until direct Owner observation.
 
+### First S0 Owner recording — APPARATUS FAIL
+
+The first Owner recording of public specimen `3da498947b480c5da5a52530293afa818014b3c8` is authoritative product evidence.
+
+Result:
+
+> **OWNER-OBSERVED PRODUCT FAIL: the simulation never started.**
+
+Observed for the full ~12.6 s recording:
+
+- blank canvas;
+- timer fixed at `0.00 s`;
+- static `RUNNING` label;
+- `source: local` never replaced;
+- selector visually changes but does not load the selected experiment;
+- expected control actions do not produce application-state changes.
+
+Exact deployed source confirms a startup temporal-dead-zone bug: `loadExperiment()` writes `elapsed` and `last` before their later `let` initializations.
+
+Research boundary:
+
+- public S0 specimen: **FAIL**;
+- browser qualification gate: **FAIL / insufficient**;
+- BODY / SCALE human phenomenon: **UNPROVEN**, not rejected;
+- machine body/scale mechanism tests remain narrow mechanistic evidence only.
+
+Do not modify body/scale semantics from this recording.
+
+First repair runtime translation and strengthen the live browser gate.
+
+See `docs/S0_FIRST_OWNER_RECORDING_ANALYSIS_2026-09-25.md`.
+
 ### Broader refoundation frontier
 
 No later combat family is preselected.

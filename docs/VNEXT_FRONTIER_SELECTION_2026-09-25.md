@@ -216,6 +216,18 @@ Public target:
 
 No behavior was changed after machine/browser qualification.
 
+## 4.3 First Owner recording — runtime FAIL
+
+The Owner recording of exact public specimen `3da498947b480c5da5a52530293afa818014b3c8` shows that S0 never entered its simulation loop.
+
+Product status is therefore **FAIL** even though machine CI and the previous Chromium DOM gate were green.
+
+The bug is startup-order specific: `loadExperiment()` accesses `elapsed` / `last` before their `let` initialization.
+
+This invalidates the previous Owner-ready promotion, but does **not** falsify BODY / SCALE.
+
+The next specimen must preserve S0 semantics and repair only the translation/runtime layer before retest.
+
 ## 5. Evidence boundary
 
 Machine tests may qualify:

@@ -32,7 +32,7 @@ Preserved pre-refoundation research branch:
 
 The old branch remains recoverable evidence. It is **not** the foundation of vNext.
 
-Exact S0 public specimen is `3da498947b480c5da5a52530293afa818014b3c8`; Pages run `36172099859` succeeded and the emitted artifact identifies that exact SHA.
+Exact S0 public specimen was `3da498947b480c5da5a52530293afa818014b3c8`. Pages provenance was correct, but the first Owner recording showed the runtime never started. **S0 first Owner recording = product FAIL; BODY / SCALE = still unproven.**
 
 Neutral substrate checkpoint:
 
@@ -45,7 +45,7 @@ Neutral substrate checkpoint:
 There is currently:
 
 - a selected first vNext frontier: **BODY / SCALE**;
-- an S0 body/world discovery field that has passed its machine/browser gate and is ready for first Owner observation;
+- an S0 body/world discovery field whose first Owner recording exposed a startup/runtime FAIL before any body/scale observation was possible;
 - no active R4;
 - no accepted next weapon family;
 - no accepted Feniks combat architecture;
