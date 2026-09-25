@@ -362,12 +362,12 @@ export const embodiedScaleFieldV0={
         const recentlyTouched=state.time-state.lastContactTime<0.18;
         drawBody(ctx,t,state.player,recentlyTouched?"#8fd5ff":"#4d9fe0","#cbeaff");
 
-        ctx.fillStyle="#e9eef5";
-        ctx.font="13px ui-monospace, monospace";
-        ctx.fillText(`scale ${state.player.scale.toFixed(2)} · radius ${state.player.r.toFixed(1)} · mass ${state.player.mass.toFixed(2)}`,18,24);
-        ctx.fillText(`speed ${Math.hypot(state.player.vx,state.player.vy).toFixed(1)} · contacts ${state.contacts}`,18,43);
-
         if(debug){
+          ctx.fillStyle="#e9eef5";
+          ctx.font="13px ui-monospace, monospace";
+          ctx.fillText(`scale ${state.player.scale.toFixed(2)} · radius ${state.player.r.toFixed(1)} · mass ${state.player.mass.toFixed(2)}`,18,24);
+          ctx.fillText(`speed ${Math.hypot(state.player.vx,state.player.vy).toFixed(1)} · contacts ${state.contacts}`,18,43);
+
           ctx.strokeStyle="#8fd5ff";
           ctx.beginPath();
           ctx.moveTo(t.x(state.player.x),t.y(state.player.y));
