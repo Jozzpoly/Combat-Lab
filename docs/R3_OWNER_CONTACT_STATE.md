@@ -3,7 +3,7 @@
 **Date:** 2026-09-25  
 **Campaign:** active; machine gate complete  
 **Exact deployed observation specimen:** `b51aad2dbc6475237b9fb22fdb0ed24b82bb6827`  
-**Owner play:** not yet performed
+**Owner play:** first observation performed — POSITIVE SIGNAL
 
 ## Live truth
 
@@ -27,7 +27,7 @@ Hard boundary:
 | Exact Pages source / artifact provenance | PASS |
 | ES-module runtime in Chromium | PASS |
 | Missing module / page / console errors | NONE |
-| Human feel / readability | **UNPROVEN** |
+| Human phenomenon / interest | **EARLY POSITIVE OWNER SIGNAL** |
 
 The public Pages target is:
 
@@ -55,17 +55,46 @@ It contains no Owner play evidence. Its real-browser gate was explicitly unprove
 
 Preserve it as apparatus/provenance history.
 
+## First Owner observation — 2026-09-25
+
+Owner response to exact deployed specimen `b51aad2dbc6475237b9fb22fdb0ed24b82bb6827` was materially positive but deliberately non-committal:
+
+- the specimen is "already something";
+- it is "something we can work on";
+- the raw beginning itself is appealing;
+- whether Feniks needs this degree/type of sword physics remains explicitly uncertain.
+
+Interpretation:
+
+> **the human-facing phenomenon is interesting enough to continue researching, but nothing here promotes sword physics into Feniks combat.**
+
+This is the first positive Owner signal in the R3 line.
+
+What this DOES qualify:
+
+- the specimen was not rejected as immediately dead / irrelevant;
+- direct manipulation exposes enough of a phenomenon to justify another research question;
+- R4 may now be opened as a bounded adversarial-pressure experiment.
+
+What this does NOT qualify:
+
+- a final sword-physics model;
+- combat feel as solved;
+- readability / mastery;
+- hit or damage authority;
+- weapon realism as a design goal;
+- Feniks fit;
+- a requirement that Feniks use continuous physical blade contact.
+
 ## Next valid action
 
-No further pre-Owner feel tuning.
+Open a new bounded R4 hypothesis around the smallest useful question:
 
-Owner instruction should stay minimal:
+> **Does the interesting part of R3 survive when the other participant has minimal adversarial intent, without special bind semantics or physics-chore incentives?**
 
-> WASD — move. Mouse — guide the tool. Left click — COMMIT. R — reset. Play with contact and report what you notice.
+Preserve the Owner's uncertainty as a design constraint. The next experiment must be capable of showing that the useful result is either:
 
-After raw Owner evidence:
+- a general material exchange principle worth carrying forward; or
+- merely an interesting sword-physics toy that Feniks does not need.
 
-- if imperceptible, separate translation failure from kernel failure;
-- if perceptible but sticky/chore-like/arbitrary, retain the donor and stop human-facing promotion;
-- if perceptible and interesting, only then open the R4 adversarial-pressure hypothesis;
-- if an unexpected phenomenon dominates, follow that evidence instead of the roadmap.
+Do not tune R3 toward realism before answering that distinction.

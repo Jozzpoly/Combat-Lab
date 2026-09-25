@@ -614,7 +614,29 @@ Browser-connector boundary:
 - this is tooling unavailability, not product evidence;
 - the exact deployed Pages artifact was therefore exercised in local Chromium with routed artifact modules rather than claiming a live public-URL observation.
 
-Human phenomenon / feel remains **UNPROVEN** until Owner play.
+First Owner observation is now recorded.
+
+Owner response to exact deployed specimen `b51aad2dbc6475237b9fb22fdb0ed24b82bb6827` is an **EARLY POSITIVE SIGNAL**:
+
+- the result is "already something";
+- it is "something we can work on";
+- the raw starting point is appealing;
+- whether Feniks needs this kind of sword physics remains explicitly uncertain.
+
+Therefore:
+
+> **R3 human phenomenon = interesting enough to continue researching.**
+
+This does **not** promote sword physics, R3, or any current control/contact law into Feniks combat.
+
+The next frontier is now legitimately reopened as a separate R4 design question:
+
+> **Does the interesting part of the shared material relation survive minimal adversarial intent without bind semantics, hidden advantage, or physics-wrestling becoming the game?**
+
+The experiment should be able to falsify both possibilities:
+
+1. the value is a broader material-exchange principle that can survive abstraction away from literal sword physics;
+2. the value is mainly the novelty of manipulating physical swords and need not belong in Feniks.
 
 ## Recovery correction — 2026-09-22
 
