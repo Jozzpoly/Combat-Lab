@@ -13,7 +13,9 @@ import {
   contactFamilySweep,
   resetDecaySweep,
   mirroredContactCheck,
-  perturbationSweep
+  perturbationSweep,
+  runRepeatedContactSoak,
+  pressReference
 } from "../src/r3-rehearsal.js";
 
 test("R3 bodies remain ordinarily responsive while tools commit",()=>{
