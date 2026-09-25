@@ -400,48 +400,28 @@ export function mirroredContactCheck(){
 }
 
 
-export function runRepeatedContactSoak({
-  seconds=12,
+export function runSustainedContactSoak({
+  holdSeconds=6,
+  releaseSeconds=1.4,
   guideAuthority=0.48
 }={}){
   const state=createState();
-  const frames=Math.round(seconds/DT);
-  const halfPeriod=0.42;
-  let lastPhase=-1;
+  setGuide(state.a,0.34);
+  setGuide(state.b,Math.PI-0.34);
+  requestCommit(state.a,0.34);
+  requestCommit(state.b,Math.PI-0.34);
+
   let maxOmega=0;
-  let maxDuration=0;
   let engagedFrames=0;
+  const holdFrames=Math.round(holdSeconds/DT);
 
-  for(let i=0;i<frames;i++){
-    const t=i*DT;
-    const phase=Math.floor(t/halfPeriod)%2;
-
-    if(phase!==lastPhase){
-      if(phase===0){
-        setGuide(state.a,0.34);
-        setGuide(state.b,Math.PI-0.34);
-        if(!state.a.tool.action) requestCommit(state.a,0.34);
-        if(!state.b.tool.action) requestCommit(state.b,Math.PI-0.34);
-      }else{
-        setGuide(state.a,0.78);
-        setGuide(state.b,Math.PI-0.78);
-        if(!state.a.tool.action) requestCommit(state.a,0.78);
-        if(!state.b.tool.action) requestCommit(state.b,Math.PI-0.78);
-      }
-      lastPhase=phase;
-    }
-
+  for(let i=0;i<holdFrames;i++){
     stepState(state,{
       dt:DT,
       guideAuthority,
       contactEnabled:true
     });
-
     if(state.contact.engaged) engagedFrames++;
-    maxDuration=Math.max(
-      maxDuration,
-      state.contact.maxDuration
-    );
     maxOmega=Math.max(
       maxOmega,
       Math.abs(state.a.tool.angularVelocity),
@@ -449,17 +429,49 @@ export function runRepeatedContactSoak({
     );
   }
 
+  let separated=false;
+  let releaseFrames=0;
+  const maxReleaseFrames=Math.round(releaseSeconds/DT);
+  for(let i=0;i<maxReleaseFrames;i++){
+    stepState(state,{
+      dt:DT,
+      guideAuthority,
+      contactEnabled:true,
+      aMoveX:-1,
+      bMoveX:1
+    });
+    releaseFrames=i+1;
+    maxOmega=Math.max(
+      maxOmega,
+      Math.abs(state.a.tool.angularVelocity),
+      Math.abs(state.b.tool.angularVelocity)
+    );
+    if(
+      !state.contact.engaged &&
+      state.contact.separatedFor>=0.06
+    ){
+      separated=true;
+      break;
+    }
+  }
+
+  const a=snapshotActor(state.a);
+  const b=snapshotActor(state.b);
+
   return {
     impacts:state.contact.impacts,
     contactFrames:state.contact.frames,
     engagedFrames,
-    maxDuration:Number(maxDuration.toFixed(4)),
+    maxDuration:Number(
+      state.contact.maxDuration.toFixed(4)
+    ),
     maxOmega:Number(maxOmega.toFixed(4)),
-    a:snapshotActor(state.a),
-    b:snapshotActor(state.b),
+    separated,
+    releaseTime:Number((releaseFrames*DT).toFixed(4)),
+    a,b,
     finite:[
-      ...Object.values(snapshotActor(state.a)),
-      ...Object.values(snapshotActor(state.b))
+      ...Object.values(a),
+      ...Object.values(b)
     ].every(Number.isFinite)
   };
 }
