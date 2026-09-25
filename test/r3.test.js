@@ -15,7 +15,8 @@ import {
   mirroredContactCheck,
   perturbationSweep,
   runSustainedContactSoak,
-  pressReference
+  pressReference,
+  coupledIntentProbe
 } from "../src/r3-rehearsal.js";
 
 test("R3 bodies remain ordinarily responsive while tools commit",()=>{
@@ -168,4 +169,16 @@ test("R3 long sustained manifold does not pump repeated impacts and releases thr
   assert.equal(first.separated,true);
   assert.ok(first.releaseTime<1.4);
   assert.deepEqual(first,second);
+});
+
+
+test("R3 ordinary one-side GUIDE perturbation propagates through the shared manifold",()=>{
+  const result=coupledIntentProbe();
+  console.log("R3_COUPLED_INTENT",JSON.stringify(result));
+
+  assert.equal(result.baseline.separated,true);
+  assert.equal(result.aPerturb.separated,true);
+  assert.equal(result.bPerturb.separated,true);
+  assert.ok(Number.isFinite(result.crossResponse.bFromA));
+  assert.ok(Number.isFinite(result.crossResponse.aFromB));
 });
