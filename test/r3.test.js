@@ -14,7 +14,7 @@ import {
   resetDecaySweep,
   mirroredContactCheck,
   perturbationSweep,
-  runRepeatedContactSoak,
+  runSustainedContactSoak,
   pressReference
 } from "../src/r3-rehearsal.js";
 
@@ -146,21 +146,26 @@ test("R3 independent local neutralization collapses press-medium joint tool hist
   assert.ok(end.nextPathDelta.b<0.02);
 });
 
-test("R3 repeated ordinary contact and disengage remains bounded and deterministic",()=>{
-  const first=runRepeatedContactSoak({
-    seconds:12,
+test("R3 long sustained manifold does not pump repeated impacts and releases through locomotion",()=>{
+  const first=runSustainedContactSoak({
+    holdSeconds:6,
+    releaseSeconds:1.4,
     guideAuthority:0.48
   });
-  const second=runRepeatedContactSoak({
-    seconds:12,
+  const second=runSustainedContactSoak({
+    holdSeconds:6,
+    releaseSeconds:1.4,
     guideAuthority:0.48
   });
 
   console.log("R3_SOAK",JSON.stringify(first));
 
   assert.equal(first.finite,true);
-  assert.ok(first.impacts>=3);
-  assert.ok(first.contactFrames>20);
+  assert.equal(first.impacts,1);
+  assert.ok(first.contactFrames>600);
+  assert.ok(first.maxDuration>5);
   assert.ok(first.maxOmega<20);
+  assert.equal(first.separated,true);
+  assert.ok(first.releaseTime<1.4);
   assert.deepEqual(first,second);
 });
