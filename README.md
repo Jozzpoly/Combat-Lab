@@ -45,7 +45,7 @@ Neutral substrate checkpoint:
 There is currently:
 
 - a selected first vNext frontier: **BODY / SCALE**;
-- an S0 body/world discovery field whose first Owner recording exposed a startup/runtime FAIL before any body/scale observation was possible;
+- an S0 body/world discovery field whose first Owner recording exposed a startup/runtime FAIL; that runtime has now been repaired without changing the S0 experiment behavior and passes a live-browser interaction gate;
 - no active R4;
 - no accepted next weapon family;
 - no accepted Feniks combat architecture;

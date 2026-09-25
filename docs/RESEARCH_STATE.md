@@ -158,6 +158,33 @@ The repaired specimen must pass this gate before deployment.
 
 See `docs/S0_FIRST_OWNER_RECORDING_ANALYSIS_2026-09-25.md`.
 
+### S0 runtime repair qualification
+
+Runtime-only repair checkpoint:
+
+- `fd851a13d1f36776f15b513884047f5cc90ff3a5`.
+
+Critical preservation check:
+
+- S0 experiment blob at failed Owner specimen `3da498947…`: `d0ea720a1978fe385b0358c3b870f7cc10e335a8`;
+- S0 experiment blob after runtime repair: `d0ea720a1978fe385b0358c3b870f7cc10e335a8`;
+- **BODY / SCALE behavior is byte-identical.**
+
+Qualification:
+
+- 10 / 10 deterministic tests PASS;
+- live headless-Chromium gate PASS;
+- runtime reaches RUNNING with advancing frame/time heartbeat;
+- real `Digit3` browser input changes active S0 scale to the large anchor;
+- Reset restores the S0 initial scale/state;
+- Pause holds simulation time and Resume advances it;
+- experiment selector actually loads the smoke probe and then returns to S0;
+- no captured runtime error.
+
+The new gate itself first caught a heartbeat/reset inconsistency and blocked promotion. That instrumentation issue was corrected before this PASS.
+
+This is the required evidence to redeploy the same S0 hypothesis for the first actual Owner body/scale observation.
+
 ### Broader refoundation frontier
 
 No later combat family is preselected.

@@ -159,3 +159,18 @@ Before changing any BODY / SCALE behavior:
 Do not tune size, mass, geometry, movement or drifters based on this recording.
 
 There is no Owner evidence about those yet.
+
+
+## 7. Repair result
+
+The runtime failure has now been repaired without touching `experiments/embodied-scale-field-v0.js`.
+
+The S0 experiment blob remains exactly:
+
+`d0ea720a1978fe385b0358c3b870f7cc10e335a8`
+
+before and after the repair.
+
+Checkpoint `fd851a13d1f36776f15b513884047f5cc90ff3a5` passes the strengthened live-browser gate, including real input, reset, pause/resume and experiment switching.
+
+Therefore the next Owner observation remains a clean retest of the original S0 body/scale hypothesis.

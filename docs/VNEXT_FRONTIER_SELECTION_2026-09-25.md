@@ -228,6 +228,31 @@ This invalidates the previous Owner-ready promotion, but does **not** falsify BO
 
 The next specimen must preserve S0 semantics and repair only the translation/runtime layer before retest.
 
+## 4.4 Runtime repair qualification
+
+The failed public specimen was repaired **without changing the S0 experiment implementation**.
+
+Experiment blob before/after repair:
+
+- `d0ea720a1978fe385b0358c3b870f7cc10e335a8`.
+
+Repair checkpoint:
+
+- `fd851a13d1f36776f15b513884047f5cc90ff3a5`.
+
+The strengthened live-browser gate now verifies:
+
+- advancing frames/time;
+- real keyboard input changing S0 scale;
+- Reset restoring S0;
+- Pause/Resume;
+- actual experiment switching;
+- zero captured runtime error.
+
+Gate: **PASS**.
+
+The next deploy is therefore a translation/runtime repair of the same S0 hypothesis, not a tuned replacement.
+
 ## 5. Evidence boundary
 
 Machine tests may qualify:
