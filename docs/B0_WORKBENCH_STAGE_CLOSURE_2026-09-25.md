@@ -171,3 +171,50 @@ The Workbench should support that decision rather than pre-empt it.
 > **FINAL FENIKS BODY OR COMBAT MODEL — NOT DECIDED**
 
 > **NEXT RESEARCH DIRECTION — OPEN, WAITING FOR OWNER INSTRUCTION**
+
+
+## 6. Exact final public closure
+
+Final deployed closure candidate:
+
+`2eb9a878eb4fa9c406ca0e90abcab33cb186332a`
+
+CI / Pages:
+
+- check run `36195359528`: SUCCESS;
+- emitted artifact browser gate: PASS;
+- Pages run `36195381040`: SUCCESS;
+- Pages build checked out exact `2eb9a878eb4fa9c406ca0e90abcab33cb186332a`;
+- Pages artifact ID: `10889951339`;
+- deploy: SUCCESS.
+
+Real public-browser verification:
+
+- existing Combat Lab tab in Opera was explicitly navigated/reloaded to the public origin;
+- active experiment: `Load / Envelope Field B0`;
+- runtime surface present;
+- final shortened B0 Inspector copy present;
+- selector exposes:
+  - `Research experiments` → S0, B0;
+  - `Internal diagnostics` → Substrate smoke probe;
+- direct public `COMMIT.txt` opened in Opera returns exact:
+  - `2eb9a878eb4fa9c406ca0e90abcab33cb186332a`.
+
+Therefore:
+
+> **repo truth = emitted artifact truth = real public-browser truth.**
+
+No additional Owner test is required to close this stage because the final changes are bounded recording-driven polish, not a new research mechanism.
+
+## Final handoff state
+
+The project is intentionally left with:
+
+- a qualified Workbench substrate;
+- a positive B0 embodiment-decomposition signal;
+- preserved S0 reference experiment;
+- internal substrate diagnostic clearly separated;
+- no preselected next combat family;
+- no open implementation obligation from this stage.
+
+**READY FOR NEW OWNER INSTRUCTION.**

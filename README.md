@@ -242,3 +242,10 @@ See:
 
 - `docs/B0_WORKBENCH_OWNER_RECORDING_FEEDBACK_2026-09-25.md`
 - `docs/B0_WORKBENCH_STAGE_CLOSURE_2026-09-25.md`
+
+
+Final public B0 / Workbench closure specimen:
+
+`2eb9a878eb4fa9c406ca0e90abcab33cb186332a`
+
+Real public-browser provenance has been verified. This stage is closed and the project is waiting for the next Owner instruction.

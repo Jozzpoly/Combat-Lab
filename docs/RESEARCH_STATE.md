@@ -1849,3 +1849,29 @@ Public truth should remain `main` until browser/runtime rehearsal and the next p
 A failed specimen is evidence, not a foundation.
 
 Combat Lab should prefer a clean reset over accumulating mechanics around an unearned direction.
+
+
+## FINAL CHECKPOINT — B0 / Workbench closure
+
+Final public closure specimen:
+
+- `2eb9a878eb4fa9c406ca0e90abcab33cb186332a`.
+
+Final evidence:
+
+- 31 / 31 checks PASS;
+- emitted Pages interaction gate PASS;
+- Pages deploy PASS;
+- real Opera public-origin inspection PASS;
+- direct public `COMMIT.txt` in Opera matches exact closure SHA.
+
+Stage state:
+
+- **WORKBENCH FOUNDATION: QUALIFIED**
+- **B0 DIRECTION: POSITIVE OWNER SIGNAL / CLOSED**
+- **A/B OWNER VALUE: UNPROVEN**
+- **FINAL FENIKS BODY/COMBAT MODEL: UNDECIDED**
+- **NEXT DIRECTION: OPEN**
+- **OWNER ACTION REQUIRED NOW: NONE**
+
+The project is cleanly waiting for new Owner instruction.
