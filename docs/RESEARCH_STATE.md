@@ -226,6 +226,56 @@ Therefore:
 
 > **runtime translation is re-qualified; BODY / SCALE itself remains unchanged and still awaits its first valid Owner observation.**
 
+### S0 second Owner recording — POSITIVE BODY/WORLD SIGNAL
+
+The repaired S0 received its first valid Owner play recording.
+
+Owner feedback:
+
+- the specimen is genuinely in the direction Feniks needs;
+- largest body does not fit the central passage but can use side routes;
+- mass difference is perceptible in movement / displacement;
+- the result is still extremely raw and far from final Feniks needs;
+- moving away from a weapon-system-centric foundation is considered justified;
+- future combat is expected to be a hybrid discovered through experimentation, not a weapon mechanic frozen in advance.
+
+Dense recording analysis promotes the broad body/world direction while explicitly refusing to canonize S0's placeholder laws.
+
+Strongest matched observation:
+
+- large form remains unable to clear the central opening around ~7.1–10.9 s;
+- at ~11.0 s the Owner switches to small at essentially the same location;
+- small clears the relation immediately afterward.
+
+Source geometry:
+
+- central gap: 54;
+- small diameter: 23.4;
+- medium diameter: 36;
+- large diameter: 61.2;
+- side bypass: 70.
+
+Therefore the useful relation is material and permissive:
+
+> **large loses one route but not movement through the world.**
+
+Contact evidence also shows qualitatively different yield / displacement behavior between small and large bodies, but exact mass and motor laws remain unqualified.
+
+Status:
+
+- BODY / WORLD discovery direction: **ACTIVE / POSITIVE OWNER SIGNAL**;
+- exact scale->mass law: UNPROVEN;
+- exact locomotion law: UNPROVEN;
+- current circle collider: PLACEHOLDER;
+- current contact solver: MECHANISM ONLY;
+- continuous scale sweep: UNPROVEN;
+- S1 frontier: disentangle envelope, mass and locomotor authority before adding attacks.
+
+See:
+
+- `docs/S0_SECOND_OWNER_RECORDING_DENSE_ANALYSIS_2026-09-25.md`;
+- `docs/EMBODIED_COMBAT_ECOLOGY_CAMPAIGN_2026-09-25.md`.
+
 ### Broader refoundation frontier
 
 No later combat family is preselected.

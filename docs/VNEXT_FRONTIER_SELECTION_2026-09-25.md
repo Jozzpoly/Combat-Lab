@@ -299,3 +299,18 @@ Only Owner play can qualify:
 ## Working invariant
 
 > **First prove that different bodies can inhabit the same world differently. Only then ask how they fight in it.**
+
+
+## 6. Second Owner recording — S0 direction promoted
+
+The first valid S0 Owner test is positive for the broad body/world research direction.
+
+Do not interpret this as approval of the current formulas.
+
+The next highest-information question is no longer "does size matter at all?"
+
+It is:
+
+> **Which part of the perceived phenotype comes from envelope, mass/contact and locomotor authority respectively?**
+
+The active follow-up is therefore S1 / Orthogonal Body Field, described in the Embodied Combat Ecology campaign.
