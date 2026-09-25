@@ -53,6 +53,7 @@ export class WorkbenchInspector {
     this.inspector=null;
     this.numericBindings=[];
     this.liveBindings=[];
+    this.editableIds=[];
 
     this.restoreButton.addEventListener("click",()=>{
       if(!this.inspector?.restoreDefaults) return;
@@ -66,6 +67,7 @@ export class WorkbenchInspector {
     this.inspector=instance?.inspector || null;
     this.numericBindings=[];
     this.liveBindings=[];
+    this.editableIds=[];
     this.parameterRoot.replaceChildren();
     this.liveRoot.replaceChildren();
 
@@ -216,12 +218,40 @@ export class WorkbenchInspector {
     this.numericBindings.push({
       control,range,number,extreme
     });
+    this.editableIds.push(control.id);
 
     return wrap;
   }
 
   #get(id){
     return finite(this.inspector?.get?.(id),0);
+  }
+
+  getParameterState(){
+    if(!this.inspector) return {};
+    const state={};
+    for(const id of this.editableIds){
+      state[id]=this.#get(id);
+    }
+    return state;
+  }
+
+  applyParameterState(state){
+    if(!this.inspector || !state || typeof state!=="object") return;
+    const allowed=new Set(this.editableIds);
+    for(const [id,value] of Object.entries(state)){
+      if(!allowed.has(id)) continue;
+      const n=Number(value);
+      if(!Number.isFinite(n)) continue;
+      this.inspector.set?.(id,n);
+    }
+    this.sync(true);
+  }
+
+  getParameterLabels(){
+    return Object.fromEntries(
+      this.numericBindings.map(({control})=>[control.id,control.label || control.id])
+    );
   }
 
   sync(force=false){

@@ -4,6 +4,7 @@ import {BrowserInput} from "./src/core/browser-input.js";
 import {resizeCanvas,beginCanvasFrame} from "./src/core/canvas.js";
 import {readBuildIdentity} from "./src/core/provenance.js";
 import {WorkbenchInspector} from "./src/core/workbench-inspector.js";
+import {ParameterSlotStore,formatParameterSlot} from "./src/core/parameter-state.js";
 import {substrateSmoke} from "./experiments/substrate-smoke.js";
 import {embodiedScaleFieldV0} from "./experiments/embodied-scale-field-v0.js";
 
@@ -21,6 +22,12 @@ const experimentSelect=document.querySelector("#experiment-select");
 const pauseButton=document.querySelector("#pause");
 const resetWorldButton=document.querySelector("#reset-world");
 const restoreDefaultsButton=document.querySelector("#restore-defaults");
+const captureAButton=document.querySelector("#capture-a");
+const applyAButton=document.querySelector("#apply-a");
+const captureBButton=document.querySelector("#capture-b");
+const applyBButton=document.querySelector("#apply-b");
+const slotASummary=document.querySelector("#slot-a-summary");
+const slotBSummary=document.querySelector("#slot-b-summary");
 const debugInput=document.querySelector("#debug");
 const runtime=window.__combatLabRuntime;
 
@@ -31,6 +38,8 @@ registry.register(embodiedScaleFieldV0);
 const runner=new FixedStepRunner({dt:1/120,maxFrame:0.05,maxAccum:0.10});
 const input=new BrowserInput({pointerTarget:canvas});
 input.attach();
+
+const parameterSlots=new ParameterSlotStore();
 
 const inspector=new WorkbenchInspector({
   parameterRoot:document.querySelector("#parameter-panel"),
@@ -59,6 +68,37 @@ function captureSnapshot(){
     : null;
 }
 
+function updateParameterSlots(){
+  const experimentId=runtime.activeExperimentId;
+  const labels=inspector.getParameterLabels();
+  const a=parameterSlots.get(experimentId,"A");
+  const b=parameterSlots.get(experimentId,"B");
+
+  slotASummary.textContent=formatParameterSlot(a,labels);
+  slotBSummary.textContent=formatParameterSlot(b,labels);
+  applyAButton.disabled=!a;
+  applyBButton.disabled=!b;
+  captureAButton.disabled=inspector.editableIds.length===0;
+  captureBButton.disabled=inspector.editableIds.length===0;
+}
+
+function captureParameterSlot(name){
+  parameterSlots.capture(
+    runtime.activeExperimentId,
+    name,
+    inspector.getParameterState()
+  );
+  updateParameterSlots();
+}
+
+function applyParameterSlot(name){
+  const state=parameterSlots.get(runtime.activeExperimentId,name);
+  if(!state) return;
+  inspector.applyParameterState(state);
+  captureSnapshot();
+  updateParameterSlots();
+}
+
 function loadExperiment(id){
   current=registry.create(id);
   runtime.activeExperimentId=id;
@@ -71,6 +111,7 @@ function loadExperiment(id){
   last=performance.now();
   captureSnapshot();
   inspector.mount(current.instance);
+  updateParameterSlots();
 }
 
 for(const item of registry.list()){
@@ -105,6 +146,18 @@ pauseButton.addEventListener("click",()=>{
 });
 
 resetWorldButton.addEventListener("click",resetWorld);
+
+captureAButton.addEventListener("click",()=>captureParameterSlot("A"));
+applyAButton.addEventListener("click",()=>applyParameterSlot("A"));
+captureBButton.addEventListener("click",()=>captureParameterSlot("B"));
+applyBButton.addEventListener("click",()=>applyParameterSlot("B"));
+
+restoreDefaultsButton.addEventListener("click",()=>{
+  queueMicrotask(()=>{
+    captureSnapshot();
+    inspector.sync(true);
+  });
+});
 
 debugInput.addEventListener("change",()=>{
   debug=debugInput.checked;

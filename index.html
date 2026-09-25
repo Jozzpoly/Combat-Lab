@@ -66,14 +66,39 @@
 
         <div id="parameter-panel"></div>
 
-        <section class="inspector-section defaults-section">
+        <section class="inspector-section parameter-state-section">
           <div class="section-heading compact">
             <div>
               <div class="section-title">Parameter state</div>
-              <p class="section-description">World reset preserves authored values. Restore Defaults resets the authored experiment parameters.</p>
+              <p class="section-description">Capture authored values for fast A/B comparison. Applying a slot is live; Reset World remains separate for matched starts.</p>
             </div>
           </div>
-          <button id="restore-defaults" type="button" class="wide-action">Restore Defaults</button>
+
+          <div class="parameter-slots">
+            <div class="parameter-slot" data-slot="A">
+              <div class="slot-heading">
+                <span class="slot-name">A</span>
+                <span id="slot-a-summary" class="slot-summary">Empty</span>
+              </div>
+              <div class="slot-actions">
+                <button id="capture-a" type="button">Capture</button>
+                <button id="apply-a" type="button" disabled>Apply</button>
+              </div>
+            </div>
+
+            <div class="parameter-slot" data-slot="B">
+              <div class="slot-heading">
+                <span class="slot-name">B</span>
+                <span id="slot-b-summary" class="slot-summary">Empty</span>
+              </div>
+              <div class="slot-actions">
+                <button id="capture-b" type="button">Capture</button>
+                <button id="apply-b" type="button" disabled>Apply</button>
+              </div>
+            </div>
+          </div>
+
+          <button id="restore-defaults" type="button" class="wide-action secondary-reset">Restore Defaults</button>
         </section>
 
         <div id="live-panel"></div>

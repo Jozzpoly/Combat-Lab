@@ -207,6 +207,37 @@ try{
     return Math.abs(Number(scale)-1)<1e-9;
   });
 
+  await evaluate(`(()=>{
+    const input=document.querySelector('[data-param-id="scale"] .parameter-number');
+    input.value="0.65";
+    input.dispatchEvent(new Event("change",{bubbles:true}));
+    document.querySelector("#capture-a").click();
+    input.value="1.70";
+    input.dispatchEvent(new Event("change",{bubbles:true}));
+    document.querySelector("#capture-b").click();
+  })()`);
+
+  await waitFor("A/B parameter slots capture independently",async()=>{
+    return evaluate(`
+      !document.querySelector("#apply-a")?.disabled &&
+      !document.querySelector("#apply-b")?.disabled &&
+      document.querySelector("#slot-a-summary")?.textContent.includes("0.65") &&
+      document.querySelector("#slot-b-summary")?.textContent.includes("1.70")
+    `);
+  });
+
+  await evaluate(`document.querySelector("#apply-a").click()`);
+  await waitFor("Apply A restores authored state live",async()=>{
+    const scale=await evaluate("window.__combatLabRuntime?.snapshot?.player?.scale");
+    return Math.abs(Number(scale)-0.65)<1e-9;
+  });
+
+  await evaluate(`document.querySelector("#apply-b").click()`);
+  await waitFor("Apply B restores authored state live",async()=>{
+    const scale=await evaluate("window.__combatLabRuntime?.snapshot?.player?.scale");
+    return Math.abs(Number(scale)-1.70)<1e-9;
+  });
+
   const beforePause=await evaluate("window.__combatLabRuntime.elapsed");
   await evaluate(`document.querySelector("#pause").click()`);
   await sleep(250);

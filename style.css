@@ -457,3 +457,54 @@ canvas {
     gap: 4px;
   }
 }
+
+.parameter-slots {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.parameter-slot {
+  padding: 9px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: #0d1218;
+}
+.slot-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+.slot-name {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: 1px solid rgba(114,185,255,.35);
+  border-radius: 6px;
+  color: #cce6ff;
+  background: var(--accent-soft);
+  font: 700 10px/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+.slot-summary {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--muted);
+  font: 10px/1.25 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+.slot-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: 8px;
+}
+.slot-actions button {
+  padding: 5px 8px;
+  font-size: 10px;
+}
+.secondary-reset {
+  color: var(--muted);
+}
