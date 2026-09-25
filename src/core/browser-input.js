@@ -1,5 +1,19 @@
+export function isEditingTarget(target){
+  if(!target || typeof target!=="object") return false;
+
+  const tag=String(target.tagName || "").toUpperCase();
+  if(["INPUT","TEXTAREA","SELECT","BUTTON"].includes(tag)) return true;
+  if(target.isContentEditable===true) return true;
+
+  if(typeof target.closest==="function"){
+    return Boolean(target.closest("[contenteditable='true'], [data-workbench-input]"));
+  }
+
+  return false;
+}
+
 export class BrowserInput {
-  constructor({keyboardTarget=window, pointerTarget}={}) {
+  constructor({keyboardTarget=window,pointerTarget}={}) {
     if (!pointerTarget) throw new Error("pointerTarget required");
     this.keyboardTarget=keyboardTarget;
     this.pointerTarget=pointerTarget;
@@ -7,8 +21,23 @@ export class BrowserInput {
     this.buttons=new Set();
     this.pointer={x:0,y:0,valid:false};
 
-    this.onKeyDown=event=>this.keys.add(event.code);
-    this.onKeyUp=event=>this.keys.delete(event.code);
+    this.onKeyDown=event=>{
+      if(isEditingTarget(event.target)){
+        this.keys.clear();
+        return;
+      }
+      this.keys.add(event.code);
+    };
+    this.onKeyUp=event=>{
+      if(isEditingTarget(event.target)){
+        this.keys.clear();
+        return;
+      }
+      this.keys.delete(event.code);
+    };
+    this.onFocusIn=event=>{
+      if(isEditingTarget(event.target)) this.keys.clear();
+    };
     this.onBlur=()=>this.clearTransient();
     this.onPointerMove=event=>this.updatePointer(event);
     this.onPointerDown=event=>{ this.updatePointer(event); this.buttons.add(event.button); };
@@ -19,6 +48,7 @@ export class BrowserInput {
   attach() {
     this.keyboardTarget.addEventListener("keydown",this.onKeyDown);
     this.keyboardTarget.addEventListener("keyup",this.onKeyUp);
+    this.keyboardTarget.addEventListener("focusin",this.onFocusIn);
     this.keyboardTarget.addEventListener("blur",this.onBlur);
     this.pointerTarget.addEventListener("pointermove",this.onPointerMove);
     this.pointerTarget.addEventListener("pointerdown",this.onPointerDown);
@@ -29,6 +59,7 @@ export class BrowserInput {
   detach() {
     this.keyboardTarget.removeEventListener("keydown",this.onKeyDown);
     this.keyboardTarget.removeEventListener("keyup",this.onKeyUp);
+    this.keyboardTarget.removeEventListener("focusin",this.onFocusIn);
     this.keyboardTarget.removeEventListener("blur",this.onBlur);
     this.pointerTarget.removeEventListener("pointermove",this.onPointerMove);
     this.pointerTarget.removeEventListener("pointerdown",this.onPointerDown);

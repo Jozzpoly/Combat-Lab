@@ -143,6 +143,22 @@ try{
   if(!first.inspectorVisible || !first.parameterVisible) throw new Error(`Workbench Inspector missing: ${JSON.stringify(first)}`);
 
   await evaluate(`(()=>{
+    const number=document.querySelector('[data-param-id="scale"] .parameter-number');
+    number.focus();
+  })()`);
+
+  const scaleBeforeFocusedKey=await evaluate("window.__combatLabRuntime?.snapshot?.player?.scale");
+  await cdp.send("Input.dispatchKeyEvent",{type:"keyDown",code:"Digit3",key:"3",windowsVirtualKeyCode:51});
+  await sleep(120);
+  await cdp.send("Input.dispatchKeyEvent",{type:"keyUp",code:"Digit3",key:"3",windowsVirtualKeyCode:51});
+  const scaleAfterFocusedKey=await evaluate("window.__combatLabRuntime?.snapshot?.player?.scale");
+  if(Math.abs(Number(scaleAfterFocusedKey)-Number(scaleBeforeFocusedKey))>1e-9){
+    throw new Error(`focused Inspector leaked keyboard shortcut into experiment: before=${scaleBeforeFocusedKey} after=${scaleAfterFocusedKey}`);
+  }
+
+  await evaluate(`document.querySelector("#lab").focus?.(); document.activeElement?.blur?.();`);
+
+  await evaluate(`(()=>{
     const slider=document.querySelector('[data-param-id="scale"] .parameter-slider');
     slider.value="0.65";
     slider.dispatchEvent(new Event("input",{bubbles:true}));
