@@ -11,7 +11,7 @@ import {
 import {
   compareContactGhost,
   contactFamilySweep,
-  independentResetComparison,
+  resetDecaySweep,
   mirroredContactCheck,
   perturbationSweep
 } from "../src/r3-rehearsal.js";
@@ -53,17 +53,20 @@ test("R3 apparatus produces genuine multi-frame shared tool contact and separati
 test("R3 exploratory contact family sweep stays finite",()=>{
   const result=contactFamilySweep();
   console.log("R3_CONTACT_FAMILY",JSON.stringify(result.map(x=>({
-    yOffset:x.yOffset,
-    impacts:x.contact.impacts,
-    frames:x.contact.frames,
-    duration:x.contact.maxDuration,
-    separated:x.contact.separated,
-    distance:x.distance,
-    nextPathDelta:x.nextPathDelta
+    label:x.label,
+    family:x.result.family,
+    yOffset:x.result.yOffset,
+    hold:x.result.pressHoldSeconds,
+    impacts:x.result.contact.impacts,
+    frames:x.result.contact.frames,
+    duration:x.result.contact.maxDuration,
+    separated:x.result.contact.separated,
+    distance:x.result.distance,
+    nextPathDelta:x.result.nextPathDelta
   }))));
 
   for(const row of result){
-    assert.equal(row.finite,true);
+    assert.equal(row.result.finite,true);
   }
 });
 
@@ -82,21 +85,14 @@ test("R3 exploratory tiny perturbation sweep stays finite",()=>{
   }
 });
 
-test("R3 exploratory independent-reset attribution",()=>{
-  const result=independentResetComparison();
-  console.log("R3_INDEPENDENT_RESET",JSON.stringify({
-    inherited:{
-      distance:result.inherited.distance,
-      nextPathDelta:result.inherited.nextPathDelta
-    },
-    reset:{
-      distance:result.reset.distance,
-      nextPathDelta:result.reset.nextPathDelta
-    }
-  }));
+test("R3 independent local reset decay is mapped rather than assumed",()=>{
+  const result=resetDecaySweep();
+  console.log("R3_RESET_DECAY",JSON.stringify(result));
 
-  assert.equal(result.inherited.finite,true);
-  assert.equal(result.reset.finite,true);
+  for(const row of result){
+    assert.ok(Number.isFinite(row.distance.a));
+    assert.ok(Number.isFinite(row.distance.b));
+  }
 });
 
 test("R3 mirrored contact remains finite without one-side implementation authority",()=>{
