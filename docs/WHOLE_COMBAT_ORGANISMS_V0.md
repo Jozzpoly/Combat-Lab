@@ -1,5 +1,8 @@
 # Whole Combat Organisms v0 — discovery campaign
 
+> **HISTORICAL RECORD — NOT CURRENT AUTHORITY.**
+> This file preserves the campaign state at its date. Current truth lives in `README.md` and `docs/RESEARCH_STATE.md`.
+
 **Date:** 2026-09-22  
 **Status:** active design authority; implementation not yet started  
 **Branch:** `experiment/whole-combat-organisms-v0`
