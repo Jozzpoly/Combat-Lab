@@ -360,6 +360,31 @@ Not qualified:
 
 **NO DEPLOY / NO OWNER TEST requested at this checkpoint.**
 
+### Next embodied question — Load / Envelope B0
+
+After the Workbench core and A/B parameter comparison became internally functional, the next body experiment was redesigned from zero.
+
+The discarded S1 `envelope / mass / drive` ontology is **not restored**.
+
+B0 instead separates:
+
+- body envelope;
+- intrinsic body mass;
+- carried load mass;
+- locomotor force multiplier.
+
+Primary causal case:
+
+> same actor geometry + same locomotor capability + different carried load.
+
+B0 holds max speed constant and lets total mass affect acceleration/braking only through a force/mass relation.
+
+Traction, stance, rotational inertia and equipment geometry remain explicitly outside B0.
+
+This experiment is currently an **internal design hypothesis only**.
+
+See `docs/EMBODIMENT_DECOMPOSITION_LOAD_ENVELOPE_B0_2026-09-25.md`.
+
 ### Broader refoundation frontier
 
 No later combat family is preselected.
