@@ -11,7 +11,9 @@ Current authority lives in:
 - current substrate / Workbench contracts;
 - newest Owner evidence and closure records.
 
-## Current / durable records
+For live sequencing, **`docs/RESEARCH_STATE.md` wins**. A durable design/evidence record may preserve historical implementation steps; those steps do not become current instructions unless the live state explicitly reaffirms them.
+
+## Durable evidence / contract records
 
 - `COMBAT_LAB_SCOPE_CORRECTION_2026-09-25.md` — durable Owner scope correction.
 - `COMBAT_LAB_VNEXT_EXECUTION_SUBSTRATE.md` — implemented neutral substrate contract.
@@ -19,6 +21,8 @@ Current authority lives in:
 - `B0_WORKBENCH_OWNER_RECORDING_FEEDBACK_2026-09-25.md` — direct Owner evidence.
 - `B0_WORKBENCH_STAGE_CLOSURE_2026-09-25.md` — closed-stage boundary.
 - `EMBODIMENT_DECOMPOSITION_LOAD_ENVELOPE_B0_2026-09-25.md` — B0 hypothesis + final bounded outcome.
+- `EXPERIMENT_PROTOCOL.md` — current research / deployment / continuation protocol.
+- `REPOSITORY_CLOSURE_AUDIT_2026-09-26.md` — verified repository/public handoff and cleanup evidence.
 
 ## Historical campaign / donor records
 
