@@ -1330,6 +1330,296 @@ The same transformation is needed in the organism substrate:
 
 > **from blind goal-seeking particles whose conflicts are repaired after the fact, toward minimally competent embodied actors whose intent, feasibility, immediate movement and physical contact can be investigated separately without pre-authoring the answer.**
 
+## 56. Authored causes and derived consequences are too far apart
+
+**Status:** STRONG OBSERVED REQUIREMENT
+
+During player authoring the Owner edits:
+
+- envelope;
+- body mass;
+- carried load;
+- locomotor force.
+
+The resulting live values:
+
+- total mass;
+- acceleration limit;
+- current speed;
+
+live much lower in the Inspector.
+
+They cannot normally be read together while editing the causes.
+
+This creates a cognitive tax:
+
+> change value → remember it → leave the control → scroll → find derived state → reconstruct causal relation.
+
+Future Lab architecture must preserve the conceptual distinction between authored and derived state while making **causally adjacent information easy to inspect together**.
+
+This does not require every derived value to be permanently visible.
+
+It requires that understanding an edit not demand navigation through unrelated sections.
+
+## 57. Abstract templates need stronger feedback than live entities
+
+**Status:** STRONG DERIVED REQUIREMENT
+
+The live player has immediate feedback:
+
+- body size changes visually;
+- movement response changes immediately;
+- contact behavior changes in the observed world.
+
+The spawn template is different:
+
+- values describe **future** bodies;
+- no existing actor changes when the template changes;
+- the Owner must spawn something and then remember which new bodies inherited the template;
+- cohort provenance is visually weak.
+
+This likely contributes to the observed asymmetry:
+
+> aggressive player authoring / almost no visible spawn-template authoring.
+
+Future authoring of templates/cohorts needs enough immediate interpretation that the Owner can understand what is being prepared before/after creation.
+
+Possible mechanisms include previews, derived summaries, cohort inspection or direct instance authoring, but none is selected yet.
+
+## 58. Observation controls are currently fragmented
+
+**Status:** STRONG PRODUCT REQUIREMENT
+
+Observation apparatus is split across distant parts of the current Inspector:
+
+- Debug toggle near the top;
+- camera zoom near the lower parameter area;
+- simulation health in top status;
+- spatial/live telemetry below A/B;
+- world itself in the viewport.
+
+The first rehearsal repeatedly moves between those regions while investigating anomalies.
+
+Future Lab design should treat observation/explanation as a coherent workflow even if individual tools remain physically distributed.
+
+Invariant:
+
+> **the Owner should not need to navigate the authoring hierarchy just to change how he observes the same phenomenon.**
+
+## 59. Interaction affinity should matter more than schema order
+
+**Status:** STRONG ARCHITECTURAL REQUIREMENT
+
+Current UI order follows schema groups.
+
+Observed work follows task relationships.
+
+Examples of high-affinity pairs from the recording:
+
+- camera ↔ world observation;
+- body mass/load/force ↔ derived acceleration/current speed;
+- population pressure ↔ crowd diagnostics;
+- Debug ↔ selected anomaly;
+- A/B Apply ↔ visible state diff;
+- spawn action ↔ spawn/cohort phenotype.
+
+Future interaction architecture should be evaluated by whether **things used together are cheap to use together**, not merely whether the schema hierarchy is tidy.
+
+This is a requirement on information architecture, not a specific screen layout.
+
+## 60. Exploratory continuity is part of the Owner method
+
+**Status:** STRONG OBSERVED REQUIREMENT
+
+The Owner does not run a clean reset after each intervention.
+
+The session accumulates:
+
+- population;
+- player phenotype changes;
+- spatial history;
+- jams;
+- stress;
+- diagnostic exploration.
+
+This path-dependent state is part of the research process.
+
+Therefore Combat Lab cannot assume the dominant workflow is:
+
+> configure → run → record result → reset → configure again.
+
+It must support long-lived messy exploratory sessions.
+
+That strengthens the requirements for:
+
+- intervention history;
+- checkpoints;
+- scoped recovery;
+- explicit provenance.
+
+It does **not** remove the need for clean reproducible trials when a hypothesis later needs attribution.
+
+## 61. The Lab needs both discovery mode and attribution mode
+
+**Status:** STRONG DERIVED REQUIREMENT
+
+The first rehearsal is predominantly **discovery mode**:
+
+- change several things;
+- escalate;
+- watch;
+- follow surprising behavior;
+- push the system.
+
+A/B represents an attempt at a more controlled **attribution/comparison mode**.
+
+Both are legitimate.
+
+A professional Lab should not force discovery into rigid experimental procedure.
+
+But when the Owner decides:
+
+> “I want to know whether X caused this,”
+
+the Lab should make it possible to transition into a more controlled comparison without reconstructing everything manually.
+
+This is a workflow requirement, not a demand for a specific scientific-method UI.
+
+## 62. Experimental continuity and reproducibility are complementary, not opposing
+
+**Status:** RESEARCH-INTEGRITY REQUIREMENT
+
+Messy exploration creates valuable findings.
+
+Reproducibility is needed later to challenge them.
+
+The Lab therefore needs enough provenance to turn:
+
+> “something interesting happened after I messed with this for two minutes”
+
+into:
+
+> “here is the intervention/state sequence worth replaying or isolating.”
+
+The first recording itself is evidence for this need because analysis had to reconstruct the sequence externally.
+
+## 63. Population actions should create identifiable experimental cohorts
+
+**Status:** STRONG DERIVED REQUIREMENT
+
+Every spawn action is already a meaningful intervention.
+
+In future heterogeneous tests, a wave may represent:
+
+- one phenotype;
+- one intent distribution;
+- one pressure condition.
+
+Treating all created actors as an undifferentiated resident array discards experiment structure.
+
+Future architecture should be capable of remembering that:
+
+> these bodies were created together under this authored state.
+
+Whether that is surfaced as cohorts, batches, tags, layers or another concept remains open.
+
+## 64. Cohort provenance should survive later template changes
+
+**Status:** RESEARCH-INTEGRITY REQUIREMENT
+
+The current runtime already preserves body phenotype values when the spawn template changes.
+
+That mechanistic property is good.
+
+The missing layer is human-readable provenance.
+
+Future Lab behavior should preserve the same principle:
+
+> changing the authoring template must not rewrite historical actors/cohorts unless explicitly requested.
+
+And the Owner should be able to tell that this happened.
+
+## 65. Selected-state context is likely more scalable than duplicated global sections
+
+**Status:** STRONG CANDIDATE
+
+As the Lab grows, separate permanent sections for:
+
+- Player;
+- Spawn template;
+- Cohort A;
+- Cohort B;
+- selected resident;
+- weapon;
+- terrain object;
+
+would recreate the current long-form problem at a larger scale.
+
+The recording therefore strengthens a candidate requirement for **explicit current target/scope**:
+
+> what thing am I authoring or inspecting right now?
+
+Direct entity/cohort selection is one possible solution, not yet selected.
+
+The invariant is that scope must be visible and scalable.
+
+## 66. Current player editing reveals a useful property: immediate world feedback can replace UI verbosity
+
+**Status:** STRONG OBSERVED REQUIREMENT
+
+Despite poor panel organization, player phenotype authoring remains usable enough for sustained exploration because the world immediately demonstrates consequences.
+
+This suggests an important design criterion:
+
+> when the phenomenon itself gives clear feedback, the UI can stay lightweight.
+
+Conversely, abstract states such as spawn templates, A/B slots and hidden actor intent require stronger explicit representation because the world cannot communicate them before interpretation.
+
+Professionalization should add information where the world is insufficient, not cover every variable with permanent dashboards.
+
+## 67. Lab-state visibility should be proportional to consequence
+
+**Status:** STRONG DERIVED REQUIREMENT
+
+Some state changes are local and obvious.
+
+Others can silently alter the interpretation of the entire experiment.
+
+Examples:
+
+- camera state can confound visual A/B;
+- spawn template affects all future actors;
+- population actions permanently change current world composition;
+- Restore Defaults / Apply can change many authored fields.
+
+The more consequential an operation is, the clearer its scope and effect should be before/after invocation.
+
+This is more important than uniform UI consistency.
+
+## 68. The first rehearsal exposes an attention-allocation failure
+
+**Status:** STRONG SYNTHESIS
+
+A meaningful portion of Owner attention is spent on:
+
+- finding controls;
+- scrolling;
+- reconstructing hidden context;
+- turning noisy diagnostics on/off;
+- repeatedly pressing stress buttons.
+
+Those actions do not themselves answer combat/world questions.
+
+This means current apparatus overhead competes directly with research cognition.
+
+The redesign goal should not simply be:
+
+> fewer clicks.
+
+It should be:
+
+> **less working memory and navigation devoted to the apparatus per useful experimental insight.**
+
 ## Working invariant
 
 > **A professional Combat Lab should make it cheap to ask a dangerous question of the world, cheap to see what happened, and hard to misunderstand why.**
