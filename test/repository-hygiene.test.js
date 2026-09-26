@@ -14,7 +14,7 @@ test("canonical entrypoints contain one current project state",()=>{
   assert.match(readme,/Canonical live branch/);
   assert.match(readme,/Workbench foundation — QUALIFIED FOR CURRENT RESEARCH USE/);
   assert.match(readme,/Active Embodied Spatial Ecology \/ Multi-Body Pressure is selected/i);
-  assert.match(readme,/no selected next research specimen/i);
+  assert.doesNotMatch(readme,/no selected next research specimen/i);
   assert.match(readme,/6bd4b4492261b9fe3b8edbca276cf9b7de3d822d/);
   assert.doesNotMatch(readme,/waits for new Owner instruction/i);
   assert.doesNotMatch(readme,/Active refoundation branch:/);
