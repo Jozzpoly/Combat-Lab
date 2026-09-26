@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-26  
 **Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
 **Canonical branch:** `main` after repository canonicalization  
-**Stage:** **Workbench + B0 CLOSED; first Active Spatial Ecology Owner rehearsal + feedback/evidence campaign CLOSED; target hypothesis INCONCLUSIVE; refoundation campaign NOT YET STARTED**
+**Stage:** **Workbench + B0 CLOSED; first Active Spatial Ecology Owner rehearsal + feedback/evidence campaign CLOSED; target hypothesis INCONCLUSIVE; refoundation/research campaign ACTIVE; runtime implementation NOT STARTED**
 
 ## 1. Owner intent
 
@@ -193,81 +193,66 @@ Other repository truth remains:
 
 ## 7. Current objective / next move
 
-The first public Active Spatial Ecology Owner rehearsal and the dedicated feedback/evidence-extraction campaign are now **CLOSED**.
+The first Ecology recording/feedback campaign remains **CLOSED**.
 
-Durable closure / transition record:
+The separate **Combat Lab refoundation/research campaign is now ACTIVE**. No runtime implementation has started.
+
+Primary active strategy:
+
+- [Refoundation research campaign](COMBAT_LAB_REFOUNDATION_RESEARCH_CAMPAIGN_2026-09-26.md)
+
+Closed-campaign evidence remains authoritative input:
 
 - [Combat Lab handoff after first Ecology feedback campaign](COMBAT_LAB_HANDOFF_2026-09-26_ECOLOGY_FEEDBACK_CLOSURE.md)
-
-Primary campaign evidence:
-
 - [First Ecology Owner recording deep feedback](ACTIVE_SPATIAL_ECOLOGY_FIRST_OWNER_RECORDING_FEEDBACK_2026-09-26.md)
 - [First rehearsal implicit requirements mining](COMBAT_LAB_FIRST_REHEARSAL_IMPLICIT_REQUIREMENTS_2026-09-26.md)
 
-Canonical classification remains:
+Canonical Ecology classification remains:
 
 > **TARGET HYPOTHESIS INCONCLUSIVE — APPARATUS LIMITATIONS BECAME THE DOMINANT FINDING.**
 
-Owner/product truth after the rehearsal:
+### Active refoundation boundary
 
-- Combat Lab as a permissive self-directed research environment has a **positive Owner signal**;
-- current Lab UX / information architecture has **material FAIL-level findings**;
-- current resident sophistication and ordinary crowd/contact behavior are **not adequate for promotion**;
-- current Debug/observability is **not adequate for crowd-scale explanation**;
-- current performance result is a whole-runtime/harness result, not a clean actor-capacity claim;
-- the current Ecology specimen remains an evidence source, not a foundation to polish into permanence.
+The campaign now treats two problem families separately:
 
-Key campaign-1 findings now preserved include:
+**Shared Lab / apparatus**
 
-- live intervention, exact numeric entry and broad/extreme ranges are durable Owner workflow;
-- independent envelope / inertial burden / locomotor authority remain valuable raw research axes;
-- optional linkage may be useful only as explicit/reversible convenience;
-- current single vertical schema-form has crossed its scalability boundary;
-- current flat editable-ID state model is insufficient for scoped comparison/provenance;
-- exact final Owner comparison action was **Capture B → Apply A** inside the live 845-resident world, directly exposing comparison-scope/matched-state problems;
-- resident movement lacks dynamic-body awareness, stuck-state memory and replanning;
-- current route/stimulus harness contains strong hidden convergence biases, including a universal goal-10 hub;
-- near-player spawning and fallback zones can author local pressure;
-- current one-pass sequential body solver plus persistent intent produces stable packed states;
-- current performance knee includes O(N²) pair work, synchronous spawn placement, rendering and high-frequency evidence snapshots;
-- observation/evidence machinery itself can materially contribute to runtime cost;
-- first campaign found enough independent failure classes that further recording mining now has diminishing return relative to a new refoundation/research campaign.
+- intervention provenance and scope;
+- comparison semantics rather than capture-all state;
+- scalable information architecture;
+- query-driven / cost-aware observability;
+- truthful clock/performance attribution;
+- exact build/deployment provenance;
+- continued permissive extreme/break testing.
 
-### Transition boundary
+**Ecology / multi-body substrate**
 
-Do **not** patch or redesign the runtime in the closed campaign.
+- intent/stimulus;
+- whole-body feasibility/navigation;
+- minimal progress/stuck competence;
+- immediate motion choice;
+- contact/yield/displacement semantics;
+- local pressure and scaling.
 
-The next conversation should begin a separate, critical refoundation/research campaign.
+The current shell's flat numeric parameter contract, global A/B and binary Debug are historical donors, not refoundation authority.
 
-It should first:
+Targeted donor recovery has already identified Companion whole-body static feasibility and hard-feasibility-vs-comfort separation as strong bounded donors. SPC contributes competence/world-authority boundaries; ReflexBrain is not currently selected as a movement donor. No donor architecture or physics backend is promoted wholesale.
 
-1. recover fresh live repo truth;
-2. read the closure handoff and campaign evidence records;
-3. challenge shared Lab / Workbench architecture from first principles;
-4. separate shared Lab needs from Ecology-specific organism/contact/navigation debt;
-5. recover targeted Feniks / ReflexBrain / Companion / SPC donor evidence only when concrete dependencies justify it;
-6. formulate a bounded refoundation/research strategy before implementation.
+### Immediate next research cell
 
-Do not jump directly to:
+The next execution target is **L0 — intervention/provenance contract design**, followed only if earned by scoped comparison / causal-observation work.
 
-- weapons;
-- stance;
-- damage/combat AI;
-- ORCA/RVO;
-- Rapier;
-- production pathfinding;
-- old-solver optimization;
-- superficial Inspector/CSS polish.
+Do not begin by:
 
-Public/repository provenance remains:
+- redesigning CSS/panels;
+- installing a crowd solver;
+- replacing physics;
+- optimizing the old O(N²) pair loop;
+- adding combat semantics;
+- polishing Ecology v0.
 
-- public Ecology evidence candidate: `ce96587826746efad426347a8a394048810e4ee2`;
-- public control ref: `rehearsal/current`;
-- active historical experiment lane: `experiment/active-spatial-ecology`;
-- canonical truth: `main`.
+The closed Ecology lane remains the only implementation experiment branch. Its unique ancestry must be preserved before any later branch retirement. Do not open a second implementation lane merely because the research campaign has started.
 
-The public specimen should remain available as the exact evidence source until a later deliberate deployment changes it.
+### Active invariant
 
-### Transition invariant
-
-> **Preserve the experimental freedom that finally made Combat Lab useful, but refound the apparatus and organism from evidence rather than polishing the current specimen into a false foundation.**
+> **Preserve the experimental freedom that made Combat Lab useful; refound state, causality and organism competence so the apparatus reveals the phenomenon instead of becoming it.**
