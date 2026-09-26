@@ -1551,6 +1551,54 @@ Therefore:
 
 A later refoundation should profile phases separately before using population count as an engineering target.
 
+## 54. SIM STRESS is specifically a real-time-fidelity warning, not a general lag meter
+
+The fixed-step runner uses:
+
+- dt = 1/120 s;
+- max accepted frame = 0.05 s.
+
+It can execute multiple simulation steps after a slower render frame and remain caught up.
+
+Therefore:
+
+- a visibly low render rate can exist while simulation time still tracks wall time;
+- `SIM STRESS` appears only when enough frame time is discarded/clamped.
+
+In practical terms, a frame around 33–40 ms may look noticeably less smooth while still being able to advance the required fixed steps.
+
+A frame substantially beyond ~50 ms causes lost real-time fidelity.
+
+This means the Owner phrase “started lagging” and the UI state `SIM STRESS` are related but not semantically identical.
+
+Future analysis should separate:
+
+- render/input responsiveness;
+- simulation real-time factor;
+- action hitch latency;
+- sustained simulation overload.
+
+## 55. One Spawn +50 hitch can itself trigger SIM STRESS even before steady-state overload
+
+Because `spawnEcologyResidents()` runs synchronously inside the button action, a long placement operation delays the next animation frame.
+
+If that delay pushes the next raw frame beyond the fixed-step 0.05 s limit:
+
+- the excess wall time is dropped;
+- `SIM STRESS` is correctly shown.
+
+Thus the first stress light immediately after a spawn action may mean:
+
+> “this authoring action caused a long main-thread stall”
+
+rather than:
+
+> “the established population can no longer simulate in real time.”
+
+The final sustained time dilation demonstrates that steady-state overload eventually exists too.
+
+But those are different failure modes and should be diagnosable separately.
+
 ## Working invariant
 
 > **The first public Ecology rehearsal succeeded as an experiment mainly because it exposed why the current laboratory and organism are not yet good enough to answer the question cleanly.**
