@@ -23,8 +23,9 @@ For live sequencing, **`docs/RESEARCH_STATE.md` wins**. A durable design/evidenc
 - `EMBODIMENT_DECOMPOSITION_LOAD_ENVELOPE_B0_2026-09-25.md` — B0 hypothesis + final bounded outcome.
 - `EXPERIMENT_PROTOCOL.md` — current research / deployment / continuation protocol.
 - `REPOSITORY_CLOSURE_AUDIT_2026-09-26.md` — verified repository/public handoff and cleanup evidence.
-- `FRONTIER_REASSESSMENT_2026-09-26.md` — active top-down frontier synthesis; provisional lead only, no specimen authority yet.
-- `ACTIVE_EMBODIED_SPATIAL_ECOLOGY_HYPOTHESIS_2026-09-26.md` — candidate hypothesis/apparatus contract with permissive sparse→horde population pressure; not implementation authority yet.
+- `FRONTIER_REASSESSMENT_2026-09-26.md` — top-down selection reasoning that produced the Active Embodied Spatial Ecology frontier.
+- `ACTIVE_EMBODIED_SPATIAL_ECOLOGY_HYPOTHESIS_2026-09-26.md` — selected bounded implementation contract with permissive sparse→horde population pressure; current status lives in `RESEARCH_STATE.md`.
+- `ACTIVE_SPATIAL_ECOLOGY_INTERNAL_QUALIFICATION_2026-09-26.md` — exact internal mechanism/browser/visual evidence; public/Owner value remains unproven.
 
 ## Historical campaign / donor records
 
@@ -76,4 +77,4 @@ Canonical Git history retains reachability to the unique historical heads:
 
 The refs themselves are now deleted. Historical commits remain evidence through canonical ancestry, not active branches.
 
-Post-cleanup branch topology: **`main` only**.
+Post-cleanup topology at the end of the cleanup campaign was **`main` only**. A later deliberate research step opened the single temporary `experiment/active-spatial-ecology` lane; current topology is authoritative in `RESEARCH_STATE.md`.
