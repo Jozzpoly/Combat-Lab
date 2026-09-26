@@ -1466,6 +1466,91 @@ The recording is silent, so do not claim this was the Owner's verbalized hypothe
 
 But the behavior is directly consistent with using locomotor authority as an independent experimental axis rather than merely a correlated “speed stat”.
 
+## 50. Performance stress is contaminated by high-frequency browser-harness snapshots
+
+The app calls `captureSnapshot()` every render frame.
+
+Ecology's `snapshot()` creates:
+
+- a copied player object;
+- a copied spawn template;
+- **a new copied object for every resident**;
+- aggregate occupancy and contact values.
+
+At 845 residents, if rendering is near 60 fps, that implies on the order of:
+
+> **~50,700 resident object copies per second**
+
+before counting the player, arrays and other snapshot allocations.
+
+This snapshot exists primarily to expose machine/browser evidence through `window.__combatLabRuntime`.
+
+Therefore the instrumentation layer itself may contribute materially to:
+
+- allocation pressure;
+- garbage collection;
+- frame time.
+
+No profiler evidence currently quantifies its share, so do not assign a percentage.
+
+The correct conclusion is:
+
+> the first Owner recording is **not** a clean physics/AI performance benchmark.
+
+## 51. Spawn +50 itself has population-dependent synchronous cost
+
+Ordinary spawning is synchronous.
+
+For each requested body it may try up to 180 candidate placements.
+
+A candidate checks:
+
+- static legality;
+- player overlap;
+- `state.residents.some(...)` against the existing population.
+
+At high population, a single `Spawn +50` can therefore perform substantial work before the next render frame.
+
+The first visible `SIM STRESS` appears while the Owner is repeatedly using `Spawn +50`.
+
+Therefore stress onset cannot be attributed cleanly to steady-state pair simulation alone.
+
+The late sustained ~0.81× real-time behavior after the population is established still demonstrates a steady-state overload regime.
+
+But the **first transition into stress** may include a spawn-operation hitch.
+
+## 52. Rendering and observation currently scale with total population, not visible population
+
+The Ecology renderer iterates every resident and draws its circle without explicit viewport culling.
+
+When Debug is enabled it also draws one line per resident.
+
+The per-frame machine snapshot likewise copies every resident regardless of visibility.
+
+Thus moving to a larger world does not currently reduce per-frame population observation/render cost for offscreen actors.
+
+At 845 simple circles, the all-pairs simulation is still an obvious major cost.
+
+Future larger-world scaling cannot assume offscreen actors are cheap under the current apparatus.
+
+## 53. Current performance evidence is a whole-runtime result
+
+The measured late stress regime includes at least:
+
+- O(N²) dynamic pair checks;
+- actor stepping/steering;
+- static collision work;
+- rendering all residents;
+- per-frame full resident snapshot copying;
+- periodic Inspector/live-value synchronization;
+- synchronous spawn-placement bursts when actions are invoked.
+
+Therefore:
+
+> **“845 bodies begin to lag” is a whole current-runtime observation, not a capacity number for any one subsystem.**
+
+A later refoundation should profile phases separately before using population count as an engineering target.
+
 ## Working invariant
 
 > **The first public Ecology rehearsal succeeded as an experiment mainly because it exposed why the current laboratory and organism are not yet good enough to answer the question cleanly.**
