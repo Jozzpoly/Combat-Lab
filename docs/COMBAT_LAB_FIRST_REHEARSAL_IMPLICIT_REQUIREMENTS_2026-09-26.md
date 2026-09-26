@@ -3205,6 +3205,46 @@ The current requirement is simply:
 
 > **a larger world must not hide the fact that offscreen actors can still cost full apparatus/runtime work.**
 
+## 136. Performance truth needs multiple clocks/signals
+
+**Status:** STRONG OBSERVABILITY REQUIREMENT
+
+Current `SIM STRESS` reports loss of simulation real-time fidelity.
+
+It does not directly report:
+
+- render FPS/smoothness;
+- input latency;
+- synchronous action duration;
+- phase-specific simulation cost.
+
+A professional Lab should avoid one overloaded “performance” status.
+
+When performance is under study, it should be possible to distinguish at least:
+
+- visual/render cadence;
+- simulation-time / wall-time ratio;
+- discrete intervention hitches;
+- sustained runtime cost.
+
+This is a semantic requirement, not a demand for four permanent gauges.
+
+## 137. Authoring actions themselves belong in performance attribution
+
+**Status:** STRONG RESEARCH/ENGINEERING REQUIREMENT
+
+A user-triggered action such as `Spawn +50` can synchronously perform significant placement/overlap work.
+
+Therefore performance evidence should be capable of saying:
+
+> the world is expensive to simulate
+
+versus
+
+> this intervention was expensive to execute.
+
+This becomes especially important if future authoring actions create complex actors, equipment or terrain.
+
 ## Working invariant
 
 > **A professional Combat Lab should make it cheap to ask a dangerous question of the world, cheap to see what happened, and hard to misunderstand why.**
