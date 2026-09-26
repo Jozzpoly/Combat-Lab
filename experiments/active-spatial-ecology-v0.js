@@ -381,6 +381,11 @@ export function clearEcologyExtras(state){
   state.lastSpawnResult={requested:0,spawned:0,failed:0};
 }
 
+export function clearEcologyResidents(state){
+  state.residents=[];
+  state.lastSpawnResult={requested:0,spawned:0,failed:0};
+}
+
 function movementTarget(body,inputX,inputY){
   const len=Math.hypot(inputX,inputY);
   if(len<=1e-9) return {x:0,y:0};
@@ -576,7 +581,9 @@ export const activeSpatialEcologyV0={
               {id:"spawn1",label:"Spawn +1"},
               {id:"spawn5",label:"Spawn +5"},
               {id:"spawn10",label:"Spawn +10"},
-              {id:"clearExtras",label:"Clear extras"}
+              {id:"spawn50",label:"Spawn +50"},
+              {id:"clearExtras",label:"Clear extras"},
+              {id:"clearAll",label:"Clear all"}
             ]
           }
         ],
@@ -640,7 +647,9 @@ export const activeSpatialEcologyV0={
         if(id==="spawn1") spawnEcologyResidents(state,1);
         else if(id==="spawn5") spawnEcologyResidents(state,5);
         else if(id==="spawn10") spawnEcologyResidents(state,10);
+        else if(id==="spawn50") spawnEcologyResidents(state,50);
         else if(id==="clearExtras") clearEcologyExtras(state);
+        else if(id==="clearAll") clearEcologyResidents(state);
       },
 
       getLive(id){
