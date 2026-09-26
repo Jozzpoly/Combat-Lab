@@ -55,9 +55,11 @@ It is preserved verbatim at:
 
 - `archive/RESEARCH_STATE_HISTORY_PRE_CLEANUP_2026-09-25.md`
 
-## Historical branch heads to preserve in Git ancestry
+## Preserved historical branch lineages
 
-Before stale branch refs are removed, canonical history must retain reachability to the unique historical heads:
+The stale branch refs were removed on 2026-09-26 **after** every branch HEAD was verified as an ancestor of canonical `main`.
+
+Canonical Git history retains reachability to the unique historical heads:
 
 - Combat Terrarium lineage: `a95654ca7a765167375086259f09a7b090fa6bcb`;
 - Phenotype Combat Ecology lineage: `e9d592f007d31c2715d9f687e336c4517504e59a`;
@@ -66,4 +68,6 @@ Before stale branch refs are removed, canonical history must retain reachability
 
 `experiment/control-commitment-spike` and `experiment/discovery-campaign-v1` both point at `35e5017af40c85cdeb2e03e9843e75ae5cc2998a`, already an ancestor of the vNext lineage.
 
-Historical refs are evidence, not active branches.
+The refs themselves are now deleted. Historical commits remain evidence through canonical ancestry, not active branches.
+
+Post-cleanup branch topology: **`main` only**.
