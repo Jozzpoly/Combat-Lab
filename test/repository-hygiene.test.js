@@ -23,7 +23,7 @@ test("canonical entrypoints contain one current project state",()=>{
 
   assert.match(state,/Workbench \+ B0 CLOSED/);
   assert.match(state,/Active Embodied Spatial Ecology v0 INTERNALLY QUALIFIED FOR DELIBERATE PUBLIC REHEARSAL — OWNER VALUE UNPROVEN/i);
-  assert.match(state,/ACTIVE EMBODIED SPATIAL ECOLOGY \/ MULTI-BODY PRESSURE/);
+  assert.match(state,/Active Embodied Spatial Ecology v0 has crossed the \*\*internal apparatus\/mechanism gate\*\*/i);
   assert.match(state,/optional explicit linkage \/ correlated scaling/i);
   assert.match(state,/Feniks, ReflexBrain, Companion and SPC/);
   assert.doesNotMatch(state,/waiting for new Owner instruction/i);
