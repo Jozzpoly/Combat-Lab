@@ -61,6 +61,25 @@ test("population pressure can climb well beyond the readable baseline without a 
   assert.ok(state.residents.length>=ACTIVE_ECOLOGY_BASELINE_COUNT+40);
 });
 
+test("destructive pressure can exceed one hundred active residents before any artificial cap",()=>{
+  const state=createActiveEcologyState();
+
+  for(let i=0;i<10;i++) spawnEcologyResidents(state,10);
+  assert.ok(
+    state.residents.length>=100,
+    `expected at least 100 active residents including baseline; got ${state.residents.length} with ${state.spawnFailures} placement failures`
+  );
+
+  for(let i=0;i<60;i++) stepActiveEcology(state,idle,1/120);
+
+  for(const body of [state.player,...state.residents]){
+    assert.ok(Number.isFinite(body.x));
+    assert.ok(Number.isFinite(body.y));
+    assert.ok(Number.isFinite(body.vx));
+    assert.ok(Number.isFinite(body.vy));
+  }
+});
+
 test("clear extras restores the deterministic baseline population",()=>{
   const state=createActiveEcologyState();
   spawnEcologyResidents(state,10);
