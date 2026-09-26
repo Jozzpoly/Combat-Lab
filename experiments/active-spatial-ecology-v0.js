@@ -337,6 +337,55 @@ function spawnCandidate(state,serial,attempt,radius){
   };
 }
 
+function forcedSpawnCandidate(state,serial,attempt,radius){
+  const angle=hash01(serial*3571+attempt*104729+211)*Math.PI*2;
+  const radial=hash01(serial*1297+attempt*65537+47);
+  const distance=70+radius+radial*180;
+  return {
+    x:state.player.x+Math.cos(angle)*distance,
+    y:state.player.y+Math.sin(angle)*distance
+  };
+}
+
+export function forceSpawnEcologyResidents(state,count){
+  const requested=Math.max(0,Math.floor(Number(count)||0));
+  let spawned=0;
+
+  for(let n=0;n<requested;n++){
+    const serial=state.nextSpawnSerial++;
+    const d=deriveEcologyEmbodiment({...state.spawnTemplate,maxSpeed:RESIDENT_MAX_SPEED});
+    let position=null;
+
+    // Force-spawn deliberately ignores overlap with existing dynamic bodies.
+    // It still respects static geometry and world bounds so "break pressure"
+    // remains about body crowding rather than hidden wall penetration.
+    for(let attempt=0;attempt<220;attempt++){
+      const candidate=forcedSpawnCandidate(state,serial,attempt,d.radius);
+      if(!legalStaticPosition(candidate.x,candidate.y,d.radius)) continue;
+      position=candidate;
+      break;
+    }
+
+    if(!position){
+      state.spawnFailures++;
+      continue;
+    }
+
+    state.residents.push(makeBody({
+      x:position.x,y:position.y,
+      phenotype:{...state.spawnTemplate},
+      maxSpeed:RESIDENT_MAX_SPEED,
+      id:`forced-${serial}`,
+      baseline:false,
+      goalIndex:(serial*7+2)%GOALS.length
+    }));
+    spawned++;
+  }
+
+  state.lastSpawnResult={requested,spawned,failed:requested-spawned,forced:true};
+  return state.lastSpawnResult;
+}
+
 export function spawnEcologyResidents(state,count){
   const requested=Math.max(0,Math.floor(Number(count)||0));
   let spawned=0;
@@ -582,6 +631,7 @@ export const activeSpatialEcologyV0={
               {id:"spawn5",label:"Spawn +5"},
               {id:"spawn10",label:"Spawn +10"},
               {id:"spawn50",label:"Spawn +50"},
+              {id:"force10",label:"Force +10",title:"Ignores body-body spawn clearance; still avoids static geometry and world bounds."},
               {id:"clearExtras",label:"Clear extras"},
               {id:"clearAll",label:"Clear all"}
             ]
@@ -648,6 +698,7 @@ export const activeSpatialEcologyV0={
         else if(id==="spawn5") spawnEcologyResidents(state,5);
         else if(id==="spawn10") spawnEcologyResidents(state,10);
         else if(id==="spawn50") spawnEcologyResidents(state,50);
+        else if(id==="force10") forceSpawnEcologyResidents(state,10);
         else if(id==="clearExtras") clearEcologyExtras(state);
         else if(id==="clearAll") clearEcologyResidents(state);
       },
