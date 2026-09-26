@@ -13,7 +13,7 @@ test("canonical entrypoints contain one current project state",()=>{
 
   assert.match(readme,/Canonical live branch/);
   assert.match(readme,/Workbench foundation — QUALIFIED FOR CURRENT RESEARCH USE/);
-  assert.match(readme,/top-down frontier reassessment is active/i);
+  assert.match(readme,/Active Embodied Spatial Ecology \/ Multi-Body Pressure is selected/i);
   assert.match(readme,/no selected next research specimen/i);
   assert.match(readme,/6bd4b4492261b9fe3b8edbca276cf9b7de3d822d/);
   assert.doesNotMatch(readme,/waits for new Owner instruction/i);
@@ -22,7 +22,7 @@ test("canonical entrypoints contain one current project state",()=>{
   assert.doesNotMatch(readme,/intentionally \*\*not deployed for Owner testing yet\*\*/i);
 
   assert.match(state,/Workbench \+ B0 CLOSED/);
-  assert.match(state,/top-down frontier reassessment ACTIVE/i);
+  assert.match(state,/Active Embodied Spatial Ecology hypothesis SELECTED FOR REVERSIBLE IMPLEMENTATION/i);
   assert.match(state,/ACTIVE EMBODIED SPATIAL ECOLOGY \/ MULTI-BODY PRESSURE/);
   assert.match(state,/optional explicit linkage \/ correlated scaling/i);
   assert.match(state,/Feniks, ReflexBrain, Companion and SPC/);
@@ -99,7 +99,15 @@ test("durable records cannot masquerade as live execution authority",()=>{
   assert.ok(exists("docs/FRONTIER_REASSESSMENT_2026-09-26.md"));
   const frontier=read("docs/FRONTIER_REASSESSMENT_2026-09-26.md");
   assert.match(frontier,/ACTIVE EMBODIED SPATIAL ECOLOGY \/ MULTI-BODY PRESSURE/);
-  assert.match(frontier,/not yet an implementation command/i);
+  assert.match(frontier,/Owner correction — population pressure is permissive/i);
+
+  const spatialHypothesis=read("docs/ACTIVE_EMBODIED_SPATIAL_ECOLOGY_HYPOTHESIS_2026-09-26.md");
+  assert.match(spatialHypothesis,/READY FOR IMPLEMENTATION AS THE NEXT REVERSIBLE DISCOVERY SPECIMEN/);
+  assert.match(spatialHypothesis,/Spawn \+1/);
+  assert.match(spatialHypothesis,/Spawn \+5/);
+  assert.match(spatialHypothesis,/Spawn \+10/);
+  assert.match(spatialHypothesis,/SIM STRESS/);
+  assert.doesNotMatch(spatialHypothesis,/small population, not a crowd benchmark/i);
 });
 
 test("package identity no longer describes a temporary refoundation substrate",()=>{
