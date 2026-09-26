@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-26  
 **Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
 **Canonical branch:** `main` after repository canonicalization  
-**Stage:** **Workbench + B0 CLOSED; post-closure preparation / frontier-shaping campaign ACTIVE; no new specimen selected**
+**Stage:** **Workbench + B0 CLOSED; top-down frontier reassessment ACTIVE; no new specimen selected**
 
 ## 1. Owner intent
 
@@ -168,20 +168,27 @@ Repository cleanup result:
 
 ## 7. Current objective / next move
 
-There is still no preselected R4, weapon family or body-system continuation.
+Post-closure cleanup / authority synchronization is **CLOSED**.
 
-The immediate objective is to **finish the post-closure cleanup, authority synchronization and preparation campaign** before opening another specimen.
+Current work is the top-down frontier reassessment recorded in [Frontier Reassessment 2026-09-26](FRONTIER_REASSESSMENT_2026-09-26.md).
 
-That preparation must leave:
+There is still no selected R4, weapon family or body-system continuation.
 
-- one coherent canonical truth;
-- no durable document silently acting on superseded execution instructions;
-- repository / branch / deploy hygiene guarded by tests;
-- the public B0 closure provenance intact;
-- the new Owner direction above preserved without prematurely implementing it.
+Current highest-value uncertainty:
 
-After this preparation closes:
+> **Do embodied differences remain decision-relevant when the world becomes richer and several bodies create active spatial pressure, or do they collapse into an interesting parameter sandbox / authored fit-not-fit puzzle?**
 
-> **NEXT RESEARCH DIRECTION — OPEN FOR DELIBERATE FRONTIER SELECTION.**
+Current provisional lead:
 
-Optional linked scaling, larger-world pressure and cross-project donor recovery are now legitimate frontier-shaping inputs. None of them is automatically the next build merely because it is recorded here.
+> **ACTIVE EMBODIED SPATIAL ECOLOGY / MULTI-BODY PRESSURE**
+
+This is a research lead, **not yet implementation authority**.
+
+Before opening a specimen:
+
+- challenge this lead against stance/equipment and at least one orthogonal combat family;
+- define a bounded hypothesis card with an unmistakable human discriminator and hard falsifiers;
+- decide the minimum apparatus needed for a genuinely larger traversable world;
+- only then recover targeted donors if the chosen apparatus would otherwise reinvent material movement/pathfinding/spatial infrastructure.
+
+Optional linked scaling remains an enabling Workbench candidate, not the research question itself.
