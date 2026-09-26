@@ -157,10 +157,16 @@ See [Historical evidence index](HISTORY_INDEX.md).
 
 The completed cleanup campaign temporarily reduced repository topology to `main` only after ancestry verification of all stale refs.
 
-Current live topology now intentionally contains exactly two branch refs:
+Current **research topology** intentionally contains:
 
 - `main` — canonical truth / governance;
 - `experiment/active-spatial-ecology` — one temporary active experiment lane.
+
+A separate infrastructure-only ref may be present:
+
+- `rehearsal/current` — exact public-rehearsal / rollback control plane; never an authoring lane and never research authority.
+
+Do not count `rehearsal/current` as a third research branch. Its only legitimate motion is an explicit move to an already-selected exact candidate or intended rollback source.
 
 The active lane was opened from green canonical main:
 
@@ -178,7 +184,8 @@ Other repository truth remains:
 - the former append-only state is preserved in `docs/archive/`;
 - permanent workflows are only `check.yml` and `pages.yml`;
 - deployments are exact-SHA and browser-qualified;
-- Pages deployment requires explicit `[deploy]` from checked `main` or manual workflow dispatch of an exact source ref;
+- Pages deployment requires explicit `[deploy]` from checked `main`, a successful checked `rehearsal/current` move to an exact candidate, or manual workflow dispatch of an exact source ref;
+- ordinary `experiment/*` pushes never deploy;
 - the **public runtime remains the B0 closure release `6bd4b4492261b9fe3b8edbca276cf9b7de3d822d`**; the ecology specimen has not replaced it;
 - repository closure evidence is recorded in `REPOSITORY_CLOSURE_AUDIT_2026-09-26.md`.
 
