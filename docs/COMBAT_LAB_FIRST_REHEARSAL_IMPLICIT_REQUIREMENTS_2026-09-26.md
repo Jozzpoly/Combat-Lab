@@ -2487,6 +2487,176 @@ This reinforces a design principle:
 
 Persistent dashboards may exist, but the world should not require permanent maximal instrumentation to remain understandable.
 
+## 106. Requirement boundary — shared Combat Lab
+
+The recording now supports these as **shared-Lab pressures**, independent of whether Ecology survives:
+
+- high-bandwidth live intervention;
+- direct/precise numeric manipulation with wide rails;
+- explicit state scope/context;
+- research provenance / intervention history;
+- scalable information architecture beyond one long form;
+- observation apparatus that is easy to manipulate;
+- query-driven / scale-aware Debug;
+- truthful performance/failure diagnostics;
+- comparison semantics that expose scope and matched-start assumptions;
+- clear separation of authored vs derived truth while keeping causal neighbors inspectable;
+- breakability without hidden rescue;
+- apparatus/world input ownership;
+- exact build/public provenance.
+
+These should be challenged as potential shared Workbench/refoundation concerns.
+
+## 107. Requirement boundary — Ecology / multi-body substrate
+
+These findings should **not** automatically become shared Workbench semantics:
+
+- dynamic-body-aware movement;
+- stuck detection / replanning;
+- goal/stimulus generation;
+- local-density/crowd metrics;
+- contact/yield semantics;
+- spatial broad phase;
+- actor cohort behavior;
+- route feasibility;
+- contact solver iteration/order.
+
+They are currently Ecology/multi-actor substrate problems.
+
+The Workbench may need neutral ways to expose their state, but should not learn what “crowd”, “route” or “body” means unless repeated evidence later justifies a more general abstraction.
+
+## 108. Strong candidates still needing human validation
+
+Do not freeze these as requirements yet:
+
+- free-pan camera;
+- click-to-select resident;
+- specific cohort UI;
+- world-state checkpointing implementation;
+- full replay;
+- pressure ramp / target-count UI;
+- exact heatmaps;
+- tabs/docking/multiple windows;
+- ORCA/RVO or any crowd solver;
+- Rapier or another physics backend;
+- pathfinding architecture;
+- exact optional-linkage interaction;
+- exact comparison UX.
+
+They are supported enough to investigate later.
+
+They are not Owner-qualified solutions.
+
+## 109. Current implementation elements worth retaining as donors, not dogma
+
+The first campaign suggests retaining/reusing the **ideas** behind:
+
+- live number editing;
+- wide hard rails + soft ranges;
+- explicit EXTREME / SAFETY RAIL truth;
+- input-focus isolation;
+- Reset World vs Restore Defaults separation;
+- deterministic fixed-step guard + dropped-time truth;
+- exact public provenance;
+- experiment registry / replaceable experiment concept;
+- deep-link to an exact experiment;
+- generic experiment-owned actions.
+
+But even these should be allowed to change form.
+
+For example:
+
+- generic actions need provenance;
+- fixed-step stress needs richer severity;
+- Inspector schema needs scope semantics;
+- experiment registry may need richer experiment state metadata.
+
+## 110. Current implementation elements that should not be promoted as foundations
+
+Based on the recording and code forensics, do not promote:
+
+- one long vertical schema form;
+- flat global editable IDs as the full research state model;
+- capture-all parameter A/B;
+- first-two-plus-`+N` comparison summaries;
+- binary global Debug as the observability architecture;
+- near-player hidden spawn placement as neutral population policy;
+- actor-ID-driven goal policy;
+- 12 fixed goals as a generic ecology driver;
+- endpoint-only static steering as sufficient navigation;
+- one-pass all-pairs contact solver as physical semantics;
+- global nominal occupied area as the primary crowd-pressure metric;
+- current player/resident role laws as matched embodied actors.
+
+These remain historical specimen machinery.
+
+## 111. Design debt and research debt must remain separate
+
+**Shared Lab design debt** can be repaired without deciding the ecology hypothesis.
+
+Examples:
+
+- camera interaction;
+- state scope;
+- naming;
+- navigation of controls;
+- provenance;
+- diagnostics architecture.
+
+**Ecology research debt** requires new hypotheses/evidence.
+
+Examples:
+
+- what contact/yield relation is interesting;
+- how much movement competence is enough;
+- how embodied actors should respond to congestion;
+- how intent should be generated.
+
+Do not let a UX refactor silently choose ecology semantics.
+
+Do not let an ecology experiment hardcode itself into shared Lab architecture.
+
+## 112. Refoundation should preserve replaceability
+
+The recording strongly justifies substantial rebuilding.
+
+It does **not** justify making the next organism/contact/navigation model permanent.
+
+Any future refoundation should make it easier, not harder, to replace:
+
+- resident movement law;
+- contact law;
+- stimulus generator;
+- observation probes;
+- experiment-specific authoring surfaces.
+
+The Lab's value comes partly from surviving failed specimens.
+
+## 113. Campaign-1 evidence saturation signal
+
+The feedback campaign is approaching useful saturation when new analysis mostly:
+
+- sharpens causal boundaries;
+- identifies hidden confounds;
+- strengthens already repeated workflow requirements;
+
+rather than discovering a new independent class of Owner failure.
+
+Current independent classes now include:
+
+1. camera/direct observation;
+2. Workbench information architecture/state scope;
+3. comparison/provenance;
+4. Debug/observability;
+5. population/stress authoring;
+6. organism competence;
+7. stimulus validity;
+8. physical/contact behavior;
+9. scaling/performance;
+10. causal attribution across phenotype/role/cohort.
+
+This is enough breadth to support a later dedicated refoundation/research campaign without immediately implementing from the first visible complaint.
+
 ## Working invariant
 
 > **A professional Combat Lab should make it cheap to ask a dangerous question of the world, cheap to see what happened, and hard to misunderstand why.**
