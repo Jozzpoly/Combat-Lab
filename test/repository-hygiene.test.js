@@ -13,7 +13,7 @@ test("canonical entrypoints contain one current project state",()=>{
 
   assert.match(readme,/Canonical live branch/);
   assert.match(readme,/Workbench foundation — QUALIFIED FOR CURRENT RESEARCH USE/);
-  assert.match(readme,/post-closure preparation \/ frontier-shaping campaign is active/i);
+  assert.match(readme,/top-down frontier reassessment is active/i);
   assert.match(readme,/no selected next research specimen/i);
   assert.match(readme,/6bd4b4492261b9fe3b8edbca276cf9b7de3d822d/);
   assert.doesNotMatch(readme,/waits for new Owner instruction/i);
@@ -22,8 +22,8 @@ test("canonical entrypoints contain one current project state",()=>{
   assert.doesNotMatch(readme,/intentionally \*\*not deployed for Owner testing yet\*\*/i);
 
   assert.match(state,/Workbench \+ B0 CLOSED/);
-  assert.match(state,/post-closure preparation \/ frontier-shaping campaign ACTIVE/i);
-  assert.match(state,/NEXT RESEARCH DIRECTION — OPEN FOR DELIBERATE FRONTIER SELECTION/);
+  assert.match(state,/top-down frontier reassessment ACTIVE/i);
+  assert.match(state,/ACTIVE EMBODIED SPATIAL ECOLOGY \/ MULTI-BODY PRESSURE/);
   assert.match(state,/optional explicit linkage \/ correlated scaling/i);
   assert.match(state,/Feniks, ReflexBrain, Companion and SPC/);
   assert.doesNotMatch(state,/waiting for new Owner instruction/i);
@@ -96,6 +96,10 @@ test("durable records cannot masquerade as live execution authority",()=>{
   assert.match(history,/For live sequencing, \*\*\`docs\/RESEARCH_STATE\.md\` wins\*\*/);
   assert.match(protocol,/## 13\. Cross-project donor recovery/);
   assert.match(closure,/## 8\. Final release gate — PASS/);
+  assert.ok(exists("docs/FRONTIER_REASSESSMENT_2026-09-26.md"));
+  const frontier=read("docs/FRONTIER_REASSESSMENT_2026-09-26.md");
+  assert.match(frontier,/ACTIVE EMBODIED SPATIAL ECOLOGY \/ MULTI-BODY PRESSURE/);
+  assert.match(frontier,/not yet an implementation command/i);
 });
 
 test("package identity no longer describes a temporary refoundation substrate",()=>{
