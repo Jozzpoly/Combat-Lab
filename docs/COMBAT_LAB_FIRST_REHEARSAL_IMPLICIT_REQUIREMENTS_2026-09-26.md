@@ -3357,6 +3357,42 @@ Intentional coupling is a valid scenario.
 
 It must not remain hidden when causal interpretation depends on it.
 
+## 143. Spawn topology and movement topology must be independently inspectable
+
+**Status:** STRONG RESEARCH-INTEGRITY REQUIREMENT
+
+Current fallback spawn zones overlap several route destinations, including the universal goal-10 hub.
+
+This creates a hidden coupling between:
+
+- where bodies enter;
+- where bodies are later asked to travel.
+
+Future harnesses should allow those two stimulus layers to be inspected and, when needed, varied independently.
+
+This does not require random spawning.
+
+It requires causal transparency.
+
+## 144. Multiple weak harness biases can compound into a dominant phenomenon
+
+**Status:** CRITICAL SYNTHESIS REQUIREMENT
+
+The first Ecology jam is not explained by one obvious bug.
+
+Several individually understandable choices align:
+
+- local visible spawning;
+- waypoint convergence;
+- permanent goal classes;
+- no dynamic-body response;
+- hard contact;
+- sequential solving.
+
+A professional research process must therefore challenge **compositions of apparatus choices**, not only inspect each component in isolation.
+
+This is particularly important for emergent-system research, where several small deterministic biases can create a highly coherent-looking macroscopic pattern.
+
 ## Working invariant
 
 > **A professional Combat Lab should make it cheap to ask a dangerous question of the world, cheap to see what happened, and hard to misunderstand why.**
