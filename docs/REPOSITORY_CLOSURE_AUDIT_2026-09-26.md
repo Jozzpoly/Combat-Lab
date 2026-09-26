@@ -192,6 +192,37 @@ During recovery after the conversation-limit failure, one canonical documentatio
 - commit `e29cf8559d3a2a3409b13c443897b5e61e611b9d` added a repository-hygiene regression guard;
 - the resulting full check passed, while Pages build/deploy were correctly skipped because those commits did not request deployment.
 
+## 9. Conversation-limit recovery hardening — PASS
+
+A fresh recovery audit was performed after the previous conversation ended at its context limit without returning a user-facing handoff.
+
+Material findings and repairs:
+
+- the deployment protocol still described a removed whitelisted experiment-branch auto-deploy path; corrected;
+- the neutral-substrate record still said the substrate was not deployed and carried a superseded first-frontier shortlist as if it could be current guidance; historical execution guidance was demoted explicitly;
+- the Workbench refoundation record still exposed its old W0–W4 plan and an "active implementation baseline" without enough historical scoping; corrected;
+- B0 evidence / closure records now state explicitly when their execution or `WAITING FOR OWNER INSTRUCTION` wording is historical rather than live authority;
+- current Owner direction now records optional future linked/correlated phenotype scaling, larger terrain/obstacle/multi-actor pressure, and later bounded donor recovery from Feniks / ReflexBrain / Companion / SPC without promoting any of those to an automatic next build;
+- repository hygiene now checks all non-archived Markdown links, current preparation-state truth and durable-vs-live authority boundaries.
+
+Repository verification after these repairs:
+
+- branch refs: **`main` only**;
+- open pull requests: **0**;
+- open issues: **0**;
+- releases: **0**;
+- latest full `check` on recovery head `b805202cab40d2163018e3923a7e00e750bb4cd5`: **SUCCESS**;
+- Pages build/deploy on documentation-only commits: correctly **SKIPPED** without explicit `[deploy]`.
+
+Runtime-preservation comparison:
+
+- base public closure release: `6bd4b4492261b9fe3b8edbca276cf9b7de3d822d`;
+- recovery head checked: `b805202cab40d2163018e3923a7e00e750bb4cd5`;
+- changed files are limited to Markdown documentation and `test/repository-hygiene.test.js`;
+- **no changes** to `index.html`, `app.js`, `style.css`, `src/**`, `experiments/**` or the browser-gate implementation.
+
+Therefore this hardening campaign changes repository truth / governance only and does not silently mutate the Owner-observed B0 runtime.
+
 ## Closure invariant
 
 > **Preserve evidence, remove stale authority, and leave exactly one clean place from which the next research question can begin.**
