@@ -2081,6 +2081,125 @@ It is:
 
 > **the neutral contract now needs richer research semantics before it needs richer controls.**
 
+## 86. Ecology exposes a fundamental limit of parameter-only A/B
+
+**Status:** CRITICAL RESEARCH-INTEGRITY FINDING
+
+Current A/B captures editable parameters.
+
+It does **not** capture the evolving world/population state.
+
+In B0 this can be useful when a matched world start is externally guaranteed.
+
+In Ecology the world becomes strongly path-dependent:
+
+- hundreds of moving actors;
+- persistent jams;
+- changing contact networks;
+- spatial redistribution over time.
+
+Therefore:
+
+> applying A and B sequentially inside one evolving 845-resident world does not create a controlled A/B comparison.
+
+The parameter vector may differ cleanly while the initial physical situation does not.
+
+This means a professional comparison system needs an explicit answer to:
+
+> **what start state is being held constant?**
+
+Potential later mechanisms include:
+
+- deterministic reset/re-run;
+- world checkpoint;
+- replayed intervention sequence;
+- controlled scenario seed;
+- matched saved population state.
+
+No mechanism is selected by this campaign.
+
+## 87. Current A/B captures the wrong boundary for complex experiments
+
+Current parameter slots can include:
+
+- camera zoom — often apparatus state and a possible visual confound.
+
+They exclude:
+
+- actor positions;
+- velocities;
+- population composition/history;
+- current jams/contact topology;
+- simulation time.
+
+That is almost the opposite of what some stateful comparisons may require.
+
+The requirement is not “snapshot absolutely everything”.
+
+It is:
+
+> **comparison domains must be explicit and question-dependent.**
+
+Examples of possible comparison questions:
+
+- same world start, different player phenotype;
+- same actor population, different contact law;
+- same phenotype, different pressure regime;
+- same simulation result, different observation view.
+
+These require different state boundaries.
+
+## 88. “Experiment state” cannot remain synonymous with “editable controls”
+
+**Status:** CODE + RECORDING CONFIRMED
+
+The current implementation makes a convenient assumption:
+
+> editable parameters ≈ state worth capturing.
+
+Ecology falsifies that assumption.
+
+Research-relevant state may include:
+
+- authored law/configuration;
+- instantiated population;
+- world dynamic state;
+- stimulus state;
+- intervention history;
+- random seed;
+- observation apparatus.
+
+Future Workbench refoundation needs a more explicit state ontology before comparison/replay tooling can become trustworthy.
+
+## 89. Long-lived exploratory worlds make checkpoints more valuable than global resets alone
+
+**Status:** STRONG DERIVED REQUIREMENT
+
+The Owner keeps the evolving world alive rather than repeatedly resetting.
+
+In that workflow, an interesting jam or crowd arrangement may itself be evidence worth preserving.
+
+A global deterministic Reset is useful, but it destroys the found state.
+
+Therefore a future Lab likely needs some way to preserve **interesting intermediate research state** before destructive follow-up.
+
+This is a candidate requirement for checkpointing, not authority for a particular serialization/replay implementation.
+
+## 90. Dynamic-world comparison requires time semantics
+
+**Status:** RESEARCH-INTEGRITY REQUIREMENT
+
+In a moving population, “same parameters” at two different times are not equivalent experimental conditions.
+
+Comparison tooling must eventually make temporal context explicit enough to distinguish:
+
+- same simulation time from matched start;
+- same intervention sequence;
+- same instantaneous world checkpoint;
+- merely “whatever the world looked like when Apply was clicked.”
+
+Current A/B provides no such distinction.
+
 ## Working invariant
 
 > **A professional Combat Lab should make it cheap to ask a dangerous question of the world, cheap to see what happened, and hard to misunderstand why.**
