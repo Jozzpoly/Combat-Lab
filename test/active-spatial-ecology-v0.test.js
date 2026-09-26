@@ -81,6 +81,24 @@ test("destructive pressure can exceed one hundred active residents before any ar
   }
 });
 
+test("impossible giant horde pressure reports placement saturation instead of mutating phenotype",()=>{
+  const state=createActiveEcologyState();
+  setActiveEcologyParameter(state,"spawnEnvelope",12);
+  setActiveEcologyParameter(state,"spawnBodyMass",200);
+  setActiveEcologyParameter(state,"spawnForceMultiplier",100);
+
+  const result=spawnEcologyResidents(state,50);
+  assert.equal(result.requested,50);
+  assert.equal(result.spawned+result.failed,50);
+  assert.ok(result.failed>0,"giant horde should eventually saturate legal placement");
+  assert.equal(state.spawnFailures,result.failed);
+
+  const spawned=state.residents.filter(r=>!r.baseline);
+  assert.ok(spawned.every(r=>r.envelope===12));
+  assert.ok(spawned.every(r=>r.bodyMass===200));
+  assert.ok(spawned.every(r=>r.forceMultiplier===100));
+});
+
 test("clear extras restores the deterministic baseline population",()=>{
   const state=createActiveEcologyState();
   spawnEcologyResidents(state,10);
