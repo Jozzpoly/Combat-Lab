@@ -314,7 +314,31 @@ This means only that it is now worth translating to a real public origin for dir
 
 It is **not** a positive result for the research hypothesis.
 
-## 9. Next evidence
+## 9. Public-rehearsal translation hardening
+
+After the internal qualification checkpoint, one additional user-surface problem was found:
+
+> the ecology-capable build still opened B0 by default.
+
+That would make an exact ecology deployment formally correct but weak as Owner exposure.
+
+A neutral experiment deep-link seam was added and real-browser qualified:
+
+- exact candidate: `67309b91d9c5f376192fe2ba6a80458294086691`;
+- direct ecology URL: `?experiment=active-spatial-ecology-v0`;
+- ordinary root still defaults to B0;
+- changing experiments updates/removes the query parameter without changing experiment semantics;
+- invalid/absent explicit selection falls back to canonical B0.
+
+The rehearsal candidate therefore preserves the normal public root while allowing one link to open the intended specimen immediately.
+
+Rollback provenance remains:
+
+- `6bd4b4492261b9fe3b8edbca276cf9b7de3d822d` — prior canonical public B0 closure release.
+
+This deep-link seam changes translation/access only. It does not add research evidence for the ecology hypothesis.
+
+## 10. Next evidence
 
 After exact public-origin qualification, the Owner should receive the specimen with minimal interpretation.
 
@@ -329,6 +353,6 @@ The important observations are behavioral:
 
 The Owner’s reaction outranks every PASS above.
 
-## Working invariant
+## 11. Working invariant
 
 > **Machine evidence earns the right to ask the human question; it does not answer it.**
