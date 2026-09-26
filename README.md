@@ -116,7 +116,7 @@ The cleanup campaign previously reduced the repository to `main` only after pres
 Exact rehearsal provenance:
 
 - internally qualified runtime: `d55b3b093325452e6dc730f314c886a2cbc85229`;
-- public-rehearsal candidate: `67309b91d9c5f376192fe2ba6a80458294086691`.
+- public-rehearsal candidate: `ce96587826746efad426347a8a394048810e4ee2`.
 
 A rehearsal must deploy the exact candidate SHA rather than a moving branch HEAD.
 
