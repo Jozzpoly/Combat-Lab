@@ -324,7 +324,7 @@ That would make an exact ecology deployment formally correct but weak as Owner e
 
 A neutral experiment deep-link seam was added and real-browser qualified:
 
-- exact candidate: `67309b91d9c5f376192fe2ba6a80458294086691`;
+- translation-hardening checkpoint: `67309b91d9c5f376192fe2ba6a80458294086691`;
 - direct ecology URL: `?experiment=active-spatial-ecology-v0`;
 - ordinary root still defaults to B0;
 - changing experiments updates/removes the query parameter without changing experiment semantics;
@@ -337,6 +337,36 @@ Rollback provenance remains:
 - `6bd4b4492261b9fe3b8edbca276cf9b7de3d822d` — prior canonical public B0 closure release.
 
 This deep-link seam changes translation/access only. It does not add research evidence for the ecology hypothesis.
+
+### Explicit break-pressure follow-up
+
+The Owner's instruction to make the lab deliberately breakable exposed one remaining protective boundary: ordinary spawning refused placements that overlapped existing dynamic bodies.
+
+A separate explicit action was therefore added:
+
+- `Force +10` — ignores **body-body spawn clearance**;
+- still respects world bounds and static obstacle legality;
+- preserves the authored spawn phenotype exactly;
+- reports failures truthfully if even static/world placement is impossible;
+- does not silently despawn, shrink or retune anything.
+
+The real-browser gate exercises:
+
+- `Clear all`;
+- two `Force +10` actions;
+- confirmation of 20 force-spawned authored residents;
+- real body-contact resolution;
+- Reset World recovery back to deterministic baseline.
+
+Current automated qualification:
+
+> **52 / 52 PASS**
+
+Final exact public-rehearsal candidate:
+
+- `ce96587826746efad426347a8a394048810e4ee2`
+
+This is the candidate that should be deployed for Owner rehearsal. The earlier `67309b91...` checkpoint is superseded as the public target, but remains useful evidence for the deep-link translation seam.
 
 ## 10. Next evidence
 
