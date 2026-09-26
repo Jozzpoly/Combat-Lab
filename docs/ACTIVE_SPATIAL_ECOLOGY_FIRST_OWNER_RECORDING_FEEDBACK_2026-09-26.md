@@ -903,6 +903,63 @@ Observed player-vs-crowd behavior may reflect:
 
 Do not attribute those interactions to embodiment alone.
 
+## 29. Player authoring is staged, not merely “set an extreme preset”
+
+A denser read of ~136–192 s shows an informative sequence.
+
+Approximate visible authored states:
+
+| Time | Envelope | Body mass | Load | Force |
+| --- | ---: | ---: | ---: | ---: |
+| ~136 s | 2.00 | 2 | 4 | 12 |
+| ~144 s | 2.00 | 12 | 4 | 12 |
+| ~160 s | 2.00 | 12 | 14 | 12 |
+| ~168 s | 2.00 | 32 | 14 | 12 |
+| ~184 s | ~1.16 | 62 | 14 | 12 |
+| ~192 s | ~1.16 | 62 | 14 | 62 |
+
+Under the current law:
+
+`acceleration = 760 × force / (body mass + load)`
+
+these states correspond roughly to:
+
+- 1520;
+- 570;
+- 351;
+- 198;
+- 120;
+- 620
+
+world-units/s² of acceleration limit.
+
+This sequence is important because it is not one correlated “bigger/heavier/stronger” move.
+
+The Owner repeatedly changes one axis while leaving the others in place.
+
+That is direct behavioral support for preserving independent raw controls.
+
+Do not replace this workflow with automatic phenotype correlation.
+
+## 30. Current fixed max speed limits what mass/force authoring can express
+
+Player max speed remains ~225 independent of these mass/load/force changes.
+
+Therefore much of the authored mass/force variation affects:
+
+- acceleration/braking;
+- contact mass;
+
+but not eventual free-running top speed.
+
+The recording does not establish whether this law is good or bad.
+
+It does establish another interpretation boundary:
+
+> visible mass/force changes are not equivalent to a general “movement speed” change.
+
+Future feedback/debug must keep derived law consequences legible enough that authored labels do not imply stronger effects than the current model actually provides.
+
 ## Working invariant
 
 > **The first public Ecology rehearsal succeeded as an experiment mainly because it exposed why the current laboratory and organism are not yet good enough to answer the question cleanly.**
