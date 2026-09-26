@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-26  
 **Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
 **Canonical branch:** `main` after repository canonicalization  
-**Stage:** **Workbench + B0 CLOSED; waiting for new Owner instruction**
+**Stage:** **Workbench + B0 CLOSED; post-closure preparation / frontier-shaping campaign ACTIVE; no new specimen selected**
 
 ## 1. Owner intent
 
@@ -26,6 +26,17 @@ It is deliberately broader than melee or hitting. Important research territory i
 No single historical line — including R3 sword/tool contact — is the project spine.
 
 A clean implementation restart is allowed whenever accumulated architecture constrains discovery. Evidence must survive such resets.
+
+### Post-closure Owner direction — 2026-09-26
+
+These are **Owner intent / future capability candidates**, not qualified mechanics and not an automatic next implementation:
+
+- preserve envelope, mass/load and locomotor authority as independently editable underlying dimensions;
+- later explore **optional explicit linkage / correlated scaling** so one authored change (for example body size) can deliberately drive selected mass, speed, force or other dimensions up/down together when the Owner wants a coherent phenotype quickly;
+- such linkage must remain visible, reversible and authorable rather than becoming a hidden universal law that destroys independent experimentation;
+- expand future test pressure toward a **larger and more varied world** with more terrain, obstacles and multiple varied opponents / residents, especially for displacement, pushing, being pushed, clearance and spatial-relation experiments;
+- after the current cleanup/preparation campaign, perform a deliberate donor review of **Feniks, ReflexBrain, Companion and SPC** for already-developed movement, pathfinding, spatial-relation and related infrastructure before reinventing those capabilities;
+- cross-project donor code or architecture is never local authority by default: recover the exact useful property/evidence, transplant the minimum when a Combat Lab question actually needs it, and re-qualify it locally.
 
 ## 2. Evidence hierarchy
 
@@ -155,10 +166,22 @@ Repository cleanup result:
 - Pages deployment from CI requires explicit `[deploy]` or manual workflow dispatch;
 - repository closure evidence is recorded in `REPOSITORY_CLOSURE_AUDIT_2026-09-26.md`.
 
-## 7. Next move
+## 7. Current objective / next move
 
-There is no preselected R4, weapon family or body-system continuation.
+There is still no preselected R4, weapon family or body-system continuation.
 
-> **NEXT RESEARCH DIRECTION — OPEN.**
+The immediate objective is to **finish the post-closure cleanup, authority synchronization and preparation campaign** before opening another specimen.
 
-Wait for new Owner instruction, recover this state, challenge the proposed direction, then open the smallest high-information experiment that serves the real question.
+That preparation must leave:
+
+- one coherent canonical truth;
+- no durable document silently acting on superseded execution instructions;
+- repository / branch / deploy hygiene guarded by tests;
+- the public B0 closure provenance intact;
+- the new Owner direction above preserved without prematurely implementing it.
+
+After this preparation closes:
+
+> **NEXT RESEARCH DIRECTION — OPEN FOR DELIBERATE FRONTIER SELECTION.**
+
+Optional linked scaling, larger-world pressure and cross-project donor recovery are now legitimate frontier-shaping inputs. None of them is automatically the next build merely because it is recorded here.
