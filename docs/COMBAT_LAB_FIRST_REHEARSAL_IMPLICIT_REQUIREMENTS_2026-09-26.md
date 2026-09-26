@@ -2081,7 +2081,29 @@ It is:
 
 > **the neutral contract now needs richer research semantics before it needs richer controls.**
 
-## 86. Ecology exposes a fundamental limit of parameter-only A/B
+## 86. Final Owner A/B action directly demonstrates scope contamination
+
+Dense recording review resolves the final action sequence as:
+
+> **Capture B → Apply A**
+
+inside the live 845-resident world.
+
+Applying A visibly changes both:
+
+- player authored state;
+- camera zoom;
+
+while leaving the evolved world/population arrangement intact.
+
+Thus two previously inferred requirements are now directly demonstrated by one Owner action:
+
+1. **comparison scope is too broad in one dimension** — camera/appartus state changes;
+2. **comparison scope is too narrow in another** — path-dependent world state is not matched.
+
+This is unusually strong evidence that future comparison semantics must be domain-aware rather than “all editable controls”.
+
+## 87. Ecology exposes a fundamental limit of parameter-only A/B
 
 **Status:** CRITICAL RESEARCH-INTEGRITY FINDING
 
@@ -2118,7 +2140,7 @@ Potential later mechanisms include:
 
 No mechanism is selected by this campaign.
 
-## 87. Current A/B captures the wrong boundary for complex experiments
+## 88. Current A/B captures the wrong boundary for complex experiments
 
 Current parameter slots can include:
 
@@ -2149,7 +2171,7 @@ Examples of possible comparison questions:
 
 These require different state boundaries.
 
-## 88. “Experiment state” cannot remain synonymous with “editable controls”
+## 89. “Experiment state” cannot remain synonymous with “editable controls”
 
 **Status:** CODE + RECORDING CONFIRMED
 
@@ -2171,7 +2193,7 @@ Research-relevant state may include:
 
 Future Workbench refoundation needs a more explicit state ontology before comparison/replay tooling can become trustworthy.
 
-## 89. Long-lived exploratory worlds make checkpoints more valuable than global resets alone
+## 90. Long-lived exploratory worlds make checkpoints more valuable than global resets alone
 
 **Status:** STRONG DERIVED REQUIREMENT
 
@@ -2185,7 +2207,7 @@ Therefore a future Lab likely needs some way to preserve **interesting intermedi
 
 This is a candidate requirement for checkpointing, not authority for a particular serialization/replay implementation.
 
-## 90. Dynamic-world comparison requires time semantics
+## 90A. Dynamic-world comparison requires time semantics
 
 **Status:** RESEARCH-INTEGRITY REQUIREMENT
 
