@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-26  
 **Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
 **Canonical branch:** `main` after repository canonicalization  
-**Stage:** **Workbench + B0 CLOSED; Active Embodied Spatial Ecology hypothesis SELECTED FOR REVERSIBLE IMPLEMENTATION**
+**Stage:** **Workbench + B0 CLOSED; Active Embodied Spatial Ecology v0 INTERNALLY QUALIFIED FOR DELIBERATE PUBLIC REHEARSAL — OWNER VALUE UNPROVEN**
 
 ## 1. Owner intent
 
@@ -155,62 +155,69 @@ See [Historical evidence index](HISTORY_INDEX.md).
 
 ## 6. Repository / deployment truth
 
-Repository cleanup result:
+The completed cleanup campaign temporarily reduced repository topology to `main` only after ancestry verification of all stale refs.
 
-- `main` is the **only remaining branch ref**;
-- all six stale experiment/refoundation refs were removed only after ancestry verification;
+Current live topology now intentionally contains exactly two branch refs:
+
+- `main` — canonical truth / governance;
+- `experiment/active-spatial-ecology` — one temporary active experiment lane.
+
+The active lane was opened from green canonical main:
+
+- base: `4b44a001be679cb987c8470ce208d3b503d698a9`;
+- internally qualified runtime checkpoint: `d55b3b093325452e6dc730f314c886a2cbc85229`;
+- current lane head after evidence documentation: `1a35280bae42902b3a70e5919b671954425f10ca`.
+
+Other repository truth remains:
+
+- all six old stale experiment/refoundation refs remain deleted;
 - unique historical lineages remain reachable from `main` through canonical Git ancestry;
 - old "active/current/next" language in historical documents is explicitly marked non-authoritative;
 - the former append-only state is preserved in `docs/archive/`;
 - permanent workflows are only `check.yml` and `pages.yml`;
 - deployments are exact-SHA and browser-qualified;
-- Pages deployment from CI requires explicit `[deploy]` or manual workflow dispatch;
+- Pages deployment requires explicit `[deploy]` from checked `main` or manual workflow dispatch of an exact source ref;
+- the **public runtime remains the B0 closure release `6bd4b4492261b9fe3b8edbca276cf9b7de3d822d`**; the ecology specimen has not replaced it;
 - repository closure evidence is recorded in `REPOSITORY_CLOSURE_AUDIT_2026-09-26.md`.
 
 ## 7. Current objective / next move
 
-Post-closure cleanup / authority synchronization is **CLOSED**.
+Active Embodied Spatial Ecology v0 has crossed the **internal apparatus/mechanism gate**.
 
-Current work is the top-down frontier reassessment recorded in [Frontier Reassessment 2026-09-26](FRONTIER_REASSESSMENT_2026-09-26.md).
+Exact evidence record:
 
-There is still no selected R4, weapon family or body-system continuation.
+- [Active Spatial Ecology Internal Qualification](ACTIVE_SPATIAL_ECOLOGY_INTERNAL_QUALIFICATION_2026-09-26.md)
 
-Current highest-value uncertainty:
+Narrow internal evidence:
 
-> **Do embodied differences remain decision-relevant when the world becomes richer and active body pressure scales from sparse encounters through crowd/horde regimes, or do they collapse into an interesting parameter sandbox, authored fit-not-fit puzzle or technical solver failure?**
+- **51 / 51 automated tests PASS** at the qualified runtime checkpoint;
+- real Chromium Workbench gate PASS;
+- mixed spawn waves preserve independently authored phenotypes;
+- browser rehearsal reached **56 active residents with 0 spawn failures** and sampled ~**626 body contacts/s**;
+- a separate mechanistic probe exceeded **100 active residents** while remaining finite;
+- impossible giant-horde requests report legal-placement saturation rather than silently mutating the requested phenotype;
+- zero → baseline → dense/horde population states are directly controllable;
+- forced main-thread stall surfaces `SIM STRESS` and dropped wall time rather than silently presenting slowdown as body behavior;
+- visual red-team caught and repaired a first spawn-placement apparatus failure before promotion.
 
-Selected next reversible discovery specimen:
+These claims qualify only apparatus/mechanistic facts.
 
-> **ACTIVE EMBODIED SPATIAL ECOLOGY / MULTI-BODY PRESSURE**
+Still **UNPROVEN until Owner play**:
 
-Implementation contract:
+- whether the bodies feel meaningfully different under pressure;
+- whether population pressure changes Owner decisions;
+- whether crowd/horde regimes reveal useful emergence rather than noise;
+- whether pushing/yielding is readable or enjoyable;
+- whether the simple resident intent is adequate;
+- whether any of this belongs in Feniks;
+- whether current collision, movement, camera or navigation laws deserve promotion.
 
-- [Active Embodied Spatial Ecology Hypothesis Card](ACTIVE_EMBODIED_SPATIAL_ECOLOGY_HYPOTHESIS_2026-09-26.md)
+Current next move:
 
-The hypothesis survived the top-down comparison, the Owner's permissive-population correction and a final apparatus review.
+> **perform one exact public rehearsal of the active experiment-lane head, verify public provenance and runtime translation, then obtain early raw Owner observation.**
 
-Implementation authority is narrow: build the smallest specimen that exposes a larger continuous world, active resident movement, independently authored player/spawn phenotypes, permissive sparse→horde pressure and truthful runtime diagnostics.
+Do not add stance, equipment, weapons, crowd algorithms, pathfinding sophistication or further tuning merely because CI is green.
 
-This is **not** Feniks architecture authority.
+If public translation exposes a technical defect, repair only that defect and repeat the public gate. If public translation is faithful, the next authority is Owner behavior.
 
-Completed before implementation:
-
-- challenged against stance/equipment and orthogonal bow/magic;
-- bounded hypothesis card defined with human discriminator and hard falsifiers;
-- permissive population escalation corrected to match Owner intent;
-- larger-world camera/view requirement identified;
-- targeted donor reconnaissance performed for multi-body navigation scaling.
-
-Current donor result:
-
-- Companion-Brain-Lab contains useful bounded static navigation/query/physical-world donors;
-- it does **not** contain a ready multi-companion/crowd avoidance system;
-- ReflexBrain-Lab and current SPC/Llm-Live-NPC repos do not provide the required movement donor.
-
-Next move:
-
-> **Open one temporary experiment lane and implement the minimum internally qualified specimen.**
-
-Do not deploy or request Owner play merely because implementation/CI turns green.
-
-Optional linked scaling remains an enabling Workbench candidate, not the research question itself.
+Optional linked scaling remains an enabling Workbench candidate; current multi-phenotype authoring is now the first real context in which its friction can be observed rather than assumed.
