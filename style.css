@@ -111,6 +111,11 @@ button:disabled { opacity: .45; cursor: default; }
   border-color: rgba(255,125,125,.5);
   color: #ffd0d0;
 }
+.status-pill[data-state="STRESS"] {
+  border-color: rgba(241,181,95,.45);
+  color: #ffdca8;
+  background: rgba(241,181,95,.08);
+}
 .workspace {
   flex: 1 1 auto;
   min-height: 0;
@@ -373,6 +378,21 @@ canvas {
   font-size: 10px;
 }
 .wide-action { width: 100%; }
+.action-grid {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 7px;
+}
+.action-button {
+  min-width: 0;
+  padding: 7px 8px;
+  color: var(--muted);
+  font-size: 10px;
+}
+.action-button[data-action-id^="spawn"] {
+  border-color: rgba(114,185,255,.26);
+}
+
 .live-grid {
   display: grid;
   gap: 6px;
