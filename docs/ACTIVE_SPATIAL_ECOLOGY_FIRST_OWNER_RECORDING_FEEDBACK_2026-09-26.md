@@ -1379,6 +1379,93 @@ However:
 
 So the causal-integrity concern remains, but its magnitude depends on batch size.
 
+## 47. Intrinsic body mass and carried load are currently mechanically degenerate
+
+The Inspector exposes:
+
+- Body mass;
+- Carried load;
+
+as separate authored values.
+
+The current experiment immediately derives:
+
+`totalMass = bodyMass + loadMass`.
+
+That same `totalMass` then drives:
+
+- acceleration;
+- braking;
+- inverse-mass body-body positional correction;
+- collision impulse response.
+
+No current movement/contact law distinguishes whether one unit of mass came from:
+
+- intrinsic body mass; or
+- carried load.
+
+Therefore states such as:
+
+- body mass 62 + load 14;
+- body mass 76 + load 0;
+
+are mechanically equivalent in the present Ecology law if all other values match.
+
+The recording proves the Owner values separate authoring controls.
+
+It does **not** prove that intrinsic and carried mass already have separately useful gameplay semantics.
+
+This distinction must survive future evidence claims.
+
+## 48. The late extreme player becomes almost a kinematic bulldozer against default spawned residents
+
+Near the late extreme state:
+
+- body mass ≈ 62;
+- carried load ≈ 14;
+- total mass ≈ 76;
+- envelope ≈ 1.16;
+- default ordinary spawned resident mass ≈ 1.
+
+In a pair overlap between mass 76 and mass 1, inverse-mass positional correction assigns approximately:
+
+- **~1.3%** of penetration correction to the heavy player;
+- **~98.7%** to the mass-1 resident.
+
+So the player is not literally kinematic, but in pair contact it is nearly immovable relative to a default spawned body.
+
+This helps interpret visible pushing.
+
+It also means a late player-vs-default-crowd observation is a highly asymmetric mass-ratio test, not a generic crowd-contact test.
+
+## 49. Late force escalation restores responsiveness without removing inertia
+
+At:
+
+- total mass ≈ 76;
+- force ≈ 12;
+
+current acceleration/braking limit is roughly:
+
+- **120 units/s²**.
+
+With player max speed fixed at ~225, ideal free-space time to reach top speed is roughly:
+
+- **~1.9 s**.
+
+After force rises to ~62 while mass/load remain extreme:
+
+- acceleration/braking ≈ **620 units/s²**;
+- ideal time to top speed falls to ~**0.36 s**.
+
+Thus the late sequence effectively explores:
+
+> high inertia/contact mass with weak motor authority → high inertia/contact mass with strong motor authority.
+
+The recording is silent, so do not claim this was the Owner's verbalized hypothesis.
+
+But the behavior is directly consistent with using locomotor authority as an independent experimental axis rather than merely a correlated “speed stat”.
+
 ## Working invariant
 
 > **The first public Ecology rehearsal succeeded as an experiment mainly because it exposed why the current laboratory and organism are not yet good enough to answer the question cleanly.**
