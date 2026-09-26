@@ -309,9 +309,23 @@ export function setActiveEcologyParameter(state,id,value){
 }
 
 function spawnCandidate(state,serial,attempt,radius){
-  const zone=SPAWN_ZONES[(serial+attempt*3)%SPAWN_ZONES.length];
-  const hx=hash01(serial*7919+attempt*104729+17);
-  const hy=hash01(serial*1543+attempt*31337+91);
+  // First prefer a deterministic annulus around the player so live pressure appears where
+  // the Owner is currently observing it. Legal placement still decides whether it is usable.
+  if(attempt<140){
+    const angle=hash01(serial*7919+attempt*104729+17)*Math.PI*2;
+    const radial=hash01(serial*1543+attempt*31337+91);
+    const distance=220+radius+radial*430;
+    return {
+      x:state.player.x+Math.cos(angle)*distance,
+      y:state.player.y+Math.sin(angle)*distance
+    };
+  }
+
+  // Fallback entry regions keep spawning possible when the local annulus is saturated.
+  const fallback=attempt-140;
+  const zone=SPAWN_ZONES[(serial+fallback*3)%SPAWN_ZONES.length];
+  const hx=hash01(serial*9151+fallback*65537+31);
+  const hy=hash01(serial*2081+fallback*8191+73);
   const minX=zone.x+radius;
   const maxX=zone.x+zone.w-radius;
   const minY=zone.y+radius;
@@ -526,16 +540,6 @@ export const activeSpatialEcologyV0={
       schema:{
         groups:[
           {
-            id:"player-body",label:"Player phenotype",
-            description:"Your live body. Geometry, inertia/load and locomotor force remain independently authored.",
-            controls:[
-              {id:"playerEnvelope",type:"number",label:"Player envelope",default:1,...RAILS.envelope,decimals:2},
-              {id:"playerBodyMass",type:"number",label:"Player body mass",default:1,...RAILS.bodyMass,decimals:2},
-              {id:"playerLoadMass",type:"number",label:"Player carried load",default:0,...RAILS.loadMass,decimals:2},
-              {id:"playerForceMultiplier",type:"number",label:"Player locomotor force",unit:"×",default:1,...RAILS.forceMultiplier,decimals:2}
-            ]
-          },
-          {
             id:"spawn-phenotype",label:"Spawn phenotype",
             description:"Only new residents use these values. Existing bodies keep the phenotype they were spawned with.",
             controls:[
@@ -543,6 +547,16 @@ export const activeSpatialEcologyV0={
               {id:"spawnBodyMass",type:"number",label:"Spawn body mass",default:1,...RAILS.bodyMass,decimals:2},
               {id:"spawnLoadMass",type:"number",label:"Spawn carried load",default:0,...RAILS.loadMass,decimals:2},
               {id:"spawnForceMultiplier",type:"number",label:"Spawn locomotor force",unit:"×",default:1,...RAILS.forceMultiplier,decimals:2}
+            ]
+          },
+          {
+            id:"player-body",label:"Player phenotype",
+            description:"Your live body. Geometry, inertia/load and locomotor force remain independently authored.",
+            controls:[
+              {id:"playerEnvelope",type:"number",label:"Player envelope",default:1,...RAILS.envelope,decimals:2},
+              {id:"playerBodyMass",type:"number",label:"Player body mass",default:1,...RAILS.bodyMass,decimals:2},
+              {id:"playerLoadMass",type:"number",label:"Player carried load",default:0,...RAILS.loadMass,decimals:2},
+              {id:"playerForceMultiplier",type:"number",label:"Player locomotor force",unit:"×",default:1,...RAILS.forceMultiplier,decimals:2}
             ]
           },
           {
