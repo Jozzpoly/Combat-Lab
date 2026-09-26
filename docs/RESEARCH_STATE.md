@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-26  
 **Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
 **Canonical branch:** `main` after repository canonicalization  
-**Stage:** **Workbench + B0 CLOSED; Active Embodied Spatial Ecology v0 PUBLIC REHEARSAL LIVE / TRANSLATION PASS — OWNER VALUE UNPROVEN**
+**Stage:** **Workbench + B0 CLOSED; Active Spatial Ecology first Owner rehearsal COMPLETE; feedback extraction ACTIVE; target hypothesis INCONCLUSIVE due material apparatus findings**
 
 ## 1. Owner intent
 
@@ -51,7 +51,7 @@ Machine evidence may remain as narrow diagnostic/mechanism evidence.
 
 ## 3. Current qualified foundation
 
-### Workbench — QUALIFIED FOR CURRENT RESEARCH USE
+### Workbench substrate — MECHANICALLY QUALIFIED; CURRENT LAB UX HAS MATERIAL OWNER FINDINGS
 
 Owner-observed direct use includes:
 
@@ -73,7 +73,7 @@ Current substrate also has:
 - exact provenance;
 - source-tree and emitted-artifact browser qualification.
 
-A/B **human usefulness remains UNPROVEN** because the Owner recording did not contain a complete A↔B comparison loop.
+A/B capture/application is now **OWNER-USED** in the first Ecology recording, but comparison usefulness remains **UNPROVEN** because the recording ends before a clean interpreted A↔B loop is established.
 
 ### B0 Load / Envelope — POSITIVE OWNER SIGNAL / STAGE CLOSED
 
@@ -191,73 +191,67 @@ Other repository truth remains:
 
 ## 7. Current objective / next move
 
-Active Embodied Spatial Ecology v0 has crossed both:
+The first public Active Spatial Ecology Owner rehearsal is complete.
 
-- the **internal apparatus/mechanism gate**; and
-- the **public translation/provenance gate**.
+Primary evidence record:
 
-Exact evidence records:
+- [First Ecology Owner recording deep feedback](ACTIVE_SPATIAL_ECOLOGY_FIRST_OWNER_RECORDING_FEEDBACK_2026-09-26.md)
 
-- [Active Spatial Ecology Internal Qualification](ACTIVE_SPATIAL_ECOLOGY_INTERNAL_QUALIFICATION_2026-09-26.md)
-- exact internal runtime checkpoint: `d55b3b093325452e6dc730f314c886a2cbc85229`;
-- exact public rehearsal candidate: `ce96587826746efad426347a8a394048810e4ee2`.
+Direct Owner truth:
 
-### Public rehearsal deployment — PASS
+- camera interaction is inadequate; mouse-wheel zoom and a wider/easier usable range are required;
+- bodies block one another too strongly and produce too many stupid jams;
+- organisms are too simple;
+- Debug is not ambitious enough;
+- the Lab's current information architecture/naming/orientation are poor and unpleasant to use;
+- repeated `Spawn +50` presses were needed to reach obvious lag;
+- substantial parts of the Lab now need fundamental / architectural redesign and professional hardening;
+- despite those failures, the Lab **is beginning to fulfill its intended role**.
 
-Deployment control:
+Recording-derived findings:
 
-- `rehearsal/current` points exactly to `ce96587826746efad426347a8a394048810e4ee2`;
-- candidate rehearsal check run `36239476177` — **SUCCESS**;
-- Pages run `36239513452` — emitted-artifact build qualification **SUCCESS**, deploy **SUCCESS**;
-- workflow log proves checkout source `ce96587826746efad426347a8a394048810e4ee2` and label `rehearsal/current`.
+- the stress horde was mostly homogeneous default residents while the Owner aggressively modified the player;
+- resident steering is unaware of dynamic bodies and has no stuck/replan semantics;
+- only 12 global goals drive the whole population;
+- deterministic ID-based goal stepping creates short route cycles, including a 1-goal cycle for 1/12 of actor-ID residues;
+- local jam morphology appears well before the final horde and resembles driven granular packing;
+- Debug's global goal-line overlay rapidly becomes unreadable and does not display the actual local steering choice;
+- the current global occupied-area metric hides severe local congestion;
+- current body/static contact counters measure repeated resolver work, not unique behavioral contact events;
+- the O(N²) pair phase reaches ~357,435 pair checks per fixed step at 845 residents + player (~42.9M/s at 120 Hz);
+- first visible stress appears only after repeated escalation into the hundreds, with Debug OFF at onset;
+- current vertical Inspector is already difficult to navigate with only nine numeric controls plus actions/A-B/telemetry;
+- spawn-template labels leak flat machine scope into every human label;
+- spawned-cohort provenance is effectively invisible after creation;
+- A/B is now Owner-used, but its summary/scope are too opaque for trustworthy comparison;
+- optional linked phenotype scaling gains real authoring-friction evidence, but must remain visible/reversible rather than becoming a hidden law.
 
-External public-origin verification:
+Research classification:
 
-- `COMMIT.txt` = `ce96587826746efad426347a8a394048810e4ee2`;
-- `BRANCH.txt` = `rehearsal/current`;
-- direct URL `?experiment=active-spatial-ecology-v0` renders **Active Embodied Spatial Ecology v0**;
-- ordinary public root still renders **Load / Envelope Field B0** by default.
+> **TARGET HYPOTHESIS INCONCLUSIVE — APPARATUS LIMITATIONS BECAME THE DOMINANT FINDING.**
 
-This means the ecology specimen is publicly reachable without changing the ordinary root's default experiment.
+Do not interpret the rehearsal as either a positive or negative verdict on embodied multi-actor spatial ecology itself.
 
-### Current machine-qualified evidence
+### Campaign boundary
 
-- original internal runtime qualification: **51 / 51 automated tests PASS**;
-- final rehearsal candidate: **52 / 52 automated tests PASS**;
-- real Chromium Workbench gate PASS;
-- emitted Pages artifact browser gate PASS;
-- mixed spawn waves preserve independently authored phenotypes;
-- browser rehearsal reached **56 active residents with 0 spawn failures** and sampled ~**626 body contacts/s**;
-- a separate mechanistic probe exceeded **100 active residents** while remaining finite;
-- impossible giant-horde requests report legal-placement saturation rather than silently mutating the requested phenotype;
-- zero → baseline → dense/horde population states are directly controllable;
-- explicit `Force +10` can ignore dynamic-body spawn clearance while still respecting static world legality;
-- forced main-thread stall surfaces `SIM STRESS` and dropped wall time rather than silently presenting slowdown as body behavior;
-- visual red-team caught and repaired the initial off-camera spawn-pressure failure.
+The current campaign remains **feedback extraction only**.
 
-These claims qualify only apparatus/mechanistic/deployment facts.
+Do not patch or redesign the runtime yet.
 
-Still **UNPROVEN until Owner play**:
+The next campaign, only after this evidence pass is deliberately closed, should challenge from first principles:
 
-- whether embodied differences remain decision-relevant under active spatial pressure;
-- whether sparse / crowd / horde regimes produce qualitatively different useful behavior;
-- whether pushing/yielding is readable, interesting or enjoyable;
-- whether the current resident intent is adequate or dominates the phenomenon;
-- whether `Force +10` reveals useful break-pressure or merely solver pathology;
-- whether linked phenotype scaling is actually needed in practice;
-- whether any of this belongs in Feniks;
-- whether current collision, movement, camera or navigation laws deserve promotion.
+- shared Lab / Workbench architecture;
+- organism / locomotion / navigation substrate;
+- body-contact semantics;
+- observability / Debug architecture;
+- scaling infrastructure and donor opportunities.
 
-Current next move:
+Do not jump directly to stance, equipment, weapons, combat AI, production pathfinding or crowd algorithms.
 
-> **early raw Owner observation on the already-live public ecology rehearsal.**
+Public/repository provenance remains:
 
-Direct rehearsal URL:
+- public candidate: `ce96587826746efad426347a8a394048810e4ee2`;
+- public control ref: `rehearsal/current`;
+- canonical truth: `main`.
 
-- `https://jozzpoly.github.io/Combat-Lab/?experiment=active-spatial-ecology-v0`
-
-Do not add stance, equipment, weapons, crowd algorithms, navigation sophistication or further tuning before Owner evidence unless a concrete public-runtime defect appears.
-
-Rollback source remains the canonical B0-equivalent runtime on `main`; moving `rehearsal/current` back to canonical `main` re-runs normal CI and restores the ordinary public specimen through the same exact-source deployment path.
-
-Optional linked scaling remains an enabling Workbench candidate; current multi-phenotype authoring is now the first real context in which its friction can be observed rather than assumed.
+The current public specimen may remain available as the exact evidence source while analysis continues.
