@@ -1,5 +1,8 @@
 # Embodied Scale Field S0 — First Owner Recording Analysis
 
+> **HISTORICAL RECORD — NOT CURRENT AUTHORITY.**
+> This file preserves the research state at its date. Any `active`, `current` or `next` wording below is historical. Current truth lives in `README.md` and `docs/RESEARCH_STATE.md`.
+
 **Date:** 2026-09-25  
 **Exact recorded public specimen:** `3da498947b480c5da5a52530293afa818014b3c8`  
 **Recording:** ~12.63 s, 1858×918, 30 fps  
