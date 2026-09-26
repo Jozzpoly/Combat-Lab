@@ -23,6 +23,7 @@ For live sequencing, **`docs/RESEARCH_STATE.md` wins**. A durable design/evidenc
 - `EMBODIMENT_DECOMPOSITION_LOAD_ENVELOPE_B0_2026-09-25.md` — B0 hypothesis + final bounded outcome.
 - `EXPERIMENT_PROTOCOL.md` — current research / deployment / continuation protocol.
 - `REPOSITORY_CLOSURE_AUDIT_2026-09-26.md` — verified repository/public handoff and cleanup evidence.
+- `FRONTIER_REASSESSMENT_2026-09-26.md` — active top-down frontier synthesis; provisional lead only, no specimen authority yet.
 
 ## Historical campaign / donor records
 
