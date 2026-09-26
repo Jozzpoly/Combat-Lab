@@ -264,7 +264,7 @@ Likely required for a first bounded specimen:
 
 - an experiment-owned camera / larger traversable world view;
 - several geometry families in one space rather than one discriminating choke;
-- a small population of transparent active bodies with bounded local intents;
+- a transparent active-body population with a small deterministic baseline and permissive live population escalation;
 - several materially distinct phenotypes using the existing B0 dimensions;
 - deterministic reset;
 - fast reconfiguration / restart;
@@ -373,17 +373,32 @@ A simple player-following camera may be owned by the experiment initially.
 
 ### Population
 
-Use a **small population**, not a crowd benchmark.
+Use a **small, readable deterministic baseline**, but do **not** make that baseline a population cap.
 
-Enough bodies to create:
+The Owner must be able to increase pressure directly during play. Minimum intended controls:
 
+- Spawn +1;
+- Spawn +5;
+- Spawn +10;
+- Clear extras;
+- Reset World back to the deterministic baseline.
+
+Repeated spawning into crowd / horde / break regimes is valid discovery, not misuse.
+
+The apparatus should support:
+
+- sparse pairwise encounters;
 - concurrency;
 - crossing flow;
-- occasional local congestion;
+- local congestion;
+- sustained crowd pressure;
+- deliberate horde / stress states;
 - repeated pushing/yielding opportunities;
 - variation in envelope / inertia / locomotor authority.
 
-Do not add combat intelligence.
+Do not add combat intelligence merely to make the population feel active.
+
+If performance, collision quality or readability breaks first, classify that break honestly instead of hiding it behind a low population limit.
 
 ### Resident intent
 
@@ -440,7 +455,28 @@ The first human question should remain simple:
 
 If not, stop before adding stance, equipment, weapons or AI sophistication.
 
-## 10. Immediate research sequence
+## 10. Owner correction — population pressure is permissive
+
+The phrase “small population, not a crowd benchmark” was too restrictive and contradicted the Owner's established research contract.
+
+Correct interpretation:
+
+> **small is the default for legibility; it is not the permission boundary.**
+
+The Owner explicitly wants direct controls such as `Spawn +1 / +5 / +10` and the ability to keep escalating until the experiment breaks.
+
+This changes the frontier positively:
+
+- population count/density becomes a research variable;
+- sparse → multi-body → dense → horde regimes may expose qualitatively different world/body relations;
+- technical breakdown thresholds are evidence when distinguished from actual actor/world behavior;
+- any true population safety rail must be broad, explicit and justified only by runtime/browser stability.
+
+Detailed candidate contract:
+
+- [Active Embodied Spatial Ecology Hypothesis Card](ACTIVE_EMBODIED_SPATIAL_ECOLOGY_HYPOTHESIS_2026-09-26.md)
+
+## 11. Immediate research sequence
 
 1. keep the current public B0 closure untouched;
 2. finish this top-down frontier reassessment before implementation;
