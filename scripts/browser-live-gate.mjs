@@ -461,6 +461,13 @@ try{
     })()`);
   },{timeout:3000});
 
+  const stressEvidence=await evaluate(`({
+    droppedWallTime:window.__combatLabRuntime.droppedWallTime,
+    lastDroppedSeconds:window.__combatLabRuntime.lastDroppedSeconds,
+    simHealth:window.__combatLabRuntime.simHealth,
+    lastFrameSteps:window.__combatLabRuntime.lastFrameSteps
+  })`);
+
   // Reset returns deterministic baseline but preserves current authored player/spawn/view settings.
   await evaluate('document.querySelector("#reset-world").click()');
   await waitFor("ecology reset preserves authored controls and baseline population",async()=>{
@@ -518,6 +525,13 @@ try{
       accelerationB:b.acceleration,
       maxSpeedA:a.maxSpeed,
       maxSpeedB:b.maxSpeed
+    },
+    ecology:{
+      baselineResidents:ecologyBaseline.baselineCount,
+      waveAResidents:10,
+      waveBResidents:5,
+      pressure,
+      stressEvidence
     },
     final:{
       state:finalState.state,
