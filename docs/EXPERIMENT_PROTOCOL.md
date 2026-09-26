@@ -162,16 +162,16 @@ An experimental specimen may be deployed only after its checks are green and dep
 
 Supported explicit paths:
 
-- manual workflow dispatch of an exact ref/SHA; or
-- a checked commit on the **currently whitelisted active experiment branch** whose message contains `[deploy]`. The Pages workflow deploys that exact checked `head_sha`.
+- automatic deployment from a successful checked `main` commit whose message contains `[deploy]`; the Pages workflow deploys that exact checked `head_sha`; or
+- manual workflow dispatch of an exact branch, tag or commit SHA when a deliberate non-main rehearsal is needed.
 
-Ordinary experiment pushes never deploy.
+There is **no whitelisted active experiment branch auto-deploy path**. Ordinary experiment-branch pushes never deploy.
 
 The public URL must never silently become an experiment merely because an experiment branch received a push.
 
 After a rejected experiment:
 
-1. restore Pages to `main` / reset truth;
+1. if a manually deployed experiment temporarily occupied Pages, explicitly restore the intended canonical public specimen;
 2. record the finding and preserved commit SHA in `RESEARCH_STATE.md`;
 3. remove or retire the experiment branch instead of accumulating stale lanes.
 
