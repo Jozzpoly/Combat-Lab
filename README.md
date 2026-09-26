@@ -8,7 +8,7 @@ It is not the Feniks combat implementation, and it is not a sword project. The r
 
 **Canonical live branch:** `main` after repository canonicalization.
 
-**Current stage:** Workbench + Load / Envelope B0 is **closed** after direct Owner play and recording analysis; a post-closure preparation / frontier-shaping campaign is active before the next specimen.
+**Current stage:** Workbench + Load / Envelope B0 is **closed** after direct Owner play and recording analysis; a top-down frontier reassessment is active before the next specimen.
 
 Current qualified statements:
 
@@ -18,7 +18,7 @@ Current qualified statements:
 - The current B0 formulas, units and circular body representation are **not** accepted Feniks semantics.
 - A/B parameter slots are mechanically qualified, but their human usefulness remains **UNPROVEN**.
 - There is **no accepted Feniks combat model, hit-authority model, aim/target model or commitment scheme**.
-- There is **no selected next research specimen**; current work is synchronizing authority and preparing the lab for deliberate frontier selection.
+- There is **no selected next research specimen**; current work is testing whether active multi-body spatial pressure is the strongest next frontier.
 
 Latest Owner-confirmed direction: the project is broader than hitting or melee. Body/world relations matter. Independent embodiment dimensions should remain available, while future Workbench research may add optional explicit correlations for fast coherent phenotype scaling. Larger terrain/obstacle spaces and more varied opponents/residents are desired future pressure. A later donor review of Feniks, ReflexBrain, Companion and SPC should recover proven movement/pathfinding/spatial capabilities without importing those projects' architecture as Combat Lab authority.
 
@@ -89,13 +89,14 @@ Deployment is explicit: a successful `main` CI run deploys only when the commit 
 Start here:
 
 1. [Current research state](docs/RESEARCH_STATE.md)
-2. [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md)
-3. [Owner scope correction](docs/COMBAT_LAB_SCOPE_CORRECTION_2026-09-25.md)
-4. [Workbench design record](docs/COMBAT_LAB_WORKBENCH_REFOUNDATION_2026-09-25.md)
-5. [B0 Owner recording feedback](docs/B0_WORKBENCH_OWNER_RECORDING_FEEDBACK_2026-09-25.md)
-6. [B0 / Workbench stage closure](docs/B0_WORKBENCH_STAGE_CLOSURE_2026-09-25.md)
-7. [Repository closure audit](docs/REPOSITORY_CLOSURE_AUDIT_2026-09-26.md)
-8. [Historical evidence index](docs/HISTORY_INDEX.md)
+2. [Frontier reassessment](docs/FRONTIER_REASSESSMENT_2026-09-26.md)
+3. [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md)
+4. [Owner scope correction](docs/COMBAT_LAB_SCOPE_CORRECTION_2026-09-25.md)
+5. [Workbench design record](docs/COMBAT_LAB_WORKBENCH_REFOUNDATION_2026-09-25.md)
+6. [B0 Owner recording feedback](docs/B0_WORKBENCH_OWNER_RECORDING_FEEDBACK_2026-09-25.md)
+7. [B0 / Workbench stage closure](docs/B0_WORKBENCH_STAGE_CLOSURE_2026-09-25.md)
+8. [Repository closure audit](docs/REPOSITORY_CLOSURE_AUDIT_2026-09-26.md)
+9. [Historical evidence index](docs/HISTORY_INDEX.md)
 
 The previous append-only canonical state is preserved verbatim as historical evidence at:
 
