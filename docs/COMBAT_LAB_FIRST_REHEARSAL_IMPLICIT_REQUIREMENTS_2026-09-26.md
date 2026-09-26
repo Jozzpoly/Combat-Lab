@@ -3144,6 +3144,67 @@ Combined with B0's earlier non-correlated phenotype use, this strengthens the re
 
 It still does not qualify the current exact force/acceleration law for Feniks.
 
+## 133. Measurement/qualification tooling must have an explicit observer-cost budget
+
+**Status:** CRITICAL RESEARCH-INTEGRITY REQUIREMENT
+
+The current public runtime copies every resident into a machine-readable snapshot every render frame.
+
+This was valuable for browser qualification.
+
+At high population it becomes part of the performance workload being measured.
+
+Future instrumentation should distinguish:
+
+- cheap continuously available summaries;
+- selected/on-demand detailed snapshots;
+- expensive diagnostic capture modes.
+
+Invariant:
+
+> **evidence machinery must not silently become a major cause of the phenomenon it is measuring.**
+
+## 134. Performance qualification needs phase attribution
+
+**Status:** STRONG ENGINEERING/RESEARCH REQUIREMENT
+
+A population stress result can include:
+
+- simulation step;
+- collision broad phase/narrow phase;
+- navigation/actor cognition;
+- synchronous authoring actions such as spawn placement;
+- rendering;
+- diagnostics;
+- evidence instrumentation;
+- garbage collection.
+
+Before claiming a scaling limit, later work should attribute enough cost to know which boundary was reached.
+
+This does not require a permanent profiler UI in every experiment.
+
+It requires the capability to answer the question when scale matters.
+
+## 135. Offscreen cost should be visible when the world grows
+
+**Status:** FUTURE SCALING PRESSURE
+
+Current actor render/snapshot work scales with total population even if bodies are outside the viewport.
+
+The Owner wants larger worlds.
+
+A future Lab may eventually need semantic-neutral mechanisms such as:
+
+- render culling;
+- lower-cost offscreen observation;
+- bounded snapshot detail.
+
+Do not prematurely turn this into simulation LOD semantics.
+
+The current requirement is simply:
+
+> **a larger world must not hide the fact that offscreen actors can still cost full apparatus/runtime work.**
+
 ## Working invariant
 
 > **A professional Combat Lab should make it cheap to ask a dangerous question of the world, cheap to see what happened, and hard to misunderstand why.**
