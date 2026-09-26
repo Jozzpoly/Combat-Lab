@@ -85,25 +85,6 @@ export class WorkbenchInspector {
     this.restoreButton.disabled=typeof this.inspector.restoreDefaults!=="function";
 
     const schema=this.inspector.schema || {};
-    for(const group of schema.groups || []){
-      const section=el("section","inspector-section");
-      const head=el("div","section-heading");
-      const title=el("div","section-title",group.label || group.id || "Parameters");
-      head.append(title);
-      if(group.description){
-        head.append(el("p","section-description",group.description));
-      }
-      section.append(head);
-
-      for(const control of group.controls || []){
-        if(control.type==="number"){
-          section.append(this.#numericControl(control));
-        }
-      }
-
-      this.parameterRoot.append(section);
-    }
-
     for(const group of schema.actionGroups || []){
       const section=el("section","inspector-section");
       const head=el("div","section-heading");
@@ -126,6 +107,25 @@ export class WorkbenchInspector {
         grid.append(button);
       }
       section.append(grid);
+      this.parameterRoot.append(section);
+    }
+
+    for(const group of schema.groups || []){
+      const section=el("section","inspector-section");
+      const head=el("div","section-heading");
+      const title=el("div","section-title",group.label || group.id || "Parameters");
+      head.append(title);
+      if(group.description){
+        head.append(el("p","section-description",group.description));
+      }
+      section.append(head);
+
+      for(const control of group.controls || []){
+        if(control.type==="number"){
+          section.append(this.#numericControl(control));
+        }
+      }
+
       this.parameterRoot.append(section);
     }
 
