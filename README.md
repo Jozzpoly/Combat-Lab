@@ -8,7 +8,7 @@ It is not the Feniks combat implementation, and it is not a sword project. The r
 
 **Canonical live branch:** `main` after repository canonicalization.
 
-**Current stage:** Workbench + Load / Envelope B0 is **closed**; Active Embodied Spatial Ecology v0 is **INTERNALLY QUALIFIED FOR DELIBERATE PUBLIC REHEARSAL — OWNER VALUE UNPROVEN** on one temporary experiment lane.
+**Current stage:** Workbench + Load / Envelope B0 is **closed**; Active Embodied Spatial Ecology v0 is **LIVE AS A PUBLIC REHEARSAL / TRANSLATION PASS — OWNER VALUE UNPROVEN**.
 
 Current qualified statements:
 
@@ -18,7 +18,7 @@ Current qualified statements:
 - The current B0 formulas, units and circular body representation are **not** accepted Feniks semantics.
 - A/B parameter slots are mechanically qualified, but their human usefulness remains **UNPROVEN**.
 - There is **no accepted Feniks combat model, hit-authority model, aim/target model or commitment scheme**.
-- **Active Embodied Spatial Ecology v0** is internally qualified as apparatus/mechanism evidence only; its decision relevance, crowd value, feel and Feniks fit remain **UNPROVEN pending Owner play**.
+- **Active Embodied Spatial Ecology v0** is internally + publicly qualified as apparatus/deployment evidence only; its decision relevance, crowd value, feel and Feniks fit remain **UNPROVEN pending Owner play**.
 
 Latest Owner-confirmed direction: the project is broader than hitting or melee. Body/world relations matter. Independent embodiment dimensions should remain available, while future Workbench research may add optional explicit correlations for fast coherent phenotype scaling. Larger terrain/obstacle spaces and more varied opponents/residents are desired future pressure, with population deliberately scalable from a readable baseline into crowd/horde/break regimes rather than hidden behind low protective limits. A later donor review of Feniks, ReflexBrain, Companion and SPC should recover proven movement/pathfinding/spatial capabilities without importing those projects' architecture as Combat Lab authority.
 
@@ -76,11 +76,18 @@ Public provenance is authoritative through:
 
 The repository-closure release is deployed from canonical `main` after full CI and emitted-artifact browser qualification.
 
-Current public closure release:
+Historical repository-closure release:
 
 - `6bd4b4492261b9fe3b8edbca276cf9b7de3d822d` from `main`.
 
-Later documentation-only `main` commits intentionally do not replace that public runtime unless deployment is explicitly requested.
+Current public rehearsal provenance:
+
+- `COMMIT.txt`: `ce96587826746efad426347a8a394048810e4ee2`;
+- `BRANCH.txt`: `rehearsal/current`;
+- ordinary root defaults to B0;
+- direct ecology rehearsal: `?experiment=active-spatial-ecology-v0`.
+
+The public rehearsal changes the deployed artifact intentionally; it does **not** promote ecology to canonical research truth or Feniks architecture.
 
 Deployment is explicit: a successful `main` CI run deploys only when the commit message contains `[deploy]`; an exact candidate may also be rehearsed through the CI-gated infrastructure ref `rehearsal/current` or by explicit workflow dispatch. Ordinary `experiment/*` pushes never deploy.
 
