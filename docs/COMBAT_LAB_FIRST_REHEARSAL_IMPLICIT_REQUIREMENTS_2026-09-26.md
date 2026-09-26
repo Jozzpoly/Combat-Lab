@@ -2888,6 +2888,163 @@ This does not require every scenario to be uniform.
 
 It requires intended asymmetry to be explicit rather than accidental.
 
+## 124. Adversarial confidence ledger
+
+This section exists to prevent later work from laundering agent inference into Owner intent.
+
+### Tier A — direct Owner requirements / verdicts
+
+Treat as explicit:
+
+- mouse-wheel camera zoom;
+- easier/broader camera min/max use;
+- current bodies block one another too much;
+- stupid jams form too often;
+- organisms are too simple;
+- Debug should be more ambitious;
+- the Lab should be designed substantially better;
+- current Lab navigation/naming are poor and unpleasant;
+- repeated `Spawn +50` was required to reach obvious lag;
+- substantial fundamental/architectural rebuilding and professional hardening are warranted;
+- despite failures, the Lab is beginning to fulfill its role;
+- Owner must retain the ability to break experiments.
+
+### Tier B — direct recording behavior
+
+Strongly observed:
+
+- live edits dominate; world remains RUNNING;
+- exact/extreme numeric values are used;
+- independent phenotype axes are manipulated sequentially;
+- resident spawn template remains essentially default during the stress horde;
+- population reaches 845;
+- Debug is used in temporary bursts;
+- Inspector is traversed repeatedly;
+- both A/B slots are populated;
+- exact final sequence includes **Capture B → Apply A**;
+- Apply A changes player/apparatus values while the 845-resident world persists;
+- stress appears only after heavy escalation;
+- major packed jams persist for many seconds.
+
+### Tier C — code-confirmed mechanism facts
+
+Treat as exact for this specimen:
+
+- no wheel input in neutral BrowserInput;
+- flat `editableIds` Workbench state;
+- A/B captures every editable numeric parameter;
+- A/B summary exposes first two entries + `+N`;
+- camera is among captured editable values;
+- action/parameter changes have no Workbench intervention ledger;
+- ordinary spawn prefers a near-player annulus;
+- serial controls spawn placement and goal policy;
+- every ordinary spawn serial residue cycle includes goal 10 `(650,1580)`;
+- one serial residue class has a one-goal cycle there;
+- steering ignores dynamic bodies;
+- steering candidate order has deterministic side bias;
+- dynamic collision phase is naïve all-pairs and sequential;
+- current player and residents have different max-speed/controller laws.
+
+### Tier D — research-integrity requirements inferred from A+B+C
+
+Strong enough to carry into refoundation review, but not direct UI requests:
+
+- explicit state/domain scope;
+- intervention/provenance history;
+- causal attribution between phenotype and stimulus;
+- cohort/batch provenance if heterogeneous populations are studied;
+- comparison matched-start semantics;
+- query-/scale-aware observability;
+- causal authored↔derived legibility;
+- validity operating envelopes;
+- explicit distinction between phenomenon failure and technical breakdown;
+- stimulus topology auditing.
+
+### Tier E — strong design candidates, not frozen
+
+Investigate later:
+
+- free-pan research camera;
+- click-to-inspect entity;
+- selected subject/context model;
+- checkpoint/world-state capture;
+- replay;
+- target/ramp population controls;
+- local density/contact heatmaps;
+- cohort UI;
+- scoped A/B/checkpoints;
+- optional phenotype linkage UI.
+
+### Tier F — not supported as decisions
+
+Do **not** treat as chosen:
+
+- ORCA/RVO;
+- Rapier as final physics;
+- any specific pathfinding algorithm;
+- tabs/docks/multi-window UI;
+- ECS/component editor;
+- soft collision;
+- ghosting;
+- stance system;
+- full replay editor;
+- production crowd simulation;
+- a target maximum actor count.
+
+## 125. Findings that were corrected during the campaign
+
+### Correction: “horde is outside scope”
+
+Wrong.
+
+Owner correction established permissive sparse→horde/break exploration.
+
+### Correction: “Force +10 is the main meaning of breakability”
+
+Too narrow.
+
+Recording behavior shows breakability also means cheap traversal of pressure/performance regimes.
+
+`Force +10` remains human-unqualified.
+
+### Correction: “mixed phenotype ecology was tested by Owner”
+
+Wrong.
+
+Machine gate tested mixed waves.
+
+Owner stress horde remained overwhelmingly default-spawn phenotype.
+
+### Correction: “A/B use is ambiguous”
+
+No longer.
+
+Dense frame review proves Capture B → Apply A.
+
+Human comparison usefulness still fails to qualify because world state is unmatched and scope is opaque.
+
+### Correction: “resident decisions are phenotype-blind”
+
+Too broad.
+
+Envelope affects static feasibility/probe/arrival threshold.
+
+Dynamic-body reasoning remains absent; mass/load/force do not directly drive route choice.
+
+### Correction: “local pressure is endogenous”
+
+Too strong.
+
+Near-player spawn policy and hidden universal waypoint hub materially author local convergence.
+
+## 126. Confidence boundary for later refoundation
+
+Future planning should preserve the following distinction:
+
+> **Owner intent defines the problem. Evidence constrains the problem. Agent inference proposes candidate solutions.**
+
+A candidate solution must never become retroactive evidence that the Owner asked for it.
+
 ## Working invariant
 
 > **A professional Combat Lab should make it cheap to ask a dangerous question of the world, cheap to see what happened, and hard to misunderstand why.**
