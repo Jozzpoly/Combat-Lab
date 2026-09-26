@@ -1620,6 +1620,254 @@ It should be:
 
 > **less working memory and navigation devoted to the apparatus per useful experimental insight.**
 
+## 69. Cross-recording triangulation — what survived S0/B0 → Ecology
+
+The Ecology requirements should not be learned from one recording in isolation.
+
+Comparison against S0/B0 Owner evidence reveals which findings are stable.
+
+### Live manipulation — REPEATED POSITIVE EVIDENCE
+
+B0:
+
+- Owner edits parameters while the world runs;
+- movement/contact remains part of tuning.
+
+Ecology:
+
+- the same pattern becomes even stronger;
+- major phenotype changes happen while RUNNING.
+
+Conclusion:
+
+> **live authoring is a stable Owner workflow requirement, not an experiment-specific convenience.**
+
+### Wide permissive extremes — REPEATED POSITIVE EVIDENCE
+
+B0:
+
+- Owner explicitly enters force 42;
+- narrow rail 8 is rejected by Owner behavior.
+
+Ecology:
+
+- Owner later uses mass 62 / force 62 and other extreme combinations.
+
+Conclusion:
+
+> **large exploratory headroom is now repeated human evidence across stages.**
+
+### Independent embodiment dimensions — REPEATED POSITIVE EVIDENCE
+
+B0:
+
+- small/heavy/high-force and giant/heavy/high-force phenotypes are created spontaneously.
+
+Ecology:
+
+- player envelope, mass, load and force are again manipulated independently.
+
+Conclusion:
+
+> **raw independence remains a durable research principle even if optional linkage is added later.**
+
+### Break → tune loop — REPEATED POSITIVE EVIDENCE
+
+B0 explicitly moves from extreme breakage back toward finer tuning.
+
+Ecology escalates all the way to horde/stress while also repeatedly rebuilding the player.
+
+Conclusion:
+
+> the Lab needs both coarse destructive manipulation and fine parameter refinement.
+
+## 70. Cross-recording triangulation — what failed only after scale increased
+
+### Single vertical Inspector
+
+B0 record already notes panel density and repeated scrolling, but calls it acceptable after copy shortening.
+
+Ecology turns the same mechanism into a material Owner FAIL.
+
+Therefore:
+
+> **the Inspector concept was locally adequate; the single vertical schema-form is not a scalable long-term architecture.**
+
+Do not rewrite history by saying the B0 qualification was false.
+
+The better interpretation is:
+
+> B0 established a useful interaction kernel; Ecology exposed its scalability boundary.
+
+### Authored vs derived separation
+
+B0 evidence says authored vs derived relations were sufficiently visible for exploratory tuning.
+
+Ecology retains the conceptual distinction but spreads causes and consequences too far apart spatially.
+
+Therefore:
+
+> **semantic separation remains good; presentation locality failed under larger state.**
+
+### Debug
+
+B0:
+
+- Debug is discoverable and useful enough to continue movement/editing.
+
+Ecology:
+
+- the same global-overlay idea becomes severe visual noise at population scale.
+
+Therefore:
+
+> **Debug itself is validated as part of the Owner loop; one binary global representation is not.**
+
+This is a strong argument for scale-/question-dependent observability rather than removing Debug.
+
+## 71. Cross-recording triangulation — A/B has progressed mechanically but not epistemically
+
+B0:
+
+- slot A captured;
+- no full comparison;
+- human usefulness UNPROVEN.
+
+Ecology:
+
+- both slots become populated;
+- Apply is reached/used;
+- broad hidden scope becomes visible as a problem;
+- recording still does not yield a clean interpretable A↔B comparison.
+
+This repeated pattern is important.
+
+The problem is no longer:
+
+> “Owner has not discovered the feature.”
+
+The Owner now uses it.
+
+Yet it still does not naturally produce a trustworthy comparison.
+
+Therefore:
+
+> **A/B's next problem is semantic/epistemic design, not discoverability or plumbing.**
+
+## 72. S0 positive physicality constrains how Ecology blocking may be repaired
+
+S0 provides positive Owner evidence that:
+
+- body envelope changes route availability;
+- material body relations matter;
+- heavy/light interaction can visibly alter another body;
+- permissive alternate paths are preferable to hidden restrictions.
+
+Ecology provides negative evidence that:
+
+- ordinary multi-body traffic too easily becomes hard packed deadlock.
+
+Together they reject both naive poles.
+
+Do not infer from Ecology:
+
+> remove body-body occupancy.
+
+Do not infer from S0:
+
+> hard circle blocking is good.
+
+Cross-recording requirement:
+
+> **preserve material spatial consequence while discovering contact/navigation behavior that does not turn accidental traffic into permanent walls.**
+
+## 73. S0 drifters were adequate for dyadic evidence but do not scale into organisms
+
+S0's simple drifters were sufficient to test:
+
+- one heavy/light contact;
+- displacement;
+- body/world route fit.
+
+Ecology scales similarly simple actor logic into a population and exposes its inadequacy.
+
+Therefore:
+
+> **a substrate can be adequate evidence machinery at one interaction cardinality and invalid at another.**
+
+This is a general Combat Lab lesson.
+
+Do not promote a donor/mechanism merely because it worked in a lower-cardinality specimen.
+
+## 74. Copy reduction already failed as a sufficient answer to panel density
+
+B0 closure deliberately shortened descriptions.
+
+That was correct local polish.
+
+Ecology still becomes difficult to navigate.
+
+Therefore future refoundation should not treat the problem as:
+
+> “make descriptions shorter again.”
+
+The recording now proves that **information architecture**, not merely copy length, is the dominant issue.
+
+## 75. Workbench qualification must be scoped more precisely after Ecology
+
+Earlier canonical verdict:
+
+> WORKBENCH FOUNDATION — QUALIFIED FOR CURRENT RESEARCH USE
+
+remains defensible for the interaction kernel proven in B0.
+
+Ecology adds an important scope boundary.
+
+A more precise interpretation is:
+
+### Qualified interaction primitives
+
+- live numeric editing;
+- exact entry;
+- wide rails;
+- authored/derived distinction;
+- world reset vs parameter-default reset;
+- experiment shell;
+- provenance;
+- basic action controls.
+
+### Not qualified as scalable product architecture
+
+- one long Inspector;
+- binary global Debug;
+- flat parameter naming/scope;
+- broad opaque A/B snapshot semantics;
+- population/cohort observability;
+- crowd-scale diagnostics.
+
+This distinction prevents two opposite errors:
+
+- throwing away useful proven primitives;
+- preserving the entire Workbench structure because it once earned a PASS.
+
+## 76. Repeated Owner behavior gives a stable “research personality” for the Lab
+
+Across S0/B0/Ecology the Owner repeatedly prefers:
+
+- immediate interaction over reading instructions;
+- physical/world evidence over abstract claims;
+- extreme experiments over protected normal ranges;
+- changing variables independently;
+- continuing from surprising states rather than resetting immediately;
+- understanding causes after something interesting happens;
+- permissive failure over prevented failure.
+
+This is not authority for a specific UI.
+
+It is a durable design pressure:
+
+> **Combat Lab should optimize for an exploratory experimentalist who discovers by perturbing a live world, not for a user filling out a configuration form before a test run.**
+
 ## Working invariant
 
 > **A professional Combat Lab should make it cheap to ask a dangerous question of the world, cheap to see what happened, and hard to misunderstand why.**
