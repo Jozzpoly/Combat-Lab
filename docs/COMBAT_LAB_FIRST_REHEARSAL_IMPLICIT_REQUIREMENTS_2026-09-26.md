@@ -2207,7 +2207,7 @@ Therefore a future Lab likely needs some way to preserve **interesting intermedi
 
 This is a candidate requirement for checkpointing, not authority for a particular serialization/replay implementation.
 
-## 90A. Dynamic-world comparison requires time semantics
+## 91. Dynamic-world comparison requires time semantics
 
 **Status:** RESEARCH-INTEGRITY REQUIREMENT
 
@@ -2222,7 +2222,7 @@ Comparison tooling must eventually make temporal context explicit enough to dist
 
 Current A/B provides no such distinction.
 
-## 91. Observation convenience must not silently author the phenomenon
+## 92. Observation convenience must not silently author the phenomenon
 
 **Status:** CRITICAL RESEARCH-INTEGRITY REQUIREMENT
 
@@ -2245,7 +2245,7 @@ Examples to watch later:
 
 Visibility and neutrality are separate axes.
 
-## 92. Spawn location must be explicit stimulus state
+## 93. Spawn location must be explicit stimulus state
 
 **Status:** STRONG REQUIREMENT
 
@@ -2262,7 +2262,7 @@ Future experiments should be able to treat placement policy as explicit scenario
 
 No spawn-editor design is selected.
 
-## 93. Phenotype assignment and stimulus assignment must be matchable
+## 94. Phenotype assignment and stimulus assignment must be matchable
 
 **Status:** CRITICAL CAUSAL REQUIREMENT
 
@@ -2283,7 +2283,7 @@ This may later require matched cohorts, shared seeds, cloned starts or another m
 
 No method is selected yet.
 
-## 94. Implementation identity must not silently become behavioral policy
+## 95. Implementation identity must not silently become behavioral policy
 
 **Status:** CODE-CONFIRMED RESEARCH-INTEGRITY REQUIREMENT
 
@@ -2299,7 +2299,7 @@ They may be deterministically related if explicitly chosen.
 
 They should not be accidentally coupled because a string contains a number.
 
-## 95. Role differences must be visible when interpreting embodied comparisons
+## 96. Role differences must be visible when interpreting embodied comparisons
 
 **Status:** RESEARCH-INTEGRITY REQUIREMENT
 
@@ -2316,7 +2316,7 @@ This does not require identical player/NPC controllers.
 
 It requires attribution discipline.
 
-## 96. The Lab must support deliberate one-axis sweeps inside messy live state
+## 97. The Lab must support deliberate one-axis sweeps inside messy live state
 
 **Status:** STRONG OBSERVED REQUIREMENT
 
@@ -2336,7 +2336,7 @@ Future authoring must preserve the ability to:
 
 Optional linked relationships should be easy to suspend/bypass during such probing.
 
-## 97. Derived-law visibility matters when authored labels are intuitive but effects are not
+## 98. Derived-law visibility matters when authored labels are intuitive but effects are not
 
 **Status:** STRONG RESEARCH-INTEGRITY REQUIREMENT
 
@@ -2365,7 +2365,7 @@ This does not require exposing source code or equations everywhere.
 
 It requires causal legibility.
 
-## 98. Optional linkage must never destroy manual causal probing
+## 99. Optional linkage must never destroy manual causal probing
 
 **Status:** OWNER REQUEST + RECORDING-CONFIRMED BOUNDARY
 
@@ -2382,7 +2382,7 @@ Any future linkage layer must therefore allow the Owner to:
 
 A “coherent phenotype” convenience must never become an invisible constraint.
 
-## 99. Regular-looking emergence must be tested against implementation symmetry/bias
+## 100. Regular-looking emergence must be tested against implementation symmetry/bias
 
 **Status:** CRITICAL RESEARCH-INTEGRITY REQUIREMENT
 
@@ -2406,7 +2406,7 @@ must be challenged against algorithm-order artifacts.
 
 A useful research practice later may include permutation/mirror tests, but no specific harness is selected now.
 
-## 100. Navigation feasibility needs more than endpoint legality when terrain complexity grows
+## 101. Navigation feasibility needs more than endpoint legality when terrain complexity grows
 
 **Status:** STRONG ARCHITECTURAL REQUIREMENT
 
@@ -2422,7 +2422,7 @@ Future spatial substrate must support enough traversal-feasibility reasoning tha
 
 The exact level — swept local tests, route graph, navigation queries or donor subsystem — remains open.
 
-## 101. Phenotype-aware navigation should be attributed dimension by dimension
+## 102. Phenotype-aware navigation should be attributed dimension by dimension
 
 **Status:** STRONG RESEARCH-INTEGRITY REQUIREMENT
 
@@ -2443,7 +2443,7 @@ must distinguish:
 
 This reinforces the need for causally legible derived state and controlled comparisons.
 
-## 102. Debug target visualization must represent reachable/meaningful intent
+## 103. Debug target visualization must represent reachable/meaningful intent
 
 **Status:** STRONG OBSERVABILITY REQUIREMENT
 
@@ -2458,7 +2458,7 @@ Future Debug should distinguish concepts such as:
 
 Do not collapse them into one arrow/line.
 
-## 103. Semantic-neutral scaling work should be preferred before behavior-changing crowd “optimization”
+## 104. Semantic-neutral scaling work should be preferred before behavior-changing crowd “optimization”
 
 **Status:** EVIDENCE-BASED FUTURE PRESSURE
 
@@ -2474,7 +2474,7 @@ It establishes a prioritization principle for later profiling:
 
 > when scale blocks a valuable experiment, first look for costs that can be removed without deciding how actors ought to behave.
 
-## 104. Performance diagnostics need severity, not only a boolean state
+## 105. Performance diagnostics need severity, not only a boolean state
 
 **Status:** STRONG OBSERVED REQUIREMENT
 
@@ -2492,7 +2492,7 @@ A binary stress light remains useful as an immediate warning.
 
 It is not enough for diagnosis.
 
-## 105. Debug behaves like a temporary investigative lens
+## 106. Debug behaves like a temporary investigative lens
 
 **Status:** STRONG OBSERVED REQUIREMENT
 
@@ -2509,7 +2509,7 @@ This reinforces a design principle:
 
 Persistent dashboards may exist, but the world should not require permanent maximal instrumentation to remain understandable.
 
-## 106. Requirement boundary — shared Combat Lab
+## 107. Requirement boundary — shared Combat Lab
 
 The recording now supports these as **shared-Lab pressures**, independent of whether Ecology survives:
 
@@ -2529,7 +2529,7 @@ The recording now supports these as **shared-Lab pressures**, independent of whe
 
 These should be challenged as potential shared Workbench/refoundation concerns.
 
-## 107. Requirement boundary — Ecology / multi-body substrate
+## 108. Requirement boundary — Ecology / multi-body substrate
 
 These findings should **not** automatically become shared Workbench semantics:
 
@@ -2547,7 +2547,7 @@ They are currently Ecology/multi-actor substrate problems.
 
 The Workbench may need neutral ways to expose their state, but should not learn what “crowd”, “route” or “body” means unless repeated evidence later justifies a more general abstraction.
 
-## 108. Strong candidates still needing human validation
+## 109. Strong candidates still needing human validation
 
 Do not freeze these as requirements yet:
 
@@ -2569,7 +2569,7 @@ They are supported enough to investigate later.
 
 They are not Owner-qualified solutions.
 
-## 109. Current implementation elements worth retaining as donors, not dogma
+## 110. Current implementation elements worth retaining as donors, not dogma
 
 The first campaign suggests retaining/reusing the **ideas** behind:
 
@@ -2593,7 +2593,7 @@ For example:
 - Inspector schema needs scope semantics;
 - experiment registry may need richer experiment state metadata.
 
-## 110. Current implementation elements that should not be promoted as foundations
+## 111. Current implementation elements that should not be promoted as foundations
 
 Based on the recording and code forensics, do not promote:
 
@@ -2612,7 +2612,7 @@ Based on the recording and code forensics, do not promote:
 
 These remain historical specimen machinery.
 
-## 111. Design debt and research debt must remain separate
+## 112. Design debt and research debt must remain separate
 
 **Shared Lab design debt** can be repaired without deciding the ecology hypothesis.
 
@@ -2638,7 +2638,7 @@ Do not let a UX refactor silently choose ecology semantics.
 
 Do not let an ecology experiment hardcode itself into shared Lab architecture.
 
-## 112. Refoundation should preserve replaceability
+## 113. Refoundation should preserve replaceability
 
 The recording strongly justifies substantial rebuilding.
 
@@ -2654,7 +2654,7 @@ Any future refoundation should make it easier, not harder, to replace:
 
 The Lab's value comes partly from surviving failed specimens.
 
-## 113. Campaign-1 evidence saturation signal
+## 114. Campaign-1 evidence saturation signal
 
 The feedback campaign is approaching useful saturation when new analysis mostly:
 
@@ -2679,7 +2679,7 @@ Current independent classes now include:
 
 This is enough breadth to support a later dedicated refoundation/research campaign without immediately implementing from the first visible complaint.
 
-## 114. Qualification needs an operating envelope, not only PASS/FAIL
+## 115. Qualification needs an operating envelope, not only PASS/FAIL
 
 **Status:** CROSS-RECORDING RESEARCH REQUIREMENT
 
@@ -2700,7 +2700,7 @@ A useful claim may look conceptually like:
 
 This preserves permissiveness without overstating evidence.
 
-## 115. “Pressure” is multidimensional
+## 116. “Pressure” is multidimensional
 
 **Status:** STRONG DERIVED REQUIREMENT
 
@@ -2721,7 +2721,7 @@ Therefore no single number such as “supports 845 actors” is a meaningful lon
 
 The Lab should make operating conditions/provenance clear enough that results are tied to the regime actually tested.
 
-## 116. Break beyond the qualified envelope should remain allowed
+## 117. Break beyond the qualified envelope should remain allowed
 
 **Status:** DIRECT OWNER CONTRACT + RESEARCH-INTEGRITY REQUIREMENT
 
@@ -2739,7 +2739,7 @@ This extends the existing soft-range vs safety-rail philosophy from numeric cont
 
 > permissive execution, explicit evidence boundary.
 
-## 117. Interaction hierarchy should reflect frequency and consequence
+## 118. Interaction hierarchy should reflect frequency and consequence
 
 **Status:** STRONG PRODUCT REQUIREMENT
 
@@ -2777,7 +2777,7 @@ This does not imply confirmation dialogs for everything.
 
 Excess friction would violate the same Owner workflow.
 
-## 118. Consequence should be legible without turning the Lab paternalistic
+## 119. Consequence should be legible without turning the Lab paternalistic
 
 **Status:** STRONG DESIGN BOUNDARY
 
@@ -2804,7 +2804,7 @@ Invariant:
 
 > **make destructive power understandable, not difficult to use.**
 
-## 119. Permanent instructional prose consumes operational space
+## 120. Permanent instructional prose consumes operational space
 
 **Status:** CROSS-RECORDING PRODUCT FINDING
 
@@ -2828,7 +2828,7 @@ Future Lab should separate:
 
 Exact tooltips/help/disclosure design remains open.
 
-## 120. At-a-glance summaries should replace repeated navigation, not add another dashboard
+## 121. At-a-glance summaries should replace repeated navigation, not add another dashboard
 
 **Status:** STRONG PRODUCT REQUIREMENT
 
