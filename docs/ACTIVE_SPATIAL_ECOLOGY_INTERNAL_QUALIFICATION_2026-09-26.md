@@ -3,8 +3,8 @@
 **Date:** 2026-09-26  
 **Branch:** `experiment/active-spatial-ecology`  
 **Qualified checkpoint:** `d55b3b093325452e6dc730f314c886a2cbc85229`  
-**Status:** **INTERNALLY QUALIFIED FOR DELIBERATE PUBLIC REHEARSAL — OWNER VALUE UNPROVEN**  
-**Public deployment:** not yet changed by this checkpoint
+**Internal checkpoint status:** **QUALIFIED FOR DELIBERATE PUBLIC REHEARSAL**  
+**Current status:** **PUBLIC REHEARSAL LIVE / TRANSLATION PASS — OWNER VALUE UNPROVEN**
 
 ## 0. Evidence boundary
 
@@ -368,7 +368,34 @@ Final exact public-rehearsal candidate:
 
 This is the candidate that should be deployed for Owner rehearsal. The earlier `67309b91...` checkpoint is superseded as the public target, but remains useful evidence for the deep-link translation seam.
 
-## 10. Next evidence
+## 10. Public translation / provenance gate — PASS
+
+Final public-rehearsal candidate:
+
+- `ce96587826746efad426347a8a394048810e4ee2`.
+
+CI-gated rehearsal control plane:
+
+- `rehearsal/current` moved to the exact candidate;
+- candidate branch ancestry was checked against experiment base `4b44a001be679cb987c8470ce208d3b503d698a9`;
+- exact candidate had green source-tree `check`;
+- the rehearsal ref then earned a **fresh** normal `check`: run `36239476177` — SUCCESS;
+- Pages workflow run `36239513452` resolved source `ce96587826746efad426347a8a394048810e4ee2` / label `rehearsal/current`;
+- emitted artifact real-browser qualification — SUCCESS;
+- Pages deploy — SUCCESS.
+
+External public verification after deploy:
+
+- `COMMIT.txt` = `ce96587826746efad426347a8a394048810e4ee2`;
+- `BRANCH.txt` = `rehearsal/current`;
+- ordinary root renders **Load / Envelope Field B0**;
+- `?experiment=active-spatial-ecology-v0` renders **Active Embodied Spatial Ecology v0**.
+
+This qualifies public translation, provenance and access only.
+
+It still does not qualify the ecology hypothesis at the human/product level.
+
+## 11. Next evidence
 
 After exact public-origin qualification, the Owner should receive the specimen with minimal interpretation.
 
@@ -383,6 +410,6 @@ The important observations are behavioral:
 
 The Owner’s reaction outranks every PASS above.
 
-## 11. Working invariant
+## 12. Working invariant
 
 > **Machine evidence earns the right to ask the human question; it does not answer it.**
