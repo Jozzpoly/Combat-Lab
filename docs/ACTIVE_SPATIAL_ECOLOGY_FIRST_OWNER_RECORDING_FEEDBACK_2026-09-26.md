@@ -1189,6 +1189,78 @@ They are stable or slowly evolving non-progress states.
 
 This strengthens the requirement for future organisms/diagnostics to reason about **blocked duration / progress over time**, not just instantaneous overlap.
 
+## 42. Ordinary spawn route arithmetic creates a universal hidden hub
+
+A full modulo analysis of ordinary `spawn-serial` movement reveals a stronger artifact than the earlier short-cycle finding.
+
+For ordinary spawned residents:
+
+- initial goal = `(serial × 5 + 1) mod 12`;
+- future increment = `(serial + 3) mod 12`.
+
+Across all 12 possible `serial mod 12` classes:
+
+> **every route cycle contains goal index 10.**
+
+Goal 10 is:
+
+- `(650, 1580)`.
+
+Therefore essentially every ordinary spawned resident is periodically directed through the same bottom-left world anchor.
+
+This is a hidden global traffic hub created by ID arithmetic.
+
+### One-twelfth permanent attractor
+
+For:
+
+- `serial mod 12 = 9`;
+
+the future increment is:
+
+- `12 mod 12 = 0`.
+
+Its initial goal is also index 10.
+
+Therefore this entire residue class has a one-goal cycle:
+
+> **goal 10 forever.**
+
+At a late population on the order of ~839 ordinary spawned bodies, roughly one twelfth is around **~70 actors** in that serial residue class.
+
+They are structurally biased to keep driving toward the same bottom-left target indefinitely.
+
+### Other route-cycle hub bias
+
+Goal 10 appears in **12 / 12** residue-class cycles.
+
+For comparison, the number of residue classes whose cycles include each goal is:
+
+- goal 0: 6;
+- goal 1: 6;
+- goal 2: 8;
+- goal 3: 4;
+- goal 4: 9;
+- goal 5: 4;
+- goal 6: 8;
+- goal 7: 6;
+- goal 8: 6;
+- goal 9: 4;
+- **goal 10: 12**;
+- goal 11: 4.
+
+Thus the stimulus graph has a strong hidden convergence asymmetry.
+
+### Recording relation
+
+The recording repeatedly shows a very large persistent packed structure in the lower-left region.
+
+The code result does not prove that every body in that visible cluster is there because of goal 10.
+
+It does establish a strong apparatus-level mechanism capable of continually feeding traffic into that region.
+
+Therefore the lower-left megajam must not be treated as endogenous crowd behavior.
+
 ## Working invariant
 
 > **The first public Ecology rehearsal succeeded as an experiment mainly because it exposed why the current laboratory and organism are not yet good enough to answer the question cleanly.**
