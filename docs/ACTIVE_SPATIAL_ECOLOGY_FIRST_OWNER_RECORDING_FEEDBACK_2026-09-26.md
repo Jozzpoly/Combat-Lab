@@ -1730,6 +1730,50 @@ This reinforces the broader finding:
 
 > derived-state presentation should expose the causal consequences relevant to the current question, not merely a convenient subset of numbers.
 
+## 62. Fallback spawn zones are spatially coupled to movement goals
+
+The five fallback spawn zones each contain exactly one global goal:
+
+- zone 0 contains goal 0;
+- zone 1 contains **goal 10**;
+- zone 2 contains goal 3;
+- zone 3 contains goal 7;
+- zone 4 contains goal 6.
+
+This means fallback population injection is not spatially independent from the goal/stimulus layout.
+
+The strongest case is:
+
+- zone 1 includes goal 10 at `(650,1580)`;
+- goal 10 is already the universal hidden route-cycle hub.
+
+If near-player legal placement becomes difficult and fallback zones are used heavily, new bodies may be injected directly into regions already favored by movement stimulus.
+
+The recording does not expose how many of the 845 residents used fallback placement, so no quantitative contribution is claimed.
+
+The structural confound is enough to reject “spawn distribution is neutral” as an assumption.
+
+## 63. One fallback zone also contains the goal located inside static geometry
+
+Fallback zone 4 contains goal 6:
+
+- `(2700,780)`.
+
+Goal 6 is inside the static obstacle at:
+
+- x 2650..2740;
+- y 480..840.
+
+The spawn placement itself still rejects static overlap, so actors are not necessarily spawned inside the obstacle.
+
+But the same region combines:
+
+- an entry zone;
+- an unoccupiable global target;
+- local static collision.
+
+This is another reason current local crowd structure may reflect harness geometry more than endogenous ecology.
+
 ## Working invariant
 
 > **The first public Ecology rehearsal succeeded as an experiment mainly because it exposed why the current laboratory and organism are not yet good enough to answer the question cleanly.**
