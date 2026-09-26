@@ -1,5 +1,8 @@
 # Combat Lab — Discovery Campaign v1
 
+> **HISTORICAL RECORD — NOT CURRENT AUTHORITY.**
+> This file preserves the research state at its date. Any `active`, `current` or `next` wording below is historical. Current truth lives in `README.md` and `docs/RESEARCH_STATE.md`.
+
 **Phase:** divergent combat-language discovery  
 **Authority:** subordinate to `docs/RESEARCH_STATE.md` and newest Owner play evidence  
 **Goal:** create the first comparison in which different candidates actually ask the player to fight differently.
