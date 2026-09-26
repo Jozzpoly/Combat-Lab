@@ -147,7 +147,7 @@ test("canonical docs distinguish cleanup topology from the one active experiment
   assert.match(state,/COMMIT\.txt.*ce96587826746efad426347a8a394048810e4ee2/is);
   assert.match(state,/BRANCH\.txt.*rehearsal\/current/is);
   assert.match(state,/ce96587826746efad426347a8a394048810e4ee2/);
-  assert.match(state,/direct ecology rehearsal URL/i);
+  assert.match(state,/\?experiment=active-spatial-ecology-v0/);
   assert.match(state,/6bd4b4492261b9fe3b8edbca276cf9b7de3d822d/);
   assert.doesNotMatch(state,/active experiment-lane head/i);
   assert.doesNotMatch(state,/Open one temporary experiment lane/i);
