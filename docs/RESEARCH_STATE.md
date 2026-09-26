@@ -166,7 +166,9 @@ The active lane was opened from green canonical main:
 
 - base: `4b44a001be679cb987c8470ce208d3b503d698a9`;
 - internally qualified runtime checkpoint: `d55b3b093325452e6dc730f314c886a2cbc85229`;
-- current lane head after evidence documentation: `1a35280bae42902b3a70e5919b671954425f10ca`.
+- exact qualified public-rehearsal candidate: `67309b91d9c5f376192fe2ba6a80458294086691`.
+
+Do not use a moving branch HEAD as rehearsal provenance. Docs-only branch commits may advance independently; public rehearsal must name an exact SHA.
 
 Other repository truth remains:
 
@@ -214,7 +216,19 @@ Still **UNPROVEN until Owner play**:
 
 Current next move:
 
-> **perform one exact public rehearsal of the active experiment-lane head, verify public provenance and runtime translation, then obtain early raw Owner observation.**
+> **deploy exact candidate `67309b91d9c5f376192fe2ba6a80458294086691`, verify public provenance/runtime translation, then obtain early raw Owner observation through the direct ecology rehearsal URL.**
+
+Expected rehearsal URL after deployment:
+
+- `https://jozzpoly.github.io/Combat-Lab/?experiment=active-spatial-ecology-v0`
+
+Expected ordinary root behavior:
+
+- `https://jozzpoly.github.io/Combat-Lab/` still opens B0 by default even while the rehearsal build is deployed.
+
+Rollback target if the rehearsal is rejected or materially broken:
+
+- exact prior public closure release `6bd4b4492261b9fe3b8edbca276cf9b7de3d822d`.
 
 Do not add stance, equipment, weapons, crowd algorithms, pathfinding sophistication or further tuning merely because CI is green.
 
