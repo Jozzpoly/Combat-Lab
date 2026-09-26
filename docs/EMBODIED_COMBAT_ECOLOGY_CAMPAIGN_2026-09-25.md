@@ -1,5 +1,8 @@
 # Combat Lab vNext — Embodied Combat Ecology Campaign
 
+> **HISTORICAL RECORD — NOT CURRENT AUTHORITY.**
+> This file preserves the research state at its date. Any `active`, `current` or `next` wording below is historical. Current truth lives in `README.md` and `docs/RESEARCH_STATE.md`.
+
 **Date:** 2026-09-25  
 **Status:** active campaign design after first positive S0 Owner test  
 **Trigger:** Owner confirms S0 is in the direction Feniks needs while explicitly calling it raw and far from final needs
