@@ -63,13 +63,18 @@ The first direct Owner session used the Workbench as an actual exploratory instr
 
 ## Public specimen
 
-The last Owner-verified B0 closure specimen before repository canonicalization was:
+The Owner-observed B0 phenomenon was last changed before repository canonicalization; the cleanup campaign did **not** modify runtime files.
 
-- `2eb9a878eb4fa9c406ca0e90abcab33cb186332a`.
-
-Public surface:
+The canonical public surface is:
 
 https://jozzpoly.github.io/Combat-Lab/
+
+Public provenance is authoritative through:
+
+- `COMMIT.txt` — exact deployed SHA;
+- `BRANCH.txt` — deployed branch/ref label.
+
+The repository-closure release is deployed from canonical `main` after full CI and emitted-artifact browser qualification.
 
 Deployment is explicit: a successful `main` CI run deploys only when the commit message contains `[deploy]`, or through an explicit workflow dispatch.
 
@@ -83,7 +88,8 @@ Start here:
 4. [Workbench design record](docs/COMBAT_LAB_WORKBENCH_REFOUNDATION_2026-09-25.md)
 5. [B0 Owner recording feedback](docs/B0_WORKBENCH_OWNER_RECORDING_FEEDBACK_2026-09-25.md)
 6. [B0 / Workbench stage closure](docs/B0_WORKBENCH_STAGE_CLOSURE_2026-09-25.md)
-7. [Historical evidence index](docs/HISTORY_INDEX.md)
+7. [Repository closure audit](docs/REPOSITORY_CLOSURE_AUDIT_2026-09-26.md)
+8. [Historical evidence index](docs/HISTORY_INDEX.md)
 
 The previous append-only canonical state is preserved verbatim as historical evidence at:
 
@@ -91,9 +97,11 @@ The previous append-only canonical state is preserved verbatim as historical evi
 
 ## Branch policy
 
-The repository should normally have **one live branch: `main`**.
+The repository currently has **one branch ref: `main`**.
 
-Experiment branches are temporary execution surfaces. Before deletion, any unique historical lineage that still matters must be made reachable from the canonical DAG and its evidence/status recorded in documentation.
+The six stale experiment/refoundation refs from the completed campaign were removed only after their heads were verified as ancestors of `main`. Unique historical lineages remain reachable through canonical Git ancestry.
+
+Future experiment branches are temporary execution surfaces. Before deletion, any unique historical lineage that still matters must be made reachable from the canonical DAG and its evidence/status recorded in documentation.
 
 Do not keep stale branches merely as bookmarks.
 
