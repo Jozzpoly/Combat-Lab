@@ -135,7 +135,7 @@ test("durable records cannot masquerade as live execution authority",()=>{
   assert.match(ownerRecording,/only \*\*4 \/ 12\*\* produce a full 12-goal cycle/i);
   assert.match(ownerRecording,/845 residents/);
   assert.match(ownerRecording,/42\.9M pair checks\/s/);
-  assert.match(ownerRecording,/feedback extraction only/i);
+  assert.match(ownerRecording,/evidence extraction only/i);
 });
 
 test("canonical docs distinguish cleanup topology from the one active experiment lane",()=>{
