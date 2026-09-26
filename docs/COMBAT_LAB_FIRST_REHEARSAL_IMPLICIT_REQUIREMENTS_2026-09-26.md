@@ -2360,6 +2360,82 @@ Any future linkage layer must therefore allow the Owner to:
 
 A “coherent phenotype” convenience must never become an invisible constraint.
 
+## 99. Regular-looking emergence must be tested against implementation symmetry/bias
+
+**Status:** CRITICAL RESEARCH-INTEGRITY REQUIREMENT
+
+A visually coherent pattern is not automatically meaningful emergence.
+
+Current hidden biases include:
+
+- ordered clockwise/counterclockwise steering candidates;
+- sequential actor-pair resolution;
+- creation-order-dependent arrays;
+- serial-dependent goal cycles.
+
+Future claims about:
+
+- lanes;
+- circulation;
+- stable crowd shapes;
+- preferred side passing;
+
+must be challenged against algorithm-order artifacts.
+
+A useful research practice later may include permutation/mirror tests, but no specific harness is selected now.
+
+## 100. Navigation feasibility needs more than endpoint legality when terrain complexity grows
+
+**Status:** STRONG ARCHITECTURAL REQUIREMENT
+
+Current local steering checks one future endpoint against static geometry.
+
+That can be adequate in open/simple terrain.
+
+The Owner has already requested larger/more varied world pressure.
+
+As terrain becomes richer, endpoint-only probing is likely to turn static geometry into a dominant artifact.
+
+Future spatial substrate must support enough traversal-feasibility reasoning that ordinary obstacles do not reduce organisms to repeated collision correction.
+
+The exact level — swept local tests, route graph, navigation queries or donor subsystem — remains open.
+
+## 101. Phenotype-aware navigation should be attributed dimension by dimension
+
+**Status:** STRONG RESEARCH-INTEGRITY REQUIREMENT
+
+Current envelope already affects static feasibility/probe distance/goal threshold.
+
+Mass/load/force do not directly change route selection.
+
+Therefore future claims such as:
+
+> “large/heavy actors choose different routes”
+
+must distinguish:
+
+- geometry/envelope effect;
+- inertia/motor effect;
+- contact consequence;
+- higher-level policy.
+
+This reinforces the need for causally legible derived state and controlled comparisons.
+
+## 102. Debug target visualization must represent reachable/meaningful intent
+
+**Status:** STRONG OBSERVABILITY REQUIREMENT
+
+A line to an abstract global goal inside solid geometry can be mathematically truthful but behaviorally misleading.
+
+Future Debug should distinguish concepts such as:
+
+- long-horizon destination;
+- planned route/path;
+- immediate steering target;
+- actual motion.
+
+Do not collapse them into one arrow/line.
+
 ## Working invariant
 
 > **A professional Combat Lab should make it cheap to ask a dangerous question of the world, cheap to see what happened, and hard to misunderstand why.**
