@@ -23,11 +23,13 @@ test("canonical entrypoints contain one current project state",()=>{
 
   assert.match(state,/Workbench \+ B0 CLOSED/);
   assert.match(state,/Active Embodied Spatial Ecology v0 PUBLIC REHEARSAL LIVE \/ TRANSLATION PASS — OWNER VALUE UNPROVEN/i);
-  assert.match(state,/Active Embodied Spatial Ecology v0 has crossed the \*\*internal apparatus\/mechanism gate\*\*/i);
+  assert.match(state,/Active Embodied Spatial Ecology v0 has crossed both/i);
   assert.match(state,/optional explicit linkage \/ correlated scaling/i);
   assert.match(state,/Feniks, ReflexBrain, Companion and SPC/);
   assert.doesNotMatch(state,/waiting for new Owner instruction/i);
   assert.doesNotMatch(state,/Active branch:/);
+  assert.doesNotMatch(state,/public runtime remains the B0 closure release/i);
+  assert.match(state,/current public artifact is the ecology rehearsal candidate/i);
   assert.ok(state.length<20000,"canonical state must remain a compact live-truth document");
 });
 
