@@ -1,5 +1,8 @@
 # LINE / IMPULSE Organism v0
 
+> **HISTORICAL RECORD — NOT CURRENT AUTHORITY.**
+> This file preserves the research state at its date. Any `active`, `current` or `next` wording below is historical. Current truth lives in `README.md` and `docs/RESEARCH_STATE.md`.
+
 **Status:** active hypothesis, pre-kernel  
 **Owner play:** not eligible  
 **Predecessor:** Adversarial Combat Organism v1 — whole-organism FAIL, donors retained
