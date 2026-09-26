@@ -960,6 +960,114 @@ It does establish another interpretation boundary:
 
 Future feedback/debug must keep derived law consequences legible enough that authored labels do not imply stronger effects than the current model actually provides.
 
+## 31. Steering has a hidden handedness bias
+
+Local static steering tests candidate angular offsets in this fixed order:
+
+`0, +0.34, -0.34, +0.68, -0.68, +1.02, -1.02, +1.57, -1.57, π`.
+
+When two symmetric alternatives are both legal, the positive offset is tested first.
+
+Therefore apparently spontaneous “choose one side of the obstacle” behavior may inherit a deterministic handedness from array order.
+
+Any future lane/circulation observation from this specimen must be treated cautiously.
+
+## 32. Sequential pair solving makes dense results order-dependent
+
+Dynamic bodies are stored as:
+
+`[player, ...residents]`
+
+and pair collisions are resolved once in nested array order.
+
+This is not an order-independent constraint solve.
+
+In dense states:
+
+- an early pair correction changes positions seen by later pairs;
+- later corrections can partially undo/recreate earlier overlaps;
+- creation/array order can therefore influence final per-step geometry.
+
+After that pair pass, static/world collisions are resolved again.
+
+There is no second body-pair convergence pass in the same step.
+
+Thus static correction can create/reintroduce dynamic overlaps that survive until the next fixed step.
+
+The regular dense morphology in the recording is therefore partly solver-order-shaped.
+
+## 33. Exact-overlap fallback contains another directional bias
+
+If two body centers are numerically coincident, pair resolution substitutes:
+
+- dx = 1;
+- dy = 0.
+
+This creates an arbitrary horizontal separation axis.
+
+This is most relevant to explicit forced-overlap testing rather than the ordinary recorded spawn path.
+
+Because `Force +10` was not human-qualified in the recording, do not overgeneralize this finding to normal crowd behavior.
+
+## 34. Static steering samples endpoints, not swept paths
+
+`steerResident()` asks whether the body would be legal at one probe endpoint.
+
+It does not validate the entire swept segment from current position to that endpoint.
+
+Movement then proceeds and world collision resolution corrects any actual penetration.
+
+This is another way in which apparent “navigation” can devolve into:
+
+> aim somewhere locally plausible → hit geometry → get corrected.
+
+More complex terrain would increase this limitation.
+
+## 35. Embodiment is not completely absent from resident steering — important nuance
+
+Earlier shorthand that the decision layer “barely understands embodiment” should be read precisely.
+
+Resident geometry **does** influence local static steering through:
+
+- body radius in `legalStaticPosition`;
+- probe distance `max(45, radius × 1.8)`;
+- goal-arrival threshold `70 + radius`.
+
+Therefore different envelope sizes can change:
+
+- whether a probe point is feasible;
+- how far ahead the actor probes;
+- when a goal counts as reached.
+
+Mass/load/force mainly affect acceleration/contact outcome rather than route choice.
+
+Dynamic-body relations remain absent from steering.
+
+This nuance matters so the recording is not used to claim that all resident decisions are phenotype-blind.
+
+## 36. One global goal lies inside a static obstacle
+
+Goal:
+
+- `(2700, 780)`
+
+lies inside the obstacle:
+
+- x 2650..2740;
+- y 480..840.
+
+Because goal arrival uses a generous `70 + radius` threshold, a resident can count the goal as reached from outside the obstacle.
+
+So this is not necessarily an unreachable infinite target.
+
+However, it means:
+
+- debug lines explicitly point into solid geometry;
+- actors are intentionally attracted toward a point that is not occupiable;
+- local congestion around that obstacle can be apparatus-induced.
+
+This further weakens literal interpretation of current goal-line Debug.
+
 ## Working invariant
 
 > **The first public Ecology rehearsal succeeded as an experiment mainly because it exposed why the current laboratory and organism are not yet good enough to answer the question cleanly.**
