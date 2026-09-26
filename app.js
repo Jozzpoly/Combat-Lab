@@ -8,6 +8,7 @@ import {ParameterSlotStore,formatParameterSlot} from "./src/core/parameter-state
 import {substrateSmoke} from "./experiments/substrate-smoke.js";
 import {embodiedScaleFieldV0} from "./experiments/embodied-scale-field-v0.js";
 import {loadEnvelopeFieldB0} from "./experiments/load-envelope-field-b0.js";
+import {activeSpatialEcologyV0} from "./experiments/active-spatial-ecology-v0.js";
 
 const canvas=document.querySelector("#lab");
 const ctx=canvas.getContext("2d");
@@ -17,7 +18,10 @@ const controlsText=document.querySelector("#controls-text");
 const runState=document.querySelector("#run-state");
 const runtimeDetail=document.querySelector("#runtime-detail");
 const simTime=document.querySelector("#sim-time");
+const simHealth=document.querySelector("#sim-health");
 const simTimeDetail=document.querySelector("#sim-time-detail");
+const simHealthDetail=document.querySelector("#sim-health-detail");
+const droppedWallDetail=document.querySelector("#dropped-wall-detail");
 const buildId=document.querySelector("#build-id");
 const experimentSelect=document.querySelector("#experiment-select");
 const pauseButton=document.querySelector("#pause");
@@ -36,6 +40,7 @@ const registry=new ExperimentRegistry();
 registry.register(substrateSmoke);
 registry.register(embodiedScaleFieldV0);
 registry.register(loadEnvelopeFieldB0);
+registry.register(activeSpatialEcologyV0);
 
 const runner=new FixedStepRunner({dt:1/120,maxFrame:0.05,maxAccum:0.10});
 const input=new BrowserInput({pointerTarget:canvas});
@@ -55,6 +60,8 @@ let elapsed=0;
 let last=performance.now();
 let current=null;
 let nextInspectorSync=0;
+let droppedWallTime=0;
+let stressUntil=0;
 
 function updateRuntimeState(state){
   runtime.state=state;
@@ -62,6 +69,36 @@ function updateRuntimeState(state){
   runState.textContent=state;
   runState.dataset.state=state;
   runtimeDetail.textContent=state;
+}
+
+function resetSimulationStress(){
+  droppedWallTime=0;
+  stressUntil=0;
+  runtime.droppedWallTime=0;
+  runtime.lastFrameSteps=0;
+  runtime.lastDroppedSeconds=0;
+  runtime.simHealth="OK";
+  simHealth.textContent="SIM OK";
+  simHealth.dataset.state="RUNNING";
+  simHealthDetail.textContent="SIM OK";
+  droppedWallDetail.textContent="0.000 s";
+}
+
+function updateSimulationStress(now,result){
+  const dropped=Math.max(0,Number(result?.droppedSeconds)||0);
+  droppedWallTime+=dropped;
+  if(dropped>0.002) stressUntil=now+1200;
+  const stressing=now<stressUntil;
+
+  runtime.droppedWallTime=droppedWallTime;
+  runtime.lastFrameSteps=Number(result?.steps)||0;
+  runtime.lastDroppedSeconds=dropped;
+  runtime.simHealth=stressing?"STRESS":"OK";
+
+  simHealth.textContent=stressing?"SIM STRESS":"SIM OK";
+  simHealth.dataset.state=stressing?"STRESS":"RUNNING";
+  simHealthDetail.textContent=stressing?"SIM STRESS":"SIM OK";
+  droppedWallDetail.textContent=`${droppedWallTime.toFixed(3)} s`;
 }
 
 function captureSnapshot(){
@@ -108,6 +145,7 @@ function loadExperiment(id){
   purpose.textContent=current.definition.purpose;
   controlsText.textContent=current.definition.controls || "Direct controls available in Lab Inspector.";
   runner.reset();
+  resetSimulationStress();
   elapsed=0;
   runtime.elapsed=0;
   last=performance.now();
@@ -145,6 +183,7 @@ experimentSelect.addEventListener("change",()=>loadExperiment(experimentSelect.v
 
 function resetWorld(){
   runner.reset();
+  resetSimulationStress();
   current.instance.reset();
   elapsed=0;
   runtime.elapsed=0;
@@ -191,13 +230,15 @@ function frame(now){
   const frameSeconds=(now-last)/1000;
   last=now;
 
+  let stepResult={steps:0,alpha:0,rawFrame:frameSeconds,acceptedFrame:0,droppedSeconds:0};
   if(!paused){
     const snapshot=input.snapshot();
-    runner.advance(frameSeconds,dt=>{
+    stepResult=runner.advance(frameSeconds,dt=>{
       current.instance.step(snapshot,dt);
       elapsed+=dt;
     });
   }
+  updateSimulationStress(now,stepResult);
 
   const view=resizeCanvas(canvas);
   beginCanvasFrame(ctx,view);
