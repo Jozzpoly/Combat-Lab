@@ -1868,6 +1868,219 @@ It is a durable design pressure:
 
 > **Combat Lab should optimize for an exploratory experimentalist who discovers by perturbing a live world, not for a user filling out a configuration form before a test run.**
 
+## 77. Current Workbench state model is structurally flat
+
+**Status:** CODE-CONFIRMED ARCHITECTURAL LIMIT
+
+`WorkbenchInspector` maintains:
+
+- one ordered `editableIds` list;
+- one set of numeric bindings;
+- one set of live bindings.
+
+`getParameterState()` iterates every editable ID and produces one flat object.
+
+There is no neutral representation of:
+
+- scope/domain;
+- selected entity;
+- selected cohort;
+- apparatus vs specimen state;
+- relationship between authored and derived values;
+- nested object identity;
+- comparison subset.
+
+Therefore several recording findings cannot be solved cleanly by styling the current schema.
+
+The contract itself needs more expressive semantics before the Lab can scale.
+
+## 78. Current A/B opacity is deterministic architecture behavior
+
+**Status:** CODE-CONFIRMED
+
+The slot summary implementation displays:
+
+- the first two entries;
+- then `+N`.
+
+Ecology's editable order begins with spawn-template fields.
+
+Therefore summaries such as:
+
+> Spawn envelope 1.00 · Spawn body mass 1.00 · +7
+
+are not an accidental copy bug.
+
+They are a deterministic result of:
+
+1. flat parameter ordering;
+2. capture-all semantics;
+3. first-two summary formatting.
+
+Likewise, `applyParameterState()` applies every captured editable value that still exists.
+
+There is no diff preview or domain filtering.
+
+This confirms:
+
+> **A/B needs a semantic state model before presentation polish can make it trustworthy.**
+
+## 79. Wheel zoom is absent from the current neutral input substrate
+
+**Status:** CODE-CONFIRMED DIRECT REQUIREMENT GAP
+
+`BrowserInput` currently supports:
+
+- keyboard;
+- pointer position;
+- pointer buttons.
+
+It does not capture wheel input.
+
+The Owner's mouse-wheel camera requirement therefore requires a real input-contract extension or an experiment-local equivalent.
+
+This is not currently a hidden feature that merely needs exposure.
+
+A future shared input design should consider whether wheel is:
+
+- neutral viewport input;
+- experiment-owned input;
+- apparatus-owned camera input.
+
+That ownership decision is architectural and remains open.
+
+## 80. Authored/live separation is implemented as different rendering roots
+
+**Status:** CODE-CONFIRMED ARCHITECTURAL LIMIT
+
+Editable groups render into `parameterRoot`.
+
+Derived/live groups render into `liveRoot`.
+
+This guarantees a clean conceptual separation, which was useful in B0.
+
+But it also makes it difficult for an experiment to express:
+
+> “show this derived consequence next to this authored cause.”
+
+The Ecology recording shows why both properties matter:
+
+- authored vs derived must remain distinguishable;
+- causal neighbors sometimes need local co-visibility.
+
+Future Workbench semantics need to support both without collapsing authored/derived truth.
+
+## 81. Actions have no first-class provenance in the current Workbench
+
+**Status:** CODE-CONFIRMED RESEARCH-INTEGRITY LIMIT
+
+A generic action button currently:
+
+1. invokes `inspector.action(action.id)`;
+2. runs `sync(true)`.
+
+The Workbench does not automatically record:
+
+- action ID;
+- simulation time;
+- result;
+- parameter context;
+- affected cohort/entity.
+
+Therefore the first recording's spawn history had to be reconstructed externally.
+
+A future intervention ledger cannot be added reliably as a visual afterthought; the action/state contract must provide enough semantic event information.
+
+## 82. Parameter edits likewise lack an intervention event stream
+
+**Status:** CODE-CONFIRMED RESEARCH-INTEGRITY LIMIT
+
+Numeric edits directly call:
+
+`inspector.set(control.id, value)`.
+
+The Workbench does not retain:
+
+- previous value;
+- new applied value;
+- simulation time;
+- scope/target;
+- whether the change came from slider, numeric entry, anchor, reset, A/B Apply or Restore Defaults.
+
+This is adequate for a demo/control panel.
+
+It is insufficient for a research instrument expected to explain how a live state was reached.
+
+## 83. Current input architecture already contains a useful separation worth preserving
+
+**Status:** CODE-CONFIRMED STRENGTH
+
+`BrowserInput` deliberately clears world keyboard state when focus is inside:
+
+- INPUT;
+- TEXTAREA;
+- SELECT;
+- BUTTON;
+- contenteditable / Workbench input surfaces.
+
+This was introduced after B0 focus leakage and remains a good boundary:
+
+> **editing the apparatus should not accidentally operate the world.**
+
+Future direct viewport manipulation, wheel zoom and entity inspection should preserve similarly explicit input ownership.
+
+## 84. Current architecture has no concept of “selected research subject”
+
+**Status:** CODE-CONFIRMED LIMIT / STRONG CANDIDATE REQUIREMENT
+
+The Workbench mounts one experiment-level inspector.
+
+It can ask that experiment for values by global IDs.
+
+There is no shared concept equivalent to:
+
+- selected actor;
+- selected cohort;
+- selected object;
+- selected region;
+- selected diagnostic probe.
+
+This explains why the easiest implementation pattern is to create permanent sections such as:
+
+- Player phenotype;
+- Spawn phenotype.
+
+That pattern does not scale to many inspectable subjects.
+
+A future refoundation should challenge whether **selection/context** needs to become a neutral Workbench concept, while keeping the actual semantics of actor/cohort/object experiment-owned.
+
+## 85. Current generic control contract is too narrow for the now-observed research workflow
+
+The original Workbench intentionally started with:
+
+- numeric;
+- action;
+- read-only.
+
+That bounded design was correct for S0/B0.
+
+Ecology now produces evidence for additional semantic capabilities, not necessarily additional widget types:
+
+- scoped state;
+- selected target/context;
+- intervention events;
+- state/checkpoint domains;
+- causal authored↔derived relationships;
+- richer observation apparatus.
+
+The lesson is not:
+
+> add 15 generic widget types.
+
+It is:
+
+> **the neutral contract now needs richer research semantics before it needs richer controls.**
+
 ## Working invariant
 
 > **A professional Combat Lab should make it cheap to ask a dangerous question of the world, cheap to see what happened, and hard to misunderstand why.**
