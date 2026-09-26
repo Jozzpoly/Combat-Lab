@@ -178,7 +178,8 @@ test("canonical docs distinguish active refoundation research from the retained 
   assert.doesNotMatch(readme,/repository currently has \*\*one branch ref/i);
 
   assert.match(state,/Current \*\*research topology\*\*/i);
-  assert.match(state,/experiment\/active-spatial-ecology/);\n  assert.match(state,/closed Ecology execution\/evidence lane retained temporarily/i);
+  assert.match(state,/experiment\/active-spatial-ecology/);
+  assert.match(state,/closed Ecology execution\/evidence lane retained temporarily/i);
   assert.match(state,/rehearsal\/current/);
   assert.match(state,/never an authoring lane and never research authority/i);
   assert.match(state,/COMMIT\.txt.*ce96587826746efad426347a8a394048810e4ee2/is);
