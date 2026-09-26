@@ -1096,6 +1096,54 @@ It also shows the problem is not one isolated trip to a rarely used setting.
 
 Large context shifts recur throughout the session.
 
+## 38. Dense pair phase is mostly empty work
+
+At 845 residents + player:
+
+- dynamic bodies: 846;
+- all-pairs comparisons per fixed step: **357,435**.
+
+Using a representative late body-resolution rate of ~185,000 / s:
+
+- ~1,542 overlapping-pair resolutions occur per 120 Hz simulation step.
+
+Approximate fraction of pair checks that produce a body resolution:
+
+> **~0.43%**
+
+Approximate fraction that reject without contact:
+
+> **~99.57%**
+
+This is not a benchmark-quality profiler result, because the contact rate fluctuates.
+
+It is nevertheless strong evidence that the current late-stage scaling cost is dominated by broad-phase absence rather than a world in which most body pairs are interacting.
+
+If similar contact semantics survive later refoundation, spatial candidate pruning is a high-leverage semantic-neutral optimization candidate.
+
+Do not optimize the obsolete solver merely to preserve it.
+
+## 39. Late stress is sustained time dilation, not one hitch
+
+Approximate timeline:
+
+- stress appears around recording ~198 s;
+- simulation time at that moment is ~199.18 s;
+- recording ends around ~232 s;
+- simulation time ends around ~226.73 s.
+
+Across those final ~34 wall-clock seconds:
+
+- simulation advances ~27.55 s;
+- average effective real-time factor is roughly **0.81×**;
+- ~6.45 s of wall-time progression is not simulated.
+
+Therefore late `SIM STRESS` represents sustained inability to maintain real-time, not merely a transient spawn hitch.
+
+This validates the usefulness of explicit fixed-step stress truth.
+
+Future performance diagnostics should make severity/rate easier to interpret, not only expose the binary stress state.
+
 ## Working invariant
 
 > **The first public Ecology rehearsal succeeded as an experiment mainly because it exposed why the current laboratory and organism are not yet good enough to answer the question cleanly.**
