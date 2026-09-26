@@ -26,6 +26,7 @@ For live sequencing, **`docs/RESEARCH_STATE.md` wins**. A durable design/evidenc
 - `FRONTIER_REASSESSMENT_2026-09-26.md` — top-down selection reasoning that produced the Active Embodied Spatial Ecology frontier.
 - `ACTIVE_EMBODIED_SPATIAL_ECOLOGY_HYPOTHESIS_2026-09-26.md` — selected bounded implementation contract with permissive sparse→horde population pressure; current status lives in `RESEARCH_STATE.md`.
 - `ACTIVE_SPATIAL_ECOLOGY_INTERNAL_QUALIFICATION_2026-09-26.md` — exact internal mechanism/browser/visual evidence plus later public translation/provenance PASS; Owner value remains unproven.
+- `ACTIVE_SPATIAL_ECOLOGY_FIRST_OWNER_RECORDING_FEEDBACK_2026-09-26.md` — first public Owner rehearsal deep evidence; Lab-direction positive signal plus material UX/organism/contact/debug findings; target ecology hypothesis inconclusive.
 
 ## Historical campaign / donor records
 
