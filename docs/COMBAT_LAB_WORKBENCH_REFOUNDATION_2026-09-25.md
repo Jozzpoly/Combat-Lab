@@ -3,7 +3,8 @@
 **Date:** 2026-09-25  
 **Status:** implemented Workbench design record; closure-qualified for current research use  
 **Owner trigger:** positive S0 body/world evidence followed by rejection of the rushed shortcut-driven S1 handoff  
-**Active implementation baseline:** `3e9648fe77c49994c49b60722aa9b2d550124d58`
+**Historical implementation baseline for this campaign:** `3e9648fe77c49994c49b60722aa9b2d550124d58`  
+**Authority note:** durable Workbench principles and qualified Owner evidence remain useful; the W0–W4 execution sequence below is completed historical chronology and is not current next-step authority.
 
 ## 0. Reset
 
@@ -355,9 +356,11 @@ Before asking the Owner:
 
 A green deploy alone is not Owner-ready evidence.
 
-## 9. Explicit non-goals
+## 9. Historical pre-qualification non-goals
 
-Do not build yet:
+During the Workbench refoundation, the following were deliberately excluded until the interaction model was proven. This is a historical scope boundary, not a permanent prohibition or current roadmap.
+
+At that stage, do not build yet:
 
 - S1 orthogonal-body gameplay;
 - weapon systems;
@@ -370,13 +373,13 @@ Do not build yet:
 - universal actor component model;
 - a giant generic engine inspector.
 
-First prove the Workbench interaction model on S0.
+The purpose was to prove the Workbench interaction model on S0 first. That qualification is now complete.
 
-## 10. Immediate execution order
+## 10. Historical immediate execution order — COMPLETED
 
 ### W0 — reset and contract
 
-- active branch reset to the last good S0 checkpoint;
+- reset the then-active branch to the last good S0 checkpoint;
 - record this Workbench contract;
 - amend neutral-substrate ergonomics requirements.
 
