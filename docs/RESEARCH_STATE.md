@@ -36,7 +36,7 @@ These are **Owner intent / future capability candidates**, not qualified mechani
 - such linkage must remain visible, reversible and authorable rather than becoming a hidden universal law that destroys independent experimentation;
 - expand future test pressure toward a **larger and more varied world** with more terrain, obstacles and multiple varied opponents / residents, especially for displacement, pushing, being pushed, clearance and spatial-relation experiments;
 - population pressure must remain **permissively scalable**: a small deterministic baseline may improve readability, but the Owner must be able to spawn more bodies directly (for example +1 / +5 / +10 repeatedly) and intentionally drive the experiment into crowd, horde and break regimes;
-- after the current cleanup/preparation campaign, perform a deliberate donor review of **Feniks, ReflexBrain, Companion and SPC** for already-developed movement, pathfinding, spatial-relation and related infrastructure before reinventing those capabilities;
+- targeted donor recovery from **Feniks, ReflexBrain, Companion and SPC** is question-driven rather than scheduled wholesale; the first concrete movement/feasibility need has already recovered bounded Companion whole-body feasibility evidence, while other donors remain unselected until a live dependency justifies them;
 - cross-project donor code or architecture is never local authority by default: recover the exact useful property/evidence, transplant the minimum when a Combat Lab question actually needs it, and re-qualify it locally.
 
 ## 2. Evidence hierarchy
@@ -160,7 +160,7 @@ The completed cleanup campaign temporarily reduced repository topology to `main`
 Current **research topology** intentionally contains:
 
 - `main` — canonical truth / governance;
-- `experiment/active-spatial-ecology` — one temporary active experiment lane.
+- `experiment/active-spatial-ecology` — closed Ecology execution/evidence lane retained temporarily because its unique lineage and exact public specimen still matter; not current execution authority.
 
 A separate infrastructure-only ref may be present:
 

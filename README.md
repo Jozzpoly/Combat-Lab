@@ -97,7 +97,7 @@ Start here:
 
 1. [Current research state](docs/RESEARCH_STATE.md)
 2. [Active refoundation research campaign](docs/COMBAT_LAB_REFOUNDATION_RESEARCH_CAMPAIGN_2026-09-26.md)
-4. [Frontier reassessment](docs/FRONTIER_REASSESSMENT_2026-09-26.md)
+3. [Frontier reassessment](docs/FRONTIER_REASSESSMENT_2026-09-26.md)
 4. [Active spatial ecology hypothesis](docs/ACTIVE_EMBODIED_SPATIAL_ECOLOGY_HYPOTHESIS_2026-09-26.md)
 5. [Active spatial ecology internal qualification](docs/ACTIVE_SPATIAL_ECOLOGY_INTERNAL_QUALIFICATION_2026-09-26.md)
 6. [First Active Spatial Ecology Owner recording feedback](docs/ACTIVE_SPATIAL_ECOLOGY_FIRST_OWNER_RECORDING_FEEDBACK_2026-09-26.md)
@@ -120,13 +120,13 @@ The previous append-only canonical state is preserved verbatim as historical evi
 Current research refs:
 
 - `main` — canonical truth / governance;
-- `experiment/active-spatial-ecology` — the **single temporary active experiment lane**.
+- `experiment/active-spatial-ecology` — the **closed Ecology execution/evidence lane**, retained temporarily for unique-history and exact-specimen provenance; it is not the active refoundation authority.
 
 Deployment control may additionally use:
 
 - `rehearsal/current` — infrastructure-only pointer to the exact candidate currently being publicly rehearsed; never an authoring branch and never research authority.
 
-The cleanup campaign previously reduced the repository to `main` only after preserving historical ancestry. The current experiment branch was then opened deliberately from green canonical main `4b44a001be679cb987c8470ce208d3b503d698a9` after frontier selection.
+The cleanup campaign previously reduced the repository to `main` only after preserving historical ancestry. The Ecology branch was then opened deliberately from green canonical main `4b44a001be679cb987c8470ce208d3b503d698a9`; that campaign is now closed, but the ref remains temporarily because its 27-commit unique lineage and public rehearsal provenance must be preserved before retirement.
 
 Exact rehearsal provenance:
 

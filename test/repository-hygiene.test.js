@@ -24,7 +24,7 @@ test("canonical entrypoints contain one current project state",()=>{
   assert.match(state,/Workbench \+ B0 CLOSED/);
   assert.match(state,/first Active Spatial Ecology Owner rehearsal \+ feedback\/evidence campaign CLOSED/i);
   assert.match(state,/TARGET HYPOTHESIS INCONCLUSIVE — APPARATUS LIMITATIONS BECAME THE DOMINANT FINDING/i);
-  assert.match(state,/refoundation campaign NOT YET STARTED/i);
+  assert.match(state,/refoundation\/research campaign ACTIVE; runtime implementation NOT STARTED/i);
   assert.match(state,/optional explicit linkage \/ correlated scaling/i);
   assert.match(state,/Feniks, ReflexBrain, Companion and SPC/);
   assert.doesNotMatch(state,/waiting for new Owner instruction/i);
@@ -167,18 +167,18 @@ test("durable records cannot masquerade as live execution authority",()=>{
   assert.match(handoff,/new conversation should \*\*not code immediately\*\*/i);
 });
 
-test("canonical docs distinguish cleanup topology from the one active experiment lane",()=>{
+test("canonical docs distinguish active refoundation research from the retained closed Ecology lane",()=>{
   const readme=read("README.md");
   const state=read("docs/RESEARCH_STATE.md");
   const history=read("docs/HISTORY_INDEX.md");
 
   assert.match(readme,/experiment\/active-spatial-ecology/);
-  assert.match(readme,/single temporary active experiment lane/i);
+  assert.match(readme,/closed Ecology execution\/evidence lane/i);
   assert.match(readme,/rehearsal\/current/);
   assert.doesNotMatch(readme,/repository currently has \*\*one branch ref/i);
 
   assert.match(state,/Current \*\*research topology\*\*/i);
-  assert.match(state,/experiment\/active-spatial-ecology/);
+  assert.match(state,/experiment\/active-spatial-ecology/);\n  assert.match(state,/closed Ecology execution\/evidence lane retained temporarily/i);
   assert.match(state,/rehearsal\/current/);
   assert.match(state,/never an authoring lane and never research authority/i);
   assert.match(state,/COMMIT\.txt.*ce96587826746efad426347a8a394048810e4ee2/is);

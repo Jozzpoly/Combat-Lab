@@ -171,7 +171,7 @@ Useful recovered properties:
 - route feasibility can be body-envelope aware;
 - contact is temporal physical evidence rather than only a final-frame overlap fact.
 
-Exact useful donor examples include Companion commit `616bda34255a1f48e6ceaecb2`-family whole-body traversal work and the surrounding static-router/feasibility tests. The property is the donor. Rapier, the Companion architecture and its current routing policy are not selected Combat Lab foundations.
+Exact useful donor examples include Companion commit `616bda342b9096326633c6449851f48e6ceaecb2` whole-body traversal work and the surrounding static-router/feasibility tests. The property is the donor. Rapier, the Companion architecture and its current routing policy are not selected Combat Lab foundations.
 
 ### SPC / LLM Live NPC — conceptual competence donor
 
