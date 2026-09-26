@@ -114,6 +114,8 @@ test("durable records cannot masquerade as live execution authority",()=>{
   assert.match(spatialQualification,/OWNER VALUE UNPROVEN/);
   assert.match(spatialQualification,/51 \/ 51 PASS/);
   assert.match(spatialQualification,/d55b3b093325452e6dc730f314c886a2cbc85229/);
+  assert.match(spatialQualification,/67309b91d9c5f376192fe2ba6a80458294086691/);
+  assert.match(spatialQualification,/public-rehearsal translation hardening/i);
 });
 
 test("canonical docs distinguish cleanup topology from the one active experiment lane",()=>{
@@ -128,7 +130,10 @@ test("canonical docs distinguish cleanup topology from the one active experiment
   assert.match(state,/exactly two branch refs/i);
   assert.match(state,/experiment\/active-spatial-ecology/);
   assert.match(state,/public runtime remains the B0 closure release/);
-  assert.match(state,/perform one exact public rehearsal/i);
+  assert.match(state,/67309b91d9c5f376192fe2ba6a80458294086691/);
+  assert.match(state,/direct ecology rehearsal URL/i);
+  assert.match(state,/6bd4b4492261b9fe3b8edbca276cf9b7de3d822d/);
+  assert.doesNotMatch(state,/active experiment-lane head/i);
   assert.doesNotMatch(state,/Open one temporary experiment lane/i);
 
   assert.match(history,/current topology is authoritative in `RESEARCH_STATE\.md`/);
