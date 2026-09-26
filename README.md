@@ -82,7 +82,7 @@ Current public closure release:
 
 Later documentation-only `main` commits intentionally do not replace that public runtime unless deployment is explicitly requested.
 
-Deployment is explicit: a successful `main` CI run deploys only when the commit message contains `[deploy]`, or through an explicit workflow dispatch.
+Deployment is explicit: a successful `main` CI run deploys only when the commit message contains `[deploy]`; an exact candidate may also be rehearsed through the CI-gated infrastructure ref `rehearsal/current` or by explicit workflow dispatch. Ordinary `experiment/*` pushes never deploy.
 
 ## Repository authority
 
@@ -106,10 +106,14 @@ The previous append-only canonical state is preserved verbatim as historical evi
 
 ## Branch policy
 
-Current live refs:
+Current research refs:
 
 - `main` — canonical truth / governance;
 - `experiment/active-spatial-ecology` — the **single temporary active experiment lane**.
+
+Deployment control may additionally use:
+
+- `rehearsal/current` — infrastructure-only pointer to the exact candidate currently being publicly rehearsed; never an authoring branch and never research authority.
 
 The cleanup campaign previously reduced the repository to `main` only after preserving historical ancestry. The current experiment branch was then opened deliberately from green canonical main `4b44a001be679cb987c8470ce208d3b503d698a9` after frontier selection.
 
