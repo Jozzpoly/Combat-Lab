@@ -13,7 +13,7 @@ test("canonical entrypoints contain one current project state",()=>{
 
   assert.match(readme,/Canonical live branch/);
   assert.match(readme,/Workbench mechanical foundation — QUALIFIED; current Lab usability\/information architecture has MATERIAL OWNER FINDINGS/i);
-  assert.match(readme,/first Active Spatial Ecology Owner rehearsal is complete/i);
+  assert.match(readme,/first Active Spatial Ecology Owner rehearsal and feedback\/evidence campaign are \*\*closed\*\*/i);
   assert.doesNotMatch(readme,/no selected next research specimen/i);
   assert.match(readme,/6bd4b4492261b9fe3b8edbca276cf9b7de3d822d/);
   assert.doesNotMatch(readme,/waits for new Owner instruction/i);
@@ -22,8 +22,9 @@ test("canonical entrypoints contain one current project state",()=>{
   assert.doesNotMatch(readme,/intentionally \*\*not deployed for Owner testing yet\*\*/i);
 
   assert.match(state,/Workbench \+ B0 CLOSED/);
-  assert.match(state,/Active Spatial Ecology first Owner rehearsal COMPLETE/i);
+  assert.match(state,/first Active Spatial Ecology Owner rehearsal \+ feedback\/evidence campaign CLOSED/i);
   assert.match(state,/TARGET HYPOTHESIS INCONCLUSIVE — APPARATUS LIMITATIONS BECAME THE DOMINANT FINDING/i);
+  assert.match(state,/refoundation campaign NOT YET STARTED/i);
   assert.match(state,/optional explicit linkage \/ correlated scaling/i);
   assert.match(state,/Feniks, ReflexBrain, Companion and SPC/);
   assert.doesNotMatch(state,/waiting for new Owner instruction/i);
@@ -136,6 +137,10 @@ test("durable records cannot masquerade as live execution authority",()=>{
   assert.match(ownerRecording,/845 residents/);
   assert.match(ownerRecording,/42\.9M pair checks\/s/);
   assert.match(ownerRecording,/evidence extraction only/i);
+  assert.match(ownerRecording,/universal hidden hub/i);
+  assert.match(ownerRecording,/27\.78%/);
+  assert.match(ownerRecording,/full resident object copies per second/i);
+  assert.match(ownerRecording,/Capture B → Apply A/);
 
   const implicitRequirements=read("docs/COMBAT_LAB_FIRST_REHEARSAL_IMPLICIT_REQUIREMENTS_2026-09-26.md");
   assert.match(implicitRequirements,/manipulation must be high-bandwidth/i);
@@ -146,6 +151,19 @@ test("durable records cannot masquerade as live execution authority",()=>{
   assert.match(implicitRequirements,/competence floor, not maximum intelligence/i);
   assert.match(implicitRequirements,/preserve material spatial consequence/i);
   assert.match(implicitRequirements,/feedback\/evidence extraction/i);
+  assert.match(implicitRequirements,/observer-cost budget/i);
+  assert.match(implicitRequirements,/Spawn topology and movement topology/i);
+  assert.match(implicitRequirements,/live authoring and physical continuity/i);
+  assert.match(implicitRequirements,/adversarial confidence ledger/i);
+
+  const handoff=read("docs/COMBAT_LAB_HANDOFF_2026-09-26_ECOLOGY_FEEDBACK_CLOSURE.md");
+  assert.match(handoff,/feedback\/evidence-extraction campaign are \*\*CLOSED\*\*/i);
+  assert.match(handoff,/TARGET HYPOTHESIS INCONCLUSIVE/i);
+  assert.match(handoff,/No refoundation implementation has started/i);
+  assert.match(handoff,/ce96587826746efad426347a8a394048810e4ee2/);
+  assert.match(handoff,/27\.8%/);
+  assert.match(handoff,/Capture B → Apply A/);
+  assert.match(handoff,/new conversation should \*\*not code immediately\*\*/i);
 });
 
 test("canonical docs distinguish cleanup topology from the one active experiment lane",()=>{
