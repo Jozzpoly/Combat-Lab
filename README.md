@@ -20,7 +20,7 @@ Current qualified statements:
 - There is **no accepted Feniks combat model, hit-authority model, aim/target model or commitment scheme**.
 - There is **no selected next research specimen**; current work is testing whether active multi-body spatial pressure is the strongest next frontier.
 
-Latest Owner-confirmed direction: the project is broader than hitting or melee. Body/world relations matter. Independent embodiment dimensions should remain available, while future Workbench research may add optional explicit correlations for fast coherent phenotype scaling. Larger terrain/obstacle spaces and more varied opponents/residents are desired future pressure. A later donor review of Feniks, ReflexBrain, Companion and SPC should recover proven movement/pathfinding/spatial capabilities without importing those projects' architecture as Combat Lab authority.
+Latest Owner-confirmed direction: the project is broader than hitting or melee. Body/world relations matter. Independent embodiment dimensions should remain available, while future Workbench research may add optional explicit correlations for fast coherent phenotype scaling. Larger terrain/obstacle spaces and more varied opponents/residents are desired future pressure, with population deliberately scalable from a readable baseline into crowd/horde/break regimes rather than hidden behind low protective limits. A later donor review of Feniks, ReflexBrain, Companion and SPC should recover proven movement/pathfinding/spatial capabilities without importing those projects' architecture as Combat Lab authority.
 
 ## Research standard
 
@@ -90,13 +90,14 @@ Start here:
 
 1. [Current research state](docs/RESEARCH_STATE.md)
 2. [Frontier reassessment](docs/FRONTIER_REASSESSMENT_2026-09-26.md)
-3. [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md)
-4. [Owner scope correction](docs/COMBAT_LAB_SCOPE_CORRECTION_2026-09-25.md)
-5. [Workbench design record](docs/COMBAT_LAB_WORKBENCH_REFOUNDATION_2026-09-25.md)
-6. [B0 Owner recording feedback](docs/B0_WORKBENCH_OWNER_RECORDING_FEEDBACK_2026-09-25.md)
-7. [B0 / Workbench stage closure](docs/B0_WORKBENCH_STAGE_CLOSURE_2026-09-25.md)
-8. [Repository closure audit](docs/REPOSITORY_CLOSURE_AUDIT_2026-09-26.md)
-9. [Historical evidence index](docs/HISTORY_INDEX.md)
+3. [Active spatial ecology hypothesis](docs/ACTIVE_EMBODIED_SPATIAL_ECOLOGY_HYPOTHESIS_2026-09-26.md)
+4. [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md)
+5. [Owner scope correction](docs/COMBAT_LAB_SCOPE_CORRECTION_2026-09-25.md)
+6. [Workbench design record](docs/COMBAT_LAB_WORKBENCH_REFOUNDATION_2026-09-25.md)
+7. [B0 Owner recording feedback](docs/B0_WORKBENCH_OWNER_RECORDING_FEEDBACK_2026-09-25.md)
+8. [B0 / Workbench stage closure](docs/B0_WORKBENCH_STAGE_CLOSURE_2026-09-25.md)
+9. [Repository closure audit](docs/REPOSITORY_CLOSURE_AUDIT_2026-09-26.md)
+10. [Historical evidence index](docs/HISTORY_INDEX.md)
 
 The previous append-only canonical state is preserved verbatim as historical evidence at:
 
