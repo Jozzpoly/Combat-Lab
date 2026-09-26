@@ -113,9 +113,12 @@ Current live refs:
 
 The cleanup campaign previously reduced the repository to `main` only after preserving historical ancestry. The current experiment branch was then opened deliberately from green canonical main `4b44a001be679cb987c8470ce208d3b503d698a9` after frontier selection.
 
-Current active-lane head:
+Exact rehearsal provenance:
 
-- `1a35280bae42902b3a70e5919b671954425f10ca`.
+- internally qualified runtime: `d55b3b093325452e6dc730f314c886a2cbc85229`;
+- public-rehearsal candidate: `67309b91d9c5f376192fe2ba6a80458294086691`.
+
+A rehearsal must deploy the exact candidate SHA rather than a moving branch HEAD.
 
 Future experiment branches remain temporary execution surfaces. Before deletion, any unique historical lineage that still matters must be made reachable from the canonical DAG and its evidence/status recorded in documentation.
 
