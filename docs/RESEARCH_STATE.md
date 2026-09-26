@@ -186,7 +186,7 @@ Other repository truth remains:
 - deployments are exact-SHA and browser-qualified;
 - Pages deployment requires explicit `[deploy]` from checked `main`, a successful checked `rehearsal/current` move to an exact candidate, or manual workflow dispatch of an exact source ref;
 - ordinary `experiment/*` pushes never deploy;
-- the **public runtime remains the B0 closure release `6bd4b4492261b9fe3b8edbca276cf9b7de3d822d`**; the ecology specimen has not replaced it;
+- the **current public artifact is the ecology rehearsal candidate `ce96587826746efad426347a8a394048810e4ee2` via `rehearsal/current`**; ordinary root still defaults to B0, while the direct ecology query opens the rehearsal specimen;
 - repository closure evidence is recorded in `REPOSITORY_CLOSURE_AUDIT_2026-09-26.md`.
 
 ## 7. Current objective / next move
