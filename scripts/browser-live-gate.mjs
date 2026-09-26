@@ -519,6 +519,46 @@ try{
   }
   await captureScreenshot(compactScreenshotPath);
 
+  // Public rehearsal deep-link must open the intended experiment directly while root remains B0.
+  const ecologyUrl=new URL(target);
+  ecologyUrl.searchParams.set("experiment","active-spatial-ecology-v0");
+  await cdp.send("Page.navigate",{url:ecologyUrl.toString()});
+  await waitFor("ecology deep-link boots directly",async()=>{
+    return evaluate(`(()=>{
+      const r=window.__combatLabRuntime;
+      const selected=document.querySelector("#experiment-select")?.value;
+      return !!r && r.state==="RUNNING" && r.frames>=8 && r.elapsed>0.03 &&
+        r.activeExperimentId==="active-spatial-ecology-v0" &&
+        selected==="active-spatial-ecology-v0" &&
+        new URLSearchParams(location.search).get("experiment")==="active-spatial-ecology-v0" &&
+        !!document.querySelector('[data-action-id="spawn50"]');
+    })()`);
+  },{timeout:6000});
+
+  // Selecting canonical B0 again removes the deep-link parameter rather than polluting the root URL.
+  await evaluate(`(()=>{
+    const s=document.querySelector("#experiment-select");
+    s.value="load-envelope-field-b0";
+    s.dispatchEvent(new Event("change",{bubbles:true}));
+  })()`);
+  await waitFor("B0 selection clears experiment query",async()=>{
+    return evaluate(`(()=>{
+      const r=window.__combatLabRuntime;
+      return r.activeExperimentId==="load-envelope-field-b0" &&
+        !new URLSearchParams(location.search).has("experiment");
+    })()`);
+  });
+
+  // Restore ecology through the selector so final state remains the rehearsal specimen.
+  await evaluate(`(()=>{
+    const s=document.querySelector("#experiment-select");
+    s.value="active-spatial-ecology-v0";
+    s.dispatchEvent(new Event("change",{bubbles:true}));
+  })()`);
+  await waitFor("restore ecology after URL qualification",async()=>{
+    return evaluate('window.__combatLabRuntime.activeExperimentId==="active-spatial-ecology-v0"');
+  });
+
   const finalState=await evaluate("window.__combatLabRuntime");
   if(finalState.error) throw new Error(`runtime error captured: ${finalState.error}`);
 
