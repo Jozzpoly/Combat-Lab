@@ -136,6 +136,16 @@ test("durable records cannot masquerade as live execution authority",()=>{
   assert.match(ownerRecording,/845 residents/);
   assert.match(ownerRecording,/42\.9M pair checks\/s/);
   assert.match(ownerRecording,/evidence extraction only/i);
+
+  const implicitRequirements=read("docs/COMBAT_LAB_FIRST_REHEARSAL_IMPLICIT_REQUIREMENTS_2026-09-26.md");
+  assert.match(implicitRequirements,/manipulation must be high-bandwidth/i);
+  assert.match(implicitRequirements,/experimental intervention ledger/i);
+  assert.match(implicitRequirements,/query-driven, not globally maximal/i);
+  assert.match(implicitRequirements,/parameter-only A\/B/i);
+  assert.match(implicitRequirements,/Current Workbench state model is structurally flat/i);
+  assert.match(implicitRequirements,/competence floor, not maximum intelligence/i);
+  assert.match(implicitRequirements,/preserve material spatial consequence/i);
+  assert.match(implicitRequirements,/feedback\/evidence extraction/i);
 });
 
 test("canonical docs distinguish cleanup topology from the one active experiment lane",()=>{
