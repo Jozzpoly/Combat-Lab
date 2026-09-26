@@ -24,6 +24,7 @@ For live sequencing, **`docs/RESEARCH_STATE.md` wins**. A durable design/evidenc
 - `EXPERIMENT_PROTOCOL.md` — current research / deployment / continuation protocol.
 - `REPOSITORY_CLOSURE_AUDIT_2026-09-26.md` — verified repository/public handoff and cleanup evidence.
 - `FRONTIER_REASSESSMENT_2026-09-26.md` — active top-down frontier synthesis; provisional lead only, no specimen authority yet.
+- `ACTIVE_EMBODIED_SPATIAL_ECOLOGY_HYPOTHESIS_2026-09-26.md` — candidate hypothesis/apparatus contract with permissive sparse→horde population pressure; not implementation authority yet.
 
 ## Historical campaign / donor records
 
