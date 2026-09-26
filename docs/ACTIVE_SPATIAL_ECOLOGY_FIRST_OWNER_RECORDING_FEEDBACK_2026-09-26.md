@@ -1599,6 +1599,70 @@ The final sustained time dilation demonstrates that steady-state overload eventu
 
 But those are different failure modes and should be diagnosable separately.
 
+## 56. Live phenotype editing creates deliberate non-physical intervention transients
+
+The Owner's live-edit workflow is valuable and should be preserved.
+
+But current edits are instantaneous apparatus interventions.
+
+`applyPhenotype()` changes:
+
+- radius/envelope;
+- body mass;
+- carried load;
+- total collision mass;
+- acceleration/braking;
+
+while leaving current:
+
+- vx;
+- vy;
+- world history
+
+unchanged.
+
+Therefore changing mass while moving instantaneously changes physical momentum `m × v` without a world process that supplied that momentum.
+
+Changing envelope can also produce immediate geometric overlap and trigger player world-resolution correction.
+
+These are acceptable **Lab interventions**.
+
+They are not natural Feniks transformation semantics.
+
+Evidence immediately after a live mutation must be interpreted accordingly.
+
+## 57. Parameter A/B can introduce intervention artifacts even before world-state mismatch is considered
+
+Applying A/B parameter state changes phenotype values in-place while retaining:
+
+- current velocity;
+- current position except any envelope world correction;
+- crowd configuration;
+- resident velocities;
+- contact network.
+
+Thus a comparison can differ not only because the start world is unmatched.
+
+It may also contain instantaneous discontinuities such as:
+
+- mass changed at constant velocity;
+- radius changed inside an existing spatial relation;
+- acceleration/braking law changed mid-motion.
+
+This reinforces that current parameter slots are exploratory convenience, not a controlled dynamic-world comparison instrument.
+
+## 58. Live intervention should be visible as intervention in future causal evidence
+
+The correct lesson is not to require Reset after every edit.
+
+That would damage the proven Owner workflow.
+
+The requirement is:
+
+> **when live edits create discontinuous world-law/state changes, later analysis should be able to distinguish the intervention from endogenous simulation evolution.**
+
+An intervention ledger is therefore useful for physics/behavior attribution as well as UI provenance.
+
 ## Working invariant
 
 > **The first public Ecology rehearsal succeeded as an experiment mainly because it exposed why the current laboratory and organism are not yet good enough to answer the question cleanly.**
