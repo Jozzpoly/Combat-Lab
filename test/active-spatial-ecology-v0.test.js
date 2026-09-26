@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   ACTIVE_ECOLOGY_BASELINE_COUNT,
+  ACTIVE_ECOLOGY_OBSTACLES,
   activeSpatialEcologyV0,
   clearEcologyExtras,
   clearEcologyResidents,
@@ -122,10 +123,15 @@ test("force spawn ignores dynamic-body clearance but preserves requested phenoty
   assert.equal(forced.length,result.spawned);
   assert.ok(forced.every(r=>r.envelope===1.25 && r.bodyMass===9 && r.loadMass===3 && r.forceMultiplier===6));
 
-  // Deliberate overlap may exist, but no forced spawn may begin inside static geometry or outside the world.
+  // Deliberate body-body overlap may exist, but static geometry remains respected.
   for(const body of forced){
     assert.ok(body.x-body.r>=0 && body.x+body.r<=3000);
     assert.ok(body.y-body.r>=0 && body.y+body.r<=1800);
+    for(const rect of ACTIVE_ECOLOGY_OBSTACLES){
+      const nx=Math.max(rect.x,Math.min(body.x,rect.x+rect.w));
+      const ny=Math.max(rect.y,Math.min(body.y,rect.y+rect.h));
+      assert.ok(Math.hypot(body.x-nx,body.y-ny)>=body.r);
+    }
   }
 
   for(let i=0;i<180;i++) stepActiveEcology(state,idle,1/120);
