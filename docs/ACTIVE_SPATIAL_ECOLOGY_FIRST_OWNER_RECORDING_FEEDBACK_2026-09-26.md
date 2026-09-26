@@ -1774,6 +1774,42 @@ But the same region combines:
 
 This is another reason current local crowd structure may reflect harness geometry more than endogenous ecology.
 
+## 62. Fallback spawn zones overlap traffic destinations
+
+The five fallback spawn zones each contain one of the 12 movement goals:
+
+- zone 0 contains goal 0;
+- zone 1 contains **goal 10**;
+- zone 2 contains goal 3;
+- zone 3 contains goal 7;
+- zone 4 contains goal 6.
+
+Goal 10 is the same hidden route hub that appears in every ordinary serial route cycle.
+
+Therefore, once near-player placement becomes saturated enough to use fallback zones, spawn placement and movement stimulus are not independent:
+
+> new residents may be injected directly into regions that are also traffic destinations.
+
+The recording does not expose how often fallback placement was used, so no quantitative share of the observed megajam is assigned to this mechanism.
+
+The structural confound is nevertheless real.
+
+## 63. The ecology harness contains several compounding convergence mechanisms
+
+The first recording should now be interpreted against a stack of apparatus pressures:
+
+- repeated near-player spawning increases local density around the observer;
+- fallback zones overlap several movement goals;
+- every ordinary route class eventually visits goal 10;
+- one twelfth of ordinary serial classes target goal 10 forever;
+- dynamic bodies are ignored by steering;
+- blocked actors do not replan;
+- sequential hard-contact correction preserves dense packing.
+
+No single one of these is proven to explain the entire visible jam morphology.
+
+Together they make it unsafe to call the late packed structures endogenous crowd ecology.
+
 ## Working invariant
 
 > **The first public Ecology rehearsal succeeded as an experiment mainly because it exposed why the current laboratory and organism are not yet good enough to answer the question cleanly.**
