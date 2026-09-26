@@ -8,7 +8,7 @@ It is not the Feniks combat implementation, and it is not a sword project. The r
 
 **Canonical live branch:** `main` after repository canonicalization.
 
-**Current stage:** Workbench + Load / Envelope B0 is **closed** after direct Owner play and recording analysis; a top-down frontier reassessment is active before the next specimen.
+**Current stage:** Workbench + Load / Envelope B0 is **closed**; Active Embodied Spatial Ecology / Multi-Body Pressure is selected for one reversible implementation lane after top-down reassessment.
 
 Current qualified statements:
 
@@ -18,7 +18,7 @@ Current qualified statements:
 - The current B0 formulas, units and circular body representation are **not** accepted Feniks semantics.
 - A/B parameter slots are mechanically qualified, but their human usefulness remains **UNPROVEN**.
 - There is **no accepted Feniks combat model, hit-authority model, aim/target model or commitment scheme**.
-- There is **no selected next research specimen**; current work is testing whether active multi-body spatial pressure is the strongest next frontier.
+- **Active Embodied Spatial Ecology / Multi-Body Pressure** is the selected next discovery specimen, with permissive sparse→horde population escalation and no combat semantics yet.
 
 Latest Owner-confirmed direction: the project is broader than hitting or melee. Body/world relations matter. Independent embodiment dimensions should remain available, while future Workbench research may add optional explicit correlations for fast coherent phenotype scaling. Larger terrain/obstacle spaces and more varied opponents/residents are desired future pressure, with population deliberately scalable from a readable baseline into crowd/horde/break regimes rather than hidden behind low protective limits. A later donor review of Feniks, ReflexBrain, Companion and SPC should recover proven movement/pathfinding/spatial capabilities without importing those projects' architecture as Combat Lab authority.
 
