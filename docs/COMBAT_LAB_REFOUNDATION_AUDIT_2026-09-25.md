@@ -1,5 +1,8 @@
 # Combat Lab Refoundation Audit — 2026-09-25
 
+> **HISTORICAL RECORD — NOT CURRENT AUTHORITY.**
+> This file preserves the research state at its date. Any `active`, `current` or `next` wording below is historical. Current truth lives in `README.md` and `docs/RESEARCH_STATE.md`.
+
 **Status:** historical strategic audit; refoundation executed and superseded by current canonical state  
 **Scope:** Combat Lab as a research instrument  
 **Owner trigger:** explicit correction that Combat Lab is broader than hitting or swords; body size and many other combat families matter; a clean restart may be needed  
