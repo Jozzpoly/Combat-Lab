@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-26  
 **Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
 **Canonical branch:** `main` after repository canonicalization  
-**Stage:** **Workbench + B0 CLOSED; Active Embodied Spatial Ecology v0 INTERNALLY QUALIFIED FOR DELIBERATE PUBLIC REHEARSAL — OWNER VALUE UNPROVEN**
+**Stage:** **Workbench + B0 CLOSED; Active Embodied Spatial Ecology v0 PUBLIC REHEARSAL LIVE / TRANSLATION PASS — OWNER VALUE UNPROVEN**
 
 ## 1. Owner intent
 
@@ -191,56 +191,73 @@ Other repository truth remains:
 
 ## 7. Current objective / next move
 
-Active Embodied Spatial Ecology v0 has crossed the **internal apparatus/mechanism gate**.
+Active Embodied Spatial Ecology v0 has crossed both:
 
-Exact evidence record:
+- the **internal apparatus/mechanism gate**; and
+- the **public translation/provenance gate**.
+
+Exact evidence records:
 
 - [Active Spatial Ecology Internal Qualification](ACTIVE_SPATIAL_ECOLOGY_INTERNAL_QUALIFICATION_2026-09-26.md)
+- exact internal runtime checkpoint: `d55b3b093325452e6dc730f314c886a2cbc85229`;
+- exact public rehearsal candidate: `ce96587826746efad426347a8a394048810e4ee2`.
 
-Narrow internal evidence:
+### Public rehearsal deployment — PASS
+
+Deployment control:
+
+- `rehearsal/current` points exactly to `ce96587826746efad426347a8a394048810e4ee2`;
+- candidate rehearsal check run `36239476177` — **SUCCESS**;
+- Pages run `36239513452` — emitted-artifact build qualification **SUCCESS**, deploy **SUCCESS**;
+- workflow log proves checkout source `ce96587826746efad426347a8a394048810e4ee2` and label `rehearsal/current`.
+
+External public-origin verification:
+
+- `COMMIT.txt` = `ce96587826746efad426347a8a394048810e4ee2`;
+- `BRANCH.txt` = `rehearsal/current`;
+- direct URL `?experiment=active-spatial-ecology-v0` renders **Active Embodied Spatial Ecology v0**;
+- ordinary public root still renders **Load / Envelope Field B0** by default.
+
+This means the ecology specimen is publicly reachable without changing the ordinary root's default experiment.
+
+### Current machine-qualified evidence
 
 - original internal runtime qualification: **51 / 51 automated tests PASS**;
-- current public-rehearsal candidate: **52 / 52 automated tests PASS**;
-- real Chromium Workbench gate PASS, including direct deep-link and explicit `Force +10` break-mode;
+- final rehearsal candidate: **52 / 52 automated tests PASS**;
+- real Chromium Workbench gate PASS;
+- emitted Pages artifact browser gate PASS;
 - mixed spawn waves preserve independently authored phenotypes;
 - browser rehearsal reached **56 active residents with 0 spawn failures** and sampled ~**626 body contacts/s**;
 - a separate mechanistic probe exceeded **100 active residents** while remaining finite;
 - impossible giant-horde requests report legal-placement saturation rather than silently mutating the requested phenotype;
 - zero → baseline → dense/horde population states are directly controllable;
-- explicit `Force +10` can ignore dynamic-body spawn clearance while still respecting static world legality, enabling deliberate overpacking/break-pressure;
+- explicit `Force +10` can ignore dynamic-body spawn clearance while still respecting static world legality;
 - forced main-thread stall surfaces `SIM STRESS` and dropped wall time rather than silently presenting slowdown as body behavior;
-- visual red-team caught and repaired a first spawn-placement apparatus failure before promotion.
+- visual red-team caught and repaired the initial off-camera spawn-pressure failure.
 
-These claims qualify only apparatus/mechanistic facts.
+These claims qualify only apparatus/mechanistic/deployment facts.
 
 Still **UNPROVEN until Owner play**:
 
-- whether the bodies feel meaningfully different under pressure;
-- whether population pressure changes Owner decisions;
-- whether crowd/horde regimes reveal useful emergence rather than noise;
-- whether pushing/yielding is readable or enjoyable;
-- whether the simple resident intent is adequate;
+- whether embodied differences remain decision-relevant under active spatial pressure;
+- whether sparse / crowd / horde regimes produce qualitatively different useful behavior;
+- whether pushing/yielding is readable, interesting or enjoyable;
+- whether the current resident intent is adequate or dominates the phenomenon;
+- whether `Force +10` reveals useful break-pressure or merely solver pathology;
+- whether linked phenotype scaling is actually needed in practice;
 - whether any of this belongs in Feniks;
 - whether current collision, movement, camera or navigation laws deserve promotion.
 
 Current next move:
 
-> **deploy exact candidate `ce96587826746efad426347a8a394048810e4ee2`, verify public provenance/runtime translation, then obtain early raw Owner observation through the direct ecology rehearsal URL.**
+> **early raw Owner observation on the already-live public ecology rehearsal.**
 
-Expected rehearsal URL after deployment:
+Direct rehearsal URL:
 
 - `https://jozzpoly.github.io/Combat-Lab/?experiment=active-spatial-ecology-v0`
 
-Expected ordinary root behavior:
+Do not add stance, equipment, weapons, crowd algorithms, navigation sophistication or further tuning before Owner evidence unless a concrete public-runtime defect appears.
 
-- `https://jozzpoly.github.io/Combat-Lab/` still opens B0 by default even while the rehearsal build is deployed.
-
-Rollback target if the rehearsal is rejected or materially broken:
-
-- exact prior public closure release `6bd4b4492261b9fe3b8edbca276cf9b7de3d822d`.
-
-Do not add stance, equipment, weapons, crowd algorithms, pathfinding sophistication or further tuning merely because CI is green.
-
-If public translation exposes a technical defect, repair only that defect and repeat the public gate. If public translation is faithful, the next authority is Owner behavior.
+Rollback source remains the canonical B0-equivalent runtime on `main`; moving `rehearsal/current` back to canonical `main` re-runs normal CI and restores the ordinary public specimen through the same exact-source deployment path.
 
 Optional linked scaling remains an enabling Workbench candidate; current multi-phenotype authoring is now the first real context in which its friction can be observed rather than assumed.
