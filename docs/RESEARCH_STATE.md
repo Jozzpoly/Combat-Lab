@@ -198,6 +198,7 @@ The first public Active Spatial Ecology Owner rehearsal is complete.
 Primary evidence record:
 
 - [First Ecology Owner recording deep feedback](ACTIVE_SPATIAL_ECOLOGY_FIRST_OWNER_RECORDING_FEEDBACK_2026-09-26.md)
+- [First rehearsal implicit requirements mining](COMBAT_LAB_FIRST_REHEARSAL_IMPLICIT_REQUIREMENTS_2026-09-26.md)
 
 Direct Owner truth:
 
@@ -236,7 +237,19 @@ Do not interpret the rehearsal as either a positive or negative verdict on embod
 
 ### Campaign boundary
 
-The current campaign remains **feedback extraction only**.
+The current campaign remains **feedback/evidence extraction only**.
+
+The requirements-mining pass has now also established solution-neutral pressures around:
+
+- high-bandwidth live intervention;
+- state/scoping/provenance;
+- cohort attribution;
+- query-driven scale-aware Debug;
+- dynamic-world comparison integrity;
+- intervention history;
+- explicit separation of intent / feasibility / immediate motion / physical contact;
+- preserving physicality without accidental traffic deadlock;
+- preserving exact extremes and permissive breakability while reducing apparatus attention cost.
 
 Do not patch or redesign the runtime yet.
 
