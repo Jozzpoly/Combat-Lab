@@ -12,8 +12,8 @@ test("canonical entrypoints contain one current project state",()=>{
   const state=read("docs/RESEARCH_STATE.md");
 
   assert.match(readme,/Canonical live branch/);
-  assert.match(readme,/Workbench foundation — QUALIFIED FOR CURRENT RESEARCH USE/);
-  assert.match(readme,/Active Embodied Spatial Ecology v0 is \*\*LIVE AS A PUBLIC REHEARSAL \/ TRANSLATION PASS — OWNER VALUE UNPROVEN\*\*/i);
+  assert.match(readme,/Workbench mechanical foundation — QUALIFIED; current Lab usability\/information architecture has MATERIAL OWNER FINDINGS/i);
+  assert.match(readme,/first Active Spatial Ecology Owner rehearsal is complete/i);
   assert.doesNotMatch(readme,/no selected next research specimen/i);
   assert.match(readme,/6bd4b4492261b9fe3b8edbca276cf9b7de3d822d/);
   assert.doesNotMatch(readme,/waits for new Owner instruction/i);
@@ -22,8 +22,8 @@ test("canonical entrypoints contain one current project state",()=>{
   assert.doesNotMatch(readme,/intentionally \*\*not deployed for Owner testing yet\*\*/i);
 
   assert.match(state,/Workbench \+ B0 CLOSED/);
-  assert.match(state,/Active Embodied Spatial Ecology v0 PUBLIC REHEARSAL LIVE \/ TRANSLATION PASS — OWNER VALUE UNPROVEN/i);
-  assert.match(state,/Active Embodied Spatial Ecology v0 has crossed both/i);
+  assert.match(state,/Active Spatial Ecology first Owner rehearsal COMPLETE/i);
+  assert.match(state,/TARGET HYPOTHESIS INCONCLUSIVE — APPARATUS LIMITATIONS BECAME THE DOMINANT FINDING/i);
   assert.match(state,/optional explicit linkage \/ correlated scaling/i);
   assert.match(state,/Feniks, ReflexBrain, Companion and SPC/);
   assert.doesNotMatch(state,/waiting for new Owner instruction/i);
@@ -128,6 +128,14 @@ test("durable records cannot masquerade as live execution authority",()=>{
   assert.match(spatialQualification,/public-rehearsal translation hardening/i);
   assert.match(spatialQualification,/Force \+10/);
   assert.match(spatialQualification,/52 \/ 52 PASS/);
+
+  const ownerRecording=read("docs/ACTIVE_SPATIAL_ECOLOGY_FIRST_OWNER_RECORDING_FEEDBACK_2026-09-26.md");
+  assert.match(ownerRecording,/Lab \*\*starts to fulfill its role\*\*/i);
+  assert.match(ownerRecording,/TARGET HYPOTHESIS INCONCLUSIVE — APPARATUS LIMITATIONS BECAME THE DOMINANT FINDING/i);
+  assert.match(ownerRecording,/only \*\*4 \/ 12\*\* produce a full 12-goal cycle/i);
+  assert.match(ownerRecording,/845 residents/);
+  assert.match(ownerRecording,/42\.9M pair checks\/s/);
+  assert.match(ownerRecording,/feedback extraction only/i);
 });
 
 test("canonical docs distinguish cleanup topology from the one active experiment lane",()=>{
