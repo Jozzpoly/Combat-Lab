@@ -1663,6 +1663,73 @@ The requirement is:
 
 An intervention ledger is therefore useful for physics/behavior attribution as well as UI provenance.
 
+## 59. Current jams occur without a tangential-friction model
+
+The body-body solver:
+
+- resolves positional overlap along the contact normal;
+- applies a normal impulse with restitution ~0.10 when bodies are closing;
+- does not apply an explicit tangential friction impulse.
+
+Tangential relative motion is not directly damped by a contact-friction law.
+
+Therefore the severe packed jams cannot be diagnosed simply as:
+
+> “friction is too high.”
+
+They arise despite the absence of that mechanism.
+
+The stronger causal candidates are:
+
+- hard non-overlap geometry;
+- persistent goal pressure;
+- no dynamic-body-aware replanning/yield;
+- sequential pair correction;
+- concentrated stimulus topology.
+
+Future contact research should not start by tuning a friction coefficient that does not currently explain the dominant failure.
+
+## 60. Locomotor force currently conflates several movement qualities
+
+Player velocity is moved toward the desired velocity vector with a bounded delta.
+
+The same derived acceleration value is also used as braking.
+
+Therefore current mass/load/force jointly affect not only:
+
+- forward acceleration;
+
+but also:
+
+- stopping responsiveness;
+- reversal responsiveness;
+- turning/change-of-velocity responsiveness.
+
+Max speed remains separately fixed by role.
+
+So an observed effect of “locomotor force” in this specimen cannot be attributed to one narrow movement quality.
+
+The current control is a compact experimental authority axis, not a final motor model.
+
+## 61. Current Debug under-reports the locomotor law it is helping the Owner tune
+
+Player live state exposes:
+
+- Total mass;
+- Acceleration limit;
+- Current speed.
+
+But current law also makes the same acceleration limit govern:
+
+- braking;
+- direction-change response.
+
+Those effects are not equally legible in the Inspector.
+
+This reinforces the broader finding:
+
+> derived-state presentation should expose the causal consequences relevant to the current question, not merely a convenient subset of numbers.
+
 ## Working invariant
 
 > **The first public Ecology rehearsal succeeded as an experiment mainly because it exposed why the current laboratory and organism are not yet good enough to answer the question cleanly.**
