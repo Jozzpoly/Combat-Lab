@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-26  
 **Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
 **Canonical branch:** `main` after repository canonicalization  
-**Stage:** **Workbench + B0 CLOSED; Active Spatial Ecology first Owner rehearsal COMPLETE; feedback extraction ACTIVE; target hypothesis INCONCLUSIVE due material apparatus findings**
+**Stage:** **Workbench + B0 CLOSED; first Active Spatial Ecology Owner rehearsal + feedback/evidence campaign CLOSED; target hypothesis INCONCLUSIVE; refoundation campaign NOT YET STARTED**
 
 ## 1. Owner intent
 
@@ -193,80 +193,81 @@ Other repository truth remains:
 
 ## 7. Current objective / next move
 
-The first public Active Spatial Ecology Owner rehearsal is complete.
+The first public Active Spatial Ecology Owner rehearsal and the dedicated feedback/evidence-extraction campaign are now **CLOSED**.
 
-Primary evidence record:
+Durable closure / transition record:
+
+- [Combat Lab handoff after first Ecology feedback campaign](COMBAT_LAB_HANDOFF_2026-09-26_ECOLOGY_FEEDBACK_CLOSURE.md)
+
+Primary campaign evidence:
 
 - [First Ecology Owner recording deep feedback](ACTIVE_SPATIAL_ECOLOGY_FIRST_OWNER_RECORDING_FEEDBACK_2026-09-26.md)
 - [First rehearsal implicit requirements mining](COMBAT_LAB_FIRST_REHEARSAL_IMPLICIT_REQUIREMENTS_2026-09-26.md)
 
-Direct Owner truth:
-
-- camera interaction is inadequate; mouse-wheel zoom and a wider/easier usable range are required;
-- bodies block one another too strongly and produce too many stupid jams;
-- organisms are too simple;
-- Debug is not ambitious enough;
-- the Lab's current information architecture/naming/orientation are poor and unpleasant to use;
-- repeated `Spawn +50` presses were needed to reach obvious lag;
-- substantial parts of the Lab now need fundamental / architectural redesign and professional hardening;
-- despite those failures, the Lab **is beginning to fulfill its intended role**.
-
-Recording-derived findings:
-
-- the stress horde was mostly homogeneous default residents while the Owner aggressively modified the player;
-- resident steering is unaware of dynamic bodies and has no stuck/replan semantics;
-- only 12 global goals drive the whole population;
-- deterministic ID-based goal stepping creates short route cycles, including a 1-goal cycle for 1/12 of actor-ID residues;
-- local jam morphology appears well before the final horde and resembles driven granular packing;
-- Debug's global goal-line overlay rapidly becomes unreadable and does not display the actual local steering choice;
-- the current global occupied-area metric hides severe local congestion;
-- current body/static contact counters measure repeated resolver work, not unique behavioral contact events;
-- the O(N²) pair phase reaches ~357,435 pair checks per fixed step at 845 residents + player (~42.9M/s at 120 Hz);
-- first visible stress appears only after repeated escalation into the hundreds, with Debug OFF at onset;
-- current vertical Inspector is already difficult to navigate with only nine numeric controls plus actions/A-B/telemetry;
-- spawn-template labels leak flat machine scope into every human label;
-- spawned-cohort provenance is effectively invisible after creation;
-- A/B is now Owner-used, but its summary/scope are too opaque for trustworthy comparison;
-- optional linked phenotype scaling gains real authoring-friction evidence, but must remain visible/reversible rather than becoming a hidden law.
-
-Research classification:
+Canonical classification remains:
 
 > **TARGET HYPOTHESIS INCONCLUSIVE — APPARATUS LIMITATIONS BECAME THE DOMINANT FINDING.**
 
-Do not interpret the rehearsal as either a positive or negative verdict on embodied multi-actor spatial ecology itself.
+Owner/product truth after the rehearsal:
 
-### Campaign boundary
+- Combat Lab as a permissive self-directed research environment has a **positive Owner signal**;
+- current Lab UX / information architecture has **material FAIL-level findings**;
+- current resident sophistication and ordinary crowd/contact behavior are **not adequate for promotion**;
+- current Debug/observability is **not adequate for crowd-scale explanation**;
+- current performance result is a whole-runtime/harness result, not a clean actor-capacity claim;
+- the current Ecology specimen remains an evidence source, not a foundation to polish into permanence.
 
-The current campaign remains **feedback/evidence extraction only**.
+Key campaign-1 findings now preserved include:
 
-The requirements-mining pass has now also established solution-neutral pressures around:
+- live intervention, exact numeric entry and broad/extreme ranges are durable Owner workflow;
+- independent envelope / inertial burden / locomotor authority remain valuable raw research axes;
+- optional linkage may be useful only as explicit/reversible convenience;
+- current single vertical schema-form has crossed its scalability boundary;
+- current flat editable-ID state model is insufficient for scoped comparison/provenance;
+- exact final Owner comparison action was **Capture B → Apply A** inside the live 845-resident world, directly exposing comparison-scope/matched-state problems;
+- resident movement lacks dynamic-body awareness, stuck-state memory and replanning;
+- current route/stimulus harness contains strong hidden convergence biases, including a universal goal-10 hub;
+- near-player spawning and fallback zones can author local pressure;
+- current one-pass sequential body solver plus persistent intent produces stable packed states;
+- current performance knee includes O(N²) pair work, synchronous spawn placement, rendering and high-frequency evidence snapshots;
+- observation/evidence machinery itself can materially contribute to runtime cost;
+- first campaign found enough independent failure classes that further recording mining now has diminishing return relative to a new refoundation/research campaign.
 
-- high-bandwidth live intervention;
-- state/scoping/provenance;
-- cohort attribution;
-- query-driven scale-aware Debug;
-- dynamic-world comparison integrity;
-- intervention history;
-- explicit separation of intent / feasibility / immediate motion / physical contact;
-- preserving physicality without accidental traffic deadlock;
-- preserving exact extremes and permissive breakability while reducing apparatus attention cost.
+### Transition boundary
 
-Do not patch or redesign the runtime yet.
+Do **not** patch or redesign the runtime in the closed campaign.
 
-The next campaign, only after this evidence pass is deliberately closed, should challenge from first principles:
+The next conversation should begin a separate, critical refoundation/research campaign.
 
-- shared Lab / Workbench architecture;
-- organism / locomotion / navigation substrate;
-- body-contact semantics;
-- observability / Debug architecture;
-- scaling infrastructure and donor opportunities.
+It should first:
 
-Do not jump directly to stance, equipment, weapons, combat AI, production pathfinding or crowd algorithms.
+1. recover fresh live repo truth;
+2. read the closure handoff and campaign evidence records;
+3. challenge shared Lab / Workbench architecture from first principles;
+4. separate shared Lab needs from Ecology-specific organism/contact/navigation debt;
+5. recover targeted Feniks / ReflexBrain / Companion / SPC donor evidence only when concrete dependencies justify it;
+6. formulate a bounded refoundation/research strategy before implementation.
+
+Do not jump directly to:
+
+- weapons;
+- stance;
+- damage/combat AI;
+- ORCA/RVO;
+- Rapier;
+- production pathfinding;
+- old-solver optimization;
+- superficial Inspector/CSS polish.
 
 Public/repository provenance remains:
 
-- public candidate: `ce96587826746efad426347a8a394048810e4ee2`;
+- public Ecology evidence candidate: `ce96587826746efad426347a8a394048810e4ee2`;
 - public control ref: `rehearsal/current`;
+- active historical experiment lane: `experiment/active-spatial-ecology`;
 - canonical truth: `main`.
 
-The current public specimen may remain available as the exact evidence source while analysis continues.
+The public specimen should remain available as the exact evidence source until a later deliberate deployment changes it.
+
+### Transition invariant
+
+> **Preserve the experimental freedom that finally made Combat Lab useful, but refound the apparatus and organism from evidence rather than polishing the current specimen into a false foundation.**
