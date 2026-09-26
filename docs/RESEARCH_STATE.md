@@ -35,6 +35,7 @@ These are **Owner intent / future capability candidates**, not qualified mechani
 - later explore **optional explicit linkage / correlated scaling** so one authored change (for example body size) can deliberately drive selected mass, speed, force or other dimensions up/down together when the Owner wants a coherent phenotype quickly;
 - such linkage must remain visible, reversible and authorable rather than becoming a hidden universal law that destroys independent experimentation;
 - expand future test pressure toward a **larger and more varied world** with more terrain, obstacles and multiple varied opponents / residents, especially for displacement, pushing, being pushed, clearance and spatial-relation experiments;
+- population pressure must remain **permissively scalable**: a small deterministic baseline may improve readability, but the Owner must be able to spawn more bodies directly (for example +1 / +5 / +10 repeatedly) and intentionally drive the experiment into crowd, horde and break regimes;
 - after the current cleanup/preparation campaign, perform a deliberate donor review of **Feniks, ReflexBrain, Companion and SPC** for already-developed movement, pathfinding, spatial-relation and related infrastructure before reinventing those capabilities;
 - cross-project donor code or architecture is never local authority by default: recover the exact useful property/evidence, transplant the minimum when a Combat Lab question actually needs it, and re-qualify it locally.
 
@@ -176,13 +177,17 @@ There is still no selected R4, weapon family or body-system continuation.
 
 Current highest-value uncertainty:
 
-> **Do embodied differences remain decision-relevant when the world becomes richer and several bodies create active spatial pressure, or do they collapse into an interesting parameter sandbox / authored fit-not-fit puzzle?**
+> **Do embodied differences remain decision-relevant when the world becomes richer and active body pressure scales from sparse encounters through crowd/horde regimes, or do they collapse into an interesting parameter sandbox, authored fit-not-fit puzzle or technical solver failure?**
 
 Current provisional lead:
 
 > **ACTIVE EMBODIED SPATIAL ECOLOGY / MULTI-BODY PRESSURE**
 
-This is a research lead, **not yet implementation authority**.
+Candidate hypothesis/apparatus contract:
+
+- [Active Embodied Spatial Ecology Hypothesis Card](ACTIVE_EMBODIED_SPATIAL_ECOLOGY_HYPOTHESIS_2026-09-26.md)
+
+This is a research lead and hypothesis card, **not yet implementation authority**.
 
 Before opening a specimen:
 
