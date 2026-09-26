@@ -348,7 +348,9 @@ try{
         !!document.querySelector('[data-param-id="spawnEnvelope"]') &&
         !!document.querySelector('[data-action-id="spawn1"]') &&
         !!document.querySelector('[data-action-id="spawn5"]') &&
-        !!document.querySelector('[data-action-id="spawn10"]');
+        !!document.querySelector('[data-action-id="spawn10"]') &&
+        !!document.querySelector('[data-action-id="spawn50"]') &&
+        !!document.querySelector('[data-action-id="clearAll"]');
     })()`);
   });
 
@@ -419,17 +421,22 @@ try{
 
   await captureScreenshot();
 
-  // Clear is not Reset: it removes extras while authored player/spawn/view state remains.
+  // Clear extras preserves baseline; Clear all proves population zero is also a legal research state.
   await evaluate('document.querySelector(\'[data-action-id="clearExtras"]\').click()');
   await waitFor("clear extras returns baseline",async()=>{
     return evaluate("window.__combatLabRuntime.snapshot.residents.length===6");
   });
+  await evaluate('document.querySelector(\'[data-action-id="clearAll"]\').click()');
+  await waitFor("clear all reaches zero residents",async()=>{
+    return evaluate("window.__combatLabRuntime.snapshot.residents.length===0");
+  });
+  await evaluate('document.querySelector("#reset-world").click()');
+  await waitFor("reset restores deterministic ecology baseline",async()=>{
+    return evaluate("window.__combatLabRuntime.snapshot.residents.length===6");
+  });
 
-  // Destructive pressure: repeatedly ask for +10; no low protective cap.
-  for(let i=0;i<5;i++){
-    await evaluate('document.querySelector(\'[data-action-id="spawn10"]\').click()');
-    await sleep(50);
-  }
+  // Destructive pressure: one +50 action must reach a broad crowd regime without a low protective cap.
+  await evaluate('document.querySelector(\'[data-action-id="spawn50"]\').click()');
   await waitFor("broad ecology population pressure",async()=>{
     return evaluate("window.__combatLabRuntime.snapshot.residents.length>=46");
   },{timeout:7000});
