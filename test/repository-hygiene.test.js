@@ -70,13 +70,16 @@ test("all live markdown links resolve inside the repository",()=>{
 test("Pages deployment has one canonical workflow contract",()=>{
   assert.ok(exists(".github/workflows/pages.yml"));
   const pages=read(".github/workflows/pages.yml");
-  assert.match(pages,/branches:\s*\n\s*- main/);
+  assert.match(pages,/branches:\s*\n\s*- main\s*\n\s*- rehearsal\/current/);
   assert.doesNotMatch(pages,/refoundation\/combat-lab-vnext/);
   assert.match(pages,/contains\(github\.event\.workflow_run\.head_commit\.message, '\[deploy\]'\)/);
+  assert.match(pages,/github\.event\.workflow_run\.head_branch == 'rehearsal\/current'/);
 
   const protocol=read("docs/EXPERIMENT_PROTOCOL.md");
   assert.match(protocol,/automatic deployment from a successful checked `main` commit/i);
-  assert.match(protocol,/no whitelisted active experiment branch auto-deploy path/i);
+  assert.match(protocol,/rehearsal control plane/i);
+  assert.match(protocol,/`rehearsal\/current` is infrastructure, not research authority/i);
+  assert.match(protocol,/no whitelisted active `experiment\/\*` auto-deploy path/i);
   assert.doesNotMatch(protocol,/currently whitelisted active experiment branch/i);
 
   assert.equal(exists(".github/workflows/pages-r0.yml"),false,"legacy pages-r0 workflow must stay removed");
@@ -127,10 +130,13 @@ test("canonical docs distinguish cleanup topology from the one active experiment
 
   assert.match(readme,/experiment\/active-spatial-ecology/);
   assert.match(readme,/single temporary active experiment lane/i);
+  assert.match(readme,/rehearsal\/current/);
   assert.doesNotMatch(readme,/repository currently has \*\*one branch ref/i);
 
-  assert.match(state,/exactly two branch refs/i);
+  assert.match(state,/Current \*\*research topology\*\*/i);
   assert.match(state,/experiment\/active-spatial-ecology/);
+  assert.match(state,/rehearsal\/current/);
+  assert.match(state,/never an authoring lane and never research authority/i);
   assert.match(state,/public runtime remains the B0 closure release/);
   assert.match(state,/ce96587826746efad426347a8a394048810e4ee2/);
   assert.match(state,/direct ecology rehearsal URL/i);
