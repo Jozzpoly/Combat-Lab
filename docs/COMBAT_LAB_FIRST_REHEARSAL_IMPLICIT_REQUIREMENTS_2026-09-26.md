@@ -2657,6 +2657,66 @@ Current independent classes now include:
 
 This is enough breadth to support a later dedicated refoundation/research campaign without immediately implementing from the first visible complaint.
 
+## 114. Qualification needs an operating envelope, not only PASS/FAIL
+
+**Status:** CROSS-RECORDING RESEARCH REQUIREMENT
+
+S0 demonstrates that very simple actors/physics can be adequate for a narrow dyadic question.
+
+Ecology demonstrates that the same class of simplification can become the dominant artifact at larger cardinality.
+
+Likewise:
+
+- Debug works at small scale and fails at crowd scale;
+- brute-force pairs are fine at small scale and dominate at horde scale.
+
+Therefore future evidence should qualify **regimes**, not merely mechanisms.
+
+A useful claim may look conceptually like:
+
+> qualified for sparse/dyadic observation; unqualified but breakable beyond that regime.
+
+This preserves permissiveness without overstating evidence.
+
+## 115. “Pressure” is multidimensional
+
+**Status:** STRONG DERIVED REQUIREMENT
+
+The first Ecology recording varies population count heavily.
+
+But future validity/performance depends jointly on:
+
+- actor count;
+- local density;
+- body envelope distribution;
+- terrain complexity;
+- phenotype heterogeneity;
+- resident competence/cognition;
+- contact-law cost;
+- active diagnostics.
+
+Therefore no single number such as “supports 845 actors” is a meaningful long-term capability claim.
+
+The Lab should make operating conditions/provenance clear enough that results are tied to the regime actually tested.
+
+## 116. Break beyond the qualified envelope should remain allowed
+
+**Status:** DIRECT OWNER CONTRACT + RESEARCH-INTEGRITY REQUIREMENT
+
+An operating envelope must not become a prohibition.
+
+The Owner should still be able to drive:
+
+- a sparse-qualified model into a horde;
+- a normal-size model into extreme geometry;
+- a real-time model into slow simulation.
+
+The Lab's responsibility is to report when evidence leaves a defended regime.
+
+This extends the existing soft-range vs safety-rail philosophy from numeric controls to **research validity**:
+
+> permissive execution, explicit evidence boundary.
+
 ## Working invariant
 
 > **A professional Combat Lab should make it cheap to ask a dangerous question of the world, cheap to see what happened, and hard to misunderstand why.**
