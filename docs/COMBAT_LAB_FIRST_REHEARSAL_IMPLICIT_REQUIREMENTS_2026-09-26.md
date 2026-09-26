@@ -2294,6 +2294,72 @@ This does not require identical player/NPC controllers.
 
 It requires attribution discipline.
 
+## 96. The Lab must support deliberate one-axis sweeps inside messy live state
+
+**Status:** STRONG OBSERVED REQUIREMENT
+
+The ~136–192 s phenotype sequence shows the Owner repeatedly changing one authored dimension while retaining the others.
+
+This is not a formal automated parameter sweep.
+
+It is exploratory manual causal probing.
+
+Future authoring must preserve the ability to:
+
+- hold several axes;
+- alter one quickly;
+- watch the world;
+- alter another;
+- continue from the same live state.
+
+Optional linked relationships should be easy to suspend/bypass during such probing.
+
+## 97. Derived-law visibility matters when authored labels are intuitive but effects are not
+
+**Status:** STRONG RESEARCH-INTEGRITY REQUIREMENT
+
+Terms such as:
+
+- mass;
+- load;
+- locomotor force
+
+sound semantically rich.
+
+The current implementation maps them through a specific temporary law:
+
+- total mass = body + load;
+- acceleration ∝ force / total mass;
+- top speed remains fixed for the role.
+
+Therefore “force 62” does not simply mean “moves 62× faster”.
+
+A professional Lab must make the current law's relevant consequences understandable enough that the Owner can distinguish:
+
+- the variable he authored;
+- the effect the current experimental law derives.
+
+This does not require exposing source code or equations everywhere.
+
+It requires causal legibility.
+
+## 98. Optional linkage must never destroy manual causal probing
+
+**Status:** OWNER REQUEST + RECORDING-CONFIRMED BOUNDARY
+
+Linked phenotype authoring may reduce repetitive setup.
+
+But the first Ecology recording shows a strong manual workflow that depends on uncoupling values.
+
+Any future linkage layer must therefore allow the Owner to:
+
+- see which relationships are active;
+- temporarily break/unlink them;
+- directly override one value;
+- know whether changing one axis propagated to others.
+
+A “coherent phenotype” convenience must never become an invisible constraint.
+
 ## Working invariant
 
 > **A professional Combat Lab should make it cheap to ask a dangerous question of the world, cheap to see what happened, and hard to misunderstand why.**
