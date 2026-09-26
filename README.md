@@ -8,7 +8,7 @@ It is not the Feniks combat implementation, and it is not a sword project. The r
 
 **Canonical live branch:** `main` after repository canonicalization.
 
-**Current stage:** Workbench + Load / Envelope B0 is **closed**; Active Embodied Spatial Ecology / Multi-Body Pressure is selected for one reversible implementation lane after top-down reassessment.
+**Current stage:** Workbench + Load / Envelope B0 is **closed**; Active Embodied Spatial Ecology v0 is **INTERNALLY QUALIFIED FOR DELIBERATE PUBLIC REHEARSAL — OWNER VALUE UNPROVEN** on one temporary experiment lane.
 
 Current qualified statements:
 
@@ -18,7 +18,7 @@ Current qualified statements:
 - The current B0 formulas, units and circular body representation are **not** accepted Feniks semantics.
 - A/B parameter slots are mechanically qualified, but their human usefulness remains **UNPROVEN**.
 - There is **no accepted Feniks combat model, hit-authority model, aim/target model or commitment scheme**.
-- **Active Embodied Spatial Ecology / Multi-Body Pressure** is the selected next discovery specimen, with permissive sparse→horde population escalation and no combat semantics yet.
+- **Active Embodied Spatial Ecology v0** is internally qualified as apparatus/mechanism evidence only; its decision relevance, crowd value, feel and Feniks fit remain **UNPROVEN pending Owner play**.
 
 Latest Owner-confirmed direction: the project is broader than hitting or melee. Body/world relations matter. Independent embodiment dimensions should remain available, while future Workbench research may add optional explicit correlations for fast coherent phenotype scaling. Larger terrain/obstacle spaces and more varied opponents/residents are desired future pressure, with population deliberately scalable from a readable baseline into crowd/horde/break regimes rather than hidden behind low protective limits. A later donor review of Feniks, ReflexBrain, Companion and SPC should recover proven movement/pathfinding/spatial capabilities without importing those projects' architecture as Combat Lab authority.
 
@@ -91,13 +91,14 @@ Start here:
 1. [Current research state](docs/RESEARCH_STATE.md)
 2. [Frontier reassessment](docs/FRONTIER_REASSESSMENT_2026-09-26.md)
 3. [Active spatial ecology hypothesis](docs/ACTIVE_EMBODIED_SPATIAL_ECOLOGY_HYPOTHESIS_2026-09-26.md)
-4. [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md)
-5. [Owner scope correction](docs/COMBAT_LAB_SCOPE_CORRECTION_2026-09-25.md)
-6. [Workbench design record](docs/COMBAT_LAB_WORKBENCH_REFOUNDATION_2026-09-25.md)
-7. [B0 Owner recording feedback](docs/B0_WORKBENCH_OWNER_RECORDING_FEEDBACK_2026-09-25.md)
-8. [B0 / Workbench stage closure](docs/B0_WORKBENCH_STAGE_CLOSURE_2026-09-25.md)
-9. [Repository closure audit](docs/REPOSITORY_CLOSURE_AUDIT_2026-09-26.md)
-10. [Historical evidence index](docs/HISTORY_INDEX.md)
+4. [Active spatial ecology internal qualification](docs/ACTIVE_SPATIAL_ECOLOGY_INTERNAL_QUALIFICATION_2026-09-26.md)
+5. [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md)
+6. [Owner scope correction](docs/COMBAT_LAB_SCOPE_CORRECTION_2026-09-25.md)
+7. [Workbench design record](docs/COMBAT_LAB_WORKBENCH_REFOUNDATION_2026-09-25.md)
+8. [B0 Owner recording feedback](docs/B0_WORKBENCH_OWNER_RECORDING_FEEDBACK_2026-09-25.md)
+9. [B0 / Workbench stage closure](docs/B0_WORKBENCH_STAGE_CLOSURE_2026-09-25.md)
+10. [Repository closure audit](docs/REPOSITORY_CLOSURE_AUDIT_2026-09-26.md)
+11. [Historical evidence index](docs/HISTORY_INDEX.md)
 
 The previous append-only canonical state is preserved verbatim as historical evidence at:
 
@@ -105,13 +106,20 @@ The previous append-only canonical state is preserved verbatim as historical evi
 
 ## Branch policy
 
-The repository currently has **one branch ref: `main`**.
+Current live refs:
 
-The six stale experiment/refoundation refs from the completed campaign were removed only after their heads were verified as ancestors of `main`. Unique historical lineages remain reachable through canonical Git ancestry.
+- `main` — canonical truth / governance;
+- `experiment/active-spatial-ecology` — the **single temporary active experiment lane**.
 
-Future experiment branches are temporary execution surfaces. Before deletion, any unique historical lineage that still matters must be made reachable from the canonical DAG and its evidence/status recorded in documentation.
+The cleanup campaign previously reduced the repository to `main` only after preserving historical ancestry. The current experiment branch was then opened deliberately from green canonical main `4b44a001be679cb987c8470ce208d3b503d698a9` after frontier selection.
 
-Do not keep stale branches merely as bookmarks.
+Current active-lane head:
+
+- `1a35280bae42902b3a70e5919b671954425f10ca`.
+
+Future experiment branches remain temporary execution surfaces. Before deletion, any unique historical lineage that still matters must be made reachable from the canonical DAG and its evidence/status recorded in documentation.
+
+Do not accumulate stale branches merely as bookmarks.
 
 ## Working invariant
 
