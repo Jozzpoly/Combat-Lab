@@ -3297,6 +3297,45 @@ rather than only applying a parameter vector.
 
 The exact mechanism remains open.
 
+## 141. Diagnose contact failures at the correct causal layer
+
+**Status:** STRONG RESEARCH-INTEGRITY REQUIREMENT
+
+The first Ecology jams occur without explicit tangential friction.
+
+Therefore a future refoundation should resist symptom-level explanations such as:
+
+- “lower friction”;
+- “reduce collision radius”;
+- “add random separation”.
+
+Contact, intent, navigation and solver behavior should be diagnosable separately enough to identify which layer actually produces a failure.
+
+## 142. One authored control may intentionally represent a bundled temporary law — but the bundle must be legible
+
+**Status:** STRONG CAUSAL-LEGIBILITY REQUIREMENT
+
+Current locomotor force is a useful experimental axis even though it bundles:
+
+- acceleration;
+- braking;
+- change-of-velocity/turn response.
+
+The Lab does not need to explode every temporary law into separate sliders immediately.
+
+It does need to make the current bundle understandable.
+
+Later research can decide whether:
+
+- acceleration;
+- braking;
+- turning authority;
+- traction;
+
+deserve independent axes.
+
+Do not prematurely multiply controls merely because one current control has several consequences.
+
 ## Working invariant
 
 > **A professional Combat Lab should make it cheap to ask a dangerous question of the world, cheap to see what happened, and hard to misunderstand why.**
