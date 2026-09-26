@@ -2717,6 +2717,113 @@ This extends the existing soft-range vs safety-rail philosophy from numeric cont
 
 > permissive execution, explicit evidence boundary.
 
+## 117. Interaction hierarchy should reflect frequency and consequence
+
+**Status:** STRONG PRODUCT REQUIREMENT
+
+Current Workbench presents many operations in one scroll hierarchy.
+
+Observed use has distinct classes:
+
+### High-frequency manipulation
+
+- current phenotype edits;
+- population changes;
+- camera.
+
+### Investigative observation
+
+- Debug;
+- live/derived state.
+
+### Comparison / evidence
+
+- Capture / Apply.
+
+### Recovery / destructive state operations
+
+- Reset World;
+- Restore Defaults;
+- Clear all;
+- Force pressure.
+
+These operations should not necessarily have equal placement/visual semantics.
+
+The future Lab should make common experimentation fast while keeping broad/destructive operations clear about their effect.
+
+This does not imply confirmation dialogs for everything.
+
+Excess friction would violate the same Owner workflow.
+
+## 118. Consequence should be legible without turning the Lab paternalistic
+
+**Status:** STRONG DESIGN BOUNDARY
+
+Operations such as:
+
+- Apply A/B;
+- Clear all;
+- Restore Defaults;
+- Force pressure;
+
+can alter large state domains.
+
+The Owner wants speed and breakability.
+
+Therefore professional safety should emphasize:
+
+- visible scope;
+- reversibility/history where practical;
+- truthful result;
+
+rather than blocking confirmation friction.
+
+Invariant:
+
+> **make destructive power understandable, not difficult to use.**
+
+## 119. Permanent instructional prose consumes operational space
+
+**Status:** CROSS-RECORDING PRODUCT FINDING
+
+B0 already identified description density as a problem and shortened copy.
+
+Ecology still contains repeated explanatory paragraphs such as:
+
+- what population pressure means;
+- what spawn phenotype means;
+- what player phenotype means;
+- what camera zoom means.
+
+Those explanations help discoverability once.
+
+They consume valuable vertical space during repeated operation.
+
+Future Lab should separate:
+
+- learn/discover help;
+- persistent operational state.
+
+Exact tooltips/help/disclosure design remains open.
+
+## 120. At-a-glance summaries should replace repeated navigation, not add another dashboard
+
+**Status:** STRONG PRODUCT REQUIREMENT
+
+The Owner needs rapid awareness of:
+
+- current target/scope;
+- important authored state;
+- population regime;
+- simulation health;
+- active diagnostics/comparison.
+
+A concise summary layer could reduce working-memory burden.
+
+But adding a second permanent dashboard beside the existing long Inspector would increase apparatus overhead.
+
+Future design should aim for **state compression**, not simply more simultaneous UI.
+
 ## Working invariant
 
 > **A professional Combat Lab should make it cheap to ask a dangerous question of the world, cheap to see what happened, and hard to misunderstand why.**
