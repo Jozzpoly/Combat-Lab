@@ -411,9 +411,141 @@ Trigger targeted donor recovery when one of these becomes materially blocking:
 - O(N²) collision or current solver quality prevents reaching a useful population regime;
 - a known donor can clearly replace new bespoke infrastructure with less semantic contamination.
 
-## 15. Candidate promotion boundary
+## 15. Final apparatus review
 
-This hypothesis card may become implementation authority only after one final design check confirms:
+The permissive-population correction exposed three additional seams that must be explicit before implementation.
+
+### 15.1 Spawned phenotype must be Owner-authored
+
+A population control that only spawns an agent-authored preset would still constrain discovery.
+
+The first specimen should therefore distinguish:
+
+- **player phenotype** — editable B0-like dimensions;
+- **spawn-template phenotype** — editable envelope / body mass / load / locomotor authority used by subsequent Spawn actions;
+- **existing residents** — retain the authored phenotype they were created with.
+
+Minimum loop:
+
+1. edit the spawn-template dimensions;
+2. click Spawn +1 / +5 / +10;
+3. edit the template again;
+4. spawn a different phenotype into the same live world.
+
+This allows:
+
+- homogeneous hordes;
+- mixed hordes;
+- correlated-looking populations;
+- deliberately absurd non-correlated populations;
+- “one giant among many tiny bodies” and the inverse.
+
+Do not force a predefined mix.
+
+A deterministic baseline may still contain several distinct residents for immediate legibility.
+
+### 15.2 Count alone is not pressure
+
+Entity count is useful but insufficient.
+
+A world containing 50 tiny bodies and one containing 50 huge bodies do not express the same spatial load.
+
+Optional diagnostics should therefore distinguish at least:
+
+- total active body count;
+- nominal occupied-body area / world-area ratio (diagnostic approximation, not physics authority);
+- recent body-body contact rate;
+- recent static-contact rate.
+
+Do not turn these into goals or optimization scores.
+
+They exist to help explain why a state changed regime.
+
+### 15.3 Fixed-step overload must be truthful
+
+The current shared `FixedStepRunner` intentionally clamps frame delta and accumulated simulation debt.
+
+That keeps the browser stable, but under heavy population load it can make simulation time advance more slowly than wall time.
+
+Without instrumentation, a technical slowdown could be mistaken for a crowd-behavior finding.
+
+The first horde-capable specimen therefore needs narrow neutral runtime diagnostics:
+
+- cumulative wall time discarded/clamped by fixed-step protection;
+- recent simulation-time / wall-time ratio or equivalent lag indicator;
+- number of simulation steps executed per rendered frame where useful.
+
+The implementation should preserve the existing safety behavior.
+
+It should **expose the loss of real-time fidelity**, not remove the guard and risk spiral-of-death behavior.
+
+A visible `SIM STRESS` diagnostic may appear when the runtime is no longer approximately real-time.
+
+It must not automatically despawn bodies or lower research parameters.
+
+### 15.4 Camera must not erase extremes
+
+A larger world needs an experiment-owned camera.
+
+Automatic zoom-to-fit based on actor size would be dangerous because it could visually normalize away the very scale differences under study.
+
+Preferred first contract:
+
+- camera follows player position;
+- default zoom is fixed;
+- manual zoom is allowed over a broad range;
+- changing body envelope does not silently change camera zoom;
+- world bounds constrain camera translation where useful.
+
+Camera zoom is apparatus state, not actor semantics.
+
+### 15.5 Spawn placement
+
+Ordinary spawn actions should attempt deterministic physically legal placement from one or more neutral entry regions.
+
+Do not silently:
+
+- delete existing residents;
+- shrink the spawned body;
+- change its mass/force;
+- move obstacles;
+- swap to a different phenotype.
+
+If ordinary legal placement fails because the world/entry region is saturated, report the failure truthfully.
+
+Do not treat that as a reason for a low global population cap.
+
+A later explicit overlap/break-spawn control may be added if legal-placement saturation itself blocks useful destructive testing, but it is not required before the first Owner specimen.
+
+## 16. Promotion decision
+
+After the final apparatus review, this hypothesis is sufficiently bounded to open an implementation lane.
+
+Promotion is narrow:
+
+> **READY FOR IMPLEMENTATION AS THE NEXT REVERSIBLE DISCOVERY SPECIMEN**
+
+This does not promote:
+
+- active spatial ecology to Feniks architecture;
+- the current B0 physics to production physics;
+- Companion navigation to Combat Lab authority;
+- any population size as canonical;
+- any crowd algorithm;
+- any combat mechanics.
+
+The implementation target is the smallest specimen that can expose:
+
+1. a larger continuous world;
+2. active resident movement;
+3. independently authored player and spawned resident phenotypes;
+4. permissive live population escalation;
+5. truthful runtime/pressure diagnostics;
+6. an early raw Owner observation.
+
+## 17. Candidate promotion boundary
+
+Final design review completed on 2026-09-26. The implementation lane may now open provided the implementation remains within the bounded contract above. It must preserve:
 
 - population escalation is permissive;
 - horde/break mode is supported rather than prohibited;
@@ -422,6 +554,6 @@ This hypothesis card may become implementation authority only after one final de
 - resident intent does not encode the answer;
 - the first implementation can stay small enough for early Owner play.
 
-## Working invariant
+## 18. Working invariant
 
 > **Give the Owner a clean baseline, then let him increase pressure until the phenomenon, the solver or the runtime breaks — and treat the location and nature of that break as evidence.**
