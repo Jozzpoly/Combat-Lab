@@ -13,13 +13,20 @@ test("canonical entrypoints contain one current project state",()=>{
 
   assert.match(readme,/Canonical live branch/);
   assert.match(readme,/Workbench foundation — QUALIFIED FOR CURRENT RESEARCH USE/);
-  assert.match(readme,/next research direction is deliberately \*\*OPEN\*\*/i);
+  assert.match(readme,/post-closure preparation \/ frontier-shaping campaign is active/i);
+  assert.match(readme,/no selected next research specimen/i);
+  assert.match(readme,/6bd4b4492261b9fe3b8edbca276cf9b7de3d822d/);
+  assert.doesNotMatch(readme,/waits for new Owner instruction/i);
   assert.doesNotMatch(readme,/Active refoundation branch:/);
   assert.doesNotMatch(readme,/The active research phase is/);
   assert.doesNotMatch(readme,/intentionally \*\*not deployed for Owner testing yet\*\*/i);
 
   assert.match(state,/Workbench \+ B0 CLOSED/);
-  assert.match(state,/NEXT RESEARCH DIRECTION — OPEN/);
+  assert.match(state,/post-closure preparation \/ frontier-shaping campaign ACTIVE/i);
+  assert.match(state,/NEXT RESEARCH DIRECTION — OPEN FOR DELIBERATE FRONTIER SELECTION/);
+  assert.match(state,/optional explicit linkage \/ correlated scaling/i);
+  assert.match(state,/Feniks, ReflexBrain, Companion and SPC/);
+  assert.doesNotMatch(state,/waiting for new Owner instruction/i);
   assert.doesNotMatch(state,/Active branch:/);
   assert.ok(state.length<20000,"canonical state must remain a compact live-truth document");
 });
@@ -30,13 +37,27 @@ test("append-only historical state is preserved outside canonical truth",()=>{
   assert.ok(exists("docs/HISTORY_INDEX.md"));
 });
 
-test("canonical markdown links resolve inside the repository",()=>{
-  for(const source of ["README.md","docs/RESEARCH_STATE.md","docs/HISTORY_INDEX.md"]){
+test("all live markdown links resolve inside the repository",()=>{
+  const markdown=["README.md"];
+  const walk=dir=>{
+    for(const entry of fs.readdirSync(path.join(root,dir),{withFileTypes:true})){
+      const rel=path.join(dir,entry.name);
+      if(entry.isDirectory()){
+        if(rel===path.join("docs","archive")) continue;
+        walk(rel);
+      }else if(entry.isFile() && entry.name.endsWith(".md")){
+        markdown.push(rel);
+      }
+    }
+  };
+  walk("docs");
+
+  for(const source of markdown){
     const text=read(source);
     const base=path.dirname(source);
     const links=[...text.matchAll(/\[[^\]]+\]\(([^)]+)\)/g)]
       .map(match=>match[1])
-      .filter(link=>!/^https?:/i.test(link) && !link.startsWith("#"));
+      .filter(link=>!/^https?:/i.test(link) && !/^mailto:/i.test(link) && !link.startsWith("#"));
 
     for(const link of links){
       const clean=link.split("#")[0];
@@ -59,6 +80,22 @@ test("Pages deployment has one canonical workflow contract",()=>{
   assert.doesNotMatch(protocol,/currently whitelisted active experiment branch/i);
 
   assert.equal(exists(".github/workflows/pages-r0.yml"),false,"legacy pages-r0 workflow must stay removed");
+});
+
+test("durable records cannot masquerade as live execution authority",()=>{
+  const substrate=read("docs/COMBAT_LAB_VNEXT_EXECUTION_SUBSTRATE.md");
+  const workbench=read("docs/COMBAT_LAB_WORKBENCH_REFOUNDATION_2026-09-25.md");
+  const history=read("docs/HISTORY_INDEX.md");
+  const protocol=read("docs/EXPERIMENT_PROTOCOL.md");
+  const closure=read("docs/REPOSITORY_CLOSURE_AUDIT_2026-09-26.md");
+
+  assert.match(substrate,/SUPERSEDED AS EXECUTION GUIDANCE/);
+  assert.doesNotMatch(substrate,/^The substrate is not deployed yet/m);
+  assert.match(workbench,/Historical immediate execution order — COMPLETED/);
+  assert.doesNotMatch(workbench,/\*\*Active implementation baseline:\*\*/);
+  assert.match(history,/For live sequencing, \*\*\`docs\/RESEARCH_STATE\.md\` wins\*\*/);
+  assert.match(protocol,/## 13\. Cross-project donor recovery/);
+  assert.match(closure,/## 8\. Final release gate — PASS/);
 });
 
 test("package identity no longer describes a temporary refoundation substrate",()=>{
