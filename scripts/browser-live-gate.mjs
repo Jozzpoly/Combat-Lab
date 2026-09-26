@@ -440,6 +440,9 @@ try{
   await waitFor("broad ecology population pressure",async()=>{
     return evaluate("window.__combatLabRuntime.snapshot.residents.length>=46");
   },{timeout:7000});
+  await waitFor("dense ecology produces actual moving body contact",async()=>{
+    return evaluate("window.__combatLabRuntime.snapshot.bodyContactsPerSecond>0");
+  },{timeout:5000});
   const pressure=await evaluate(`({
     count:window.__combatLabRuntime.snapshot.residents.length,
     failures:window.__combatLabRuntime.snapshot.spawnFailures,
@@ -449,6 +452,9 @@ try{
   })`);
   for(const value of [pressure.count,pressure.failures,pressure.occupied,pressure.bodyRate,pressure.staticRate]){
     if(!Number.isFinite(Number(value))) throw new Error(`non-finite ecology pressure diagnostic: ${JSON.stringify(pressure)}`);
+  }
+  if(!(pressure.bodyRate>0)){
+    throw new Error(`dense population did not produce body contact pressure: ${JSON.stringify(pressure)}`);
   }
   await captureScreenshot(extremeScreenshotPath);
 
