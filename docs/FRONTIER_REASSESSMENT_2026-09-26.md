@@ -283,7 +283,164 @@ Likely **not** required yet:
 - final NPC behavior;
 - final Feniks camera.
 
-## 8. Immediate research sequence
+## 8. First adversarial comparison — provisional lead survives
+
+The provisional lead was challenged against three materially different alternatives.
+
+| Frontier | What it would answer now | Main problem now |
+| --- | --- | --- |
+| Active embodied spatial ecology | whether B0/S0 embodiment changes Owner decisions under live world/body pressure | can collapse into a movement/crowd sandbox if pressure is weak or scripted |
+| Stance / posture | whether one actor can materially alter occupied-space/contact relation | likely adds another embodiment variable before we know where decision pressure actually needs it |
+| Equipment as body extension | whether shields/armour/tools materially alter spatial occupancy before damage | depends on having richer world/body relations for equipment to interact with; otherwise risks mechanism-demo isolation |
+| Bow / magic | whether a very different combat modality escapes melee history | introduces action/consequence semantics before the current positive body/world finding has proved decision relevance |
+
+Result:
+
+> **Active embodied spatial ecology remains the strongest immediate research lead.**
+
+This is not because it is the most important final Feniks system.
+
+It survives because it asks the narrowest high-value question created by the evidence we already have:
+
+> **does embodiment change behavior once other bodies and terrain push back?**
+
+### Why stance does not win yet
+
+Stance has strong Owner relevance and may become a major Feniks relation.
+
+But if we implement brace/squeeze/defensive posture now, we can easily produce a satisfying local mechanism without learning whether the existing envelope/inertia/locomotor distinctions matter in a broader living situation.
+
+A richer pressure field can instead reveal concrete failure cases such as:
+
+- “I need to narrow my profile here”;
+- “I want to brace because this flow displaces me”;
+- “I want to yield contact without losing the route.”
+
+Those are better reasons to open stance than abstract completeness.
+
+### Why equipment does not win yet
+
+Equipment should eventually extend body truth.
+
+But shields, armour, long tools and carried objects become more informative when:
+
+- clearance already matters in several places;
+- other bodies contest space;
+- burden and envelope have visible consequences;
+- the player has real reasons to protect / screen / pass / hold.
+
+The pressure field can therefore create the situation in which equipment becomes a grounded next question.
+
+### Why bow / magic do not win yet
+
+They remain essential anti-tunnel candidates.
+
+However, opening them immediately would confound:
+
+- embodied movement;
+- active body pressure;
+- aiming / preparation;
+- line of sight;
+- projectile or field semantics;
+- consequence;
+- disengagement.
+
+That is a much larger hypothesis bundle.
+
+The historical ranged campaign already showed how easy it is for a real projectile mechanism to collapse into delete / kite / suppress behavior.
+
+The body/world finding should first prove it can shape choice without needing damage to become significant.
+
+## 9. Candidate apparatus contract — still pre-implementation
+
+If the provisional lead survives the next design pass, the first specimen should be bounded by the following apparatus principles.
+
+### World
+
+Not “make a huge map.”
+
+Instead:
+
+- one continuous traversable space large enough that the whole world cannot simply be scaled into the viewport as S0/B0 do;
+- several materially different spatial regions in the same world;
+- at least:
+  - open space;
+  - clutter / obstacle field;
+  - constrained passage with more than one viable relation / bypass;
+- no single authored gate that explains the entire experiment.
+
+A simple player-following camera may be owned by the experiment initially.
+
+### Population
+
+Use a **small population**, not a crowd benchmark.
+
+Enough bodies to create:
+
+- concurrency;
+- crossing flow;
+- occasional local congestion;
+- repeated pushing/yielding opportunities;
+- variation in envelope / inertia / locomotor authority.
+
+Do not add combat intelligence.
+
+### Resident intent
+
+Residents need **independent movement intent**, but that intent should be transparent and intentionally weak.
+
+Candidate principle:
+
+> deterministic destination-seeking / local movement goals that create pressure incidentally rather than policies that know the research answer.
+
+Do not encode:
+
+- “heavy actor should hold here”;
+- “small actor should take this gap”;
+- player-countering tactics;
+- hidden role/class policy.
+
+If nontrivial pathfinding becomes necessary to keep this apparatus from getting stuck, that is the trigger for targeted donor recovery before inventing another navigation stack.
+
+### Phenotypes
+
+Start from the B0 dimensions:
+
+- envelope;
+- body mass / carried load where useful;
+- locomotor force / authority.
+
+Use several deliberately different configurations plus at least one awkward/non-correlated phenotype.
+
+Do not label them “tank”, “rogue”, “heavy”, etc.
+
+Optional correlated scaling remains deferred unless repeated multi-actor authoring creates real friction.
+
+### Contact
+
+The current collision law is only qualitative evidence.
+
+Before Owner exposure, red-team:
+
+- dense pair / small-cluster contacts;
+- wall + body contact;
+- high mass ratios;
+- high locomotor authority;
+- no explosive/jitter-dominated states.
+
+If the qualitative solver dominates play, fix or bound the apparatus.
+
+Do not turn that repair into a production physics campaign.
+
+### Human gate
+
+The first human question should remain simple:
+
+> **Do I naturally start treating different bodies / routes / spaces differently, without being told what role each one has?**
+
+If not, stop before adding stance, equipment, weapons or AI sophistication.
+
+## 10. Immediate research sequence
 
 1. keep the current public B0 closure untouched;
 2. finish this top-down frontier reassessment before implementation;
