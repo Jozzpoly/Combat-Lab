@@ -177,9 +177,26 @@ for(const group of experimentGroups){
   experimentSelect.append(optgroup);
 }
 
-experimentSelect.value="load-envelope-field-b0";
+function requestedExperimentId(){
+  const requested=new URLSearchParams(window.location.search).get("experiment");
+  return experimentItems.some(item=>item.id===requested)
+    ? requested
+    : "load-envelope-field-b0";
+}
+
+function syncExperimentUrl(id){
+  const url=new URL(window.location.href);
+  if(id==="load-envelope-field-b0") url.searchParams.delete("experiment");
+  else url.searchParams.set("experiment",id);
+  history.replaceState(null,"",url);
+}
+
+experimentSelect.value=requestedExperimentId();
 loadExperiment(experimentSelect.value);
-experimentSelect.addEventListener("change",()=>loadExperiment(experimentSelect.value));
+experimentSelect.addEventListener("change",()=>{
+  loadExperiment(experimentSelect.value);
+  syncExperimentUrl(experimentSelect.value);
+});
 
 function resetWorld(){
   runner.reset();
