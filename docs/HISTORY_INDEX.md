@@ -28,6 +28,7 @@ For live sequencing, **`docs/RESEARCH_STATE.md` wins**. A durable design/evidenc
 - `ACTIVE_SPATIAL_ECOLOGY_INTERNAL_QUALIFICATION_2026-09-26.md` — exact internal mechanism/browser/visual evidence plus later public translation/provenance PASS; Owner value remains unproven.
 - `ACTIVE_SPATIAL_ECOLOGY_FIRST_OWNER_RECORDING_FEEDBACK_2026-09-26.md` — first public Owner rehearsal deep evidence; Lab-direction positive signal plus material UX/organism/contact/debug findings; target ecology hypothesis inconclusive.
 - `COMBAT_LAB_FIRST_REHEARSAL_IMPLICIT_REQUIREMENTS_2026-09-26.md` — solution-neutral requirements mining from the same rehearsal plus S0/B0 triangulation; captures workflow, epistemic, observability and state-model requirements without selecting a redesign.
+- `COMBAT_LAB_HANDOFF_2026-09-26_ECOLOGY_FEEDBACK_CLOSURE.md` — campaign-1 closure and new-conversation bootstrap; current evidence map, preserve/do-not-promote boundaries and next-campaign contract.
 
 ## Historical campaign / donor records
 
