@@ -1,5 +1,8 @@
 # Embodied Scale Field S0 — Second Owner Recording, Dense Analysis
 
+> **HISTORICAL RECORD — NOT CURRENT AUTHORITY.**
+> This file preserves the research state at its date. Any `active`, `current` or `next` wording below is historical. Current truth lives in `README.md` and `docs/RESEARCH_STATE.md`.
+
 **Date:** 2026-09-25  
 **Recorded specimen:** `f4c64e35f225b3a8d994f6ac05b5e7c02689cf6c`  
 **S0 experiment blob:** `d0ea720a1978fe385b0358c3b870f7cc10e335a8`  
