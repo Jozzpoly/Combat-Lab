@@ -2200,6 +2200,100 @@ Comparison tooling must eventually make temporal context explicit enough to dist
 
 Current A/B provides no such distinction.
 
+## 91. Observation convenience must not silently author the phenomenon
+
+**Status:** CRITICAL RESEARCH-INTEGRITY REQUIREMENT
+
+The near-player spawn repair improved visibility.
+
+It also changed spatial pressure.
+
+This demonstrates a general rule:
+
+> **an apparatus feature added to make something easier to observe must be audited for whether it changes the phenomenon being observed.**
+
+Examples to watch later:
+
+- camera-follow spawning;
+- auto-centering;
+- debug-only physics alterations;
+- adaptive despawn;
+- auto-spacing crowds;
+- hidden spawn redistribution.
+
+Visibility and neutrality are separate axes.
+
+## 92. Spawn location must be explicit stimulus state
+
+**Status:** STRONG REQUIREMENT
+
+Where an actor enters the world materially affects:
+
+- local density;
+- route choice;
+- first contacts;
+- jam formation.
+
+Therefore spawn placement is not incidental infrastructure once crowd/world relations are under study.
+
+Future experiments should be able to treat placement policy as explicit scenario/stimulus state with provenance.
+
+No spawn-editor design is selected.
+
+## 93. Phenotype assignment and stimulus assignment must be matchable
+
+**Status:** CRITICAL CAUSAL REQUIREMENT
+
+Current serial couples:
+
+- creation order;
+- position seed;
+- initial goal;
+- route cycle.
+
+A future phenotype comparison needs the ability, where appropriate, to hold non-phenotype stimulus constant.
+
+Invariant:
+
+> **changing phenotype must not necessarily force a different route/start/stimulus unless the experiment explicitly intends that confound.**
+
+This may later require matched cohorts, shared seeds, cloned starts or another method.
+
+No method is selected yet.
+
+## 94. Implementation identity must not silently become behavioral policy
+
+**Status:** CODE-CONFIRMED RESEARCH-INTEGRITY REQUIREMENT
+
+Actor ID currently influences goal stepping.
+
+Future architecture should separate:
+
+- identity/provenance;
+- random/deterministic seed;
+- behavioral stimulus/policy.
+
+They may be deterministically related if explicitly chosen.
+
+They should not be accidentally coupled because a string contains a number.
+
+## 95. Role differences must be visible when interpreting embodied comparisons
+
+**Status:** RESEARCH-INTEGRITY REQUIREMENT
+
+Player and residents currently differ in more than authored phenotype:
+
+- direct human control vs waypoint control;
+- max speed ~225 vs ~175.
+
+Therefore “player pushes resident” is not a pure phenotype comparison.
+
+Future debug/evidence should make role/controller-law differences legible enough that embodiment claims do not silently absorb them.
+
+This does not require identical player/NPC controllers.
+
+It requires attribution discipline.
+
 ## Working invariant
 
 > **A professional Combat Lab should make it cheap to ask a dangerous question of the world, cheap to see what happened, and hard to misunderstand why.**
