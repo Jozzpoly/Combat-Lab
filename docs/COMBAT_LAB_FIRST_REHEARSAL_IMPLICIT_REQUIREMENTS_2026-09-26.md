@@ -2436,6 +2436,57 @@ Future Debug should distinguish concepts such as:
 
 Do not collapse them into one arrow/line.
 
+## 103. Semantic-neutral scaling work should be preferred before behavior-changing crowd “optimization”
+
+**Status:** EVIDENCE-BASED FUTURE PRESSURE
+
+At the late 846-body state, approximately 99.6% of naïve all-pairs checks do not produce contact resolution.
+
+This identifies a class of future optimization that can, in principle, preserve behavior much more closely than introducing crowd policy:
+
+- spatial broad-phase / neighborhood candidate pruning.
+
+This does **not** authorize implementation now.
+
+It establishes a prioritization principle for later profiling:
+
+> when scale blocks a valuable experiment, first look for costs that can be removed without deciding how actors ought to behave.
+
+## 104. Performance diagnostics need severity, not only a boolean state
+
+**Status:** STRONG OBSERVED REQUIREMENT
+
+`SIM STRESS` correctly reports loss of real-time fidelity.
+
+In the final ~34 s of the recording the simulation averages roughly ~0.81× wall-clock progression.
+
+Future diagnostics should be able to answer:
+
+- how far from real-time are we?
+- is debt increasing or recovering?
+- which subsystem is responsible?
+
+A binary stress light remains useful as an immediate warning.
+
+It is not enough for diagnosis.
+
+## 105. Debug behaves like a temporary investigative lens
+
+**Status:** STRONG OBSERVED REQUIREMENT
+
+Approximate recording windows show Debug enabled in short bursts around:
+
+- ~84–102 s;
+- ~204–213 s.
+
+It is not left on as the normal visual mode.
+
+This reinforces a design principle:
+
+> **diagnostics should be cheap to invoke for a question and cheap to dismiss once the question is answered.**
+
+Persistent dashboards may exist, but the world should not require permanent maximal instrumentation to remain understandable.
+
 ## Working invariant
 
 > **A professional Combat Lab should make it cheap to ask a dangerous question of the world, cheap to see what happened, and hard to misunderstand why.**
