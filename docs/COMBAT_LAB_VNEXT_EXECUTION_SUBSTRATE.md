@@ -2,7 +2,8 @@
 
 **Date:** 2026-09-25  
 **Status:** implemented substrate contract; current until superseded by newer Owner evidence  
-**Authority:** subordinate to Owner evidence and `RESEARCH_STATE.md`
+**Authority:** subordinate to Owner evidence and `RESEARCH_STATE.md`  
+**Execution note:** this file preserves the durable neutral-substrate contract. Checkpoint and frontier-sequencing text records its historical execution context; `RESEARCH_STATE.md` is the live authority for what happens next.
 
 ## 0. Purpose
 
@@ -308,13 +309,15 @@ This checkpoint intentionally contains no shared Actor, Weapon, Attack, HP, targ
 
 CI is green.
 
-The substrate is not deployed yet and has no combat-product authority.
+At this first checkpoint, the substrate was not yet deployed and had no combat-product authority. It was later incorporated into the qualified Workbench/public closure line; see `RESEARCH_STATE.md` for current status.
 
-## 11. First frontier selection after substrate
+## 11. Historical first frontier selection after substrate — SUPERSEDED AS EXECUTION GUIDANCE
+
+This section records the frontier comparison used at that point in the refoundation. It is retained as historical reasoning, **not** as the current shortlist or next-step instruction.
 
 Do not automatically implement R4.
 
-Prepare a short comparison of divergent first-campaign candidates.
+At that time, the plan was to compare divergent first-campaign candidates.
 
 At minimum consider:
 
@@ -323,9 +326,9 @@ At minimum consider:
 - **MAGIC / WORLD RELATION** — can magic change combat through persistent or spatial world relations rather than projectile reskin?
 - **R3 FOLLOW-UP** — does shared material afterstate remain interesting under minimal adversarial intent?
 
-The comparison is for selecting one next experiment.
+The comparison was intended to select one next experiment at that historical point.
 
-It is not a commitment to implement all four.
+It was not a commitment to implement all four. Current frontier selection must start from `RESEARCH_STATE.md` and newest Owner evidence.
 
 ---
 
