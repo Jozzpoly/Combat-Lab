@@ -4,6 +4,7 @@ import {
   ACTIVE_ECOLOGY_BASELINE_COUNT,
   activeSpatialEcologyV0,
   clearEcologyExtras,
+  clearEcologyResidents,
   createActiveEcologyState,
   deriveEcologyEmbodiment,
   setActiveEcologyParameter,
@@ -90,6 +91,13 @@ test("clear extras restores the deterministic baseline population",()=>{
   assert.ok(state.residents.every(r=>r.baseline));
 });
 
+test("population can be deliberately reduced all the way to zero",()=>{
+  const state=createActiveEcologyState();
+  spawnEcologyResidents(state,10);
+  clearEcologyResidents(state);
+  assert.equal(state.residents.length,0);
+});
+
 test("resident movement intent is active without player input",()=>{
   const state=createActiveEcologyState();
   const before=state.residents.map(r=>({x:r.x,y:r.y}));
@@ -139,6 +147,9 @@ test("Workbench actions expose direct spawn pressure and reset preserves authore
   let snapshot=instance.snapshot();
   assert.equal(snapshot.residents.length,ACTIVE_ECOLOGY_BASELINE_COUNT+10);
   assert.ok(snapshot.residents.slice(-10).every(r=>r.envelope===0.65 && r.bodyMass===6 && r.forceMultiplier===4));
+
+  instance.inspector.action("clearAll");
+  assert.equal(instance.snapshot().residents.length,0);
 
   instance.step(right,0.1);
   instance.reset();
