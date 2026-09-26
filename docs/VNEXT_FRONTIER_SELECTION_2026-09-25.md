@@ -1,5 +1,8 @@
 # Combat Lab vNext — Frontier Selection 2026-09-25
 
+> **HISTORICAL RECORD — NOT CURRENT AUTHORITY.**
+> This file preserves the research state at its date. Any `active`, `current` or `next` wording below is historical. Current truth lives in `README.md` and `docs/RESEARCH_STATE.md`.
+
 **Status:** historical frontier-selection record; BODY / SCALE campaign executed through S0/B0 and closed  
 **Selected frontier:** BODY / SCALE  
 **Not selected as roadmap:** bow, magic, R3 follow-up remain open future fronts
