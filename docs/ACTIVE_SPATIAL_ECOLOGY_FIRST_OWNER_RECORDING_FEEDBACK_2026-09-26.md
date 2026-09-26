@@ -1068,6 +1068,34 @@ However, it means:
 
 This further weakens literal interpretation of current goal-line Debug.
 
+## 37. Inspector navigation friction is quantitatively visible
+
+A simple image analysis of the Inspector scrollbar was performed on the existing sampled UI frames.
+
+The scrollbar thumb has a stable height of ~291 px, making its center a useful proxy for panel scroll position.
+
+Across the sampled recording:
+
+- top position center ≈ 239 px;
+- bottom position center ≈ 726 px;
+- normalized sampled scroll travel totals roughly **6.37 full panel ranges**;
+- at least **9 sampled transitions** move more than 30% of the complete scroll range.
+
+Examples:
+
+- 0 s: top;
+- 8 s: essentially bottom;
+- 16 s: near top again;
+- later repeated transitions occur around 32→38 s, 72→80 s, 104→112 s, 112→120 s, 192→198 s and 218→222 s.
+
+Because frames are sampled sparsely, this is a **lower bound** on actual scrolling.
+
+This quantitatively supports the Owner report that the Lab is hard to navigate.
+
+It also shows the problem is not one isolated trip to a rarely used setting.
+
+Large context shifts recur throughout the session.
+
 ## Working invariant
 
 > **The first public Ecology rehearsal succeeded as an experiment mainly because it exposed why the current laboratory and organism are not yet good enough to answer the question cleanly.**
