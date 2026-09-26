@@ -585,7 +585,7 @@ export const activeSpatialEcologyV0={
   title:"Active Embodied Spatial Ecology v0",
   kind:"research",
   purpose:"Test whether embodied differences change spatial decisions as active body pressure scales from sparse encounters into crowd and break regimes.",
-  controls:"WASD / arrows · author player + spawn phenotype in Inspector · Spawn +1 / +5 / +10",
+  controls:"WASD / arrows · author player + spawn phenotype · Spawn +1/+5/+10/+50 · Force +10 deliberately ignores body-body spawn clearance",
 
   create(){
     let state=createActiveEcologyState();
