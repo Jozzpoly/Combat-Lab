@@ -3,7 +3,8 @@
 **Date:** 2026-09-25  
 **Status:** stage closed; positive Owner direction signal; equations remain non-canonical  
 **Parent human evidence:** positive S0 BODY / WORLD signal  
-**Owner correction:** the same actor may keep essentially the same body size while equipment changes total mass; continuous permissive manipulation is valuable
+**Owner correction:** the same actor may keep essentially the same body size while equipment changes total mass; continuous permissive manipulation is valuable  
+**Authority note:** B0 evidence and its bounded outcome remain useful; the internal execution order below is completed historical chronology, not current next-step authority. See `RESEARCH_STATE.md`.
 
 ## 0. Why the discarded S1 decomposition was still wrong
 
