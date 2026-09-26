@@ -2846,6 +2846,48 @@ But adding a second permanent dashboard beside the existing long Inspector would
 
 Future design should aim for **state compression**, not simply more simultaneous UI.
 
+## 122. Stimulus topology must be auditable before emergent behavior is trusted
+
+**Status:** CRITICAL RESEARCH-INTEGRITY REQUIREMENT
+
+The current ordinary spawn route generator contains a hidden universal hub:
+
+- every serial residue-class cycle contains the same goal at `(650,1580)`;
+- one twelfth of serial classes targets only that goal forever.
+
+This is a strong example of why “simple deterministic movement” is not automatically neutral.
+
+Future stimulus generators should be auditable for structural properties such as:
+
+- hidden hubs;
+- unreachable/near-obstacle goals;
+- route-cycle length;
+- directional bias;
+- cohort/seed correlation;
+- repeated convergence.
+
+The Lab should make it difficult to accidentally claim emergent behavior from an unexamined stimulus graph.
+
+## 123. Deterministic stimulus should support structural validation, not just repeatability
+
+**Status:** STRONG RESEARCH REQUIREMENT
+
+A deterministic harness can reproduce the same artifact perfectly.
+
+Repeatability alone is not validity.
+
+Before a deterministic movement/population harness is used as a neutral substrate, it should be possible to test properties such as:
+
+- coverage of space/goals;
+- balance of route usage;
+- absence/presence of intentional hubs;
+- symmetry where symmetry is intended;
+- distribution across cohorts/seeds.
+
+This does not require every scenario to be uniform.
+
+It requires intended asymmetry to be explicit rather than accidental.
+
 ## Working invariant
 
 > **A professional Combat Lab should make it cheap to ask a dangerous question of the world, cheap to see what happened, and hard to misunderstand why.**
