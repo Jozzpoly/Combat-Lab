@@ -164,18 +164,33 @@ Current stage truth remains:
 
 No R4, weapon family, body continuation or other next campaign is preselected by the cleanup.
 
-## 8. Final release gate
+## 8. Final release gate — PASS
 
-One final canonical `main` commit must carry `[deploy]`.
+Final repository-closure release:
 
-After its CI + emitted-artifact qualification succeeds, the public origin must be checked for:
+- `6bd4b4492261b9fe3b8edbca276cf9b7de3d822d`;
+- commit message carries explicit `[deploy]`;
+- GitHub Actions test: **SUCCESS**;
+- emitted-artifact Pages build/browser qualification: **SUCCESS**;
+- GitHub Pages deploy: **SUCCESS** (deployment `6676500885`).
 
-- `COMMIT.txt` = exact final deploy SHA;
+External public-origin verification after deployment confirms:
+
+- `COMMIT.txt` = `6bd4b4492261b9fe3b8edbca276cf9b7de3d822d`;
 - `BRANCH.txt` = `main`;
-- live B0 Workbench runtime;
-- no stale refoundation provenance.
+- public root = `Combat Lab vNext — Workbench`;
+- active public experiment = `Load / Envelope Field B0`.
 
-Only after that external verification is the repository/public handoff fully closed.
+Therefore the repository-closure public handoff is externally proven for release `6bd4b4492261b9fe3b8edbca276cf9b7de3d822d`.
+
+Post-release documentation / hygiene corrections may advance `main` without replacing the public specimen when they intentionally omit `[deploy]`. This is expected under the explicit-deployment contract and does not change the provenance of the deployed runtime.
+
+During recovery after the conversation-limit failure, one canonical documentation drift was found and repaired:
+
+- `EXPERIMENT_PROTOCOL.md` still described the removed whitelisted-experiment-branch auto-deploy model;
+- commit `9f23d677a7f703a84ab138aa5ca80e8268bc639e` aligned the protocol with the live main-only automatic deployment contract;
+- commit `e29cf8559d3a2a3409b13c443897b5e61e611b9d` added a repository-hygiene regression guard;
+- the resulting full check passed, while Pages build/deploy were correctly skipped because those commits did not request deployment.
 
 ## Closure invariant
 
