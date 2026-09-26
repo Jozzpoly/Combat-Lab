@@ -166,7 +166,7 @@ The active lane was opened from green canonical main:
 
 - base: `4b44a001be679cb987c8470ce208d3b503d698a9`;
 - internally qualified runtime checkpoint: `d55b3b093325452e6dc730f314c886a2cbc85229`;
-- exact qualified public-rehearsal candidate: `67309b91d9c5f376192fe2ba6a80458294086691`.
+- exact qualified public-rehearsal candidate: `ce96587826746efad426347a8a394048810e4ee2`.
 
 Do not use a moving branch HEAD as rehearsal provenance. Docs-only branch commits may advance independently; public rehearsal must name an exact SHA.
 
@@ -192,13 +192,15 @@ Exact evidence record:
 
 Narrow internal evidence:
 
-- **51 / 51 automated tests PASS** at the qualified runtime checkpoint;
-- real Chromium Workbench gate PASS;
+- original internal runtime qualification: **51 / 51 automated tests PASS**;
+- current public-rehearsal candidate: **52 / 52 automated tests PASS**;
+- real Chromium Workbench gate PASS, including direct deep-link and explicit `Force +10` break-mode;
 - mixed spawn waves preserve independently authored phenotypes;
 - browser rehearsal reached **56 active residents with 0 spawn failures** and sampled ~**626 body contacts/s**;
 - a separate mechanistic probe exceeded **100 active residents** while remaining finite;
 - impossible giant-horde requests report legal-placement saturation rather than silently mutating the requested phenotype;
 - zero → baseline → dense/horde population states are directly controllable;
+- explicit `Force +10` can ignore dynamic-body spawn clearance while still respecting static world legality, enabling deliberate overpacking/break-pressure;
 - forced main-thread stall surfaces `SIM STRESS` and dropped wall time rather than silently presenting slowdown as body behavior;
 - visual red-team caught and repaired a first spawn-placement apparatus failure before promotion.
 
@@ -216,7 +218,7 @@ Still **UNPROVEN until Owner play**:
 
 Current next move:
 
-> **deploy exact candidate `67309b91d9c5f376192fe2ba6a80458294086691`, verify public provenance/runtime translation, then obtain early raw Owner observation through the direct ecology rehearsal URL.**
+> **deploy exact candidate `ce96587826746efad426347a8a394048810e4ee2`, verify public provenance/runtime translation, then obtain early raw Owner observation through the direct ecology rehearsal URL.**
 
 Expected rehearsal URL after deployment:
 
