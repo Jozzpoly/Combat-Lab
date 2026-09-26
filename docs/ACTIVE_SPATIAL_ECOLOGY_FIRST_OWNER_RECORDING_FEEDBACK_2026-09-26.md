@@ -1261,6 +1261,124 @@ It does establish a strong apparatus-level mechanism capable of continually feed
 
 Therefore the lower-left megajam must not be treated as endogenous crowd behavior.
 
+## 43. Hidden waypoint asymmetry emerges over time rather than at initial assignment
+
+There is an important nuance to the universal-goal-10 finding.
+
+Ordinary initial goal assignment is:
+
+`(serial × 5 + 1) mod 12`.
+
+Because 5 and 12 are coprime, each block of 12 serial residues maps to all 12 initial goals exactly once.
+
+So initial assignment is balanced.
+
+The asymmetry appears in the **transition cycles**.
+
+If the 12 serial residue classes are weighted equally and each discrete goal visit inside its cycle is weighted equally, the route-cycle visit distribution is approximately:
+
+- goal 0: 5.56%;
+- goal 1: 6.94%;
+- goal 2: 11.11%;
+- goal 3: 2.78%;
+- goal 4: 13.89%;
+- goal 5: 2.78%;
+- goal 6: 11.11%;
+- goal 7: 6.94%;
+- goal 8: 5.56%;
+- goal 9: 2.78%;
+- **goal 10: 27.78%**;
+- goal 11: 2.78%.
+
+Uniform would be:
+
+- **8.33% per goal**.
+
+This is a discrete route-cycle calculation, not a time-weighted prediction of exact actor occupancy.
+
+Travel distance, obstruction and blocking alter real temporal occupancy.
+
+The important result is structural:
+
+> a harness that looks balanced at spawn time develops a very strong hidden destination asymmetry later.
+
+That helps explain why the problem is not obvious from the initial six/early population state.
+
+## 44. Baseline phenotype heterogeneity is fully confounded with baseline scenario
+
+The six baseline residents are deliberately heterogeneous.
+
+But each phenotype is permanently paired with:
+
+- a unique initial position;
+- a unique resident ID;
+- a unique initial goal;
+- a unique ID-derived route-cycle increment.
+
+Therefore baseline observations cannot cleanly attribute behavior differences to phenotype.
+
+For example, a small/heavy/high-force baseline resident is not the same scenario as the large/light/weak resident with only phenotype changed.
+
+The baseline remains useful as a **possibility-rich visual seed**.
+
+It is not a matched phenotype experiment.
+
+## 45. Envelope also changes spawn stimulus before motion begins
+
+Ordinary spawn placement depends on the requested body radius.
+
+In the near-player annulus:
+
+- radial distance includes `+ radius`.
+
+In fallback zones:
+
+- legal spawn bounds shrink inward by radius.
+
+Legality against:
+
+- world bounds;
+- static geometry;
+- player;
+- existing residents
+
+also depends on radius.
+
+Therefore changing spawn envelope changes more than the body's later spatial behavior.
+
+It can also change:
+
+- exact initial position;
+- candidate acceptance/failure;
+- fallback usage;
+- local starting density.
+
+This coupling is partly physically appropriate — a larger body genuinely needs more placement clearance.
+
+But it means:
+
+> an envelope-wave comparison is not automatically a matched-start comparison.
+
+Future causal tests need to decide explicitly whether spawn feasibility is part of the phenomenon or a condition to control.
+
+## 46. Serial confounding is real but wave size matters
+
+Earlier analysis correctly notes that sequential cohorts receive different serials, and serial controls route/stimulus state.
+
+A nuance:
+
+- for large waves such as 50 actors, serial residues mod 12 are nearly balanced in each wave;
+- therefore route-cycle-class composition differences between two adjacent 50-body waves are relatively small;
+- for small waves such as 5 or 10 actors, residue imbalance can be more material.
+
+However:
+
+- exact start positions still differ;
+- exact initial goals differ per serial;
+- route identities remain coupled to creation order.
+
+So the causal-integrity concern remains, but its magnitude depends on batch size.
+
 ## Working invariant
 
 > **The first public Ecology rehearsal succeeded as an experiment mainly because it exposed why the current laboratory and organism are not yet good enough to answer the question cleanly.**
