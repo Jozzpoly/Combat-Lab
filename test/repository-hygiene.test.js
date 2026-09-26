@@ -53,6 +53,11 @@ test("Pages deployment has one canonical workflow contract",()=>{
   assert.doesNotMatch(pages,/refoundation\/combat-lab-vnext/);
   assert.match(pages,/contains\(github\.event\.workflow_run\.head_commit\.message, '\[deploy\]'\)/);
 
+  const protocol=read("docs/EXPERIMENT_PROTOCOL.md");
+  assert.match(protocol,/automatic deployment from a successful checked `main` commit/i);
+  assert.match(protocol,/no whitelisted active experiment branch auto-deploy path/i);
+  assert.doesNotMatch(protocol,/currently whitelisted active experiment branch/i);
+
   assert.equal(exists(".github/workflows/pages-r0.yml"),false,"legacy pages-r0 workflow must stay removed");
 });
 
