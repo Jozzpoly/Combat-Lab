@@ -13,7 +13,7 @@ test("canonical entrypoints contain one current project state",()=>{
 
   assert.match(readme,/Canonical live branch/);
   assert.match(readme,/Workbench foundation — QUALIFIED FOR CURRENT RESEARCH USE/);
-  assert.match(readme,/Active Embodied Spatial Ecology v0 is \*\*INTERNALLY QUALIFIED FOR DELIBERATE PUBLIC REHEARSAL — OWNER VALUE UNPROVEN\*\*/i);
+  assert.match(readme,/Active Embodied Spatial Ecology v0 is \*\*LIVE AS A PUBLIC REHEARSAL \/ TRANSLATION PASS — OWNER VALUE UNPROVEN\*\*/i);
   assert.doesNotMatch(readme,/no selected next research specimen/i);
   assert.match(readme,/6bd4b4492261b9fe3b8edbca276cf9b7de3d822d/);
   assert.doesNotMatch(readme,/waits for new Owner instruction/i);
@@ -22,7 +22,7 @@ test("canonical entrypoints contain one current project state",()=>{
   assert.doesNotMatch(readme,/intentionally \*\*not deployed for Owner testing yet\*\*/i);
 
   assert.match(state,/Workbench \+ B0 CLOSED/);
-  assert.match(state,/Active Embodied Spatial Ecology v0 INTERNALLY QUALIFIED FOR DELIBERATE PUBLIC REHEARSAL — OWNER VALUE UNPROVEN/i);
+  assert.match(state,/Active Embodied Spatial Ecology v0 PUBLIC REHEARSAL LIVE \/ TRANSLATION PASS — OWNER VALUE UNPROVEN/i);
   assert.match(state,/Active Embodied Spatial Ecology v0 has crossed the \*\*internal apparatus\/mechanism gate\*\*/i);
   assert.match(state,/optional explicit linkage \/ correlated scaling/i);
   assert.match(state,/Feniks, ReflexBrain, Companion and SPC/);
@@ -79,6 +79,8 @@ test("Pages deployment has one canonical workflow contract",()=>{
   assert.match(protocol,/automatic deployment from a successful checked `main` commit/i);
   assert.match(protocol,/rehearsal control plane/i);
   assert.match(protocol,/`rehearsal\/current` is infrastructure, not research authority/i);
+  assert.match(protocol,/forced ref update/i);
+  assert.match(protocol,/fresh.*normal.*`check`/is);
   assert.match(protocol,/no whitelisted active `experiment\/\*` auto-deploy path/i);
   assert.doesNotMatch(protocol,/currently whitelisted active experiment branch/i);
 
@@ -113,8 +115,11 @@ test("durable records cannot masquerade as live execution authority",()=>{
   assert.doesNotMatch(spatialHypothesis,/small population, not a crowd benchmark/i);
 
   const spatialQualification=read("docs/ACTIVE_SPATIAL_ECOLOGY_INTERNAL_QUALIFICATION_2026-09-26.md");
-  assert.match(spatialQualification,/INTERNALLY QUALIFIED FOR DELIBERATE PUBLIC REHEARSAL/);
-  assert.match(spatialQualification,/OWNER VALUE UNPROVEN/);
+  assert.match(spatialQualification,/QUALIFIED FOR DELIBERATE PUBLIC REHEARSAL/);
+  assert.match(spatialQualification,/PUBLIC REHEARSAL LIVE \/ TRANSLATION PASS — OWNER VALUE UNPROVEN/);
+  assert.match(spatialQualification,/Public translation \/ provenance gate — PASS/);
+  assert.match(spatialQualification,/36239476177/);
+  assert.match(spatialQualification,/36239513452/);
   assert.match(spatialQualification,/51 \/ 51 PASS/);
   assert.match(spatialQualification,/d55b3b093325452e6dc730f314c886a2cbc85229/);
   assert.match(spatialQualification,/ce96587826746efad426347a8a394048810e4ee2/);
@@ -137,7 +142,8 @@ test("canonical docs distinguish cleanup topology from the one active experiment
   assert.match(state,/experiment\/active-spatial-ecology/);
   assert.match(state,/rehearsal\/current/);
   assert.match(state,/never an authoring lane and never research authority/i);
-  assert.match(state,/public runtime remains the B0 closure release/);
+  assert.match(state,/COMMIT\.txt.*ce96587826746efad426347a8a394048810e4ee2/is);
+  assert.match(state,/BRANCH\.txt.*rehearsal\/current/is);
   assert.match(state,/ce96587826746efad426347a8a394048810e4ee2/);
   assert.match(state,/direct ecology rehearsal URL/i);
   assert.match(state,/6bd4b4492261b9fe3b8edbca276cf9b7de3d822d/);
