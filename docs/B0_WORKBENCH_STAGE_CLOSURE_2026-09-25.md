@@ -3,7 +3,8 @@
 **Date:** 2026-09-25  
 **Status:** **STAGE CLOSED — research foundation preserved, next direction intentionally open**  
 **Owner recording:** 160.2 s direct play on public B0 Workbench  
-**Owner verdict:** "jest w dobrym kierunku"
+**Owner verdict:** "jest w dobrym kierunku"  
+**Authority note:** this file preserves the stage-closure truth of 2026-09-25. The later `WAITING FOR OWNER INSTRUCTION` wording describes that handoff moment; new Owner instruction arrived on 2026-09-26 and live sequencing now belongs to `RESEARCH_STATE.md`.
 
 ## 1. What this stage actually established
 
