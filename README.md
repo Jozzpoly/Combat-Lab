@@ -8,7 +8,7 @@ It is not the Feniks combat implementation, and it is not a sword project. The r
 
 **Canonical live branch:** `main` after repository canonicalization.
 
-**Current stage:** Workbench + Load / Envelope B0 is **closed** after direct Owner play and recording analysis.
+**Current stage:** Workbench + Load / Envelope B0 is **closed** after direct Owner play and recording analysis; a post-closure preparation / frontier-shaping campaign is active before the next specimen.
 
 Current qualified statements:
 
@@ -18,9 +18,9 @@ Current qualified statements:
 - The current B0 formulas, units and circular body representation are **not** accepted Feniks semantics.
 - A/B parameter slots are mechanically qualified, but their human usefulness remains **UNPROVEN**.
 - There is **no accepted Feniks combat model, hit-authority model, aim/target model or commitment scheme**.
-- The next research direction is deliberately **OPEN** and waits for new Owner instruction.
+- There is **no selected next research specimen**; current work is synchronizing authority and preparing the lab for deliberate frontier selection.
 
-Latest Owner-confirmed direction: the project is broader than hitting or melee. Body/world relations matter, and later work may investigate bows, magic, axes, spears, shields, terrain and hybrids without treating any previous combat family as the project spine.
+Latest Owner-confirmed direction: the project is broader than hitting or melee. Body/world relations matter. Independent embodiment dimensions should remain available, while future Workbench research may add optional explicit correlations for fast coherent phenotype scaling. Larger terrain/obstacle spaces and more varied opponents/residents are desired future pressure. A later donor review of Feniks, ReflexBrain, Companion and SPC should recover proven movement/pathfinding/spatial capabilities without importing those projects' architecture as Combat Lab authority.
 
 ## Research standard
 
@@ -75,6 +75,12 @@ Public provenance is authoritative through:
 - `BRANCH.txt` — deployed branch/ref label.
 
 The repository-closure release is deployed from canonical `main` after full CI and emitted-artifact browser qualification.
+
+Current public closure release:
+
+- `6bd4b4492261b9fe3b8edbca276cf9b7de3d822d` from `main`.
+
+Later documentation-only `main` commits intentionally do not replace that public runtime unless deployment is explicitly requested.
 
 Deployment is explicit: a successful `main` CI run deploys only when the commit message contains `[deploy]`, or through an explicit workflow dispatch.
 
