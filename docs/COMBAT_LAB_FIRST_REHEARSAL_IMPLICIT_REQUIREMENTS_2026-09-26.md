@@ -3045,6 +3045,59 @@ Future planning should preserve the following distinction:
 
 A candidate solution must never become retroactive evidence that the Owner asked for it.
 
+## 127. Validate stimulus over time, not only at initialization
+
+**Status:** CRITICAL RESEARCH-INTEGRITY REQUIREMENT
+
+The current ordinary spawn goal assignment is initially balanced across the 12 goals.
+
+The later deterministic transition law creates a strongly imbalanced route-cycle topology, with goal 10 receiving ~27.8% of discrete cycle visits under equal residue weighting.
+
+Therefore a harness can pass an initial-distribution sanity check and still develop a severe long-horizon bias.
+
+Future stimulus qualification should consider:
+
+- initial distribution;
+- transition structure;
+- long-run cycle/coverage behavior;
+- interaction with world topology.
+
+## 128. A heterogeneous baseline is not evidence unless scenario factors are controlled or exposed
+
+**Status:** STRONG RESEARCH-INTEGRITY REQUIREMENT
+
+Current six baseline phenotypes are each tied to distinct:
+
+- positions;
+- IDs;
+- goals;
+- route cycles.
+
+This makes the baseline good for visual diversity but weak for causal phenotype attribution.
+
+Future experiments should distinguish:
+
+- **possibility-rich baseline populations** intended to provoke discovery;
+- **matched comparison populations** intended to attribute cause.
+
+Both are useful.
+
+Do not confuse their evidence status.
+
+## 129. Physically legitimate coupling still needs explicit causal treatment
+
+**Status:** STRONG RESEARCH REQUIREMENT
+
+Larger envelope naturally changes legal spawn placement because a larger body needs more clearance.
+
+That coupling is not automatically a bug.
+
+But it creates a causal choice:
+
+> is placement feasibility part of the body-envelope phenomenon being studied, or should initial position be controlled for this comparison?
+
+A professional Lab should make that choice explicit enough that a physically legitimate side effect does not become an unnoticed confound.
+
 ## Working invariant
 
 > **A professional Combat Lab should make it cheap to ask a dangerous question of the world, cheap to see what happened, and hard to misunderstand why.**
