@@ -3336,6 +3336,27 @@ deserve independent axes.
 
 Do not prematurely multiply controls merely because one current control has several consequences.
 
+## 143. Population injection and movement stimulus must be independently inspectable
+
+**Status:** STRONG RESEARCH-INTEGRITY REQUIREMENT
+
+Current fallback spawn regions overlap selected movement goals, including the universal hidden route hub.
+
+Therefore two harness layers that look independent in code organization can jointly author the same congestion pattern.
+
+Future scenario/stimulus tooling should make it possible to inspect or validate relationships between:
+
+- spawn/entry distribution;
+- destination distribution;
+- terrain;
+- route topology.
+
+The Lab need not force them to be independent.
+
+Intentional coupling is a valid scenario.
+
+It must not remain hidden when causal interpretation depends on it.
+
 ## Working invariant
 
 > **A professional Combat Lab should make it cheap to ask a dangerous question of the world, cheap to see what happened, and hard to misunderstand why.**
