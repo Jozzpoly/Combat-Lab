@@ -1,6 +1,6 @@
 # Combat Lab — Current Research State
 
-**Canonical status date:** 2026-09-25  
+**Canonical status date:** 2026-09-26  
 **Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
 **Canonical branch:** `main` after repository canonicalization  
 **Stage:** **Workbench + B0 CLOSED; waiting for new Owner instruction**
@@ -143,14 +143,17 @@ See [Historical evidence index](HISTORY_INDEX.md).
 
 ## 6. Repository / deployment truth
 
-Repository cleanup policy:
+Repository cleanup result:
 
-- `main` is the sole long-lived live branch;
-- historical branch lineages may be retained in Git ancestry without keeping stale branch refs;
-- old "active/current/next" language in historical documents is non-authoritative;
-- README + this file define current status;
+- `main` is the **only remaining branch ref**;
+- all six stale experiment/refoundation refs were removed only after ancestry verification;
+- unique historical lineages remain reachable from `main` through canonical Git ancestry;
+- old "active/current/next" language in historical documents is explicitly marked non-authoritative;
+- the former append-only state is preserved in `docs/archive/`;
+- permanent workflows are only `check.yml` and `pages.yml`;
 - deployments are exact-SHA and browser-qualified;
-- Pages deployment from CI requires explicit `[deploy]` or manual workflow dispatch.
+- Pages deployment from CI requires explicit `[deploy]` or manual workflow dispatch;
+- repository closure evidence is recorded in `REPOSITORY_CLOSURE_AUDIT_2026-09-26.md`.
 
 ## 7. Next move
 
