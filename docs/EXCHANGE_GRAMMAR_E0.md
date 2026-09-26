@@ -1,5 +1,8 @@
 # EXCHANGE GRAMMAR E0 — Mirrored Access Contest
 
+> **HISTORICAL RECORD — NOT CURRENT AUTHORITY.**
+> This file preserves the research state at its date. Any `active`, `current` or `next` wording below is historical. Current truth lives in `README.md` and `docs/RESEARCH_STATE.md`.
+
 **Date:** 2026-09-24  
 **Status:** active hypothesis card; implementation not started  
 **Owner play:** not eligible  
