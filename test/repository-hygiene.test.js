@@ -13,7 +13,7 @@ test("canonical entrypoints contain one current project state",()=>{
 
   assert.match(readme,/Canonical live branch/);
   assert.match(readme,/Workbench foundation — QUALIFIED FOR CURRENT RESEARCH USE/);
-  assert.match(readme,/Active Embodied Spatial Ecology \/ Multi-Body Pressure is selected/i);
+  assert.match(readme,/Active Embodied Spatial Ecology v0 is \*\*INTERNALLY QUALIFIED FOR DELIBERATE PUBLIC REHEARSAL — OWNER VALUE UNPROVEN\*\*/i);
   assert.doesNotMatch(readme,/no selected next research specimen/i);
   assert.match(readme,/6bd4b4492261b9fe3b8edbca276cf9b7de3d822d/);
   assert.doesNotMatch(readme,/waits for new Owner instruction/i);
@@ -22,7 +22,7 @@ test("canonical entrypoints contain one current project state",()=>{
   assert.doesNotMatch(readme,/intentionally \*\*not deployed for Owner testing yet\*\*/i);
 
   assert.match(state,/Workbench \+ B0 CLOSED/);
-  assert.match(state,/Active Embodied Spatial Ecology hypothesis SELECTED FOR REVERSIBLE IMPLEMENTATION/i);
+  assert.match(state,/Active Embodied Spatial Ecology v0 INTERNALLY QUALIFIED FOR DELIBERATE PUBLIC REHEARSAL — OWNER VALUE UNPROVEN/i);
   assert.match(state,/ACTIVE EMBODIED SPATIAL ECOLOGY \/ MULTI-BODY PRESSURE/);
   assert.match(state,/optional explicit linkage \/ correlated scaling/i);
   assert.match(state,/Feniks, ReflexBrain, Companion and SPC/);
@@ -108,6 +108,30 @@ test("durable records cannot masquerade as live execution authority",()=>{
   assert.match(spatialHypothesis,/Spawn \+10/);
   assert.match(spatialHypothesis,/SIM STRESS/);
   assert.doesNotMatch(spatialHypothesis,/small population, not a crowd benchmark/i);
+
+  const spatialQualification=read("docs/ACTIVE_SPATIAL_ECOLOGY_INTERNAL_QUALIFICATION_2026-09-26.md");
+  assert.match(spatialQualification,/INTERNALLY QUALIFIED FOR DELIBERATE PUBLIC REHEARSAL/);
+  assert.match(spatialQualification,/OWNER VALUE UNPROVEN/);
+  assert.match(spatialQualification,/51 \/ 51 PASS/);
+  assert.match(spatialQualification,/d55b3b093325452e6dc730f314c886a2cbc85229/);
+});
+
+test("canonical docs distinguish cleanup topology from the one active experiment lane",()=>{
+  const readme=read("README.md");
+  const state=read("docs/RESEARCH_STATE.md");
+  const history=read("docs/HISTORY_INDEX.md");
+
+  assert.match(readme,/experiment\/active-spatial-ecology/);
+  assert.match(readme,/single temporary active experiment lane/i);
+  assert.doesNotMatch(readme,/repository currently has \*\*one branch ref/i);
+
+  assert.match(state,/exactly two branch refs/i);
+  assert.match(state,/experiment\/active-spatial-ecology/);
+  assert.match(state,/public runtime remains the B0 closure release/);
+  assert.match(state,/perform one exact public rehearsal/i);
+  assert.doesNotMatch(state,/Open one temporary experiment lane/i);
+
+  assert.match(history,/current topology is authoritative in `RESEARCH_STATE\.md`/);
 });
 
 test("package identity no longer describes a temporary refoundation substrate",()=>{
