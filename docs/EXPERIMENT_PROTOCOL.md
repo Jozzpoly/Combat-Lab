@@ -162,10 +162,19 @@ An experimental specimen may be deployed only after its checks are green and dep
 
 Supported explicit paths:
 
-- automatic deployment from a successful checked `main` commit whose message contains `[deploy]`; the Pages workflow deploys that exact checked `head_sha`; or
+- automatic deployment from a successful checked `main` commit whose message contains `[deploy]`; the Pages workflow deploys that exact checked `head_sha`;
+- **rehearsal control plane:** move the dedicated `rehearsal/current` ref to an exact already-selected candidate; its ordinary `check` workflow must pass, after which Pages deploys that exact checked `head_sha`; or
 - manual workflow dispatch of an exact branch, tag or commit SHA when a deliberate non-main rehearsal is needed.
 
-There is **no whitelisted active experiment branch auto-deploy path**. Ordinary experiment-branch pushes never deploy.
+There is **no whitelisted active `experiment/*` auto-deploy path**. Ordinary experiment-branch pushes never deploy.
+
+`rehearsal/current` is infrastructure, not research authority:
+
+- it must point to the exact specimen intended for the current public rehearsal;
+- it must never be used as a place to author work;
+- moving it is an explicit deployment action;
+- after a rejected rehearsal, move it back to the intended canonical public source and let normal CI qualify the rollback;
+- canonical docs must name the exact deployed candidate SHA independently of the moving rehearsal ref.
 
 The public URL must never silently become an experiment merely because an experiment branch received a push.
 
@@ -180,7 +189,8 @@ After a rejected experiment:
 Target state:
 
 - `main`;
-- at most **one active experiment lane** unless a simultaneous comparison genuinely requires more.
+- at most **one active experiment lane** unless a simultaneous comparison genuinely requires more;
+- one optional infrastructure-only `rehearsal/current` ref when public rehearsal/rollback control is active.
 
 Rejected experiments are historical evidence, not permanent branches. Preserve their commit SHA and result in documentation, then clean the branch.
 
