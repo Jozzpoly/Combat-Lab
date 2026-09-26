@@ -787,6 +787,122 @@ from first principles and donor evidence before selecting a rebuild plan.
 
 Do not continue by patching the most visible symptom.
 
+## 24. Hidden local-spawn policy contaminates crowd-pressure interpretation
+
+The public rehearsal spawn policy was deliberately changed after an internal visual failure.
+
+Earlier:
+
+- new residents could exist mostly off-camera.
+
+Repair:
+
+- ordinary spawning first searches a deterministic annulus around the **current player**;
+- only later falls back to fixed world entry regions.
+
+This made live pressure visible.
+
+However, the first Owner recording reveals the research cost.
+
+Repeated `Spawn +50` does not merely increase global population.
+
+It repeatedly injects new bodies preferentially near the player/current observation region.
+
+Therefore:
+
+- local density is partly apparatus-authored;
+- player path/location influences where later waves appear;
+- repeated stress spawning can manufacture local congestion around the observer.
+
+This is a material confound.
+
+The earlier visual repair was useful for Owner visibility but not neutral ecology.
+
+Do not interpret the observed local jams as purely endogenous population flow.
+
+## 25. Final horde is even more homogeneous than “mostly default” suggests
+
+The final population is 845 residents.
+
+Only the six deterministic baseline residents carry the deliberately heterogeneous baseline phenotype set.
+
+If all later ordinary spawns use the unchanged default template, baseline heterogeneous residents represent roughly:
+
+> **6 / 845 ≈ 0.71%**
+
+of the resident population.
+
+Therefore the late horde is overwhelmingly a default-phenotype stress population.
+
+It provides almost no human evidence for multi-cohort embodied ecology.
+
+## 26. Spawn serial silently controls multiple experimental variables
+
+Every ordinary spawned resident receives a serial.
+
+That serial affects:
+
+- deterministic spawn placement hashes;
+- initial goal assignment;
+- later goal-cycle behavior through numeric ID arithmetic.
+
+Therefore spawn order is also a hidden stimulus variable.
+
+This matters for future mixed-wave comparisons.
+
+If wave A is spawned first and wave B second:
+
+- phenotype may differ;
+- start positions also differ;
+- goal assignment also differs;
+- route-cycle structure can differ.
+
+A visible behavioral difference between cohorts would therefore be causally ambiguous.
+
+Machine qualification of “two phenotypes coexist correctly” remains valid.
+
+Causal phenotype comparison is not qualified.
+
+## 27. Actor identity is currently part of behavior policy
+
+Resident movement extracts a number from the actor ID and uses it to choose future goals.
+
+Thus an implementation identity string such as:
+
+- `spawn-17`
+
+is not merely provenance.
+
+It changes movement behavior.
+
+This is a research-design smell because:
+
+> identity/provenance and behavioral stimulus are silently coupled.
+
+Future test harness design should make such stimulus variables explicit and controllable.
+
+## 28. Player-vs-resident law is also not fully matched
+
+The player and ordinary residents use different max-speed constants:
+
+- player: ~225;
+- resident: ~175.
+
+Therefore a player interacting with a resident crowd is not a matched “same body law with different authored phenotype” relation.
+
+This does not invalidate the session.
+
+It limits attribution.
+
+Observed player-vs-crowd behavior may reflect:
+
+- authored envelope/mass/load/force;
+- different role controller;
+- different maximum speed;
+- direct human input vs waypoint steering.
+
+Do not attribute those interactions to embodiment alone.
+
 ## Working invariant
 
 > **The first public Ecology rehearsal succeeded as an experiment mainly because it exposed why the current laboratory and organism are not yet good enough to answer the question cleanly.**
