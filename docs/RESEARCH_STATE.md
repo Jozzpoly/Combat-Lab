@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-26  
 **Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
 **Canonical branch:** `main` after repository canonicalization  
-**Stage:** **Workbench + B0 CLOSED; top-down frontier reassessment ACTIVE; no new specimen selected**
+**Stage:** **Workbench + B0 CLOSED; Active Embodied Spatial Ecology hypothesis SELECTED FOR REVERSIBLE IMPLEMENTATION**
 
 ## 1. Owner intent
 
@@ -179,21 +179,38 @@ Current highest-value uncertainty:
 
 > **Do embodied differences remain decision-relevant when the world becomes richer and active body pressure scales from sparse encounters through crowd/horde regimes, or do they collapse into an interesting parameter sandbox, authored fit-not-fit puzzle or technical solver failure?**
 
-Current provisional lead:
+Selected next reversible discovery specimen:
 
 > **ACTIVE EMBODIED SPATIAL ECOLOGY / MULTI-BODY PRESSURE**
 
-Candidate hypothesis/apparatus contract:
+Implementation contract:
 
 - [Active Embodied Spatial Ecology Hypothesis Card](ACTIVE_EMBODIED_SPATIAL_ECOLOGY_HYPOTHESIS_2026-09-26.md)
 
-This is a research lead and hypothesis card, **not yet implementation authority**.
+The hypothesis survived the top-down comparison, the Owner's permissive-population correction and a final apparatus review.
 
-Before opening a specimen:
+Implementation authority is narrow: build the smallest specimen that exposes a larger continuous world, active resident movement, independently authored player/spawn phenotypes, permissive sparse→horde pressure and truthful runtime diagnostics.
 
-- challenge this lead against stance/equipment and at least one orthogonal combat family;
-- define a bounded hypothesis card with an unmistakable human discriminator and hard falsifiers;
-- decide the minimum apparatus needed for a genuinely larger traversable world;
-- only then recover targeted donors if the chosen apparatus would otherwise reinvent material movement/pathfinding/spatial infrastructure.
+This is **not** Feniks architecture authority.
+
+Completed before implementation:
+
+- challenged against stance/equipment and orthogonal bow/magic;
+- bounded hypothesis card defined with human discriminator and hard falsifiers;
+- permissive population escalation corrected to match Owner intent;
+- larger-world camera/view requirement identified;
+- targeted donor reconnaissance performed for multi-body navigation scaling.
+
+Current donor result:
+
+- Companion-Brain-Lab contains useful bounded static navigation/query/physical-world donors;
+- it does **not** contain a ready multi-companion/crowd avoidance system;
+- ReflexBrain-Lab and current SPC/Llm-Live-NPC repos do not provide the required movement donor.
+
+Next move:
+
+> **Open one temporary experiment lane and implement the minimum internally qualified specimen.**
+
+Do not deploy or request Owner play merely because implementation/CI turns green.
 
 Optional linked scaling remains an enabling Workbench candidate, not the research question itself.
