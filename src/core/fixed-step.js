@@ -14,8 +14,14 @@ export class FixedStepRunner {
   }
 
   advance(frameSeconds, step) {
-    const frame=Math.max(0, Math.min(Number.isFinite(frameSeconds) ? frameSeconds : 0, this.maxFrame));
-    this.accumulator=Math.min(this.maxAccum, this.accumulator+frame);
+    const rawFrame=Math.max(0,Number.isFinite(frameSeconds) ? frameSeconds : 0);
+    const frame=Math.min(rawFrame,this.maxFrame);
+    const frameDropped=Math.max(0,rawFrame-frame);
+
+    const requestedAccum=this.accumulator+frame;
+    const nextAccum=Math.min(this.maxAccum,requestedAccum);
+    const accumDropped=Math.max(0,requestedAccum-nextAccum);
+    this.accumulator=nextAccum;
 
     let steps=0;
     while (this.accumulator + 1e-12 >= this.dt) {
@@ -26,7 +32,10 @@ export class FixedStepRunner {
 
     return {
       steps,
-      alpha:this.accumulator/this.dt
+      alpha:this.accumulator/this.dt,
+      rawFrame,
+      acceptedFrame:frame,
+      droppedSeconds:frameDropped+accumDropped
     };
   }
 }
