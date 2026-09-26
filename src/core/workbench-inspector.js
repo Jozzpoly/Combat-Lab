@@ -104,6 +104,31 @@ export class WorkbenchInspector {
       this.parameterRoot.append(section);
     }
 
+    for(const group of schema.actionGroups || []){
+      const section=el("section","inspector-section");
+      const head=el("div","section-heading");
+      head.append(el("div","section-title",group.label || group.id || "Actions"));
+      if(group.description){
+        head.append(el("p","section-description",group.description));
+      }
+      section.append(head);
+
+      const grid=el("div","action-grid");
+      for(const action of group.actions || []){
+        const button=el("button","action-button",action.label || action.id);
+        button.type="button";
+        button.dataset.actionId=action.id;
+        if(action.title) button.title=action.title;
+        button.addEventListener("click",()=>{
+          this.inspector?.action?.(action.id);
+          this.sync(true);
+        });
+        grid.append(button);
+      }
+      section.append(grid);
+      this.parameterRoot.append(section);
+    }
+
     for(const group of schema.liveGroups || []){
       const section=el("section","inspector-section live-section");
       const head=el("div","section-heading");
