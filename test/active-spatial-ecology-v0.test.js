@@ -7,6 +7,7 @@ import {
   clearEcologyResidents,
   createActiveEcologyState,
   deriveEcologyEmbodiment,
+  forceSpawnEcologyResidents,
   setActiveEcologyParameter,
   spawnEcologyResidents,
   stepActiveEcology
@@ -97,6 +98,43 @@ test("impossible giant horde pressure reports placement saturation instead of mu
   assert.ok(spawned.every(r=>r.envelope===12));
   assert.ok(spawned.every(r=>r.bodyMass===200));
   assert.ok(spawned.every(r=>r.forceMultiplier===100));
+});
+
+test("force spawn ignores dynamic-body clearance but preserves requested phenotype and static legality",()=>{
+  const state=createActiveEcologyState();
+  setActiveEcologyParameter(state,"spawnEnvelope",1.25);
+  setActiveEcologyParameter(state,"spawnBodyMass",9);
+  setActiveEcologyParameter(state,"spawnLoadMass",3);
+  setActiveEcologyParameter(state,"spawnForceMultiplier",6);
+
+  // Collapse the available local dynamic space with ordinary residents first.
+  for(let i=0;i<6;i++) spawnEcologyResidents(state,10);
+  const before=state.residents.length;
+
+  const result=forceSpawnEcologyResidents(state,10);
+  assert.equal(result.requested,10);
+  assert.equal(result.spawned+result.failed,10);
+  assert.equal(result.forced,true);
+  assert.ok(result.spawned>0);
+  assert.ok(state.residents.length>=before+result.spawned);
+
+  const forced=state.residents.filter(r=>String(r.id).startsWith("forced-"));
+  assert.equal(forced.length,result.spawned);
+  assert.ok(forced.every(r=>r.envelope===1.25 && r.bodyMass===9 && r.loadMass===3 && r.forceMultiplier===6));
+
+  // Deliberate overlap may exist, but no forced spawn may begin inside static geometry or outside the world.
+  for(const body of forced){
+    assert.ok(body.x-body.r>=0 && body.x+body.r<=3000);
+    assert.ok(body.y-body.r>=0 && body.y+body.r<=1800);
+  }
+
+  for(let i=0;i<180;i++) stepActiveEcology(state,idle,1/120);
+  for(const body of [state.player,...state.residents]){
+    assert.ok(Number.isFinite(body.x));
+    assert.ok(Number.isFinite(body.y));
+    assert.ok(Number.isFinite(body.vx));
+    assert.ok(Number.isFinite(body.vy));
+  }
 });
 
 test("clear extras restores the deterministic baseline population",()=>{
