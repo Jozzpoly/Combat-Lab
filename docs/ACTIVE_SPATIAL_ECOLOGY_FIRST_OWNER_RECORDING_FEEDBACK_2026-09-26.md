@@ -1144,7 +1144,33 @@ This validates the usefulness of explicit fixed-step stress truth.
 
 Future performance diagnostics should make severity/rate easier to interpret, not only expose the binary stress state.
 
-## 40. Major jams persist on behavioral timescales
+## 40. Dense final A/B sequence is now directly resolved
+
+A 10 fps forensic pass over ~224.8–228.0 s removes the previous ambiguity about the final comparison interaction.
+
+Observed sequence:
+
+1. both A and B slots are populated;
+2. around ~226 s the cursor is on **B → Capture** while the live state remains extreme;
+3. shortly afterward the cursor moves to **A → Apply**;
+4. by ~227 s visible authored/apparatus values have changed:
+   - player carried load: ~14 → 0;
+   - player locomotor force: ~62 → 1;
+   - camera zoom: ~0.55× → ~0.75×;
+5. resident count remains **845** and the evolved crowd/world arrangement is not reset.
+
+Therefore:
+
+> **A/B capture + apply is directly Owner-observed.**
+
+The interaction also directly demonstrates two integrity limitations:
+
+- a parameter slot changes apparatus state (camera) together with specimen authoring;
+- it does not restore the path-dependent world state needed for a matched crowd comparison.
+
+This is stronger evidence than the earlier coarse-timeline inference.
+
+## 41. Major jams persist on behavioral timescales
 
 The dense visual timeline shows packed structures that remain recognizable for long periods.
 
