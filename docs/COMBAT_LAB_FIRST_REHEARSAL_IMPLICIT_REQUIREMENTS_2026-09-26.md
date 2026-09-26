@@ -3098,6 +3098,52 @@ But it creates a causal choice:
 
 A professional Lab should make that choice explicit enough that a physically legitimate side effect does not become an unnoticed confound.
 
+## 130. Separate authoring dimensions are not automatically separate mechanics
+
+**Status:** CRITICAL CAUSAL REQUIREMENT
+
+The current Lab correctly allows Body mass and Carried load to be authored separately.
+
+The current Ecology law then collapses them into one `totalMass`.
+
+Therefore UI dimensionality must not be mistaken for mechanical dimensionality.
+
+Future evidence/reporting should distinguish:
+
+- independently authored inputs;
+- independently causal mechanisms;
+- merely future-facing semantic placeholders.
+
+This is especially important as the Lab gains more sophisticated phenotype variables.
+
+## 131. The Lab should expose causal equivalence when two controls currently feed the same law
+
+**Status:** STRONG OBSERVABILITY REQUIREMENT
+
+If two separately named controls currently produce the same downstream effect through a shared derived quantity, the Owner should be able to understand that relationship.
+
+Otherwise the Lab can create an illusion of mechanistic richness.
+
+This does not mean merging the controls.
+
+Separate authoring may be valuable for future hypotheses.
+
+It means current derived-law truth must remain legible.
+
+## 132. Independent motor authority is now stronger human evidence than “speed”
+
+**Status:** CROSS-RECORDING POSITIVE SIGNAL
+
+The late recording sequence keeps very high total mass while increasing force from ~12 to ~62.
+
+Under the current law that primarily restores acceleration/braking responsiveness while leaving max speed unchanged.
+
+Combined with B0's earlier non-correlated phenotype use, this strengthens the research principle that:
+
+> **locomotor authority deserves to remain separable from inertial mass and geometric envelope.**
+
+It still does not qualify the current exact force/acceleration law for Feniks.
+
 ## Working invariant
 
 > **A professional Combat Lab should make it cheap to ask a dangerous question of the world, cheap to see what happened, and hard to misunderstand why.**
