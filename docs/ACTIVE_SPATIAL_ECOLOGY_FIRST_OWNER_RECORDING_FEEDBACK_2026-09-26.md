@@ -1144,6 +1144,25 @@ This validates the usefulness of explicit fixed-step stress truth.
 
 Future performance diagnostics should make severity/rate easier to interpret, not only expose the binary stress state.
 
+## 40. Major jams persist on behavioral timescales
+
+The dense visual timeline shows packed structures that remain recognizable for long periods.
+
+One large left-side packed mass persists from approximately:
+
+- ~148 s;
+- through at least ~166 s;
+
+for roughly **18 seconds** of continuous simulation.
+
+Other wedge/column structures also survive multiple multi-second samples.
+
+Therefore current jams are not merely transient collision bursts.
+
+They are stable or slowly evolving non-progress states.
+
+This strengthens the requirement for future organisms/diagnostics to reason about **blocked duration / progress over time**, not just instantaneous overlap.
+
 ## Working invariant
 
 > **The first public Ecology rehearsal succeeded as an experiment mainly because it exposed why the current laboratory and organism are not yet good enough to answer the question cleanly.**
