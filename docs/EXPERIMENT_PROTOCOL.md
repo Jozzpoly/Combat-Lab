@@ -175,6 +175,9 @@ There is **no whitelisted active `experiment/*` auto-deploy path**. Ordinary exp
 - moving it is an explicit deployment action;
 - after a rejected rehearsal, move it back to the intended canonical public source and let normal CI qualify the rollback;
 - canonical docs must name the exact deployed candidate SHA independently of the moving rehearsal ref.
+- because the candidate branch and `main` may have diverged after the experiment lane opened, moving `rehearsal/current` may require a **forced ref update**; force is permitted only for this infrastructure pointer, never as a shortcut on `main` or an authoring `experiment/*` branch;
+- before a forced rehearsal move, independently verify the exact candidate SHA, its ancestry from the intended experiment base and a green candidate `check`;
+- the moved `rehearsal/current` ref must then earn a **fresh** normal `check` before Pages may deploy it.
 
 The public URL must never silently become an experiment merely because an experiment branch received a push.
 
