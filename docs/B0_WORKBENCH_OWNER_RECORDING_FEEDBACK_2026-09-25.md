@@ -5,7 +5,8 @@
 **Duration:** 160.2 s  
 **Visual:** 1866×912 @ 30 fps  
 **Audio:** silent  
-**Exact public candidate observed:** `43c8a3fdf1bc12110e34c53159841b363b4414ea`
+**Exact public candidate observed:** `43c8a3fdf1bc12110e34c53159841b363b4414ea`  
+**Authority note:** direct Owner-evidence record. Its closure actions were subsequently completed; live sequencing and current status are governed by `RESEARCH_STATE.md`.
 
 ## 0. Owner verdict
 
