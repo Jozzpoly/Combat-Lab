@@ -140,7 +140,8 @@ test("durable records cannot masquerade as live execution authority",()=>{
   assert.match(ownerRecording,/universal hidden hub/i);
   assert.match(ownerRecording,/27\.78%/);
   assert.match(ownerRecording,/50,700 resident object copies per second/i);
-  assert.match(ownerRecording,/Capture B → Apply A/);
+  assert.match(ownerRecording,/B → Capture/);
+  assert.match(ownerRecording,/A → Apply/);
 
   const implicitRequirements=read("docs/COMBAT_LAB_FIRST_REHEARSAL_IMPLICIT_REQUIREMENTS_2026-09-26.md");
   assert.match(implicitRequirements,/manipulation must be high-bandwidth/i);
