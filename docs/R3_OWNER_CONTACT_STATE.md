@@ -1,5 +1,8 @@
 # R3 Owner Contact — Live State
 
+> **HISTORICAL RECORD — NOT CURRENT AUTHORITY.**
+> This file preserves the research state at its date. Any `active`, `current` or `next` wording below is historical. Current truth lives in `README.md` and `docs/RESEARCH_STATE.md`.
+
 **Date:** 2026-09-25  
 **Campaign:** active; machine gate complete  
 **Exact deployed observation specimen:** `b51aad2dbc6475237b9fb22fdb0ed24b82bb6827`  
