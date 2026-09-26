@@ -8,7 +8,7 @@ It is not the Feniks combat implementation, and it is not a sword project. The r
 
 **Canonical live branch:** `main` after repository canonicalization.
 
-**Current stage:** Workbench + Load / Envelope B0 is **closed**; the first Active Spatial Ecology Owner rehearsal is complete. The Lab direction has a positive Owner signal, while the target ecology hypothesis is **INCONCLUSIVE because material apparatus/UX/organism failures dominated the test**. Feedback extraction is active; no redesign has started yet.
+**Current stage:** Workbench + Load / Envelope B0 is **closed**; the first Active Spatial Ecology Owner rehearsal and feedback/evidence campaign are **closed**. The Lab direction has a positive Owner signal, while the target ecology hypothesis remains **INCONCLUSIVE because material apparatus/UX/organism/stimulus failures dominated the test**. The next refoundation/research campaign has not started yet.
 
 Current qualified statements:
 
@@ -101,13 +101,14 @@ Start here:
 4. [Active spatial ecology internal qualification](docs/ACTIVE_SPATIAL_ECOLOGY_INTERNAL_QUALIFICATION_2026-09-26.md)
 5. [First Active Spatial Ecology Owner recording feedback](docs/ACTIVE_SPATIAL_ECOLOGY_FIRST_OWNER_RECORDING_FEEDBACK_2026-09-26.md)
 6. [First rehearsal implicit requirements](docs/COMBAT_LAB_FIRST_REHEARSAL_IMPLICIT_REQUIREMENTS_2026-09-26.md)
-7. [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md)
-8. [Owner scope correction](docs/COMBAT_LAB_SCOPE_CORRECTION_2026-09-25.md)
-9. [Workbench design record](docs/COMBAT_LAB_WORKBENCH_REFOUNDATION_2026-09-25.md)
-10. [B0 Owner recording feedback](docs/B0_WORKBENCH_OWNER_RECORDING_FEEDBACK_2026-09-25.md)
-11. [B0 / Workbench stage closure](docs/B0_WORKBENCH_STAGE_CLOSURE_2026-09-25.md)
-12. [Repository closure audit](docs/REPOSITORY_CLOSURE_AUDIT_2026-09-26.md)
-13. [Historical evidence index](docs/HISTORY_INDEX.md)
+7. [Ecology feedback campaign closure / new-conversation handoff](docs/COMBAT_LAB_HANDOFF_2026-09-26_ECOLOGY_FEEDBACK_CLOSURE.md)
+8. [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md)
+9. [Owner scope correction](docs/COMBAT_LAB_SCOPE_CORRECTION_2026-09-25.md)
+10. [Workbench design record](docs/COMBAT_LAB_WORKBENCH_REFOUNDATION_2026-09-25.md)
+11. [B0 Owner recording feedback](docs/B0_WORKBENCH_OWNER_RECORDING_FEEDBACK_2026-09-25.md)
+12. [B0 / Workbench stage closure](docs/B0_WORKBENCH_STAGE_CLOSURE_2026-09-25.md)
+13. [Repository closure audit](docs/REPOSITORY_CLOSURE_AUDIT_2026-09-26.md)
+14. [Historical evidence index](docs/HISTORY_INDEX.md)
 
 The previous append-only canonical state is preserved verbatim as historical evidence at:
 
