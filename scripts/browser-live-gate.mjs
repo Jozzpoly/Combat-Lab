@@ -350,6 +350,7 @@ try{
         !!document.querySelector('[data-action-id="spawn5"]') &&
         !!document.querySelector('[data-action-id="spawn10"]') &&
         !!document.querySelector('[data-action-id="spawn50"]') &&
+        !!document.querySelector('[data-action-id="force10"]') &&
         !!document.querySelector('[data-action-id="clearAll"]');
     })()`);
   });
@@ -434,6 +435,39 @@ try{
   await waitFor("reset restores deterministic ecology baseline",async()=>{
     return evaluate("window.__combatLabRuntime.snapshot.residents.length===6");
   });
+
+  // Explicit break mode: ignore body-body spawn clearance while retaining static/world legality.
+  await setNumber("spawnEnvelope",2.25);
+  await setNumber("spawnBodyMass",5);
+  await setNumber("spawnLoadMass",1);
+  await setNumber("spawnForceMultiplier",3);
+  await evaluate('document.querySelector(\'[data-action-id="clearAll"]\').click()');
+  await evaluate('document.querySelector(\'[data-action-id="force10"]\').click()');
+  await evaluate('document.querySelector(\'[data-action-id="force10"]\').click()');
+  await waitFor("forced overlap pressure creates authored bodies",async()=>{
+    return evaluate(`(()=>{
+      const s=window.__combatLabRuntime.snapshot;
+      const forced=s.residents.filter(r=>String(r.id).startsWith("forced-"));
+      return s.residents.length===20 &&
+        s.lastSpawnResult?.forced===true &&
+        forced.length===20 &&
+        forced.every(r=>Math.abs(r.envelope-2.25)<1e-9 && Math.abs(r.bodyMass-5)<1e-9);
+    })()`);
+  },{timeout:4000});
+  await waitFor("forced pressure produces real contact resolution",async()=>{
+    return evaluate("window.__combatLabRuntime.snapshot.bodyContactsPerSecond>0");
+  },{timeout:5000});
+
+  await evaluate('document.querySelector("#reset-world").click()');
+  await waitFor("reset recovers from forced pressure",async()=>{
+    return evaluate("window.__combatLabRuntime.snapshot.residents.length===6");
+  });
+
+  // Restore the deliberately contrasting spawn phenotype used by the dense-pressure rehearsal.
+  await setNumber("spawnEnvelope",2.00);
+  await setNumber("spawnBodyMass",0.50);
+  await setNumber("spawnLoadMass",0);
+  await setNumber("spawnForceMultiplier",0.75);
 
   // Destructive pressure: one +50 action must reach a broad crowd regime without a low protective cap.
   await evaluate('document.querySelector(\'[data-action-id="spawn50"]\').click()');
