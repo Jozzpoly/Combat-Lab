@@ -3245,6 +3245,58 @@ versus
 
 This becomes especially important if future authoring actions create complex actors, equipment or terrain.
 
+## 138. Live authoring and physical continuity are different research modes
+
+**Status:** CRITICAL RESEARCH-INTEGRITY REQUIREMENT
+
+The Owner strongly prefers live intervention.
+
+Instantly changing radius/mass/force is a Lab operation, not necessarily a physically continuous world process.
+
+Future experimentation should preserve both possibilities:
+
+- **live perturbation** — intentionally discontinuous, fast discovery;
+- **matched/reinitialized comparison** — controlled when causal attribution needs it.
+
+Do not force all discovery into physically continuous transitions.
+
+Do not interpret every live transition as physically meaningful either.
+
+## 139. Intervention transients need temporal context
+
+**Status:** STRONG RESEARCH REQUIREMENT
+
+After a large live mutation, behavior can contain a transient caused by:
+
+- instantaneous mass change at existing velocity;
+- sudden geometry change;
+- collision correction;
+- sudden motor-law change.
+
+A later diagnostic/comparison system should be able to know:
+
+> how long ago did this intervention happen?
+
+This can help separate immediate apparatus shock from later settled behavior.
+
+No automatic “settling time” rule is selected.
+
+## 140. Controlled A/B may need state reinitialization rather than parameter application
+
+**Status:** STRONG CANDIDATE, NOT A CHOSEN SOLUTION
+
+The recording proves that applying parameters inside an evolved world is not a clean matched dynamic comparison.
+
+A future controlled comparison may need some form of:
+
+- matched start;
+- reset/checkpoint;
+- replayed intervention sequence;
+
+rather than only applying a parameter vector.
+
+The exact mechanism remains open.
+
 ## Working invariant
 
 > **A professional Combat Lab should make it cheap to ask a dangerous question of the world, cheap to see what happened, and hard to misunderstand why.**
