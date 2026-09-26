@@ -124,7 +124,11 @@
       frames: 0,
       error: null,
       activeExperimentId: null,
-      snapshot: null
+      snapshot: null,
+      droppedWallTime: 0,
+      lastFrameSteps: 0,
+      lastDroppedSeconds: 0,
+      simHealth: "OK"
     };
 
     function markRuntimeError(reason) {
