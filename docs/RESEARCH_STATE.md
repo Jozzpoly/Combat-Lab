@@ -187,6 +187,7 @@ Other repository truth remains:
 - Pages deployment requires explicit `[deploy]` from checked `main`, a successful checked `rehearsal/current` move to an exact candidate, or manual workflow dispatch of an exact source ref;
 - ordinary `experiment/*` pushes never deploy;
 - the **current public artifact is the ecology rehearsal candidate `ce96587826746efad426347a8a394048810e4ee2` via `rehearsal/current`**; ordinary root still defaults to B0, while the direct ecology query opens the rehearsal specimen;
+- public provenance files currently report: `COMMIT.txt = ce96587826746efad426347a8a394048810e4ee2`; `BRANCH.txt = rehearsal/current`;
 - repository closure evidence is recorded in `REPOSITORY_CLOSURE_AUDIT_2026-09-26.md`.
 
 ## 7. Current objective / next move
