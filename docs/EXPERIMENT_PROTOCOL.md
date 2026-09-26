@@ -267,3 +267,28 @@ It does **not** need to preserve:
 The neutral substrate should share only machinery that cannot answer a combat hypothesis by construction.
 
 If a supposedly shared abstraction already assumes what an actor, attack, weapon, spell, projectile, hit, block or commitment is, it belongs in an experiment until multiple independent families justify promoting it.
+
+## 13. Cross-project donor recovery
+
+Combat Lab may deliberately recover proven capabilities from sibling Feniks-related projects when doing so prevents needless reinvention.
+
+Likely donor domains include:
+
+- movement / locomotion infrastructure;
+- pathfinding / navigation;
+- spatial relation and neighborhood bookkeeping;
+- multi-actor pressure / steering support;
+- other bounded infrastructure already exercised elsewhere.
+
+Potential donor projects include **Feniks, ReflexBrain, Companion and SPC**.
+
+Rules:
+
+1. start from the current Combat Lab question, not from whatever architecture the donor already has;
+2. identify the exact donor behavior, evidence and provenance that are useful;
+3. prefer narrow infrastructure/mechanism reuse over wholesale architecture import;
+4. treat donor project assumptions and abstractions as candidates, never automatic Combat Lab authority;
+5. re-test the transplanted property inside the Combat Lab context before relying on it;
+6. do not start a donor sweep merely because one is possible — use it when the current frontier would otherwise reinvent something material.
+
+This donor review is intentionally **later than the current repository/preparation closure** and does not itself select the next combat specimen.
