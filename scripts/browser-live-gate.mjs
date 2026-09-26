@@ -304,7 +304,11 @@ try{
   }))`);
   const researchGroup=selectorGroups.find(g=>g.label==="Research experiments");
   const diagnosticGroup=selectorGroups.find(g=>g.label==="Internal diagnostics");
-  if(!researchGroup?.values.includes("load-envelope-field-b0") || !researchGroup?.values.includes("embodied-scale-field-v0")){
+  if(
+    !researchGroup?.values.includes("load-envelope-field-b0") ||
+    !researchGroup?.values.includes("embodied-scale-field-v0") ||
+    !researchGroup?.values.includes("active-spatial-ecology-v0")
+  ){
     throw new Error(`research experiment grouping failed: ${JSON.stringify(selectorGroups)}`);
   }
   if(!diagnosticGroup?.values.includes("substrate-smoke")){
@@ -330,29 +334,147 @@ try{
     return evaluate('window.__combatLabRuntime.activeExperimentId==="load-envelope-field-b0" && !!document.querySelector(\'[data-param-id="loadMass"]\')');
   });
 
-  // Normal visual rehearsal: heavy load only.
-  await setNumber("loadMass",4.00);
-  await captureScreenshot();
-
-  // Owner-derived extreme phenotype: wider than the old rails, still finite and explicitly allowed.
-  await setNumber("envelope",4.50);
-  await setNumber("bodyMass",20.00);
-  await setNumber("loadMass",4.00);
-  await setNumber("forceMultiplier",42.00);
-  await waitFor("Owner-derived extreme B0 state",async()=>{
+  // New discovery lane: switch from preserved B0/S0 regressions into Active Spatial Ecology.
+  await evaluate(`(()=>{
+    const s=document.querySelector("#experiment-select");
+    s.value="active-spatial-ecology-v0";
+    s.dispatchEvent(new Event("change",{bubbles:true}));
+  })()`);
+  await waitFor("switch into active spatial ecology",async()=>{
     return evaluate(`(()=>{
-      const p=window.__combatLabRuntime.snapshot.player;
-      const badges=[...document.querySelectorAll(".extreme-badge")].filter(x=>!x.hidden);
-      return Math.abs(p.envelope-4.5)<1e-9 &&
-        Math.abs(p.bodyMass-20)<1e-9 &&
-        Math.abs(p.loadMass-4)<1e-9 &&
-        Math.abs(p.forceMultiplier-42)<1e-9 &&
-        badges.length>=3;
+      const r=window.__combatLabRuntime;
+      return r.activeExperimentId==="active-spatial-ecology-v0" &&
+        !!document.querySelector('[data-param-id="playerEnvelope"]') &&
+        !!document.querySelector('[data-param-id="spawnEnvelope"]') &&
+        !!document.querySelector('[data-action-id="spawn1"]') &&
+        !!document.querySelector('[data-action-id="spawn5"]') &&
+        !!document.querySelector('[data-action-id="spawn10"]');
     })()`);
   });
+
+  const ecologyBaseline=await evaluate("window.__combatLabRuntime.snapshot");
+  if(ecologyBaseline.residents.length!==ecologyBaseline.baselineCount || ecologyBaseline.baselineCount!==6){
+    throw new Error(`unexpected ecology baseline: ${JSON.stringify({count:ecologyBaseline.residents.length,baseline:ecologyBaseline.baselineCount})}`);
+  }
+
+  // Author wave A: deliberately small, heavy and high-force.
+  await setNumber("spawnEnvelope",0.55);
+  await setNumber("spawnBodyMass",8);
+  await setNumber("spawnLoadMass",2);
+  await setNumber("spawnForceMultiplier",5);
+  await evaluate('document.querySelector(\'[data-action-id="spawn10"]\').click()');
+  await waitFor("spawn wave A +10",async()=>{
+    return evaluate("window.__combatLabRuntime.snapshot.residents.length===16");
+  });
+  const waveA=await evaluate("window.__combatLabRuntime.snapshot.residents.slice(-10)");
+  if(!waveA.every(r=>Math.abs(r.envelope-0.55)<1e-9 && Math.abs(r.bodyMass-8)<1e-9 && Math.abs(r.loadMass-2)<1e-9 && Math.abs(r.forceMultiplier-5)<1e-9)){
+    throw new Error("spawn wave A did not preserve authored phenotype");
+  }
+
+  // Author wave B without resetting the world; wave A must remain unchanged.
+  await setNumber("spawnEnvelope",2.00);
+  await setNumber("spawnBodyMass",0.50);
+  await setNumber("spawnLoadMass",0);
+  await setNumber("spawnForceMultiplier",0.75);
+  await evaluate('document.querySelector(\'[data-action-id="spawn5"]\').click()');
+  await waitFor("spawn wave B +5",async()=>{
+    return evaluate("window.__combatLabRuntime.snapshot.residents.length===21");
+  });
+  const mixed=await evaluate("window.__combatLabRuntime.snapshot.residents");
+  const waveAAfter=mixed.filter(r=>String(r.id).startsWith("spawn-")).slice(0,10);
+  const waveB=mixed.filter(r=>String(r.id).startsWith("spawn-")).slice(10,15);
+  if(!waveAAfter.every(r=>Math.abs(r.envelope-0.55)<1e-9 && Math.abs(r.bodyMass-8)<1e-9)){
+    throw new Error("later authoring rewrote earlier spawned phenotype");
+  }
+  if(!waveB.every(r=>Math.abs(r.envelope-2)<1e-9 && Math.abs(r.bodyMass-0.5)<1e-9 && Math.abs(r.forceMultiplier-0.75)<1e-9)){
+    throw new Error("spawn wave B did not preserve authored phenotype");
+  }
+
+  // Player phenotype remains independently authorable; camera must not normalize it away.
+  await setNumber("playerEnvelope",4.50);
+  await setNumber("playerBodyMass",20);
+  await setNumber("playerLoadMass",4);
+  await setNumber("playerForceMultiplier",42);
+  await setNumber("cameraZoom",0.75);
+  await waitFor("ecology Owner-derived player phenotype",async()=>{
+    return evaluate(`(()=>{
+      const s=window.__combatLabRuntime.snapshot;
+      return Math.abs(s.player.envelope-4.5)<1e-9 &&
+        Math.abs(s.player.bodyMass-20)<1e-9 &&
+        Math.abs(s.player.loadMass-4)<1e-9 &&
+        Math.abs(s.player.forceMultiplier-42)<1e-9 &&
+        Math.abs(s.cameraZoom-0.75)<1e-9;
+    })()`);
+  });
+
+  // Direct movement still works in the larger camera-following world.
+  const ecologyX0=await evaluate("window.__combatLabRuntime.snapshot.player.x");
+  await cdp.send("Input.dispatchKeyEvent",{type:"keyDown",code:"KeyD",key:"d",windowsVirtualKeyCode:68});
+  await sleep(300);
+  await cdp.send("Input.dispatchKeyEvent",{type:"keyUp",code:"KeyD",key:"d",windowsVirtualKeyCode:68});
+  await waitFor("ecology player direct movement",async()=>{
+    const x=await evaluate("window.__combatLabRuntime.snapshot.player.x");
+    return Number(x)>Number(ecologyX0)+2;
+  });
+
+  await captureScreenshot();
+
+  // Clear is not Reset: it removes extras while authored player/spawn/view state remains.
+  await evaluate('document.querySelector(\'[data-action-id="clearExtras"]\').click()');
+  await waitFor("clear extras returns baseline",async()=>{
+    return evaluate("window.__combatLabRuntime.snapshot.residents.length===6");
+  });
+
+  // Destructive pressure: repeatedly ask for +10; no low protective cap.
+  for(let i=0;i<5;i++){
+    await evaluate('document.querySelector(\'[data-action-id="spawn10"]\').click()');
+    await sleep(50);
+  }
+  await waitFor("broad ecology population pressure",async()=>{
+    return evaluate("window.__combatLabRuntime.snapshot.residents.length>=46");
+  },{timeout:7000});
+  const pressure=await evaluate(`({
+    count:window.__combatLabRuntime.snapshot.residents.length,
+    failures:window.__combatLabRuntime.snapshot.spawnFailures,
+    occupied:window.__combatLabRuntime.snapshot.occupiedPercent,
+    bodyRate:window.__combatLabRuntime.snapshot.bodyContactsPerSecond,
+    staticRate:window.__combatLabRuntime.snapshot.staticContactsPerSecond
+  })`);
+  for(const value of [pressure.count,pressure.failures,pressure.occupied,pressure.bodyRate,pressure.staticRate]){
+    if(!Number.isFinite(Number(value))) throw new Error(`non-finite ecology pressure diagnostic: ${JSON.stringify(pressure)}`);
+  }
   await captureScreenshot(extremeScreenshotPath);
 
-  await evaluate('document.querySelector("#restore-defaults").click()');
+  // Force one long main-thread stall. Fixed-step safety remains, but the lost wall time must be visible.
+  await evaluate(`(()=>{
+    const until=performance.now()+125;
+    while(performance.now()<until){}
+    return true;
+  })()`);
+  await waitFor("simulation stress is truthfully surfaced",async()=>{
+    return evaluate(`(()=>{
+      const r=window.__combatLabRuntime;
+      return r.droppedWallTime>0.02 &&
+        r.simHealth==="STRESS" &&
+        document.querySelector("#sim-health")?.textContent==="SIM STRESS" &&
+        Number.isFinite(r.lastDroppedSeconds);
+    })()`);
+  },{timeout:3000});
+
+  // Reset returns deterministic baseline but preserves current authored player/spawn/view settings.
+  await evaluate('document.querySelector("#reset-world").click()');
+  await waitFor("ecology reset preserves authored controls and baseline population",async()=>{
+    return evaluate(`(()=>{
+      const s=window.__combatLabRuntime.snapshot;
+      return s.residents.length===6 &&
+        Math.abs(s.player.envelope-4.5)<1e-9 &&
+        Math.abs(s.spawnTemplate.envelope-2)<1e-9 &&
+        Math.abs(s.spawnTemplate.bodyMass-0.5)<1e-9 &&
+        Math.abs(s.cameraZoom-0.75)<1e-9 &&
+        window.__combatLabRuntime.droppedWallTime===0;
+    })()`);
+  });
+
   await cdp.send("Emulation.setDeviceMetricsOverride",{
     width:1280,height:800,deviceScaleFactor:1,mobile:false
   });
@@ -370,34 +492,10 @@ try{
     };
   })()`);
   if(Number(compact.inspector)<340 || Number(compact.stage)<700){
-    throw new Error(`compact B0 layout failed: ${JSON.stringify(compact)}`);
+    throw new Error(`compact ecology layout failed: ${JSON.stringify(compact)}`);
   }
   if(Number(compact.inspectorScrollWidth)>Number(compact.inspectorClientWidth)+1){
-    const overflowAudit=await evaluate(`(()=>{
-      const inspector=document.querySelector(".inspector");
-      const root=inspector.getBoundingClientRect();
-      const contentRight=root.left+inspector.clientWidth;
-      return [...inspector.querySelectorAll("*")]
-        .map(el=>{
-          const r=el.getBoundingClientRect();
-          return {
-            tag:el.tagName,
-            id:el.id || "",
-            cls:el.className || "",
-            left:Number(r.left.toFixed(1)),
-            right:Number(r.right.toFixed(1)),
-            width:Number(r.width.toFixed(1)),
-            scrollWidth:el.scrollWidth,
-            clientWidth:el.clientWidth,
-            overflowX:getComputedStyle(el).overflowX,
-            excess:Number((r.right-contentRight).toFixed(1))
-          };
-        })
-        .filter(x=>x.excess>1 || x.scrollWidth>x.clientWidth+1)
-        .sort((a,b)=>Math.max(b.excess,b.scrollWidth-b.clientWidth)-Math.max(a.excess,a.scrollWidth-a.clientWidth))
-        .slice(0,12);
-    })()`);
-    throw new Error(`Inspector has horizontal overflow: ${JSON.stringify(compact)} offenders=${JSON.stringify(overflowAudit)}`);
+    throw new Error(`ecology Inspector has horizontal overflow: ${JSON.stringify(compact)}`);
   }
   await captureScreenshot(compactScreenshotPath);
 
