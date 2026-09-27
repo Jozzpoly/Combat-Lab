@@ -8,7 +8,7 @@ It is not the Feniks combat implementation, and it is not a sword project. The r
 
 **Canonical live branch:** `main` after repository canonicalization.
 
-**Current stage:** Workbench + Load / Envelope B0 is **closed**; the first Active Spatial Ecology Owner rehearsal and feedback/evidence campaign are **closed**. The Lab direction has a positive Owner signal, while the target ecology hypothesis remains **INCONCLUSIVE because material apparatus/UX/organism/stimulus failures dominated the test**. A separate refoundation/research campaign is now **ACTIVE**. Its first bounded shared-apparatus slice, L0 intervention provenance, is **mechanically qualified**; its Owner-facing usefulness remains unqualified.
+**Current stage:** Workbench + Load / Envelope B0 is **closed**; the first Active Spatial Ecology Owner rehearsal and feedback/evidence campaign are **closed**. The Lab direction has a positive Owner signal, while the target ecology hypothesis remains **INCONCLUSIVE because material apparatus/UX/organism/stimulus failures dominated the test**. A separate refoundation/research campaign is now **ACTIVE**. Its first two bounded shared-apparatus slices — L0 intervention provenance and L1 scoped comparison — are **mechanically qualified**; their Owner-facing usefulness remains unqualified.
 
 Current qualified statements:
 
@@ -16,7 +16,7 @@ Current qualified statements:
 - **B0 embodiment decomposition — POSITIVE OWNER SIGNAL / STAGE CLOSED.**
 - Separating spatial envelope, inertial burden/load and locomotor authority is worth carrying forward as a research principle.
 - The current B0 formulas, units and circular body representation are **not** accepted Feniks semantics.
-- A/B parameter slots are mechanically qualified and now **OWNER-USED**, but trustworthy comparison usefulness remains **UNPROVEN**.
+- L1 replaces capture-all numeric A/B with experiment-declared scoped comparison; its mechanics are qualified, while trustworthy Owner comparison usefulness remains **UNPROVEN**.
 - There is **no accepted Feniks combat model, hit-authority model, aim/target model or commitment scheme**.
 - **Active Spatial Ecology v0** has completed its first Owner rehearsal: the Lab starts fulfilling its research role, but current camera/UX/debug/organism/contact behavior has material failures and the intended ecology hypothesis remains **INCONCLUSIVE**.
 

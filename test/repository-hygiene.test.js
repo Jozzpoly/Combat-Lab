@@ -24,7 +24,7 @@ test("canonical entrypoints contain one current project state",()=>{
   assert.match(state,/Workbench \+ B0 CLOSED/);
   assert.match(state,/first Active Spatial Ecology Owner rehearsal \+ feedback\/evidence campaign CLOSED/i);
   assert.match(state,/TARGET HYPOTHESIS INCONCLUSIVE — APPARATUS LIMITATIONS BECAME THE DOMINANT FINDING/i);
-  assert.match(state,/refoundation\/research campaign ACTIVE; L0 intervention provenance MECHANICALLY QUALIFIED; Owner UX UNQUALIFIED/i);
+  assert.match(state,/refoundation\/research campaign ACTIVE; L0 intervention provenance \+ L1 scoped comparison MECHANICALLY QUALIFIED; Owner UX UNQUALIFIED/i);
   assert.match(state,/optional explicit linkage \/ correlated scaling/i);
   assert.match(state,/Feniks, ReflexBrain, Companion and SPC/);
   assert.doesNotMatch(state,/waiting for new Owner instruction/i);
@@ -32,6 +32,13 @@ test("canonical entrypoints contain one current project state",()=>{
   assert.doesNotMatch(state,/public runtime remains the B0 closure release/i);
   assert.match(state,/current public artifact is the ecology rehearsal candidate/i);
   assert.ok(state.length<20000,"canonical state must remain a compact live-truth document");
+});
+
+test("legacy capture-all parameter state is retired after L1",()=>{
+  assert.ok(exists("src/core/comparison-state.js"));
+  assert.ok(exists("test/comparison-state.test.js"));
+  assert.equal(exists("src/core/parameter-state.js"),false);
+  assert.equal(exists("test/parameter-state.test.js"),false);
 });
 
 test("append-only historical state is preserved outside canonical truth",()=>{

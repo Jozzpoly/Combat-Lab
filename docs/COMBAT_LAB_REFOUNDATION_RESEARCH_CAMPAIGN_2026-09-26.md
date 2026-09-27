@@ -1,7 +1,7 @@
 # Combat Lab — Refoundation Research Campaign
 
 **Started:** 2026-09-26  
-**Campaign status:** **ACTIVE RESEARCH / ARCHITECTURE REFOUNDATION · NO RUNTIME IMPLEMENTATION STARTED**  
+**Campaign status:** **ACTIVE RESEARCH / SHARED-APPARATUS REFOUNDATION IN PROGRESS · ECOLOGY ORGANISM/CONTACT/NAVIGATION REFOUNDATION NOT STARTED**  
 **Authority:** bounded strategy derived from live `main`, S0/B0/Ecology Owner evidence, exact Ecology specimen forensics and targeted donor recovery. It does not promote a replacement runtime architecture by existence.
 
 ## 0. Why this campaign exists
@@ -352,7 +352,7 @@ Useful comparison donor:
 
 ## 14. L1 scoped-comparison contract — implementation candidate
 
-**Status at authoring:** implementation candidate; machine qualification pending.
+**Status:** **MECHANICALLY QUALIFIED · OWNER UX UNQUALIFIED**.
 
 L1 changes the meaning of Workbench A/B from:
 
@@ -400,3 +400,44 @@ L1 falsifiers:
 - Apply silently changes state outside the declared contract;
 - matched-start assumptions remain hidden;
 - adding a future editable apparatus field would be captured unless the experiment explicitly opted it in.
+
+
+### L1 qualification evidence
+
+Exact qualified checkpoint:
+
+`c13c83389f68481fe586a7b613429887314b7235`
+
+Machine evidence:
+
+- GitHub Actions check run `36293705172` — **SUCCESS**;
+- **44 / 44** Node checks PASS;
+- live Chromium Workbench gate PASS;
+- unit evidence proves an editable apparatus field is excluded unless an experiment explicitly includes it;
+- B0 slot summary exposes `Player authored phenotype · specimen/player · 4 fields`;
+- exact A↔B difference is visible before Apply;
+- browser evidence checks that Apply preserves current World state and that Reset World is a separate matched-start operation;
+- L0 ledger captures the full scoped comparison snapshot with domain/scope/path metadata.
+
+Bounded verdict:
+
+> **L1 MECHANICS PASS — comparison scope is now experiment-declared and inspectable instead of being synonymous with all editable numeric state.**
+
+Still unqualified:
+
+- whether A/B should remain two slots;
+- whether the current presentation is pleasant or fast enough for the Owner;
+- persistent checkpoints;
+- replay / undo;
+- comparison of world/population domains;
+- Owner usefulness in a richer Ecology experiment.
+
+### Post-L1 sequencing
+
+A standalone generic O0 observability framework is now rejected as the next move.
+
+The next candidate cell is **N0 whole-body static feasibility with O0 embedded as its observation requirement**. The first causal query should have a real consumer:
+
+`target / intent → whole-body hard feasibility → first static blocker or clear result`.
+
+This deliberately leaves out dynamic-body avoidance, stuck/replan policy and contact negotiation. Those remain later N1/C0 questions.

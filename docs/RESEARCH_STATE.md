@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-26  
 **Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
 **Canonical branch:** `main` after repository canonicalization  
-**Stage:** **Workbench + B0 CLOSED; first Active Spatial Ecology Owner rehearsal + feedback/evidence campaign CLOSED; target hypothesis INCONCLUSIVE; refoundation/research campaign ACTIVE; L0 intervention provenance MECHANICALLY QUALIFIED; Owner UX UNQUALIFIED**
+**Stage:** **Workbench + B0 CLOSED; first Active Spatial Ecology Owner rehearsal + feedback/evidence campaign CLOSED; target hypothesis INCONCLUSIVE; refoundation/research campaign ACTIVE; L0 intervention provenance + L1 scoped comparison MECHANICALLY QUALIFIED; Owner UX UNQUALIFIED**
 
 ## 1. Owner intent
 
@@ -195,7 +195,7 @@ Other repository truth remains:
 
 The first Ecology recording/feedback campaign remains **CLOSED**.
 
-The separate **Combat Lab refoundation/research campaign is now ACTIVE**. Runtime refoundation has started only in the bounded shared-apparatus L0 intervention-provenance slice; no Ecology/organism/contact refoundation implementation has started.
+The separate **Combat Lab refoundation/research campaign is now ACTIVE**. Runtime refoundation currently contains only bounded shared-apparatus L0 intervention provenance and L1 scoped comparison; no Ecology organism/contact/navigation refoundation implementation has started.
 
 Primary active strategy:
 
@@ -255,16 +255,36 @@ Exact qualified checkpoint:
 
 L0 proves only that the Lab can preserve lightweight structured intervention provenance without changing the existing B0/S0 behavioral contract. It does **not** prove that the history is yet easy or useful for the Owner to inspect.
 
+**L1 — scoped comparison: MECHANICALLY QUALIFIED · OWNER UX UNQUALIFIED**
+
+Exact qualified checkpoint:
+
+- `c13c83389f68481fe586a7b613429887314b7235`;
+- CI run `36293705172`;
+- **44 / 44 automated checks PASS**;
+- live Chromium Workbench gate PASS;
+- B0 declares exactly four `specimen/player` fields instead of inheriting every editable numeric field;
+- S0 declares its own one-field body-scale comparison contract;
+- slot summaries expose comparison identity, semantic scope and field count;
+- A↔B differences are visible before Apply; the browser gate explicitly recovered `Carried load mass 0.00 → 4.00`;
+- Apply semantics explicitly say current World state remains live and Reset World is separate when a matched start matters;
+- L0 provenance stores the scoped comparison snapshot itself, so later evidence does not need to infer what Capture meant.
+
+L1 does **not** qualify the two-slot UI, comparison usefulness, checkpoint/replay semantics or Owner-facing workflow quality.
+
 ### Immediate next research boundary
 
-Do **not** automatically implement L1 or O0.
+Do not build a generic O0 Debug/probe framework in isolation.
 
-Use L0 as new evidence and challenge which unresolved apparatus question has higher information value:
+The next highest-value candidate is **N0 whole-body feasibility with an embedded O0 observation cell**:
 
-- **L1 — scoped comparison:** make capture/apply explicit about domains, differences and matched-start assumptions instead of treating all editable numeric fields as one hidden state;
-- **O0 — causal observation:** replace global-maximal Debug assumptions with query/probe semantics that can later answer local causal questions at bounded observer cost.
+- use a minimal, replaceable whole-body static-feasibility query;
+- keep hard physical feasibility separate from optional comfort/preference clearance;
+- expose one focused causal answer such as target → swept-body feasibility → first static blocker / clear result;
+- keep dynamic-body negotiation, replanning and contact semantics out of N0;
+- use this concrete consumer to discover the minimum useful query/probe contract rather than designing observability in the abstract.
 
-Choose after a short architecture/evidence comparison, not because one is easier to code.
+This combines the first real Ecology competence deficit with the first meaningful causal-observation consumer while preserving replaceability. It is a research candidate, not yet a selected pathfinder or physics backend.
 
 ### Active invariant
 
