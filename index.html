@@ -69,10 +69,13 @@
         <section class="inspector-section parameter-state-section">
           <div class="section-heading compact">
             <div>
-              <div class="section-title">Parameter state</div>
-              <p class="section-description">Capture authored values for fast A/B comparison. Applying a slot is live; Reset World remains separate for matched starts.</p>
+              <div class="section-title">Comparison</div>
+              <p class="section-description">Each experiment declares exactly what A/B captures and what Apply preserves.</p>
             </div>
           </div>
+
+          <p id="comparison-contract" class="section-description">This experiment declares no A/B comparison contract.</p>
+          <div id="comparison-diff" class="slot-summary">Capture A and B to inspect exact differences.</div>
 
           <div class="parameter-slots">
             <div class="parameter-slot" data-slot="A">

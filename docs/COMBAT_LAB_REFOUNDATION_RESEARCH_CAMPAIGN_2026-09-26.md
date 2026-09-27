@@ -332,3 +332,71 @@ Still unqualified:
 - whether the current domain/scope conventions remain sufficient under richer experiments;
 - comparison semantics (L1);
 - query-driven causal observation (O0).
+
+
+## 13. L1 vs O0 sequencing decision
+
+**Decision:** pursue **L1 scoped comparison before O0 causal observation**.
+
+Reasoning:
+
+- L1 has a direct Owner-observed epistemic failure: the first Ecology rehearsal ended with `Capture B → Apply A` inside a live 845-resident world while the old slot summary hid most captured state and did not expose matched-start scope.
+- L0 now supplies structured provenance needed to make comparison effects explicit rather than inferred.
+- B0/S0 are sufficient to falsify a scoped-comparison contract without inventing new organism semantics.
+- O0 remains high-value, but a useful query/probe system needs a concrete causal consumer. Companion donor evidence is strongest when it can talk about a focused member's target, BLOCKED status, contact exposure and recovery timing. Building a generic probe framework before Combat Lab has an equivalent causal chain would risk another substrate-first abstraction.
+
+Useful comparison donor:
+
+- Companion Field Lab explicitly captures setup dimensions such as situation, layout, control state and live positions, and commit `3d97134255a1acfe49d369553039361bd0a10731` specifically tests that layout/situation changes preserve live spatial setup instead of silently resetting it.
+- Combat Lab takes the principle — **comparison must say which domains change and which remain live** — without importing Companion's setup/trial architecture.
+
+## 14. L1 scoped-comparison contract — implementation candidate
+
+**Status at authoring:** implementation candidate; machine qualification pending.
+
+L1 changes the meaning of Workbench A/B from:
+
+> every editable numeric field is implicitly comparison state
+
+to:
+
+> each experiment explicitly declares a comparison contract.
+
+For the initial B0/S0 cell, the contract declares:
+
+- a stable comparison identity;
+- human label;
+- exact included control IDs;
+- each included field's L0 `domain / scope / path`;
+- factual Apply semantics;
+- a matched-start hint.
+
+The captured slot stores these semantics together with field values. Therefore scope is preserved at capture time rather than reconstructed from a later UI label.
+
+Initial B0 contract:
+
+- scope: `specimen/player`;
+- fields: envelope, body mass, carried load, locomotor force;
+- Apply changes those authored specimen values only;
+- current world state remains live;
+- Reset World is separate when the research question requires a matched spatial/velocity start.
+
+S0 declares its own one-field body-scale contract.
+
+L1 deliberately does **not**:
+
+- automatically reset the world;
+- capture apparatus/view state;
+- capture world/population state;
+- turn two slots into replay/checkpoints;
+- decide that every experiment needs A/B;
+- define a universal comparison ontology.
+
+L1 falsifiers:
+
+- capture still implicitly means every editable field;
+- Owner cannot see captured scope before Apply;
+- Owner cannot see A↔B differences before Apply;
+- Apply silently changes state outside the declared contract;
+- matched-start assumptions remain hidden;
+- adding a future editable apparatus field would be captured unless the experiment explicitly opted it in.

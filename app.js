@@ -4,7 +4,14 @@ import {BrowserInput} from "./src/core/browser-input.js";
 import {resizeCanvas,beginCanvasFrame} from "./src/core/canvas.js";
 import {readBuildIdentity} from "./src/core/provenance.js";
 import {WorkbenchInspector} from "./src/core/workbench-inspector.js";
-import {ParameterSlotStore,formatParameterSlot} from "./src/core/parameter-state.js";
+import {
+  ComparisonSlotStore,
+  buildComparisonSnapshot,
+  comparisonSnapshotState,
+  formatComparisonContract,
+  formatComparisonDiff,
+  formatComparisonSlot
+} from "./src/core/comparison-state.js";
 import {InterventionLedger} from "./src/core/intervention-ledger.js";
 import {substrateSmoke} from "./experiments/substrate-smoke.js";
 import {embodiedScaleFieldV0} from "./experiments/embodied-scale-field-v0.js";
@@ -30,6 +37,8 @@ const captureBButton=document.querySelector("#capture-b");
 const applyBButton=document.querySelector("#apply-b");
 const slotASummary=document.querySelector("#slot-a-summary");
 const slotBSummary=document.querySelector("#slot-b-summary");
+const comparisonContract=document.querySelector("#comparison-contract");
+const comparisonDiff=document.querySelector("#comparison-diff");
 const debugInput=document.querySelector("#debug");
 const runtime=window.__combatLabRuntime;
 
@@ -42,7 +51,7 @@ const runner=new FixedStepRunner({dt:1/120,maxFrame:0.05,maxAccum:0.10});
 const input=new BrowserInput({pointerTarget:canvas});
 input.attach();
 
-const parameterSlots=new ParameterSlotStore();
+const comparisonSlots=new ComparisonSlotStore();
 const interventionLedger=new InterventionLedger();
 
 let paused=false;
@@ -94,48 +103,70 @@ function captureSnapshot(){
     : null;
 }
 
+function currentComparisonSnapshot(){
+  const definition=inspector.getComparisonDefinition();
+  if(!definition) return null;
+  return buildComparisonSnapshot({
+    experimentId:runtime.activeExperimentId,
+    simulationTime:elapsed,
+    definition,
+    descriptors:inspector.getParameterDescriptors(),
+    values:inspector.getParameterState()
+  });
+}
+
 function updateParameterSlots(){
   const experimentId=runtime.activeExperimentId;
-  const labels=inspector.getParameterLabels();
-  const a=parameterSlots.get(experimentId,"A");
-  const b=parameterSlots.get(experimentId,"B");
+  const definition=inspector.getComparisonDefinition();
+  const descriptors=inspector.getParameterDescriptors();
+  const a=comparisonSlots.get(experimentId,"A");
+  const b=comparisonSlots.get(experimentId,"B");
 
-  slotASummary.textContent=formatParameterSlot(a,labels);
-  slotBSummary.textContent=formatParameterSlot(b,labels);
+  slotASummary.textContent=formatComparisonSlot(a);
+  slotBSummary.textContent=formatComparisonSlot(b);
+  comparisonContract.textContent=formatComparisonContract(definition,descriptors);
+  comparisonDiff.textContent=formatComparisonDiff(a,b);
   applyAButton.disabled=!a;
   applyBButton.disabled=!b;
-  captureAButton.disabled=inspector.editableIds.length===0;
-  captureBButton.disabled=inspector.editableIds.length===0;
+  captureAButton.disabled=!definition;
+  captureBButton.disabled=!definition;
 }
 
 function captureParameterSlot(name){
-  const before=parameterSlots.get(runtime.activeExperimentId,name);
-  const state=inspector.getParameterState();
-  parameterSlots.capture(runtime.activeExperimentId,name,state);
+  const before=comparisonSlots.get(runtime.activeExperimentId,name);
+  const snapshot=currentComparisonSnapshot();
+  if(!snapshot) return;
+  comparisonSlots.capture(runtime.activeExperimentId,name,snapshot);
   recordIntervention({
     operation:"comparison-capture",
     effects:[{
       domain:"comparison",
       scope:`slot:${name}`,
-      path:"authored-parameters",
+      path:snapshot.comparisonId,
       before,
-      after:state
+      after:snapshot
     }],
-    detail:{slot:name}
+    detail:{slot:name,comparisonId:snapshot.comparisonId}
   });
   updateParameterSlots();
 }
 
 function applyParameterSlot(name){
-  const state=parameterSlots.get(runtime.activeExperimentId,name);
-  if(!state) return;
+  const snapshot=comparisonSlots.get(runtime.activeExperimentId,name);
+  if(!snapshot) return;
+  const state=comparisonSnapshotState(snapshot);
   const before=inspector.getParameterState();
   inspector.applyParameterState(state);
   const after=inspector.getParameterState();
   recordIntervention({
     operation:"comparison-apply",
     effects:inspector.describeParameterChanges(before,after,{requestedState:state}),
-    detail:{slot:name}
+    detail:{
+      slot:name,
+      comparisonId:snapshot.comparisonId,
+      applySemantics:snapshot.applySemantics,
+      matchedStartHint:snapshot.matchedStartHint
+    }
   });
   captureSnapshot();
   updateParameterSlots();

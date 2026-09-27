@@ -293,6 +293,13 @@ export const loadEnvelopeFieldB0={
 
     const inspector={
       schema:{
+        comparison:{
+          id:"player-authored-phenotype",
+          label:"Player authored phenotype",
+          controlIds:["envelope","bodyMass","loadMass","forceMultiplier"],
+          applySemantics:"Apply changes specimen/player authored values only; current world state is preserved.",
+          matchedStartHint:"Reset World separately when a matched spatial/velocity start matters."
+        },
         groups:[
           {
             id:"geometry",

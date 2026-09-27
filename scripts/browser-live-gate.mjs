@@ -205,6 +205,27 @@ try{
   });
   await evaluate('document.querySelector("#capture-b").click()');
 
+  const comparisonUi=await evaluate(`({
+    a:document.querySelector("#slot-a-summary")?.textContent,
+    b:document.querySelector("#slot-b-summary")?.textContent,
+    contract:document.querySelector("#comparison-contract")?.textContent,
+    diff:document.querySelector("#comparison-diff")?.textContent
+  })`);
+  if(!comparisonUi.a?.includes("Player authored phenotype") || !comparisonUi.a?.includes("specimen/player")){
+    throw new Error(`A scope is not explicit: ${JSON.stringify(comparisonUi)}`);
+  }
+  if(!comparisonUi.b?.includes("4 fields")){
+    throw new Error(`B field scope is not explicit: ${JSON.stringify(comparisonUi)}`);
+  }
+  if(!comparisonUi.contract?.includes("current world state is preserved") ||
+     !comparisonUi.contract?.includes("Reset World separately")){
+    throw new Error(`comparison apply/matched-start semantics are hidden: ${JSON.stringify(comparisonUi)}`);
+  }
+  if(!comparisonUi.diff?.includes("Carried load mass") ||
+     !comparisonUi.diff?.includes("0.00 → 4.00")){
+    throw new Error(`comparison diff is not explicit before Apply: ${JSON.stringify(comparisonUi)}`);
+  }
+
   const b=await evaluate("window.__combatLabRuntime.snapshot.player");
 
   if(Math.abs(a.r-b.r)>1e-9) throw new Error("load changed body envelope");
@@ -458,6 +479,18 @@ try{
     if(!interventionEvents.some(event=>event.operation===operation)){
       throw new Error(`intervention ledger missed ${operation}`);
     }
+  }
+
+  const captureA=interventionEvents.find(event=>
+    event.operation==="comparison-capture" && event.detail?.slot==="A"
+  );
+  const scopedSnapshot=captureA?.effects?.[0]?.after;
+  if(scopedSnapshot?.schema!=="combat-lab-comparison-snapshot-v0"){
+    throw new Error("comparison capture did not preserve a scoped snapshot");
+  }
+  if(scopedSnapshot.fields.length!==4 ||
+     scopedSnapshot.fields.some(field=>field.domain!=="specimen" || field.scope!=="player")){
+    throw new Error(`comparison capture scope is not explicit: ${JSON.stringify(scopedSnapshot)}`);
   }
 
   const switches=interventionEvents.filter(event=>event.operation==="experiment-switch");

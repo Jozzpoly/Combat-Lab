@@ -255,6 +255,13 @@ export const embodiedScaleFieldV0={
 
     const inspector={
       schema:{
+        comparison:{
+          id:"player-body-scale",
+          label:"Player body scale",
+          controlIds:["scale"],
+          applySemantics:"Apply changes specimen/player authored scale only; current world state is preserved.",
+          matchedStartHint:"Reset World separately when a matched spatial/velocity start matters."
+        },
         groups:[
           {
             id:"body",

@@ -323,6 +323,31 @@ export class WorkbenchInspector {
     );
   }
 
+  getParameterDescriptors(){
+    return this.numericBindings.map(({control,provenance})=>({
+      id:control.id,
+      label:control.label || control.id,
+      ...provenance
+    }));
+  }
+
+  getComparisonDefinition(){
+    const raw=this.inspector?.schema?.comparison;
+    if(!raw) return null;
+    const controlIds=Array.isArray(raw.controlIds) ? [...raw.controlIds] : [];
+    const available=new Set(this.editableIds);
+    for(const id of controlIds){
+      if(!available.has(id)) throw new Error(`comparison references non-editable control: ${id}`);
+    }
+    return {
+      id:String(raw.id || "default"),
+      label:String(raw.label || raw.id || "Comparison"),
+      controlIds,
+      applySemantics:String(raw.applySemantics || ""),
+      matchedStartHint:String(raw.matchedStartHint || "")
+    };
+  }
+
   sync(force=false){
     if(!this.inspector) return;
 
