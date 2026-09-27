@@ -65,6 +65,10 @@ export function contactAcceleration(body){
   return BASE_MOTOR_FORCE*body.motorAuthority/body.mass;
 }
 
+export function contactMobility(body){
+  return 1/(body.mass*body.contactResistance);
+}
+
 export function resolveCandidateContactPair(a,b){
   let dx=b.x-a.x;
   let dy=b.y-a.y;
@@ -86,8 +90,8 @@ export function resolveCandidateContactPair(a,b){
   // - inertial mass remains mass;
   // - contact resistance is an independent positional-yield axis;
   // - resistance does not rewrite motor authority or inertial impulse mass.
-  const mobilityA=1/(a.mass*a.contactResistance);
-  const mobilityB=1/(b.mass*b.contactResistance);
+  const mobilityA=contactMobility(a);
+  const mobilityB=contactMobility(b);
   const mobilityTotal=mobilityA+mobilityB;
 
   const correctionA=penetration*(mobilityA/mobilityTotal);
@@ -247,6 +251,7 @@ export function contactOutcomeSnapshot(state){
         x:a.x,y:a.y,vx:a.vx,vy:a.vy,
         mass:a.mass,motorAuthority:a.motorAuthority,
         contactResistance:a.contactResistance,
+        contactMobility:contactMobility(a),
         acceleration:contactAcceleration(a),
         desiredVelocity:{...a.desiredVelocity}
       },
@@ -254,6 +259,7 @@ export function contactOutcomeSnapshot(state){
         x:b.x,y:b.y,vx:b.vx,vy:b.vy,
         mass:b.mass,motorAuthority:b.motorAuthority,
         contactResistance:b.contactResistance,
+        contactMobility:contactMobility(b),
         acceleration:contactAcceleration(b),
         desiredVelocity:{...b.desiredVelocity}
       }

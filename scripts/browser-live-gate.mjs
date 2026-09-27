@@ -502,6 +502,8 @@ try{
      causalC0?.bodies?.B?.mass!==1 ||
      causalC0?.bodies?.A?.contactResistance!==0.25 ||
      causalC0?.bodies?.B?.contactResistance!==4 ||
+     causalC0?.bodies?.A?.contactMobility!==4 ||
+     causalC0?.bodies?.B?.contactMobility!==0.25 ||
      causalC0?.bodies?.A?.desiredVelocity?.x!==140 ||
      causalC0?.bodies?.B?.desiredVelocity?.x!==-140){
     throw new Error(`C0 yielding causal evidence failed: ${JSON.stringify(causalC0)}`);

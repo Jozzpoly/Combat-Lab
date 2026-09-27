@@ -102,7 +102,7 @@ function threeBody(order,iterations){
     contactPairsThisStep:0,totalContactPairSteps:0,lastContacts:[]
   };
   for(let i=0;i<600;i++) stepContactWorld(state,1/120,{iterations,pairOrder:order});
-  return state.bodies.map(body=>body.x);
+  return state.bodies.map(body=>({x:body.x,vx:body.vx}));
 }
 
 test("C0 iterative solve materially suppresses multi-body pair-order artifact",()=>{
@@ -111,12 +111,26 @@ test("C0 iterative solve materially suppresses multi-body pair-order artifact",(
   const convergedForward=threeBody("forward",12);
   const convergedReverse=threeBody("reverse",12);
 
-  const oneError=Math.max(...oneForward.map((x,i)=>Math.abs(x-oneReverse[i])));
-  const convergedError=Math.max(...convergedForward.map((x,i)=>Math.abs(x-convergedReverse[i])));
+  const onePositionError=Math.max(...oneForward.map((body,i)=>Math.abs(body.x-oneReverse[i].x)));
+  const convergedPositionError=Math.max(...convergedForward.map((body,i)=>Math.abs(body.x-convergedReverse[i].x)));
+  const convergedVelocityError=Math.max(...convergedForward.map((body,i)=>Math.abs(body.vx-convergedReverse[i].vx)));
 
-  assert.ok(oneError>0.01);
-  assert.ok(convergedError<1e-4);
-  assert.ok(convergedError<oneError/100);
+  assert.ok(onePositionError>0.01);
+  assert.ok(convergedPositionError<1e-4);
+  assert.ok(convergedPositionError<onePositionError/100);
+  assert.ok(convergedVelocityError<1e-4);
+});
+
+test("C0 causal truth exposes the current mass-times-resistance coupling instead of implying orthogonal laws",()=>{
+  const out=runHeadOn({
+    a:{mass:2,contactResistance:4},
+    b:{mass:1,contactResistance:0.5}
+  });
+
+  assert.equal(out.bodies.A.contactMobility,1/8);
+  assert.equal(out.bodies.B.contactMobility,2);
+  assert.equal(out.bodies.A.mass,2);
+  assert.equal(out.bodies.A.contactResistance,4);
 });
 
 test("C0 candidate remains finite under strong but legal body asymmetry",()=>{
