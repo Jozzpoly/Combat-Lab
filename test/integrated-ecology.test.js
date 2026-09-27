@@ -78,7 +78,9 @@ test("E1 explicit passing convention materially improves the same integrated top
     left.totalRemainingDistance<none.totalRemainingDistance,
     `LEFT remaining ${left.totalRemainingDistance} >= NONE ${none.totalRemainingDistance}; LEFT=${JSON.stringify(left)} NONE=${JSON.stringify(none)}`
   );
-  assert.ok(none.noConventionBlocks>0);
+  assert.ok(none.dynamicEncounters>0);
+  assert.ok(none.noConventionEncounters>0);
+  assert.ok(Object.values(none.actors).some(actor=>actor.dynamicTrigger?.passingSide===0));
 });
 
 test("E1 snapshot preserves per-actor causal triggers instead of only aggregate crowd metrics",()=>{

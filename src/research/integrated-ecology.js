@@ -598,6 +598,9 @@ export function integratedEcologySnapshot(state){
   const staticReplans=actorValues.reduce((sum,actor)=>sum+actor.staticReplanCount,0);
   const dynamicEncounters=actorValues.reduce((sum,actor)=>sum+actor.dynamicEncounterCount,0);
   const noConventionBlocks=actorValues.filter(actor=>actor.mode==="DYNAMIC_BLOCKED_NO_CONVENTION").length;
+  const noConventionEncounters=actorValues.filter(actor=>
+    actor.dynamicTrigger?.passingSide===0
+  ).length;
   const totalInitialDistance=state.initialTotalDistance;
   const totalRemainingDistance=state.bodies.reduce((sum,body)=>
     sum+distance(body,state.actors[body.id].target),0
@@ -613,6 +616,7 @@ export function integratedEcologySnapshot(state){
     staticReplans,
     dynamicEncounters,
     noConventionBlocks,
+    noConventionEncounters,
     staticOverlapViolations:state.staticOverlapViolations,
     dynamicOverlapViolations:state.dynamicOverlapViolations,
     staticProjectionCorrections:state.totalStaticProjectionCorrections,
