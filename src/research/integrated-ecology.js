@@ -607,6 +607,77 @@ export function stepIntegratedEcologyState(state,dt){
   return state;
 }
 
+
+export function setIntegratedEcologyPassingSide(state,value){
+  const side=normalizePassingSide(value);
+  for(const actor of Object.values(state.actors)){
+    actor.passingSide=side;
+  }
+  return side;
+}
+
+export function integratedEcologyActorSnapshot(state,actorId){
+  const id=String(actorId || "");
+  const actor=state.actors[id];
+  const body=state.bodies.find(candidate=>candidate.id===id);
+  if(!actor || !body) return null;
+
+  const partners=[];
+  for(const contact of state.lastContacts || []){
+    if(contact.a===id) partners.push(contact.b);
+    else if(contact.b===id) partners.push(contact.a);
+  }
+  partners.sort();
+
+  return {
+    id,
+    phenotype:actor.phenotype,
+    mode:actor.mode,
+    passingSide:actor.passingSide,
+    body:{
+      position:{x:body.x,y:body.y},
+      velocity:{x:body.vx,y:body.vy},
+      desiredVelocity:{...body.desiredVelocity},
+      radius:body.radius,
+      mass:body.mass,
+      motorAuthority:body.motorAuthority,
+      contactResistance:body.contactResistance
+    },
+    purpose:{
+      target:{...actor.target},
+      goalDistance:distance(body,actor.target)
+    },
+    immediatePlan:{
+      waypoint:{...currentWaypoint(actor)},
+      routeIndex:actor.routeIndex,
+      routeLength:actor.route.length,
+      route:actor.route.map(point=>({...point}))
+    },
+    static:{
+      blockerThisStep:actor.staticBlockerThisStep,
+      noProgressFor:actor.staticNoProgressFor,
+      replanAttempted:actor.staticReplanAttempted,
+      replanCount:actor.staticReplanCount,
+      trigger:actor.staticTrigger ? structuredClone(actor.staticTrigger) : null,
+      witness:actor.staticWitness
+        ? {
+            status:actor.staticWitness.status,
+            provesUnreachable:actor.staticWitness.provesUnreachable,
+            clearanceConstrained:Boolean(actor.staticWitness.clearanceConstrained),
+            routeNodeIds:[...(actor.staticWitness.routeNodeIds || [])]
+          }
+        : null
+    },
+    dynamic:{
+      partners,
+      noProgressFor:actor.dynamicNoProgressFor,
+      encounterAttempted:actor.dynamicEncounterAttempted,
+      encounterCount:actor.dynamicEncounterCount,
+      trigger:actor.dynamicTrigger ? structuredClone(actor.dynamicTrigger) : null
+    }
+  };
+}
+
 export function integratedEcologySnapshot(state){
   const actorValues=Object.values(state.actors);
   const arrived=actorValues.filter(actor=>actor.mode==="ARRIVED").length;

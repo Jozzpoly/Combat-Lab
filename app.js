@@ -21,6 +21,7 @@ import {loadEnvelopeFieldB0} from "./experiments/load-envelope-field-b0.js";
 import {minimalReplanCellN1} from "./experiments/minimal-replan-cell-n1.js";
 import {contactSemanticsCellC0} from "./experiments/contact-semantics-cell-c0.js";
 import {dynamicEncounterCellD0} from "./experiments/dynamic-encounter-cell-d0.js";
+import {integratedEcologyRehearsalR0} from "./experiments/integrated-ecology-rehearsal-r0.js";
 
 const canvas=document.querySelector("#lab");
 const ctx=canvas.getContext("2d");
@@ -59,6 +60,7 @@ registry.register(loadEnvelopeFieldB0);
 registry.register(minimalReplanCellN1);
 registry.register(contactSemanticsCellC0);
 registry.register(dynamicEncounterCellD0);
+registry.register(integratedEcologyRehearsalR0);
 
 const runner=new FixedStepRunner({dt:1/120,maxFrame:0.05,maxAccum:0.10});
 const input=new BrowserInput({pointerTarget:canvas});
@@ -475,6 +477,33 @@ function endCameraPan(event){
 }
 canvas.addEventListener("pointerup",endCameraPan);
 canvas.addEventListener("pointercancel",endCameraPan);
+
+canvas.addEventListener("pointerdown",event=>{
+  if(event.button!==0 || typeof current?.instance?.pick!=="function") return;
+  const rect=canvas.getBoundingClientRect();
+  const result=current.instance.pick({
+    screen:{x:event.clientX-rect.left,y:event.clientY-rect.top},
+    view:latestView,
+    camera:cameraBounds ? researchCamera : null
+  });
+  if(!result) return;
+  if(result.inspectorMode) setInspectorMode(result.inspectorMode);
+  if(!Object.is(result.before,result.after)){
+    recordIntervention({
+      operation:"select-subject",
+      effects:[{
+        domain:"apparatus",
+        scope:"inspection",
+        path:"selectedSubject",
+        before:result.before,
+        after:result.after
+      }],
+      detail:{inputKind:"pointer"}
+    });
+  }
+  captureSnapshot();
+  inspector.sync(true);
+});
 
 readBuildIdentity().then(identity=>{
   buildId.textContent=`${identity.commit.slice(0,12)} · ${identity.branch}`;

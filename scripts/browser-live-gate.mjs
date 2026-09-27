@@ -691,6 +691,96 @@ try{
     return evaluate('window.__combatLabRuntime.activeExperimentId==="load-envelope-field-b0" && !!document.querySelector(\'[data-param-id="loadMass"]\')');
   });
 
+  // Rehearsal R0: real camera input, selected-subject causal observation and exact population-on-reset authoring.
+  await evaluate(`(()=>{
+    const s=document.querySelector("#experiment-select");
+    s.value="integrated-ecology-rehearsal-r0";
+    s.dispatchEvent(new Event("change",{bubbles:true}));
+  })()`);
+  await waitFor("switch B0 to rehearsal R0",async()=>{
+    return evaluate(`(()=>{
+      const r=window.__combatLabRuntime;
+      return r?.activeExperimentId==="integrated-ecology-rehearsal-r0" &&
+        r?.snapshot?.population===8 &&
+        !document.querySelector("#camera-tools")?.hidden &&
+        !!document.querySelector('[data-param-id="population"]');
+    })()`);
+  });
+
+  const cameraBefore=await evaluate("window.__combatLabRuntime.camera.snapshot()");
+  await evaluate(`(()=>{
+    const canvas=document.querySelector("#lab");
+    const rect=canvas.getBoundingClientRect();
+    canvas.dispatchEvent(new WheelEvent("wheel",{
+      bubbles:true,
+      cancelable:true,
+      deltaY:-260,
+      clientX:rect.left+rect.width*0.62,
+      clientY:rect.top+rect.height*0.43
+    }));
+  })()`);
+  const cameraAfter=await evaluate("window.__combatLabRuntime.camera.snapshot()");
+  if(!(cameraAfter.zoom>cameraBefore.zoom) || cameraAfter.minZoom!==0.12 || cameraAfter.maxZoom!==8){
+    throw new Error(`rehearsal wheel zoom failed: ${JSON.stringify({cameraBefore,cameraAfter})}`);
+  }
+
+  const selected=await evaluate(`(()=>{
+    const canvas=document.querySelector("#lab");
+    const rect=canvas.getBoundingClientRect();
+    const snapshot=window.__combatLabRuntime.snapshot;
+    const camera=window.__combatLabRuntime.camera.snapshot();
+    const actor=snapshot.actors["resident-1"];
+    const x=rect.left+rect.width/2+(actor.position.x-camera.center.x)*camera.zoom;
+    const y=rect.top+rect.height/2+(actor.position.y-camera.center.y)*camera.zoom;
+    canvas.dispatchEvent(new PointerEvent("pointerdown",{
+      bubbles:true,
+      button:0,
+      pointerId:71,
+      clientX:x,
+      clientY:y
+    }));
+    return {
+      selected:window.__combatLabRuntime.snapshot.selectedId,
+      observeActive:document.querySelector('[data-inspector-mode="observe"]')?.getAttribute("aria-selected"),
+      observeHidden:document.querySelector('[data-inspector-panel="observe"]')?.hidden
+    };
+  })()`);
+  if(selected.selected!=="resident-1" || selected.observeActive!=="true" || selected.observeHidden!==false){
+    throw new Error(`rehearsal subject selection failed: ${JSON.stringify(selected)}`);
+  }
+
+  const selectedCausal=await evaluate('window.__combatLabRuntime.query("selected-subject")');
+  if(selectedCausal?.id!=="resident-1" ||
+     !Number.isFinite(Number(selectedCausal?.purpose?.goalDistance)) ||
+     !(Number(selectedCausal?.body?.radius)>0) ||
+     !Array.isArray(selectedCausal?.dynamic?.partners)){
+    throw new Error(`rehearsal causal subject query failed: ${JSON.stringify(selectedCausal)}`);
+  }
+
+  await setNumber("population",12);
+  const beforePopulationReset=await evaluate("window.__combatLabRuntime.snapshot");
+  if(beforePopulationReset.population!==8 || beforePopulationReset.authoredPopulation!==12){
+    throw new Error(`population edit silently rebuilt world: ${JSON.stringify(beforePopulationReset)}`);
+  }
+  await evaluate('document.querySelector("#reset-world").click()');
+  await waitFor("exact rehearsal population applies on Reset World",async()=>{
+    return evaluate(`(()=>{
+      const s=window.__combatLabRuntime.snapshot;
+      return s?.population===12 &&
+        s?.authoredPopulation===12 &&
+        s?.selectedId===null;
+    })()`);
+  },{timeout:4500,interval:80});
+
+  await evaluate(`(()=>{
+    const s=document.querySelector("#experiment-select");
+    s.value="load-envelope-field-b0";
+    s.dispatchEvent(new Event("change",{bubbles:true}));
+  })()`);
+  await waitFor("switch rehearsal R0 back to B0",async()=>{
+    return evaluate('window.__combatLabRuntime.activeExperimentId==="load-envelope-field-b0" && !!document.querySelector(\'[data-param-id="loadMass"]\')');
+  });
+
   // E1 browser-only integration qualification. Do not expose E1 in the Owner selector yet.
   const e1Browser=await evaluate(`(async()=>{
     const module=await import("./src/research/integrated-ecology.js");
