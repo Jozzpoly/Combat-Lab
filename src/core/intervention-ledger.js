@@ -34,11 +34,15 @@ function normalizeEffect(effect){
 }
 
 export class InterventionLedger {
+  #now;
+  #nextSequence;
+  #events;
+
   constructor({now=()=>Date.now()}={}){
     if(typeof now!=="function") throw new Error("InterventionLedger now() required");
-    this.now=now;
-    this.nextSequence=1;
-    this.events=[];
+    this.#now=now;
+    this.#nextSequence=1;
+    this.#events=[];
   }
 
   record({
@@ -49,16 +53,18 @@ export class InterventionLedger {
     effects=[],
     detail
   }={}){
-    const wallTimeMs=Number(this.now());
+    const wallTimeMs=Number(this.#now());
     if(!Number.isFinite(wallTimeMs)) throw new Error("intervention wall clock must be finite");
 
-    const sim=Number(simulationTime);
+    const sim=simulationTime===null || simulationTime===undefined
+      ? null
+      : Number(simulationTime);
     const event={
       schema:INTERVENTION_EVENT_SCHEMA,
-      sequence:this.nextSequence++,
+      sequence:this.#nextSequence++,
       wallTimeMs,
       experimentId:optionalText(experimentId),
-      simulationTime:Number.isFinite(sim) ? sim : null,
+      simulationTime:sim!==null && Number.isFinite(sim) ? sim : null,
       operation:requiredText(operation,"intervention operation"),
       source:requiredText(source,"intervention source"),
       effects:Array.from(effects,normalizeEffect)
@@ -66,18 +72,18 @@ export class InterventionLedger {
 
     if(detail!==undefined) event.detail=cloneValue(detail);
 
-    this.events.push(event);
+    this.#events.push(event);
     return cloneValue(event);
   }
 
   entries(){
-    return cloneValue(this.events);
+    return cloneValue(this.#events);
   }
 
   snapshot(){
     return {
       schema:INTERVENTION_LEDGER_SCHEMA,
-      count:this.events.length,
+      count:this.#events.length,
       events:this.entries()
     };
   }

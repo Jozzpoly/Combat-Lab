@@ -286,7 +286,11 @@ try{
   if(Math.abs(large.totalMass-baseline.totalMass)>1e-9) throw new Error("envelope leaked into mass");
   if(Math.abs(large.acceleration-baseline.acceleration)>1e-9) throw new Error("envelope leaked into acceleration");
 
-  await setNumber("envelope",1.00);
+  await evaluate('document.querySelector(\'[data-param-id="envelope"] .icon-button\').click()');
+  await waitFor("per-parameter reset restores envelope",async()=>{
+    const p=await evaluate("window.__combatLabRuntime.snapshot.player");
+    return Math.abs(p.envelope-1)<1e-9;
+  });
   await setNumber("forceMultiplier",2.00);
   await waitFor("force edit propagated",async()=>{
     const p=await evaluate("window.__combatLabRuntime.snapshot.player");
@@ -310,6 +314,19 @@ try{
   if(!diagnosticGroup?.values.includes("substrate-smoke")){
     throw new Error(`diagnostic experiment grouping failed: ${JSON.stringify(selectorGroups)}`);
   }
+
+  // Apparatus/session interventions are provenance too, without becoming specimen state.
+  await evaluate('document.querySelector("#debug").click()');
+  await evaluate('document.querySelector("#debug").click()');
+
+  await evaluate('document.querySelector("#pause").click()');
+  await waitFor("pause toggle reaches runtime",async()=>
+    evaluate('window.__combatLabRuntime.state==="PAUSED"')
+  );
+  await evaluate('document.querySelector("#pause").click()');
+  await waitFor("resume toggle reaches runtime",async()=>
+    evaluate('window.__combatLabRuntime.state==="RUNNING"')
+  );
 
   // Experiment switching must keep both B0 and S0 valid.
   await evaluate(`(()=>{
@@ -428,7 +445,16 @@ try{
   );
   if(!clamped) throw new Error("intervention ledger did not preserve requested vs applied safety-rail truth");
 
-  for(const operation of ["comparison-capture","comparison-apply","reset-world","restore-defaults","experiment-switch"]){
+  for(const operation of [
+    "comparison-capture",
+    "comparison-apply",
+    "reset-world",
+    "restore-defaults",
+    "reset-parameter",
+    "toggle-debug",
+    "toggle-pause",
+    "experiment-switch"
+  ]){
     if(!interventionEvents.some(event=>event.operation===operation)){
       throw new Error(`intervention ledger missed ${operation}`);
     }
