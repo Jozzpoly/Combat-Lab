@@ -1311,3 +1311,34 @@ Those claims remain **OWNER-UNQUALIFIED**.
 Freeze runtime `9fe3e7f7...` and deploy that exact SHA through the existing rehearsal control plane. Do not add more runtime features before fresh Owner evidence.
 
 The old public Ecology specimen remains preserved at `experiment/active-spatial-ecology = ce96587826746efad426347a8a394048810e4ee2`.
+
+
+## 24. R0 exact public promotion — machine/artifact complete
+
+**Status:** **DEPLOYED THROUGH REHEARSAL CONTROL PLANE · OWNER EXPERIENCE STILL UNQUALIFIED**.
+
+Exact frozen runtime:
+
+`9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd`
+
+Promotion evidence:
+
+- `rehearsal/current` moved to exact frozen runtime;
+- fresh ref check `36318084351` — **SUCCESS**;
+- Pages build/deploy `36318131633` — **SUCCESS**;
+- emitted artifact browser gate PASS;
+- uploaded Pages artifact ID `10931422584`;
+- direct artifact inspection confirms:
+  - `COMMIT.txt = 9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd`;
+  - `BRANCH.txt = rehearsal/current`;
+  - versioned module entrypoints use the same SHA;
+- source browser gate already qualified direct startup via `?experiment=integrated-ecology-rehearsal-r0`.
+
+External verification boundary:
+
+- the current agent runtime could not independently fetch GitHub Pages after deployment;
+- built-in web could not access the Pages URL;
+- Opera Connector was disconnected;
+- therefore do not upgrade artifact/deploy evidence into a claim that the Owner-facing public endpoint was independently re-opened by this agent.
+
+The next evidence source is the Owner's second rehearsal. Freeze R0 until that evidence arrives.

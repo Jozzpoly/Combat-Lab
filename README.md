@@ -89,19 +89,18 @@ Historical repository-closure release:
 
 - `6bd4b4492261b9fe3b8edbca276cf9b7de3d822d` from `main`.
 
-Current public rehearsal provenance:
+Current public second-rehearsal provenance:
 
-- `COMMIT.txt`: `ce96587826746efad426347a8a394048810e4ee2`;
+- exact runtime / emitted artifact SHA: `9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd`;
+- `COMMIT.txt`: `9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd`;
 - `BRANCH.txt`: `rehearsal/current`;
-- ordinary root defaults to B0;
-- direct ecology rehearsal: `?experiment=active-spatial-ecology-v0`.
-
-Next internally qualified exact rehearsal candidate (not public until the rehearsal pointer/deploy gate completes):
-
-- runtime SHA: `9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd`;
 - source check: `36317682590` — SUCCESS;
-- direct R0 selector: `?experiment=integrated-ecology-rehearsal-r0`;
+- emitted Pages artifact browser qualification + deployment: run `36318131633` — SUCCESS;
+- ordinary root still defaults to B0;
+- direct R0 rehearsal: `?experiment=integrated-ecology-rehearsal-r0`;
 - Owner experience remains unqualified until direct use.
+
+The first Ecology rehearsal specimen remains preserved as historical Git evidence at `experiment/active-spatial-ecology = ce96587826746efad426347a8a394048810e4ee2`; it is no longer the current public Pages artifact.
 
 The public rehearsal changes the deployed artifact intentionally; it does **not** promote ecology to canonical research truth or Feniks architecture.
 
@@ -144,10 +143,16 @@ Deployment control may additionally use:
 
 The cleanup campaign previously reduced the repository to `main` only after preserving historical ancestry. The Ecology branch was then opened deliberately from green canonical main `4b44a001be679cb987c8470ce208d3b503d698a9`; that campaign is now closed, but the ref remains temporarily because its 27-commit unique lineage and public rehearsal provenance must be preserved before retirement.
 
-Exact rehearsal provenance:
+Historical first-Ecology rehearsal provenance:
 
 - internally qualified runtime: `d55b3b093325452e6dc730f314c886a2cbc85229`;
-- public-rehearsal candidate: `ce96587826746efad426347a8a394048810e4ee2`.
+- exact public-rehearsal specimen: `ce96587826746efad426347a8a394048810e4ee2`.
+
+Current second-rehearsal provenance:
+
+- frozen R0 runtime: `9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd`;
+- infrastructure pointer: `rehearsal/current`;
+- Pages deploy run: `36318131633` — SUCCESS.
 
 A rehearsal must deploy the exact candidate SHA rather than a moving branch HEAD.
 

@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-27  
 **Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
 **Canonical branch:** `main` after repository canonicalization  
-**Stage:** **Workbench + B0 CLOSED; first Active Spatial Ecology Owner rehearsal + feedback/evidence campaign CLOSED; target hypothesis INCONCLUSIVE; bounded E1 INTEGRATION MECHANICALLY QUALIFIED; R0 SECOND-REHEARSAL CANDIDATE INTERNALLY QUALIFIED; OWNER EXPERIENCE UNQUALIFIED; EXACT PUBLIC PROMOTION PENDING**
+**Stage:** **Workbench + B0 CLOSED; first Active Spatial Ecology Owner rehearsal + feedback/evidence campaign CLOSED; target hypothesis INCONCLUSIVE; bounded E1 INTEGRATION MECHANICALLY QUALIFIED; R0 SECOND-REHEARSAL SPECIMEN DEPLOYED; OWNER EXPERIENCE UNQUALIFIED; FRESH OWNER REHEARSAL NEXT**
 
 ## 1. Owner intent
 
@@ -186,9 +186,14 @@ Other repository truth remains:
 - deployments are exact-SHA and browser-qualified;
 - Pages deployment requires explicit `[deploy]` from checked `main`, a successful checked `rehearsal/current` move to an exact candidate, or manual workflow dispatch of an exact source ref;
 - ordinary `experiment/*` pushes never deploy;
-- the **current public artifact is the ecology rehearsal candidate `ce96587826746efad426347a8a394048810e4ee2` via `rehearsal/current`**; ordinary root still defaults to B0, while the direct ecology query opens the rehearsal specimen;
-- public provenance files currently report: `COMMIT.txt = ce96587826746efad426347a8a394048810e4ee2`; `BRANCH.txt = rehearsal/current`;
-- direct public Ecology rehearsal selector remains `?experiment=active-spatial-ecology-v0`;
+- the **current deployed Pages artifact is frozen R0 `9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd` via `rehearsal/current`**;
+- source check `36318084351` on the moved rehearsal ref — SUCCESS;
+- Pages build/deploy `36318131633` — SUCCESS;
+- emitted artifact `10931422584` contains `COMMIT.txt = 9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd` and `BRANCH.txt = rehearsal/current`, and was browser-qualified before upload;
+- ordinary root still defaults to B0;
+- direct current rehearsal selector is `?experiment=integrated-ecology-rehearsal-r0`;
+- independent external fetch from this agent runtime was unavailable after deployment (GitHub Pages inaccessible to built-in web and Opera Connector disconnected), so the fresh Owner open is also the remaining external surface verification;
+- the first Ecology specimen remains preserved as historical Git evidence at `experiment/active-spatial-ecology = ce96587826746efad426347a8a394048810e4ee2`; it is not the current Pages artifact;
 - repository closure evidence is recorded in `REPOSITORY_CLOSURE_AUDIT_2026-09-26.md`.
 
 ## 7. Current objective / next move
@@ -239,19 +244,29 @@ Important boundary:
 
 ### Immediate next move
 
-Freeze the R0 runtime at `9fe3e7f7...`.
+**Do not modify frozen R0 runtime before fresh Owner evidence.**
 
-Do not add further apparatus features before fresh Owner evidence.
+Deployment/promotion is complete at the machine/artifact level:
 
-Deployment sequence:
+1. `rehearsal/current` points to exact `9fe3e7f7...`;
+2. fresh check on that ref: `36318084351` — SUCCESS;
+3. emitted-artifact browser qualification + Pages deploy: `36318131633` — SUCCESS;
+4. emitted provenance inspected directly from artifact `10931422584`: exact SHA + `rehearsal/current`;
+5. direct R0 startup was already qualified by the source browser gate.
 
-1. move the infrastructure-only `rehearsal/current` pointer to exact `9fe3e7f7...`;
-2. require a fresh normal `check` on that ref;
-3. require emitted-artifact browser qualification and Pages deployment;
-4. verify public `COMMIT.txt` / `BRANCH.txt` and the direct R0 URL;
-5. then hand the exact specimen to the Owner for a second rehearsal.
+The remaining gate is the **second Owner rehearsal** on the exact R0 specimen.
 
-The old Ecology public specimen remains preserved by `experiment/active-spatial-ecology = ce96587826746efad426347a8a394048810e4ee2`; moving `rehearsal/current` must not delete that historical evidence.
+That rehearsal should test apparatus and phenomenon together, but product/experience truth stays Owner-authoritative. In particular, watch whether:
+
+- camera actually feels natural under real exploration;
+- Tune / Observe / Compare / Session reduces orientation cost;
+- selected-subject causal Observe answers useful “why?” questions;
+- exact population-on-reset makes sparse→dense→break exploration materially faster;
+- new apparatus reveals rather than dominates organism/contact behavior;
+- higher pressure exposes new correctness/scaling failures.
+
+The historical first Ecology specimen remains preserved at `experiment/active-spatial-ecology = ce96587826746efad426347a8a394048810e4ee2`.
+
 
 ### Active invariant
 

@@ -24,7 +24,7 @@ test("canonical entrypoints contain one current project state",()=>{
   assert.match(state,/Workbench \+ B0 CLOSED/);
   assert.match(state,/first Active Spatial Ecology Owner rehearsal \+ feedback\/evidence campaign CLOSED/i);
   assert.match(state,/TARGET HYPOTHESIS INCONCLUSIVE — APPARATUS LIMITATIONS BECAME THE DOMINANT FINDING/i);
-  assert.match(state,/bounded E1 INTEGRATION MECHANICALLY QUALIFIED; R0 SECOND-REHEARSAL CANDIDATE INTERNALLY QUALIFIED; OWNER EXPERIENCE UNQUALIFIED; EXACT PUBLIC PROMOTION PENDING/i);
+  assert.match(state,/bounded E1 INTEGRATION MECHANICALLY QUALIFIED; R0 SECOND-REHEARSAL SPECIMEN DEPLOYED; OWNER EXPERIENCE UNQUALIFIED; FRESH OWNER REHEARSAL NEXT/i);
   assert.match(state,/9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd/);
   assert.match(state,/integrated-ecology-rehearsal-r0/);
   assert.match(state,/optional explicit linkage \/ correlated scaling/i);
@@ -32,7 +32,7 @@ test("canonical entrypoints contain one current project state",()=>{
   assert.doesNotMatch(state,/waiting for new Owner instruction/i);
   assert.doesNotMatch(state,/Active branch:/);
   assert.doesNotMatch(state,/public runtime remains the B0 closure release/i);
-  assert.match(state,/current public artifact is the ecology rehearsal candidate/i);
+  assert.match(state,/current deployed Pages artifact is frozen R0/i);
   assert.ok(state.length<20000,"canonical state must remain a compact live-truth document");
 });
 
@@ -191,10 +191,10 @@ test("canonical docs distinguish active refoundation research from the retained 
   assert.match(state,/closed Ecology execution\/evidence lane retained temporarily/i);
   assert.match(state,/rehearsal\/current/);
   assert.match(state,/never an authoring lane and never research authority/i);
-  assert.match(state,/COMMIT\.txt.*ce96587826746efad426347a8a394048810e4ee2/is);
+  assert.match(state,/COMMIT\.txt.*9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd/is);
   assert.match(state,/BRANCH\.txt.*rehearsal\/current/is);
   assert.match(state,/ce96587826746efad426347a8a394048810e4ee2/);
-  assert.match(state,/\?experiment=active-spatial-ecology-v0/);
+  assert.match(state,/\?experiment=integrated-ecology-rehearsal-r0/);
   assert.doesNotMatch(state,/active experiment-lane head/i);
   assert.doesNotMatch(state,/Open one temporary experiment lane/i);
 
