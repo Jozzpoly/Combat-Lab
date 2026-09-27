@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-26  
 **Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
 **Canonical branch:** `main` after repository canonicalization  
-**Stage:** **Workbench + B0 CLOSED; first Active Spatial Ecology Owner rehearsal + feedback/evidence campaign CLOSED; target hypothesis INCONCLUSIVE; refoundation/research campaign ACTIVE; L0 provenance + L1 scoped comparison + N0 whole-body static feasibility MECHANICALLY QUALIFIED; Owner UX / routing / movement competence UNQUALIFIED**
+**Stage:** **Workbench + B0 CLOSED; first Active Spatial Ecology Owner rehearsal + feedback/evidence campaign CLOSED; target hypothesis INCONCLUSIVE; refoundation/research campaign ACTIVE; L0 provenance + L1 scoped comparison + N0 direct feasibility + N0b static route witness MECHANICALLY QUALIFIED; Owner UX / movement competence / contact UNQUALIFIED**
 
 ## 1. Owner intent
 
@@ -296,19 +296,42 @@ Important negative evidence:
 
 N0 qualifies a static geometric/query mechanism only. It does not qualify a route planner, dynamic avoidance, stuck detection, replanning, actor competence or contact behavior.
 
+**N0b — static alternative route witness: MECHANICALLY QUALIFIED · MOVEMENT AUTHORITY / REACHABILITY PROOF / OWNER UX UNQUALIFIED**
+
+Exact qualified checkpoint:
+
+- `86bf323104faa802ffa14308b4112dbc3d475326`;
+- CI run `36294624156`;
+- **61 / 61 automated checks PASS**;
+- live Chromium Workbench gate PASS;
+- B0 large-body choke query returns a verified hard-feasible bypass witness;
+- every returned witness edge is independently revalidated through exact N0 swept-body geometry;
+- comfort clearance annotates the hard route rather than deleting hard connectivity;
+- narrow-passage regression preserves the same hard route with `clearance=0.08` and marks it constrained;
+- `none-found` explicitly carries `provesUnreachable=false`;
+- invalid start/target occupancy remains distinct from failure to find an alternative;
+- witness selection is deterministic under obstacle input ordering;
+- duplicate static obstacle IDs are rejected before they can alias graph-node identity;
+- no actor automatically consumes the witness and no dynamic bodies enter the static graph.
+
+N0b is **positive-evidence infrastructure**, not a complete pathfinder. A returned witness is physically verified; lack of one remains epistemically unknown.
+
 ### Immediate next research boundary
 
-Do **not** jump directly from “direct path blocked” to a sophisticated pathfinder or N1 behavior policy.
+The apparatus has now earned a real behavioral consumer.
 
-The next question is a bounded **static alternative-feasibility audit**:
+Proceed to a bounded **N1 minimal progress / replan cell**, not another generic routing layer:
 
-- what is the smallest body-aware substrate that can answer whether a hard-feasible alternative around static geometry exists;
-- can that substrate remain a query/witness rather than silently becoming actor behavior;
-- can hard connectivity remain separate from comfort/preference;
-- can the result be explained through the same on-demand observation seam;
-- does Companion's deterministic corner/visibility graph provide useful bounded infrastructure, or does it import more route policy than Combat Lab currently needs.
+- one actor has an explicit target/purpose;
+- direct motion into a static blocker initially fails;
+- factual no-progress is measured over time, not inferred from one collision;
+- after bounded persistent failure, the actor may query N0/N0b;
+- if a verified alternative witness exists, it may switch its immediate plan to that witness;
+- success means factual progress resumes and the target can be reached in the controlled cell;
+- route witness remains advisory evidence; actor policy owns whether/when to consume it;
+- dynamic-body avoidance, crowd reciprocity, ghosting, contact-yield policy and random wandering remain out of scope.
 
-Only after that question is answered should N1 add persistent no-progress detection and choose whether/when an actor consumes an alternative route.
+The key falsifier is causal: **if success requires hard-coding the expected side/solution, global crowd choreography, or continuous route replanning from the apparatus, N1 fails.**
 
 ### Active invariant
 

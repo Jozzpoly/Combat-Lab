@@ -1,7 +1,7 @@
 # Combat Lab — Refoundation Research Campaign
 
 **Started:** 2026-09-26  
-**Campaign status:** **ACTIVE RESEARCH / REFOUNDATION IN PROGRESS · L0/L1 SHARED APPARATUS + N0 STATIC FEASIBILITY QUALIFIED · ORGANISM POLICY/CONTACT UNSELECTED**  
+**Campaign status:** **ACTIVE RESEARCH / REFOUNDATION IN PROGRESS · L0/L1 + N0/N0b QUALIFIED · N1 ORGANISM COMPETENCE NEXT · CONTACT UNSELECTED**  
 **Authority:** bounded strategy derived from live `main`, S0/B0/Ecology Owner evidence, exact Ecology specimen forensics and targeted donor recovery. It does not promote a replacement runtime architecture by existence.
 
 ## 0. Why this campaign exists
@@ -546,9 +546,9 @@ The next work must preserve:
 - on-demand causal inspection without global Debug cost.
 
 
-## 16. N0b static alternative witness — candidate
+## 16. N0b static alternative witness
 
-**Status at authoring:** implementation candidate; machine qualification pending.
+**Status:** **MECHANICALLY QUALIFIED · MOVEMENT AUTHORITY / REACHABILITY PROOF / OWNER UX UNQUALIFIED**.
 
 N0 established truthful direct swept-body feasibility. It does **not** tell an actor whether any useful static alternative exists.
 
@@ -589,3 +589,37 @@ N0b falsifiers:
 - dynamic-body/contact policy leaks into static witness generation.
 
 A successful N0b cell would provide a bounded substrate that N1 may later consume after persistent no-progress evidence. It would still not qualify replanning behavior.
+
+
+### N0b qualification evidence
+
+Exact qualified checkpoint:
+
+`86bf323104faa802ffa14308b4112dbc3d475326`
+
+Machine evidence:
+
+- GitHub Actions check run `36294624156` — **SUCCESS**;
+- **61 / 61** Node checks PASS;
+- live Chromium Workbench gate PASS;
+- B0 large-body route query returns a verified hard-feasible bypass;
+- every route edge is exact-N0 checked;
+- hard connectivity survives desired clearance in the narrow hard-only passage;
+- comfort becomes `clearanceConstrained` evidence rather than topology authority;
+- `none-found` remains explicitly non-authoritative about global reachability;
+- obstacle-order determinism is tested;
+- duplicate obstacle identity is rejected before graph construction.
+
+Bounded verdict:
+
+> **N0b MECHANICS PASS — Combat Lab can return deterministic, physically verified static alternative witnesses without pretending that a bounded witness graph is a complete pathfinder or actor policy.**
+
+### Post-N0b transition to N1
+
+Further static-routing sophistication is now lower-value than testing whether a minimally competent actor can use the already-qualified facts.
+
+The next candidate is N1:
+
+`purpose/target → direct plan → factual no-progress → bounded replan trigger → optional verified route witness → resumed progress`.
+
+N1 must remain an organism-competence experiment. The Lab/query substrate may provide facts and witnesses, but must not continuously steer the actor or encode the expected route side.
