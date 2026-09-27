@@ -1,4 +1,5 @@
 import {explainStaticFeasibility} from "../src/research/static-feasibility.js";
+import {findStaticRouteWitness} from "../src/research/static-route-witness.js";
 
 const WORLD={width:1080,height:650};
 const BASE_RADIUS=18;
@@ -516,16 +517,19 @@ export const loadEnvelopeFieldB0={
       inspector,
 
       query(name,args={}){
-        if(name!=="static-feasibility") return null;
-        if(!args.target) throw new Error("static-feasibility query requires target");
-        return explainStaticFeasibility({
+        if(name!=="static-feasibility" && name!=="static-route-witness") return null;
+        if(!args.target) throw new Error(`${name} query requires target`);
+        const common={
           from:{x:state.player.x,y:state.player.y},
           to:args.target,
           radius:state.player.r,
           clearance:args.clearance ?? 0,
           world:WORLD,
           obstacles:STATIC_FEASIBILITY_OBSTACLES
-        });
+        };
+        return name==="static-feasibility"
+          ? explainStaticFeasibility(common)
+          : findStaticRouteWitness(common);
       },
 
       snapshot(){

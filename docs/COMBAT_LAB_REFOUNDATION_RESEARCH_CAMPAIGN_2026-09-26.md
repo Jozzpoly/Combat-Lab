@@ -544,3 +544,48 @@ The next work must preserve:
 - route witness separate from actor policy;
 - static geometry separate from dynamic-body negotiation;
 - on-demand causal inspection without global Debug cost.
+
+
+## 16. N0b static alternative witness — candidate
+
+**Status at authoring:** implementation candidate; machine qualification pending.
+
+N0 established truthful direct swept-body feasibility. It does **not** tell an actor whether any useful static alternative exists.
+
+The targeted Companion donor audit rejects wholesale import of the current router as hard-connectivity authority:
+
+- its useful principle is a deterministic visibility/corner graph whose edges are independently whole-body checked;
+- however current node generation is influenced by `desiredQueryRadius`;
+- Companion's own narrow-passage audit demonstrates a case where hard radius is reachable while desired/comfort clearance is not;
+- therefore comfort must not be allowed to erase hard connectivity in Combat Lab.
+
+N0b deliberately uses weaker epistemic language:
+
+> find a **verified hard-feasible route witness** when a bounded candidate graph contains one.
+
+It does **not** claim that failure to find a witness proves the target unreachable.
+
+Candidate contract:
+
+- graph nodes are generated from **hard body radius only**;
+- every graph edge is revalidated by the exact N0 swept-body query;
+- shortest witness selection is deterministic;
+- comfort clearance is evaluated only as secondary annotation on already hard-valid edges;
+- `status=none-found` carries `provesUnreachable=false`;
+- direct hard-clear traversal remains `status=direct`;
+- invalid start/target occupancy remains a separate hard geometric fact;
+- no dynamic actors enter the graph;
+- no actor automatically follows the witness.
+
+The initial candidate graph uses conservative obstacle-corner witness nodes. This is intentionally **not complete** for arbitrary rounded Minkowski geometry. Its value is positive evidence: a returned witness is physically checked. A missing witness remains unknown.
+
+N0b falsifiers:
+
+- comfort changes hard route topology or removes a hard witness;
+- any returned route edge fails exact N0 feasibility;
+- `none-found` is exposed as unreachable;
+- route result depends on obstacle input ordering;
+- the graph silently becomes per-frame movement authority;
+- dynamic-body/contact policy leaks into static witness generation.
+
+A successful N0b cell would provide a bounded substrate that N1 may later consume after persistent no-progress evidence. It would still not qualify replanning behavior.

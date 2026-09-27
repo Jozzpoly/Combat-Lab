@@ -230,3 +230,18 @@ test("B0 exposes N0 whole-body static feasibility as an on-demand observation qu
 
   assert.equal(instance.query("unknown-query",{}),null);
 });
+
+
+test("B0 N0b query can return a hard-feasible alternative witness without claiming unreachable authority",()=>{
+  const instance=loadEnvelopeFieldB0.create();
+  const target={x:520,y:325};
+  instance.inspector.set("envelope",1.70);
+
+  const result=instance.query("static-route-witness",{target,clearance:10});
+  assert.equal(result.schema,"combat-lab-static-route-witness-v0");
+  assert.equal(result.status,"witness");
+  assert.equal(result.provesUnreachable,false);
+  assert.equal(result.completeness,"witness-only");
+  assert.ok(result.routeNodeIds.length>2);
+  assert.equal(result.clearanceConstrained,true);
+});

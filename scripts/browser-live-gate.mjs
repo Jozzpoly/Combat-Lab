@@ -172,6 +172,26 @@ try{
      !String(largeFeasibility?.hard?.blocker?.id || "").startsWith("choke.")){
     throw new Error(`N0 large-body feasibility did not expose choke blocker: ${JSON.stringify(largeFeasibility)}`);
   }
+
+  const routeWitness=await evaluate(`window.__combatLabRuntime.query(
+    "static-route-witness",
+    {target:{x:520,y:325},clearance:10}
+  )`);
+  if(routeWitness?.schema!=="combat-lab-static-route-witness-v0" ||
+     routeWitness.status!=="witness" ||
+     routeWitness.provesUnreachable!==false ||
+     routeWitness.completeness!=="witness-only" ||
+     routeWitness.routeNodeIds?.length<=2 ||
+     routeWitness.clearanceConstrained!==true){
+    throw new Error(`N0b alternative witness contract failed: ${JSON.stringify(routeWitness)}`);
+  }
+  for(const edgeId of routeWitness.routeEdgeIds || []){
+    const edge=routeWitness.edges?.find(candidate=>candidate.id===edgeId);
+    if(!edge?.hard?.clear){
+      throw new Error(`N0b route contains non-hard-feasible edge: ${JSON.stringify(edge)}`);
+    }
+  }
+
   await setNumber("envelope",1.00);
 
   // Owner recording regression: force=42 must be accepted and displayed truthfully.
