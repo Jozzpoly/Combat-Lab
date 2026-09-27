@@ -1565,6 +1565,50 @@ The problem exposed by R0 is therefore better phrased as:
 
 That is a much narrower and more useful diagnosis than “the crowd AI is bad”.
 
+
+## 8AI. The bottleneck already has meaningful body-size capacity
+
+Current map geometry is not merely decorative.
+
+Vertical free-space widths:
+
+- above upper pillar: ~120 world units;
+- central gap between pillars: **190**;
+- below lower pillar: ~10.
+
+Hard phenotype diameters:
+
+- small: 40;
+- medium: 52;
+- large: 64.
+
+For equal bodies, idealized side-by-side capacity through the 190-unit central gap is approximately:
+
+- 4 small;
+- 3 medium;
+- 2 large.
+
+Three large bodies cannot fit abreast through the central hard corridor without conflict.
+
+The 120-unit upper outer route supports materially less simultaneous width.
+The 10-unit lower outer route supports none of the current bodies.
+
+This is a positive spatial-ecology property:
+
+> **body envelope already changes the throughput/capacity of real world geometry.**
+
+That should be preserved through future crowd improvements.
+
+A future personal-space / soft-envelope experiment should probably distinguish:
+
+- **hard-core capacity** — what bodies physically fit;
+- **preferred comfort capacity** — how much space actors would like;
+- **compressed comfort capacity** — how much preferred separation they surrender under pressure.
+
+The current recording motivates that distinction naturally.
+
+It does not motivate making the hard core ghostable.
+
 ## 9. Immediate campaign boundary
 
 **Do not implement personal space, soft envelopes, new crowd steering or a new solver yet.**
