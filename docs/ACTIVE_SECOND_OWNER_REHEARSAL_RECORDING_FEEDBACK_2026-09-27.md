@@ -1497,6 +1497,74 @@ It remains useful as an Owner scenario/breakability control.
 
 A future controlled pressure experiment needs an independent variable that changes density/flow while holding route topology and phenotype composition appropriately fixed.
 
+
+## 8AG. The current crowd reacts deliberately late — 0.425 s after hard contact
+
+The Owner's “personal space” intuition has a direct mechanistic basis in frozen R0.
+
+In the clean straight/open 18-person counterflow:
+
+- first hard body-body contacts occur around `2.99–3.08 s`;
+- every actor's dynamic encounter trigger fires exactly about `0.425 s` later;
+- this matches `dynamicNoProgressSeconds = 0.42` plus fixed-step quantization.
+
+So current behavior is structurally:
+
+`hard contact -> continued pushing/no-progress for ~0.42 s -> one local sidestep`.
+
+It is not anticipatory.
+
+That creates visible qualities such as:
+
+- bodies touching before negotiation;
+- short pushing/compression episodes;
+- late evasive motion;
+- groups visually “packing” before local response.
+
+This explains why the recording naturally suggests personal-space / softness ideas without proving that those mechanisms are required.
+
+Future experiment families should remain distinct:
+
+1. **earlier hard-contact reaction**  
+   Keep hard bodies and current contact semantics, but reduce / redesign the post-contact persistence requirement.
+
+2. **pre-contact anticipation / personal envelope**  
+   Detect an approaching conflict before hard cores touch.
+
+3. **compressible personal envelope**  
+   Preferred spacing can be invaded under pressure while hard body occupancy remains intact.
+
+4. **true deformable body**  
+   Actual body geometry changes.
+
+The second recording provides strong motivation to compare (1)–(3).
+
+It does not currently justify (4).
+
+## 8AH. Pure counterflow qualifies a narrow local-negotiation capability
+
+The straight/open factorial also provides a clean positive mechanistic result:
+
+- NONE: stable `0 / 18` head-on gridlock;
+- LEFT: `18 / 18 COMPLETE`;
+- RIGHT: `18 / 18 COMPLETE`;
+- LEFT/RIGHT completion times are nearly mirrored.
+
+This means the existing local sidestep is not merely decorative.
+
+It can causally resolve a physically material head-on conflict without:
+
+- static routing;
+- global crowd coordination;
+- ghosting;
+- target reassignment.
+
+The problem exposed by R0 is therefore better phrased as:
+
+> **a one-shot local negotiation primitive works for one encounter, but the integrated ecology needs repeated context-sensitive episodes and robust embodied execution.**
+
+That is a much narrower and more useful diagnosis than “the crowd AI is bad”.
+
 ## 9. Immediate campaign boundary
 
 **Do not implement personal space, soft envelopes, new crowd steering or a new solver yet.**
