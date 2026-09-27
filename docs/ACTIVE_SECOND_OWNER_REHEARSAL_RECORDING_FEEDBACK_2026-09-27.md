@@ -604,6 +604,97 @@ So only `256 break` is semantically honest as written.
 
 The `24 pressure` / `64 dense` labels should not be treated as canonical pressure tiers in future work until pressure can be increased without changing physical validity.
 
+
+## 8M. The overload is lost realtime, not variable-step physics
+
+Workbench simulation uses:
+
+- fixed `dt = 1/120 s`;
+- `maxFrame = 0.05 s`;
+- `maxAccum = 0.10 s`.
+
+When the browser cannot keep up, wall time is discarded rather than converted into a larger physics timestep.
+
+Therefore the visible 64 / 256 slow-motion regime means:
+
+> **the apparatus is falling behind realtime while preserving fixed-step mechanics.**
+
+This is substantially cleaner than silently increasing dt, but it still makes high-N Owner observation expensive and slow.
+
+The existing `RuntimePerformanceMeter` already records:
+
+- `simulationToWallRatio`;
+- `discardedWallSeconds`;
+- simulation / render / observation phase time.
+
+R0 does not surface those values in the main ecology observation flow.
+
+So the immediate observability debt is mainly **presentation**, not absence of instrumentation.
+
+## 8N. Recording gives a practical realtime scaling bracket
+
+The final recording sequence is especially informative because it runs 256 → 64 → ~30 through explicit Reset World transitions without reloading the page.
+
+Approximate observed timing:
+
+### 256
+
+Around 149–151 s wall-time:
+
+- sim time remains around 0.06–0.11 s for multiple wall seconds.
+
+This is effectively a frozen break regime.
+
+### 64
+
+After reset:
+
+- ~152 s wall: sim ~0.90 s;
+- ~160 s wall: sim ~2.57 s;
+- ~165 s wall: sim ~4.53 s;
+- ~170 s wall: sim ~6.43 s.
+
+This is roughly ~0.3x realtime over the segment.
+
+### 35
+
+Earlier 35-person trial:
+
+- ~44 s wall: sim ~1.05 s;
+- ~68 s wall: sim ~25.04 s.
+
+This remains essentially realtime.
+
+### ~30
+
+Final trial:
+
+- ~173 s wall: sim ~1.27 s;
+- ~187 s wall: sim ~15.27 s.
+
+Again essentially 1x realtime.
+
+Bounded interpretation:
+
+> **current useful interactive scaling is still healthy around 30–35 bodies, while 64 crosses a major realtime cliff and 256 is a deliberate break regime.**
+
+This is not yet a precise maximum-capacity benchmark because topology invalidity and contact density differ with N.
+
+## 8O. Reset World survives pathological overload
+
+The same final sequence demonstrates an apparatus-strength result:
+
+- 256 can nearly freeze the simulation;
+- explicit Reset World can still move to 64;
+- another reset can move to ~30;
+- ~30 returns to realtime progression.
+
+So the pathological regime does **not** visibly poison the runtime permanently.
+
+That supports the Owner requirement that the Lab remain breakable and recoverable rather than protecting itself through hidden caps/despawns.
+
+The remaining problem is that ordinary pressure levels should become physically valid and more computationally scalable, not that break regimes should be prevented.
+
 ## 9. Immediate campaign boundary
 
 **Do not implement personal space, soft envelopes, new crowd steering or a new solver yet.**
