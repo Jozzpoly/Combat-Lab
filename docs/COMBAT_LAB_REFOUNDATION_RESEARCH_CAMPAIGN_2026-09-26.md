@@ -1,7 +1,7 @@
 # Combat Lab — Refoundation Research Campaign
 
 **Started:** 2026-09-26  
-**Campaign status:** **ACTIVE RESEARCH / SHARED-APPARATUS REFOUNDATION IN PROGRESS · ECOLOGY ORGANISM/CONTACT/NAVIGATION REFOUNDATION NOT STARTED**  
+**Campaign status:** **ACTIVE RESEARCH / REFOUNDATION IN PROGRESS · L0/L1 SHARED APPARATUS + N0 STATIC FEASIBILITY QUALIFIED · ORGANISM POLICY/CONTACT UNSELECTED**  
 **Authority:** bounded strategy derived from live `main`, S0/B0/Ecology Owner evidence, exact Ecology specimen forensics and targeted donor recovery. It does not promote a replacement runtime architecture by existence.
 
 ## 0. Why this campaign exists
@@ -445,7 +445,7 @@ This deliberately leaves out dynamic-body avoidance, stuck/replan policy and con
 
 ## 15. N0 + embedded O0 — whole-body static feasibility candidate
 
-**Status at authoring:** implementation candidate; machine qualification pending.
+**Status:** **MECHANICALLY QUALIFIED · ROUTING / MOVEMENT COMPETENCE / OWNER UX UNQUALIFIED**.
 
 The post-L1 sequencing decision deliberately rejects two tempting jumps:
 
@@ -496,3 +496,51 @@ N0 falsifiers:
 - a route planner becomes necessary merely to answer direct static feasibility.
 
 Passing this cell would qualify a geometric/query mechanism only. It would not qualify movement competence, routing, replanning, contact behavior or Owner-facing causal-debug UX.
+
+
+### N0 qualification and falsification history
+
+First green implementation checkpoint:
+
+`5236f39a917093803438ba7c2c182e94663b2308`
+
+That checkpoint passed **50 / 50** tests and the live browser gate, but a post-PASS geometry audit found a material flaw: expanding an AABB by the body radius creates square corner regions that a real circle-vs-rectangle Minkowski shape does not occupy. A green gate therefore did **not** justify promotion.
+
+Hardening replaced that approximation with exact side-strip plus corner-circle swept geometry and added regressions for:
+
+- rounded-corner false positives;
+- exact side tangency;
+- grazing along the rounded/side boundary;
+- true side penetration.
+
+Qualified checkpoint:
+
+`2f99520fa586f58bd6d79997ada7f69967c55635`
+
+Evidence:
+
+- GitHub Actions check run `36294227944` — **SUCCESS**;
+- **53 / 53** Node checks PASS;
+- live Chromium Workbench gate PASS;
+- B0 runtime query proves baseline hard-clear / comfort-constrained behavior through the 54-unit choke;
+- envelope 1.70 converts that same direct traversal into a hard block with explicit choke blocker;
+- target endpoint remains separately legal in the dedicated endpoint-vs-sweep regression;
+- query does not mutate World geometry or run per frame.
+
+Bounded verdict:
+
+> **N0 MECHANICS PASS — Combat Lab now has a truthful direct whole-body static-feasibility query with explicit hard-vs-comfort evidence and a zero-authority on-demand observation seam.**
+
+### Post-N0 boundary
+
+N0 does not yet justify N1 replanning.
+
+The immediate research question is whether static **alternative feasibility** should be recovered through a minimal deterministic visibility/corner graph, another bounded representation, or not yet at all. Companion's current static router is now a concrete donor to challenge because N0 has created a real consumer for it.
+
+The next work must preserve:
+
+- hard connectivity as physical fact;
+- comfort as secondary evidence rather than authority;
+- route witness separate from actor policy;
+- static geometry separate from dynamic-body negotiation;
+- on-demand causal inspection without global Debug cost.

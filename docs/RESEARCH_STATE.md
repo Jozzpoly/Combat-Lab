@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-26  
 **Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
 **Canonical branch:** `main` after repository canonicalization  
-**Stage:** **Workbench + B0 CLOSED; first Active Spatial Ecology Owner rehearsal + feedback/evidence campaign CLOSED; target hypothesis INCONCLUSIVE; refoundation/research campaign ACTIVE; L0 intervention provenance + L1 scoped comparison MECHANICALLY QUALIFIED; Owner UX UNQUALIFIED**
+**Stage:** **Workbench + B0 CLOSED; first Active Spatial Ecology Owner rehearsal + feedback/evidence campaign CLOSED; target hypothesis INCONCLUSIVE; refoundation/research campaign ACTIVE; L0 provenance + L1 scoped comparison + N0 whole-body static feasibility MECHANICALLY QUALIFIED; Owner UX / routing / movement competence UNQUALIFIED**
 
 ## 1. Owner intent
 
@@ -195,7 +195,7 @@ Other repository truth remains:
 
 The first Ecology recording/feedback campaign remains **CLOSED**.
 
-The separate **Combat Lab refoundation/research campaign is now ACTIVE**. Runtime refoundation currently contains only bounded shared-apparatus L0 intervention provenance and L1 scoped comparison; no Ecology organism/contact/navigation refoundation implementation has started.
+The separate **Combat Lab refoundation/research campaign is now ACTIVE**. Runtime refoundation now contains bounded shared-apparatus L0/L1 plus the first Ecology-adjacent N0 static-feasibility query; organism policy, routing/replanning and contact semantics remain unimplemented.
 
 Primary active strategy:
 
@@ -272,19 +272,43 @@ Exact qualified checkpoint:
 
 L1 does **not** qualify the two-slot UI, comparison usefulness, checkpoint/replay semantics or Owner-facing workflow quality.
 
+**N0 — whole-body static feasibility + on-demand observation query: MECHANICALLY QUALIFIED · ROUTING / MOVEMENT COMPETENCE / OWNER UX UNQUALIFIED**
+
+Exact qualified checkpoint:
+
+- `2f99520fa586f58bd6d79997ada7f69967c55635`;
+- CI run `36294227944`;
+- **53 / 53 automated checks PASS**;
+- live Chromium Workbench gate PASS;
+- direct swept-body traversal distinguishes a legal endpoint from a blocked path;
+- the same 54-unit B0 choke is hard-clear for a small/baseline body and hard-blocked for envelope 1.70;
+- hard body feasibility remains separate from +10 desired/comfort clearance;
+- first static blocker and world boundary are explicit;
+- exact side/corner tangency remains legal while true penetration blocks;
+- the query is observational, ignores dynamic actors by construction and does not mutate caller geometry;
+- `runtime.query(...)` executes experiment-owned observation only on demand; no per-frame global probe was introduced.
+
+Important negative evidence:
+
+- first green N0 checkpoint `5236f39a917093803438ba7c2c182e94663b2308` used an expanded-AABB approximation that could falsely block rounded rectangle corners;
+- post-PASS audit rejected that geometry despite green CI;
+- `2f99520...` replaced it with side-strip + corner-circle swept geometry and added explicit corner/tangency regressions.
+
+N0 qualifies a static geometric/query mechanism only. It does not qualify a route planner, dynamic avoidance, stuck detection, replanning, actor competence or contact behavior.
+
 ### Immediate next research boundary
 
-Do not build a generic O0 Debug/probe framework in isolation.
+Do **not** jump directly from “direct path blocked” to a sophisticated pathfinder or N1 behavior policy.
 
-The next highest-value candidate is **N0 whole-body feasibility with an embedded O0 observation cell**:
+The next question is a bounded **static alternative-feasibility audit**:
 
-- use a minimal, replaceable whole-body static-feasibility query;
-- keep hard physical feasibility separate from optional comfort/preference clearance;
-- expose one focused causal answer such as target → swept-body feasibility → first static blocker / clear result;
-- keep dynamic-body negotiation, replanning and contact semantics out of N0;
-- use this concrete consumer to discover the minimum useful query/probe contract rather than designing observability in the abstract.
+- what is the smallest body-aware substrate that can answer whether a hard-feasible alternative around static geometry exists;
+- can that substrate remain a query/witness rather than silently becoming actor behavior;
+- can hard connectivity remain separate from comfort/preference;
+- can the result be explained through the same on-demand observation seam;
+- does Companion's deterministic corner/visibility graph provide useful bounded infrastructure, or does it import more route policy than Combat Lab currently needs.
 
-This combines the first real Ecology competence deficit with the first meaningful causal-observation consumer while preserving replaceability. It is a research candidate, not yet a selected pathfinder or physics backend.
+Only after that question is answered should N1 add persistent no-progress detection and choose whether/when an actor consumes an alternative route.
 
 ### Active invariant
 
