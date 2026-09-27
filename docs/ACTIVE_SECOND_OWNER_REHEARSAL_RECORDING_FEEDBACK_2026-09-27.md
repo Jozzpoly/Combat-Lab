@@ -816,6 +816,72 @@ It does **not** qualify:
 
 A future correction must preserve this valuable capacity for meaningful blocking / compression / jam rather than optimizing blindly for maximum throughput.
 
+
+## 8R. Strong dead-actor mechanism — ROUTE can become stale without any failure detector
+
+Frozen R0 static failure detection is more limited than “one replan per lifetime”.
+
+The static no-progress branch requires:
+
+- a static blocker this step;
+- `!staticReplanAttempted`;
+- **`actor.mode === "DIRECT"`**.
+
+Therefore once an actor has accepted a verified route witness and entered `ROUTE`:
+
+- static no-progress is no longer accumulated;
+- a later static block while following that route cannot trigger recovery;
+- the route follower advances a waypoint only by entering the waypoint's arrival tolerance;
+- crowd contact can displace the body away from / beyond the route geometry;
+- the actor can keep steering toward a stale waypoint indefinitely.
+
+Exact replay already found that clean low-density residual actors commonly remain in `ROUTE` after using their one static recovery.
+
+The clean 18-person recording places persistent residual bodies near the pillar geometry.
+
+Together these make **stale ROUTE without a failure episode** a strong current explanation for at least part of the Owner-observed “death” phenomenon.
+
+This does not invalidate the N0b route witness itself:
+
+> the witness can be correct at query time while the **consumer's execution state becomes stale later**.
+
+This is a composition failure between navigation evidence and embodied crowd disturbance.
+
+## 8S. Selected-subject causal Observe currently has a blind spot for that failure
+
+Current `subjectWhy()` can report:
+
+- “following verified static route witness”
+
+whenever mode is `ROUTE`.
+
+But it does not know whether:
+
+- the actor is making meaningful progress along that route;
+- the actor has missed / passed a waypoint;
+- the route has become stale after displacement;
+- recovery eligibility has already been exhausted.
+
+Similarly, `Blocked by` uses:
+
+- pre-contact `staticBlockerThisStep`;
+- current dynamic partner list.
+
+The coupled solver's post-contact static projection corrections are not attributed back to the actor as an embodied blocking cause.
+
+So an actor can be physically constrained by crowd→pillar interaction while selected-subject diagnostics under-report or misclassify the reason.
+
+This is exactly the kind of causal-debug debt the next observability layer must avoid.
+
+A useful future explanation should distinguish at least:
+
+- verified route still valid and progressing;
+- route execution not progressing;
+- route waypoint stale / missed;
+- physically pushed into static constraint;
+- recovery available;
+- recovery exhausted.
+
 ## 9. Immediate campaign boundary
 
 **Do not implement personal space, soft envelopes, new crowd steering or a new solver yet.**
