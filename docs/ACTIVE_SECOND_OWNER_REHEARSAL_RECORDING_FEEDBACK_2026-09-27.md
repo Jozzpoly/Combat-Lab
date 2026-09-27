@@ -1409,6 +1409,94 @@ So future research must keep distinct:
 The recording motivates investigation of (1)–(3).
 It does not currently justify true soft-body simulation.
 
+
+## 8AE. Route witness authority is being used outside its verified domain
+
+The three exact film residuals were tested against N0 direct traversal from:
+
+- their **current displaced body position**;
+- to their **current route waypoint**.
+
+Results:
+
+### resident-1
+
+- current position approximately `(490, 275.996)`;
+- current waypoint / target approximately `(980, 335.556)`;
+- radius 20;
+- N0 direct traversal: **BLOCKED**;
+- blocker: `pillar.upper`;
+- hit fraction: `0`.
+
+### resident-6
+
+- current position approximately `(478, 518.599)`;
+- current waypoint approximately `(622.032, 467.968)`;
+- radius 32;
+- N0 direct traversal: **BLOCKED**;
+- blocker: `pillar.lower`;
+- hit fraction effectively zero.
+
+### resident-12
+
+- current position approximately `(622, 529.584)`;
+- current waypoint approximately `(477.968, 467.968)`;
+- radius 32;
+- N0 direct traversal: **BLOCKED**;
+- blocker: `pillar.lower`;
+- hit fraction: `0`.
+
+This establishes an important authority violation in the current consumer:
+
+> the original N0b witness verified route edges from the original query/start state; after crowd displacement, R0 treats a new arbitrary body-position -> waypoint segment as though it were still part of that verified witness.
+
+It is not.
+
+The actor's current `ROUTE` label therefore overstates epistemic truth.
+
+Correct conceptual boundary:
+
+- **route witness**: verified at query time for its returned edge sequence;
+- **route execution**: must establish whether the embodied actor still occupies a state from which the active edge remains valid;
+- **crowd displacement**: can invalidate that execution assumption without invalidating N0b itself.
+
+Future route execution should expose / test edge validity explicitly rather than treating `mode=ROUTE` as proof that the current motion is verified.
+
+## 8AF. Population is a scenario generator, not a clean pressure scalar even <=20
+
+A clean-population sweep under frozen LEFT R0 for 30 s gives:
+
+| Population | Completion |
+| ---: | ---: |
+| 4 | 3 / 4 |
+| 6 | 5 / 6 |
+| 8 | 7 / 8 |
+| 10 | **10 / 10** |
+| 12 | 11 / 12 |
+| 14 | **14 / 14** |
+| 16 | 14 / 16 |
+| 18 | 15 / 18 |
+| 20 | **20 / 20** |
+
+So failure is strongly non-monotonic before any invalid packing begins.
+
+Changing population changes simultaneously:
+
+- vertical spacing;
+- side population;
+- target-rank offset `floor(sideCount / 3)`;
+- route crossing geometry;
+- phenotype phase / composition alignment;
+- interaction partner structure.
+
+At total populations 12 and 18 the target-rank offset itself changes discretely.
+
+Therefore the current `Population` control should not be interpreted scientifically as a smooth pressure axis even in the collision-free range.
+
+It remains useful as an Owner scenario/breakability control.
+
+A future controlled pressure experiment needs an independent variable that changes density/flow while holding route topology and phenotype composition appropriately fixed.
+
 ## 9. Immediate campaign boundary
 
 **Do not implement personal space, soft envelopes, new crowd steering or a new solver yet.**
