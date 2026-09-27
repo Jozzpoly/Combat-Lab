@@ -179,7 +179,7 @@ export const contactSemanticsCellC0={
 
     return {
       step(_input,dt){
-        stepHeadOnContactState(state,dt,{iterations:8,pairOrder:"forward"});
+        stepHeadOnContactState(state,dt,{iterations:12,pairOrder:"forward"});
       },
 
       render(ctx,view,{debug=false}={}){

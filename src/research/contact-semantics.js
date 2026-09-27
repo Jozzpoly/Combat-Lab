@@ -133,7 +133,7 @@ function pairIndices(count,pairOrder){
   return pairs;
 }
 
-export function stepContactWorld(state,dt,{iterations=8,pairOrder="forward"}={}){
+export function stepContactWorld(state,dt,{iterations=12,pairOrder="forward"}={}){
   const delta=positive(dt,"dt");
   const iterationCount=Math.max(1,Math.floor(positive(iterations,"iterations")));
 

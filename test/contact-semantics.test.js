@@ -108,15 +108,15 @@ function threeBody(order,iterations){
 test("C0 iterative solve materially suppresses multi-body pair-order artifact",()=>{
   const oneForward=threeBody("forward",1);
   const oneReverse=threeBody("reverse",1);
-  const eightForward=threeBody("forward",8);
-  const eightReverse=threeBody("reverse",8);
+  const convergedForward=threeBody("forward",12);
+  const convergedReverse=threeBody("reverse",12);
 
   const oneError=Math.max(...oneForward.map((x,i)=>Math.abs(x-oneReverse[i])));
-  const eightError=Math.max(...eightForward.map((x,i)=>Math.abs(x-eightReverse[i])));
+  const convergedError=Math.max(...convergedForward.map((x,i)=>Math.abs(x-convergedReverse[i])));
 
   assert.ok(oneError>0.01);
-  assert.ok(eightError<1e-4);
-  assert.ok(eightError<oneError/100);
+  assert.ok(convergedError<1e-4);
+  assert.ok(convergedError<oneError/100);
 });
 
 test("C0 candidate remains finite under strong but legal body asymmetry",()=>{
