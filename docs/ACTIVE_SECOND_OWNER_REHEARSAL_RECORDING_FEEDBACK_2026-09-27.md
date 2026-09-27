@@ -1142,6 +1142,107 @@ Important boundary:
 - the recording does not yet tell us which correction gives the desired Feniks/Combat-Lab movement feel;
 - they may both deserve correction, but must be tested separately before composition.
 
+
+## 8Y. Clean 18 factorial separates body negotiation, obstacles and target crossing
+
+Additional analysis-only trials used the exact frozen mechanics with clean population 18.
+
+No runtime/repo mechanics were modified.
+
+### Straight-flow + open world
+
+Targets preserve each actor's Y lane and both pillars are removed.
+
+Results:
+
+| Passing convention | Result |
+| --- | --- |
+| LEFT | **18 / 18 COMPLETE**, ~21.52 s |
+| RIGHT | **18 / 18 COMPLETE**, ~21.51 s |
+| NONE | **0 / 18 after 30 s** |
+
+All 18 actors in the LEFT/RIGHT trials use one dynamic encounter episode.
+
+This is a particularly clean causal result:
+
+> **hard material contact plus the existing one-shot local passing convention is sufficient to resolve a pure open-space head-on counterflow; without a passing convention the same material streams form a stable gridlock.**
+
+No static routing, pillar geometry or target permutation is needed for this effect.
+
+So the current D0-style convention has real local causal authority.
+Its weakness is repeated/composed encounters, not the absence of any useful behavior.
+
+### Straight-flow + pillars
+
+Keeping straight targets but restoring current pillars:
+
+| Convention | Result at 30 s |
+| --- | ---: |
+| LEFT | 15 / 18 |
+| RIGHT | 16 / 18 |
+| NONE | 11 / 18 |
+
+The dead-body / stale-route failure returns only after static obstacle interaction is reintroduced.
+
+### Permuted targets + open world
+
+Removing pillars but restoring current target permutation:
+
+- all LEFT / RIGHT / NONE variants eventually complete;
+- interaction/contact work is substantially higher than pure straight flow;
+- NONE no longer creates the clean stable head-on gridlock because permuted goals themselves introduce lateral desired motion.
+
+Therefore current target permutation is not neutral “variety”:
+
+> it supplies its own de facto avoidance/crossing geometry and can mask what the explicit passing convention is doing.
+
+### Permuted targets + pillars — current R0 stimulus
+
+At clean 18:
+
+- LEFT: 15 / 18 at 30 s;
+- NONE: 13 / 18;
+- RIGHT: 18 / 18 COMPLETE around 13.68 s.
+
+This apparent RIGHT advantage is **not** a general policy qualification.
+
+The factorial shows that obstacles + target crossing + map asymmetry interact strongly with the convention.
+
+## 8Z. Mirrored-world falsifier proves policy result is environment-relative
+
+A full geometric mirror was tested analysis-only:
+
+- pillar geometry mirrored vertically;
+- actor start Y positions mirrored;
+- target Y positions mirrored;
+- LEFT and RIGHT exchanged under the coordinate reflection.
+
+Result pairs:
+
+- original LEFT -> 15 / 18;
+- exact mirrored RIGHT -> 15 / 18;
+- contact work and remaining distance are nearly identical.
+
+And:
+
+- original RIGHT -> 16 / 18;
+- exact mirrored LEFT -> 16 / 18;
+- again nearly identical.
+
+So the apparent side preference transforms with the environment exactly as expected under reflection.
+
+Bounded verdict:
+
+> **current LEFT-vs-RIGHT outcome is coupled to environment orientation / route affordances, not evidence that one convention is intrinsically superior.**
+
+Future convention experiments should use:
+
+- symmetric stimuli;
+- mirrored paired stimuli;
+- or explicit directional/environment stratification.
+
+This is especially important before adding anticipatory personal-space behavior, because an asymmetric map can otherwise make a steering bias look intelligent.
+
 ## 9. Immediate campaign boundary
 
 **Do not implement personal space, soft envelopes, new crowd steering or a new solver yet.**
