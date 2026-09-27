@@ -124,11 +124,11 @@ try{
     const buttons=[...document.querySelectorAll("[data-inspector-mode]")];
     const result={labels:buttons.map(button=>button.textContent.trim())};
     const click=mode=>{
-      document.querySelector(`[data-inspector-mode="${mode}"]`)?.click();
+      document.querySelector('[data-inspector-mode="'+mode+'"]')?.click();
       return {
         mode,
-        active:document.querySelector(`[data-inspector-mode="${mode}"]`)?.getAttribute("aria-selected"),
-        panelHidden:document.querySelector(`[data-inspector-panel="${mode}"]`)?.hidden
+        active:document.querySelector('[data-inspector-mode="'+mode+'"]')?.getAttribute("aria-selected"),
+        panelHidden:document.querySelector('[data-inspector-panel="'+mode+'"]')?.hidden
       };
     };
     result.observe=click("observe");
