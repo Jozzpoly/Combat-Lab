@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-27  
 **Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
 **Canonical branch:** `main` after repository canonicalization  
-**Stage:** **Workbench + B0 CLOSED; first Active Spatial Ecology Owner rehearsal + feedback/evidence campaign CLOSED; target hypothesis INCONCLUSIVE; bounded E1 INTEGRATION MECHANICALLY QUALIFIED; R0 SECOND-REHEARSAL SPECIMEN DEPLOYED; OWNER EXPERIENCE UNQUALIFIED; FRESH OWNER REHEARSAL NEXT**
+**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL RECORDED; FEEDBACK/EVIDENCE EXTRACTION ACTIVE; CROWD-LIKE OWNER SIGNAL POSITIVE; DENSE MECHANISTIC ATTRIBUTION INCONCLUSIVE**
 
 ## 1. Owner intent
 
@@ -244,28 +244,28 @@ Important boundary:
 
 ### Immediate next move
 
-**Do not modify frozen R0 runtime before fresh Owner evidence.**
+The second Owner recording has now opened a new **feedback/evidence-extraction campaign**.
 
-Deployment/promotion is complete at the machine/artifact level:
+Do not modify frozen R0 merely because the recording produced plausible feature ideas.
 
-1. `rehearsal/current` points to exact `9fe3e7f7...`;
-2. fresh check on that ref: `36318084351` — SUCCESS;
-3. emitted-artifact browser qualification + Pages deploy: `36318131633` — SUCCESS;
-4. emitted provenance inspected directly from artifact `10931422584`: exact SHA + `rehearsal/current`;
-5. direct R0 startup was already qualified by the source browser gate.
+Current high-value findings:
 
-The remaining gate is the **second Owner rehearsal** on the exact R0 specimen.
+- Owner reports that the experiment now begins to imitate a crowd;
+- Owner also observes balls that become stuck / appear to “die”;
+- exact frozen-runtime audit finds lifetime one-shot static/dynamic recovery;
+- `ARRIVED` is a sticky mode and can leave physically displaced inert bodies;
+- current distributed start/target topology is collision-free only through population **20**;
+- the named `24 pressure` preset already begins with overlapping bodies;
+- 64 and 256 are heavily contaminated by impossible packing + solver saturation;
+- coupled solve reaches `24/24` frequently at moderate density and persistently in dense trials;
+- exact population authoring is a clear apparatus improvement;
+- selected-subject causal Observe / camera feel / Compare remain Owner-unqualified because they were not materially exercised.
 
-That rehearsal should test apparatus and phenomenon together, but product/experience truth stays Owner-authoritative. In particular, watch whether:
+Canonical active evidence record:
 
-- camera actually feels natural under real exploration;
-- Tune / Observe / Compare / Session reduces orientation cost;
-- selected-subject causal Observe answers useful “why?” questions;
-- exact population-on-reset makes sparse→dense→break exploration materially faster;
-- new apparatus reveals rather than dominates organism/contact behavior;
-- higher pressure exposes new correctness/scaling failures.
+- `docs/ACTIVE_SECOND_OWNER_REHEARSAL_RECORDING_FEEDBACK_2026-09-27.md`.
 
-The historical first Ecology specimen remains preserved at `experiment/active-spatial-ecology = ce96587826746efad426347a8a394048810e4ee2`.
+Continue the analysis/falsification campaign before selecting implementation.
 
 
 ### Active invariant
