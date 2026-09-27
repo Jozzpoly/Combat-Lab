@@ -69,6 +69,10 @@ test("N1 consumes one verified route witness and resumes progress to the goal",(
   assert.equal(state.lastRouteWitness?.status,"witness");
   assert.equal(state.lastRouteWitness?.provesUnreachable,false);
   assert.ok(state.lastRouteWitness?.routeNodeIds.length>2);
+  assert.equal(state.replanTrigger?.blocker?.id,"wall.center");
+  assert.ok(state.replanTrigger?.noProgressFor>=state.policy.noProgressSeconds);
+  assert.ok(state.replanTrigger?.goalDistance>0);
+  assert.equal(state.noProgressFor,0);
   assert.ok(Math.hypot(
     state.actor.position.x-state.purpose.target.x,
     state.actor.position.y-state.purpose.target.y
@@ -135,4 +139,8 @@ test("N1 causal snapshot exposes purpose, progress, blocker and replan evidence 
   assert.ok(Number.isFinite(snap.factualProgress.goalDistance));
   assert.ok(Number.isFinite(snap.factualProgress.noProgressFor));
   assert.equal(typeof snap.replan.attempted,"boolean");
+  if(snap.replan.attempted){
+    assert.equal(snap.replan.trigger?.blocker?.id,"wall.center");
+    assert.ok(snap.replan.trigger?.noProgressFor>=snap.factualProgress.threshold);
+  }
 });

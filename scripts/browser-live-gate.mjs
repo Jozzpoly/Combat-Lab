@@ -438,6 +438,8 @@ try{
   const causalN1=await evaluate('window.__combatLabRuntime.query("causal-state")');
   if(causalN1?.schema!=="combat-lab-minimal-replan-v0" ||
      causalN1.replan?.witness?.status!=="witness" ||
+     causalN1.replan?.trigger?.blocker?.id!=="wall.center" ||
+     !(Number(causalN1.replan?.trigger?.noProgressFor)>=Number(causalN1.factualProgress?.threshold)) ||
      !Number.isFinite(causalN1.factualProgress?.goalDistance)){
     throw new Error(`N1 causal query failed: ${JSON.stringify(causalN1)}`);
   }

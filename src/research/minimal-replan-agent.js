@@ -96,6 +96,7 @@ export function createMinimalReplanState({
     replanAttempted:false,
     replanCount:0,
     replanAtTime:null,
+    replanTrigger:null,
     lastRouteWitness:null
   };
 }
@@ -158,6 +159,18 @@ function moveOneStep(state,dt){
 
 function attemptReplan(state,routeWitness){
   state.replanAttempted=true;
+  state.replanTrigger={
+    time:state.time,
+    goalDistance:state.goalDistance,
+    noProgressFor:state.noProgressFor,
+    blocker:state.lastBlocker
+      ? {
+          id:state.lastBlocker.id,
+          distance:state.lastBlocker.distance,
+          fraction:state.lastBlocker.fraction
+        }
+      : null
+  };
   const witness=routeWitness({
     from:state.actor.position,
     to:state.purpose.target,
@@ -217,20 +230,29 @@ export function stepMinimalReplanState(
     return state;
   }
 
-  if(goalDistance<state.bestGoalDistance-state.policy.progressEpsilon){
-    state.bestGoalDistance=goalDistance;
-    state.noProgressFor=0;
-  }else{
-    state.noProgressFor+=delta;
-  }
+  if(state.planMode==="DIRECT"){
+    if(goalDistance<state.bestGoalDistance-state.policy.progressEpsilon){
+      state.bestGoalDistance=goalDistance;
+      state.noProgressFor=0;
+    }else{
+      state.noProgressFor+=delta;
+    }
 
-  if(
-    state.planMode==="DIRECT" &&
-    state.policy.replanningEnabled &&
-    !state.replanAttempted &&
-    state.noProgressFor>=state.policy.noProgressSeconds
-  ){
-    attemptReplan(state,routeWitness);
+    if(
+      state.policy.replanningEnabled &&
+      !state.replanAttempted &&
+      state.noProgressFor>=state.policy.noProgressSeconds
+    ){
+      attemptReplan(state,routeWitness);
+    }
+  }else{
+    if(goalDistance<state.bestGoalDistance-state.policy.progressEpsilon){
+      state.bestGoalDistance=goalDistance;
+    }
+    // N1 uses no-progress only as a direct-plan failure trigger. Once a
+    // verified alternative is being executed, do not mislabel legitimate
+    // around-obstacle motion as a continuing direct-plan stall.
+    state.noProgressFor=0;
   }
 
   return state;
@@ -265,6 +287,7 @@ export function minimalReplanCausalSnapshot(state){
       attempted:state.replanAttempted,
       count:state.replanCount,
       atTime:state.replanAtTime,
+      trigger:state.replanTrigger ? structuredClone(state.replanTrigger) : null,
       witness:state.lastRouteWitness
         ? {
             status:state.lastRouteWitness.status,
