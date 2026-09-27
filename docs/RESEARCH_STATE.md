@@ -195,7 +195,7 @@ Other repository truth remains:
 
 The first Ecology recording/feedback campaign remains **CLOSED**.
 
-The separate **Combat Lab refoundation/research campaign is now ACTIVE**. No runtime implementation has started.
+The separate **Combat Lab refoundation/research campaign is now ACTIVE**. Runtime refoundation has started only in the bounded shared-apparatus L0 intervention-provenance slice; no Ecology/organism/contact refoundation implementation has started.
 
 Primary active strategy:
 
