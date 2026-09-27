@@ -1,7 +1,7 @@
 # Combat Lab — Refoundation Research Campaign
 
 **Started:** 2026-09-26  
-**Campaign status:** **ACTIVE RESEARCH / REFOUNDATION IN PROGRESS · L0/L1 + N0/N0b + N1 + C0 + P0 QUALIFIED · D0 DYNAMIC ENCOUNTER COMPETENCE NEXT**  
+**Campaign status:** **ACTIVE RESEARCH / REFOUNDATION IN PROGRESS · L0/L1 + N0/N0b + N1 + C0 + P0 + D0 QUALIFIED · E1 BOUNDED INTEGRATION NEXT**  
 **Authority:** bounded strategy derived from live `main`, S0/B0/Ecology Owner evidence, exact Ecology specimen forensics and targeted donor recovery. It does not promote a replacement runtime architecture by existence.
 
 ## 0. Why this campaign exists
@@ -997,9 +997,9 @@ Constraints:
 E1 remains the integration target after this missing causal layer is resolved or consciously falsified.
 
 
-## 20. D0 dynamic encounter competence — implementation candidate
+## 20. D0 dynamic encounter competence
 
-**Status at authoring:** implementation candidate; machine/browser qualification pending.
+**Status:** **MECHANICALLY QUALIFIED · CROWD GENERALIZATION / PEDESTRIAN REALISM / OWNER UX UNQUALIFIED**.
 
 D0 exists because the post-P0 integration-readiness audit found a known causal hole:
 
@@ -1063,3 +1063,47 @@ D0 fails if:
 - causal evidence cannot name the dynamic partner, no-progress trigger and authored side convention.
 
 Passing D0 would qualify only one minimal local dynamic-encounter competence candidate. It would not qualify pedestrian realism, crowd navigation, ORCA/RVO, social norms or integrated Ecology.
+
+
+### D0 qualification evidence
+
+Exact qualified checkpoint:
+
+`7bac0fc84bd120a957f2771147cb2270c1346b81`
+
+Machine/browser evidence:
+
+- GitHub Actions check run `36309731062` — **SUCCESS**;
+- **102 / 102** Node checks PASS;
+- live Chromium Workbench gate PASS;
+- exact symmetric `NONE / NONE` records `BLOCKED_NO_CONVENTION` rather than choosing by actor ID, solver order or noise;
+- shared `LEFT / LEFT` reaches both targets after the bounded dynamic no-progress trigger;
+- unilateral `LEFT / NONE` also resolves, proving a shared pair-level coordinator is not required by the candidate;
+- conflicting `LEFT / RIGHT` is allowed to expire unresolved;
+- first contact alone cannot trigger sidestep;
+- trigger evidence preserves dynamic partner, no-progress duration and authored local convention;
+- matched Reset World preserves authored convention state and restarts physical state.
+
+Bounded verdict:
+
+> **D0 MECHANICS PASS — one explicit local dynamic-encounter convention can break a persistent embodied hold without ghosting or hidden pair coordination, while exact no-convention symmetry remains honestly unresolved.**
+
+Still unqualified:
+
+- crowd-scale generalization;
+- whether a passing-side convention belongs in Feniks;
+- richer priority/urgency/social right-of-way semantics;
+- proactive collision prediction;
+- ORCA/RVO/MAPF;
+- Owner-facing encounter diagnostics.
+
+### E1 / rehearsal split
+
+D0 removes the last **known minimal competence prerequisite** for bounded integrated Ecology.
+
+The next implementation may therefore be E1, but with two separate gates:
+
+1. **integration evidence gate** — can N1 static recovery, C0 physical contact, D0 dynamic encounter behavior and P0 attribution coexist under a non-hub stimulus topology without harness-authored convergence?
+2. **Owner rehearsal readiness gate** — camera, population authoring, causal Debug/selection, information architecture and exact deployed specimen provenance must be fit for another Owner recording.
+
+Machine E1 PASS cannot waive the second gate.

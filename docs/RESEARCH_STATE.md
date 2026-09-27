@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-27  
 **Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
 **Canonical branch:** `main` after repository canonicalization  
-**Stage:** **Workbench + B0 CLOSED; first Active Spatial Ecology Owner rehearsal + feedback/evidence campaign CLOSED; target hypothesis INCONCLUSIVE; refoundation/research campaign ACTIVE; L0/L1 + N0/N0b + N1 + C0 + P0 MECHANICALLY QUALIFIED; dynamic-body competence / integrated ecology / Owner UX UNQUALIFIED**
+**Stage:** **Workbench + B0 CLOSED; first Active Spatial Ecology Owner rehearsal + feedback/evidence campaign CLOSED; target hypothesis INCONCLUSIVE; refoundation/research campaign ACTIVE; L0/L1 + N0/N0b + N1 + C0 + P0 + D0 MECHANICALLY QUALIFIED; integrated ecology / Owner rehearsal UX UNQUALIFIED**
 
 ## 1. Owner intent
 
@@ -251,6 +251,7 @@ The full qualification/falsification history lives in the refoundation campaign 
 | **N1 static-obstruction recovery** | MECHANICALLY QUALIFIED | One actor can detect persistent no-progress, preserve trigger evidence and consume one verified witness without continuous apparatus steering. |
 | **C0 contact candidate** | MECHANICALLY QUALIFIED | One explicit law family produces hold/yield/displacement with visible `contactMobility = 1/(mass × resistance)` and bounded pair-order artifact. |
 | **P0 scaling attribution** | MECHANICALLY QUALIFIED | Wall/sim fidelity, render cadence, simulation/render/observation phases, query/intervention cost and exact contact work are separable. |
+| **D0 dynamic encounter** | MECHANICALLY QUALIFIED | Persistent dynamic no-progress can trigger an explicit local passing-side decision; perfect symmetry with no convention remains an honest hold. |
 
 Latest exact qualified checkpoints:
 
@@ -260,29 +261,38 @@ Latest exact qualified checkpoints:
 - N0b `86bf323104fa...`;
 - N1 `f54cd64e08bb...`;
 - C0 `5ea8931c9e36...`;
-- P0 `71ada13dd175...`, CI `36309076545`, **92 / 92 PASS** + live Chromium PASS.
+- P0 `71ada13dd175...`, CI `36309076545`, **92 / 92 PASS** + live Chromium PASS;
+- D0 `7bac0fc84bd1...`, CI `36309731062`, **102 / 102 PASS** + live Chromium PASS.
 
 Important P0 evidence: sparse contact work reconciles exactly with the current naïve all-pairs law (`12 → 66 pairs/iteration → 330 checks/5 steps`; `24 → 276 → 1380`), dense work reports contact resolutions separately, forced wall-time loss is explicit, rolling metrics are bounded, and O(1) run totals preserve discarded-time evidence after it leaves the rolling window. Browser timing remains environment-specific evidence, not a portable benchmark.
 
 ### Integration-readiness finding
 
-**E1 integrated Ecology is NOT READY yet.**
+**D0 closes the known minimal dynamic-encounter gap, so bounded E1 integration work may begin.**
 
-This is an evidence-driven reorder, not abandonment of the campaign ladder:
+D0 evidence is intentionally narrow:
 
-- N1 currently understands static obstruction only;
-- N0/N0b deliberately exclude dynamic bodies;
-- C0 proves that equal bodies with equal persistent opposing intent can form a legitimate stable hold;
-- therefore a many-body E1 with persistent intersecting intents can still generate known permanent jams even on the improved solver;
-- P0 would make that failure measurable, but measurement alone would not make the target ecology hypothesis interpretable.
+- exact head-on `NONE / NONE` remains `BLOCKED_NO_CONVENTION`;
+- `LEFT / LEFT` reaches both targets;
+- unilateral `LEFT / NONE` can also resolve the encounter, so reciprocal omniscience is not required;
+- conflicting `LEFT / RIGHT` may fail and is not secretly coordinated;
+- the decision occurs only after persistent dynamic no-progress and preserves the partner/trigger evidence.
 
-The missing prerequisite is **D0 — bounded dynamic encounter competence**.
+External research is consistent with treating passing-side choice/asymmetry as a real local decision pressure rather than assuming perfect symmetry will solve itself; this does **not** promote pedestrian realism or ORCA/RVO.
 
-D0 should ask whether an actor can distinguish persistent dynamic obstruction from static geometry and make a local, inspectable choice such as wait/yield/sidestep/retry **without** importing global crowd choreography, ghosting, reciprocal omniscience or a production ORCA/RVO stack.
+### Next boundary: E1 integration, not Owner rehearsal
 
-The actor must own the choice. Contact physics provides outcome truth; the Lab may expose facts/probes but may not continuously steer the solution. Equal-priority unresolved hold is allowed when no legitimate asymmetry or local option exists.
+Proceed to an **E1 bounded integrated Ecology candidate** that combines the qualified mechanisms under an explicit, non-hub stimulus topology and P0 attribution.
 
-Only after D0 earns a useful minimal mechanism should E1 recombine N1 + C0 + P0 under an explicitly audited spawn/destination topology.
+However, E1 machine/integration PASS must remain separate from **Owner rehearsal readiness**. Before asking for another Owner recording, known apparatus findings still require explicit treatment:
+
+- mouse-wheel camera zoom with a materially wider usable range;
+- scalable population authoring that does not repeat `Spawn +50` ergonomics or overloaded “Spawn” naming;
+- Owner-facing causal Debug/selection built from the qualified on-demand query model;
+- information architecture that remains navigable as multi-body controls grow;
+- exact public specimen/build provenance.
+
+Do not let E1 implementation quietly redefine those UX failures as solved.
 
 ### Active invariant
 

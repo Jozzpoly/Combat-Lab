@@ -8,7 +8,7 @@ It is not the Feniks combat implementation, and it is not a sword project. The r
 
 **Canonical live branch:** `main` after repository canonicalization.
 
-**Current stage:** Workbench + Load / Envelope B0 is **closed**; the first Active Spatial Ecology Owner rehearsal and feedback/evidence campaign are **closed**. The Lab direction has a positive Owner signal, while the target ecology hypothesis remains **INCONCLUSIVE because material apparatus/UX/organism/stimulus failures dominated the test**. A separate refoundation/research campaign is now **ACTIVE**. L0/L1 apparatus, N0/N0b static feasibility, N1 static-obstruction recovery, one C0 contact-law candidate and P0 scaling attribution are **mechanically qualified**. Dynamic-body competence, integrated ecology, Owner-facing usefulness and final contact semantics remain unqualified.
+**Current stage:** Workbench + Load / Envelope B0 is **closed**; the first Active Spatial Ecology Owner rehearsal and feedback/evidence campaign are **closed**. The Lab direction has a positive Owner signal, while the target ecology hypothesis remains **INCONCLUSIVE because material apparatus/UX/organism/stimulus failures dominated the test**. A separate refoundation/research campaign is now **ACTIVE**. L0/L1 apparatus, N0/N0b static feasibility, N1 static-obstruction recovery, one C0 contact-law candidate, P0 scaling attribution and D0 dynamic-encounter competence are **mechanically qualified**. Integrated ecology, Owner-facing rehearsal UX and final contact semantics remain unqualified.
 
 Current qualified statements:
 
@@ -23,6 +23,7 @@ Current qualified statements:
 - **N1 minimal replan competence — MECHANICALLY QUALIFIED / NARROW.** One actor can detect persistent static no-progress, preserve causal trigger evidence, consume one verified witness and resume progress without crowd policy or continuous apparatus steering.
 - **C0 contact semantics — MECHANICALLY QUALIFIED / CANDIDATE LAW ONLY.** Mass, motor authority and explicit contact resistance produce distinguishable hold/yield/displacement outcomes with bounded pair-order artifact; the current mobility formula is visible and is not accepted Feniks physics.
 - **P0 scaling attribution — MECHANICALLY QUALIFIED.** Render cadence, sim/wall fidelity, phase cost, query/intervention cost and exact contact-work counts can be separated without adding an always-on profiler dashboard.
+- **D0 dynamic encounter competence — MECHANICALLY QUALIFIED / NARROW.** Dynamic no-progress can trigger an explicit local passing-side choice; no convention means no invented tie-break, and conflicting conventions are allowed to fail.
 
 Latest Owner-confirmed direction: the project is broader than hitting or melee. Body/world relations matter. Independent embodiment dimensions should remain available, while future Workbench research may add optional explicit correlations for fast coherent phenotype scaling. Larger terrain/obstacle spaces and more varied opponents/residents are desired future pressure, with population deliberately scalable from a readable baseline into crowd/horde/break regimes rather than hidden behind low protective limits. Targeted donor recovery has begun only where concrete dependencies justify it. Companion whole-body feasibility is a strong bounded donor; sibling architectures remain evidence sources rather than Combat Lab authority.
 
