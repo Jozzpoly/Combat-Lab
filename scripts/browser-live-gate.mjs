@@ -120,6 +120,55 @@ try{
     })()`);
   });
 
+  const inspectorNavigation=await evaluate(`(()=>{
+    const buttons=[...document.querySelectorAll("[data-inspector-mode]")];
+    const result={labels:buttons.map(button=>button.textContent.trim())};
+    const click=mode=>{
+      document.querySelector(`[data-inspector-mode="${mode}"]`)?.click();
+      return {
+        mode,
+        active:document.querySelector(`[data-inspector-mode="${mode}"]`)?.getAttribute("aria-selected"),
+        panelHidden:document.querySelector(`[data-inspector-panel="${mode}"]`)?.hidden
+      };
+    };
+    result.observe=click("observe");
+    result.compare=click("compare");
+    result.session=click("session");
+    result.tune=click("tune");
+    return result;
+  })()`);
+  if(inspectorNavigation.labels.join("|")!=="Tune|Observe|Compare|Session" ||
+     inspectorNavigation.observe.active!=="true" ||
+     inspectorNavigation.observe.panelHidden!==false ||
+     inspectorNavigation.compare.active!=="true" ||
+     inspectorNavigation.session.active!=="true" ||
+     inspectorNavigation.tune.active!=="true"){
+    throw new Error(`Inspector context navigation failed: ${JSON.stringify(inspectorNavigation)}`);
+  }
+
+  const cameraModuleTruth=await evaluate(`(async()=>{
+    const {ResearchCamera}=await import("./src/core/research-camera.js");
+    const camera=new ResearchCamera({minZoom:0.12,maxZoom:8});
+    const view={width:1000,height:600};
+    camera.fit({x:0,y:0,width:2000,height:1000},view);
+    const cursor={x:820,y:210};
+    const before=camera.screenToWorld(cursor,view);
+    camera.zoomWheel(-320,cursor,view);
+    const after=camera.screenToWorld(cursor,view);
+    return {
+      zoom:camera.zoom,
+      minZoom:camera.minZoom,
+      maxZoom:camera.maxZoom,
+      anchorError:Math.hypot(before.x-after.x,before.y-after.y)
+    };
+  })()`);
+  if(!(cameraModuleTruth.zoom>0.12) ||
+     cameraModuleTruth.minZoom!==0.12 ||
+     cameraModuleTruth.maxZoom!==8 ||
+     !(cameraModuleTruth.anchorError<1e-8)){
+    throw new Error(`Research camera browser truth failed: ${JSON.stringify(cameraModuleTruth)}`);
+  }
+
   const first=await evaluate(`({
     title:document.querySelector("#experiment-title")?.textContent,
     state:window.__combatLabRuntime?.state,

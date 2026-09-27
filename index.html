@@ -39,6 +39,11 @@
         <div class="stage-footer">
           <span class="movement-hint"><strong>Movement</strong> WASD / arrows</span>
           <span id="controls-text" class="shortcut-hint">—</span>
+          <div id="camera-tools" class="viewport-tools" hidden>
+            <span class="viewport-zoom"><strong>View</strong> <span id="camera-zoom">1.00×</span></span>
+            <button id="camera-fit" type="button">Fit</button>
+            <span class="viewport-hint">wheel zoom · middle-drag pan</span>
+          </div>
         </div>
       </section>
 
@@ -48,8 +53,8 @@
             <p class="eyebrow">LAB INSPECTOR</p>
             <h2>Experiment controls</h2>
           </div>
-          <label class="toggle-control" title="Show experiment debug overlay">
-            <span>Debug</span>
+          <label class="toggle-control" title="Show experiment overlay">
+            <span>Overlay</span>
             <input id="debug" type="checkbox">
             <span class="toggle-track" aria-hidden="true"><span class="toggle-knob"></span></span>
           </label>
@@ -64,56 +69,78 @@
           </div>
         </section>
 
-        <div id="parameter-panel"></div>
+        <nav class="inspector-nav" aria-label="Inspector context">
+          <button type="button" class="inspector-nav-button is-active" data-inspector-mode="tune" aria-selected="true">Tune</button>
+          <button type="button" class="inspector-nav-button" data-inspector-mode="observe" aria-selected="false">Observe</button>
+          <button type="button" class="inspector-nav-button" data-inspector-mode="compare" aria-selected="false">Compare</button>
+          <button type="button" class="inspector-nav-button" data-inspector-mode="session" aria-selected="false">Session</button>
+        </nav>
 
-        <section class="inspector-section parameter-state-section">
-          <div class="section-heading compact">
-            <div>
-              <div class="section-title">Comparison</div>
-              <p class="section-description">Each experiment declares exactly what A/B captures and what Apply preserves.</p>
-            </div>
-          </div>
+        <div class="inspector-mode-stack">
+          <section class="inspector-mode-panel" data-inspector-panel="tune">
+            <div id="parameter-panel"></div>
+          </section>
 
-          <p id="comparison-contract" class="section-description">This experiment declares no A/B comparison contract.</p>
-          <div id="comparison-diff" class="slot-summary">Capture A and B to inspect exact differences.</div>
+          <section class="inspector-mode-panel" data-inspector-panel="observe" hidden>
+            <div id="live-panel"></div>
+          </section>
 
-          <div class="parameter-slots">
-            <div class="parameter-slot" data-slot="A">
-              <div class="slot-heading">
-                <span class="slot-name">A</span>
-                <span id="slot-a-summary" class="slot-summary">Empty</span>
+          <section class="inspector-mode-panel" data-inspector-panel="compare" hidden>
+            <section class="inspector-section parameter-state-section">
+              <div class="section-heading compact">
+                <div>
+                  <div class="section-title">Comparison</div>
+                  <p class="section-description">Only experiment-declared state is captured. Apply does not imply a matched reset.</p>
+                </div>
               </div>
-              <div class="slot-actions">
-                <button id="capture-a" type="button">Capture</button>
-                <button id="apply-a" type="button" disabled>Apply</button>
+
+              <p id="comparison-contract" class="section-description">This experiment declares no A/B comparison contract.</p>
+              <div id="comparison-diff" class="slot-summary comparison-diff">Capture A and B to inspect exact differences.</div>
+
+              <div class="parameter-slots">
+                <div class="parameter-slot" data-slot="A">
+                  <div class="slot-heading">
+                    <span class="slot-name">A</span>
+                    <span id="slot-a-summary" class="slot-summary">Empty</span>
+                  </div>
+                  <div class="slot-actions">
+                    <button id="capture-a" type="button">Capture</button>
+                    <button id="apply-a" type="button" disabled>Apply</button>
+                  </div>
+                </div>
+
+                <div class="parameter-slot" data-slot="B">
+                  <div class="slot-heading">
+                    <span class="slot-name">B</span>
+                    <span id="slot-b-summary" class="slot-summary">Empty</span>
+                  </div>
+                  <div class="slot-actions">
+                    <button id="capture-b" type="button">Capture</button>
+                    <button id="apply-b" type="button" disabled>Apply</button>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            <div class="parameter-slot" data-slot="B">
-              <div class="slot-heading">
-                <span class="slot-name">B</span>
-                <span id="slot-b-summary" class="slot-summary">Empty</span>
+              <button id="restore-defaults" type="button" class="wide-action secondary-reset">Restore Defaults</button>
+            </section>
+          </section>
+
+          <section class="inspector-mode-panel" data-inspector-panel="session" hidden>
+            <section class="inspector-section diagnostics session-diagnostics">
+              <div class="section-heading compact">
+                <div>
+                  <div class="section-title">Session & provenance</div>
+                  <p class="section-description">Runtime and exact build identity stay separate from experiment controls.</p>
+                </div>
               </div>
-              <div class="slot-actions">
-                <button id="capture-b" type="button">Capture</button>
-                <button id="apply-b" type="button" disabled>Apply</button>
+              <div class="diagnostic-grid">
+                <span>Runtime</span><strong id="runtime-detail">BOOTING</strong>
+                <span>Simulation</span><strong id="sim-time-detail">0.00 s</strong>
+                <span>Build</span><strong id="build-id">source: local</strong>
               </div>
-            </div>
-          </div>
-
-          <button id="restore-defaults" type="button" class="wide-action secondary-reset">Restore Defaults</button>
-        </section>
-
-        <div id="live-panel"></div>
-
-        <details class="inspector-section diagnostics">
-          <summary>Session & provenance</summary>
-          <div class="diagnostic-grid">
-            <span>Runtime</span><strong id="runtime-detail">BOOTING</strong>
-            <span>Simulation</span><strong id="sim-time-detail">0.00 s</strong>
-            <span>Build</span><strong id="build-id">source: local</strong>
-          </div>
-        </details>
+            </section>
+          </section>
+        </div>
       </aside>
     </main>
   </div>

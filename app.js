@@ -14,6 +14,7 @@ import {
 } from "./src/core/comparison-state.js";
 import {InterventionLedger} from "./src/core/intervention-ledger.js";
 import {RuntimePerformanceMeter} from "./src/core/runtime-performance.js";
+import {ResearchCamera} from "./src/core/research-camera.js";
 import {substrateSmoke} from "./experiments/substrate-smoke.js";
 import {embodiedScaleFieldV0} from "./experiments/embodied-scale-field-v0.js";
 import {loadEnvelopeFieldB0} from "./experiments/load-envelope-field-b0.js";
@@ -44,6 +45,11 @@ const slotBSummary=document.querySelector("#slot-b-summary");
 const comparisonContract=document.querySelector("#comparison-contract");
 const comparisonDiff=document.querySelector("#comparison-diff");
 const debugInput=document.querySelector("#debug");
+const cameraTools=document.querySelector("#camera-tools");
+const cameraZoom=document.querySelector("#camera-zoom");
+const cameraFitButton=document.querySelector("#camera-fit");
+const inspectorModeButtons=[...document.querySelectorAll("[data-inspector-mode]")];
+const inspectorModePanels=[...document.querySelectorAll("[data-inspector-panel]")];
 const runtime=window.__combatLabRuntime;
 
 const registry=new ExperimentRegistry();
@@ -61,6 +67,11 @@ input.attach();
 const comparisonSlots=new ComparisonSlotStore();
 const interventionLedger=new InterventionLedger();
 const runtimePerformance=new RuntimePerformanceMeter();
+const researchCamera=new ResearchCamera({
+  minZoom:0.12,
+  maxZoom:8,
+  wheelSensitivity:0.0017
+});
 
 let paused=false;
 let debug=false;
@@ -68,10 +79,17 @@ let elapsed=0;
 let last=performance.now();
 let current=null;
 let nextInspectorSync=0;
+let latestView={width:1,height:1,dpr:1};
+let cameraBounds=null;
+let cameraNeedsFit=false;
+let cameraPan=null;
 
 runtime.interventionLedger=interventionLedger;
 runtime.interventionCount=0;
 runtime.performance=runtimePerformance;
+runtime.camera={
+  snapshot:()=>researchCamera.snapshot()
+};
 runtime.fixedStep=null;
 runtime.query=(name,args={})=>{
   const query=current?.instance?.query;
@@ -203,9 +221,28 @@ function applyParameterSlot(name){
   updateParameterSlots();
 }
 
+function experimentCameraBounds(){
+  const raw=current?.definition?.camera?.bounds;
+  if(!raw) return null;
+  const width=Number(raw.width);
+  const height=Number(raw.height);
+  const x=Number(raw.x ?? 0);
+  const y=Number(raw.y ?? 0);
+  if(![x,y,width,height].every(Number.isFinite) || width<=0 || height<=0) return null;
+  return {x,y,width,height};
+}
+
+function syncCameraUi(){
+  cameraTools.hidden=!cameraBounds;
+  cameraZoom.textContent=`${researchCamera.zoom.toFixed(2)}×`;
+}
+
 function loadExperiment(id){
   current=registry.create(id);
   runtime.activeExperimentId=id;
+  cameraBounds=experimentCameraBounds();
+  cameraNeedsFit=Boolean(cameraBounds);
+  syncCameraUi();
   title.textContent=current.definition.title;
   purpose.textContent=current.definition.purpose;
   controlsText.textContent=current.definition.controls || "Direct controls available in Lab Inspector.";
@@ -339,6 +376,106 @@ debugInput.addEventListener("change",()=>{
   });
 });
 
+function setInspectorMode(mode){
+  const target=String(mode);
+  for(const button of inspectorModeButtons){
+    const active=button.dataset.inspectorMode===target;
+    button.classList.toggle("is-active",active);
+    button.setAttribute("aria-selected",active ? "true" : "false");
+  }
+  for(const panel of inspectorModePanels){
+    panel.hidden=panel.dataset.inspectorPanel!==target;
+  }
+}
+for(const button of inspectorModeButtons){
+  button.addEventListener("click",()=>setInspectorMode(button.dataset.inspectorMode));
+}
+setInspectorMode("tune");
+
+cameraFitButton.addEventListener("click",()=>{
+  if(!cameraBounds) return;
+  const before=researchCamera.snapshot();
+  researchCamera.fit(cameraBounds,latestView,{padding:42});
+  cameraNeedsFit=false;
+  syncCameraUi();
+  recordIntervention({
+    operation:"camera-fit",
+    effects:[{
+      domain:"apparatus",
+      scope:"viewport",
+      path:"camera",
+      before,
+      after:researchCamera.snapshot()
+    }]
+  });
+});
+
+canvas.addEventListener("wheel",event=>{
+  if(!cameraBounds) return;
+  event.preventDefault();
+  const rect=canvas.getBoundingClientRect();
+  const before=researchCamera.snapshot();
+  researchCamera.zoomWheel(
+    event.deltaY,
+    {x:event.clientX-rect.left,y:event.clientY-rect.top},
+    latestView
+  );
+  syncCameraUi();
+  recordIntervention({
+    operation:"camera-zoom",
+    effects:[{
+      domain:"apparatus",
+      scope:"viewport",
+      path:"camera",
+      before,
+      after:researchCamera.snapshot()
+    }],
+    detail:{inputKind:"wheel"}
+  });
+},{passive:false});
+
+canvas.addEventListener("pointerdown",event=>{
+  if(!cameraBounds || event.button!==1) return;
+  event.preventDefault();
+  cameraPan={
+    pointerId:event.pointerId,
+    x:event.clientX,
+    y:event.clientY,
+    before:researchCamera.snapshot()
+  };
+  canvas.setPointerCapture?.(event.pointerId);
+});
+
+canvas.addEventListener("pointermove",event=>{
+  if(!cameraPan || event.pointerId!==cameraPan.pointerId) return;
+  const dx=event.clientX-cameraPan.x;
+  const dy=event.clientY-cameraPan.y;
+  cameraPan.x=event.clientX;
+  cameraPan.y=event.clientY;
+  researchCamera.panScreen(dx,dy);
+  syncCameraUi();
+});
+
+function endCameraPan(event){
+  if(!cameraPan || event.pointerId!==cameraPan.pointerId) return;
+  const before=cameraPan.before;
+  cameraPan=null;
+  try{ canvas.releasePointerCapture?.(event.pointerId); }catch{}
+  recordIntervention({
+    operation:"camera-pan",
+    effects:[{
+      domain:"apparatus",
+      scope:"viewport",
+      path:"camera",
+      before,
+      after:researchCamera.snapshot()
+    }],
+    detail:{inputKind:"middle-drag"}
+  });
+}
+canvas.addEventListener("pointerup",endCameraPan);
+canvas.addEventListener("pointercancel",endCameraPan);
+
 readBuildIdentity().then(identity=>{
   buildId.textContent=`${identity.commit.slice(0,12)} · ${identity.branch}`;
 });
@@ -373,8 +510,17 @@ function frame(now){
 
   const renderStarted=performance.now();
   const view=resizeCanvas(canvas);
+  latestView=view;
+  if(cameraBounds && cameraNeedsFit){
+    researchCamera.fit(cameraBounds,view,{padding:42});
+    cameraNeedsFit=false;
+    syncCameraUi();
+  }
   beginCanvasFrame(ctx,view);
-  current.instance.render(ctx,view,{debug});
+  current.instance.render(ctx,view,{
+    debug,
+    camera:cameraBounds ? researchCamera : null
+  });
   const renderMs=Math.max(0,performance.now()-renderStarted);
 
   const observationStarted=performance.now();
