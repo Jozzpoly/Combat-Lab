@@ -355,24 +355,38 @@ function dynamicOverlapCount(state){
 function projectBodiesOutOfStatic(state){
   let corrections=0;
   for(const body of state.bodies){
+    const before={x:body.x,y:body.y};
     const projected=projectStaticCircleOut({
-      center:{x:body.x,y:body.y},
+      center:before,
       radius:body.radius,
       world:state.world,
       obstacles:state.obstacles,
       maxIterations:12
     });
-    if(!projected.moved) continue;
-    body.x=projected.center.x;
-    body.y=projected.center.y;
-    corrections+=projected.contacts.length;
+    if(projected.moved){
+      body.x=projected.center.x;
+      body.y=projected.center.y;
+      corrections+=projected.contacts.length;
 
-    for(const contact of projected.contacts){
-      const into=body.vx*contact.normal.x+body.vy*contact.normal.y;
-      if(into<0){
-        body.vx-=into*contact.normal.x;
-        body.vy-=into*contact.normal.y;
+      for(const contact of projected.contacts){
+        const into=body.vx*contact.normal.x+body.vy*contact.normal.y;
+        if(into<0){
+          body.vx-=into*contact.normal.x;
+          body.vy-=into*contact.normal.y;
+        }
       }
+    }
+
+    if(!projected.clear){
+      state.lastUnresolvedStaticProjection={
+        time:state.time,
+        bodyId:body.id,
+        radius:body.radius,
+        before,
+        after:{...projected.center},
+        blocker:structuredClone(projected.blocker),
+        contacts:projected.contacts.map(contact=>structuredClone(contact))
+      };
     }
   }
   return corrections;
@@ -511,6 +525,7 @@ export function createIntegratedEcologyState({
     totalStaticProjectionCorrections:0,
     coupledPassesThisStep:0,
     totalCoupledPasses:0,
+    lastUnresolvedStaticProjection:null,
     initialTotalDistance:bodies.reduce((sum,body)=>
       sum+distance(body,actors[body.id].target),0
     )
@@ -576,6 +591,9 @@ export function integratedEcologySnapshot(state){
     dynamicOverlapViolations:state.dynamicOverlapViolations,
     staticProjectionCorrections:state.totalStaticProjectionCorrections,
     coupledPasses:state.totalCoupledPasses,
+    lastUnresolvedStaticProjection:state.lastUnresolvedStaticProjection
+      ? structuredClone(state.lastUnresolvedStaticProjection)
+      : null,
     contactPairSteps:state.totalContactPairSteps,
     pairChecks:state.totalPairChecks,
     contactResolutions:state.totalContactResolutions,

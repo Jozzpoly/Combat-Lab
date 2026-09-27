@@ -186,7 +186,7 @@ test("N0 static projection does not choose an impossible near-boundary escape fr
   assert.equal(result.clear,true);
   assert.equal(result.moved,true);
   assert.ok(result.center.y<=localWorld.height-32+1e-9);
-  assert.notEqual(result.contacts[0]?.id,"boundary.bottom");
+  assert.ok(result.contacts.some(contact=>contact.id==="pillar.lower"));
   assert.equal(queryStaticCircleOccupancy({
     center:result.center,
     radius:32,
