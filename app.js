@@ -344,8 +344,9 @@ readBuildIdentity().then(identity=>{
 updateRuntimeState("RUNNING");
 
 function frame(now){
-  const frameSeconds=Math.max(0,(now-last)/1000);
-  last=now;
+  const wallNow=performance.now();
+  const frameSeconds=Math.max(0,(wallNow-last)/1000);
+  last=wallNow;
 
   let fixedStep={
     steps:0,
@@ -379,7 +380,7 @@ function frame(now){
 
   runtime.frames+=1;
   runtime.elapsed=elapsed;
-  runtime.lastFrameAt=now;
+  runtime.lastFrameAt=wallNow;
   runtime.fixedStep=structuredClone(fixedStep);
 
   const formatted=`${elapsed.toFixed(2)} s`;
