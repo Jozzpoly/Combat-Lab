@@ -71,3 +71,38 @@ test("rehearsal reset clears selection while preserving authored trial configura
   assert.equal(snap.authoredPassingSide,-1);
   assert.equal(snap.actors["resident-1"].passingSide,-1);
 });
+
+
+test("rehearsal Observe translates selected state into purpose, plan and causal why",()=>{
+  const instance=integratedEcologyRehearsalR0.create();
+  const actor=instance.snapshot().actors["resident-1"];
+  instance.pick({
+    screen:{x:0,y:0},
+    camera:{zoom:1,screenToWorld(){return {...actor.position};}},
+    view:{width:100,height:100}
+  });
+
+  assert.match(instance.inspector.getLive("purpose"),/^reach \(/);
+  assert.match(instance.inspector.getLive("plan"),/direct/i);
+  assert.match(instance.inspector.getLive("why"),/direct progress/i);
+  assert.equal(instance.inspector.getLive("blockedBy"),"");
+  assert.ok(Number.isFinite(instance.inspector.getLive("radius")));
+  assert.ok(Number.isFinite(instance.inspector.getLive("mass")));
+});
+
+test("rehearsal Observe reports a real historical static decision instead of only raw timers",()=>{
+  const instance=integratedEcologyRehearsalR0.create();
+  const initial=instance.snapshot().actors["resident-1"];
+  instance.pick({
+    screen:{x:0,y:0},
+    camera:{zoom:1,screenToWorld(){return {...initial.position};}},
+    view:{width:100,height:100}
+  });
+
+  const idle={keys:[],buttons:[],pointer:{x:0,y:0,valid:false}};
+  for(let i=0;i<520;i++) instance.step(idle,1/120);
+
+  const decision=instance.inspector.getLive("decision");
+  assert.match(decision,/static replan/i);
+  assert.match(instance.inspector.getLive("plan"),/(route|direct)/i);
+});

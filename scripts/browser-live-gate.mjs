@@ -768,6 +768,15 @@ try{
     throw new Error(`rehearsal causal subject query failed: ${JSON.stringify(selectedCausal)}`);
   }
 
+  const observeText=await evaluate(
+    'document.querySelector(\'[data-inspector-panel="observe"]\')?.innerText'
+  );
+  for(const required of ["Why now","Purpose","Immediate plan","Blocked by","No progress","Selected body","resident-1"]){
+    if(!observeText?.includes(required)){
+      throw new Error(`rehearsal Observe missing ${required}: ${observeText}`);
+    }
+  }
+
   await evaluate('document.querySelector(\'[data-inspector-mode="tune"]\').click()');
   await waitFor("return rehearsal Inspector to Tune",async()=>{
     return evaluate(`(()=>{

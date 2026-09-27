@@ -51,6 +51,86 @@ function selectedCausal(state,selectedId){
   return selectedId ? integratedEcologyActorSnapshot(state,selectedId) : null;
 }
 
+function formatPoint(point){
+  if(!point) return "—";
+  return `(${point.x.toFixed(0)}, ${point.y.toFixed(0)})`;
+}
+
+function subjectPurpose(subject){
+  if(!subject) return "";
+  return `reach ${formatPoint(subject.purpose.target)}`;
+}
+
+function subjectPlan(subject){
+  if(!subject) return "";
+  const waypoint=formatPoint(subject.immediatePlan.waypoint);
+  if(subject.mode==="ROUTE"){
+    return `route ${subject.immediatePlan.routeIndex+1}/${Math.max(1,subject.immediatePlan.routeLength)} → ${waypoint}`;
+  }
+  if(subject.mode==="SIDESTEP"){
+    return `sidestep ${sideLabel(subject.passingSide)} → ${waypoint}`;
+  }
+  if(subject.mode==="ARRIVED") return "hold target";
+  if(subject.mode==="DYNAMIC_BLOCKED_NO_CONVENTION") return "hold · no passing convention";
+  if(subject.mode==="STATIC_STUCK_NO_WITNESS") return "hold · no verified route";
+  return `direct → ${waypoint}`;
+}
+
+function subjectBlockedBy(subject){
+  if(!subject) return "";
+  const current=[];
+  if(subject.static.blockerThisStep) current.push(subject.static.blockerThisStep);
+  if(subject.dynamic.partners.length) current.push(...subject.dynamic.partners);
+  return current.join(", ");
+}
+
+function subjectNoProgress(subject){
+  if(!subject) return "";
+  const staticSeconds=Number(subject.static.noProgressFor || 0);
+  const dynamicSeconds=Number(subject.dynamic.noProgressFor || 0);
+  if(staticSeconds<=0 && dynamicSeconds<=0) return "";
+  if(staticSeconds>=dynamicSeconds) return `static ${staticSeconds.toFixed(2)} s`;
+  return `dynamic ${dynamicSeconds.toFixed(2)} s`;
+}
+
+function subjectDecision(subject){
+  if(!subject) return "";
+  const staticTrigger=subject.static.trigger;
+  const dynamicTrigger=subject.dynamic.trigger;
+  const staticTime=Number(staticTrigger?.time ?? -Infinity);
+  const dynamicTime=Number(dynamicTrigger?.time ?? -Infinity);
+  if(dynamicTime>staticTime){
+    return `encounter ${sideLabel(dynamicTrigger.passingSide)} vs ${dynamicTrigger.partnerId}`;
+  }
+  if(staticTrigger){
+    return `static replan after ${staticTrigger.blocker || "block"}`;
+  }
+  return "";
+}
+
+function subjectWhy(subject){
+  if(!subject) return "";
+  if(subject.mode==="ARRIVED") return "target reached";
+  if(subject.mode==="DYNAMIC_BLOCKED_NO_CONVENTION"){
+    const partner=subject.dynamic.trigger?.partnerId || subject.dynamic.partners[0] || "body";
+    return `held by ${partner}; no passing convention`;
+  }
+  if(subject.mode==="STATIC_STUCK_NO_WITNESS"){
+    return `blocked by ${subject.static.trigger?.blocker || "static geometry"}; no verified alternative`;
+  }
+  if(subject.mode==="SIDESTEP"){
+    return `local ${sideLabel(subject.passingSide)} sidestep after dynamic no-progress`;
+  }
+  if(subject.static.blockerThisStep){
+    return `physical static contact with ${subject.static.blockerThisStep}`;
+  }
+  if(subject.dynamic.partners.length){
+    return `physical contact with ${subject.dynamic.partners.join(", ")}`;
+  }
+  if(subject.mode==="ROUTE") return "following verified static route witness";
+  return "direct progress toward purpose";
+}
+
 function drawTarget(ctx,actor,zoom){
   if(!actor) return;
   const lineWidth=1.5/zoom;
@@ -200,13 +280,24 @@ export const integratedEcologyRehearsalR0={
             description:"Click one body in the viewport. This panel explains that subject instead of drawing a global target web.",
             values:[
               {id:"selectedId",label:"Resident",format:value=>String(value || "click a resident")},
-              {id:"mode",label:"Mode",format:value=>String(value || "—")},
+              {id:"why",label:"Why now",format:value=>String(value || "—")},
+              {id:"purpose",label:"Purpose",format:value=>String(value || "—")},
+              {id:"plan",label:"Immediate plan",format:value=>String(value || "—")},
               {id:"goalDistance",label:"Goal distance",decimals:1},
-              {id:"staticBlocker",label:"Static blocker",format:value=>String(value || "—")},
-              {id:"staticNoProgress",label:"Static no-progress",unit:"s",decimals:2},
-              {id:"dynamicPartners",label:"Dynamic contact",format:value=>String(value || "—")},
-              {id:"dynamicNoProgress",label:"Dynamic no-progress",unit:"s",decimals:2},
+              {id:"blockedBy",label:"Blocked by",format:value=>String(value || "—")},
+              {id:"noProgress",label:"No progress",format:value=>String(value || "—")},
               {id:"decision",label:"Last decision",format:value=>String(value || "—")}
+            ]
+          },
+          {
+            id:"body",
+            label:"Selected body",
+            description:"Embodied causes remain visible below behavior; they are not collapsed into one hidden size/strength axis.",
+            values:[
+              {id:"radius",label:"Radius",decimals:1},
+              {id:"mass",label:"Mass",decimals:2},
+              {id:"motorAuthority",label:"Motor authority",decimals:2},
+              {id:"contactResistance",label:"Contact resistance",decimals:2}
             ]
           }
         ]
@@ -252,19 +343,17 @@ export const integratedEcologyRehearsalR0={
         if(id==="contacts") return world.contactResolutions;
         if(id==="maxCoupled") return world.maxCoupledPassesUsed;
         if(id==="selectedId") return selectedId;
-        if(id==="mode") return subject?.mode || "";
+        if(id==="why") return subjectWhy(subject);
+        if(id==="purpose") return subjectPurpose(subject);
+        if(id==="plan") return subjectPlan(subject);
         if(id==="goalDistance") return subject?.purpose?.goalDistance ?? NaN;
-        if(id==="staticBlocker") return subject?.static?.blockerThisStep || subject?.static?.trigger?.blocker || "";
-        if(id==="staticNoProgress") return subject?.static?.noProgressFor ?? NaN;
-        if(id==="dynamicPartners") return subject?.dynamic?.partners?.join(", ") || subject?.dynamic?.trigger?.partnerId || "";
-        if(id==="dynamicNoProgress") return subject?.dynamic?.noProgressFor ?? NaN;
-        if(id==="decision"){
-          if(subject?.dynamic?.trigger){
-            return `encounter ${sideLabel(subject.dynamic.trigger.passingSide)}`;
-          }
-          if(subject?.static?.trigger) return "static replan";
-          return "";
-        }
+        if(id==="blockedBy") return subjectBlockedBy(subject);
+        if(id==="noProgress") return subjectNoProgress(subject);
+        if(id==="decision") return subjectDecision(subject);
+        if(id==="radius") return subject?.body?.radius ?? NaN;
+        if(id==="mass") return subject?.body?.mass ?? NaN;
+        if(id==="motorAuthority") return subject?.body?.motorAuthority ?? NaN;
+        if(id==="contactResistance") return subject?.body?.contactResistance ?? NaN;
         return undefined;
       }
     };
