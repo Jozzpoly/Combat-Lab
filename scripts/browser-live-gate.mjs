@@ -642,6 +642,57 @@ try{
     return evaluate('window.__combatLabRuntime.activeExperimentId==="load-envelope-field-b0" && !!document.querySelector(\'[data-param-id="loadMass"]\')');
   });
 
+  // E1 browser-only integration qualification. Do not expose E1 in the Owner selector yet.
+  const e1Browser=await evaluate(`(async()=>{
+    const module=await import("./src/research/integrated-ecology.js");
+    const left=module.runIntegratedEcologyTrial({
+      count:8,
+      passingSide:1,
+      pairOrder:"forward",
+      trialDuration:10
+    });
+    const none=module.runIntegratedEcologyTrial({
+      count:8,
+      passingSide:0,
+      pairOrder:"forward",
+      trialDuration:10
+    });
+    return {
+      schema:left.schema,
+      left:{
+        arrived:left.arrived,
+        staticReplans:left.staticReplans,
+        dynamicEncounters:left.dynamicEncounters,
+        staticOverlapViolations:left.staticOverlapViolations,
+        dynamicOverlapViolations:left.dynamicOverlapViolations,
+        maxCoupledPassesUsed:left.maxCoupledPassesUsed,
+        totalRemainingDistance:left.totalRemainingDistance,
+        pairChecks:left.pairChecks,
+        contactResolutions:left.contactResolutions
+      },
+      none:{
+        arrived:none.arrived,
+        dynamicEncounters:none.dynamicEncounters,
+        noConventionEncounters:none.noConventionEncounters,
+        totalRemainingDistance:none.totalRemainingDistance
+      }
+    };
+  })()`);
+
+  if(e1Browser?.schema!=="combat-lab-integrated-ecology-v0" ||
+     !(e1Browser.left.staticReplans>0) ||
+     !(e1Browser.left.dynamicEncounters>0) ||
+     e1Browser.left.staticOverlapViolations!==0 ||
+     e1Browser.left.dynamicOverlapViolations!==0 ||
+     !(e1Browser.left.maxCoupledPassesUsed>0) ||
+     !(e1Browser.left.maxCoupledPassesUsed<24) ||
+     !(e1Browser.left.pairChecks>e1Browser.left.contactResolutions) ||
+     !(e1Browser.none.dynamicEncounters>0) ||
+     !(e1Browser.none.noConventionEncounters>0) ||
+     !(e1Browser.left.totalRemainingDistance<e1Browser.none.totalRemainingDistance)){
+    throw new Error(`E1 browser integration qualification failed: ${JSON.stringify(e1Browser)}`);
+  }
+
   // Normal visual rehearsal: heavy load only.
   await setNumber("loadMass",4.00);
   await captureScreenshot();
@@ -826,6 +877,7 @@ try{
       lastQuery:performanceTruth.lastQuery,
       lastIntervention:performanceTruth.lastIntervention
     },
+    e1Browser,
     final:{
       state:finalState.state,
       frames:finalState.frames,
