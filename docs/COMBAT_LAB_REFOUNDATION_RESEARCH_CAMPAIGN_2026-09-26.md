@@ -441,3 +441,58 @@ The next candidate cell is **N0 whole-body static feasibility with O0 embedded a
 `target / intent → whole-body hard feasibility → first static blocker or clear result`.
 
 This deliberately leaves out dynamic-body avoidance, stuck/replan policy and contact negotiation. Those remain later N1/C0 questions.
+
+
+## 15. N0 + embedded O0 — whole-body static feasibility candidate
+
+**Status at authoring:** implementation candidate; machine qualification pending.
+
+The post-L1 sequencing decision deliberately rejects two tempting jumps:
+
+- do not build a generic O0 Debug framework without a concrete causal consumer;
+- do not import Companion's static route graph or Rapier before Combat Lab has earned routing as a requirement.
+
+The minimum N0 fact is earlier:
+
+> given a body center, target, body radius and static world geometry, is the **whole swept body segment** physically clear, and if not, what is the first blocker?
+
+The bounded candidate therefore provides:
+
+- circle-vs-static-world occupancy;
+- swept circle-vs-AABB/world-boundary traversal;
+- first-blocker identity, distance, fraction, hit-center and normal;
+- separate hard-body radius and optional desired/comfort clearance;
+- no dynamic actors in the static classification;
+- no route search;
+- no avoidance policy;
+- no stuck/replan policy;
+- no contact/yield semantics.
+
+A small shared observation seam exposes experiment-owned queries only on demand:
+
+`runtime.query(name, args)`
+
+This is intentionally not a new global Debug mode. It performs no per-frame capture and adds no observation work until a query is requested.
+
+The initial real-runtime consumer is B0's known 54-unit reference choke:
+
+- baseline radius 18 has a hard-clear center traversal;
+- with +10 desired clearance the same path becomes comfort-constrained;
+- envelope 1.70 increases radius enough that the hard-body traversal itself becomes blocked;
+- the target endpoint remains legal, so this explicitly falsifies endpoint-only feasibility as sufficient evidence.
+
+Targeted Companion donor boundary:
+
+- retain the whole-body feasibility idea and hard-vs-comfort separation demonstrated around `616bda342b9096326633c6449851f48e6ceaecb2`;
+- do **not** transplant the route graph, corner-node policy, path scoring, current clearance constant or Rapier backend.
+
+N0 falsifiers:
+
+- endpoint legality and swept-body traversal cannot be made observably distinct;
+- hard physical feasibility becomes entangled with comfort/preference clearance;
+- the query mutates World state;
+- dynamic-body policy leaks into the static classification;
+- observation requires per-frame snapshots or all-actor debug;
+- a route planner becomes necessary merely to answer direct static feasibility.
+
+Passing this cell would qualify a geometric/query mechanism only. It would not qualify movement competence, routing, replanning, contact behavior or Owner-facing causal-debug UX.

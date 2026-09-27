@@ -152,6 +152,28 @@ try{
     })()`);
   }
 
+  const baselineFeasibility=await evaluate(`window.__combatLabRuntime.query(
+    "static-feasibility",
+    {target:{x:520,y:325},clearance:10}
+  )`);
+  if(baselineFeasibility?.schema!=="combat-lab-static-feasibility-v0" ||
+     baselineFeasibility.hard?.clear!==true ||
+     baselineFeasibility.comfort?.clear!==false ||
+     baselineFeasibility.clearanceConstrained!==true){
+    throw new Error(`N0 baseline feasibility query failed: ${JSON.stringify(baselineFeasibility)}`);
+  }
+
+  await setNumber("envelope",1.70);
+  const largeFeasibility=await evaluate(`window.__combatLabRuntime.query(
+    "static-feasibility",
+    {target:{x:520,y:325},clearance:10}
+  )`);
+  if(largeFeasibility?.hard?.clear!==false ||
+     !String(largeFeasibility?.hard?.blocker?.id || "").startsWith("choke.")){
+    throw new Error(`N0 large-body feasibility did not expose choke blocker: ${JSON.stringify(largeFeasibility)}`);
+  }
+  await setNumber("envelope",1.00);
+
   // Owner recording regression: force=42 must be accepted and displayed truthfully.
   await setNumber("forceMultiplier",42);
   await waitFor("Owner force 42 remains applied and visible",async()=>{

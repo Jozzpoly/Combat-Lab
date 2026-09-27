@@ -1,3 +1,5 @@
+import {explainStaticFeasibility} from "../src/research/static-feasibility.js";
+
 const WORLD={width:1080,height:650};
 const BASE_RADIUS=18;
 const BASE_FORCE=760;
@@ -20,6 +22,17 @@ const OBSTACLES=[
   {x:760,y:500,w:135,h:40},
   {x:900,y:265,w:42,h:120}
 ];
+
+const STATIC_FEASIBILITY_OBSTACLES=OBSTACLES.map((rect,index)=>({
+  id:[
+    "choke.top",
+    "choke.bottom",
+    "island.upper",
+    "island.lower",
+    "island.right"
+  ][index] || `obstacle-${index}`,
+  ...rect
+}));
 
 const CONTACT_SEED=[
   {x:610,y:205,r:18,mass:1.50,vx:-34,vy:26},
@@ -501,6 +514,19 @@ export const loadEnvelopeFieldB0={
       },
 
       inspector,
+
+      query(name,args={}){
+        if(name!=="static-feasibility") return null;
+        if(!args.target) throw new Error("static-feasibility query requires target");
+        return explainStaticFeasibility({
+          from:{x:state.player.x,y:state.player.y},
+          to:args.target,
+          radius:state.player.r,
+          clearance:args.clearance ?? 0,
+          world:WORLD,
+          obstacles:STATIC_FEASIBILITY_OBSTACLES
+        });
+      },
 
       snapshot(){
         return {

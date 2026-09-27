@@ -63,6 +63,12 @@ let nextInspectorSync=0;
 
 runtime.interventionLedger=interventionLedger;
 runtime.interventionCount=0;
+runtime.query=(name,args={})=>{
+  const query=current?.instance?.query;
+  if(typeof query!=="function") return null;
+  const result=query.call(current.instance,name,structuredClone(args ?? {}));
+  return result===undefined ? undefined : structuredClone(result);
+};
 
 function recordIntervention({
   operation,

@@ -211,3 +211,22 @@ test("B0 still applies explicit numerical safety rails beyond the widened resear
   assert.equal(d.forceMultiplier,100);
   assert.ok(Number.isFinite(d.acceleration));
 });
+
+
+test("B0 exposes N0 whole-body static feasibility as an on-demand observation query",()=>{
+  const instance=loadEnvelopeFieldB0.create();
+  const target={x:520,y:325};
+
+  const baseline=instance.query("static-feasibility",{target,clearance:10});
+  assert.equal(baseline.schema,"combat-lab-static-feasibility-v0");
+  assert.equal(baseline.hard.clear,true);
+  assert.equal(baseline.comfort.clear,false);
+  assert.equal(baseline.clearanceConstrained,true);
+
+  instance.inspector.set("envelope",1.70);
+  const large=instance.query("static-feasibility",{target,clearance:10});
+  assert.equal(large.hard.clear,false);
+  assert.match(large.hard.blocker.id,/choke\.(top|bottom)/);
+
+  assert.equal(instance.query("unknown-query",{}),null);
+});
