@@ -16,6 +16,7 @@ import {InterventionLedger} from "./src/core/intervention-ledger.js";
 import {substrateSmoke} from "./experiments/substrate-smoke.js";
 import {embodiedScaleFieldV0} from "./experiments/embodied-scale-field-v0.js";
 import {loadEnvelopeFieldB0} from "./experiments/load-envelope-field-b0.js";
+import {minimalReplanCellN1} from "./experiments/minimal-replan-cell-n1.js";
 
 const canvas=document.querySelector("#lab");
 const ctx=canvas.getContext("2d");
@@ -46,6 +47,7 @@ const registry=new ExperimentRegistry();
 registry.register(substrateSmoke);
 registry.register(embodiedScaleFieldV0);
 registry.register(loadEnvelopeFieldB0);
+registry.register(minimalReplanCellN1);
 
 const runner=new FixedStepRunner({dt:1/120,maxFrame:0.05,maxAccum:0.10});
 const input=new BrowserInput({pointerTarget:canvas});

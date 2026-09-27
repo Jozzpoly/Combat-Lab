@@ -623,3 +623,55 @@ The next candidate is N1:
 `purpose/target → direct plan → factual no-progress → bounded replan trigger → optional verified route witness → resumed progress`.
 
 N1 must remain an organism-competence experiment. The Lab/query substrate may provide facts and witnesses, but must not continuously steer the actor or encode the expected route side.
+
+
+## 17. N1 minimal progress / replan cell — implementation candidate
+
+**Status at authoring:** implementation candidate; machine qualification pending.
+
+N1 is the first refoundation cell that tests **organism competence rather than apparatus truth**.
+
+The controlled question is deliberately narrow:
+
+> can one embodied actor notice persistent factual no-progress against static geometry and change its immediate plan using an already-qualified route witness, without the Lab continuously steering it?
+
+Candidate causal chain:
+
+`purpose/target → direct immediate plan → physical block → factual no-progress over time → one bounded replan attempt → optional N0b witness → resumed motion/progress`.
+
+The cell is intentionally not crowd AI.
+
+Included:
+
+- one actor;
+- one static blocker;
+- one explicit target/purpose;
+- direct movement toward target;
+- exact N0 swept-body movement checks;
+- time-bounded no-progress detection;
+- one route-witness query after persistent failure;
+- actor-owned switch to witness waypoints;
+- on-demand causal snapshot through the existing query seam.
+
+Excluded:
+
+- dynamic actors;
+- reciprocal avoidance;
+- crowd flow policy;
+- random wandering;
+- repeated continuous replanning;
+- contact/yield/displacement semantics;
+- target selection;
+- high-level cognition;
+- route-side hard-coding.
+
+Falsifiers:
+
+- actor replans on first contact rather than persistent factual failure;
+- successful path requires hard-coded top/bottom side knowledge;
+- apparatus updates or steers the actor every frame;
+- `none-found` is treated as proof of impossibility and motion is invented anyway;
+- actor fails to resume factual progress after receiving a verified witness;
+- causal explanation cannot distinguish purpose, immediate plan, factual progress, blocker and replan evidence.
+
+Passing N1 would qualify only a minimal static-obstruction recovery competence. It would not qualify crowd behavior, dynamic avoidance, contact semantics or a final organism architecture.

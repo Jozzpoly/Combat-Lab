@@ -410,6 +410,56 @@ try{
     return evaluate('window.__combatLabRuntime.activeExperimentId==="load-envelope-field-b0" && !!document.querySelector(\'[data-param-id="loadMass"]\')');
   });
 
+  // N1 real-browser organism competence: direct stall -> bounded replan -> arrival.
+  await evaluate(`(()=>{
+    const s=document.querySelector("#experiment-select");
+    s.value="minimal-replan-cell-n1";
+    s.dispatchEvent(new Event("change",{bubbles:true}));
+  })()`);
+  await waitFor("switch B0 to N1",async()=>{
+    return evaluate('window.__combatLabRuntime.activeExperimentId==="minimal-replan-cell-n1"');
+  });
+
+  const beforeN1=await evaluate("window.__combatLabRuntime.snapshot");
+  if(beforeN1.status!=="MOVING" || beforeN1.planMode!=="DIRECT" || beforeN1.replanAttempted){
+    throw new Error(`N1 did not start in direct pre-replan state: ${JSON.stringify(beforeN1)}`);
+  }
+
+  await waitFor("N1 bounded replan attempt",async()=>{
+    return evaluate(`(()=>{
+      const s=window.__combatLabRuntime.snapshot;
+      return s?.replanAttempted===true &&
+        s?.replanCount===1 &&
+        s?.witnessStatus==="witness" &&
+        s?.planMode==="ROUTE_WITNESS";
+    })()`);
+  },{timeout:5000,interval:80});
+
+  const causalN1=await evaluate('window.__combatLabRuntime.query("causal-state")');
+  if(causalN1?.schema!=="combat-lab-minimal-replan-v0" ||
+     causalN1.replan?.witness?.status!=="witness" ||
+     !Number.isFinite(causalN1.factualProgress?.goalDistance)){
+    throw new Error(`N1 causal query failed: ${JSON.stringify(causalN1)}`);
+  }
+
+  await waitFor("N1 reaches target after witness replan",async()=>{
+    return evaluate(`(()=>{
+      const s=window.__combatLabRuntime.snapshot;
+      return s?.status==="ARRIVED" &&
+        s?.replanCount===1 &&
+        Number(s?.goalDistance)<=3;
+    })()`);
+  },{timeout:7000,interval:80});
+
+  await evaluate(`(()=>{
+    const s=document.querySelector("#experiment-select");
+    s.value="load-envelope-field-b0";
+    s.dispatchEvent(new Event("change",{bubbles:true}));
+  })()`);
+  await waitFor("switch N1 back to B0",async()=>{
+    return evaluate('window.__combatLabRuntime.activeExperimentId==="load-envelope-field-b0" && !!document.querySelector(\'[data-param-id="loadMass"]\')');
+  });
+
   // Normal visual rehearsal: heavy load only.
   await setNumber("loadMass",4.00);
   await captureScreenshot();
