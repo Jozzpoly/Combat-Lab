@@ -77,3 +77,58 @@ test("N0 rejects invalid radius and clearance rather than fabricating feasibilit
   assert.throws(()=>queryStaticCircleTraversal({from,to:target,radius:0,world,obstacles}),/positive/);
   assert.throws(()=>explainStaticFeasibility({from,to:target,radius:18,clearance:-1,world,obstacles}),/non-negative/);
 });
+
+
+test("N0 static occupancy does not invent square collision at rounded rectangle corners",()=>{
+  const cornerWorld={width:200,height:200};
+  const wall={id:"box",x:50,y:50,w:20,h:20};
+  const outsideRoundedCorner={x:48.1,y:48.1};
+
+  const result=queryStaticCircleOccupancy({
+    center:outsideRoundedCorner,
+    radius:2,
+    world:cornerWorld,
+    obstacles:[wall]
+  });
+
+  assert.equal(result.clear,true);
+});
+
+test("N0 exact side tangency is legal while motion through the side is blocked",()=>{
+  const cornerWorld={width:200,height:200};
+  const wall={id:"box",x:50,y:50,w:20,h:20};
+
+  const tangent=queryStaticCircleOccupancy({
+    center:{x:48,y:60},
+    radius:2,
+    world:cornerWorld,
+    obstacles:[wall]
+  });
+  const crossing=queryStaticCircleTraversal({
+    from:{x:40,y:60},
+    to:{x:80,y:60},
+    radius:2,
+    world:cornerWorld,
+    obstacles:[wall]
+  });
+
+  assert.equal(tangent.clear,true);
+  assert.equal(crossing.clear,false);
+  assert.equal(crossing.blocker.id,"box");
+  assert.ok(Math.abs(crossing.blocker.hitCenter.x-48)<1e-8);
+});
+
+test("N0 grazing along the exact rounded/side boundary remains clear without penetration",()=>{
+  const cornerWorld={width:200,height:200};
+  const wall={id:"box",x:50,y:50,w:20,h:20};
+  const result=queryStaticCircleTraversal({
+    from:{x:40,y:48},
+    to:{x:80,y:48},
+    radius:2,
+    world:cornerWorld,
+    obstacles:[wall]
+  });
+
+  assert.equal(result.clear,true);
+  assert.equal(result.blocker,null);
+});

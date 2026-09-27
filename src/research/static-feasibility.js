@@ -34,24 +34,19 @@ function contractWorld(world,radius){
   return {width,height,minX:radius,maxX:width-radius,minY:radius,maxY:height-radius};
 }
 
-function expandedRect(rect,radius){
-  return {
-    minX:rect.x-radius,
-    maxX:rect.x+rect.width+radius,
-    minY:rect.y-radius,
-    maxY:rect.y+rect.height+radius
-  };
-}
-
-function pointInsideAabb(p,aabb){
-  return p.x>=aabb.minX-EPS && p.x<=aabb.maxX+EPS &&
-    p.y>=aabb.minY-EPS && p.y<=aabb.maxY+EPS;
+function pointRectDistanceSquared(p,rect){
+  const nearestX=Math.max(rect.x,Math.min(rect.x+rect.width,p.x));
+  const nearestY=Math.max(rect.y,Math.min(rect.y+rect.height,p.y));
+  const dx=p.x-nearestX;
+  const dy=p.y-nearestY;
+  return dx*dx+dy*dy;
 }
 
 function obstacleOccupancy(center,radius,obstacles){
+  const threshold=radius*radius;
   for(const [index,raw] of obstacles.entries()){
     const rect=normalizeRect(raw,index);
-    if(pointInsideAabb(center,expandedRect(rect,radius))){
+    if(pointRectDistanceSquared(center,rect)<threshold-EPS){
       return {id:rect.id,type:"obstacle"};
     }
   }
@@ -79,46 +74,85 @@ export function queryStaticCircleOccupancy({center,radius,world,obstacles=[]}={}
   };
 }
 
-function segmentAabbEntry(from,to,aabb){
+function candidate(t,id,normal){
+  if(!Number.isFinite(t) || t<-EPS || t>1+EPS) return null;
+  return {
+    id,
+    type:"obstacle",
+    fraction:Math.max(0,Math.min(1,t)),
+    normal,
+    initialOverlap:false
+  };
+}
+
+function segmentCircleEntry(from,to,center,radius,id){
   const dx=to.x-from.x;
   const dy=to.y-from.y;
-  let tMin=0;
-  let tMax=1;
-  let normal={x:0,y:0};
+  const ox=from.x-center.x;
+  const oy=from.y-center.y;
+  const a=dx*dx+dy*dy;
+  if(a<=EPS) return null;
+  const b=2*(ox*dx+oy*dy);
+  const c=ox*ox+oy*oy-radius*radius;
+  const discriminant=b*b-4*a*c;
 
-  const axes=[
-    {origin:from.x,delta:dx,min:aabb.minX,max:aabb.maxX,minNormal:{x:-1,y:0},maxNormal:{x:1,y:0}},
-    {origin:from.y,delta:dy,min:aabb.minY,max:aabb.maxY,minNormal:{x:0,y:-1},maxNormal:{x:0,y:1}}
-  ];
+  // Exact tangent contact never enters the forbidden interior.
+  if(discriminant<=EPS) return null;
+  const root=Math.sqrt(discriminant);
+  const entry=(-b-root)/(2*a);
+  return candidate(entry,id,{x:(from.x+dx*entry-center.x)/radius,y:(from.y+dy*entry-center.y)/radius});
+}
 
-  for(const axis of axes){
-    if(Math.abs(axis.delta)<=EPS){
-      if(axis.origin<axis.min-EPS || axis.origin>axis.max+EPS) return null;
-      continue;
-    }
+function segmentRoundedRectEntry(from,to,rect,radius){
+  const dx=to.x-from.x;
+  const dy=to.y-from.y;
+  const hits=[];
 
-    let t1=(axis.min-axis.origin)/axis.delta;
-    let t2=(axis.max-axis.origin)/axis.delta;
-    let n1=axis.minNormal;
-    let n2=axis.maxNormal;
-    if(t1>t2){
-      [t1,t2]=[t2,t1];
-      [n1,n2]=[n2,n1];
+  if(dx>EPS){
+    const t=(rect.x-radius-from.x)/dx;
+    const y=from.y+dy*t;
+    if(y>rect.y+EPS && y<rect.y+rect.height-EPS){
+      const hit=candidate(t,rect.id,{x:-1,y:0});
+      if(hit) hits.push(hit);
     }
-    if(t1>tMin){
-      tMin=t1;
-      normal=n1;
+  }else if(dx<-EPS){
+    const t=(rect.x+rect.width+radius-from.x)/dx;
+    const y=from.y+dy*t;
+    if(y>rect.y+EPS && y<rect.y+rect.height-EPS){
+      const hit=candidate(t,rect.id,{x:1,y:0});
+      if(hit) hits.push(hit);
     }
-    tMax=Math.min(tMax,t2);
-    if(tMin>tMax+EPS) return null;
   }
 
-  if(tMax<-EPS || tMin>1+EPS) return null;
-  return {
-    fraction:Math.max(0,Math.min(1,tMin)),
-    normal,
-    initialOverlap:pointInsideAabb(from,aabb)
-  };
+  if(dy>EPS){
+    const t=(rect.y-radius-from.y)/dy;
+    const x=from.x+dx*t;
+    if(x>rect.x+EPS && x<rect.x+rect.width-EPS){
+      const hit=candidate(t,rect.id,{x:0,y:-1});
+      if(hit) hits.push(hit);
+    }
+  }else if(dy<-EPS){
+    const t=(rect.y+rect.height+radius-from.y)/dy;
+    const x=from.x+dx*t;
+    if(x>rect.x+EPS && x<rect.x+rect.width-EPS){
+      const hit=candidate(t,rect.id,{x:0,y:1});
+      if(hit) hits.push(hit);
+    }
+  }
+
+  const corners=[
+    {x:rect.x,y:rect.y},
+    {x:rect.x+rect.width,y:rect.y},
+    {x:rect.x+rect.width,y:rect.y+rect.height},
+    {x:rect.x,y:rect.y+rect.height}
+  ];
+  for(const corner of corners){
+    const hit=segmentCircleEntry(from,to,corner,radius,rect.id);
+    if(hit) hits.push(hit);
+  }
+
+  hits.sort((a,b)=>a.fraction-b.fraction || a.id.localeCompare(b.id));
+  return hits[0] || null;
 }
 
 function boundaryExit(from,to,bounds){
@@ -173,15 +207,8 @@ export function queryStaticCircleTraversal({from,to,radius,world,obstacles=[]}={
 
   for(const [index,raw] of obstacles.entries()){
     const rect=normalizeRect(raw,index);
-    const hit=segmentAabbEntry(start,target,expandedRect(rect,r));
-    if(!hit) continue;
-    candidates.push({
-      id:rect.id,
-      type:"obstacle",
-      fraction:hit.fraction,
-      normal:hit.normal,
-      initialOverlap:hit.initialOverlap
-    });
+    const hit=segmentRoundedRectEntry(start,target,rect,r);
+    if(hit) candidates.push(hit);
   }
 
   candidates.sort((a,b)=>a.fraction-b.fraction || a.id.localeCompare(b.id));
