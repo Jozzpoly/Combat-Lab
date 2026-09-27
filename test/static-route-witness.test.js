@@ -101,3 +101,21 @@ test("N0b route witness is deterministic under obstacle input ordering",()=>{
   assert.deepEqual(first.routeNodeIds,second.routeNodeIds);
   assert.deepEqual(first.waypoints,second.waypoints);
 });
+
+
+test("N0b rejects duplicate obstacle identities before they can alias graph nodes",()=>{
+  assert.throws(
+    ()=>findStaticRouteWitness({
+      from:{x:1,y:1},
+      to:{x:9,y:1},
+      radius:0.3,
+      clearance:0,
+      world:{width:10,height:6},
+      obstacles:[
+        {id:"wall",x:4,y:0,w:1,h:2},
+        {id:"wall",x:6,y:3,w:1,h:2}
+      ]
+    }),
+    /duplicate static obstacle id: wall/
+  );
+});

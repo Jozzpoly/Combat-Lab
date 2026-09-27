@@ -30,6 +30,15 @@ function edgeId(a,b){
   return a<b ? `${a}<->${b}` : `${b}<->${a}`;
 }
 
+function validateObstacleIds(obstacles){
+  const seen=new Set();
+  for(const [index,raw] of obstacles.entries()){
+    const id=normalizeRect(raw,index).id;
+    if(seen.has(id)) throw new Error(`duplicate static obstacle id: ${id}`);
+    seen.add(id);
+  }
+}
+
 function candidateNodes({world,obstacles,radius,nodeEpsilon}){
   const nodes=[];
   for(const [index,raw] of obstacles.entries()){
@@ -192,6 +201,7 @@ export function findStaticRouteWitness({
     ? Math.max(1e-6,hardRadius*1e-3)
     : finite(nodeEpsilon,"nodeEpsilon");
   if(epsilon<=0) throw new Error("nodeEpsilon must be positive");
+  validateObstacleIds(obstacles);
 
   const base={
     schema:STATIC_ROUTE_WITNESS_SCHEMA,
