@@ -1334,6 +1334,81 @@ Examples of useful cohort-level facts now justified by exact evidence:
 
 This is a debug/research-instrument hypothesis, not a frozen UI requirement.
 
+
+## 8AC. Phenotype heterogeneity is causally important but currently confounded
+
+R0 visually presents three phenotype classes, but each class bundles four dimensions:
+
+- radius;
+- mass;
+- motor authority;
+- contact resistance.
+
+The recording therefore cannot support claims such as “large bodies cause the jam” from color/size alone.
+
+Analysis-only clean-18 trials isolate the bundle.
+
+### Uniform phenotype variants
+
+Current map + LEFT:
+
+| Population composition | Result |
+| --- | --- |
+| mixed R0 phenotypes | 15 / 18 at 30 s |
+| all small | **18 / 18 COMPLETE ~10.9 s** |
+| all medium | 16 / 18 at 30 s |
+| all large | 17 / 18 at 30 s |
+
+All-large produces >1.0M contact resolutions while all-small produces ~137k.
+
+There is no monotonic “larger = worse” relationship.
+
+### One heterogeneous axis at a time
+
+All unspecified dimensions were held at the medium phenotype value.
+
+| Heterogeneous dimension | Result | Solver/contact note |
+| --- | --- | --- |
+| radius only | 16 / 18 | ~1.19M resolutions |
+| mass only | 16 / 18 | ~0.81M |
+| motor authority only | **18 / 18 COMPLETE ~16.8 s** | ~0.76M |
+| contact resistance only | **13 / 18** | ~1.48M; very high saturation |
+| mass + motor + resistance, uniform radius | 16 / 18 | ~0.59M |
+| full mixed R0 | 15 / 18 | ~0.65M |
+
+The contact-resistance-only variant spends roughly half the 30 s run at the 24-pass ceiling.
+
+Bounded interpretation:
+
+> **current collective behavior is materially shaped by phenotype mechanics, especially yielding asymmetry, but the recording does not identify one phenotype dimension as “correct” or “bad”.**
+
+This is precisely why future crowd experiments should preserve the Owner requirement for independent raw dimensions rather than baking a universal phenotype bundle into crowd behavior.
+
+## 8AD. Current contact resistance is not body compression
+
+Owner's “soft / squeezing” intuition should not be mapped directly onto the existing variable.
+
+Current C0/R0 contact semantics keep a hard circle radius.
+
+`contactResistance` changes the share of overlap correction allocated to each body through positional mobility.
+
+It does **not**:
+
+- shrink body radius under pressure;
+- create a preferred outer personal-space envelope;
+- store elastic compression;
+- deform body shape.
+
+So future research must keep distinct:
+
+1. **yield authority / contact resistance** — who gives way;
+2. **soft personal envelope** — preferred spacing that may compress;
+3. **hard-core body size** — material occupancy floor;
+4. **true deformation** — changing body geometry.
+
+The recording motivates investigation of (1)–(3).
+It does not currently justify true soft-body simulation.
+
 ## 9. Immediate campaign boundary
 
 **Do not implement personal space, soft envelopes, new crowd steering or a new solver yet.**
