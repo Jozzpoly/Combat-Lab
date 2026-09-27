@@ -1031,6 +1031,25 @@ try{
   const switches=interventionEvents.filter(event=>event.operation==="experiment-switch");
   if(switches.length<2) throw new Error(`expected B0↔S0 experiment provenance, got ${switches.length}`);
 
+  // Public rehearsal URL must resolve the exact experiment directly.
+  const directUrl=new URL(target);
+  directUrl.searchParams.set("experiment","integrated-ecology-rehearsal-r0");
+  await cdp.send("Page.navigate",{url:directUrl.toString()});
+  await waitFor("direct rehearsal URL",async()=>{
+    return evaluate(`(()=>{
+      const r=window.__combatLabRuntime;
+      return r?.state==="RUNNING" &&
+        r?.activeExperimentId==="integrated-ecology-rehearsal-r0" &&
+        r?.snapshot?.population===8 &&
+        !document.querySelector("#camera-tools")?.hidden;
+    })()`);
+  },{timeout:7000,interval:80});
+
+  const directSelect=await evaluate('document.querySelector("#experiment-select")?.value');
+  if(directSelect!=="integrated-ecology-rehearsal-r0"){
+    throw new Error(`direct rehearsal URL did not synchronize selector: ${directSelect}`);
+  }
+
   const finalState=await evaluate("window.__combatLabRuntime");
   if(finalState.error) throw new Error(`runtime error captured: ${finalState.error}`);
 

@@ -282,8 +282,12 @@ for(const group of experimentGroups){
   experimentSelect.append(optgroup);
 }
 
-experimentSelect.value="load-envelope-field-b0";
-loadExperiment(experimentSelect.value);
+const requestedExperiment=new URLSearchParams(window.location.search).get("experiment");
+const initialExperiment=experimentItems.some(item=>item.id===requestedExperiment)
+  ? requestedExperiment
+  : "load-envelope-field-b0";
+experimentSelect.value=initialExperiment;
+loadExperiment(initialExperiment);
 experimentSelect.addEventListener("change",()=>{
   const before=runtime.activeExperimentId;
   const after=experimentSelect.value;
