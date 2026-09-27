@@ -422,6 +422,111 @@ At least four mechanisms can produce a visually inert or non-completing body:
 
 The next controlled experiment should be designed to separate these causes rather than “reduce stuckness” globally.
 
+
+## 8F. The current stimulus is not pure counterflow
+
+The distributed topology intentionally permutes target ranks:
+
+`targetRank = rank ± floor(sideCount / 3)`.
+
+Therefore actors travelling in the **same direction** are not simply trying to preserve lanes from one side to the other. They are assigned vertically shifted destinations and must cross/reorder relative to peers in their own stream.
+
+At 18 actors, each side has 9 residents and the offset is 3 slots — a large vertical shift.
+
+So the current recording combines at least four interaction sources:
+
+1. opposing directional flow;
+2. within-stream crossing / reordering;
+3. static bottleneck geometry;
+4. accumulation at terminal destination columns.
+
+This is useful as a deliberately difficult interaction stimulus, but it is not a clean lane-formation or ordinary pedestrian-counterflow test.
+
+Implication:
+
+> future evidence about spontaneous lanes, anticipatory personal space or local crowd organization should include a **straight-flow baseline** rather than relying only on this permutation stimulus.
+
+The current crowd-like Owner signal remains real at the phenomenological level; its mechanistic source is broader than “opposing pedestrians negotiate a bottleneck”.
+
+## 8G. LEFT / RIGHT are not environment-symmetric in this map
+
+The obstacle pair is vertically asymmetric:
+
+- an outer path exists above the upper pillar;
+- the lower pillar ends only ~10 world units from the bottom boundary, so no current body can use an equivalent bottom outer path;
+- a central passage exists between the pillars.
+
+Passing side is defined in each actor's local travel frame.
+
+For the left-to-right stream:
+
+- LEFT nudges globally upward;
+- RIGHT nudges globally downward.
+
+For the right-to-left stream the mapping reverses.
+
+Therefore LEFT and RIGHT do not receive geometrically mirrored opportunities in this stimulus.
+
+This matters because a policy difference can partly be a **map-side affordance difference**, not a general contact convention result.
+
+Any later LEFT-vs-RIGHT comparison that aims at general behavior should use either:
+
+- mirrored environments;
+- symmetric route affordances;
+- or explicit stratification by stream/direction.
+
+## 8H. Pressure is currently encoded as initial packing, not flow rate
+
+The recording exposed an important experimental-design distinction.
+
+The current `Population on reset` pressure axis increases the number of bodies packed into two fixed vertical start columns and fixed destination columns.
+
+Beyond 20 actors this changes not only crowd pressure but also:
+
+- initial penetration;
+- boundary validity;
+- target feasibility;
+- immediate solver work;
+- terminal destination congestion.
+
+So `population` is not a clean density/pressure independent variable at high N.
+
+Potential future pressure axes to compare — **not implementation decisions yet**:
+
+- wider or multi-row collision-free spawn regions;
+- continuous entrance / arrival rate;
+- fixed population in a larger physically valid holding area;
+- periodic source/sink flow through the scene;
+- world area scaled with population while local bottleneck width remains controlled.
+
+This is conceptually important for preserving Owner breakability:
+
+> “allow 256” should mean the Owner can intentionally overload the system, not that the ordinary pressure variable must create invalid initial geometry before the crowd even interacts.
+
+## 8I. Transit completion and destination occupancy are currently conflated
+
+Current R0 asks an actor to reach a point and then remain as a material body.
+
+That mixes two different research questions:
+
+1. **Can an organism traverse / negotiate the crowd?**
+2. **Can many bodies persistently occupy the destination area?**
+
+For the second question, stationary arrived bodies are legitimate pressure.
+For the first, they are apparatus pollution after the relevant event has already happened.
+
+A future experiment should make that choice explicit.
+
+Candidate semantics to compare later:
+
+- crossing a finish line then retiring/removing from interaction;
+- entering a sink/portal and counting completion;
+- wrap/recycle to the opposite source for steady-state flow;
+- persistent destination occupancy as its own deliberate scenario;
+- completion followed by a new purpose.
+
+No option is selected yet.
+
 ## 9. Immediate campaign boundary
 
 **Do not implement personal space, soft envelopes, new crowd steering or a new solver yet.**
