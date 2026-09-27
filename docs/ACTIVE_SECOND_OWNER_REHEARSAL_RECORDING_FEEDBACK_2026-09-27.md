@@ -1609,6 +1609,87 @@ The current recording motivates that distinction naturally.
 
 It does not motivate making the hard core ghostable.
 
+
+## 8AJ. Invalid initial packing has three different runtime severities
+
+High-N initial overlap should not be treated as one undifferentiated failure.
+
+Exact first-step / early-step audit:
+
+### 24 and 35
+
+These populations begin with invalid overlapping pairs, but the bounded coupled solve removes all dynamic overlap by the end of the first simulation step.
+
+So the defect is primarily:
+
+- invalid experimental initial condition;
+- large artificial correction before the intended encounter;
+- altered starting arrangement / momentum context.
+
+It is not sustained hard-body penetration after the first step.
+
+### 64
+
+First simulation step:
+
+- 49 unresolved dynamic overlap pairs remain;
+- coupled solve hits 24/24.
+
+Second step:
+
+- dynamic overlap count resolves to zero;
+- subsequent early steps use substantially fewer coupled passes.
+
+So 64 includes a short **transient correctness failure** plus persistent high computational/contact pressure.
+
+### 256
+
+First five simulation steps leave:
+
+- 403;
+- 388;
+- 375;
+- 356;
+- 355
+
+unresolved dynamic pairs respectively.
+
+Every step reaches 24/24.
+
+In local Node execution, each of those individual 1/120 s simulation steps costs roughly 0.5–0.66 s wall-time.
+
+Thus 256 is qualitatively different:
+
+> **sustained hard-body correctness failure + extreme capacity failure.**
+
+This supports a more precise density classification:
+
+1. clean initial regime;
+2. invalid initial condition but solver-recovers;
+3. transient bounded-solve violation;
+4. sustained break regime.
+
+Future Lab observability should report which regime is actually occurring rather than displaying only historical max solve.
+
+## 8AK. Apparent dense “compression” is not current soft-body physics
+
+Current bodies retain fixed hard radii.
+
+If circles remain geometrically overlapped after the coupled solve, that state is an unresolved constraint violation.
+
+Therefore visible overlap at pathological density must not be interpreted as:
+
+- elastic body compression;
+- legal soft personal-space intrusion;
+- deformable-body behavior.
+
+A future compressible envelope needs an explicit model and explicit debug truth distinguishing:
+
+- hard-core overlap: invalid;
+- soft-envelope compression: legal/quantified;
+- preferred personal-space intrusion: behavioral;
+- actual body deformation: physical shape change.
+
 ## 9. Immediate campaign boundary
 
 **Do not implement personal space, soft envelopes, new crowd steering or a new solver yet.**
