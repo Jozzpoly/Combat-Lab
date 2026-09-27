@@ -1,7 +1,7 @@
 # Combat Lab — Refoundation Research Campaign
 
 **Started:** 2026-09-26  
-**Campaign status:** **ACTIVE RESEARCH / REFOUNDATION IN PROGRESS · L0/L1 + N0/N0b QUALIFIED · N1 ORGANISM COMPETENCE NEXT · CONTACT UNSELECTED**  
+**Campaign status:** **ACTIVE RESEARCH / REFOUNDATION IN PROGRESS · L0/L1 + N0/N0b + N1 QUALIFIED · C0 CONTACT SEMANTICS NEXT**  
 **Authority:** bounded strategy derived from live `main`, S0/B0/Ecology Owner evidence, exact Ecology specimen forensics and targeted donor recovery. It does not promote a replacement runtime architecture by existence.
 
 ## 0. Why this campaign exists
@@ -625,9 +625,9 @@ The next candidate is N1:
 N1 must remain an organism-competence experiment. The Lab/query substrate may provide facts and witnesses, but must not continuously steer the actor or encode the expected route side.
 
 
-## 17. N1 minimal progress / replan cell — implementation candidate
+## 17. N1 minimal progress / replan cell
 
-**Status at authoring:** implementation candidate; machine qualification pending.
+**Status:** **MECHANICALLY QUALIFIED · DYNAMIC-BODY / CROWD / OWNER UX UNQUALIFIED**.
 
 N1 is the first refoundation cell that tests **organism competence rather than apparatus truth**.
 
@@ -675,3 +675,41 @@ Falsifiers:
 - causal explanation cannot distinguish purpose, immediate plan, factual progress, blocker and replan evidence.
 
 Passing N1 would qualify only a minimal static-obstruction recovery competence. It would not qualify crowd behavior, dynamic avoidance, contact semantics or a final organism architecture.
+
+
+### N1 qualification evidence
+
+Exact qualified checkpoint:
+
+`f54cd64e08bbda211c09773714dc993a853e1608`
+
+Machine evidence:
+
+- GitHub Actions check run `36307417405` — **SUCCESS**;
+- **71 / 71** Node checks PASS;
+- live Chromium Workbench gate PASS;
+- explicit no-replan baseline remains stalled;
+- first contact alone cannot trigger a replan;
+- persistent no-progress must cross the bounded threshold;
+- trigger evidence retains `wall.center`, the no-progress duration and goal distance that caused the policy transition;
+- a custom injected witness proves the actor policy has no baked-in route side;
+- normal N0b witness execution reaches the target after exactly one replan;
+- `none-found` becomes `STUCK_NO_WITNESS`;
+- the on-demand causal query does not steer the actor.
+
+Bounded verdict:
+
+> **N1 MECHANICS PASS — a minimal actor can recover from ordinary static obstruction through factual no-progress detection and a one-shot verified alternative witness without transferring movement authority to the Lab.**
+
+### Post-N1 transition
+
+The next dominant Owner finding is dynamic-body blocking and stupid jams. C0 should therefore investigate contact semantics before any integrated Ecology reattempt.
+
+C0 must not optimize for crowd throughput by default. It should expose when bodies:
+
+- yield;
+- resist;
+- displace;
+- hold space;
+
+and how those outcomes respond to independent body mass, locomotor authority and explicit contact posture/resistance.

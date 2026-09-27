@@ -24,7 +24,7 @@ test("canonical entrypoints contain one current project state",()=>{
   assert.match(state,/Workbench \+ B0 CLOSED/);
   assert.match(state,/first Active Spatial Ecology Owner rehearsal \+ feedback\/evidence campaign CLOSED/i);
   assert.match(state,/TARGET HYPOTHESIS INCONCLUSIVE — APPARATUS LIMITATIONS BECAME THE DOMINANT FINDING/i);
-  assert.match(state,/refoundation\/research campaign ACTIVE; L0 provenance \+ L1 scoped comparison \+ N0 direct feasibility \+ N0b static route witness MECHANICALLY QUALIFIED; Owner UX \/ movement competence \/ contact UNQUALIFIED/i);
+  assert.match(state,/refoundation\/research campaign ACTIVE; L0\/L1 \+ N0\/N0b \+ N1 minimal static-obstruction recovery MECHANICALLY QUALIFIED; Owner UX \/ dynamic-body contact \/ crowd behavior UNQUALIFIED/i);
   assert.match(state,/optional explicit linkage \/ correlated scaling/i);
   assert.match(state,/Feniks, ReflexBrain, Companion and SPC/);
   assert.doesNotMatch(state,/waiting for new Owner instruction/i);

@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-26  
 **Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
 **Canonical branch:** `main` after repository canonicalization  
-**Stage:** **Workbench + B0 CLOSED; first Active Spatial Ecology Owner rehearsal + feedback/evidence campaign CLOSED; target hypothesis INCONCLUSIVE; refoundation/research campaign ACTIVE; L0 provenance + L1 scoped comparison + N0 direct feasibility + N0b static route witness MECHANICALLY QUALIFIED; Owner UX / movement competence / contact UNQUALIFIED**
+**Stage:** **Workbench + B0 CLOSED; first Active Spatial Ecology Owner rehearsal + feedback/evidence campaign CLOSED; target hypothesis INCONCLUSIVE; refoundation/research campaign ACTIVE; L0/L1 + N0/N0b + N1 minimal static-obstruction recovery MECHANICALLY QUALIFIED; Owner UX / dynamic-body contact / crowd behavior UNQUALIFIED**
 
 ## 1. Owner intent
 
@@ -316,22 +316,41 @@ Exact qualified checkpoint:
 
 N0b is **positive-evidence infrastructure**, not a complete pathfinder. A returned witness is physically verified; lack of one remains epistemically unknown.
 
+**N1 — minimal no-progress / replan competence: MECHANICALLY QUALIFIED · DYNAMIC-BODY / CROWD / OWNER UX UNQUALIFIED**
+
+Exact qualified checkpoint:
+
+- `f54cd64e08bbda211c09773714dc993a853e1608`;
+- CI run `36307417405`;
+- **71 / 71 automated checks PASS**;
+- live Chromium Workbench gate PASS;
+- no-replan baseline factually stalls at `wall.center`;
+- actor does not replan on first contact;
+- one bounded replan occurs only after persistent factual no-progress;
+- replan trigger preserves blocker identity, no-progress duration and goal distance at the causal boundary;
+- actor consumes a supplied route witness rather than hard-coding a top/bottom solution;
+- verified witness execution resumes progress and reaches the target;
+- `none-found` yields honest `STUCK_NO_WITNESS` rather than invented movement;
+- causal query separates purpose, immediate plan, factual progress, obstruction and replan evidence;
+- no dynamic actors, reciprocal avoidance or contact policy are present in the cell.
+
+N1 qualifies only a minimal static-obstruction recovery competence. It is not a final navigation system and says nothing yet about two bodies negotiating the same space.
+
 ### Immediate next research boundary
 
-The apparatus has now earned a real behavioral consumer.
+The next dominant Owner finding is **body-body blocking / stupid jams**. Move to a bounded **C0 contact-semantics cell**, not a crowd-flow algorithm.
 
-Proceed to a bounded **N1 minimal progress / replan cell**, not another generic routing layer:
+The next cell should compare controlled conflicting motion intents while keeping higher-level routing trivial:
 
-- one actor has an explicit target/purpose;
-- direct motion into a static blocker initially fails;
-- factual no-progress is measured over time, not inferred from one collision;
-- after bounded persistent failure, the actor may query N0/N0b;
-- if a verified alternative witness exists, it may switch its immediate plan to that witness;
-- success means factual progress resumes and the target can be reached in the controlled cell;
-- route witness remains advisory evidence; actor policy owns whether/when to consume it;
-- dynamic-body avoidance, crowd reciprocity, ghosting, contact-yield policy and random wandering remain out of scope.
+- two or a few bodies deliberately want incompatible space;
+- occupied-body physicality remains real;
+- mass / locomotor authority / explicit contact posture can be varied independently;
+- candidate outcomes include yield, resist, displacement and hold;
+- no hidden ghosting, despawn, reciprocal crowd choreography or target reassignment;
+- causal evidence must distinguish desired motion from contact outcome;
+- solver order and numerical instability are explicit falsifiers.
 
-The key falsifier is causal: **if success requires hard-coding the expected side/solution, global crowd choreography, or continuous route replanning from the apparatus, N1 fails.**
+The goal is **not maximum flow**. The goal is to discover contact laws that make blocking meaningful when it should be meaningful and negotiable when it should not.
 
 ### Active invariant
 

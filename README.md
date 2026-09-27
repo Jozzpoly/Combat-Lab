@@ -8,7 +8,7 @@ It is not the Feniks combat implementation, and it is not a sword project. The r
 
 **Canonical live branch:** `main` after repository canonicalization.
 
-**Current stage:** Workbench + Load / Envelope B0 is **closed**; the first Active Spatial Ecology Owner rehearsal and feedback/evidence campaign are **closed**. The Lab direction has a positive Owner signal, while the target ecology hypothesis remains **INCONCLUSIVE because material apparatus/UX/organism/stimulus failures dominated the test**. A separate refoundation/research campaign is now **ACTIVE**. L0 provenance, L1 scoped comparison, N0 whole-body direct feasibility and N0b verified static route witnesses are **mechanically qualified**. Owner-facing usefulness, actor movement competence and contact semantics remain unqualified.
+**Current stage:** Workbench + Load / Envelope B0 is **closed**; the first Active Spatial Ecology Owner rehearsal and feedback/evidence campaign are **closed**. The Lab direction has a positive Owner signal, while the target ecology hypothesis remains **INCONCLUSIVE because material apparatus/UX/organism/stimulus failures dominated the test**. A separate refoundation/research campaign is now **ACTIVE**. L0/L1 apparatus, N0/N0b static feasibility and N1 minimal static-obstruction recovery are **mechanically qualified**. Owner-facing usefulness, dynamic-body contact semantics and crowd behavior remain unqualified.
 
 Current qualified statements:
 
@@ -20,6 +20,7 @@ Current qualified statements:
 - There is **no accepted Feniks combat model, hit-authority model, aim/target model or commitment scheme**.
 - **Active Spatial Ecology v0** has completed its first Owner rehearsal: the Lab starts fulfilling its research role, but current camera/UX/debug/organism/contact behavior has material failures and the intended ecology hypothesis remains **INCONCLUSIVE**.
 - **N0/N0b static feasibility — MECHANICALLY QUALIFIED / NARROW.** Whole-body direct traversal plus verified hard-feasible alternative witnesses are queryable without making the Lab a movement authority; `none-found` is not treated as unreachable.
+- **N1 minimal replan competence — MECHANICALLY QUALIFIED / NARROW.** One actor can detect persistent static no-progress, preserve causal trigger evidence, consume one verified witness and resume progress without crowd policy or continuous apparatus steering.
 
 Latest Owner-confirmed direction: the project is broader than hitting or melee. Body/world relations matter. Independent embodiment dimensions should remain available, while future Workbench research may add optional explicit correlations for fast coherent phenotype scaling. Larger terrain/obstacle spaces and more varied opponents/residents are desired future pressure, with population deliberately scalable from a readable baseline into crowd/horde/break regimes rather than hidden behind low protective limits. Targeted donor recovery has begun only where concrete dependencies justify it. Companion whole-body feasibility is a strong bounded donor; sibling architectures remain evidence sources rather than Combat Lab authority.
 
