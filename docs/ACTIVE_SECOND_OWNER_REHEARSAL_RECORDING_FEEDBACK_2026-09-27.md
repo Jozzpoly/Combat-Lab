@@ -695,6 +695,127 @@ That supports the Owner requirement that the Lab remain breakable and recoverabl
 
 The remaining problem is that ordinary pressure levels should become physically valid and more computationally scalable, not that break regimes should be prevented.
 
+
+## 8P. Owner interaction pattern identifies the highest-value Lab surfaces
+
+The recording itself shows which apparatus features the Owner naturally uses.
+
+### Heavily used / clearly valuable
+
+**Exact population-on-reset**
+
+The Owner repeatedly moves through substantially different population regimes without manual spawn-button repetition.
+
+This is strong product evidence that exact authored pressure + explicit Reset World is a meaningful improvement.
+
+**Live passing-side authoring**
+
+The Owner changes the policy repeatedly while the experiment is running.
+
+The resulting behavioral evidence is not a clean A/B because current passing-side semantics are one-shot and some edits occur mid-trial, but the *authoring interaction itself* is clearly used.
+
+### Used as macro inspection
+
+**Observe**
+
+The Owner opens Observe during the repeated 24-person trial and again in the 64-person dense state.
+
+In both inspected moments, no resident is selected.
+
+This suggests the first natural diagnostic question is system-level:
+
+> “what is happening to this whole crowd / simulation?”
+
+rather than immediately:
+
+> “why is resident-17 doing this?”
+
+Current World Now values include cumulative contact resolutions and max coupled passes, but those are too raw / historically compressed to answer the causal question.
+
+Example direct recording evidence:
+
+- ~132 s, population 24, sim ~1.17 s:
+  - `contact resolutions ~18,062`;
+  - `max coupled passes 22`;
+  - no selected resident.
+- ~136 s, same trial, sim ~5.17 s:
+  - `contact resolutions ~544,692`;
+  - `max coupled passes 24`;
+  - no selected resident.
+- ~155 s, population 64, sim ~2.72 s:
+  - `contact resolutions ~1,483,004`;
+  - `max coupled passes 24`;
+  - no selected resident.
+
+This is strong evidence for a **macro causal-health layer** before selected-subject drilldown.
+
+Candidate future macro categories, grounded in current findings:
+
+- actively pursuing;
+- current physical arrivals vs latched completions;
+- recovery-exhausted;
+- terminal-arrived-but-displaced;
+- explicit static stuck;
+- current dynamic stalled;
+- current contact pairs;
+- current coupled passes + peak;
+- recent saturation fraction;
+- simulation/wall ratio + discarded time.
+
+These are evidence needs, not a frozen UI design.
+
+### Used for provenance
+
+**Session**
+
+The Owner opens Session during the recording.
+It visibly reports the frozen build `9fe3e7f7...` and `rehearsal/current`.
+
+This is positive evidence that provenance is discoverable in the new IA.
+
+### Not materially exercised
+
+- selected-resident causal drilldown;
+- Compare;
+- global Overlay;
+- camera zoom/pan (recorded view remains around Fit / ~0.70x in sampled frames).
+
+Do not classify these as FAIL from this recording alone.
+They remain Owner-unqualified.
+
+## 8Q. Clean evidence now supports a bounded embodied-ecology subclaim
+
+The 18-person trial is collision-free at spawn and targets.
+
+Yet it still produces:
+
+- opposing approach;
+- local crowd compression;
+- temporary jam;
+- release;
+- heterogeneous displacement;
+- majority throughput;
+- residual deadlock.
+
+No central behavioral crowd coordinator or ghosting is required for those phenomena.
+
+This supports a narrower claim than “crowds are solved”:
+
+> **simple embodied actors plus local material contact are already sufficient to produce recognizable collective spatial phenomena in a valid small crowd.**
+
+This is meaningful positive evidence for the embodied-ecology direction.
+
+It does **not** qualify:
+
+- current organism competence;
+- large-N scaling;
+- current passing convention;
+- current solver as production physics;
+- personal-space mechanics;
+- dense crowd validity.
+
+A future correction must preserve this valuable capacity for meaningful blocking / compression / jam rather than optimizing blindly for maximum throughput.
+
 ## 9. Immediate campaign boundary
 
 **Do not implement personal space, soft envelopes, new crowd steering or a new solver yet.**
