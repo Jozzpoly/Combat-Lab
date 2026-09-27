@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-27  
 **Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
 **Canonical branch:** `main` after repository canonicalization  
-**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL RECORDED; FEEDBACK/EVIDENCE EXTRACTION ACTIVE; CROWD-LIKE OWNER SIGNAL POSITIVE; DENSE MECHANISTIC ATTRIBUTION INCONCLUSIVE**
+**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; NEXT = M1 / R1 / D1 / S1 BOUNDED REFOUNDATION DESIGN**
 
 ## 1. Owner intent
 
@@ -271,7 +271,19 @@ Canonical active evidence record:
 
 - `docs/ACTIVE_SECOND_OWNER_REHEARSAL_RECORDING_FEEDBACK_2026-09-27.md`.
 
-Continue the analysis/falsification campaign before selecting implementation.
+The recording/frozen-R0 extraction campaign is now **closed at evidence saturation**.
+
+Do not continue generating broad R0 counterfactuals by inertia.
+
+Next work should design bounded, separately attributable campaigns:
+
+1. **M1 constraint-aware static locomotion**;
+2. **R1 embodied route execution / recovery episodes** on qualified M1;
+3. **D1 repeated dynamic encounter episodes** in symmetric/open controls;
+4. **S1 valid pressure/completion/macro-observability substrate**;
+5. only then **E2 controlled recomposition + fresh Owner rehearsal**.
+
+Personal-space / compressible-envelope research remains a later horizon after those foundations.
 
 
 ### Active invariant

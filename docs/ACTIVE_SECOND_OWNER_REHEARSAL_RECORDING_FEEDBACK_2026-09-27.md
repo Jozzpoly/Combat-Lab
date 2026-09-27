@@ -1,7 +1,7 @@
 # Combat Lab — Second Owner Rehearsal Recording Feedback Campaign
 
 **Date:** 2026-09-27  
-**Status:** **ACTIVE EVIDENCE EXTRACTION · NO IMPLEMENTATION PROMOTION YET**  
+**Status:** **CLOSED AT EVIDENCE SATURATION · NEXT BOUNDED REFOUNDATION SEQUENCE SELECTED · NO R0 RUNTIME PROMOTION**  
 **Owner-tested frozen runtime:** `9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd`  
 **Public control plane:** `rehearsal/current`
 
@@ -2082,10 +2082,346 @@ These mechanisms should be qualified independently before composition so that cr
 
 Because both candidates act only on static locomotion / route execution, they do not replace the already-qualified need for explicit local dynamic negotiation in pure body-body counterflow.
 
-## 9. Immediate campaign boundary
 
-**Do not implement personal space, soft envelopes, new crowd steering or a new solver yet.**
+## 8AV. Combined static corrections preserve the independent dynamic-negotiation falsifier
 
-Continue extracting/falsifying the recording and frozen R0 first.
+The analysis-only composition:
 
-The next implementation should only be selected after the dominant causes of dead/stuck actors and invalid pressure topology are separated well enough that a new experiment will measure one thing rather than repair several hidden defects at once.
+- static wall sliding;
+- stale ROUTE -> DIRECT -> bounded N1 recovery episode;
+
+was tested again in the cleanest dynamic-control stimulus:
+
+- population 18;
+- straight targets;
+- open world;
+- no static obstacles.
+
+Because the candidate mechanisms act only on static locomotion / route execution, a correct composition should leave this experiment's body-body logic unchanged.
+
+Results:
+
+| Passing convention | Result |
+| --- | --- |
+| NONE | **0 / 18 after 30 s** |
+| LEFT | **18 / 18 COMPLETE ~22.43 s** |
+| RIGHT | **18 / 18 COMPLETE ~21.38 s** |
+
+Static replans remain zero.
+
+Therefore the candidate static corrections do **not**:
+
+- ghost bodies;
+- erase material head-on conflict;
+- replace dynamic negotiation;
+- turn every crowd into maximum-throughput flow.
+
+This is an important preservation guardrail.
+
+## 8AW. Meaningful body-size ecology survives after removing the clean residual bug
+
+The combined candidate was also tested in cleaner straight-target + pillar trials.
+
+Population 18:
+
+| Body composition | Result | Contact resolutions |
+| --- | --- | ---: |
+| all small | 18 / 18 COMPLETE ~12.86 s | ~84k |
+| all medium | 18 / 18 COMPLETE ~12.38 s | ~217k |
+| all large | 18 / 18 COMPLETE ~18.03 s | ~488k |
+| mixed R0 | 18 / 18 COMPLETE ~22.69 s | ~570k |
+
+So fixing wall-stick + stale-route execution does not erase meaningful spatial differences.
+
+Hard body size and heterogeneous contact mechanics still change:
+
+- throughput time;
+- contact workload;
+- bottleneck interaction;
+- route/recovery demand.
+
+This is stronger evidence than preserving terminal bugs in the name of “physicality”.
+
+### Important falsification of an over-simple waypoint theory
+
+Under current **permuted** targets, the combined all-large trial remains 15 / 18 and three same-stream actors converge on the same exact lower-pillar corner waypoint.
+
+It is tempting to call the point waypoint itself the cause.
+
+But switching only to straight targets makes the all-large trial complete 18 / 18.
+
+Therefore:
+
+> shared point waypoints can amplify convergence, but they are not independently sufficient to explain the terminal jam.
+
+The failure is an interaction between:
+
+- target crossing;
+- obstacle-route convergence;
+- large hard bodies;
+- repeated body contact;
+- current local negotiation semantics.
+
+This is another warning against one-cause crowd explanations.
+
+## 8AX. Campaign saturation audit
+
+The campaign's original open questions can now be classified.
+
+### 1. What are the visually dead actors?
+
+**RESOLVED for the clean recording.**
+
+The three exact filmed 18-person residuals were reconstructed 1:1.
+
+Dominant causal chain:
+
+- valid N0b route acquired;
+- crowd displacement invalidates embodied route execution;
+- actor continues with stale route state;
+- static contact reaches zero-fraction tangent;
+- current locomotion discards useful tangent motion;
+- ROUTE mode has no active static failure episode;
+- actor remains spatially dead.
+
+The complete valid-range 4–20 sweep shows every final residual belongs to this same stale-ROUTE / zero-fraction family.
+
+Dense regimes contain additional error classes and should be treated separately.
+
+### 2. Can pressure be increased while keeping stimulus validity/comparability?
+
+**NOT IN CURRENT R0; REQUIREMENT NOW CLEAR.**
+
+Current population changes too many variables and becomes physically invalid above 20.
+
+A future pressure substrate must decouple:
+
+- density / flow rate;
+- spawn validity;
+- target/route topology;
+- phenotype composition;
+- completion semantics.
+
+This is a next-campaign design problem, not a missing observation.
+
+### 3. What should arrival mean?
+
+**OWNER / EXPERIMENT-DESIGN CHOICE REMAINS OPEN.**
+
+Evidence now shows:
+
+- sticky ARRIVED becomes physically misleading above clean density;
+- terminal bodies amplify contact cost;
+- retiring them does not fix the clean residual family.
+
+Therefore arrival semantics can be redesigned separately without blocking locomotion/recovery work.
+
+### 4. Does crowd-like behavior survive valid topology?
+
+**YES.**
+
+Clean 18 produces recognizable:
+
+- approach fronts;
+- compression;
+- temporary jam;
+- release;
+- majority throughput;
+- residual deadlock.
+
+Pure straight/open counterflow also proves a clean material collective phenomenon:
+
+- NONE -> stable gridlock;
+- LEFT / RIGHT -> local negotiated flow.
+
+The positive embodied-ecology signal is not an artifact of invalid dense spawn.
+
+### 5. How much solver budget is really needed?
+
+**PARTIALLY RESOLVED; NOT A BLOCKER FOR THE NEXT SMALL-N FUNDAMENTALS.**
+
+Evidence separates:
+
+- behavioral deadlock from solver effort;
+- clean open negotiation from static/contact-heavy scenes;
+- 64 realtime capacity failure;
+- 256 sustained correctness break regime.
+
+Precise scaling should be re-measured only after stimulus and movement semantics are refounded.
+
+Broadphase/spatial partitioning is a likely later scaling candidate, not the next fix.
+
+### 6. Should encounter competence be reusable?
+
+**YES IN PRINCIPLE; EPISODE SEMANTICS UNRESOLVED.**
+
+Exact clean recording contains multiple distinct post-trigger contact episodes.
+
+One-shot lifetime booleans are not a sufficient integrated-ecology model.
+
+However simple re-arm rules based on:
+
+- waypoint advancement;
+- distance moved;
+- immediate route-edge invalidity;
+
+were all falsified or produced chatter/thrashing.
+
+Reusable competence needs qualitative episode semantics.
+
+### 7. Does current passing convention have real authority?
+
+**YES FOR A SINGLE CLEAN ENCOUNTER; NOT QUALIFIED AS A REPEATED CROWD NORM.**
+
+Straight/open factorial:
+
+- NONE -> 0 / 18 stable gridlock;
+- LEFT / RIGHT -> 18 / 18.
+
+So the primitive is causally real.
+
+Repeated/multi-body encounter behavior remains a future D1 question.
+
+### 8. What Debug/Observe evidence is actually needed?
+
+**REQUIREMENT SUBSTANTIALLY RESOLVED.**
+
+Recording + exact audit show that macro diagnosis must separate:
+
+1. behavioral progress / stalled cohorts;
+2. physical contact state;
+3. static/route execution validity;
+4. recovery availability/exhaustion;
+5. current solver effort vs historical peak;
+6. realtime performance / discarded wall time;
+7. historical completion vs current geometric occupancy.
+
+Natural Owner workflow observed:
+
+`macro anomaly -> suspicious cohort -> selected-subject causal drilldown`.
+
+Raw cumulative counters alone are insufficient.
+
+## 9. Campaign closure and next bounded research sequence
+
+The second Owner rehearsal recording / frozen-R0 extraction campaign is now **CLOSED AT EVIDENCE SATURATION**.
+
+This does **not** mean R0 is qualified.
+
+It means the recording and exact frozen runtime have yielded enough causal evidence that further broad mining has lower value than controlled new experiments.
+
+### Next sequence
+
+#### M1 — constraint-aware static locomotion
+
+Isolate the wall-contact problem before crowd composition.
+
+Questions:
+
+- does tangent motion survive hard wall contact;
+- does head-on normal blocking remain hard;
+- are corners stable;
+- is there tunneling / sticky contact;
+- do all body radii behave consistently;
+- what exact contact evidence should Debug expose.
+
+Candidate wall sliding must be qualified here before integration.
+
+#### R1 — embodied route execution / recovery episode
+
+Use a qualified M1 substrate.
+
+Do **not** make N0b a continuous steering authority.
+
+Research:
+
+- what portion of a route witness remains authoritative after body displacement;
+- how to represent route corridor / progress manifold rather than one ideal edge;
+- temporary recoverable deviation vs true loss of executability;
+- explicit bounded re-arm of recovery;
+- when escalation to a fresh global witness is justified.
+
+Key falsifiers already known:
+
+- immediate requery thrashes;
+- route-index rearm thrashes;
+- scalar movement thresholds have no stable band.
+
+#### D1 — repeated dynamic encounter episodes
+
+Return to open / symmetric body-body worlds.
+
+Preserve controls:
+
+- NONE must retain meaningful material gridlock where appropriate;
+- one local LEFT/RIGHT encounter must remain causally effective.
+
+Then test:
+
+- separation -> new encounter episode;
+- repeated partners;
+- new partners;
+- multi-body clusters;
+- whether re-arm can remain local/event-driven.
+
+Do not add global crowd coordinator.
+
+#### S1 — stimulus, completion and macro-observability refoundation
+
+Refound the experiment apparatus independently of M1/R1/D1.
+
+Required separations:
+
+- population vs density / entrance rate;
+- valid spawn geometry vs deliberate break regimes;
+- straight counterflow vs crossing/permuted targets;
+- symmetric/mirrored policy tests;
+- transit completion vs persistent destination occupancy;
+- current crowd health vs solver effort vs realtime health.
+
+Pressure must remain permissive and breakable, but ordinary presets must not silently become invalid geometry.
+
+#### E2 — controlled recomposition
+
+Only after M1 / R1 / D1 / S1 have bounded evidence.
+
+Recompose a small physically valid crowd first.
+
+Promotion question is not “does everyone arrive fastest?”
+
+It is:
+
+> does the world preserve meaningful embodied blocking, congestion, body-size consequences and local negotiation while eliminating apparatus-created death and false causal explanations?
+
+Then perform a fresh Owner rehearsal.
+
+### Personal-space / soft-envelope horizon
+
+Only after the above separation should the recording-inspired ideas be compared.
+
+Candidate families:
+
+1. earlier reaction to hard contact;
+2. anticipatory personal-space envelope;
+3. compressible preferred envelope around a hard core.
+
+True deformable-body / soft-body physics is not currently justified.
+
+The future comparison must preserve:
+
+- hard material body truth;
+- breakability;
+- independent raw dimensions;
+- causal observability;
+- no hidden ghosting/despawn.
+
+### Frozen-runtime boundary
+
+Do not modify or reinterpret public R0 in place.
+
+Exact Owner-tested specimen remains:
+
+`9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd`.
+
+All counterfactual mechanics in this campaign were analysis-only and are not promoted runtime truth.
+
