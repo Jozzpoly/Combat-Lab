@@ -1,7 +1,7 @@
 # Combat Lab — Refoundation Research Campaign
 
 **Started:** 2026-09-26  
-**Campaign status:** **ACTIVE RESEARCH / REFOUNDATION IN PROGRESS · L0/L1 + N0/N0b + N1 + C0 QUALIFIED · P0 SCALING ATTRIBUTION NEXT**  
+**Campaign status:** **ACTIVE RESEARCH / REFOUNDATION IN PROGRESS · L0/L1 + N0/N0b + N1 + C0 + P0 QUALIFIED · D0 DYNAMIC ENCOUNTER COMPETENCE NEXT**  
 **Authority:** bounded strategy derived from live `main`, S0/B0/Ecology Owner evidence, exact Ecology specimen forensics and targeted donor recovery. It does not promote a replacement runtime architecture by existence.
 
 ## 0. Why this campaign exists
@@ -827,9 +827,9 @@ The next candidate is **P0 scaling attribution** so the next integrated specimen
 P0 is a measurement problem first. Broad-phase optimization remains deferred until evidence says it blocks a valuable regime.
 
 
-## 19. P0 scaling attribution — implementation candidate
+## 19. P0 scaling attribution
 
-**Status at authoring:** implementation candidate; machine/browser qualification pending.
+**Status:** **MECHANICALLY QUALIFIED · ENVIRONMENT-SPECIFIC TIMING / SCALING TARGET UNQUALIFIED**.
 
 P0 is deliberately a **measurement cell**, not an optimization campaign.
 
@@ -924,3 +924,74 @@ P0 fails if:
 - broad-phase optimization is performed merely to improve the P0 number rather than because a valuable research regime requires it.
 
 Passing P0 would qualify **attribution capability**, not a scaling target, optimization strategy or maximum population.
+
+
+### P0 qualification and falsification history
+
+Initial candidate checkpoint:
+
+`2014ac87d77c6eb6a97af5fa0d7a2fd2e4f6a862`
+
+Node mechanics passed, but the live browser gate failed to recover a deliberately induced stall because frame-wall authority still used the callback timestamp supplied by `requestAnimationFrame`.
+
+Checkpoint `aba04b5d666bb697a042c579894ec7a316e2af37` moved wall authority to actual callback-entry `performance.now()`. Browser evidence then correctly showed approximately `0.0771 s` discarded wall time and a rolling sim/wall ratio of about `0.855`, but the gate itself raced: after detecting the stall it separately read the next ordinary frame and compared mismatched samples.
+
+Checkpoint `cc6db968fc0d66d3eb23423c6d45bae7990476f9` fixed the evidence race by capturing the stall frame and rolling snapshot atomically.
+
+Post-PASS audit found one remaining epistemic weakness: a bounded rolling window eventually forgets a short hitch. The final hardening therefore adds O(1) cumulative run totals without retaining unbounded frame history.
+
+Qualified checkpoint:
+
+`71ada13dd175b27f8bba6dbbe5bcd7800b6d04a9`
+
+Evidence:
+
+- GitHub Actions check run `36309076545` — **SUCCESS**;
+- **92 / 92** Node checks PASS;
+- live Chromium Workbench gate PASS;
+- a deliberate ~90 ms browser stall is captured as discarded wall time while the fixed-step anti-spiral guard remains unchanged;
+- sparse 12-body / 5-step probe: `66` naïve pairs per iteration, exactly `330` pair checks, zero contact resolutions;
+- sparse 24-body / 5-step probe: `276` pairs per iteration, exactly `1380` checks;
+- dense probe reports pair checks and actual contact resolutions separately;
+- runtime query duration and timed intervention duration remain distinct from ordinary frame-phase costs;
+- bounded rolling metrics coexist with O(1) cumulative current-run totals.
+
+One CI-browser sample at the end of the full gate reported approximately:
+
+- render cadence: `61.1 Hz`;
+- simulation/wall ratio: `0.993`;
+- rolling phase time: ~`1.6 ms simulation / 6.1 ms render / 2.6 ms observation`;
+- last scaling query: ~`0.9 ms`;
+- last timed intervention: ~`0.1 ms`.
+
+These numbers are **environment-specific rehearsal evidence only**. The P0 qualification is the attribution contract, not those absolute timings.
+
+Bounded verdict:
+
+> **P0 MECHANICS PASS — Combat Lab can distinguish clock fidelity, render cadence, runtime phases, observation/query cost, intervention cost and exact naïve contact work without turning measurement into an unbounded trace or prematurely optimizing the substrate.**
+
+### Integration-readiness audit after P0
+
+The original ladder placed integrated E1 after P0. Current evidence says that would be premature.
+
+N1 recovers only from **static** obstruction. N0/N0b intentionally ignore dynamic bodies. C0 demonstrates that equal persistent opposed intents can legitimately produce stable hold. Therefore a many-body reattempt with intersecting persistent goals still has a known route to permanent jams: not because the solver is accidentally single-pass anymore, but because organisms still lack dynamic encounter competence.
+
+New bounded prerequisite:
+
+**D0 — dynamic encounter competence**
+
+Question:
+
+> can a locally embodied actor recognize persistent dynamic obstruction and make a bounded, inspectable wait/yield/sidestep/retry decision without a global crowd policy deciding the answer?
+
+Constraints:
+
+- no ghosting or collision disablement;
+- no despawn / target reassignment as flow repair;
+- no hidden global reciprocal choreography;
+- no assumption that ORCA/RVO is the answer;
+- dynamic fact and social/behavioral meaning remain separate;
+- equal-priority hold is allowed when no legitimate asymmetry or safe local option exists;
+- any tie-break/asymmetry must be explicit and auditable rather than derived accidentally from iteration order or actor ID.
+
+E1 remains the integration target after this missing causal layer is resolved or consciously falsified.

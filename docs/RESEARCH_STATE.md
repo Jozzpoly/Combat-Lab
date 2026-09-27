@@ -1,9 +1,9 @@
 # Combat Lab — Current Research State
 
-**Canonical status date:** 2026-09-26  
+**Canonical status date:** 2026-09-27  
 **Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
 **Canonical branch:** `main` after repository canonicalization  
-**Stage:** **Workbench + B0 CLOSED; first Active Spatial Ecology Owner rehearsal + feedback/evidence campaign CLOSED; target hypothesis INCONCLUSIVE; refoundation/research campaign ACTIVE; L0/L1 + N0/N0b + N1 + C0 candidate contact semantics MECHANICALLY QUALIFIED; Owner UX / integrated ecology / scaling UNQUALIFIED**
+**Stage:** **Workbench + B0 CLOSED; first Active Spatial Ecology Owner rehearsal + feedback/evidence campaign CLOSED; target hypothesis INCONCLUSIVE; refoundation/research campaign ACTIVE; L0/L1 + N0/N0b + N1 + C0 + P0 MECHANICALLY QUALIFIED; dynamic-body competence / integrated ecology / Owner UX UNQUALIFIED**
 
 ## 1. Owner intent
 
@@ -240,132 +240,49 @@ Targeted donor recovery has already identified Companion whole-body static feasi
 
 ### Current refoundation evidence
 
-**L0 — intervention provenance: MECHANICALLY QUALIFIED · OWNER UX UNQUALIFIED**
+The full qualification/falsification history lives in the refoundation campaign document. Canonical live truth is:
 
-Exact qualified checkpoint:
+| Cell | Status | Narrow result |
+| --- | --- | --- |
+| **L0 provenance** | MECHANICALLY QUALIFIED | Structured live interventions retain scope, before/after/requested truth and timing identity without per-frame world event sourcing. |
+| **L1 comparison** | MECHANICALLY QUALIFIED | Experiments declare comparison scope; A/B no longer means every editable numeric field; Apply vs matched Reset World is explicit. |
+| **N0 direct feasibility** | MECHANICALLY QUALIFIED | Exact swept whole-body static traversal, first blocker and hard-vs-comfort truth are queryable on demand. |
+| **N0b alternative witness** | MECHANICALLY QUALIFIED | A bounded graph may return physically verified static route witnesses; `none-found` is explicitly not an unreachable proof. |
+| **N1 static-obstruction recovery** | MECHANICALLY QUALIFIED | One actor can detect persistent no-progress, preserve trigger evidence and consume one verified witness without continuous apparatus steering. |
+| **C0 contact candidate** | MECHANICALLY QUALIFIED | One explicit law family produces hold/yield/displacement with visible `contactMobility = 1/(mass × resistance)` and bounded pair-order artifact. |
+| **P0 scaling attribution** | MECHANICALLY QUALIFIED | Wall/sim fidelity, render cadence, simulation/render/observation phases, query/intervention cost and exact contact work are separable. |
 
-- `7cf8060953daf558ddf4f58931183a34543c1641`;
-- CI run `36293139713`;
-- **40 / 40 automated checks PASS**;
-- live Chromium Workbench gate PASS;
-- 29 ordered interventions reconstructed during the existing B0 exercise;
-- covered operations include exact numeric edits, requested-vs-applied safety-rail truth, comparison capture/apply, Reset World, Restore Defaults, per-parameter reset, Debug, Pause and B0↔S0 switching;
-- normal movement input remains outside the intervention ledger;
-- no per-frame world snapshotting or replay system was introduced.
+Latest exact qualified checkpoints:
 
-L0 proves only that the Lab can preserve lightweight structured intervention provenance without changing the existing B0/S0 behavioral contract. It does **not** prove that the history is yet easy or useful for the Owner to inspect.
+- L0 `7cf8060953da...`;
+- L1 `c13c83389f68...`;
+- N0 `2f99520fa586...`;
+- N0b `86bf323104fa...`;
+- N1 `f54cd64e08bb...`;
+- C0 `5ea8931c9e36...`;
+- P0 `71ada13dd175...`, CI `36309076545`, **92 / 92 PASS** + live Chromium PASS.
 
-**L1 — scoped comparison: MECHANICALLY QUALIFIED · OWNER UX UNQUALIFIED**
+Important P0 evidence: sparse contact work reconciles exactly with the current naïve all-pairs law (`12 → 66 pairs/iteration → 330 checks/5 steps`; `24 → 276 → 1380`), dense work reports contact resolutions separately, forced wall-time loss is explicit, rolling metrics are bounded, and O(1) run totals preserve discarded-time evidence after it leaves the rolling window. Browser timing remains environment-specific evidence, not a portable benchmark.
 
-Exact qualified checkpoint:
+### Integration-readiness finding
 
-- `c13c83389f68481fe586a7b613429887314b7235`;
-- CI run `36293705172`;
-- **44 / 44 automated checks PASS**;
-- live Chromium Workbench gate PASS;
-- B0 declares exactly four `specimen/player` fields instead of inheriting every editable numeric field;
-- S0 declares its own one-field body-scale comparison contract;
-- slot summaries expose comparison identity, semantic scope and field count;
-- A↔B differences are visible before Apply; the browser gate explicitly recovered `Carried load mass 0.00 → 4.00`;
-- Apply semantics explicitly say current World state remains live and Reset World is separate when a matched start matters;
-- L0 provenance stores the scoped comparison snapshot itself, so later evidence does not need to infer what Capture meant.
+**E1 integrated Ecology is NOT READY yet.**
 
-L1 does **not** qualify the two-slot UI, comparison usefulness, checkpoint/replay semantics or Owner-facing workflow quality.
+This is an evidence-driven reorder, not abandonment of the campaign ladder:
 
-**N0 — whole-body static feasibility + on-demand observation query: MECHANICALLY QUALIFIED · ROUTING / MOVEMENT COMPETENCE / OWNER UX UNQUALIFIED**
+- N1 currently understands static obstruction only;
+- N0/N0b deliberately exclude dynamic bodies;
+- C0 proves that equal bodies with equal persistent opposing intent can form a legitimate stable hold;
+- therefore a many-body E1 with persistent intersecting intents can still generate known permanent jams even on the improved solver;
+- P0 would make that failure measurable, but measurement alone would not make the target ecology hypothesis interpretable.
 
-Exact qualified checkpoint:
+The missing prerequisite is **D0 — bounded dynamic encounter competence**.
 
-- `2f99520fa586f58bd6d79997ada7f69967c55635`;
-- CI run `36294227944`;
-- **53 / 53 automated checks PASS**;
-- live Chromium Workbench gate PASS;
-- direct swept-body traversal distinguishes a legal endpoint from a blocked path;
-- the same 54-unit B0 choke is hard-clear for a small/baseline body and hard-blocked for envelope 1.70;
-- hard body feasibility remains separate from +10 desired/comfort clearance;
-- first static blocker and world boundary are explicit;
-- exact side/corner tangency remains legal while true penetration blocks;
-- the query is observational, ignores dynamic actors by construction and does not mutate caller geometry;
-- `runtime.query(...)` executes experiment-owned observation only on demand; no per-frame global probe was introduced.
+D0 should ask whether an actor can distinguish persistent dynamic obstruction from static geometry and make a local, inspectable choice such as wait/yield/sidestep/retry **without** importing global crowd choreography, ghosting, reciprocal omniscience or a production ORCA/RVO stack.
 
-Important negative evidence:
+The actor must own the choice. Contact physics provides outcome truth; the Lab may expose facts/probes but may not continuously steer the solution. Equal-priority unresolved hold is allowed when no legitimate asymmetry or local option exists.
 
-- first green N0 checkpoint `5236f39a917093803438ba7c2c182e94663b2308` used an expanded-AABB approximation that could falsely block rounded rectangle corners;
-- post-PASS audit rejected that geometry despite green CI;
-- `2f99520...` replaced it with side-strip + corner-circle swept geometry and added explicit corner/tangency regressions.
-
-N0 qualifies a static geometric/query mechanism only. It does not qualify a route planner, dynamic avoidance, stuck detection, replanning, actor competence or contact behavior.
-
-**N0b — static alternative route witness: MECHANICALLY QUALIFIED · MOVEMENT AUTHORITY / REACHABILITY PROOF / OWNER UX UNQUALIFIED**
-
-Exact qualified checkpoint:
-
-- `86bf323104faa802ffa14308b4112dbc3d475326`;
-- CI run `36294624156`;
-- **61 / 61 automated checks PASS**;
-- live Chromium Workbench gate PASS;
-- B0 large-body choke query returns a verified hard-feasible bypass witness;
-- every returned witness edge is independently revalidated through exact N0 swept-body geometry;
-- comfort clearance annotates the hard route rather than deleting hard connectivity;
-- narrow-passage regression preserves the same hard route with `clearance=0.08` and marks it constrained;
-- `none-found` explicitly carries `provesUnreachable=false`;
-- invalid start/target occupancy remains distinct from failure to find an alternative;
-- witness selection is deterministic under obstacle input ordering;
-- duplicate static obstacle IDs are rejected before they can alias graph-node identity;
-- no actor automatically consumes the witness and no dynamic bodies enter the static graph.
-
-N0b is **positive-evidence infrastructure**, not a complete pathfinder. A returned witness is physically verified; lack of one remains epistemically unknown.
-
-**N1 — minimal no-progress / replan competence: MECHANICALLY QUALIFIED · DYNAMIC-BODY / CROWD / OWNER UX UNQUALIFIED**
-
-Exact qualified checkpoint:
-
-- `f54cd64e08bbda211c09773714dc993a853e1608`;
-- CI run `36307417405`;
-- **71 / 71 automated checks PASS**;
-- live Chromium Workbench gate PASS;
-- no-replan baseline factually stalls at `wall.center`;
-- actor does not replan on first contact;
-- one bounded replan occurs only after persistent factual no-progress;
-- replan trigger preserves blocker identity, no-progress duration and goal distance at the causal boundary;
-- actor consumes a supplied route witness rather than hard-coding a top/bottom solution;
-- verified witness execution resumes progress and reaches the target;
-- `none-found` yields honest `STUCK_NO_WITNESS` rather than invented movement;
-- causal query separates purpose, immediate plan, factual progress, obstruction and replan evidence;
-- no dynamic actors, reciprocal avoidance or contact policy are present in the cell.
-
-N1 qualifies only a minimal static-obstruction recovery competence. It is not a final navigation system and says nothing yet about two bodies negotiating the same space.
-
-**C0 — candidate contact semantics: MECHANICALLY QUALIFIED · CROWD / PRODUCT FEEL / FENIKS PHYSICS UNQUALIFIED**
-
-Qualified checkpoint `5ea8931c9e36bd62bc20e489e2bad45b95c07033`; CI `36308131777`; **83 / 83 PASS** + live Chromium PASS.
-
-Narrow evidence:
-
-- equal opposed bodies hold centrally without authored asymmetry;
-- resistance, mass and motor authority each materially alter the controlled outcome;
-- current yielding coupling is explicit: `contactMobility = 1 / (mass × contactResistance)`;
-- desired motion and physical outcome remain separately observable;
-- 12 bounded iterations reduce forward/reverse three-body position and velocity differences below `1e-4`;
-- first C0 candidate failed this order-stability gate at 8 iterations and was not promoted.
-
-This qualifies one inspectable contact-law candidate only — not soft collision, crowd flow, stance, product feel or final Feniks physics.
-
-### Immediate next research boundary
-
-Before any integrated Ecology reattempt, execute **P0 scaling attribution** as a measurement cell, not an optimization campaign.
-
-P0 should answer separately:
-
-- simulation / contact work;
-- render cadence;
-- simulation-time vs wall-time fidelity;
-- on-demand observation cost;
-- discrete intervention cost.
-
-Use deterministic operation counts where they are exact and browser wall-clock measurements only where timing is the phenomenon. Preserve the Owner's ability to push population until break, but do not optimize the O(N²) broad phase merely to improve a benchmark.
-
-Dynamic-body behavioral negotiation remains open. P0 does not solve it; it prevents the next multi-body experiment from again collapsing into an uninterpretable “lag + jams” result.
+Only after D0 earns a useful minimal mechanism should E1 recombine N1 + C0 + P0 under an explicitly audited spawn/destination topology.
 
 ### Active invariant
 
