@@ -1243,6 +1243,97 @@ Future convention experiments should use:
 
 This is especially important before adding anticipatory personal-space behavior, because an asymmetric map can otherwise make a steering bias look intelligent.
 
+
+## 8AA. Solver load is not crowd health
+
+A clean analysis-only comparison falsifies a tempting interpretation of the current debug counters.
+
+### Pure straight/open NONE
+
+Population 18, no pillars, collision-free straight lanes, no passing convention:
+
+- **0 / 18 arrive even after 22–30 s**;
+- this is a stable material head-on gridlock;
+- average coupled passes: **1.0**;
+- peak coupled passes: **1**;
+- saturation at 24/24: **0%**;
+- average contact resolutions per frame: only ~7.8.
+
+So a severe behavioral jam can be computationally cheap.
+
+### Pure straight/open LEFT
+
+Same world, LEFT passing convention:
+
+- all 18 eventually complete;
+- average coupled passes over 22 s: ~1.47;
+- peak: 16;
+- average contact resolutions per frame: ~22.8.
+
+Successful negotiation performs more contact work than the deadlocked NONE case.
+
+### Clean 18 with pillars
+
+Over the first 22 s:
+
+| Stimulus | Mean coupled passes | Frames at 24/24 |
+| --- | ---: | ---: |
+| permuted targets + pillars | ~8.88 | ~16.0% |
+| straight targets + pillars | ~6.19 | ~13.5% |
+| straight + open LEFT | ~1.47 | 0% |
+| straight + open NONE | 1.0 | 0% |
+
+Therefore:
+
+> **solver effort, contact count and behavioral crowd health are separate dimensions.**
+
+A future macro debug view must not imply:
+
+- more contact resolutions = worse crowd;
+- higher solver passes = stronger jam;
+- low solver cost = healthy behavior.
+
+The useful diagnostic should separately report:
+
+1. **behavioral progress / stall state**;
+2. **physical contact state**;
+3. **constraint-solver effort / saturation**;
+4. **realtime performance**.
+
+This is a major observability correction exposed by the recording campaign.
+
+## 8AB. Selection drilldown currently has weak natural pull
+
+The recording shows the Owner opening Observe more than once, but sampled moments remain at the macro World Now level with no selected resident.
+
+This is not enough evidence to call resident selection a product FAIL.
+
+It does show that the current apparatus does not naturally bridge:
+
+> “this crowd looks wrong”
+
+into:
+
+> “these three actors are anomalously stalled; inspect one”.
+
+The second recording would have been substantially more informative if the apparatus had surfaced the three clean-18 residuals as anomalies.
+
+A promising future evidence flow is:
+
+`macro crowd health -> anomalous/stalled cohort -> selected-subject causal drilldown`.
+
+Examples of useful cohort-level facts now justified by exact evidence:
+
+- stalled > N seconds;
+- route execution stale / no progress;
+- recovery exhausted;
+- arrived but physically displaced;
+- explicit no-witness terminal;
+- currently in repeated static projection;
+- solver saturation local to a contact cluster.
+
+This is a debug/research-instrument hypothesis, not a frozen UI requirement.
+
 ## 9. Immediate campaign boundary
 
 **Do not implement personal space, soft envelopes, new crowd steering or a new solver yet.**
