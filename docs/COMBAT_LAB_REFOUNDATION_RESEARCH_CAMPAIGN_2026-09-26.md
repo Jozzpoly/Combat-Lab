@@ -258,7 +258,7 @@ Current claim only:
 ## 12. L0 intervention provenance contract — implementation candidate
 
 **Opened:** 2026-09-27  
-**Status at authoring:** implementation candidate; machine qualification pending.
+**Status:** **MECHANICALLY QUALIFIED · OWNER UX UNQUALIFIED**.
 
 L0 deliberately does **not** attempt replay, undo, persistence, full world event sourcing or a new Owner-facing timeline.
 
@@ -297,3 +297,38 @@ L0 implementation falsifiers:
 - provenance capture requires per-frame world cloning or another observer-cost-heavy mechanism.
 
 Passing L0 mechanically will **not** mean the provenance UX is Owner-qualified.
+
+
+### L0 qualification evidence
+
+Exact qualified checkpoint:
+
+`7cf8060953daf558ddf4f58931183a34543c1641`
+
+Machine evidence:
+
+- GitHub Actions check run `36293139713` — **SUCCESS**;
+- **40 / 40** Node checks PASS;
+- live Chromium Workbench gate PASS;
+- browser sequence preserved **29** ordered interventions;
+- observed operation families: `set`, `comparison-capture`, `comparison-apply`, `reset-world`, `restore-defaults`, `reset-parameter`, `toggle-debug`, `toggle-pause`, `experiment-switch`;
+- exact Owner-style force edit `1 → 42` is preserved;
+- a request `9999` at the force safety rail records both `requested=9999` and factual `after=100`;
+- existing B0 matched A/B movement behavior remains green;
+- provenance storage is encapsulated and only cloned on explicit inspection;
+- no full-world per-frame evidence capture was added.
+
+Bounded verdict:
+
+> **L0 MECHANICS PASS — the current Lab can retain structured, scoped intervention history without making provenance itself the simulation.**
+
+Still unqualified:
+
+- Owner-facing history/navigation UX;
+- persistence/export;
+- replay;
+- undo;
+- continuous-gesture retention policy at very long session scale;
+- whether the current domain/scope conventions remain sufficient under richer experiments;
+- comparison semantics (L1);
+- query-driven causal observation (O0).

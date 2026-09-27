@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-26  
 **Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
 **Canonical branch:** `main` after repository canonicalization  
-**Stage:** **Workbench + B0 CLOSED; first Active Spatial Ecology Owner rehearsal + feedback/evidence campaign CLOSED; target hypothesis INCONCLUSIVE; refoundation/research campaign ACTIVE; runtime implementation NOT STARTED**
+**Stage:** **Workbench + B0 CLOSED; first Active Spatial Ecology Owner rehearsal + feedback/evidence campaign CLOSED; target hypothesis INCONCLUSIVE; refoundation/research campaign ACTIVE; L0 intervention provenance MECHANICALLY QUALIFIED; Owner UX UNQUALIFIED**
 
 ## 1. Owner intent
 
@@ -238,20 +238,33 @@ The current shell's flat numeric parameter contract, global A/B and binary Debug
 
 Targeted donor recovery has already identified Companion whole-body static feasibility and hard-feasibility-vs-comfort separation as strong bounded donors. SPC contributes competence/world-authority boundaries; ReflexBrain is not currently selected as a movement donor. No donor architecture or physics backend is promoted wholesale.
 
-### Immediate next research cell
+### Current refoundation evidence
 
-The next execution target is **L0 — intervention/provenance contract design**, followed only if earned by scoped comparison / causal-observation work.
+**L0 — intervention provenance: MECHANICALLY QUALIFIED · OWNER UX UNQUALIFIED**
 
-Do not begin by:
+Exact qualified checkpoint:
 
-- redesigning CSS/panels;
-- installing a crowd solver;
-- replacing physics;
-- optimizing the old O(N²) pair loop;
-- adding combat semantics;
-- polishing Ecology v0.
+- `7cf8060953daf558ddf4f58931183a34543c1641`;
+- CI run `36293139713`;
+- **40 / 40 automated checks PASS**;
+- live Chromium Workbench gate PASS;
+- 29 ordered interventions reconstructed during the existing B0 exercise;
+- covered operations include exact numeric edits, requested-vs-applied safety-rail truth, comparison capture/apply, Reset World, Restore Defaults, per-parameter reset, Debug, Pause and B0↔S0 switching;
+- normal movement input remains outside the intervention ledger;
+- no per-frame world snapshotting or replay system was introduced.
 
-The closed Ecology lane remains the only implementation experiment branch. Its unique ancestry must be preserved before any later branch retirement. Do not open a second implementation lane merely because the research campaign has started.
+L0 proves only that the Lab can preserve lightweight structured intervention provenance without changing the existing B0/S0 behavioral contract. It does **not** prove that the history is yet easy or useful for the Owner to inspect.
+
+### Immediate next research boundary
+
+Do **not** automatically implement L1 or O0.
+
+Use L0 as new evidence and challenge which unresolved apparatus question has higher information value:
+
+- **L1 — scoped comparison:** make capture/apply explicit about domains, differences and matched-start assumptions instead of treating all editable numeric fields as one hidden state;
+- **O0 — causal observation:** replace global-maximal Debug assumptions with query/probe semantics that can later answer local causal questions at bounded observer cost.
+
+Choose after a short architecture/evidence comparison, not because one is easier to code.
 
 ### Active invariant
 

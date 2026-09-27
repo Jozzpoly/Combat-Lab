@@ -8,7 +8,7 @@ It is not the Feniks combat implementation, and it is not a sword project. The r
 
 **Canonical live branch:** `main` after repository canonicalization.
 
-**Current stage:** Workbench + Load / Envelope B0 is **closed**; the first Active Spatial Ecology Owner rehearsal and feedback/evidence campaign are **closed**. The Lab direction has a positive Owner signal, while the target ecology hypothesis remains **INCONCLUSIVE because material apparatus/UX/organism/stimulus failures dominated the test**. A separate refoundation/research campaign is now **ACTIVE**, with runtime implementation deliberately not started yet.
+**Current stage:** Workbench + Load / Envelope B0 is **closed**; the first Active Spatial Ecology Owner rehearsal and feedback/evidence campaign are **closed**. The Lab direction has a positive Owner signal, while the target ecology hypothesis remains **INCONCLUSIVE because material apparatus/UX/organism/stimulus failures dominated the test**. A separate refoundation/research campaign is now **ACTIVE**. Its first bounded shared-apparatus slice, L0 intervention provenance, is **mechanically qualified**; its Owner-facing usefulness remains unqualified.
 
 Current qualified statements:
 
