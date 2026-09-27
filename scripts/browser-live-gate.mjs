@@ -776,7 +776,25 @@ try{
       return button?.getAttribute("aria-selected")==="true" && panel?.hidden===false;
     })()`);
   });
-  await setNumber("population",12);
+  await evaluate(`(()=>{
+    const input=document.querySelector('[data-param-id="population"] .parameter-number');
+    input.focus();
+    input.select();
+  })()`);
+  await cdp.send("Input.insertText",{text:"12"});
+  await cdp.send("Input.dispatchKeyEvent",{
+    type:"keyDown",key:"Enter",code:"Enter",windowsVirtualKeyCode:13
+  });
+  await cdp.send("Input.dispatchKeyEvent",{
+    type:"keyUp",key:"Enter",code:"Enter",windowsVirtualKeyCode:13
+  });
+  await waitFor("exact rehearsal population edit",async()=>{
+    return evaluate(`(()=>{
+      const s=window.__combatLabRuntime.snapshot;
+      const input=document.querySelector('[data-param-id="population"] .parameter-number');
+      return s?.authoredPopulation===12 && Number(input?.value)===12;
+    })()`);
+  });
   const beforePopulationReset=await evaluate("window.__combatLabRuntime.snapshot");
   if(beforePopulationReset.population!==8 || beforePopulationReset.authoredPopulation!==12){
     throw new Error(`population edit silently rebuilt world: ${JSON.stringify(beforePopulationReset)}`);
