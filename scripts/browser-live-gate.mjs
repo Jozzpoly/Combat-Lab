@@ -162,7 +162,8 @@ try{
       const r=window.__combatLabRuntime;
       const p=r.performance?.snapshot?.();
       if(Number(r.fixedStep?.discardedSeconds)>0.02 &&
-         Number(p?.discardedWallSeconds)>0.02){
+         Number(p?.discardedWallSeconds)>0.02 &&
+         Number(p?.run?.discardedWallSeconds)>0.02){
         return {fixed:r.fixedStep,performance:p};
       }
       return null;
@@ -708,6 +709,9 @@ try{
      !Number.isFinite(Number(performanceTruth.phaseMs?.simulation)) ||
      !Number.isFinite(Number(performanceTruth.phaseMs?.render)) ||
      !Number.isFinite(Number(performanceTruth.phaseMs?.observation)) ||
+     !(Number(performanceTruth.run?.frames)>0) ||
+     !Number.isFinite(Number(performanceTruth.run?.simulationToWallRatio)) ||
+     !Number.isFinite(Number(performanceTruth.run?.discardedWallSeconds)) ||
      !Number.isFinite(Number(performanceTruth.lastIntervention?.durationMs))){
     throw new Error(`P0 runtime phase attribution incomplete: ${JSON.stringify(performanceTruth)}`);
   }

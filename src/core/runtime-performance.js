@@ -12,6 +12,7 @@ export class RuntimePerformanceMeter {
   #windowSeconds;
   #maxSamples;
   #samples;
+  #runTotals;
   #lastQuery;
   #lastIntervention;
 
@@ -20,12 +21,26 @@ export class RuntimePerformanceMeter {
     if(this.#windowSeconds<=0) throw new Error("windowSeconds must be positive");
     this.#maxSamples=Math.max(1,Math.floor(nonNegative(maxSamples,"maxSamples")));
     this.#samples=[];
+    this.#runTotals=this.#emptyTotals();
     this.#lastQuery=null;
     this.#lastIntervention=null;
   }
 
+  #emptyTotals(){
+    return {
+      frames:0,
+      wallSeconds:0,
+      simulatedSeconds:0,
+      discardedWallSeconds:0,
+      simulationMs:0,
+      renderMs:0,
+      observationMs:0
+    };
+  }
+
   resetFrames(){
     this.#samples=[];
+    this.#runTotals=this.#emptyTotals();
   }
 
   recordFrame({
@@ -45,6 +60,13 @@ export class RuntimePerformanceMeter {
       observationMs:nonNegative(observationMs,"observationMs")
     };
     this.#samples.push(sample);
+    this.#runTotals.frames+=1;
+    this.#runTotals.wallSeconds+=sample.wallSeconds;
+    this.#runTotals.simulatedSeconds+=sample.simulatedSeconds;
+    this.#runTotals.discardedWallSeconds+=sample.discardedWallSeconds;
+    this.#runTotals.simulationMs+=sample.simulationMs;
+    this.#runTotals.renderMs+=sample.renderMs;
+    this.#runTotals.observationMs+=sample.observationMs;
 
     let wall=this.#samples.reduce((sum,item)=>sum+item.wallSeconds,0);
     while(
@@ -101,6 +123,20 @@ export class RuntimePerformanceMeter {
         simulation:totals.simulationMs,
         render:totals.renderMs,
         observation:totals.observationMs
+      },
+      run:{
+        frames:this.#runTotals.frames,
+        wallSeconds:this.#runTotals.wallSeconds,
+        simulatedSeconds:this.#runTotals.simulatedSeconds,
+        simulationToWallRatio:this.#runTotals.wallSeconds>0
+          ? this.#runTotals.simulatedSeconds/this.#runTotals.wallSeconds
+          : null,
+        discardedWallSeconds:this.#runTotals.discardedWallSeconds,
+        phaseMs:{
+          simulation:this.#runTotals.simulationMs,
+          render:this.#runTotals.renderMs,
+          observation:this.#runTotals.observationMs
+        }
       },
       lastQuery:clone(this.#lastQuery),
       lastIntervention:clone(this.#lastIntervention)

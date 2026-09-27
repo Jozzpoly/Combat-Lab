@@ -55,3 +55,32 @@ test("performance meter bounds rolling frame evidence rather than growing with s
   assert.ok(snap.sampleCount<=3);
   assert.ok(snap.windowWallSeconds<=0.06+1e-12);
 });
+
+
+test("performance meter keeps O(1) cumulative run truth after a stall leaves the rolling window",()=>{
+  const meter=new RuntimePerformanceMeter({windowSeconds:0.05,maxSamples:3});
+  meter.recordFrame({
+    wallSeconds:0.10,
+    simulatedSeconds:0.05,
+    discardedWallSeconds:0.05,
+    simulationMs:3,
+    renderMs:2,
+    observationMs:1
+  });
+  for(let i=0;i<10;i++){
+    meter.recordFrame({
+      wallSeconds:0.02,
+      simulatedSeconds:0.02,
+      simulationMs:1,
+      renderMs:1,
+      observationMs:0.5
+    });
+  }
+
+  const snap=meter.snapshot();
+  assert.equal(snap.discardedWallSeconds,0);
+  assert.ok(Math.abs(snap.run.discardedWallSeconds-0.05)<1e-12);
+  assert.equal(snap.run.frames,11);
+  assert.ok(snap.run.wallSeconds>snap.windowWallSeconds);
+  assert.ok(snap.run.simulationToWallRatio<1);
+});
