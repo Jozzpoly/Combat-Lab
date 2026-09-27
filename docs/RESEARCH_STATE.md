@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-27  
 **Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
 **Canonical branch:** `main` after repository canonicalization  
-**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; NEXT = M1 / R1 / D1 / S1 BOUNDED REFOUNDATION DESIGN**
+**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 CONSTRAINT-AWARE STATIC LOCOMOTION DESIGN ACTIVE**
 
 ## 1. Owner intent
 
@@ -275,13 +275,22 @@ The recording/frozen-R0 extraction campaign is now **closed at evidence saturati
 
 Do not continue generating broad R0 counterfactuals by inertia.
 
-Next work should design bounded, separately attributable campaigns:
+Next work has opened **M1 constraint-aware static locomotion** as the active bounded design stage.
 
-1. **M1 constraint-aware static locomotion**;
-2. **R1 embodied route execution / recovery episodes** on qualified M1;
-3. **D1 repeated dynamic encounter episodes** in symmetric/open controls;
-4. **S1 valid pressure/completion/macro-observability substrate**;
-5. only then **E2 controlled recomposition + fresh Owner rehearsal**.
+Canonical M1 design record:
+
+- `docs/M1_CONSTRAINT_AWARE_STATIC_LOCOMOTION_RESEARCH_2026-09-27.md`.
+
+M1 will isolate one body against static geometry and compare frozen remainder-discard behavior against a minimal residual-slide candidate. It must preserve hard blocking, tangent authority, body-size capacity and causal observability.
+
+Targeted donor recovery from `Jozzpoly/Box3d-Character-Controler@e7a98be...` contributes only the invariant/falsifier pattern “remove unsupported normal authority, preserve valid tangent authority”; donor runtime architecture is not imported.
+
+After M1 qualification:
+
+1. **R1 embodied route execution / recovery episodes**;
+2. **D1 repeated dynamic encounter episodes**;
+3. **S1 valid pressure/completion/macro-observability substrate**;
+4. then **E2 controlled recomposition + fresh Owner rehearsal**.
 
 Personal-space / compressible-envelope research remains a later horizon after those foundations.
 
