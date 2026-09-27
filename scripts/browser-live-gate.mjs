@@ -7,6 +7,7 @@ const chromeBin=process.env.CHROME_BIN;
 const screenshotPath=process.env.SCREENSHOT_PATH || "";
 const extremeScreenshotPath=process.env.EXTREME_SCREENSHOT_PATH || "";
 const compactScreenshotPath=process.env.COMPACT_SCREENSHOT_PATH || "";
+const rehearsalScreenshotPath=process.env.REHEARSAL_SCREENSHOT_PATH || "";
 if(!chromeBin) throw new Error("CHROME_BIN is required");
 
 const port=9222;
@@ -767,6 +768,9 @@ try{
      !Array.isArray(selectedCausal?.dynamic?.partners)){
     throw new Error(`rehearsal causal subject query failed: ${JSON.stringify(selectedCausal)}`);
   }
+
+  // Visual evidence for the actual rehearsal surface: selected subject + causal Observe.
+  await captureScreenshot(rehearsalScreenshotPath);
 
   const observeText=await evaluate(
     'document.querySelector(\'[data-inspector-panel="observe"]\')?.innerText'

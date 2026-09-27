@@ -47,6 +47,7 @@ jobs:
           SCREENSHOT_PATH="workbench-source.png" \
           EXTREME_SCREENSHOT_PATH="workbench-extreme.png" \
           COMPACT_SCREENSHOT_PATH="workbench-compact.png" \
+          REHEARSAL_SCREENSHOT_PATH="workbench-rehearsal.png" \
             node scripts/browser-live-gate.mjs http://127.0.0.1:4173/
 
       - name: Upload Workbench rehearsal screenshot
