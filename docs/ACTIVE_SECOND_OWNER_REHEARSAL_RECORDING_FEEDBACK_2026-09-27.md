@@ -882,6 +882,266 @@ A useful future explanation should distinguish at least:
 - recovery available;
 - recovery exhausted.
 
+
+## 8T. Exact 1:1 reconstruction of the three visible 18-person residuals
+
+The strongest causal result of the campaign is now an exact replay match between the recording and frozen R0 internals.
+
+The final inspected 18-person recording state is around:
+
+- simulation time `22.09 s`;
+- `15 / 18 arrived`;
+- three persistent residual bodies near the pillar geometry.
+
+Exact frozen replay of:
+
+- population `18`;
+- passing side `LEFT`;
+- fixed step `1/120 s`;
+- exact R0 runtime `9fe3e7f7...`;
+
+reproduces the same three spatial residuals.
+
+### Residual A — resident-1
+
+Visual match:
+
+- blue / small phenotype;
+- left side of upper pillar.
+
+Exact state:
+
+- mode: `ROUTE`;
+- radius: `20`;
+- position: approximately `(490, 275.996)`;
+- exact tangent X to upper pillar left face: `510 - 20 = 490`;
+- current blocker: `pillar.upper`;
+- desired velocity remains non-zero, approximately `(+139, +16.9)`;
+- route index has already advanced past the first safe corner;
+- `staticReplanAttempted = true`;
+- `staticNoProgressFor = 0`;
+- this actor has **not** consumed a dynamic encounter.
+
+### Residual B — resident-6
+
+Visual match:
+
+- large orange phenotype;
+- left side of lower pillar.
+
+Exact state:
+
+- mode: `ROUTE`;
+- radius: `32`;
+- X approximately `478`;
+- exact tangent to lower pillar left face: `510 - 32 = 478`;
+- current blocker: `pillar.lower`;
+- `staticReplanAttempted = true`;
+- `staticNoProgressFor = 0`;
+- dynamic encounter already used once.
+
+### Residual C — resident-12
+
+Visual match:
+
+- large orange phenotype;
+- right side of lower pillar.
+
+Exact state:
+
+- mode: `ROUTE`;
+- radius: `32`;
+- X exactly `622`;
+- exact tangent to lower pillar right face: `590 + 32 = 622`;
+- current blocker: `pillar.lower`;
+- `staticReplanAttempted = true`;
+- `staticNoProgressFor = 0`;
+- dynamic encounter already used once.
+
+This directly falsifies a simplistic explanation that all dead bodies require exhaustion of the dynamic sidestep competence: resident-1 dies without ever using it.
+
+The common signature is instead:
+
+> **valid route was acquired -> crowd contact displaced the actor after route progress -> route execution became stale -> actor reached a tangent static contact -> ROUTE mode had no failure episode / replan eligibility -> actor remained alive internally but spatially dead.**
+
+## 8U. Route knowledge still exists at the dead positions
+
+N0b was queried from each exact dead-body position without changing any world geometry.
+
+All three positions still return a valid verified static route witness.
+
+Therefore the deadlock is **not**:
+
+- an unreachable world state;
+- a missing N0b route;
+- a permanent geometric softlock.
+
+The route substrate can still answer the question correctly.
+
+The failure is in **when / whether the embodied actor is allowed to ask again and how route execution reacts to displacement**.
+
+This preserves an important qualification boundary:
+
+> N0b route witness remains valid evidence infrastructure; its current crowd consumer is inadequate.
+
+## 8V. Static collision integration contains an independent wall-stick mechanism
+
+Exact residual motion exposed a second mechanism independent of route policy.
+
+Current static integration:
+
+1. proposes the full body displacement for the fixed step;
+2. sweeps the circle against static geometry;
+3. if blocked, advances only to the impact fraction;
+4. removes the velocity component into the contact normal.
+
+When a body is already tangent to a wall and its desired velocity contains:
+
+- a small component into the wall;
+- a meaningful tangential component;
+
+the sweep can report contact at approximately fraction zero.
+
+The full displacement is then discarded for that step.
+
+The motor rebuilds the into-wall component on the next step, producing the same zero-fraction collision again.
+
+Result:
+
+> **the body does not perform the remaining tangential movement and can stick perfectly to a wall despite a valid tangential velocity component.**
+
+For resident-1, position becomes bit-stable from roughly `7 s` through `22.09 s` while desired velocity remains non-zero.
+
+So the observed death chain contains both:
+
+- route/lifecycle debt;
+- locomotion/contact integration debt.
+
+Neither should be hidden by a higher-level crowd steering patch.
+
+## 8W. Analysis-only counterfactuals separate candidate causes
+
+The following experiments were performed only against a local extracted copy of the exact frozen Pages artifact.
+
+They are **not repo changes** and do not qualify any fix.
+
+### Counterfactual A — refresh only the three stale routes at 22.09 s
+
+No physics change.
+No personal space.
+No passing-policy change.
+No solver change.
+
+Only the three exact residual actors receive a fresh current N0b witness.
+
+Result:
+
+- baseline at intervention: `15 / 18`;
+- around `26.1 s`: `16 / 18`;
+- all actors eventually complete;
+- trial reaches `18 / 18 COMPLETE` around `29.73 s`.
+
+Interpretation:
+
+> **fresh route recovery alone is sufficient to revive the exact three film residuals.**
+
+### Counterfactual B — wall sliding only
+
+No new route query.
+No change to one-shot recovery flags.
+No personal space or crowd steering.
+
+Static collision is modified analysis-only so blocked normal motion is removed while the valid remaining tangential movement can continue.
+
+Result:
+
+| Simulation time | Frozen R0 | Wall-slide counterfactual |
+| ---: | ---: | ---: |
+| 8 s | 1 / 18 | 5 / 18 |
+| 10 s | 6 / 18 | 10 / 18 |
+| 12 s | 8 / 18 | 13 / 18 |
+| 14 s | 11 / 18 | 16 / 18 |
+| 16 s | 12 / 18 | 17 / 18 |
+| ~19.83 s | incomplete | **18 / 18 COMPLETE** |
+
+Interpretation:
+
+> wall sliding alone also eliminates the clean-18 residual failure, but materially changes the throughput and timing of the entire crowd encounter.
+
+Therefore wall sliding must not be promoted merely as a harmless numerical patch. It changes the behavioral organism/world interaction enough to require its own bounded comparison.
+
+### Counterfactual C — mechanically rewind routeIndex on static contact
+
+A deliberately simple alternative was tested:
+
+- no fresh path query;
+- no wall slide;
+- when a ROUTE actor hits static geometry, move it back toward the previous route waypoint.
+
+Result:
+
+- **FAIL**;
+- only about `12 / 18` complete even after `40 s`;
+- new oscillations/conflicts appear.
+
+Interpretation:
+
+> stale-route recovery is not safely reducible to “go back one waypoint”.
+
+Do not use this heuristic.
+
+### Counterfactual D — remove one-shot static recovery restriction
+
+A broader analysis-only variant allows a ROUTE/DIRECT actor to accumulate static no-progress again and obtain another N0b witness.
+
+Result:
+
+- eventually `18 / 18 COMPLETE` around `30.25 s`;
+- but the 18-person trial produces **22 static replans**;
+- individual actors replan repeatedly, with some reaching roughly 4–5 replans.
+
+Interpretation:
+
+> reusable recovery solves completion, but naive unrestricted re-query creates replan chatter / thrashing.
+
+Therefore the future mechanism should not be “delete `staticReplanAttempted`”.
+
+The useful design concept exposed by the counterfactual is a **re-armable recovery episode**:
+
+- recovery can become available again after meaningful new progress / changed circumstances;
+- repeated failure within the same episode should not spam the route witness system;
+- the re-arm event must be explicit and observable;
+- the policy should remain event-driven rather than continuous path-query steering.
+
+This is a future experiment hypothesis, not a selected implementation.
+
+## 8X. Revised causal chain for the clean 18-person dead-body failure
+
+The exact evidence now supports the following chain:
+
+1. actor initially moves DIRECT;
+2. static blocker produces factual no-progress;
+3. actor obtains a valid N0b route witness;
+4. actor makes real progress and advances route state;
+5. material crowd contact later displaces it away from the route corridor;
+6. current route index / waypoint becomes stale relative to embodied position;
+7. actor steers a direct segment toward that stale route state;
+8. static sweep reaches tangent contact with a pillar;
+9. current integrator discards the tangential remainder of blocked motion;
+10. actor remains in ROUTE, so static no-progress detection is disabled;
+11. lifetime `staticReplanAttempted` also forbids another route query;
+12. actor can remain indefinitely alive-in-policy but dead-in-space.
+
+This is now the strongest explanation for the three explicitly reconstructed residuals from the clean 18-person recording.
+
+Important boundary:
+
+- **route staleness is causal;**
+- **wall-stick is causal;**
+- both independently admit successful counterfactuals;
+- the recording does not yet tell us which correction gives the desired Feniks/Combat-Lab movement feel;
+- they may both deserve correction, but must be tested separately before composition.
+
 ## 9. Immediate campaign boundary
 
 **Do not implement personal space, soft envelopes, new crowd steering or a new solver yet.**
