@@ -252,12 +252,18 @@ Current high-value findings:
 
 - Owner reports that the experiment now begins to imitate a crowd;
 - Owner also observes balls that become stuck / appear to “die”;
-- exact frozen-runtime audit finds lifetime one-shot static/dynamic recovery;
-- `ARRIVED` is a sticky mode and can leave physically displaced inert bodies;
+- every final residual in the physically valid 4–20 sweep belongs to the same stale-ROUTE / zero-fraction static-contact family;
+- exact reconstruction maps all three filmed clean-18 residuals to that mechanism;
+- static locomotion currently discards viable tangent motion at wall contact;
+- route witness authority becomes invalid after crowd displacement, but immediate route re-query causes severe replan thrashing;
+- analysis-only wall sliding fixes the complete clean 4–20 sweep but does not restore route execution truth;
+- analysis-only stale-route -> DIRECT -> bounded N1 recovery helps but cannot fix every valid case without wall sliding;
+- composing those two candidates yields a clean 4–20 sweep with bounded replan counts, but is **not yet a selected implementation**;
+- pure straight/open counterflow still requires explicit local dynamic negotiation: NONE remains a material head-on gridlock while LEFT/RIGHT resolve it;
+- `ARRIVED` is a sticky mode and becomes heavily displaced above the clean packing floor, but retiring completed bodies does not fix the clean residual family;
 - current distributed start/target topology is collision-free only through population **20**;
-- the named `24 pressure` preset already begins with overlapping bodies;
-- 64 and 256 are heavily contaminated by impossible packing + solver saturation;
-- coupled solve reaches `24/24` frequently at moderate density and persistently in dense trials;
+- population is a scenario generator rather than a clean monotonic pressure scalar;
+- 64 and 256 remain contaminated by invalid packing, solver/capacity pressure and at 256 sustained correctness failure;
 - exact population authoring is a clear apparatus improvement;
 - selected-subject causal Observe / camera feel / Compare remain Owner-unqualified because they were not materially exercised.
 

@@ -1833,6 +1833,255 @@ The future consumer likely needs a concept richer than waypoint/edge validity:
 
 This finding further argues against solving the recording through more aggressive routing.
 
+
+## 8AO. Every clean-range residual belongs to the same stale-route / zero-fraction family
+
+The full collision-valid population range was classified after 30 simulated seconds under frozen LEFT R0.
+
+For each non-arrived actor, the audit checked:
+
+- final mode;
+- whether static recovery had already been used;
+- current body position -> current route waypoint N0 feasibility;
+- static blocker;
+- hit fraction.
+
+Results:
+
+| Population | Completion | Residual classification |
+| ---: | ---: | --- |
+| 4 | 3 / 4 | 1 stale ROUTE, current edge BLOCKED at fraction ~0 |
+| 6 | 5 / 6 | 1 same |
+| 8 | 7 / 8 | 1 same |
+| 10 | 10 / 10 | none |
+| 12 | 11 / 12 | 1 same |
+| 14 | 14 / 14 | none |
+| 16 | 14 / 16 | 2 same |
+| 18 | 15 / 18 | 3 same |
+| 20 | 20 / 20 | none |
+
+No final clean-range residual was classified as:
+
+- STATIC_STUCK_NO_WITNESS;
+- DYNAMIC_BLOCKED_NO_CONVENTION;
+- a clear active route edge with merely slow progress.
+
+And no latched ARRIVED body in this clean-range end-state was displaced beyond arrival tolerance.
+
+Bounded conclusion:
+
+> **within the physically valid 4–20 stimulus range, the observed non-completion family is dominated completely by stale ROUTE execution at zero-fraction static contact.**
+
+This is much narrower than “crowd AI failure”.
+
+It also strengthens the case that dense-R0 pathologies should not be used to choose the first fix.
+
+## 8AP. Above the clean packing floor, new error classes appear rapidly
+
+The same end-state classification was extended into the invalid-packing range.
+
+### 21–24
+
+Residual non-completion remains mostly the stale-route / zero-fraction family.
+
+But sticky arrival semantics begin to diverge from current physical truth.
+
+At 24 after 25 s:
+
+- 23 actors are latched ARRIVED;
+- **16 of those 23** are physically outside current arrival tolerance.
+
+### 26–35
+
+Additional residual classes appear:
+
+- ROUTE actors with used recovery whose current edge is now clear but still do not complete;
+- DIRECT actors with consumed dynamic recovery;
+- eventually explicit STATIC_STUCK_NO_WITNESS;
+- widespread physically displaced ARRIVED bodies.
+
+Examples:
+
+- 30 / 25 s: 25 latched arrived, **23 displaced outside tolerance**;
+- 32 / 25 s: 26 latched arrived, **20 displaced**;
+- 35 / 25 s: 29 latched arrived, **26 displaced**.
+
+Thus >20 does not merely make the clean failure “more intense”.
+
+It creates a qualitatively different composite regime:
+
+> invalid start/target packing + arrival-latch ambiguity + endpoint material congestion + recovery exhaustion + solver pressure.
+
+This is another reason the first correction should be qualified in the valid regime before being extrapolated to 30 / 64 / 256.
+
+## 8AQ. Retiring completed bodies reduces dense contact pollution but does not fix clean residual death
+
+An analysis-only counterfactual removed each body from future contact immediately after its actor first entered ARRIVED.
+
+No movement, route, contact or passing policy was otherwise changed.
+
+Results at 30 s:
+
+| Population | Frozen R0 | Arrival-sink counterfactual |
+| ---: | ---: | ---: |
+| 18 | 15 / 18 | 15 / 18 |
+| 24 | 23 / 24 | 23 / 24 |
+| 35 | 31 / 35 | 32 / 35 |
+
+Contact resolutions:
+
+- 18: effectively unchanged;
+- 24: ~1.57M -> ~0.89M;
+- 35: ~4.01M -> ~3.19M.
+
+Therefore terminal-body accumulation is:
+
+- a real semantic/debug problem;
+- a substantial high-density contact-cost amplifier;
+- a modest dense-behavior influence;
+
+but **not the cause of the clean 18 residual failure**.
+
+Arrival/completion semantics should be refounded separately from locomotion/recovery.
+
+## 8AR. Wall sliding is a system-wide locomotion candidate, not an 18-person special case
+
+The analysis-only wall-slide counterfactual was swept across every physically valid even population from 4 through 20.
+
+It changes only static contact integration:
+
+- normal motion into a wall is removed;
+- the remaining fixed-step tangential motion is allowed to continue if statically feasible.
+
+It does not alter:
+
+- hard body radius;
+- body-body contact law;
+- passing convention;
+- route witness generation;
+- one-shot recovery flags.
+
+Results:
+
+| Population | Frozen R0 | Wall slide |
+| ---: | ---: | ---: |
+| 4 | 3 / 4 | **4 / 4 COMPLETE** |
+| 6 | 5 / 6 | **6 / 6 COMPLETE** |
+| 8 | 7 / 8 | **8 / 8 COMPLETE** |
+| 10 | 10 / 10 | 10 / 10 |
+| 12 | 11 / 12 | **12 / 12 COMPLETE** |
+| 14 | 14 / 14 | 14 / 14 |
+| 16 | 14 / 16 | **16 / 16 COMPLETE** |
+| 18 | 15 / 18 | **18 / 18 COMPLETE** |
+| 20 | 20 / 20 | 20 / 20 |
+
+Contact work also falls materially in several harder cases:
+
+- 18: ~654k -> ~197k contact resolutions;
+- 20: ~608k -> ~301k.
+
+So sticky static contact is a broad movement-substrate defect.
+
+However this is still not a promotion result.
+
+Wall sliding materially changes:
+
+- throughput;
+- time spent in compression;
+- route execution path;
+- contact workload.
+
+It therefore deserves a bounded movement experiment rather than being smuggled in as a harmless numerical cleanup.
+
+## 8AS. Wall sliding fixes completion while route witness authority can remain invalid
+
+The clean 18 ROUTE execution was audited frame-by-frame.
+
+### Frozen R0
+
+Across all actor-frames in ROUTE:
+
+- ~37% have current body position -> current waypoint statically BLOCKED;
+- ~32.5% begin effectively at hit fraction zero.
+
+The three film residuals dominate this invalid execution time.
+
+### Wall-slide counterfactual
+
+The trial reaches 18 / 18, but:
+
+- ~15% of ROUTE actor-frames still have a statically BLOCKED current edge;
+- ~12.6% are effectively zero-fraction;
+- one actor spends ~801 ROUTE frames in this condition and nevertheless eventually completes.
+
+Therefore:
+
+> **wall sliding repairs embodied locomotion enough to mask many stale route executions, but it does not restore the epistemic authority of the route consumer.**
+
+Movement and route execution remain separate debts.
+
+## 8AT. Re-armable route recovery helps, but route recovery alone remains insufficient
+
+A more conservative analysis-only recovery candidate was tested:
+
+1. if a ROUTE actor's current position -> current waypoint becomes statically invalid;
+2. abandon the stale route;
+3. return to DIRECT;
+4. re-arm the existing N1 static no-progress episode;
+5. only after persistent no-progress (~0.35 s) obtain a new N0b witness.
+
+This avoids immediate high-frequency path replacement.
+
+Valid-range results:
+
+- 6, 8, 10, 12, 14, 16, 18, 20 all eventually COMPLETE;
+- clean 18 reaches 18 / 18 around 20.66 s with ~17 static replans;
+- but population 4 remains 3 / 4 after 30 s;
+- its one residual actor replans repeatedly (~15 times).
+
+So route-episode recovery is materially better than immediate edge re-query, but it cannot compensate for sticky wall locomotion in every case.
+
+## 8AU. Wall sliding + bounded route-episode re-arm gives the first clean full-range composition
+
+The two analysis-only candidates were then composed:
+
+- static wall sliding;
+- stale ROUTE invalidation -> DIRECT -> existing N1 no-progress -> fresh witness if needed.
+
+No personal-space layer, soft envelope, crowd coordinator, ghosting, target reassignment or new body-body contact law was added.
+
+Every valid-range trial 4–20 reaches COMPLETE.
+
+Selected results:
+
+| Population | Completion time | Total static replans | Max replans / actor |
+| ---: | ---: | ---: | ---: |
+| 4 | ~8.58 s | 0 | 0 |
+| 8 | ~10.46 s | 3 | 2 |
+| 12 | ~12.40 s | 5 | 2 |
+| 16 | ~16.93 s | 7 | 1 |
+| 18 | ~17.42 s | 8 | 2 |
+| 20 | ~17.83 s | 7 | 3 |
+
+This composition removes:
+
+- the clean stale-wall residual family;
+- route-query storms seen in immediate revalidation;
+- the 4-person failure left by route-episode recovery alone.
+
+Important boundary:
+
+> **this is not yet the selected implementation.**
+
+It is evidence that two orthogonal foundations can jointly explain and eliminate the clean residual failure:
+
+1. constraint-aware/tangential static locomotion;
+2. bounded route-execution recovery after material displacement.
+
+These mechanisms should be qualified independently before composition so that crowd feel and causal effects remain attributable.
+
+Because both candidates act only on static locomotion / route execution, they do not replace the already-qualified need for explicit local dynamic negotiation in pure body-body counterflow.
+
 ## 9. Immediate campaign boundary
 
 **Do not implement personal space, soft envelopes, new crowd steering or a new solver yet.**
