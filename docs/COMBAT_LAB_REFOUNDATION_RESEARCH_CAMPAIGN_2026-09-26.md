@@ -1,7 +1,7 @@
 # Combat Lab — Refoundation Research Campaign
 
 **Started:** 2026-09-26  
-**Campaign status:** **ACTIVE RESEARCH / REFOUNDATION IN PROGRESS · L0/L1 + N0/N0b + N1 QUALIFIED · C0 CONTACT SEMANTICS NEXT**  
+**Campaign status:** **ACTIVE RESEARCH / REFOUNDATION IN PROGRESS · L0/L1 + N0/N0b + N1 + C0 QUALIFIED · P0 SCALING ATTRIBUTION NEXT**  
 **Authority:** bounded strategy derived from live `main`, S0/B0/Ecology Owner evidence, exact Ecology specimen forensics and targeted donor recovery. It does not promote a replacement runtime architecture by existence.
 
 ## 0. Why this campaign exists
@@ -715,9 +715,9 @@ C0 must not optimize for crowd throughput by default. It should expose when bodi
 and how those outcomes respond to independent body mass, locomotor authority and explicit contact posture/resistance.
 
 
-## 18. C0 contact-semantics cell — implementation candidate
+## 18. C0 contact-semantics cell
 
-**Status at authoring:** implementation candidate; machine qualification pending.
+**Status:** **MECHANICALLY QUALIFIED · CROWD / PRODUCT FEEL / FENIKS PHYSICS UNQUALIFIED**.
 
 C0 begins from the exact first-Ecology failure instead of treating “too much blocking” as a generic crowd-flow problem.
 
@@ -771,3 +771,57 @@ C0 falsifiers:
 - improved flow requires ghosting, despawn, target reassignment or hidden reciprocal choreography.
 
 Passing C0 would qualify only one candidate contact-law family for further experimentation. It would not qualify crowd behavior, stance design, soft collision as a product feature, or Feniks physics.
+
+
+### C0 qualification and falsification history
+
+First implementation checkpoint:
+
+`2958a98d7fe3a6a5c79df3a13b9feeb950a575a8`
+
+Result: **FAIL**. The three-body forward/reverse pair-order audit showed that 8 bounded solver iterations did not meet the declared positional convergence threshold. The threshold was retained.
+
+Qualified checkpoint:
+
+`5ea8931c9e36bd62bc20e489e2bad45b95c07033`
+
+Evidence:
+
+- GitHub Actions check run `36308131777` — **SUCCESS**;
+- **83 / 83** Node checks PASS;
+- live Chromium Workbench gate PASS;
+- equal opposed bodies form a centered persistent hold;
+- explicit resistance asymmetry produces mirrored yielding outcomes without changing mass/motor values;
+- mass-only and motor-only asymmetries remain separately causal;
+- 12 bounded iterations suppress forward/reverse multi-body position and velocity differences below `1e-4`;
+- causal state exposes desired velocities and actual outcome separately;
+- causal state also exposes `contactMobility = 1/(mass × resistance)` so the candidate coupling is not hidden;
+- browser matched-start rerun proves equal hold, then A-yields/B-resists after authored resistance change + Reset World.
+
+Bounded verdict:
+
+> **C0 MECHANICS PASS — one explicit, inspectable contact-law candidate can express centered hold, yielding and displacement while materially suppressing the old sequential pair-order artifact.**
+
+Still unqualified:
+
+- whether this law feels good;
+- whether contact resistance should exist as a Feniks mechanic;
+- stance/body-shape coupling;
+- tangential/friction semantics;
+- dense multi-body ecology;
+- dynamic avoidance/negotiation;
+- production physics backend.
+
+### Post-C0 transition
+
+Do not jump directly to a new Ecology horde.
+
+The next candidate is **P0 scaling attribution** so the next integrated specimen can distinguish:
+
+- simulation/contact work;
+- rendering;
+- evidence/observation;
+- intervention hitches;
+- wall-time fidelity.
+
+P0 is a measurement problem first. Broad-phase optimization remains deferred until evidence says it blocks a valuable regime.

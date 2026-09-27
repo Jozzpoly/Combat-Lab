@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-26  
 **Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
 **Canonical branch:** `main` after repository canonicalization  
-**Stage:** **Workbench + B0 CLOSED; first Active Spatial Ecology Owner rehearsal + feedback/evidence campaign CLOSED; target hypothesis INCONCLUSIVE; refoundation/research campaign ACTIVE; L0/L1 + N0/N0b + N1 minimal static-obstruction recovery MECHANICALLY QUALIFIED; Owner UX / dynamic-body contact / crowd behavior UNQUALIFIED**
+**Stage:** **Workbench + B0 CLOSED; first Active Spatial Ecology Owner rehearsal + feedback/evidence campaign CLOSED; target hypothesis INCONCLUSIVE; refoundation/research campaign ACTIVE; L0/L1 + N0/N0b + N1 + C0 candidate contact semantics MECHANICALLY QUALIFIED; Owner UX / integrated ecology / scaling UNQUALIFIED**
 
 ## 1. Owner intent
 
@@ -336,21 +336,36 @@ Exact qualified checkpoint:
 
 N1 qualifies only a minimal static-obstruction recovery competence. It is not a final navigation system and says nothing yet about two bodies negotiating the same space.
 
+**C0 — candidate contact semantics: MECHANICALLY QUALIFIED · CROWD / PRODUCT FEEL / FENIKS PHYSICS UNQUALIFIED**
+
+Qualified checkpoint `5ea8931c9e36bd62bc20e489e2bad45b95c07033`; CI `36308131777`; **83 / 83 PASS** + live Chromium PASS.
+
+Narrow evidence:
+
+- equal opposed bodies hold centrally without authored asymmetry;
+- resistance, mass and motor authority each materially alter the controlled outcome;
+- current yielding coupling is explicit: `contactMobility = 1 / (mass × contactResistance)`;
+- desired motion and physical outcome remain separately observable;
+- 12 bounded iterations reduce forward/reverse three-body position and velocity differences below `1e-4`;
+- first C0 candidate failed this order-stability gate at 8 iterations and was not promoted.
+
+This qualifies one inspectable contact-law candidate only — not soft collision, crowd flow, stance, product feel or final Feniks physics.
+
 ### Immediate next research boundary
 
-The next dominant Owner finding is **body-body blocking / stupid jams**. Move to a bounded **C0 contact-semantics cell**, not a crowd-flow algorithm.
+Before any integrated Ecology reattempt, execute **P0 scaling attribution** as a measurement cell, not an optimization campaign.
 
-The next cell should compare controlled conflicting motion intents while keeping higher-level routing trivial:
+P0 should answer separately:
 
-- two or a few bodies deliberately want incompatible space;
-- occupied-body physicality remains real;
-- mass / locomotor authority / explicit contact posture can be varied independently;
-- candidate outcomes include yield, resist, displacement and hold;
-- no hidden ghosting, despawn, reciprocal crowd choreography or target reassignment;
-- causal evidence must distinguish desired motion from contact outcome;
-- solver order and numerical instability are explicit falsifiers.
+- simulation / contact work;
+- render cadence;
+- simulation-time vs wall-time fidelity;
+- on-demand observation cost;
+- discrete intervention cost.
 
-The goal is **not maximum flow**. The goal is to discover contact laws that make blocking meaningful when it should be meaningful and negotiable when it should not.
+Use deterministic operation counts where they are exact and browser wall-clock measurements only where timing is the phenomenon. Preserve the Owner's ability to push population until break, but do not optimize the O(N²) broad phase merely to improve a benchmark.
+
+Dynamic-body behavioral negotiation remains open. P0 does not solve it; it prevents the next multi-body experiment from again collapsing into an uninterpretable “lag + jams” result.
 
 ### Active invariant
 
