@@ -244,9 +244,9 @@ Important boundary:
 
 ### Immediate next move
 
-The second Owner recording has now opened a new **feedback/evidence-extraction campaign**.
+The second Owner recording feedback/evidence campaign is now **CLOSED AT EVIDENCE SATURATION**.
 
-Do not modify frozen R0 merely because the recording produced plausible feature ideas.
+Do not modify frozen R0 merely because the recording produced plausible feature ideas or because analysis-only counterfactuals produced promising candidates.
 
 Current high-value findings:
 
