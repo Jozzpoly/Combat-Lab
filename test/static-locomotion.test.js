@@ -216,3 +216,81 @@ test("M1-G S1 follows current intent at contact without stale wall ownership",()
   assert.equal(away.lastStep.firstHit,null);
   assert.equal(away.lastStep.finalOccupancy.clear,true);
 });
+
+
+test("M1 Owner-anchor reproduces and releases all three exact clean-18 filmed wall deaths",()=>{
+  const cases=[
+    {
+      id:"resident-1",
+      obstacle:{id:"pillar.upper",x:510,y:120,w:80,h:190},
+      position:{x:490,y:275.9962033648616},
+      radius:20,
+      desiredVelocity:{x:138.97711740869488,y:16.89262669835077},
+      tangentX:490,
+      tangentDirection:1
+    },
+    {
+      id:"resident-6",
+      obstacle:{id:"pillar.lower",x:510,y:500,w:80,h:190},
+      position:{x:478,y:518.599330390146},
+      radius:32,
+      desiredVelocity:{x:132.0771070161935,y:-46.42884666059415},
+      tangentX:478,
+      tangentDirection:-1
+    },
+    {
+      id:"resident-12",
+      obstacle:{id:"pillar.lower",x:510,y:500,w:80,h:190},
+      position:{x:622,y:529.5840611452998},
+      radius:32,
+      desiredVelocity:{x:-128.71649636076398,y:-55.064176781365155},
+      tangentX:622,
+      tangentDirection:-1
+    }
+  ];
+
+  for(const specimen of cases){
+    const frozen=createStaticLocomotionState({
+      position:specimen.position,
+      desiredVelocity:specimen.desiredVelocity,
+      radius:specimen.radius,
+      world:{width:1100,height:700},
+      obstacles:[specimen.obstacle],
+      policy:STATIC_LOCOMOTION_POLICIES.DISCARD_REMAINDER
+    });
+    const slide=createStaticLocomotionState({
+      position:specimen.position,
+      desiredVelocity:specimen.desiredVelocity,
+      radius:specimen.radius,
+      world:{width:1100,height:700},
+      obstacles:[specimen.obstacle],
+      policy:STATIC_LOCOMOTION_POLICIES.RESIDUAL_SLIDE
+    });
+
+    const baseline=run(frozen,30);
+    const candidate=run(slide,30);
+
+    assert.ok(
+      Math.hypot(
+        baseline.body.x-specimen.position.x,
+        baseline.body.y-specimen.position.y
+      )<1e-6,
+      `${specimen.id} baseline no longer reproduces zero-fraction wall death`
+    );
+    assert.equal(baseline.lastStep.firstHit.id,specimen.obstacle.id);
+    assert.ok(baseline.lastStep.firstHit.fraction<1e-8);
+
+    assert.ok(
+      Math.abs(candidate.body.x-specimen.tangentX)<2e-4,
+      `${specimen.id} S1 leaked through hard normal contact`
+    );
+    const tangentTravel=(candidate.body.y-specimen.position.y)*specimen.tangentDirection;
+    assert.ok(
+      tangentTravel>3,
+      `${specimen.id} S1 failed to preserve filmed tangent authority: ${tangentTravel}`
+    );
+    assert.equal(candidate.lastStep.finalOccupancy.clear,true);
+    assert.equal(candidate.lastStep.firstHit.id,specimen.obstacle.id);
+    assert.ok(candidate.lastStep.firstHit.fraction<1e-8);
+  }
+});
