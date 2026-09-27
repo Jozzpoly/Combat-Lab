@@ -1738,6 +1738,63 @@ This reveals an integration problem deeper than individual thresholds:
 
 A future embodied recovery model needs explicit causal ownership / episode semantics rather than mutually exclusive one-shot booleans.
 
+
+## 8AM. Simple recovery re-arm heuristics were falsified
+
+The recording/counterfactual campaign also tested two tempting low-cost recovery rules.
+
+These were analysis-only and are not repo changes.
+
+### Re-arm on route-waypoint advancement
+
+Hypothesis:
+
+> after a static recovery, reaching the next verified route waypoint proves the old failure episode has ended and permits another future static recovery.
+
+Result:
+
+- eventually reaches 18 / 18;
+- still produces ~22 static replans;
+- several actors replan 4–5 times.
+
+Reason:
+
+A newly returned witness can contain a nearby corner waypoint that is satisfied quickly without the actor actually escaping the same embodied conflict.
+
+So route-index bookkeeping is not a reliable episode boundary.
+
+### Re-arm after moving K x body radius
+
+Sweep:
+
+| Re-arm movement | Result |
+| --- | --- |
+| 0.1r | 18 / 18; ~22 replans |
+| 0.25r | 18 / 18; ~22 replans |
+| 0.5r | 18 / 18; ~22 replans |
+| 0.75r | 14 / 18 after 60 s |
+| 1.0r | 14 / 18 after 60 s |
+| 1.25–3.0r | 14 / 18 after 60 s |
+
+No useful stable band appears.
+
+Small thresholds fail to suppress chatter.
+Larger thresholds prevent recovery needed by legitimate new situations and can perform worse than frozen R0.
+
+Bounded conclusion:
+
+> **a recovery episode cannot be defined robustly by one route-index event or one scalar movement threshold.**
+
+The stronger candidate concept is qualitative execution validity:
+
+- active route edge was verified;
+- actor made real embodied progress;
+- material interaction displaced the actor;
+- active edge becomes no longer feasible from the new state;
+- that transition is a new recovery event.
+
+This should be tested directly rather than approximated with magic distance/time thresholds.
+
 ## 9. Immediate campaign boundary
 
 **Do not implement personal space, soft envelopes, new crowd steering or a new solver yet.**
