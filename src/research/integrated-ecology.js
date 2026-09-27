@@ -156,11 +156,21 @@ function preferredVelocity(actor,body){
 }
 
 function contactPartner(state,bodyId){
+  const partners=[];
   for(const contact of state.lastContacts || []){
-    if(contact.a===bodyId) return contact.b;
-    if(contact.b===bodyId) return contact.a;
+    if(contact.a===bodyId) partners.push(contact.b);
+    else if(contact.b===bodyId) partners.push(contact.a);
   }
-  return null;
+  partners.sort();
+  return partners[0] || null;
+}
+
+function normalizePairOrder(value){
+  const order=String(value || "forward");
+  if(order!=="forward" && order!=="reverse"){
+    throw new Error("pairOrder must be forward or reverse");
+  }
+  return order;
 }
 
 function integrateAgainstStatic(state,actor,body,dt){
@@ -407,7 +417,7 @@ function projectBodiesOutOfStatic(state){
   return corrections;
 }
 
-function solveCoupledConstraints(state,{passes=24}={}){
+function solveCoupledConstraints(state,{passes=24,pairOrder="forward"}={}){
   const startPairChecks=state.totalPairChecks;
   const startResolutions=state.totalContactResolutions;
   const startIterations=state.totalSolverIterations;
@@ -418,7 +428,7 @@ function solveCoupledConstraints(state,{passes=24}={}){
 
   for(let pass=0;pass<passes;pass++){
     passesUsed+=1;
-    solveCandidateContactPairs(state,{iterations:12,pairOrder:"forward"});
+    solveCandidateContactPairs(state,{iterations:12,pairOrder});
     for(const contact of state.lastContacts || []){
       const key=contact.a<contact.b
         ? `${contact.a}<->${contact.b}`
@@ -454,6 +464,7 @@ function solveCoupledConstraints(state,{passes=24}={}){
 export function createIntegratedEcologyState({
   count=8,
   passingSide=1,
+  pairOrder="forward",
   world=DEFAULT_WORLD,
   obstacles=DEFAULT_OBSTACLES,
   trialDuration=10
@@ -532,7 +543,8 @@ export function createIntegratedEcologyState({
       dynamicNoProgressSeconds:0.42,
       progressEpsilon:0.04,
       sidestepSeconds:0.80,
-      arrivalTolerance:5
+      arrivalTolerance:5,
+      pairOrder:normalizePairOrder(pairOrder)
     },
     contactPairsThisStep:0,
     totalContactPairSteps:0,
@@ -573,7 +585,10 @@ export function stepIntegratedEcologyState(state,dt){
     integrateAgainstStatic(state,actor,body,delta);
   }
 
-  solveCoupledConstraints(state,{passes:24});
+  solveCoupledConstraints(state,{
+    passes:24,
+    pairOrder:state.policy.pairOrder
+  });
   state.staticOverlapViolations+=staticOverlapCount(state);
   state.dynamicOverlapViolations+=dynamicOverlapCount(state);
   state.time+=delta;
@@ -611,6 +626,7 @@ export function integratedEcologySnapshot(state){
     time:state.time,
     status:state.status,
     topology:structuredClone(state.topology),
+    pairOrder:state.policy.pairOrder,
     population:state.bodies.length,
     arrived,
     staticReplans,

@@ -53,7 +53,10 @@ test("E1 bounded integrated run exercises both static recovery and dynamic encou
   assert.ok(out.staticProjectionCorrections>0);
   assert.ok(out.coupledPasses>0);
   assert.ok(out.maxCoupledPassesUsed>0);
-  assert.ok(out.maxCoupledPassesUsed<=24);
+  assert.ok(
+    out.maxCoupledPassesUsed<24,
+    `E1 exhausted coupled-pass budget: ${out.maxCoupledPassesUsed}`
+  );
   assert.ok(out.pairChecks>0);
   assert.ok(out.contactResolutions>0);
   assert.ok(out.totalRemainingDistance<out.totalInitialDistance);
@@ -93,4 +96,38 @@ test("E1 snapshot preserves per-actor causal triggers instead of only aggregate 
   assert.ok(Object.values(snap.actors).some(actor=>actor.staticTrigger));
   assert.ok(Object.values(snap.actors).some(actor=>actor.dynamicTrigger));
   assert.ok(snap.pairChecks>=snap.contactResolutions);
+});
+
+
+test("E1 integrated outcome is not materially selected by contact pair iteration order",()=>{
+  const forward=runIntegratedEcologyTrial({
+    count:8,passingSide:1,pairOrder:"forward",trialDuration:10
+  });
+  const reverse=runIntegratedEcologyTrial({
+    count:8,passingSide:1,pairOrder:"reverse",trialDuration:10
+  });
+
+  assert.equal(forward.staticOverlapViolations,0);
+  assert.equal(reverse.staticOverlapViolations,0);
+  assert.equal(forward.dynamicOverlapViolations,0);
+  assert.equal(reverse.dynamicOverlapViolations,0);
+  assert.equal(
+    forward.arrived,
+    reverse.arrived,
+    `pair order changed arrivals: forward=${JSON.stringify(forward)} reverse=${JSON.stringify(reverse)}`
+  );
+  assert.equal(
+    forward.staticReplans,
+    reverse.staticReplans,
+    `pair order changed static replans: forward=${JSON.stringify(forward)} reverse=${JSON.stringify(reverse)}`
+  );
+  assert.equal(
+    forward.dynamicEncounters,
+    reverse.dynamicEncounters,
+    `pair order changed dynamic encounters: forward=${JSON.stringify(forward)} reverse=${JSON.stringify(reverse)}`
+  );
+  assert.ok(
+    Math.abs(forward.totalRemainingDistance-reverse.totalRemainingDistance)<1e-3,
+    `pair order materially changed remaining distance: forward=${forward.totalRemainingDistance} reverse=${reverse.totalRemainingDistance}`
+  );
 });
