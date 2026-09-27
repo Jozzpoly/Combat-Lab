@@ -4,6 +4,7 @@ import {
   solveCandidateContactPairs
 } from "./contact-semantics.js";
 import {
+  projectStaticCircleOut,
   queryStaticCircleOccupancy,
   queryStaticCircleTraversal
 } from "./static-feasibility.js";
@@ -338,6 +339,80 @@ function staticOverlapCount(state){
   return violations;
 }
 
+function dynamicOverlapCount(state){
+  let violations=0;
+  for(let i=0;i<state.bodies.length;i++){
+    for(let j=i+1;j<state.bodies.length;j++){
+      const a=state.bodies[i];
+      const b=state.bodies[j];
+      const minDistance=a.radius+b.radius;
+      if(Math.hypot(b.x-a.x,b.y-a.y)<minDistance-EPS) violations+=1;
+    }
+  }
+  return violations;
+}
+
+function projectBodiesOutOfStatic(state){
+  let corrections=0;
+  for(const body of state.bodies){
+    const projected=projectStaticCircleOut({
+      center:{x:body.x,y:body.y},
+      radius:body.radius,
+      world:state.world,
+      obstacles:state.obstacles,
+      maxIterations:12
+    });
+    if(!projected.moved) continue;
+    body.x=projected.center.x;
+    body.y=projected.center.y;
+    corrections+=projected.contacts.length;
+
+    for(const contact of projected.contacts){
+      const into=body.vx*contact.normal.x+body.vy*contact.normal.y;
+      if(into<0){
+        body.vx-=into*contact.normal.x;
+        body.vy-=into*contact.normal.y;
+      }
+    }
+  }
+  return corrections;
+}
+
+function solveCoupledConstraints(state,{passes=8}={}){
+  const startPairChecks=state.totalPairChecks;
+  const startResolutions=state.totalContactResolutions;
+  const startIterations=state.totalSolverIterations;
+  const startContactPairSteps=state.totalContactPairSteps;
+  const contactByPair=new Map();
+  let staticCorrections=0;
+  let passesUsed=0;
+
+  for(let pass=0;pass<passes;pass++){
+    passesUsed+=1;
+    solveCandidateContactPairs(state,{iterations:12,pairOrder:"forward"});
+    for(const contact of state.lastContacts || []){
+      const key=contact.a<contact.b
+        ? `${contact.a}<->${contact.b}`
+        : `${contact.b}<->${contact.a}`;
+      if(!contactByPair.has(key)) contactByPair.set(key,structuredClone(contact));
+    }
+
+    staticCorrections+=projectBodiesOutOfStatic(state);
+    if(staticOverlapCount(state)===0 && dynamicOverlapCount(state)===0) break;
+  }
+
+  state.contactPairsThisStep=contactByPair.size;
+  state.totalContactPairSteps=startContactPairSteps+contactByPair.size;
+  state.pairChecksThisStep=state.totalPairChecks-startPairChecks;
+  state.contactResolutionsThisStep=state.totalContactResolutions-startResolutions;
+  state.solverIterationsUsed=state.totalSolverIterations-startIterations;
+  state.lastContacts=[...contactByPair.values()];
+  state.staticProjectionCorrectionsThisStep=staticCorrections;
+  state.totalStaticProjectionCorrections+=staticCorrections;
+  state.coupledPassesThisStep=passesUsed;
+  state.totalCoupledPasses+=passesUsed;
+}
+
 export function createIntegratedEcologyState({
   count=8,
   passingSide=1,
@@ -431,6 +506,11 @@ export function createIntegratedEcologyState({
     totalSolverIterations:0,
     lastContacts:[],
     staticOverlapViolations:0,
+    dynamicOverlapViolations:0,
+    staticProjectionCorrectionsThisStep:0,
+    totalStaticProjectionCorrections:0,
+    coupledPassesThisStep:0,
+    totalCoupledPasses:0,
     initialTotalDistance:bodies.reduce((sum,body)=>
       sum+distance(body,actors[body.id].target),0
     )
@@ -452,8 +532,9 @@ export function stepIntegratedEcologyState(state,dt){
     integrateAgainstStatic(state,actor,body,delta);
   }
 
-  solveCandidateContactPairs(state,{iterations:12,pairOrder:"forward"});
+  solveCoupledConstraints(state,{passes:8});
   state.staticOverlapViolations+=staticOverlapCount(state);
+  state.dynamicOverlapViolations+=dynamicOverlapCount(state);
   state.time+=delta;
 
   for(const body of state.bodies){
@@ -492,6 +573,9 @@ export function integratedEcologySnapshot(state){
     dynamicEncounters,
     noConventionBlocks,
     staticOverlapViolations:state.staticOverlapViolations,
+    dynamicOverlapViolations:state.dynamicOverlapViolations,
+    staticProjectionCorrections:state.totalStaticProjectionCorrections,
+    coupledPasses:state.totalCoupledPasses,
     contactPairSteps:state.totalContactPairSteps,
     pairChecks:state.totalPairChecks,
     contactResolutions:state.totalContactResolutions,

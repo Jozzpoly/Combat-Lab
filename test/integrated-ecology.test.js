@@ -41,6 +41,9 @@ test("E1 bounded integrated run exercises both static recovery and dynamic encou
   assert.ok(out.staticReplans>0);
   assert.ok(out.dynamicEncounters>0);
   assert.equal(out.staticOverlapViolations,0);
+  assert.equal(out.dynamicOverlapViolations,0);
+  assert.ok(out.staticProjectionCorrections>0);
+  assert.ok(out.coupledPasses>0);
   assert.ok(out.pairChecks>0);
   assert.ok(out.contactResolutions>0);
   assert.ok(out.totalRemainingDistance<out.totalInitialDistance);
@@ -57,8 +60,14 @@ test("E1 explicit passing convention materially improves the same integrated top
 
   assert.equal(none.topology.kind,left.topology.kind);
   assert.equal(none.topology.uniqueTargetCount,left.topology.uniqueTargetCount);
-  assert.ok(left.arrived>=none.arrived);
-  assert.ok(left.totalRemainingDistance<none.totalRemainingDistance);
+  assert.ok(
+    left.arrived>=none.arrived,
+    `LEFT arrived ${left.arrived} < NONE ${none.arrived}; LEFT=${JSON.stringify(left)} NONE=${JSON.stringify(none)}`
+  );
+  assert.ok(
+    left.totalRemainingDistance<none.totalRemainingDistance,
+    `LEFT remaining ${left.totalRemainingDistance} >= NONE ${none.totalRemainingDistance}; LEFT=${JSON.stringify(left)} NONE=${JSON.stringify(none)}`
+  );
   assert.ok(none.noConventionBlocks>0);
 });
 

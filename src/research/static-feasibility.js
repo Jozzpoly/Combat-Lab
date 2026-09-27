@@ -74,6 +74,144 @@ export function queryStaticCircleOccupancy({center,radius,world,obstacles=[]}={}
   };
 }
 
+function rectProjection(center,rect,radius){
+  const inside=
+    center.x>=rect.x-EPS && center.x<=rect.x+rect.width+EPS &&
+    center.y>=rect.y-EPS && center.y<=rect.y+rect.height+EPS;
+
+  if(inside){
+    const candidates=[
+      {
+        id:rect.id,
+        normal:{x:-1,y:0},
+        correction:{x:(rect.x-radius)-center.x,y:0}
+      },
+      {
+        id:rect.id,
+        normal:{x:1,y:0},
+        correction:{x:(rect.x+rect.width+radius)-center.x,y:0}
+      },
+      {
+        id:rect.id,
+        normal:{x:0,y:-1},
+        correction:{x:0,y:(rect.y-radius)-center.y}
+      },
+      {
+        id:rect.id,
+        normal:{x:0,y:1},
+        correction:{x:0,y:(rect.y+rect.height+radius)-center.y}
+      }
+    ];
+    candidates.sort((a,b)=>{
+      const da=Math.hypot(a.correction.x,a.correction.y);
+      const db=Math.hypot(b.correction.x,b.correction.y);
+      if(Math.abs(da-db)>EPS) return da-db;
+      const orderA=`${a.normal.x},${a.normal.y}`;
+      const orderB=`${b.normal.x},${b.normal.y}`;
+      return orderA.localeCompare(orderB);
+    });
+    const chosen=candidates[0];
+    return {
+      id:rect.id,
+      type:"obstacle",
+      normal:chosen.normal,
+      correction:chosen.correction,
+      depth:Math.hypot(chosen.correction.x,chosen.correction.y)
+    };
+  }
+
+  const nearest={
+    x:Math.max(rect.x,Math.min(rect.x+rect.width,center.x)),
+    y:Math.max(rect.y,Math.min(rect.y+rect.height,center.y))
+  };
+  const dx=center.x-nearest.x;
+  const dy=center.y-nearest.y;
+  const distance=Math.hypot(dx,dy);
+  if(distance>=radius-EPS) return null;
+  if(distance<=EPS) return null;
+
+  const normal={x:dx/distance,y:dy/distance};
+  const depth=radius-distance;
+  return {
+    id:rect.id,
+    type:"obstacle",
+    normal,
+    correction:{x:normal.x*depth,y:normal.y*depth},
+    depth
+  };
+}
+
+export function projectStaticCircleOut({
+  center,radius,world,obstacles=[],maxIterations=12
+}={}){
+  const start=point(center,"center");
+  const r=finite(radius,"radius");
+  if(r<=0) throw new Error("radius must be positive");
+  const bounds=contractWorld(world,r);
+  const iterations=Math.max(1,Math.floor(finite(maxIterations,"maxIterations")));
+  let projected={...start};
+  const contacts=[];
+
+  for(let iteration=0;iteration<iterations;iteration++){
+    let changed=false;
+
+    const boundaryCorrections=[
+      projected.x<bounds.minX-EPS
+        ? {id:"boundary.left",normal:{x:1,y:0},correction:{x:bounds.minX-projected.x,y:0}}
+        : null,
+      projected.x>bounds.maxX+EPS
+        ? {id:"boundary.right",normal:{x:-1,y:0},correction:{x:bounds.maxX-projected.x,y:0}}
+        : null,
+      projected.y<bounds.minY-EPS
+        ? {id:"boundary.top",normal:{x:0,y:1},correction:{x:0,y:bounds.minY-projected.y}}
+        : null,
+      projected.y>bounds.maxY+EPS
+        ? {id:"boundary.bottom",normal:{x:0,y:-1},correction:{x:0,y:bounds.maxY-projected.y}}
+        : null
+    ].filter(Boolean);
+
+    for(const correction of boundaryCorrections){
+      projected.x+=correction.correction.x;
+      projected.y+=correction.correction.y;
+      contacts.push({
+        ...correction,
+        type:"boundary",
+        depth:Math.hypot(correction.correction.x,correction.correction.y),
+        iteration
+      });
+      changed=true;
+    }
+
+    for(const [index,raw] of obstacles.entries()){
+      const rect=normalizeRect(raw,index);
+      const correction=rectProjection(projected,rect,r);
+      if(!correction || correction.depth<=EPS) continue;
+      projected.x+=correction.correction.x;
+      projected.y+=correction.correction.y;
+      contacts.push({...correction,iteration});
+      changed=true;
+    }
+
+    if(!changed) break;
+  }
+
+  const occupancy=queryStaticCircleOccupancy({
+    center:projected,
+    radius:r,
+    world,
+    obstacles
+  });
+
+  return {
+    center:projected,
+    radius:r,
+    moved:Math.hypot(projected.x-start.x,projected.y-start.y)>EPS,
+    clear:occupancy.clear,
+    blocker:occupancy.blocker,
+    contacts
+  };
+}
+
 function candidate(t,id,normal){
   if(!Number.isFinite(t) || t<-EPS || t>1+EPS) return null;
   return {

@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   explainStaticFeasibility,
+  projectStaticCircleOut,
   queryStaticCircleOccupancy,
   queryStaticCircleTraversal
 } from "../src/research/static-feasibility.js";
@@ -131,4 +132,42 @@ test("N0 grazing along the exact rounded/side boundary remains clear without pen
 
   assert.equal(result.clear,true);
   assert.equal(result.blocker,null);
+});
+
+
+test("N0 static projection repairs a body pushed into an obstacle without inventing square corners",()=>{
+  const localWorld={width:200,height:200};
+  const box={id:"box",x:80,y:80,w:40,h:40};
+  const original={x:78,y:78};
+  const result=projectStaticCircleOut({
+    center:original,
+    radius:8,
+    world:localWorld,
+    obstacles:[box]
+  });
+
+  assert.equal(result.clear,true);
+  assert.equal(result.moved,true);
+  assert.ok(result.contacts.length>0);
+  assert.deepEqual(original,{x:78,y:78});
+  assert.equal(queryStaticCircleOccupancy({
+    center:result.center,
+    radius:8,
+    world:localWorld,
+    obstacles:[box]
+  }).clear,true);
+});
+
+test("N0 static projection repairs world-boundary penetration and reports its causal normal",()=>{
+  const result=projectStaticCircleOut({
+    center:{x:2,y:100},
+    radius:10,
+    world:{width:200,height:200},
+    obstacles:[]
+  });
+
+  assert.equal(result.clear,true);
+  assert.equal(result.center.x,10);
+  assert.equal(result.contacts[0].id,"boundary.left");
+  assert.deepEqual(result.contacts[0].normal,{x:1,y:0});
 });
