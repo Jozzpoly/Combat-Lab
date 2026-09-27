@@ -527,6 +527,83 @@ Candidate semantics to compare later:
 
 No option is selected yet.
 
+
+## 8J. The top-left overlay mixes historical and current truth
+
+Two prominent R0 metrics are easy to over-read.
+
+### `max solve 24/24`
+
+The overlay uses historical `maxCoupledPassesUsed`.
+
+Once any frame reaches 24 coupled passes, the display remains `24/24` for the rest of the trial even if the current frame is cheap and the crowd has largely released.
+
+The clean 18-person video visibly demonstrates this: the label remains saturated after much of the central cluster has already dispersed.
+
+So the current overlay cannot distinguish:
+
+- one historical hard frame;
+- intermittent saturation;
+- continuous saturation.
+
+Future observability should separate at least:
+
+- current coupled passes;
+- peak coupled passes;
+- optionally fraction/recent-window of saturated frames.
+
+### `arrived N`
+
+The overlay counts sticky terminal actor modes.
+
+It does not report how many latched-arrived bodies remain physically inside target tolerance now.
+
+Therefore the line combines:
+
+- current residents;
+- historical completion latch;
+- historical peak solver cost.
+
+This is too semantically compressed for serious causal diagnosis.
+
+## 8K. High-density actors may spend their one-shot encounter competence before the real encounter
+
+At 64+ actors the initial columns contain many overlapping same-stream neighbors.
+
+Dynamic recovery threshold is only 0.42 s.
+The opposing streams begin ~860 world units apart and must travel toward the central region before a true counterflow encounter.
+
+Therefore the high-density stimulus creates a strong risk that actors consume `dynamicEncounterAttempted` while disentangling from **their own starting column**, before meeting the opposite stream.
+
+Exact 64 replay already shows many actors have consumed their sole dynamic encounter early in the trial.
+
+This is currently a strong causal hypothesis rather than a per-actor timestamp proof, but it follows directly from:
+
+- invalid initial overlap;
+- one-shot encounter semantics;
+- short no-progress threshold;
+- travel distance to the central encounter.
+
+If confirmed, the current dense stimulus actively destroys the competence it is supposed to test.
+
+## 8L. Preset names currently overstate experimental validity
+
+The current R0 presets include:
+
+- `24 pressure`;
+- `64 dense`;
+- `256 break`.
+
+After the topology audit:
+
+- 24 already has initial overlap;
+- 64 is heavily invalid at start/target and solver-expensive;
+- 256 is an intentional pathological break regime.
+
+So only `256 break` is semantically honest as written.
+
+The `24 pressure` / `64 dense` labels should not be treated as canonical pressure tiers in future work until pressure can be increased without changing physical validity.
+
 ## 9. Immediate campaign boundary
 
 **Do not implement personal space, soft envelopes, new crowd steering or a new solver yet.**
