@@ -45,7 +45,11 @@ test("E1 bounded integrated run exercises both static recovery and dynamic encou
     0,
     `unresolved static projection: ${JSON.stringify(out.lastUnresolvedStaticProjection)}`
   );
-  assert.equal(out.dynamicOverlapViolations,0);
+  assert.equal(
+    out.dynamicOverlapViolations,
+    0,
+    `unresolved dynamic overlap: ${JSON.stringify(out.lastUnresolvedDynamicOverlap)}`
+  );
   assert.ok(out.staticProjectionCorrections>0);
   assert.ok(out.coupledPasses>0);
   assert.ok(out.pairChecks>0);

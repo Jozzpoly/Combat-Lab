@@ -339,17 +339,32 @@ function staticOverlapCount(state){
   return violations;
 }
 
-function dynamicOverlapCount(state){
-  let violations=0;
+function dynamicOverlapEvidence(state){
+  const overlaps=[];
   for(let i=0;i<state.bodies.length;i++){
     for(let j=i+1;j<state.bodies.length;j++){
       const a=state.bodies[i];
       const b=state.bodies[j];
+      const distanceNow=Math.hypot(b.x-a.x,b.y-a.y);
       const minDistance=a.radius+b.radius;
-      if(Math.hypot(b.x-a.x,b.y-a.y)<minDistance-EPS) violations+=1;
+      if(distanceNow<minDistance-EPS){
+        overlaps.push({
+          a:a.id,
+          b:b.id,
+          distance:distanceNow,
+          minDistance,
+          penetration:minDistance-distanceNow,
+          aPosition:{x:a.x,y:a.y},
+          bPosition:{x:b.x,y:b.y}
+        });
+      }
     }
   }
-  return violations;
+  return overlaps;
+}
+
+function dynamicOverlapCount(state){
+  return dynamicOverlapEvidence(state).length;
 }
 
 function projectBodiesOutOfStatic(state){
@@ -421,6 +436,14 @@ function solveCoupledConstraints(state,{passes=8}={}){
   state.contactResolutionsThisStep=state.totalContactResolutions-startResolutions;
   state.solverIterationsUsed=state.totalSolverIterations-startIterations;
   state.lastContacts=[...contactByPair.values()];
+  const unresolvedDynamic=dynamicOverlapEvidence(state);
+  if(unresolvedDynamic.length){
+    state.lastUnresolvedDynamicOverlap={
+      time:state.time,
+      passesUsed,
+      overlaps:unresolvedDynamic.map(item=>structuredClone(item))
+    };
+  }
   state.staticProjectionCorrectionsThisStep=staticCorrections;
   state.totalStaticProjectionCorrections+=staticCorrections;
   state.coupledPassesThisStep=passesUsed;
@@ -526,6 +549,7 @@ export function createIntegratedEcologyState({
     coupledPassesThisStep:0,
     totalCoupledPasses:0,
     lastUnresolvedStaticProjection:null,
+    lastUnresolvedDynamicOverlap:null,
     initialTotalDistance:bodies.reduce((sum,body)=>
       sum+distance(body,actors[body.id].target),0
     )
@@ -593,6 +617,9 @@ export function integratedEcologySnapshot(state){
     coupledPasses:state.totalCoupledPasses,
     lastUnresolvedStaticProjection:state.lastUnresolvedStaticProjection
       ? structuredClone(state.lastUnresolvedStaticProjection)
+      : null,
+    lastUnresolvedDynamicOverlap:state.lastUnresolvedDynamicOverlap
+      ? structuredClone(state.lastUnresolvedDynamicOverlap)
       : null,
     contactPairSteps:state.totalContactPairSteps,
     pairChecks:state.totalPairChecks,
