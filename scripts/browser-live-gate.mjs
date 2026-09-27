@@ -707,6 +707,17 @@ try{
     })()`);
   });
 
+  await waitFor("rehearsal camera fitted to world",async()=>{
+    return evaluate(`(()=>{
+      const c=window.__combatLabRuntime.camera.snapshot();
+      return c?.bounds?.width===1100 &&
+        c?.bounds?.height===700 &&
+        Math.abs(c.center.x-550)<1e-9 &&
+        Math.abs(c.center.y-350)<1e-9 &&
+        c.zoom>0.12 &&
+        c.zoom<8;
+    })()`);
+  });
   const cameraBefore=await evaluate("window.__combatLabRuntime.camera.snapshot()");
   await evaluate(`(()=>{
     const canvas=document.querySelector("#lab");
