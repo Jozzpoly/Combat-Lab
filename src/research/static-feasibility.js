@@ -74,7 +74,7 @@ export function queryStaticCircleOccupancy({center,radius,world,obstacles=[]}={}
   };
 }
 
-function rectProjection(center,rect,radius){
+function rectProjection(center,rect,radius,bounds){
   const inside=
     center.x>=rect.x-EPS && center.x<=rect.x+rect.width+EPS &&
     center.y>=rect.y-EPS && center.y<=rect.y+rect.height+EPS;
@@ -102,7 +102,14 @@ function rectProjection(center,rect,radius){
         correction:{x:0,y:(rect.y+rect.height+radius)-center.y}
       }
     ];
-    candidates.sort((a,b)=>{
+    const worldFeasible=candidates.filter(candidate=>{
+      const x=center.x+candidate.correction.x;
+      const y=center.y+candidate.correction.y;
+      return x>=bounds.minX-EPS && x<=bounds.maxX+EPS &&
+        y>=bounds.minY-EPS && y<=bounds.maxY+EPS;
+    });
+    const ranked=worldFeasible.length ? worldFeasible : candidates;
+    ranked.sort((a,b)=>{
       const da=Math.hypot(a.correction.x,a.correction.y);
       const db=Math.hypot(b.correction.x,b.correction.y);
       if(Math.abs(da-db)>EPS) return da-db;
@@ -110,7 +117,7 @@ function rectProjection(center,rect,radius){
       const orderB=`${b.normal.x},${b.normal.y}`;
       return orderA.localeCompare(orderB);
     });
-    const chosen=candidates[0];
+    const chosen=ranked[0];
     return {
       id:rect.id,
       type:"obstacle",
@@ -184,7 +191,7 @@ export function projectStaticCircleOut({
 
     for(const [index,raw] of obstacles.entries()){
       const rect=normalizeRect(raw,index);
-      const correction=rectProjection(projected,rect,r);
+      const correction=rectProjection(projected,rect,r,bounds);
       if(!correction || correction.depth<=EPS) continue;
       projected.x+=correction.correction.x;
       projected.y+=correction.correction.y;

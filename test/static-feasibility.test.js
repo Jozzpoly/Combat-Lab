@@ -171,3 +171,26 @@ test("N0 static projection repairs world-boundary penetration and reports its ca
   assert.equal(result.contacts[0].id,"boundary.left");
   assert.deepEqual(result.contacts[0].normal,{x:1,y:0});
 });
+
+
+test("N0 static projection does not choose an impossible near-boundary escape from an obstacle",()=>{
+  const localWorld={width:1100,height:700};
+  const lowerPillar={id:"pillar.lower",x:510,y:500,w:80,h:190};
+  const result=projectStaticCircleOut({
+    center:{x:550,y:680},
+    radius:32,
+    world:localWorld,
+    obstacles:[lowerPillar]
+  });
+
+  assert.equal(result.clear,true);
+  assert.equal(result.moved,true);
+  assert.ok(result.center.y<=localWorld.height-32+1e-9);
+  assert.notEqual(result.contacts[0]?.id,"boundary.bottom");
+  assert.equal(queryStaticCircleOccupancy({
+    center:result.center,
+    radius:32,
+    world:localWorld,
+    obstacles:[lowerPillar]
+  }).clear,true);
+});
