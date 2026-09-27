@@ -157,18 +157,17 @@ try{
     const until=performance.now()+90;
     while(performance.now()<until){}
   })()`);
-  await waitFor("P0 discarded wall-time evidence",async()=>{
+  const p0ClockTruth=await waitFor("P0 discarded wall-time evidence",async()=>{
     return evaluate(`(()=>{
       const r=window.__combatLabRuntime;
       const p=r.performance?.snapshot?.();
-      return Number(r.fixedStep?.discardedSeconds)>0.02 &&
-        Number(p?.discardedWallSeconds)>0.02;
+      if(Number(r.fixedStep?.discardedSeconds)>0.02 &&
+         Number(p?.discardedWallSeconds)>0.02){
+        return {fixed:r.fixedStep,performance:p};
+      }
+      return null;
     })()`);
   });
-  const p0ClockTruth=await evaluate(`({
-    fixed:window.__combatLabRuntime.fixedStep,
-    performance:window.__combatLabRuntime.performance.snapshot()
-  })`);
   if(!(p0ClockTruth.fixed.rawFrameSeconds>p0ClockTruth.fixed.acceptedFrameSeconds) ||
      !(p0ClockTruth.performance.simulationToWallRatio<1)){
     throw new Error(`P0 clock attribution failed: ${JSON.stringify(p0ClockTruth)}`);
