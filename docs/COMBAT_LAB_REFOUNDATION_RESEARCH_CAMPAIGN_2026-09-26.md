@@ -995,3 +995,71 @@ Constraints:
 - any tie-break/asymmetry must be explicit and auditable rather than derived accidentally from iteration order or actor ID.
 
 E1 remains the integration target after this missing causal layer is resolved or consciously falsified.
+
+
+## 20. D0 dynamic encounter competence — implementation candidate
+
+**Status at authoring:** implementation candidate; machine/browser qualification pending.
+
+D0 exists because the post-P0 integration-readiness audit found a known causal hole:
+
+- N1 handles static obstruction;
+- N0/N0b intentionally exclude dynamic bodies;
+- C0 can make an equal persistent head-on conflict a physically stable hold.
+
+Running integrated Ecology before addressing that gap would knowingly reintroduce the Owner finding “organisms are too simple / stupid jams form too often.”
+
+### External research pressure
+
+A bounded literature check supports two design cautions without selecting a production algorithm:
+
+- experimental pedestrian work reports head-on encounters as a decision zone in which people choose a passing side, with measurable side bias;
+- velocity-obstacle / ORCA literature documents symmetry-related deadlock and later work adds extra asymmetry/coordination mechanisms to resolve it.
+
+Therefore D0 must **not** assume that a perfectly symmetric local system should magically choose a side.
+
+D0 also does not promote ORCA/RVO/MAPF as Combat Lab foundations.
+
+### Candidate mechanism
+
+Two equal embodied actors receive exactly opposed targets.
+
+Each actor owns one explicit local parameter:
+
+`passingSide ∈ { RIGHT=-1, NONE=0, LEFT=+1 }`.
+
+Behavior:
+
+1. keep direct preferred motion;
+2. observe real dynamic contact and factual no-progress;
+3. do nothing special on first contact;
+4. after bounded persistent dynamic no-progress:
+   - `NONE` records `BLOCKED_NO_CONVENTION` and invents no tie-break;
+   - LEFT/RIGHT performs one bounded lateral sidestep relative to its own travel direction;
+5. return to direct purpose motion;
+6. no second automatic encounter attempt in the cell.
+
+The passing-side convention is **behavioral**, not C0 contact resistance. Physics still owns contact outcome.
+
+### Required controls
+
+D0 explicitly compares:
+
+- `NONE / NONE`: exact symmetry remains an unresolved hold;
+- `LEFT / LEFT`: because left is relative to opposite travel directions, the actors sidestep onto opposite world sides and may pass;
+- `LEFT / NONE`: unilateral yielding may be sufficient — reciprocal omniscience is not required;
+- `LEFT / RIGHT`: conflicting conventions may fail and must not be secretly repaired.
+
+### D0 falsifiers
+
+D0 fails if:
+
+- an exact `NONE / NONE` conflict resolves through actor ID, pair iteration order or hidden noise;
+- sidestep occurs on first contact rather than persistent dynamic no-progress;
+- actors need global pair choreography or shared future trajectories;
+- collision is disabled while passing;
+- the physics layer itself chooses the behavioral side;
+- conflicting conventions are silently coordinated into success;
+- causal evidence cannot name the dynamic partner, no-progress trigger and authored side convention.
+
+Passing D0 would qualify only one minimal local dynamic-encounter competence candidate. It would not qualify pedestrian realism, crowd navigation, ORCA/RVO, social norms or integrated Ecology.

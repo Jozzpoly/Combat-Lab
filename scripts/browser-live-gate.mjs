@@ -566,6 +566,82 @@ try{
     return evaluate('window.__combatLabRuntime.activeExperimentId==="load-envelope-field-b0" && !!document.querySelector(\'[data-param-id="loadMass"]\')');
   });
 
+  // D0 dynamic encounter competence: exact symmetry must not invent a side.
+  await evaluate(`(()=>{
+    const s=document.querySelector("#experiment-select");
+    s.value="dynamic-encounter-cell-d0";
+    s.dispatchEvent(new Event("change",{bubbles:true}));
+  })()`);
+  await waitFor("switch B0 to D0",async()=>{
+    return evaluate('window.__combatLabRuntime.activeExperimentId==="dynamic-encounter-cell-d0" && !!document.querySelector(\'[data-param-id="aPassingSide"]\')');
+  });
+
+  const d0Contract=await evaluate('document.querySelector("#comparison-contract")?.textContent');
+  if(!d0Contract?.includes("organism/body:A") ||
+     !d0Contract?.includes("organism/body:B") ||
+     !d0Contract?.includes("matched encounter trial")){
+    throw new Error(`D0 comparison scope/matched-start semantics hidden: ${d0Contract}`);
+  }
+
+  await waitFor("D0 no-convention hold becomes explicit",async()=>{
+    return evaluate(`(()=>{
+      const s=window.__combatLabRuntime.snapshot;
+      return s?.actors?.A?.mode==="BLOCKED_NO_CONVENTION" &&
+        s?.actors?.B?.mode==="BLOCKED_NO_CONVENTION" &&
+        s?.actors?.A?.trigger?.partnerId==="B" &&
+        s?.actors?.B?.trigger?.partnerId==="A";
+    })()`);
+  },{timeout:5500,interval:80});
+
+  const noConventionD0=await evaluate("window.__combatLabRuntime.snapshot");
+  if(!(noConventionD0.actors.A.goalDistance>300) ||
+     !(noConventionD0.actors.B.goalDistance>300)){
+    throw new Error(`D0 no-convention baseline escaped instead of holding: ${JSON.stringify(noConventionD0)}`);
+  }
+
+  await setNumber("aPassingSide",1);
+  await setNumber("bPassingSide",1);
+  await evaluate('document.querySelector("#reset-world").click()');
+  await waitFor("D0 LEFT convention matched trial restarted",async()=>{
+    return evaluate(`(()=>{
+      const s=window.__combatLabRuntime.snapshot;
+      return s?.status==="RUNNING" &&
+        s?.time<0.5 &&
+        s?.actors?.A?.passingSide===1 &&
+        s?.actors?.B?.passingSide===1;
+    })()`);
+  });
+
+  await waitFor("D0 shared local convention reaches both targets",async()=>{
+    return evaluate(`(()=>{
+      const s=window.__combatLabRuntime.snapshot;
+      return s?.status==="COMPLETE" &&
+        s?.actors?.A?.mode==="ARRIVED" &&
+        s?.actors?.B?.mode==="ARRIVED" &&
+        s?.actors?.A?.encounterCount===1 &&
+        s?.actors?.B?.encounterCount===1;
+    })()`);
+  },{timeout:9000,interval:80});
+
+  const causalD0=await evaluate('window.__combatLabRuntime.query("dynamic-encounter-causal")');
+  if(causalD0?.schema!=="combat-lab-dynamic-encounter-v0" ||
+     causalD0?.actors?.A?.trigger?.partnerId!=="B" ||
+     causalD0?.actors?.B?.trigger?.partnerId!=="A" ||
+     causalD0?.actors?.A?.trigger?.passingSide!==1 ||
+     causalD0?.actors?.B?.trigger?.passingSide!==1 ||
+     !(Number(causalD0?.actors?.A?.trigger?.noProgressFor)>=0.45)){
+    throw new Error(`D0 causal encounter evidence failed: ${JSON.stringify(causalD0)}`);
+  }
+
+  await evaluate(`(()=>{
+    const s=document.querySelector("#experiment-select");
+    s.value="load-envelope-field-b0";
+    s.dispatchEvent(new Event("change",{bubbles:true}));
+  })()`);
+  await waitFor("switch D0 back to B0",async()=>{
+    return evaluate('window.__combatLabRuntime.activeExperimentId==="load-envelope-field-b0" && !!document.querySelector(\'[data-param-id="loadMass"]\')');
+  });
+
   // Normal visual rehearsal: heavy load only.
   await setNumber("loadMass",4.00);
   await captureScreenshot();
