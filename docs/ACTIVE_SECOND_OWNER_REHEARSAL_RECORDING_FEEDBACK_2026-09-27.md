@@ -1690,6 +1690,54 @@ A future compressible envelope needs an explicit model and explicit debug truth 
 - preferred personal-space intrusion: behavioral;
 - actual body deformation: physical shape change.
 
+
+## 8AL. Repeated dynamic conflicts occur in the exact clean recording, but only the first can trigger behavior
+
+Exact clean-18 replay was segmented into distinct body-contact episodes.
+
+A new episode is counted after contact has genuinely separated before later contact resumes.
+
+### resident-6 — film residual
+
+- first dynamic trigger: ~6.30 s;
+- `dynamicEncounterCount = 1`;
+- total body-contact episodes: ~8;
+- **post-trigger distinct contact episodes: ~4**;
+- actor finishes the recording residual in ROUTE.
+
+### resident-12 — film residual
+
+- first dynamic trigger: ~4.08 s;
+- `dynamicEncounterCount = 1`;
+- total contact episodes: ~11;
+- **post-trigger distinct contact episodes: ~6**;
+- >1200 post-trigger contact frames in the sampled replay;
+- actor finishes residual in ROUTE.
+
+So the one-shot dynamic limit is exercised by the actual recording:
+
+> actors encounter materially new body-contact situations after their only dynamic recovery episode has already been consumed.
+
+The issue is not hypothetical scaling to a future larger crowd.
+
+### resident-1 — competence ownership gap
+
+resident-1 has several body-contact episodes but never triggers a dynamic encounter.
+
+Once it becomes tangent-stuck at the upper pillar:
+
+- `staticBlockerThisStep` remains true;
+- dynamic encounter logic requires **no static blocker**;
+- static recovery is disabled because actor is already in ROUTE and its one static attempt was consumed.
+
+So neither layer owns the failure.
+
+This reveals an integration problem deeper than individual thresholds:
+
+> **when static and dynamic constraints coexist, current policy can enter a state where each recovery layer excludes itself.**
+
+A future embodied recovery model needs explicit causal ownership / episode semantics rather than mutually exclusive one-shot booleans.
+
 ## 9. Immediate campaign boundary
 
 **Do not implement personal space, soft envelopes, new crowd steering or a new solver yet.**
