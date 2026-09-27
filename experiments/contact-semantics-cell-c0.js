@@ -4,6 +4,7 @@ import {
   setContactBodyParameter,
   stepHeadOnContactState
 } from "../src/research/contact-semantics.js";
+import {runContactScalingProbe} from "../src/research/contact-scaling-probe.js";
 
 const DEFAULTS={
   aMass:1,
@@ -246,8 +247,9 @@ export const contactSemanticsCellC0={
 
       inspector,
 
-      query(name){
+      query(name,args={}){
         if(name==="contact-causal-state") return contactOutcomeSnapshot(state);
+        if(name==="contact-scaling-probe") return runContactScalingProbe(args);
         return null;
       },
 

@@ -152,6 +152,28 @@ try{
     })()`);
   }
 
+  // P0 clock truth: a deliberate browser stall must be reported as discarded wall time.
+  await evaluate(`(()=>{
+    const until=performance.now()+90;
+    while(performance.now()<until){}
+  })()`);
+  await waitFor("P0 discarded wall-time evidence",async()=>{
+    return evaluate(`(()=>{
+      const r=window.__combatLabRuntime;
+      const p=r.performance?.snapshot?.();
+      return Number(r.fixedStep?.discardedSeconds)>0.02 &&
+        Number(p?.discardedWallSeconds)>0.02;
+    })()`);
+  });
+  const p0ClockTruth=await evaluate(`({
+    fixed:window.__combatLabRuntime.fixedStep,
+    performance:window.__combatLabRuntime.performance.snapshot()
+  })`);
+  if(!(p0ClockTruth.fixed.rawFrameSeconds>p0ClockTruth.fixed.acceptedFrameSeconds) ||
+     !(p0ClockTruth.performance.simulationToWallRatio<1)){
+    throw new Error(`P0 clock attribution failed: ${JSON.stringify(p0ClockTruth)}`);
+  }
+
   const baselineFeasibility=await evaluate(`window.__combatLabRuntime.query(
     "static-feasibility",
     {target:{x:520,y:325},clearance:10}
@@ -509,6 +531,32 @@ try{
     throw new Error(`C0 yielding causal evidence failed: ${JSON.stringify(causalC0)}`);
   }
 
+  const sparse12=await evaluate('window.__combatLabRuntime.query("contact-scaling-probe",{count:12,steps:5,dense:false})');
+  const sparse24=await evaluate('window.__combatLabRuntime.query("contact-scaling-probe",{count:24,steps:5,dense:false})');
+  const dense12=await evaluate('window.__combatLabRuntime.query("contact-scaling-probe",{count:12,steps:4,dense:true})');
+
+  if(sparse12?.schema!=="combat-lab-contact-scaling-probe-v0" ||
+     sparse12.naivePairsPerIteration!==66 ||
+     sparse12.pairChecks!==330 ||
+     sparse12.contactResolutions!==0 ||
+     sparse24.naivePairsPerIteration!==276 ||
+     sparse24.pairChecks!==1380 ||
+     !(sparse24.pairChecks>sparse12.pairChecks*4)){
+    throw new Error(`P0 exact pair-work attribution failed: ${JSON.stringify({sparse12,sparse24})}`);
+  }
+  if(!(dense12.contactResolutions>0) ||
+     !(dense12.pairChecks>dense12.contactResolutions) ||
+     !Number.isFinite(Number(dense12.durationMs))){
+    throw new Error(`P0 dense contact attribution failed: ${JSON.stringify(dense12)}`);
+  }
+
+  const p0QueryTiming=await evaluate('window.__combatLabRuntime.performance.snapshot().lastQuery');
+  if(p0QueryTiming?.name!=="contact-scaling-probe" ||
+     !Number.isFinite(Number(p0QueryTiming.durationMs)) ||
+     Number(p0QueryTiming.durationMs)<0){
+    throw new Error(`P0 query cost missing: ${JSON.stringify(p0QueryTiming)}`);
+  }
+
   await evaluate(`(()=>{
     const s=document.querySelector("#experiment-select");
     s.value="load-envelope-field-b0";
@@ -604,6 +652,9 @@ try{
     )
   );
   if(!force42) throw new Error("intervention ledger missed exact Owner force=42 edit");
+  if(!Number.isFinite(Number(force42.detail?.durationMs)) || Number(force42.detail.durationMs)<0){
+    throw new Error(`P0 set intervention cost missing: ${JSON.stringify(force42)}`);
+  }
 
   const clamped=interventionEvents.find(event=>
     event.operation==="set" &&
@@ -643,6 +694,25 @@ try{
     throw new Error(`comparison capture scope is not explicit: ${JSON.stringify(scopedSnapshot)}`);
   }
 
+  const resetWithTiming=interventionEvents.find(event=>
+    event.operation==="reset-world" &&
+    Number.isFinite(Number(event.detail?.durationMs))
+  );
+  if(!resetWithTiming || Number(resetWithTiming.detail.durationMs)<0){
+    throw new Error("P0 Reset World intervention cost missing");
+  }
+
+  const performanceTruth=await evaluate("window.__combatLabRuntime.performance.snapshot()");
+  if(!(performanceTruth.sampleCount>0) ||
+     !(Number(performanceTruth.renderHz)>0) ||
+     !Number.isFinite(Number(performanceTruth.simulationToWallRatio)) ||
+     !Number.isFinite(Number(performanceTruth.phaseMs?.simulation)) ||
+     !Number.isFinite(Number(performanceTruth.phaseMs?.render)) ||
+     !Number.isFinite(Number(performanceTruth.phaseMs?.observation)) ||
+     !Number.isFinite(Number(performanceTruth.lastIntervention?.durationMs))){
+    throw new Error(`P0 runtime phase attribution incomplete: ${JSON.stringify(performanceTruth)}`);
+  }
+
   const switches=interventionEvents.filter(event=>event.operation==="experiment-switch");
   if(switches.length<2) throw new Error(`expected B0↔S0 experiment provenance, got ${switches.length}`);
 
@@ -669,6 +739,13 @@ try{
     interventionLedger:{
       count:interventionLedger.count,
       operations:[...new Set(interventionEvents.map(event=>event.operation))]
+    },
+    performance:{
+      renderHz:performanceTruth.renderHz,
+      simulationToWallRatio:performanceTruth.simulationToWallRatio,
+      phaseMs:performanceTruth.phaseMs,
+      lastQuery:performanceTruth.lastQuery,
+      lastIntervention:performanceTruth.lastIntervention
     },
     final:{
       state:finalState.state,

@@ -825,3 +825,102 @@ The next candidate is **P0 scaling attribution** so the next integrated specimen
 - wall-time fidelity.
 
 P0 is a measurement problem first. Broad-phase optimization remains deferred until evidence says it blocks a valuable regime.
+
+
+## 19. P0 scaling attribution — implementation candidate
+
+**Status at authoring:** implementation candidate; machine/browser qualification pending.
+
+P0 is deliberately a **measurement cell**, not an optimization campaign.
+
+The first Ecology rehearsal could report a general `SIM STRESS` condition, but that signal could not by itself distinguish:
+
+- render cadence;
+- simulation-time / wall-time fidelity;
+- simulation/contact work;
+- synchronous intervention hitches;
+- observation/evidence overhead.
+
+P0 adds only enough instrumentation to keep those causes separate.
+
+### Clock truth
+
+`FixedStepRunner.advance()` now reports per-frame:
+
+- raw wall-frame duration;
+- accepted frame duration;
+- wall time discarded by the max-frame rail;
+- time discarded by accumulator saturation;
+- total discarded wall time;
+- simulated seconds actually executed.
+
+The anti-spiral guard remains unchanged. The new contract makes its loss visible instead of silently collapsing the clocks.
+
+### Shared rolling phase meter
+
+The browser runtime keeps a bounded rolling meter for:
+
+- frame wall time;
+- executed simulation time;
+- discarded wall time;
+- simulation phase duration;
+- render phase duration;
+- ordinary observation phase duration.
+
+It also retains only the most recent:
+
+- on-demand query duration;
+- timed intervention duration.
+
+The meter is intentionally not a permanent dashboard and does not retain unbounded frame history.
+
+### Intervention attribution
+
+Workbench numeric set/reset/default operations and matched Reset World / comparison application carry local `durationMs` evidence.
+
+This duration measures the synchronous authored operation itself. Follow-up snapshot/Inspector refresh remains observation work rather than being silently charged to the intervention.
+
+### Exact contact-work accounting
+
+C0 contact stepping now counts:
+
+- pair checks;
+- contact resolutions;
+- solver iterations used;
+
+per step and cumulatively.
+
+These are deterministic operation counts and therefore stronger evidence about the current naïve contact workload than browser timing alone.
+
+### On-demand scaling probe
+
+C0 exposes an on-demand `contact-scaling-probe`.
+
+The probe can run small deterministic sparse or dense synthetic contact workloads and returns:
+
+- body count;
+- step count;
+- naïve pair count per solver iteration;
+- exact pair checks;
+- exact contact resolutions;
+- solver-iteration count;
+- local browser duration.
+
+Sparse probes deliberately expose the current O(N²) all-pairs law exactly. Dense probes distinguish broad pair checks from actual contact resolutions.
+
+The local duration is **environment-specific evidence**, not a portable performance benchmark.
+
+### P0 falsifiers
+
+P0 fails if:
+
+- discarded wall time still cannot be reconstructed;
+- render cadence and simulation-time fidelity collapse into one status;
+- exact pair checks cannot be reconciled with the current algorithm;
+- contact resolutions are mislabeled as pair checks;
+- on-demand query cost is hidden inside ordinary simulation cost;
+- measurement requires cloning all actor detail every frame;
+- instrumentation introduces unbounded session history;
+- broad-phase optimization is performed merely to improve the P0 number rather than because a valuable research regime requires it.
+
+Passing P0 would qualify **attribution capability**, not a scaling target, optimization strategy or maximum population.

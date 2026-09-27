@@ -13,6 +13,7 @@ import {
   formatComparisonSlot
 } from "./src/core/comparison-state.js";
 import {InterventionLedger} from "./src/core/intervention-ledger.js";
+import {RuntimePerformanceMeter} from "./src/core/runtime-performance.js";
 import {substrateSmoke} from "./experiments/substrate-smoke.js";
 import {embodiedScaleFieldV0} from "./experiments/embodied-scale-field-v0.js";
 import {loadEnvelopeFieldB0} from "./experiments/load-envelope-field-b0.js";
@@ -57,6 +58,7 @@ input.attach();
 
 const comparisonSlots=new ComparisonSlotStore();
 const interventionLedger=new InterventionLedger();
+const runtimePerformance=new RuntimePerformanceMeter();
 
 let paused=false;
 let debug=false;
@@ -67,11 +69,21 @@ let nextInspectorSync=0;
 
 runtime.interventionLedger=interventionLedger;
 runtime.interventionCount=0;
+runtime.performance=runtimePerformance;
+runtime.fixedStep=null;
 runtime.query=(name,args={})=>{
   const query=current?.instance?.query;
   if(typeof query!=="function") return null;
-  const result=query.call(current.instance,name,structuredClone(args ?? {}));
-  return result===undefined ? undefined : structuredClone(result);
+  const started=performance.now();
+  try{
+    const result=query.call(current.instance,name,structuredClone(args ?? {}));
+    return result===undefined ? undefined : structuredClone(result);
+  }finally{
+    runtimePerformance.recordQuery({
+      name,
+      durationMs:Math.max(0,performance.now()-started)
+    });
+  }
 };
 
 function recordIntervention({
@@ -89,6 +101,10 @@ function recordIntervention({
     detail
   });
   runtime.interventionCount=event.sequence;
+  const durationMs=Number(detail?.durationMs);
+  if(Number.isFinite(durationMs) && durationMs>=0){
+    runtimePerformance.recordIntervention({operation,durationMs});
+  }
   return event;
 }
 
@@ -166,7 +182,9 @@ function applyParameterSlot(name){
   if(!snapshot) return;
   const state=comparisonSnapshotState(snapshot);
   const before=inspector.getParameterState();
+  const started=performance.now();
   inspector.applyParameterState(state);
+  const durationMs=Math.max(0,performance.now()-started);
   const after=inspector.getParameterState();
   recordIntervention({
     operation:"comparison-apply",
@@ -175,7 +193,8 @@ function applyParameterSlot(name){
       slot:name,
       comparisonId:snapshot.comparisonId,
       applySemantics:snapshot.applySemantics,
-      matchedStartHint:snapshot.matchedStartHint
+      matchedStartHint:snapshot.matchedStartHint,
+      durationMs
     }
   });
   captureSnapshot();
@@ -189,8 +208,10 @@ function loadExperiment(id){
   purpose.textContent=current.definition.purpose;
   controlsText.textContent=current.definition.controls || "Direct controls available in Lab Inspector.";
   runner.reset();
+  runtimePerformance.resetFrames();
   elapsed=0;
   runtime.elapsed=0;
+  runtime.fixedStep=null;
   last=performance.now();
   captureSnapshot();
   inspector.mount(current.instance);
@@ -242,17 +263,23 @@ experimentSelect.addEventListener("change",()=>{
 });
 
 function resetWorld(){
+  const simulationTime=elapsed;
+  const started=performance.now();
+  runner.reset();
+  current.instance.reset();
+  const durationMs=Math.max(0,performance.now()-started);
   recordIntervention({
     operation:"reset-world",
+    simulationTime,
     effects:[{
       domain:"world",
       scope:"active-experiment",
       path:"state"
     }],
-    detail:{preservesAuthoredState:true}
+    detail:{preservesAuthoredState:true,durationMs}
   });
-  runner.reset();
-  current.instance.reset();
+  runtimePerformance.resetFrames();
+  runtime.fixedStep=null;
   elapsed=0;
   runtime.elapsed=0;
   simTime.textContent="0.00 s";
@@ -317,25 +344,43 @@ readBuildIdentity().then(identity=>{
 updateRuntimeState("RUNNING");
 
 function frame(now){
-  const frameSeconds=(now-last)/1000;
+  const frameSeconds=Math.max(0,(now-last)/1000);
   last=now;
 
+  let fixedStep={
+    steps:0,
+    alpha:0,
+    rawFrameSeconds:frameSeconds,
+    acceptedFrameSeconds:0,
+    discardedFrameSeconds:0,
+    discardedAccumulatorSeconds:0,
+    discardedSeconds:0,
+    simulatedSeconds:0
+  };
+
+  const simulationStarted=performance.now();
   if(!paused){
     const snapshot=input.snapshot();
-    runner.advance(frameSeconds,dt=>{
+    fixedStep=runner.advance(frameSeconds,dt=>{
       current.instance.step(snapshot,dt);
       elapsed+=dt;
     });
   }
+  const simulationMs=Math.max(0,performance.now()-simulationStarted);
 
+  const renderStarted=performance.now();
   const view=resizeCanvas(canvas);
   beginCanvasFrame(ctx,view);
   current.instance.render(ctx,view,{debug});
+  const renderMs=Math.max(0,performance.now()-renderStarted);
+
+  const observationStarted=performance.now();
   captureSnapshot();
 
   runtime.frames+=1;
   runtime.elapsed=elapsed;
   runtime.lastFrameAt=now;
+  runtime.fixedStep=structuredClone(fixedStep);
 
   const formatted=`${elapsed.toFixed(2)} s`;
   simTime.textContent=formatted;
@@ -347,6 +392,16 @@ function frame(now){
     inspector.sync();
     nextInspectorSync=now+80;
   }
+  const observationMs=Math.max(0,performance.now()-observationStarted);
+
+  runtimePerformance.recordFrame({
+    wallSeconds:frameSeconds,
+    simulatedSeconds:fixedStep.simulatedSeconds,
+    discardedWallSeconds:fixedStep.discardedSeconds,
+    simulationMs,
+    renderMs,
+    observationMs
+  });
 
   requestAnimationFrame(frame);
 }

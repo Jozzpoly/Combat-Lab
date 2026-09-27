@@ -9,6 +9,10 @@ function finite(value,fallback=0){
   return Number.isFinite(Number(value)) ? Number(value) : fallback;
 }
 
+function nowMs(){
+  return globalThis.performance?.now?.() ?? Date.now();
+}
+
 function decimalsFor(control){
   if(Number.isInteger(control.decimals)) return control.decimals;
   const step=Number(control.step);
@@ -59,14 +63,16 @@ export class WorkbenchInspector {
     this.restoreButton.addEventListener("click",()=>{
       if(!this.inspector?.restoreDefaults) return;
       const before=this.getParameterState();
+      const started=nowMs();
       this.inspector.restoreDefaults();
+      const durationMs=Math.max(0,nowMs()-started);
       const after=this.getParameterState();
       const effects=this.describeParameterChanges(before,after);
       if(effects.length){
         this.onIntervention({
           operation:"restore-defaults",
           effects,
-          detail:{controlCount:effects.length}
+          detail:{controlCount:effects.length,durationMs}
         });
       }
       this.sync(true);
@@ -198,13 +204,15 @@ export class WorkbenchInspector {
 
     reset.addEventListener("click",()=>{
       const before=this.#get(control.id);
+      const started=nowMs();
       this.inspector?.reset?.(control.id);
+      const durationMs=Math.max(0,nowMs()-started);
       const after=this.#get(control.id);
       if(!Object.is(before,after)){
         this.onIntervention({
           operation:"reset-parameter",
           effects:[{...provenance,before,after}],
-          detail:{controlId:control.id}
+          detail:{controlId:control.id,durationMs}
         });
       }
       this.sync(true);
@@ -248,13 +256,15 @@ export class WorkbenchInspector {
       const requested=Number(value);
       if(!Number.isFinite(requested)) return;
       const before=this.#get(control.id);
+      const started=nowMs();
       this.inspector?.set?.(control.id,requested);
+      const durationMs=Math.max(0,nowMs()-started);
       const after=this.#get(control.id);
       if(!Object.is(before,after) || !Object.is(requested,after)){
         this.onIntervention({
           operation:"set",
           effects:[{...provenance,before,after,requested}],
-          detail:{controlId:control.id,inputKind}
+          detail:{controlId:control.id,inputKind,durationMs}
         });
       }
       this.sync(true);

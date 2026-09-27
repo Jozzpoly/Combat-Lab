@@ -159,12 +159,18 @@ export function stepContactWorld(state,dt,{iterations=12,pairOrder="forward"}={}
   const pairs=pairIndices(state.bodies.length,pairOrder);
   const contactedPairs=new Set();
   const firstContacts=[];
+  let pairChecks=0;
+  let contactResolutions=0;
+  let iterationsUsed=0;
 
   for(let iteration=0;iteration<iterationCount;iteration++){
+    iterationsUsed+=1;
     let changed=false;
     for(const [i,j] of pairs){
+      pairChecks+=1;
       const contact=resolveCandidateContactPair(state.bodies[i],state.bodies[j]);
       if(!contact) continue;
+      contactResolutions+=1;
       changed=true;
       const id=contact.a<contact.b
         ? `${contact.a}<->${contact.b}`
@@ -179,7 +185,13 @@ export function stepContactWorld(state,dt,{iterations=12,pairOrder="forward"}={}
 
   state.time+=delta;
   state.contactPairsThisStep=contactedPairs.size;
-  state.totalContactPairSteps+=contactedPairs.size;
+  state.totalContactPairSteps=(state.totalContactPairSteps || 0)+contactedPairs.size;
+  state.pairChecksThisStep=pairChecks;
+  state.contactResolutionsThisStep=contactResolutions;
+  state.solverIterationsUsed=iterationsUsed;
+  state.totalPairChecks=(state.totalPairChecks || 0)+pairChecks;
+  state.totalContactResolutions=(state.totalContactResolutions || 0)+contactResolutions;
+  state.totalSolverIterations=(state.totalSolverIterations || 0)+iterationsUsed;
   state.lastContacts=firstContacts;
   return state;
 }
@@ -213,6 +225,12 @@ export function createHeadOnContactState({
     bodies:[bodyA,bodyB],
     contactPairsThisStep:0,
     totalContactPairSteps:0,
+    pairChecksThisStep:0,
+    contactResolutionsThisStep:0,
+    solverIterationsUsed:0,
+    totalPairChecks:0,
+    totalContactResolutions:0,
+    totalSolverIterations:0,
     firstContactTime:null,
     lastContacts:[]
   };
@@ -243,6 +261,9 @@ export function contactOutcomeSnapshot(state){
     time:state.time,
     firstContactTime:state.firstContactTime,
     contactPairSteps:state.totalContactPairSteps,
+    pairChecks:state.totalPairChecks || 0,
+    contactResolutions:state.totalContactResolutions || 0,
+    solverIterations:state.totalSolverIterations || 0,
     midpoint,
     midpointShift:midpoint-state.initialMidpoint,
     separation:Math.hypot(b.x-a.x,b.y-a.y),
