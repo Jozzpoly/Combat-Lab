@@ -296,6 +296,132 @@ Before any new crowd mechanic is promoted:
 7. Is current passing-side behavior useful after multiple encounters, or only as a one-shot D0 proof?
 8. What observer/debug evidence is needed to distinguish behavioral deadlock from numerical saturation during Owner play?
 
+
+## 8A. Further falsification — clean 18-person trial preserves the crowd signal
+
+The 18-person recording segment is especially valuable because the current generator is still collision-free at both start and target positions.
+
+Visible sequence (~20–42 s):
+
+- two clean opposing columns;
+- approach to the central obstacle pair;
+- first central contact/compression;
+- several seconds of local jam / rearrangement;
+- irregular release to both sides;
+- accumulation near destinations;
+- a small residual cohort that fails to complete.
+
+The overlay rises to approximately **15 / 18 arrived** before the next reset.
+
+Independent video tracking of the residual state finds at least **two bodies remaining practically stationary for >=5 s while still far from their target side**.
+
+Therefore:
+
+> **the positive crowd-like phenomenology and the residual “death” phenomenon both survive in a physically valid spawn/target regime.**
+
+Invalid high-density packing is a major confounder, but it is not the sole cause of either phenomenon.
+
+The 18-person segment also reaches historical `max solve 24/24` during the encounter, so solver difficulty begins before invalid spawn packing. This is a separate scaling/correctness pressure, not evidence that the spawn itself was invalid.
+
+## 8B. Passing-side semantics are one-shot, not a persistent convention
+
+Exact frozen R0 logic shows:
+
+- `dynamicEncounterAttempted` begins false;
+- the first qualifying dynamic no-progress event sets it true permanently;
+- LEFT / RIGHT perform one `SIDESTEP` lasting 0.8 s, then resume the previous DIRECT/ROUTE plan;
+- because `dynamicEncounterAttempted` remains true, no later dynamic encounter can trigger another sidestep;
+- NONE enters `DYNAMIC_BLOCKED_NO_CONVENTION`, but `preferredVelocity` still drives it toward its plan; the label means “no convention recovery available”, not a stationary body.
+
+So current `Passing side` is still fundamentally a D0-style **first-encounter probe**, not a reusable crowd norm.
+
+This matters for interpreting the recording:
+
+- the Owner naturally edits passing side live several times;
+- around the repeated 24-person section, policies are changed during running trials before some resets;
+- those sequences are useful product evidence that the control invites experimentation;
+- they are **not clean matched A/B/C behavioral trials**;
+- even a clean reset under LEFT/RIGHT/NONE would currently test only the first qualifying encounter for each actor.
+
+The approximately 24-person NONE trial beginning near ~131 s remains directionally interesting: by ~13.2 simulation seconds the overlay shows about **11 / 24 arrived** and several actors remain dispersed/residual. But because 24 already begins with invalid body overlap, this is not promotion-grade evidence about convention quality.
+
+## 8C. Arrival lifecycle is a semantic source of inert physical bodies
+
+`ARRIVED` currently means:
+
+- actor brain enters a terminal mode;
+- desired velocity becomes zero;
+- body remains fully material in the same contact solver;
+- later contacts may displace that body;
+- actor does not revoke ARRIVED or regain locomotion.
+
+This creates a hybrid state:
+
+> **cognitively finished, physically active as an obstacle.**
+
+That can be valid in some future game situations, but it is not neutral apparatus behavior for the current counterflow experiment.
+
+In this topology, every actor's target is a point in the opposite side's destination column. Therefore completed actors accumulate as stationary material bodies exactly where later members of the same stream are trying to finish.
+
+At valid density this already increases endpoint pressure.
+At invalid density the target slots themselves overlap, making terminal-body accumulation pathological.
+
+The current overlay compounds the ambiguity by counting sticky `mode==="ARRIVED"`, not current geometric occupancy of the target.
+
+This is now a first-class experiment-design question, not a small UI bug:
+
+- should a completed test subject leave the flow?
+- should crossing a finish line count and then retire it from contact?
+- should it acquire a new purpose?
+- should persistent target occupancy be the actual phenomenon under test?
+
+Do not pick one implicitly.
+
+## 8D. Contact solver scaling ceiling is structurally predictable
+
+Current coupled solve can perform:
+
+- all `N(N-1)/2` body pairs;
+- up to 12 contact iterations per pair pass;
+- up to 24 static<->dynamic coupled passes;
+- at 120 simulation steps / second.
+
+Worst-case pair checks per simulation step:
+
+| Population | Body pairs | Max pair checks / sim-step |
+| ---: | ---: | ---: |
+| 18 | 153 | 44,064 |
+| 24 | 276 | 79,488 |
+| 35 | 595 | 171,360 |
+| 64 | 2,016 | 580,608 |
+| 256 | 32,640 | 9,400,320 |
+
+At 120 Hz, the 256 theoretical ceiling exceeds **1.1 billion pair checks per simulated second** before other work.
+
+This explains why the 256 Owner run is a legitimate break-regime result but not a meaningful crowd-quality benchmark.
+
+A broadphase / spatial partition is an obvious future candidate if large-N crowd work becomes important, but implementing it now would be premature because the current stimulus topology and lifecycle semantics still contaminate the experiment.
+
+## 8E. Revised causal map for “dead” balls
+
+The campaign should no longer use “stuck/dead” as one bucket.
+
+At least four mechanisms can produce a visually inert or non-completing body:
+
+1. **recovery exhaustion**  
+   Actor is still pursuing a purpose but has consumed its lifetime static/dynamic recovery flag.
+
+2. **sticky terminal arrival**  
+   Actor has completed cognitively, remains a material collider, gets displaced, and never reactivates.
+
+3. **static no-witness terminal state**  
+   `STATIC_STUCK_NO_WITNESS` explicitly zeros preferred movement.
+
+4. **constraint/topology pathology**  
+   Invalid initial/target packing or persistent coupled-solver saturation creates states that are not clean organism-policy evidence.
+
+The next controlled experiment should be designed to separate these causes rather than “reduce stuckness” globally.
+
 ## 9. Immediate campaign boundary
 
 **Do not implement personal space, soft envelopes, new crowd steering or a new solver yet.**
