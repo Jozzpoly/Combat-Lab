@@ -137,25 +137,26 @@ function pairIndices(count,pairOrder){
   return pairs;
 }
 
-export function stepContactWorld(state,dt,{iterations=12,pairOrder="forward"}={}){
+export function applyCandidateContactMotor(body,dt){
   const delta=positive(dt,"dt");
+  const desired=body.desiredVelocity;
+  const desiredLength=Math.hypot(desired.x,desired.y);
+  const target=desiredLength>body.maxSpeed
+    ? {x:desired.x/desiredLength*body.maxSpeed,y:desired.y/desiredLength*body.maxSpeed}
+    : desired;
+  const next=moveVectorToward(
+    body.vx,body.vy,target.x,target.y,contactAcceleration(body)*delta
+  );
+  body.vx=next.vx;
+  body.vy=next.vy;
+  return body;
+}
+
+export function solveCandidateContactPairs(
+  state,
+  {iterations=12,pairOrder="forward"}={}
+){
   const iterationCount=Math.max(1,Math.floor(positive(iterations,"iterations")));
-
-  for(const body of state.bodies){
-    const desired=body.desiredVelocity;
-    const desiredLength=Math.hypot(desired.x,desired.y);
-    const target=desiredLength>body.maxSpeed
-      ? {x:desired.x/desiredLength*body.maxSpeed,y:desired.y/desiredLength*body.maxSpeed}
-      : desired;
-    const next=moveVectorToward(
-      body.vx,body.vy,target.x,target.y,contactAcceleration(body)*delta
-    );
-    body.vx=next.vx;
-    body.vy=next.vy;
-    body.x+=body.vx*delta;
-    body.y+=body.vy*delta;
-  }
-
   const pairs=pairIndices(state.bodies.length,pairOrder);
   const contactedPairs=new Set();
   const firstContacts=[];
@@ -183,7 +184,6 @@ export function stepContactWorld(state,dt,{iterations=12,pairOrder="forward"}={}
     if(!changed) break;
   }
 
-  state.time+=delta;
   state.contactPairsThisStep=contactedPairs.size;
   state.totalContactPairSteps=(state.totalContactPairSteps || 0)+contactedPairs.size;
   state.pairChecksThisStep=pairChecks;
@@ -193,6 +193,20 @@ export function stepContactWorld(state,dt,{iterations=12,pairOrder="forward"}={}
   state.totalContactResolutions=(state.totalContactResolutions || 0)+contactResolutions;
   state.totalSolverIterations=(state.totalSolverIterations || 0)+iterationsUsed;
   state.lastContacts=firstContacts;
+  return state;
+}
+
+export function stepContactWorld(state,dt,{iterations=12,pairOrder="forward"}={}){
+  const delta=positive(dt,"dt");
+
+  for(const body of state.bodies){
+    applyCandidateContactMotor(body,delta);
+    body.x+=body.vx*delta;
+    body.y+=body.vy*delta;
+  }
+
+  solveCandidateContactPairs(state,{iterations,pairOrder});
+  state.time+=delta;
   return state;
 }
 
