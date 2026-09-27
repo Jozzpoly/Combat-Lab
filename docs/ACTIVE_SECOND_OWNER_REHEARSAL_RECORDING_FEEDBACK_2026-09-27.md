@@ -1795,6 +1795,44 @@ The stronger candidate concept is qualitative execution validity:
 
 This should be tested directly rather than approximated with magic distance/time thresholds.
 
+
+## 8AN. Immediate active-edge revalidation also fails as a recovery policy
+
+A more principled analysis-only candidate was tested:
+
+> while following ROUTE, query N0 from current body position to current waypoint; if that segment is no longer clear, immediately obtain a fresh N0b witness.
+
+This directly respects the fact that crowd displacement can invalidate the active edge.
+
+Result in clean 18:
+
+- **91 static replans**;
+- individual actors reach ~12 / 17 / 24 / 33 replans;
+- final outcome only **13 / 18 after 60 s**.
+
+So this is worse than frozen R0.
+
+Why this matters:
+
+- a hard `current position -> waypoint` query is highly sensitive to temporary embodied deviation;
+- route execution in contact-rich space naturally leaves the ideal graph edge;
+- treating every such deviation as global route invalidation turns the witness system into a high-frequency steering authority;
+- repeated path replacement can itself destabilize the actor.
+
+Therefore:
+
+> **route validity truth is necessary diagnostic evidence, but it is not sufficient as the replan trigger.**
+
+The future consumer likely needs a concept richer than waypoint/edge validity:
+
+- local route corridor / progress manifold;
+- constraint-aware locomotion along that corridor;
+- temporary recoverable deviation;
+- explicit loss of route executability;
+- bounded escalation to a new global witness.
+
+This finding further argues against solving the recording through more aggressive routing.
+
 ## 9. Immediate campaign boundary
 
 **Do not implement personal space, soft envelopes, new crowd steering or a new solver yet.**
