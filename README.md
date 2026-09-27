@@ -120,13 +120,13 @@ Start here:
 8. [Ecology feedback campaign closure / new-conversation handoff](docs/COMBAT_LAB_HANDOFF_2026-09-26_ECOLOGY_FEEDBACK_CLOSURE.md)
 9. [Second Owner rehearsal recording feedback — closed evidence campaign](docs/ACTIVE_SECOND_OWNER_REHEARSAL_RECORDING_FEEDBACK_2026-09-27.md)
 10. [M1 constraint-aware static locomotion research](docs/M1_CONSTRAINT_AWARE_STATIC_LOCOMOTION_RESEARCH_2026-09-27.md)
-17. [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md)
-11. [Owner scope correction](docs/COMBAT_LAB_SCOPE_CORRECTION_2026-09-25.md)
-12. [Workbench design record](docs/COMBAT_LAB_WORKBENCH_REFOUNDATION_2026-09-25.md)
-13. [B0 Owner recording feedback](docs/B0_WORKBENCH_OWNER_RECORDING_FEEDBACK_2026-09-25.md)
-14. [B0 / Workbench stage closure](docs/B0_WORKBENCH_STAGE_CLOSURE_2026-09-25.md)
-15. [Repository closure audit](docs/REPOSITORY_CLOSURE_AUDIT_2026-09-26.md)
-16. [Historical evidence index](docs/HISTORY_INDEX.md)
+11. [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md)
+12. [Owner scope correction](docs/COMBAT_LAB_SCOPE_CORRECTION_2026-09-25.md)
+13. [Workbench design record](docs/COMBAT_LAB_WORKBENCH_REFOUNDATION_2026-09-25.md)
+14. [B0 Owner recording feedback](docs/B0_WORKBENCH_OWNER_RECORDING_FEEDBACK_2026-09-25.md)
+15. [B0 / Workbench stage closure](docs/B0_WORKBENCH_STAGE_CLOSURE_2026-09-25.md)
+16. [Repository closure audit](docs/REPOSITORY_CLOSURE_AUDIT_2026-09-26.md)
+17. [Historical evidence index](docs/HISTORY_INDEX.md)
 
 The previous append-only canonical state is preserved verbatim as historical evidence at:
 
