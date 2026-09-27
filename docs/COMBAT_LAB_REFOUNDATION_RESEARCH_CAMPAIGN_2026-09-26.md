@@ -1,7 +1,7 @@
 # Combat Lab — Refoundation Research Campaign
 
 **Started:** 2026-09-26  
-**Campaign status:** **ACTIVE RESEARCH / REFOUNDATION IN PROGRESS · L0/L1 + N0/N0b + N1 + C0 + P0 + D0 QUALIFIED · E1 BOUNDED INTEGRATION NEXT**  
+**Campaign status:** **ACTIVE · L0/L1 + N0/N0b + N1 + C0 + P0 + D0 + E1 QUALIFIED · R0 SECOND-REHEARSAL CANDIDATE INTERNALLY QUALIFIED · PUBLIC PROMOTION NEXT**  
 **Authority:** bounded strategy derived from live `main`, S0/B0/Ecology Owner evidence, exact Ecology specimen forensics and targeted donor recovery. It does not promote a replacement runtime architecture by existence.
 
 ## 0. Why this campaign exists
@@ -1202,3 +1202,112 @@ Strong derived requirements from the recording:
 - exact public build provenance.
 
 The campaign should end only when a bounded integrated Ecology specimen is worth another Owner recording. Machine PASS cannot waive that human gate.
+
+
+## 23. Integrated Ecology Rehearsal R0 — internal readiness qualification
+
+**Status:** **INTERNALLY QUALIFIED FOR EXACT PUBLIC REHEARSAL · OWNER EXPERIENCE / CROWD SCALE UNQUALIFIED**.
+
+Frozen runtime candidate:
+
+`9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd`
+
+Source qualification:
+
+- GitHub Actions check `36317682590` — **SUCCESS**;
+- Node suite PASS;
+- live Chromium Workbench gate PASS;
+- screenshot artifact PASS;
+- direct startup URL `?experiment=integrated-ecology-rehearsal-r0` PASS.
+
+### Why R0 exists
+
+The first Ecology rehearsal was dominated by apparatus defects before the target ecology hypothesis could be cleanly interpreted. R0 therefore changes the **research interface**, not the qualified E1 mechanics.
+
+Material first-rehearsal findings addressed:
+
+- wheel zoom and wider usable camera range;
+- long vertical Inspector / poor orientation;
+- global Debug line-web collapse under pressure;
+- repetitive `Spawn +50` stress search;
+- ambiguous context/naming;
+- inability to ask a selected organism why it is currently behaving as observed.
+
+### R0 apparatus contract
+
+**Research camera**
+
+- cursor-anchored mouse-wheel zoom;
+- explicit `0.12× … 8×` rails;
+- Fit;
+- middle-drag pan;
+- screen/world transform is shared by selection and rendering.
+
+**Inspector information architecture**
+
+- `Tune` — authored controls;
+- `Observe` — live/causal truth;
+- `Compare` — experiment-declared scoped A/B only;
+- `Session` — runtime/provenance.
+
+This is a candidate IA, not a claim that tabs are the final Workbench architecture.
+
+**Pressure authoring**
+
+- exact `Population on reset`;
+- editing it does not silently rebuild the running world;
+- explicit Reset World applies the authored count;
+- convenience anchors exist for baseline / pressure / dense / break;
+- no hidden despawn, ghosting or protective pressure cap.
+
+Population is **not** in the A/B comparison contract because changing count also rebuilds the distributed counterflow topology. It is a pressure/stress authoring dimension, not a population-only controlled variable.
+
+**Selected-subject causal observation**
+
+Clicking a resident:
+
+- selects exactly one subject;
+- automatically opens Observe;
+- exposes `Why now`, `Purpose`, `Immediate plan`, `Goal distance`, `Blocked by`, `No progress`, `Last decision`;
+- keeps body radius, mass, motor authority and contact resistance visible below behavioral explanation;
+- draws only selected-subject target/route/desired-motion/contact evidence rather than a global target-line web.
+
+The causal explanation is derived from already-qualified state/trigger evidence; it does not become a new movement authority.
+
+### Browser/user-path evidence
+
+The browser gate performs the real interaction path rather than only calling internal methods:
+
+- switch into R0;
+- wait for camera fit;
+- send a real wheel event;
+- click a real resident in world space;
+- verify automatic Observe selection and visible causal labels;
+- explicitly return to Tune;
+- enter population with real Chromium keyboard input;
+- verify live world remains at the old count;
+- click Reset World;
+- verify the exact new population and cleared selection;
+- verify direct URL startup.
+
+### Product boundary
+
+Machine evidence qualifies the apparatus mechanics only.
+
+It does **not** qualify:
+
+- ease of use;
+- whether the new IA is actually pleasant;
+- whether causal Observe is sufficient or cognitively clear;
+- whether camera feel/ranges are good;
+- whether pressure authoring feels natural;
+- whether R0 is a better research experience;
+- crowd/horde behavior or scaling.
+
+Those claims remain **OWNER-UNQUALIFIED**.
+
+### Next boundary
+
+Freeze runtime `9fe3e7f7...` and deploy that exact SHA through the existing rehearsal control plane. Do not add more runtime features before fresh Owner evidence.
+
+The old public Ecology specimen remains preserved at `experiment/active-spatial-ecology = ce96587826746efad426347a8a394048810e4ee2`.

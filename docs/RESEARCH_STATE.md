@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-27  
 **Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
 **Canonical branch:** `main` after repository canonicalization  
-**Stage:** **Workbench + B0 CLOSED; first Active Spatial Ecology Owner rehearsal + feedback/evidence campaign CLOSED; target hypothesis INCONCLUSIVE; refoundation mechanics L0/L1 + N0/N0b + N1 + C0 + P0 + D0 + bounded E1 INTEGRATION MECHANICALLY QUALIFIED; OWNER REHEARSAL READINESS ACTIVE / UNQUALIFIED**
+**Stage:** **Workbench + B0 CLOSED; first Active Spatial Ecology Owner rehearsal + feedback/evidence campaign CLOSED; target hypothesis INCONCLUSIVE; bounded E1 INTEGRATION MECHANICALLY QUALIFIED; R0 SECOND-REHEARSAL CANDIDATE INTERNALLY QUALIFIED; OWNER EXPERIENCE UNQUALIFIED; EXACT PUBLIC PROMOTION PENDING**
 
 ## 1. Owner intent
 
@@ -195,153 +195,63 @@ Other repository truth remains:
 
 The first Ecology recording/feedback campaign remains **CLOSED**.
 
-The separate **Combat Lab refoundation/research campaign is now ACTIVE**. Runtime refoundation now contains bounded shared-apparatus L0/L1 plus the first Ecology-adjacent N0 static-feasibility query; organism policy, routing/replanning and contact semantics remain unimplemented.
-
-Primary active strategy:
-
-- [Refoundation research campaign](COMBAT_LAB_REFOUNDATION_RESEARCH_CAMPAIGN_2026-09-26.md)
-
-Closed-campaign evidence remains authoritative input:
-
-- [Combat Lab handoff after first Ecology feedback campaign](COMBAT_LAB_HANDOFF_2026-09-26_ECOLOGY_FEEDBACK_CLOSURE.md)
-- [First Ecology Owner recording deep feedback](ACTIVE_SPATIAL_ECOLOGY_FIRST_OWNER_RECORDING_FEEDBACK_2026-09-26.md)
-- [First rehearsal implicit requirements mining](COMBAT_LAB_FIRST_REHEARSAL_IMPLICIT_REQUIREMENTS_2026-09-26.md)
-
-Canonical Ecology classification remains:
+Canonical classification remains:
 
 > **TARGET HYPOTHESIS INCONCLUSIVE — APPARATUS LIMITATIONS BECAME THE DOMINANT FINDING.**
 
-### Active refoundation boundary
+The mechanics refoundation has now reached a bounded integration checkpoint:
 
-The campaign now treats two problem families separately:
+- L0/L1 apparatus truth is mechanically qualified;
+- N0/N0b static feasibility and verified alternative witnesses are mechanically qualified;
+- N1 static-obstruction recovery is mechanically qualified;
+- C0 candidate contact semantics are mechanically qualified, not selected Feniks physics;
+- P0 performance/scaling attribution is mechanically qualified;
+- D0 dynamic encounter competence is mechanically qualified;
+- E1 bounded 8-body integration is mechanically qualified at `88a7ffe13d54e7eb3b25346fc9d4113b723733c2`, CI `36311419931`.
 
-**Shared Lab / apparatus**
+E1 remains deliberately narrow. It does not qualify crowd-scale efficiency, production pathfinding/physics, final contact law, final passing semantics or Owner experience. Its 8-body browser probe reached `21 / 24` coupled passes and ~`174,496` pair checks over 10 s; P0 remains mandatory when scale rises.
 
-- intervention provenance and scope;
-- comparison semantics rather than capture-all state;
-- scalable information architecture;
-- query-driven / cost-aware observability;
-- truthful clock/performance attribution;
-- exact build/deployment provenance;
-- continued permissive extreme/break testing.
+### R0 second-rehearsal candidate — INTERNALLY QUALIFIED / OWNER EXPERIENCE UNQUALIFIED
 
-**Ecology / multi-body substrate**
+Exact frozen runtime candidate:
 
-- intent/stimulus;
-- whole-body feasibility/navigation;
-- minimal progress/stuck competence;
-- immediate motion choice;
-- contact/yield/displacement semantics;
-- local pressure and scaling.
+- `9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd`;
+- source CI `36317682590` — **SUCCESS**;
+- Node suite PASS;
+- live Chromium Workbench gate PASS;
+- source screenshot artifact PASS;
+- direct startup route `?experiment=integrated-ecology-rehearsal-r0` browser-qualified.
 
-The current shell's flat numeric parameter contract, global A/B and binary Debug are historical donors, not refoundation authority.
+R0 addresses the material apparatus findings from the first Owner recording without changing the qualified E1 mechanics:
 
-Targeted donor recovery has already identified Companion whole-body static feasibility and hard-feasibility-vs-comfort separation as strong bounded donors. SPC contributes competence/world-authority boundaries; ReflexBrain is not currently selected as a movement donor. No donor architecture or physics backend is promoted wholesale.
+- **camera:** real mouse-wheel zoom under cursor, explicit wide `0.12× … 8×` rails, Fit, middle-drag pan;
+- **information architecture:** persistent **Tune / Observe / Compare / Session** contexts replace one long generic Inspector;
+- **pressure authoring:** exact **Population on reset** replaces repeated `Spawn +50`; current population and next-reset population remain distinct until explicit Reset World;
+- **breakability:** population soft range is convenience only; explicit numerical rail remains high and no hidden despawn/ghosting/protective cap is introduced;
+- **causal observation:** clicking one resident selects it and opens Observe with **Why now / Purpose / Immediate plan / Blocked by / No progress / Last decision** plus embodied dimensions;
+- **debug scope:** selected-subject route/intent/contact evidence replaces global target-line webs as the primary explanation surface;
+- **comparison truth:** population is intentionally excluded from A/B because changing count also rebuilds distributed topology; shared passing convention remains scoped comparison state;
+- **provenance:** the exact R0 direct URL is qualified before deployment.
 
-### Current refoundation evidence
+Important boundary:
 
-The full qualification/falsification history lives in the refoundation campaign document. Canonical live truth is:
+> **R0 is internally qualified as an exact public rehearsal candidate, not as a good Owner experience. Only a new Owner rehearsal can qualify usability, readability, explanatory value, feel or research usefulness.**
 
-| Cell | Status | Narrow result |
-| --- | --- | --- |
-| **L0 provenance** | MECHANICALLY QUALIFIED | Structured live interventions retain scope, before/after/requested truth and timing identity without per-frame world event sourcing. |
-| **L1 comparison** | MECHANICALLY QUALIFIED | Experiments declare comparison scope; A/B no longer means every editable numeric field; Apply vs matched Reset World is explicit. |
-| **N0 direct feasibility** | MECHANICALLY QUALIFIED | Exact swept whole-body static traversal, first blocker and hard-vs-comfort truth are queryable on demand. |
-| **N0b alternative witness** | MECHANICALLY QUALIFIED | A bounded graph may return physically verified static route witnesses; `none-found` is explicitly not an unreachable proof. |
-| **N1 static-obstruction recovery** | MECHANICALLY QUALIFIED | One actor can detect persistent no-progress, preserve trigger evidence and consume one verified witness without continuous apparatus steering. |
-| **C0 contact candidate** | MECHANICALLY QUALIFIED | One explicit law family produces hold/yield/displacement with visible `contactMobility = 1/(mass × resistance)` and bounded pair-order artifact. |
-| **P0 scaling attribution** | MECHANICALLY QUALIFIED | Wall/sim fidelity, render cadence, simulation/render/observation phases, query/intervention cost and exact contact work are separable. |
-| **D0 dynamic encounter** | MECHANICALLY QUALIFIED | Persistent dynamic no-progress can trigger an explicit local passing-side decision; perfect symmetry with no convention remains an honest hold. |
+### Immediate next move
 
-Latest exact qualified checkpoints:
+Freeze the R0 runtime at `9fe3e7f7...`.
 
-- L0 `7cf8060953da...`;
-- L1 `c13c83389f68...`;
-- N0 `2f99520fa586...`;
-- N0b `86bf323104fa...`;
-- N1 `f54cd64e08bb...`;
-- C0 `5ea8931c9e36...`;
-- P0 `71ada13dd175...`, CI `36309076545`, **92 / 92 PASS** + live Chromium PASS;
-- D0 `7bac0fc84bd1...`, CI `36309731062`, **102 / 102 PASS** + live Chromium PASS.
+Do not add further apparatus features before fresh Owner evidence.
 
-Important P0 evidence: sparse contact work reconciles exactly with the current naïve all-pairs law (`12 → 66 pairs/iteration → 330 checks/5 steps`; `24 → 276 → 1380`), dense work reports contact resolutions separately, forced wall-time loss is explicit, rolling metrics are bounded, and O(1) run totals preserve discarded-time evidence after it leaves the rolling window. Browser timing remains environment-specific evidence, not a portable benchmark.
+Deployment sequence:
 
-### E1 bounded integration — MECHANICALLY QUALIFIED / OWNER-FACING REHEARSAL UNQUALIFIED
+1. move the infrastructure-only `rehearsal/current` pointer to exact `9fe3e7f7...`;
+2. require a fresh normal `check` on that ref;
+3. require emitted-artifact browser qualification and Pages deployment;
+4. verify public `COMMIT.txt` / `BRANCH.txt` and the direct R0 URL;
+5. then hand the exact specimen to the Owner for a second rehearsal.
 
-Exact qualified checkpoint:
-
-- `88a7ffe13d54e7eb3b25346fc9d4113b723733c2`;
-- CI run `36311419931`;
-- **Node suite PASS**;
-- live Chromium Workbench regression PASS;
-- browser-only E1 integrated probe PASS without exposing E1 in the Owner experiment selector.
-
-Narrow integrated evidence:
-
-- explicit non-hub distributed counterflow topology with unique destinations;
-- heterogeneous radius / mass / motor authority / contact resistance;
-- N1-style static recovery and D0-style dynamic encounters both occur;
-- final step truth has **zero static overlap violations** and **zero dynamic overlap violations**;
-- LEFT passing convention materially reduces remaining distance versus NONE in the exact bounded cell;
-- NONE history preserves explicit no-convention encounter evidence;
-- causal trigger signatures remain stable under forward vs reverse pair iteration;
-- pair-order position drift exists, but does not select different static/dynamic policy branches in the qualified cell;
-- static↔dynamic constraint composition required a coupled alternating solve;
-- shared N0 tangency tolerance was hardened after E1 exposed contradictory near-tangent truth.
-
-Critical scaling boundary:
-
-- the 8-body browser probe reached `maxCoupledPassesUsed = 21 / 24`;
-- browser sample performed roughly `174,496` pair checks and `15,540` contact resolutions across the 10 s trial;
-- this is **not** acceptable evidence for crowd-scale efficiency or a production solver;
-- P0 must remain active when population grows.
-
-E1 therefore qualifies only this proposition:
-
-> **The currently qualified static-feasibility, static-recovery, candidate-contact and dynamic-encounter mechanisms can coexist in one bounded multi-actor cell without the old known harness hub, static/dynamic truth contradiction or hidden global passing coordinator.**
-
-It does **not** qualify:
-
-- crowd/horde behavior;
-- production pathfinding/physics;
-- Feniks contact law;
-- final passing-side semantics;
-- high-population scaling;
-- Owner-facing Lab UX;
-- second Owner rehearsal readiness.
-
-### Active campaign: second Owner rehearsal readiness
-
-Do **not** expose E1 as the next Owner specimen yet.
-
-The first rehearsal proved that apparatus failure can dominate the intended phenomenon. The next work now shifts from mechanics to the material Owner FAILs that remain unresolved:
-
-1. **Camera / spatial inspection**
-   - mouse-wheel zoom is a direct Owner requirement;
-   - materially broader/easier zoom range is a direct Owner requirement;
-   - free-pan / decoupled research camera remains a strong candidate, not yet frozen.
-
-2. **Population / pressure authoring**
-   - preserve direct sparse→horde→break exploration;
-   - eliminate repetitive `Spawn +50` as the only practical stress-search path;
-   - preserve explicit extreme/break regimes rather than hidden caps, despawns or protection.
-
-3. **Causal Debug / subject inspection**
-   - replace global line-web Debug as the primary explanation mechanism;
-   - build from the already-qualified on-demand causal query model;
-   - make it possible to answer why a chosen actor is stopped / what it wants / what blocks it / how long / what decision it made;
-   - selection/inspection mechanism is still a design question.
-
-4. **Workbench information architecture**
-   - current long vertical generic form already failed Owner usability at ~9 numeric parameters;
-   - machine identity, semantic scope and local human label must remain separate;
-   - state compression and contextual grouping should replace repeated scrolling;
-   - do not prematurely freeze tabs/docks/multi-window as the answer.
-
-5. **Rehearsal provenance**
-   - exact deployed public specimen/build identity remains a hard gate.
-
-The next campaign must produce a **rehearsal candidate**, not merely a prettier Inspector. The readiness gate is whether the Owner can freely provoke, inspect, understand and break the integrated phenomenon without the apparatus becoming the dominant finding again.
+The old Ecology public specimen remains preserved by `experiment/active-spatial-ecology = ce96587826746efad426347a8a394048810e4ee2`; moving `rehearsal/current` must not delete that historical evidence.
 
 ### Active invariant
 

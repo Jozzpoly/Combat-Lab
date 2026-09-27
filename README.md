@@ -8,7 +8,7 @@ It is not the Feniks combat implementation, and it is not a sword project. The r
 
 **Canonical live branch:** `main` after repository canonicalization.
 
-**Current stage:** Workbench + Load / Envelope B0 is **closed**; the first Active Spatial Ecology Owner rehearsal and feedback/evidence campaign are **closed**. The Lab direction has a positive Owner signal, while the target ecology hypothesis remains **INCONCLUSIVE because material apparatus/UX/organism/stimulus failures dominated the test**. A separate refoundation/research campaign is now **ACTIVE**. L0/L1 apparatus, N0/N0b static feasibility, N1 static-obstruction recovery, one C0 contact-law candidate, P0 scaling attribution and D0 dynamic-encounter competence are **mechanically qualified**. Integrated ecology, Owner-facing rehearsal UX and final contact semantics remain unqualified.
+**Current stage:** Workbench + Load / Envelope B0 is **closed**; the first Active Spatial Ecology Owner rehearsal and feedback/evidence campaign are **closed**. The target ecology hypothesis remains **INCONCLUSIVE because apparatus/UX/organism/stimulus failures dominated that rehearsal**. Refoundation mechanics through bounded E1 integration are now **mechanically qualified**. The exact R0 second-rehearsal runtime `9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd` is **internally qualified for public rehearsal**, while Owner experience, crowd scaling and final Feniks semantics remain unqualified.
 
 Current qualified statements:
 
@@ -24,6 +24,8 @@ Current qualified statements:
 - **C0 contact semantics — MECHANICALLY QUALIFIED / CANDIDATE LAW ONLY.** Mass, motor authority and explicit contact resistance produce distinguishable hold/yield/displacement outcomes with bounded pair-order artifact; the current mobility formula is visible and is not accepted Feniks physics.
 - **P0 scaling attribution — MECHANICALLY QUALIFIED.** Render cadence, sim/wall fidelity, phase cost, query/intervention cost and exact contact-work counts can be separated without adding an always-on profiler dashboard.
 - **D0 dynamic encounter competence — MECHANICALLY QUALIFIED / NARROW.** Dynamic no-progress can trigger an explicit local passing-side choice; no convention means no invented tie-break, and conflicting conventions are allowed to fail.
+- **E1 bounded integration — MECHANICALLY QUALIFIED / NARROW.** Static recovery, candidate contact semantics and dynamic encounter behavior coexist in one audited 8-body cell; crowd-scale efficiency remains unqualified.
+- **R0 rehearsal apparatus — INTERNALLY QUALIFIED / OWNER EXPERIENCE UNQUALIFIED.** Exact population-on-reset pressure authoring, research camera, contextual Inspector and selected-subject causal Observe pass source-browser gates; only Owner use can qualify their actual usefulness.
 
 Latest Owner-confirmed direction: the project is broader than hitting or melee. Body/world relations matter. Independent embodiment dimensions should remain available, while future Workbench research may add optional explicit correlations for fast coherent phenotype scaling. Larger terrain/obstacle spaces and more varied opponents/residents are desired future pressure, with population deliberately scalable from a readable baseline into crowd/horde/break regimes rather than hidden behind low protective limits. Targeted donor recovery has begun only where concrete dependencies justify it. Companion whole-body feasibility is a strong bounded donor; sibling architectures remain evidence sources rather than Combat Lab authority.
 
@@ -54,14 +56,16 @@ Failed specimens remain evidence. They do not become foundations through impleme
 
 The current Workbench provides:
 
-- a persistent experiment viewport + Lab Inspector;
+- a persistent experiment viewport with opt-in research camera support;
+- real wheel zoom, Fit and middle-drag pan for spatial rehearsal surfaces;
+- contextual `Tune / Observe / Compare / Session` Inspector navigation;
 - live numeric manipulation and permissive extreme ranges;
 - explicit numerical safety rails rather than paternalistic "invalid" states;
 - separate `Reset World` and `Restore Defaults`;
 - authored vs derived/live state separation;
-- optional Debug;
-- experiment switching;
-- A/B authored-parameter slots;
+- selected-subject causal observation for R0 instead of global target-line Debug as the primary explanation;
+- exact population-on-reset pressure authoring for R0;
+- experiment-declared scoped A/B comparison;
 - exact build provenance.
 
 The first direct Owner session used the Workbench as an actual exploratory instrument, including deliberately strange body/mass/load/force combinations.
@@ -91,6 +95,13 @@ Current public rehearsal provenance:
 - `BRANCH.txt`: `rehearsal/current`;
 - ordinary root defaults to B0;
 - direct ecology rehearsal: `?experiment=active-spatial-ecology-v0`.
+
+Next internally qualified exact rehearsal candidate (not public until the rehearsal pointer/deploy gate completes):
+
+- runtime SHA: `9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd`;
+- source check: `36317682590` — SUCCESS;
+- direct R0 selector: `?experiment=integrated-ecology-rehearsal-r0`;
+- Owner experience remains unqualified until direct use.
 
 The public rehearsal changes the deployed artifact intentionally; it does **not** promote ecology to canonical research truth or Feniks architecture.
 
