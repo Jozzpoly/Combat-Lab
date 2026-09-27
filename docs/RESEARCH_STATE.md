@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-27  
 **Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
 **Canonical branch:** `main` after repository canonicalization  
-**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 CONSTRAINT-AWARE STATIC LOCOMOTION DESIGN ACTIVE**
+**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 STATIC LOCOMOTION MECHANICALLY QUALIFIED; R1 ROUTE EXECUTION / RECOVERY DESIGN NEXT**
 
 ## 1. Owner intent
 
@@ -275,13 +275,25 @@ The recording/frozen-R0 extraction campaign is now **closed at evidence saturati
 
 Do not continue generating broad R0 counterfactuals by inertia.
 
-Next work has opened **M1 constraint-aware static locomotion** as the active bounded design stage.
+M1 constraint-aware static locomotion is now **MECHANICALLY QUALIFIED / NOT INTEGRATED**.
+
+Exact checkpoint:
+
+- `f4d92076fb88f2b538b309a56deffdc51eeeda94`;
+- CI `36356102263` — SUCCESS;
+- A–H mechanical falsifiers PASS;
+- exact three filmed wall-death anchors PASS;
+- S2 was not opened because the one-contact residual-slide candidate passed the required corner gate.
+
+M1 remains an isolated research foundation; frozen R0 is unchanged.
+
+Next bounded design stage is **R1 embodied route execution / recovery episodes**.
 
 Canonical M1 design record:
 
 - `docs/M1_CONSTRAINT_AWARE_STATIC_LOCOMOTION_RESEARCH_2026-09-27.md`.
 
-M1 will isolate one body against static geometry and compare frozen remainder-discard behavior against a minimal residual-slide candidate. It must preserve hard blocking, tangent authority, body-size capacity and causal observability.
+M1 qualified a minimal residual-slide candidate that preserves hard blocking, tangent authority, body-size capacity and causal observability in the isolated static substrate.
 
 Targeted donor recovery from `Jozzpoly/Box3d-Character-Controler@e7a98be...` contributes only the invariant/falsifier pattern “remove unsupported normal authority, preserve valid tangent authority”; donor runtime architecture is not imported.
 

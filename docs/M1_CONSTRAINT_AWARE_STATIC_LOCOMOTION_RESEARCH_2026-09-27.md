@@ -1,7 +1,7 @@
 # Combat Lab — M1 Constraint-Aware Static Locomotion Research
 
 **Date:** 2026-09-27  
-**Status:** **ACTIVE DESIGN / NO RUNTIME IMPLEMENTATION YET**  
+**Status:** **MECHANICALLY QUALIFIED · HEADLESS RESEARCH SURVIVOR · NOT INTEGRATED INTO R0/WORKBENCH**  
 **Parent evidence:** second Owner rehearsal feedback campaign closed at evidence saturation  
 **Frozen Owner-tested R0:** `9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd`
 
@@ -339,18 +339,79 @@ It does not qualify:
 
 Only after M1 is mechanically qualified should R1 test route execution on top of it.
 
-## 11. Immediate next action
+## 11. Qualification result
 
-Implement a **minimal headless M1 mechanical cell first**, not an Owner-facing experiment.
+Exact qualified checkpoint:
 
-Start with:
+`f4d92076fb88f2b538b309a56deffdc51eeeda94`
 
-- B baseline;
-- S1 residual-slide candidate;
-- M1-A / B / C / D;
-- exact causal snapshot;
-- deterministic repeats.
+CI:
 
-Do not build S2/corner machinery until M1-E demonstrates that S1 cannot handle the required case.
+`36356102263` — **SUCCESS**
 
-Do not touch frozen R0 while M1 is being qualified.
+Scope of evidence:
+
+- Node experiment suite PASS;
+- live Chromium Workbench regression PASS;
+- frozen discard-remainder baseline reproduces tangent + inward fraction-zero wall-stick;
+- S1 preserves hard normal contact while retaining valid tangent motion;
+- pure head-on intent remains a hard stop with no invented tangent;
+- oblique free-space impact transitions into bounded wall slide;
+- deterministic repeat PASS;
+- two-constraint corner PASS with first-hit + residual-hit attribution;
+- obstacle-order reversal produces the same corner outcome;
+- no S2/multi-plane solver was required;
+- corridor capacity PASS: radius 20 traverses a 50-unit gap while radius 26 does not;
+- intent reversal / neutral / away-from-wall release PASS with no sticky contact ownership;
+- extreme-speed thin-wall sweep PASS;
+- all three exact filmed clean-18 residual wall states reproduce baseline death and recover tangent motion under S1.
+
+Qualified implementation remains isolated in:
+
+- `src/research/static-locomotion.js`;
+- `test/static-locomotion.test.js`.
+
+### Bounded verdict
+
+> **M1 PASS — one-contact residual static slide is a viable mechanically qualified candidate for one embodied circle against static geometry.**
+
+This qualifies:
+
+- hard normal blocking;
+- preserved legal tangent motion;
+- swept high-speed contact;
+- bounded residual resweep;
+- current-intent ownership;
+- hard-radius corridor truth;
+- exact reproduction/release of the filmed wall-stick mechanism.
+
+This does **not** qualify:
+
+- route execution;
+- pathfinding;
+- crowd behavior;
+- dynamic-body contact;
+- final Feniks movement feel;
+- integration into R0.
+
+### S2 decision
+
+**S2 NOT OPENED.**
+
+The required M1-E corner falsifier passed with S1.
+
+Do not generalize this into “multi-plane constraints never need a richer solve”. It means only that the current M1 requirement does not justify additional solver complexity.
+
+## 12. Next boundary
+
+M1 is closed as a mechanically qualified isolated foundation.
+
+Next research question:
+
+> **R1 — how should a verified route be executed and recover after embodied displacement when the mover now has qualified constraint-aware static locomotion?**
+
+R1 must use M1 as a substrate without silently turning N0b into continuous steering.
+
+Frozen Owner-tested R0 remains unchanged:
+
+`9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd`
