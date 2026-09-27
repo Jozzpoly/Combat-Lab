@@ -1107,3 +1107,98 @@ The next implementation may therefore be E1, but with two separate gates:
 2. **Owner rehearsal readiness gate** — camera, population authoring, causal Debug/selection, information architecture and exact deployed specimen provenance must be fit for another Owner recording.
 
 Machine E1 PASS cannot waive the second gate.
+
+
+## 21. E1 bounded integrated Ecology — qualification
+
+**Status:** **MECHANICALLY QUALIFIED · OWNER REHEARSAL READINESS / CROWD SCALING / FINAL PHYSICS UNQUALIFIED**.
+
+Qualified checkpoint:
+
+`88a7ffe13d54e7eb3b25346fc9d4113b723733c2`
+
+CI:
+
+`36311419931` — **SUCCESS**
+
+### Falsification history
+
+E1 did not pass on first composition.
+
+Initial checkpoint `2514aeb9...` failed because:
+
+- body-body correction could push bodies back into static geometry after static motion had already been resolved;
+- the same integrated scenario did not initially support the assumed LEFT-vs-NONE outcome.
+
+The composition was then challenged rather than patched locally:
+
+1. added bounded alternating dynamic-pair ↔ static projection;
+2. discovered near-boundary static projection could choose a locally short but world-infeasible escape;
+3. exposed the exact unresolved body/blocker state rather than increasing iterations blindly;
+4. found contradictory tangency tolerances between N0 occupancy and projection;
+5. unified the shared linear epsilon;
+6. reduced residual coupled error to tiny dynamic penetrations and used that evidence to justify a larger bounded convergence budget;
+7. separated historical no-convention encounter evidence from final actor mode;
+8. audited forward vs reverse pair iteration and found identical causal policy signatures but small continuous positional drift;
+9. browser-qualified the integrated module without exposing it in the Owner selector.
+
+### Browser evidence
+
+The exact browser-only E1 probe at the qualified checkpoint reported:
+
+- LEFT:
+  - arrivals: **6 / 8**;
+  - static replans: **2**;
+  - dynamic encounters: **1**;
+  - static overlap violations: **0**;
+  - dynamic overlap violations: **0**;
+  - max coupled passes used: **21 / 24**;
+  - total remaining distance: **~533.76**;
+  - pair checks: **174,496**;
+  - contact resolutions: **15,540**;
+- NONE:
+  - arrivals: **6 / 8**;
+  - dynamic encounters: **1**;
+  - explicit no-convention encounters: **1**;
+  - total remaining distance: **~656.99**.
+
+The comparison is evidence for this exact bounded topology only. It is not a general claim that one passing convention optimizes arbitrary crowds.
+
+### Bounded verdict
+
+> **E1 MECHANICS PASS — the refounded minimal components can coexist under one auditable 8-body integrated topology, and integration itself exposed/fixed real shared-truth defects rather than merely composing green unit tests.**
+
+### Scaling warning
+
+The same evidence is a warning:
+
+- up to 21 coupled constraint passes were needed;
+- pair work is already nontrivial at only eight actors.
+
+Do not interpret E1 as solver scalability evidence. P0 remains mandatory for later scale work.
+
+## 22. Second Owner rehearsal readiness campaign
+
+**Status:** ACTIVE · NO E1 OWNER PROMOTION YET.
+
+The next campaign is explicitly apparatus/product readiness, not another mechanics ladder.
+
+Hard requirements from direct Owner feedback:
+
+- wheel zoom;
+- broader/easier zoom use;
+- substantially better Lab usability;
+- substantially better Debug;
+- less stupid/repetitive pressure authoring;
+- less confusing naming/context;
+- preserve permissive ability to break the system.
+
+Strong derived requirements from the recording:
+
+- causal selected-subject inspection rather than global line webs;
+- scalable information architecture rather than a longer Inspector;
+- explicit scope/provenance for interventions and comparisons;
+- cheap sparse→dense→break pressure transitions;
+- exact public build provenance.
+
+The campaign should end only when a bounded integrated Ecology specimen is worth another Owner recording. Machine PASS cannot waive that human gate.
