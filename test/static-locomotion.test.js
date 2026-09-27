@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {
   STATIC_LOCOMOTION_POLICIES,
   createStaticLocomotionState,
+  setStaticLocomotionDesiredVelocity,
   staticLocomotionSnapshot,
   stepStaticLocomotionState
 } from "../src/research/static-locomotion.js";
@@ -150,4 +151,68 @@ test("M1-E S1 stops cleanly at a two-constraint corner without tunneling or obst
     forward.lastStep.finalDisplacement.x,
     forward.lastStep.finalDisplacement.y
   )<1e-5);
+});
+
+
+test("M1-F S1 preserves hard-radius corridor capacity instead of squeezing bodies through",()=>{
+  const top={id:"corridor.top",x:300,y:0,w:300,h:225};
+  const bottom={id:"corridor.bottom",x:300,y:275,w:300,h:225};
+  const obstacles=[top,bottom];
+
+  function specimen(radius){
+    const instance=createStaticLocomotionState({
+      position:{x:100,y:250},
+      desiredVelocity:{x:140,y:0},
+      radius,
+      world:WORLD,
+      obstacles,
+      policy:STATIC_LOCOMOTION_POLICIES.RESIDUAL_SLIDE
+    });
+    return run(instance,480);
+  }
+
+  const small=specimen(20);
+  const large=specimen(26);
+
+  assert.ok(small.body.x>640);
+  assert.ok(Math.abs(small.body.y-250)<1e-9);
+  assert.equal(small.lastStep.finalOccupancy.clear,true);
+
+  assert.ok(large.body.x<294);
+  assert.ok(Math.abs(large.body.y-250)<1e-9);
+  assert.ok(large.totalContacts>0);
+  assert.equal(large.lastStep.finalOccupancy.clear,true);
+});
+
+test("M1-G S1 follows current intent at contact without stale wall ownership",()=>{
+  const instance=state({
+    position:{x:480,y:220},
+    desiredVelocity:{x:20,y:100},
+    policy:STATIC_LOCOMOTION_POLICIES.RESIDUAL_SLIDE
+  });
+
+  run(instance,30);
+  const afterUp=staticLocomotionSnapshot(instance);
+  assert.ok(afterUp.body.y>240);
+  assert.ok(Math.abs(afterUp.body.x-480)<1e-5);
+
+  setStaticLocomotionDesiredVelocity(instance,{x:20,y:-100});
+  run(instance,30);
+  const afterReverse=staticLocomotionSnapshot(instance);
+  assert.ok(afterReverse.body.y<afterUp.body.y-20);
+  assert.ok(Math.abs(afterReverse.body.x-480)<1e-5);
+
+  setStaticLocomotionDesiredVelocity(instance,{x:0,y:0});
+  const neutralBefore=staticLocomotionSnapshot(instance);
+  run(instance,12);
+  const neutralAfter=staticLocomotionSnapshot(instance);
+  assert.ok(Math.abs(neutralAfter.body.x-neutralBefore.body.x)<1e-9);
+  assert.ok(Math.abs(neutralAfter.body.y-neutralBefore.body.y)<1e-9);
+
+  setStaticLocomotionDesiredVelocity(instance,{x:-100,y:0});
+  run(instance,30);
+  const away=staticLocomotionSnapshot(instance);
+  assert.ok(away.body.x<460);
+  assert.equal(away.lastStep.firstHit,null);
+  assert.equal(away.lastStep.finalOccupancy.clear,true);
 });
