@@ -116,3 +116,38 @@ test("M1 S1 is deterministic for the controlled oblique specimen",()=>{
 
   assert.deepEqual(specimen(),specimen());
 });
+
+
+test("M1-E S1 stops cleanly at a two-constraint corner without tunneling or obstacle-order authority",()=>{
+  const vertical={id:"corner.vertical",x:500,y:80,w:40,h:340};
+  const horizontal={id:"corner.horizontal",x:300,y:300,w:240,h:40};
+
+  function specimen(obstacles){
+    const instance=createStaticLocomotionState({
+      position:{x:450,y:250},
+      desiredVelocity:{x:140,y:140},
+      radius:20,
+      world:WORLD,
+      obstacles,
+      policy:STATIC_LOCOMOTION_POLICIES.RESIDUAL_SLIDE
+    });
+    return run(instance,120);
+  }
+
+  const forward=specimen([vertical,horizontal]);
+  const reverse=specimen([horizontal,vertical]);
+
+  assert.deepEqual(reverse,forward);
+  assert.ok(Math.abs(forward.body.x-480)<2e-4);
+  assert.ok(Math.abs(forward.body.y-280)<2e-4);
+  assert.ok(forward.totalContacts>0);
+  assert.ok(forward.totalResidualContacts>0);
+  assert.equal(forward.lastStep.finalOccupancy.clear,true);
+  assert.ok(forward.lastStep.firstHit);
+  assert.ok(forward.lastStep.residualHit);
+  assert.notEqual(forward.lastStep.firstHit.id,forward.lastStep.residualHit.id);
+  assert.ok(Math.hypot(
+    forward.lastStep.finalDisplacement.x,
+    forward.lastStep.finalDisplacement.y
+  )<1e-5);
+});
