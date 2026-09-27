@@ -294,3 +294,29 @@ test("M1 Owner-anchor reproduces and releases all three exact clean-18 filmed wa
     assert.ok(candidate.lastStep.firstHit.fraction<1e-8);
   }
 });
+
+
+test("M1-H S1 swept hard contact prevents extreme-speed thin-wall skip",()=>{
+  const thinWall={id:"thin-wall",x:500,y:0,w:2,h:500};
+  const instance=createStaticLocomotionState({
+    position:{x:100,y:240},
+    desiredVelocity:{x:60000,y:1000},
+    radius:20,
+    world:WORLD,
+    obstacles:[thinWall],
+    policy:STATIC_LOCOMOTION_POLICIES.RESIDUAL_SLIDE
+  });
+
+  stepStaticLocomotionState(instance,DT);
+  const out=staticLocomotionSnapshot(instance);
+
+  assert.equal(out.lastStep.firstHit.id,"thin-wall");
+  assert.ok(out.lastStep.firstHit.fraction>0);
+  assert.ok(out.lastStep.firstHit.fraction<1);
+  assert.ok(out.body.x<480.001);
+  assert.ok(out.body.y>240);
+  assert.ok(out.body.y<260);
+  assert.equal(out.lastStep.finalOccupancy.clear,true);
+  assert.ok(Math.abs(out.body.velocity.x)<1e-9);
+  assert.ok(out.body.velocity.y>999);
+});
