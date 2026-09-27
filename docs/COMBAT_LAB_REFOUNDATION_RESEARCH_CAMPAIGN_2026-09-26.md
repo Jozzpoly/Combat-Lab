@@ -253,3 +253,47 @@ Current claim only:
 ## Working invariant
 
 > **Preserve freedom to manipulate and break the world; make causes, scope and evidence clearer without making the apparatus decide what the experiment is allowed to discover.**
+
+
+## 12. L0 intervention provenance contract — implementation candidate
+
+**Opened:** 2026-09-27  
+**Status at authoring:** implementation candidate; machine qualification pending.
+
+L0 deliberately does **not** attempt replay, undo, persistence, full world event sourcing or a new Owner-facing timeline.
+
+The contract is an append-only session ledger of **external experimental interventions**. Normal gameplay movement input is not automatically an intervention. The useful unit is:
+
+- one ordered intervention event;
+- zero or more structured effects;
+- exact active experiment identity when applicable;
+- simulation time plus wall-clock ordering;
+- operation/source;
+- experiment-defined `domain / scope / path`;
+- structural `before / after / requested` values when those facts exist.
+
+Important choices:
+
+1. **Domain and scope are strings, not a closed enum.** Shared Lab can use conventions such as `specimen`, `world`, `apparatus`, `comparison` and `session`, but an experiment may define a new domain without changing shared core.
+2. **One intervention may have many effects.** This is required for operations such as Restore Defaults or applying a comparison state; the Lab must not pretend a multi-field operation is one flat parameter.
+3. **Requested and applied truth are distinct.** An Owner request such as force `9999` that hits safety rail `100` should retain both facts.
+4. **No full-state snapshot is required for every intervention.** Reset World may record the operation/target without cloning the entire world. Provenance is not replay authority.
+5. **No hidden truncation/coalescing is introduced in L0.** If retention becomes a scaling issue, solve it explicitly later instead of silently dropping evidence.
+6. **Existing A/B remains legacy apparatus.** L0 only makes Capture/Apply attributable. L1 still owns comparison semantics and matched-start scope.
+7. **Presentation is deferred.** The first gate is whether the sequence can be reconstructed programmatically while existing B0/S0 behavior remains unchanged.
+
+Targeted donor:
+
+- Companion Field Lab event provenance at `43183eb456a7a9ded59db0c64d598122fe0c85ef` and related trial schema use the useful compact shape `tick/category/scope/path/before/after`.
+- Combat Lab keeps the compactness, but uses structural values and an open domain/scope vocabulary rather than importing Companion categories or trial architecture.
+
+L0 implementation falsifiers:
+
+- authoring behavior changes materially;
+- provenance reports requested values as if they were applied values;
+- a shared enum must learn experiment-specific semantics;
+- comparison/reset operations cannot expose their actual affected state;
+- browser exercise cannot reconstruct the known B0 intervention sequence;
+- provenance capture requires per-frame world cloning or another observer-cost-heavy mechanism.
+
+Passing L0 mechanically will **not** mean the provenance UX is Owner-qualified.

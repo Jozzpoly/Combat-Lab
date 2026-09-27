@@ -5,6 +5,7 @@ import {resizeCanvas,beginCanvasFrame} from "./src/core/canvas.js";
 import {readBuildIdentity} from "./src/core/provenance.js";
 import {WorkbenchInspector} from "./src/core/workbench-inspector.js";
 import {ParameterSlotStore,formatParameterSlot} from "./src/core/parameter-state.js";
+import {InterventionLedger} from "./src/core/intervention-ledger.js";
 import {substrateSmoke} from "./experiments/substrate-smoke.js";
 import {embodiedScaleFieldV0} from "./experiments/embodied-scale-field-v0.js";
 import {loadEnvelopeFieldB0} from "./experiments/load-envelope-field-b0.js";
@@ -42,12 +43,7 @@ const input=new BrowserInput({pointerTarget:canvas});
 input.attach();
 
 const parameterSlots=new ParameterSlotStore();
-
-const inspector=new WorkbenchInspector({
-  parameterRoot:document.querySelector("#parameter-panel"),
-  liveRoot:document.querySelector("#live-panel"),
-  restoreButton:restoreDefaultsButton
-});
+const interventionLedger=new InterventionLedger();
 
 let paused=false;
 let debug=false;
@@ -55,6 +51,34 @@ let elapsed=0;
 let last=performance.now();
 let current=null;
 let nextInspectorSync=0;
+
+runtime.interventionLedger=interventionLedger;
+runtime.interventionCount=0;
+
+function recordIntervention({
+  operation,
+  effects=[],
+  detail,
+  experimentId=runtime.activeExperimentId,
+  simulationTime=elapsed
+}){
+  const event=interventionLedger.record({
+    experimentId,
+    simulationTime,
+    operation,
+    effects,
+    detail
+  });
+  runtime.interventionCount=event.sequence;
+  return event;
+}
+
+const inspector=new WorkbenchInspector({
+  parameterRoot:document.querySelector("#parameter-panel"),
+  liveRoot:document.querySelector("#live-panel"),
+  restoreButton:restoreDefaultsButton,
+  onIntervention:recordIntervention
+});
 
 function updateRuntimeState(state){
   runtime.state=state;
@@ -85,18 +109,34 @@ function updateParameterSlots(){
 }
 
 function captureParameterSlot(name){
-  parameterSlots.capture(
-    runtime.activeExperimentId,
-    name,
-    inspector.getParameterState()
-  );
+  const before=parameterSlots.get(runtime.activeExperimentId,name);
+  const state=inspector.getParameterState();
+  parameterSlots.capture(runtime.activeExperimentId,name,state);
+  recordIntervention({
+    operation:"comparison-capture",
+    effects:[{
+      domain:"comparison",
+      scope:`slot:${name}`,
+      path:"authored-parameters",
+      before,
+      after:state
+    }],
+    detail:{slot:name}
+  });
   updateParameterSlots();
 }
 
 function applyParameterSlot(name){
   const state=parameterSlots.get(runtime.activeExperimentId,name);
   if(!state) return;
+  const before=inspector.getParameterState();
   inspector.applyParameterState(state);
+  const after=inspector.getParameterState();
+  recordIntervention({
+    operation:"comparison-apply",
+    effects:inspector.describeParameterChanges(before,after,{requestedState:state}),
+    detail:{slot:name}
+  });
   captureSnapshot();
   updateParameterSlots();
 }
@@ -141,9 +181,35 @@ for(const group of experimentGroups){
 
 experimentSelect.value="load-envelope-field-b0";
 loadExperiment(experimentSelect.value);
-experimentSelect.addEventListener("change",()=>loadExperiment(experimentSelect.value));
+experimentSelect.addEventListener("change",()=>{
+  const before=runtime.activeExperimentId;
+  const after=experimentSelect.value;
+  if(before!==after){
+    recordIntervention({
+      operation:"experiment-switch",
+      experimentId:null,
+      effects:[{
+        domain:"session",
+        scope:"lab",
+        path:"activeExperiment",
+        before,
+        after
+      }]
+    });
+  }
+  loadExperiment(after);
+});
 
 function resetWorld(){
+  recordIntervention({
+    operation:"reset-world",
+    effects:[{
+      domain:"world",
+      scope:"active-experiment",
+      path:"state"
+    }],
+    detail:{preservesAuthoredState:true}
+  });
   runner.reset();
   current.instance.reset();
   elapsed=0;
@@ -157,7 +223,18 @@ function resetWorld(){
 }
 
 pauseButton.addEventListener("click",()=>{
+  const before=paused;
   paused=!paused;
+  recordIntervention({
+    operation:"toggle-pause",
+    effects:[{
+      domain:"session",
+      scope:"simulation",
+      path:"paused",
+      before,
+      after:paused
+    }]
+  });
   pauseButton.textContent=paused ? "Resume" : "Pause";
   updateRuntimeState(paused ? "PAUSED" : "RUNNING");
   last=performance.now();
@@ -178,7 +255,18 @@ restoreDefaultsButton.addEventListener("click",()=>{
 });
 
 debugInput.addEventListener("change",()=>{
+  const before=debug;
   debug=debugInput.checked;
+  recordIntervention({
+    operation:"toggle-debug",
+    effects:[{
+      domain:"apparatus",
+      scope:"diagnostics",
+      path:"debug",
+      before,
+      after:debug
+    }]
+  });
 });
 
 readBuildIdentity().then(identity=>{

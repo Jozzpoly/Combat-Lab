@@ -258,6 +258,7 @@ export const embodiedScaleFieldV0={
         groups:[
           {
             id:"body",
+            provenance:{domain:"specimen",scope:"player"},
             label:"Body",
             description:"S0 keeps its original coupled law: body scale also derives mass and motor response. The coupling is visible here instead of hidden.",
             controls:[

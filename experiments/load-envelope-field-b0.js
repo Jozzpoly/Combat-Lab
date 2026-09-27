@@ -296,6 +296,7 @@ export const loadEnvelopeFieldB0={
         groups:[
           {
             id:"geometry",
+            provenance:{domain:"specimen",scope:"player"},
             label:"Body geometry",
             description:"Occupied space only; independent from mass and locomotor force in B0.",
             controls:[
@@ -313,6 +314,7 @@ export const loadEnvelopeFieldB0={
           },
           {
             id:"mass",
+            provenance:{domain:"specimen",scope:"player"},
             label:"Mass & load",
             description:"Body mass + carried load form total inertia; neither changes envelope.",
             controls:[
@@ -341,6 +343,7 @@ export const loadEnvelopeFieldB0={
           },
           {
             id:"locomotion",
+            provenance:{domain:"specimen",scope:"player"},
             label:"Locomotion",
             description:"Force-limited acceleration / braking. Max speed stays fixed in B0.",
             controls:[

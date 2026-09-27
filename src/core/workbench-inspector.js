@@ -45,10 +45,11 @@ function displayRange(control,value){
 }
 
 export class WorkbenchInspector {
-  constructor({parameterRoot,liveRoot,restoreButton}){
+  constructor({parameterRoot,liveRoot,restoreButton,onIntervention=()=>{}}){
     this.parameterRoot=parameterRoot;
     this.liveRoot=liveRoot;
     this.restoreButton=restoreButton;
+    this.onIntervention=onIntervention;
     this.instance=null;
     this.inspector=null;
     this.numericBindings=[];
@@ -57,7 +58,17 @@ export class WorkbenchInspector {
 
     this.restoreButton.addEventListener("click",()=>{
       if(!this.inspector?.restoreDefaults) return;
+      const before=this.getParameterState();
       this.inspector.restoreDefaults();
+      const after=this.getParameterState();
+      const effects=this.describeParameterChanges(before,after);
+      if(effects.length){
+        this.onIntervention({
+          operation:"restore-defaults",
+          effects,
+          detail:{controlCount:effects.length}
+        });
+      }
       this.sync(true);
     });
   }
@@ -97,7 +108,7 @@ export class WorkbenchInspector {
 
       for(const control of group.controls || []){
         if(control.type==="number"){
-          section.append(this.#numericControl(control));
+          section.append(this.#numericControl(group,control));
         }
       }
 
@@ -129,7 +140,43 @@ export class WorkbenchInspector {
     this.sync(true);
   }
 
-  #numericControl(control){
+  #provenance(group={},item={}){
+    const merged={...(group.provenance || {}),...(item.provenance || {})};
+    return {
+      domain:String(merged.domain || "experiment"),
+      scope:String(merged.scope || group.id || "parameters"),
+      path:String(merged.path || item.id || "unknown")
+    };
+  }
+
+  describeParameterChanges(beforeState={},afterState={},options={}){
+    const requestedState=options.requestedState || null;
+    const effects=[];
+
+    for(const binding of this.numericBindings){
+      const id=binding.control.id;
+      const hasBefore=Object.prototype.hasOwnProperty.call(beforeState,id);
+      const hasAfter=Object.prototype.hasOwnProperty.call(afterState,id);
+      if(!hasBefore && !hasAfter) continue;
+
+      const before=hasBefore ? beforeState[id] : undefined;
+      const after=hasAfter ? afterState[id] : undefined;
+      const hasRequested=Boolean(
+        requestedState && Object.prototype.hasOwnProperty.call(requestedState,id)
+      );
+      const requested=hasRequested ? requestedState[id] : undefined;
+
+      if(Object.is(before,after) && (!hasRequested || Object.is(requested,after))) continue;
+
+      const effect={...binding.provenance,before,after};
+      if(hasRequested) effect.requested=requested;
+      effects.push(effect);
+    }
+
+    return effects;
+  }
+
+  #numericControl(group,control){
     const wrap=el("div","parameter-control");
     wrap.dataset.paramId=control.id;
 
@@ -147,8 +194,19 @@ export class WorkbenchInspector {
     reset.type="button";
     reset.title="Restore this parameter to its experiment default";
     reset.setAttribute("aria-label",`Reset ${control.label || control.id}`);
+    const provenance=this.#provenance(group,control);
+
     reset.addEventListener("click",()=>{
+      const before=this.#get(control.id);
       this.inspector?.reset?.(control.id);
+      const after=this.#get(control.id);
+      if(!Object.is(before,after)){
+        this.onIntervention({
+          operation:"reset-parameter",
+          effects:[{...provenance,before,after}],
+          detail:{controlId:control.id}
+        });
+      }
       this.sync(true);
     });
 
@@ -186,15 +244,24 @@ export class WorkbenchInspector {
     const safety=el("span","safety-badge","SAFETY RAIL");
     safety.hidden=true;
 
-    const apply=value=>{
-      const n=Number(value);
-      if(!Number.isFinite(n)) return;
-      this.inspector?.set?.(control.id,n);
+    const apply=(value,inputKind)=>{
+      const requested=Number(value);
+      if(!Number.isFinite(requested)) return;
+      const before=this.#get(control.id);
+      this.inspector?.set?.(control.id,requested);
+      const after=this.#get(control.id);
+      if(!Object.is(before,after) || !Object.is(requested,after)){
+        this.onIntervention({
+          operation:"set",
+          effects:[{...provenance,before,after,requested}],
+          detail:{controlId:control.id,inputKind}
+        });
+      }
       this.sync(true);
     };
 
-    range.addEventListener("input",()=>apply(range.value));
-    number.addEventListener("change",()=>apply(number.value));
+    range.addEventListener("input",()=>apply(range.value,"range"));
+    number.addEventListener("change",()=>apply(number.value,"number"));
     number.addEventListener("keydown",event=>{
       if(event.key==="Enter"){
         number.blur();
@@ -211,14 +278,14 @@ export class WorkbenchInspector {
       for(const anchor of control.anchors){
         const button=el("button","anchor-button",anchor.label ?? String(anchor.value));
         button.type="button";
-        button.addEventListener("click",()=>apply(anchor.value));
+        button.addEventListener("click",()=>apply(anchor.value,"anchor"));
         anchors.append(button);
       }
       wrap.append(anchors);
     }
 
     this.numericBindings.push({
-      control,range,number,extreme,safety
+      control,range,number,extreme,safety,provenance
     });
     this.editableIds.push(control.id);
 

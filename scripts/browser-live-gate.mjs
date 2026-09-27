@@ -401,6 +401,42 @@ try{
   }
   await captureScreenshot(compactScreenshotPath);
 
+  const interventionLedger=await evaluate("window.__combatLabRuntime.interventionLedger.snapshot()");
+  const interventionEvents=interventionLedger.events;
+
+  const force42=interventionEvents.find(event=>
+    event.operation==="set" &&
+    event.effects.some(effect=>
+      effect.domain==="specimen" &&
+      effect.scope==="player" &&
+      effect.path==="forceMultiplier" &&
+      Math.abs(Number(effect.before)-1)<1e-9 &&
+      Math.abs(Number(effect.after)-42)<1e-9 &&
+      Math.abs(Number(effect.requested)-42)<1e-9
+    )
+  );
+  if(!force42) throw new Error("intervention ledger missed exact Owner force=42 edit");
+
+  const clamped=interventionEvents.find(event=>
+    event.operation==="set" &&
+    event.effects.some(effect=>
+      effect.path==="forceMultiplier" &&
+      Math.abs(Number(effect.before)-42)<1e-9 &&
+      Math.abs(Number(effect.after)-100)<1e-9 &&
+      Math.abs(Number(effect.requested)-9999)<1e-9
+    )
+  );
+  if(!clamped) throw new Error("intervention ledger did not preserve requested vs applied safety-rail truth");
+
+  for(const operation of ["comparison-capture","comparison-apply","reset-world","restore-defaults","experiment-switch"]){
+    if(!interventionEvents.some(event=>event.operation===operation)){
+      throw new Error(`intervention ledger missed ${operation}`);
+    }
+  }
+
+  const switches=interventionEvents.filter(event=>event.operation==="experiment-switch");
+  if(switches.length<2) throw new Error(`expected B0↔S0 experiment provenance, got ${switches.length}`);
+
   const finalState=await evaluate("window.__combatLabRuntime");
   if(finalState.error) throw new Error(`runtime error captured: ${finalState.error}`);
 
@@ -420,6 +456,10 @@ try{
       accelerationB:b.acceleration,
       maxSpeedA:a.maxSpeed,
       maxSpeedB:b.maxSpeed
+    },
+    interventionLedger:{
+      count:interventionLedger.count,
+      operations:[...new Set(interventionEvents.map(event=>event.operation))]
     },
     final:{
       state:finalState.state,
