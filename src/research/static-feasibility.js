@@ -43,10 +43,11 @@ function pointRectDistanceSquared(p,rect){
 }
 
 function obstacleOccupancy(center,radius,obstacles){
-  const threshold=radius*radius;
+  const linearThreshold=Math.max(0,radius-EPS);
+  const thresholdSquared=linearThreshold*linearThreshold;
   for(const [index,raw] of obstacles.entries()){
     const rect=normalizeRect(raw,index);
-    if(pointRectDistanceSquared(center,rect)<threshold-EPS){
+    if(pointRectDistanceSquared(center,rect)<thresholdSquared){
       return {id:rect.id,type:"obstacle"};
     }
   }

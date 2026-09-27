@@ -194,3 +194,23 @@ test("N0 static projection does not choose an impossible near-boundary escape fr
     obstacles:[lowerPillar]
   }).clear,true);
 });
+
+
+test("N0 occupancy and projection agree on near-exact tangency within the shared linear epsilon",()=>{
+  const localWorld={width:1100,height:700};
+  const pillar={id:"pillar.upper",x:510,y:120,w:80,h:190};
+  const center={x:521.6093846754255,y:341.9999999991949};
+  const radius=32;
+
+  const occupancy=queryStaticCircleOccupancy({
+    center,radius,world:localWorld,obstacles:[pillar]
+  });
+  const projected=projectStaticCircleOut({
+    center,radius,world:localWorld,obstacles:[pillar]
+  });
+
+  assert.equal(occupancy.clear,true);
+  assert.equal(projected.clear,true);
+  assert.equal(projected.moved,false);
+  assert.deepEqual(projected.contacts,[]);
+});
