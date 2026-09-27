@@ -757,6 +757,14 @@ try{
     throw new Error(`rehearsal causal subject query failed: ${JSON.stringify(selectedCausal)}`);
   }
 
+  await evaluate('document.querySelector(\'[data-inspector-mode="tune"]\').click()');
+  await waitFor("return rehearsal Inspector to Tune",async()=>{
+    return evaluate(`(()=>{
+      const button=document.querySelector('[data-inspector-mode="tune"]');
+      const panel=document.querySelector('[data-inspector-panel="tune"]');
+      return button?.getAttribute("aria-selected")==="true" && panel?.hidden===false;
+    })()`);
+  });
   await setNumber("population",12);
   const beforePopulationReset=await evaluate("window.__combatLabRuntime.snapshot");
   if(beforePopulationReset.population!==8 || beforePopulationReset.authoredPopulation!==12){
