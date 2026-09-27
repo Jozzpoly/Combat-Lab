@@ -407,7 +407,7 @@ function projectBodiesOutOfStatic(state){
   return corrections;
 }
 
-function solveCoupledConstraints(state,{passes=8}={}){
+function solveCoupledConstraints(state,{passes=24}={}){
   const startPairChecks=state.totalPairChecks;
   const startResolutions=state.totalContactResolutions;
   const startIterations=state.totalSolverIterations;
@@ -448,6 +448,7 @@ function solveCoupledConstraints(state,{passes=8}={}){
   state.totalStaticProjectionCorrections+=staticCorrections;
   state.coupledPassesThisStep=passesUsed;
   state.totalCoupledPasses+=passesUsed;
+  state.maxCoupledPassesUsed=Math.max(state.maxCoupledPassesUsed,passesUsed);
 }
 
 export function createIntegratedEcologyState({
@@ -548,6 +549,7 @@ export function createIntegratedEcologyState({
     totalStaticProjectionCorrections:0,
     coupledPassesThisStep:0,
     totalCoupledPasses:0,
+    maxCoupledPassesUsed:0,
     lastUnresolvedStaticProjection:null,
     lastUnresolvedDynamicOverlap:null,
     initialTotalDistance:bodies.reduce((sum,body)=>
@@ -571,7 +573,7 @@ export function stepIntegratedEcologyState(state,dt){
     integrateAgainstStatic(state,actor,body,delta);
   }
 
-  solveCoupledConstraints(state,{passes:8});
+  solveCoupledConstraints(state,{passes:24});
   state.staticOverlapViolations+=staticOverlapCount(state);
   state.dynamicOverlapViolations+=dynamicOverlapCount(state);
   state.time+=delta;
@@ -615,6 +617,7 @@ export function integratedEcologySnapshot(state){
     dynamicOverlapViolations:state.dynamicOverlapViolations,
     staticProjectionCorrections:state.totalStaticProjectionCorrections,
     coupledPasses:state.totalCoupledPasses,
+    maxCoupledPassesUsed:state.maxCoupledPassesUsed,
     lastUnresolvedStaticProjection:state.lastUnresolvedStaticProjection
       ? structuredClone(state.lastUnresolvedStaticProjection)
       : null,

@@ -52,6 +52,8 @@ test("E1 bounded integrated run exercises both static recovery and dynamic encou
   );
   assert.ok(out.staticProjectionCorrections>0);
   assert.ok(out.coupledPasses>0);
+  assert.ok(out.maxCoupledPassesUsed>0);
+  assert.ok(out.maxCoupledPassesUsed<=24);
   assert.ok(out.pairChecks>0);
   assert.ok(out.contactResolutions>0);
   assert.ok(out.totalRemainingDistance<out.totalInitialDistance);
