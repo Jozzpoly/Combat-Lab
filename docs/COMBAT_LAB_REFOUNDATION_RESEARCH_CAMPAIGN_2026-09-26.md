@@ -713,3 +713,61 @@ C0 must not optimize for crowd throughput by default. It should expose when bodi
 - hold space;
 
 and how those outcomes respond to independent body mass, locomotor authority and explicit contact posture/resistance.
+
+
+## 18. C0 contact-semantics cell — implementation candidate
+
+**Status at authoring:** implementation candidate; machine qualification pending.
+
+C0 begins from the exact first-Ecology failure instead of treating “too much blocking” as a generic crowd-flow problem.
+
+Recovered old Ecology mechanics:
+
+- body-body contact was one sequential pair pass;
+- overlap correction was inverse-mass only;
+- one normal impulse used low restitution;
+- there was no tangential law;
+- no explicit yielding / hold / posture semantics existed;
+- resolving one pair could reintroduce overlap in another;
+- dense results could therefore depend materially on pair/spawn order.
+
+C0 does **not** start by adding avoidance or lowering collision radius.
+
+The controlled candidate law separates three authorable causes:
+
+1. **inertial mass** — remains physical inertia and impulse mass;
+2. **motor authority** — determines how strongly desired velocity is rebuilt;
+3. **contact resistance** — an explicit candidate positional-yield axis used only to divide overlap correction.
+
+This third axis is a research hypothesis, not accepted Feniks physics.
+
+The controlled trial gives two bodies equal and opposite persistent intents. The experiment asks whether parameter changes produce legible outcomes such as:
+
+- centered hold;
+- A yields / B resists;
+- B yields / A resists;
+- mass-driven displacement;
+- motor-authority-driven displacement.
+
+Solver hardening:
+
+- contact is iterated rather than single-pass;
+- a three-body audit compares forward vs reverse pair ordering;
+- the current target is not mathematical order independence, but suppression of pair-order artifact below material scale.
+
+Causal observation exposes both:
+
+- **desired motion**;
+- **physical contact outcome**.
+
+C0 falsifiers:
+
+- contact resistance silently changes mass or motor authority;
+- changing mass cannot be distinguished from changing contact resistance;
+- changing motor authority cannot materially affect sustained conflict;
+- equal symmetric setup drifts materially without authored asymmetry;
+- iterative multi-body result remains strongly pair-order dependent;
+- desired velocity and actual outcome cannot be inspected separately;
+- improved flow requires ghosting, despawn, target reassignment or hidden reciprocal choreography.
+
+Passing C0 would qualify only one candidate contact-law family for further experimentation. It would not qualify crowd behavior, stance design, soft collision as a product feature, or Feniks physics.

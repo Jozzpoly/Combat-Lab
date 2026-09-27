@@ -462,6 +462,60 @@ try{
     return evaluate('window.__combatLabRuntime.activeExperimentId==="load-envelope-field-b0" && !!document.querySelector(\'[data-param-id="loadMass"]\')');
   });
 
+  // C0 real-browser contact semantics: equal hold then explicit A-yields/B-resists trial.
+  await evaluate(`(()=>{
+    const s=document.querySelector("#experiment-select");
+    s.value="contact-semantics-cell-c0";
+    s.dispatchEvent(new Event("change",{bubbles:true}));
+  })()`);
+  await waitFor("switch B0 to C0",async()=>{
+    return evaluate('window.__combatLabRuntime.activeExperimentId==="contact-semantics-cell-c0" && !!document.querySelector(\'[data-param-id="aContactResistance"]\')');
+  });
+
+  const c0Contract=await evaluate('document.querySelector("#comparison-contract")?.textContent');
+  if(!c0Contract?.includes("specimen/body:A") || !c0Contract?.includes("specimen/body:B") ||
+     !c0Contract?.includes("matched contact trial")){
+    throw new Error(`C0 comparison scope/matched-start semantics hidden: ${c0Contract}`);
+  }
+
+  await waitFor("C0 equal trial completes",async()=>{
+    return evaluate('window.__combatLabRuntime.snapshot?.status==="COMPLETE"');
+  },{timeout:6000,interval:80});
+  const equalC0=await evaluate("window.__combatLabRuntime.snapshot");
+  if(!(equalC0.contactPairSteps>100) || Math.abs(Number(equalC0.midpointShift))>0.2){
+    throw new Error(`C0 equal hold failed: ${JSON.stringify(equalC0)}`);
+  }
+
+  await setNumber("aContactResistance",0.25);
+  await setNumber("bContactResistance",4);
+  await evaluate('document.querySelector("#reset-world").click()');
+  await waitFor("C0 yielding trial restarted",async()=>{
+    return evaluate('window.__combatLabRuntime.snapshot?.status==="RUNNING" && window.__combatLabRuntime.snapshot?.time<0.5');
+  });
+  await waitFor("C0 yielding trial completes",async()=>{
+    return evaluate('window.__combatLabRuntime.snapshot?.status==="COMPLETE"');
+  },{timeout:6000,interval:80});
+
+  const causalC0=await evaluate('window.__combatLabRuntime.query("contact-causal-state")');
+  if(!(Number(causalC0?.midpointShift)<-5) ||
+     causalC0?.bodies?.A?.mass!==1 ||
+     causalC0?.bodies?.B?.mass!==1 ||
+     causalC0?.bodies?.A?.contactResistance!==0.25 ||
+     causalC0?.bodies?.B?.contactResistance!==4 ||
+     causalC0?.bodies?.A?.desiredVelocity?.x!==140 ||
+     causalC0?.bodies?.B?.desiredVelocity?.x!==-140){
+    throw new Error(`C0 yielding causal evidence failed: ${JSON.stringify(causalC0)}`);
+  }
+
+  await evaluate(`(()=>{
+    const s=document.querySelector("#experiment-select");
+    s.value="load-envelope-field-b0";
+    s.dispatchEvent(new Event("change",{bubbles:true}));
+  })()`);
+  await waitFor("switch C0 back to B0",async()=>{
+    return evaluate('window.__combatLabRuntime.activeExperimentId==="load-envelope-field-b0" && !!document.querySelector(\'[data-param-id="loadMass"]\')');
+  });
+
   // Normal visual rehearsal: heavy load only.
   await setNumber("loadMass",4.00);
   await captureScreenshot();
