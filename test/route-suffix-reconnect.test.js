@@ -64,7 +64,7 @@ test("R1-1 active valid edge executes through M1 without reconnect",()=>{
   assert.equal(out.status,"COMPLETE");
   assert.equal(out.reconnectCount,0);
   assert.equal(out.locomotion.policy,"residual-slide");
-  assert.equal(out.locomotion.finalOccupancy.clear,true);
+  assert.equal(out.locomotion.lastStep.finalOccupancy.clear,true);
 });
 
 test("R1-1 reconnects monotonically to a later hard-proven suffix and completes",()=>{
@@ -174,6 +174,6 @@ test("R1-1 preserves hard body truth while reconnecting",()=>{
 
   const out=run(state,4);
   assert.equal(out.status,"COMPLETE");
-  assert.equal(out.locomotion.finalOccupancy.clear,true);
-  assert.equal(out.locomotion.radius,32);
+  assert.equal(out.locomotion.lastStep.finalOccupancy.clear,true);
+  assert.equal(out.locomotion.body.radius,32);
 });
