@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-28  
 **Authority:** current live truth; supersedes historical "active/current/next" wording  
 **Canonical branch:** `main`  
-**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 + R1 STATIC-ROUTE FOUNDATIONS MECHANICALLY QUALIFIED; D1 REPEATED DYNAMIC ENCOUNTER FOUNDATION MECHANICALLY QUALIFIED AND CLOSED; S1 APPARATUS REFOUNDATION ACTIVE; S1-0 + S1-1 + S1-2A + S1-2B QUALIFIED; S1-3 MACRO CAUSAL-HEALTH OBSERVATION NEXT**
+**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 + R1 STATIC-ROUTE FOUNDATIONS MECHANICALLY QUALIFIED; D1 REPEATED DYNAMIC ENCOUNTER FOUNDATION MECHANICALLY QUALIFIED AND CLOSED; S1 APPARATUS REFOUNDATION ACTIVE; S1-0 + S1-1 + S1-2A + S1-2B + S1-3 QUALIFIED; S1-4 TEMPORAL TRIAL TRACE / COMPARISON NEXT**
 
 ## 1. Owner intent
 
@@ -206,59 +206,37 @@ Canonical S1 record:
 
 - `docs/S1_VALID_PRESSURE_COMPLETION_OBSERVABILITY_2026-09-28.md`.
 
-S1-0 flow-truth ledger is **MECHANICALLY QUALIFIED**.
+Qualified S1 foundations:
 
-Exact checkpoint:
+- S1-0 flow-truth ledger — `bd2684d1397e3a00acc4d0e028c45e01ac87b732`, CI `36472032893`;
+- S1-1 hard-valid source admission / straight transit — `5f49fe164daa3df2a7664a516acd97d94e58cf39`, CI `36472821286`;
+- S1-2A independent demand / flow / trajectory / completion / break axes — `3da8c83a56d974d5f128faf3d75eb905384e41ab`, CI `36473484490`;
+- S1-2B two-sided ordinary-valid straight physical pressure — `ac7a0b62ab86f4c1d6ea3c2b8eac31634d6b3a7f`, CI `36494129550`;
+- S1-3 macro causal-health observation / Workbench drilldown — `98d249aab1551419ee6ece3dca35bb0dd336b3d5`, CI `36498342711` — **227 / 227 Node PASS + live Chromium PASS**.
 
-- `bd2684d1397e3a00acc4d0e028c45e01ac87b732`;
-- CI `36472032893` — SUCCESS;
-- 191 / 191 Node PASS + Chromium PASS.
+S1-3 qualified apparatus truth:
 
-S1-1 physical admission / straight transit is **MECHANICALLY QUALIFIED**.
+- flow keeps demanded / queued / active / completed distinct;
+- progressing / pending / stalled cohorts are temporal observational evidence, not behavior authority;
+- current solver work is distinct from historical peak / recent cap saturation;
+- runtime performance remains a separate truth plane;
+- hard-valid admission truth is not rewritten by later residual solver penetration;
+- exact current geometry/contact probing remains explicit query-driven O(n²) work, not hidden always-on observation;
+- Workbench supports **macro anomaly -> suspicious cohort -> selected subject**;
+- selected-subject geometry drilldown is visible near the macro cohort instead of below all technical diagnostics;
+- no aggregate health score is introduced.
 
-Exact checkpoint:
+The real browser specimen around first established jam showed multiple simultaneous truths — active congestion, source backlog, stalled bodies, hard contact and solver-cap use — without converting them into one verdict. This is apparatus evidence only.
 
-- `5f49fe164daa3df2a7664a516acd97d94e58cf39`;
-- CI `36472821286` — SUCCESS;
-- 197 / 197 Node PASS + Chromium PASS.
-
-S1-2A independent transit stimulus axes is **MECHANICALLY QUALIFIED**.
-
-Exact checkpoint:
-
-- `3da8c83a56d974d5f128faf3d75eb905384e41ab`;
-- CI `36473484490` — SUCCESS;
-- 204 / 204 Node PASS + Chromium PASS.
-
-Demand, flow mode, trajectory topology, completion semantics and break policy are independently authored and matched-diff comparable.
-
-S1-2B two-sided ordinary-valid straight counterflow is **MECHANICALLY QUALIFIED**.
-
-Exact mechanistic checkpoint:
-
-- `ac7a0b62ab86f4c1d6ea3c2b8eac31634d6b3a7f`;
-- CI `36494129550` — SUCCESS;
-- full Node gate + live Chromium Workbench PASS.
-
-Bounded result:
-
-> in one fixed straight source/sink topology, higher matched demand can increase admitted active congestion until physical source blockage converts additional demand into visible backlog, without overlap admission, hidden demand loss or sticky completion semantics.
-
-The cell deliberately permits real same-lane head-on jam.
-It does not add passing competence, R1/D1 authority, personal space or unsafe burst mechanics.
-
-Important new observation:
-
-> dense jam can expose residual coupled-solver penetration even when every admission was hard-valid.
-
-Keep that fact in the solver/validity plane; do not misclassify it as invalid spawn or automatically “repair” the jam.
+S1-3 does **not** qualify final Owner-facing usability. The screenshot/browser gate supports structural legibility, but only direct Owner use can qualify whether this observation flow is actually efficient and pleasant in research.
 
 Immediate boundary:
 
-> **S1-3 macro causal-health observation should distinguish source backlog, active-world congestion, completion throughput, behavioral stall/contact, current solver stress and runtime overload without collapsing them into one health score.**
+> **S1-4 should add bounded temporal trial trace / comparison so authored setup differences stay separate from outcome differences across time.**
 
-Do not integrate M1/R1/D1 into frozen public R0 yet.
-S1-3 is the next bounded apparatus unit before recomposition decisions.
+First S1-4 pressure should remain on the clean S1 source/sink substrate. Do not integrate M1/R1/D1, crossing topology or new crowd behavior authority in the same unit.
+
+Frozen public R0 remains unchanged.
 
 
 ## 7. Canonical records

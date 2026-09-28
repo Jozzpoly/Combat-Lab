@@ -1,7 +1,7 @@
 # Combat Lab — S1 Valid Pressure / Completion / Macro-Observability Refoundation
 
 **Date:** 2026-09-28  
-**Status:** **S1-0 + S1-1 + S1-2A + S1-2B MECHANICALLY QUALIFIED · S1-3 MACRO CAUSAL-HEALTH OBSERVATION NEXT · NO CROWD RECOMPOSITION YET**  
+**Status:** **S1-0 + S1-1 + S1-2A + S1-2B + S1-3 MECHANICALLY / BROWSER QUALIFIED · S1-4 TEMPORAL TRIAL TRACE / COMPARISON NEXT · NO CROWD RECOMPOSITION YET**  
 **Parent foundations:** M1 + R1 static-route foundations mechanically qualified; D1 repeated dynamic encounter foundation mechanically qualified and closed  
 **Frozen Owner-tested R0:** `9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd`
 
@@ -737,3 +737,92 @@ The first S1-3 target should be:
 > **distinguish source backlog, active-world congestion, material jam, solver stress and runtime overload without collapsing them into one health score.**
 
 Do not integrate M1/R1/D1 or open S1-4 trial-comparison UI in the same change.
+
+
+## 22. S1-3 qualification result
+
+Exact qualification checkpoint:
+
+`98d249aab1551419ee6ece3dca35bb0dd336b3d5`
+
+CI:
+
+`36498342711` — **SUCCESS**
+
+Evidence:
+
+- **227 / 227** Node tests PASS;
+- live Chromium Workbench gate PASS;
+- dedicated observer falsifiers distinguish demand/backlog/active/completion, behavior cohort, contact/solver, runtime and validity without one health score;
+- clean separated-flow control becomes `PROGRESSING` instead of falsely stalled;
+- a material `8 + 8` head-on jam can exist with zero source backlog, proving backlog and active-world jam are different facts;
+- higher demand can expose source backlog and active congestion simultaneously while exact demand remains conserved;
+- residual post-solve penetration remains solver truth and does not rewrite hard-valid admission history;
+- `RuntimePerformanceMeter` evidence can vary while the same mechanical snapshot remains unchanged;
+- current solver effort, historical peak and recent cap saturation are separate fields;
+- exact current-contact / penetration geometry remains an explicit query-driven O(n²) probe rather than hidden always-on work;
+- subject drilldown identifies one stalled participant and its local partners without rendering every actor's full debug;
+- the Workbench specimen preserves authored demand as next-reset setup truth;
+- actual browser flow passed **macro anomaly -> stalled cohort -> clicked selected subject -> explicit geometry probe**;
+- dedicated `workbench-s1-3.png` CI evidence shows Flow / pressure, Behavior cohort and Selected subject together in the first Observe viewport, while deeper Contact / solver, Runtime and Validity remain lower technical layers;
+- S1-3 adds no route recovery, passing convention, personal-space layer or new movement / negotiation authority.
+
+One real-browser specimen near first established jam showed, at one moment, roughly:
+
+- demand `32`;
+- queued `8`;
+- active `24`;
+- completed `0`;
+- a small stalled cohort amid a larger progressing cohort;
+- current contact work;
+- solver at its bounded iteration cap;
+- zero invalid admissions and physical-active / ledger-active agreement.
+
+Those values are **specimen evidence**, not universal thresholds.
+
+Bounded verdict:
+
+> **S1-3 PASS — the Lab can keep source backlog, active-world congestion, behavioral progress/stall, contact/solver stress, runtime performance and validity as separate causal truth planes, then drill from a suspicious cohort into one participant without turning observation into behavior authority or an always-on quadratic debug system.**
+
+Qualification is **mechanical/browser structural only**.
+Owner-facing usefulness, readability and information scent remain unqualified until direct Owner use.
+
+S1-3 does not qualify:
+
+- crowd intelligence;
+- solver adequacy;
+- a final stall threshold;
+- final Workbench UX;
+- personal-space semantics;
+- M1/R1/D1 recomposition.
+
+## 23. S1-4 immediate boundary — temporal trial trace / comparison
+
+Use the qualified S1-3 truth planes as inputs, not as a new dashboard.
+
+The first bounded trace should preserve:
+
+> **what was authored differently**
+
+separately from:
+
+> **what happened differently over time**.
+
+Candidate temporal outputs:
+
+- demanded / admitted / queued / active / completed trajectories;
+- throughput / completion events;
+- progressing / stalled cohort counts;
+- contact workload and solver saturation samples;
+- simulation / wall ratio and discarded wall time.
+
+Requirements:
+
+- bounded memory / sampling cost;
+- explicit start-setup provenance;
+- no single aggregate score;
+- no automatic causal conclusion from correlation;
+- comparison should remain useful when one trial jams and another flows;
+- exact high demand remains authored truth even when physical admission is much lower.
+
+Do not integrate M1/R1/D1, open crossing trajectories or add crowd coordination in the same S1-4 unit.

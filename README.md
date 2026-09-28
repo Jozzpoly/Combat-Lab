@@ -8,7 +8,7 @@ It is not the Feniks combat implementation, and it is not a sword project. The r
 
 **Canonical live branch:** `main` after repository canonicalization.
 
-**Current stage:** Workbench + B0 and the first Ecology feedback campaign are closed; bounded E1, M1, R1 and D1 isolated foundations are mechanically qualified. Frozen Owner-tested R0 remains the public rehearsal specimen. S1 apparatus refoundation is active with S1-0 + S1-1 + S1-2A + S1-2B mechanically qualified; S1-3 macro causal-health observation is the next bounded frontier. Owner experience, crowd scaling and final Feniks semantics remain unqualified.
+**Current stage:** Workbench + B0 and the first Ecology feedback campaign are closed; bounded E1, M1, R1 and D1 isolated foundations are mechanically qualified. Frozen Owner-tested R0 remains the public rehearsal specimen. S1 apparatus refoundation is active with S1-0 + S1-1 + S1-2A + S1-2B + S1-3 mechanically/browser qualified; S1-4 temporal trial trace/comparison is the next bounded frontier. Owner-facing S1 usability, crowd scaling and final Feniks semantics remain unqualified.
 
 Current qualified statements:
 
@@ -27,7 +27,7 @@ Current qualified statements:
 - **E1 bounded integration — MECHANICALLY QUALIFIED / NARROW.** Static recovery, candidate contact semantics and dynamic encounter behavior coexist in one audited 8-body cell; crowd-scale efficiency remains unqualified.
 - **R0 rehearsal apparatus — INTERNALLY QUALIFIED / OWNER EXPERIENCE UNQUALIFIED.** Exact population-on-reset pressure authoring, research camera, contextual Inspector and selected-subject causal Observe pass source-browser gates; only Owner use can qualify their actual usefulness.
 - **M1 + R1 + D1 isolated foundations — MECHANICALLY QUALIFIED / CLOSED.** Static tangential locomotion, embodied route recovery and repeated local dynamic-encounter competence remain isolated from frozen R0.
-- **S1 apparatus refoundation — S1-0 + S1-1 + S1-2A + S1-2B MECHANICALLY QUALIFIED.** Exact demand/queue/completion truth, hard-valid source admission, independent scenario axes and two-sided straight physical pressure are qualified only as apparatus mechanics; S1-3 causal-health observation is next.
+- **S1 apparatus refoundation — S1-0 + S1-1 + S1-2A + S1-2B + S1-3 MECHANICALLY / BROWSER QUALIFIED.** Exact flow truth, hard-valid admission, independent stimulus axes, clean two-sided pressure and macro→cohort→subject causal observation are qualified as apparatus foundations; S1-4 temporal outcome trace/comparison is next. Owner-facing S1 UX remains unqualified.
 
 Latest Owner-confirmed direction: the project is broader than hitting or melee. Body/world relations matter. Independent embodiment dimensions should remain available, while future Workbench research may add optional explicit correlations for fast coherent phenotype scaling. Larger terrain/obstacle spaces and more varied opponents/residents are desired future pressure, with population deliberately scalable from a readable baseline into crowd/horde/break regimes rather than hidden behind low protective limits. Targeted donor recovery has begun only where concrete dependencies justify it. Companion whole-body feasibility is a strong bounded donor; sibling architectures remain evidence sources rather than Combat Lab authority.
 

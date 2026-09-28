@@ -24,7 +24,7 @@ test("canonical entrypoints contain one current project state",()=>{
   assert.match(state,/Workbench \+ B0 CLOSED/);
   assert.match(state,/first Ecology feedback campaign CLOSED/i);
   assert.match(state,/TARGET HYPOTHESIS INCONCLUSIVE — APPARATUS LIMITATIONS BECAME THE DOMINANT FINDING/i);
-  assert.match(state,/bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 \+ R1 STATIC-ROUTE FOUNDATIONS MECHANICALLY QUALIFIED; D1 REPEATED DYNAMIC ENCOUNTER FOUNDATION MECHANICALLY QUALIFIED AND CLOSED; S1 APPARATUS REFOUNDATION ACTIVE; S1-0 \+ S1-1 \+ S1-2A \+ S1-2B QUALIFIED; S1-3 MACRO CAUSAL-HEALTH OBSERVATION NEXT/i);
+  assert.match(state,/bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 \+ R1 STATIC-ROUTE FOUNDATIONS MECHANICALLY QUALIFIED; D1 REPEATED DYNAMIC ENCOUNTER FOUNDATION MECHANICALLY QUALIFIED AND CLOSED; S1 APPARATUS REFOUNDATION ACTIVE; S1-0 \+ S1-1 \+ S1-2A \+ S1-2B \+ S1-3 QUALIFIED; S1-4 TEMPORAL TRIAL TRACE \/ COMPARISON NEXT/i);
   assert.match(state,/9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd/);
   assert.match(state,/integrated-ecology-rehearsal-r0/);
   assert.match(state,/ACTIVE_SECOND_OWNER_REHEARSAL_RECORDING_FEEDBACK_2026-09-27\.md/);
@@ -32,6 +32,9 @@ test("canonical entrypoints contain one current project state",()=>{
   assert.match(state,/D1_REPEATED_DYNAMIC_ENCOUNTER_EPISODES_2026-09-28\.md/);
   assert.match(state,/ac7a0b62ab86f4c1d6ea3c2b8eac31634d6b3a7f/);
   assert.match(state,/36494129550/);
+  assert.match(state,/98d249aab1551419ee6ece3dca35bb0dd336b3d5/);
+  assert.match(state,/36498342711/);
+  assert.match(state,/macro anomaly -> suspicious cohort -> selected subject/i);
   assert.doesNotMatch(state,/D1-2 current candidate/i);
   assert.match(state,/optional explicit linkage \/ correlated scaling/i);
   assert.match(state,/Feniks, ReflexBrain, Companion and SPC/);
