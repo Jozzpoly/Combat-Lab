@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-27  
 **Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
 **Canonical branch:** `main` after repository canonicalization  
-**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 STATIC LOCOMOTION MECHANICALLY QUALIFIED; R1 ROUTE EXECUTION / RECOVERY DESIGN NEXT**
+**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 STATIC LOCOMOTION MECHANICALLY QUALIFIED; R1 ROUTE EXECUTION / RECOVERY RESEARCH ACTIVE; R1-0 AUTHORITY AUDIT NEXT**
 
 ## 1. Owner intent
 
@@ -287,11 +287,18 @@ Exact checkpoint:
 
 M1 remains an isolated research foundation; frozen R0 is unchanged.
 
-Next bounded design stage is **R1 embodied route execution / recovery episodes**.
+R1 embodied route execution / recovery research is now **ACTIVE DESIGN**.
 
-Canonical M1 design record:
+Canonical records:
 
-- `docs/M1_CONSTRAINT_AWARE_STATIC_LOCOMOTION_RESEARCH_2026-09-27.md`.
+- M1: `docs/M1_CONSTRAINT_AWARE_STATIC_LOCOMOTION_RESEARCH_2026-09-27.md`;
+- R1: `docs/R1_EMBODIED_ROUTE_EXECUTION_RECOVERY_RESEARCH_2026-09-28.md`.
+
+Immediate implementation boundary:
+
+> **R1-0 must classify current route-witness executability from the embodied body's actual position without performing a fresh global N0b query.**
+
+Only after that authority layer is qualified may R1 open local suffix reconnection and bounded recovery episodes.
 
 M1 qualified a minimal residual-slide candidate that preserves hard blocking, tangent authority, body-size capacity and causal observability in the isolated static substrate.
 
