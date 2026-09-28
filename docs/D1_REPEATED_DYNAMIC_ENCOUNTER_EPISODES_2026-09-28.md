@@ -1,7 +1,7 @@
 # Combat Lab — D1 Repeated Dynamic Encounter Episodes
 
 **Date:** 2026-09-28  
-**Status:** **D1-0 EPISODE BOUNDARY MECHANICALLY QUALIFIED · D1-1 SEQUENTIAL NEW-PARTNER ENCOUNTER NEXT · NO CROWD PROMOTION**  
+**Status:** **D1-0 + D1-1 MECHANICALLY QUALIFIED · D1-2 SAME-PARTNER SECOND ENCOUNTER NEXT · NO CROWD PROMOTION**  
 **Parent evidence:** D0 single dynamic encounter qualified; second Owner rehearsal evidence campaign closed; M1 + R1 static-route foundations mechanically qualified  
 **Frozen Owner-tested R0:** `9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd`
 
@@ -463,3 +463,77 @@ Promotion criterion remains:
 - lifetime baseline resolves B once but stalls on released C;
 - episodic candidate records trigger partners exactly `B -> C` and completes;
 - no-convention first encounter remains a stable material gridlock and never releases C.
+
+
+## 17. D1-1 qualification result
+
+Exact qualified checkpoint:
+
+`7a3f7518a78ca8f820f030b24926081cfcaf078b`
+
+CI:
+
+`36457830159` — **SUCCESS**
+
+Evidence:
+
+- **179 / 179** Node tests PASS;
+- live Chromium Workbench regression PASS;
+- source adds no route planner, personal-space or predicted/pre-contact avoidance authority;
+- lifetime baseline and episodic candidate share the same first B encounter and the same post-rearm C challenge;
+- second challenge is released only after D1-0 factual re-arm evidence;
+- C is positioned ahead of A on A's actual current goal ray with a non-overlapping hard-body gap;
+- C's desired direction is exactly opposed to A's current goal direction;
+- lifetime baseline remains limited to one encounter decision and cannot negotiate released C;
+- episodic candidate records trigger partners exactly `B -> C` and reaches A's target;
+- no-convention control preserves first material gridlock and never releases C.
+
+### D1-1 stimulus falsification history
+
+Two weaker fixtures were rejected before qualification.
+
+#### Natural second body on the original lane
+
+A second left-travelling body farther along `y=350` did not create a second factual encounter because A retained lateral displacement after the first sidestep and simply missed C.
+
+#### C released on A's current Y but travelling horizontally
+
+A and C did make hard contact, but A's current DIRECT vector still had a vertical component toward its target.
+
+The contact was therefore negotiable by ordinary hard-body motion and never produced D0-style persistent no-progress.
+
+This was correctly **not** classified as a new encounter.
+
+The qualified fixture aligns C with A's actual current goal ray and gives C the exactly opposite local direction. It therefore creates the intended hard head-on no-progress challenge without changing D1 thresholds.
+
+Bounded verdict:
+
+> **D1-1 PASS — after one encounter is factually over under D1-0, the same local actor may consume one new encounter decision against a later new partner; lifetime one-shot authority fails the matched second challenge while episodic authority succeeds.**
+
+This does not qualify:
+
+- same-partner recurrence;
+- overlapping simultaneous partners;
+- partner handoff without a clear interval;
+- crowd throughput;
+- global coordination.
+
+## 18. D1-2 immediate boundary
+
+Open a controlled same-partner second encounter.
+
+After the first A↔B episode fully re-arms:
+
+- reuse **B**, not a new partner ID;
+- reintroduce B as an explicit matched head-on challenge on A's current goal ray;
+- preserve one clear healthy interval between episodes;
+- compare lifetime baseline vs episodic candidate.
+
+Required result:
+
+- lifetime baseline remains one-shot;
+- episodic candidate trigger history is `B -> B` with distinct episode IDs;
+- the same unresolved contact cannot retrigger merely because time passed;
+- partner provenance preserves that the identity is repeated while the encounter episode is new.
+
+Same partner identity must not mean one lifetime encounter.

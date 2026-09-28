@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-28  
 **Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
 **Canonical branch:** `main` after repository canonicalization  
-**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 + R1 STATIC-ROUTE FOUNDATIONS MECHANICALLY QUALIFIED; D1-0 DYNAMIC EPISODE BOUNDARY MECHANICALLY QUALIFIED; D1-1 SEQUENTIAL NEW-PARTNER ENCOUNTER NEXT**
+**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 + R1 STATIC-ROUTE FOUNDATIONS MECHANICALLY QUALIFIED; D1-0 + D1-1 REPEATED DYNAMIC ENCOUNTER FOUNDATIONS MECHANICALLY QUALIFIED; D1-2 SAME-PARTNER SECOND ENCOUNTER NEXT**
 
 ## 1. Owner intent
 
@@ -340,19 +340,22 @@ Canonical D1 record:
 
 - `docs/D1_REPEATED_DYNAMIC_ENCOUNTER_EPISODES_2026-09-28.md`.
 
-D1-0 dynamic encounter episode boundary is now **MECHANICALLY QUALIFIED**.
+D1-0 dynamic encounter episode boundary and D1-1 sequential new-partner recurrence are now **MECHANICALLY QUALIFIED**.
 
-Exact checkpoint:
+Qualified checkpoints:
 
-- `ae0a9f3fbfe6894aacd77ebd1250bd3797713866`;
-- CI `36455674093` — SUCCESS;
-- 172 / 172 Node PASS + live Chromium regression PASS.
+- D1-0: `ae0a9f3fbfe6894aacd77ebd1250bd3797713866` — CI `36455674093`;
+- D1-1: `7a3f7518a78ca8f820f030b24926081cfcaf078b` — CI `36457830159`, 179 / 179 Node PASS + Chromium PASS.
 
-D1-0 re-arms only after the previous action ended, hard contact remained continuously clear, the body travelled materially and goal distance materially improved.
+D1-1 proves a matched causal contrast:
+
+- lifetime one-shot resolves B but fails the post-rearm C head-on challenge;
+- episodic authority records `B -> C` and completes;
+- NONE remains a material gridlock.
 
 Immediate boundary:
 
-> **D1-1 must compare lifetime one-shot vs D1-0 episodic authority in the same sequential A→B then A→C encounter cell.**
+> **D1-2 must prove that the same partner identity can form a genuinely new episode only after D1-0 healthy re-arm.**
 
 Personal-space, comfort envelopes, global coordination and static-route recovery remain out of scope.
 
