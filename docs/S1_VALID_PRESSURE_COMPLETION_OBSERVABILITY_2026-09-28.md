@@ -1,7 +1,7 @@
 # Combat Lab — S1 Valid Pressure / Completion / Macro-Observability Refoundation
 
 **Date:** 2026-09-28  
-**Status:** **S1-0 + S1-1 + S1-2A MECHANICALLY QUALIFIED · S1-2B TWO-SIDED PHYSICAL PRESSURE CELL NEXT · NO CROWD RECOMPOSITION YET**  
+**Status:** **S1-0 + S1-1 + S1-2A + S1-2B MECHANICALLY QUALIFIED · S1-3 MACRO CAUSAL-HEALTH OBSERVATION NEXT · NO CROWD RECOMPOSITION YET**  
 **Parent foundations:** M1 + R1 static-route foundations mechanically qualified; D1 repeated dynamic encounter foundation mechanically qualified and closed  
 **Frozen Owner-tested R0:** `9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd`
 
@@ -662,3 +662,78 @@ S1-2B should answer only:
 > **Can two independently authored hard-body source/sink flows generate increasing physical pressure through admitted throughput/backlog while preserving valid spawn and completion truth?**
 
 Do not open S1-3 macro UI in the same change.
+
+
+## 20. S1-2B qualification result
+
+Exact mechanistic checkpoint:
+
+`ac7a0b62ab86f4c1d6ea3c2b8eac31634d6b3a7f`
+
+CI:
+
+`36494129550` — **SUCCESS**
+
+Evidence:
+
+- full repository Node gate PASS;
+- live Chromium Workbench regression PASS;
+- **10 / 10** dedicated S1-2B falsifiers PASS in the isolated deterministic harness;
+- both physical sources admit only from hard-clear portal proofs;
+- blocked portals preserve exact queued demand instead of overlap-spawning or dropping it;
+- exact authored `256 + 256` demand remains `512` demand while ordinary admission stays bounded by physical clearance;
+- physical active-body count remains equal to ledger active participation throughout sampled runs;
+- changing demand alone leaves world, source/sink geometry, straight trajectory mode, sink-retire completion and ordinary-valid break policy unchanged;
+- a separated straight-lane completion control proves both directions can cross their sink, complete exactly once and leave the contact set;
+- same-lane straight counterflow is allowed to produce a real material jam with zero forced tie-break or hidden bypass;
+- after opposing fronts actually meet, matched `8 + 8` and `32 + 32` trials preserve identical topology while the higher-demand case increases active congestion and drives the jam back into source backlog;
+- the higher-pressure matched cell remains exactly side-symmetric in queued and active counts;
+- no R1 route recovery, D1 encounter authority, personal-space layer, obstacle bottleneck, crossing target or unsafe raw burst is introduced.
+
+A deterministic pressure probe also exposed a useful non-promotion finding:
+
+> dense same-lane jam can leave small residual pair penetration after the bounded contact solve.
+
+That is **solver truth**, not invalid admission truth.
+S1-2B does not hide or reinterpret it.
+S1-3 must keep current solver/contact stress separate from backlog, behavioral jam and runtime health.
+
+Bounded verdict:
+
+> **S1-2B PASS — in one fixed ordinary-valid straight counterflow cell, increasing matched authored demand can increase admitted active congestion until physical source blockage converts additional demand into visible backlog, while hard-valid admission, exact demand conservation and sink-retire completion truth remain intact.**
+
+This does not qualify:
+
+- crowd intelligence;
+- passing competence;
+- throughput quality;
+- solver adequacy at dense contact;
+- personal space;
+- bottleneck behavior;
+- crossing trajectories;
+- persistent-destination pressure;
+- intentional-unsafe burst mechanics;
+- M1/R1/D1 recomposition.
+
+## 21. S1-3 immediate boundary — macro causal-health observation
+
+Use S1-2B as the first real observation substrate.
+
+The next bounded unit should make these truths independently legible:
+
+- authored demand;
+- queued source backlog;
+- admitted / active transit population;
+- completed throughput;
+- progressing vs stalled active bodies;
+- current hard-contact cohort;
+- current contact/solver work and residual penetration;
+- historical peak/recent solver stress only when explicitly labeled as such;
+- simulation/wall performance and discarded wall time;
+- validity facts such as ordinary-valid admission and boundary violations.
+
+The first S1-3 target should be:
+
+> **distinguish source backlog, active-world congestion, material jam, solver stress and runtime overload without collapsing them into one health score.**
+
+Do not integrate M1/R1/D1 or open S1-4 trial-comparison UI in the same change.

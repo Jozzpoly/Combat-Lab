@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-28  
 **Authority:** current live truth; supersedes historical "active/current/next" wording  
 **Canonical branch:** `main`  
-**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 + R1 STATIC-ROUTE FOUNDATIONS MECHANICALLY QUALIFIED; D1 REPEATED DYNAMIC ENCOUNTER FOUNDATION MECHANICALLY QUALIFIED AND CLOSED; S1 APPARATUS REFOUNDATION ACTIVE; S1-0 + S1-1 + S1-2A QUALIFIED; S1-2B TWO-SIDED PHYSICAL PRESSURE CELL NEXT**
+**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 + R1 STATIC-ROUTE FOUNDATIONS MECHANICALLY QUALIFIED; D1 REPEATED DYNAMIC ENCOUNTER FOUNDATION MECHANICALLY QUALIFIED AND CLOSED; S1 APPARATUS REFOUNDATION ACTIVE; S1-0 + S1-1 + S1-2A + S1-2B QUALIFIED; S1-3 MACRO CAUSAL-HEALTH OBSERVATION NEXT**
 
 ## 1. Owner intent
 
@@ -120,46 +120,27 @@ Canonical record:
 
 - `docs/D1_REPEATED_DYNAMIC_ENCOUNTER_EPISODES_2026-09-28.md`.
 
-**D1-0 mechanically qualified:**
+D1 is **mechanically qualified and closed as an isolated foundation**.
+
+Final checkpoint:
+
+`cdcf305339f3c8da4987105ca6c31a5524fc84b1`
+
+CI:
+
+`36470797852` — **184 / 184 Node PASS + Chromium PASS**.
+
+Defended invariants:
 
 - continuous contact cannot re-arm by timeout;
 - brief contact gaps do not split one conflict;
-- prior SIDESTEP action must finish;
-- clear body travel alone is insufficient;
-- goal-metric change without body motion is insufficient;
-- re-arm requires continuous hard-contact clearance + material body travel + material goal-distance improvement.
+- re-arm requires hard-contact clearance + material body travel + resumed goal progress;
+- a later new-partner encounter can become a new episode;
+- the same partner can become a new episode only after genuine separation/progress;
+- partner handoff without a healthy zero-contact interval does not manufacture a new episode;
+- conflicting local conventions remain allowed to fail.
 
-Qualified checkpoint:
-
-`ae0a9f3fbfe6894aacd77ebd1250bd3797713866`
-
-**D1-1 mechanically qualified:**
-
-Matched post-rearm challenge proves:
-
-- lifetime one-shot resolves first partner B but fails the later factual C head-on challenge;
-- episodic authority records `B -> C` and completes;
-- NONE preserves a material gridlock;
-- no route planner, personal-space layer, pre-contact avoidance or pair-level choreography is added.
-
-Qualified checkpoint:
-
-`7a3f7518a78ca8f820f030b24926081cfcaf078b`
-
-**D1-2 current candidate:**
-
-Checkpoint:
-
-`35e757da0d6d2b3fbe9824d85067871a87bfda67`
-
-All four same-partner D1-2 cells passed in the latest machine run:
-
-- lifetime baseline cannot renegotiate recycled B;
-- episodic candidate records distinct `B(ep1) -> B(ep2)`;
-- baseline/candidate receive identical recycled-B challenge;
-- NONE never earns recycle/re-arm.
-
-The full run remained red only because this canonical state exceeded its compactness budget. D1-2 is therefore **not yet promoted** until a fresh full green gate passes after state compaction.
+D1 does not qualify simultaneous multi-body deadlock resolution, crowd coordination, anticipatory personal space, soft envelopes or dense scaling.
 
 ## 5. Recording-derived findings that still constrain refoundation
 
@@ -219,13 +200,13 @@ Keep separate:
 
 ## 6. Current frontier
 
-S1 valid pressure / completion / macro-observability refoundation is **ACTIVE DESIGN**.
+S1 valid pressure / completion / macro-observability refoundation is **ACTIVE**.
 
 Canonical S1 record:
 
 - `docs/S1_VALID_PRESSURE_COMPLETION_OBSERVABILITY_2026-09-28.md`.
 
-S1-0 flow-truth ledger is now **MECHANICALLY QUALIFIED**.
+S1-0 flow-truth ledger is **MECHANICALLY QUALIFIED**.
 
 Exact checkpoint:
 
@@ -233,7 +214,7 @@ Exact checkpoint:
 - CI `36472032893` — SUCCESS;
 - 191 / 191 Node PASS + Chromium PASS.
 
-S1-1 physical admission / straight transit is now **MECHANICALLY QUALIFIED**.
+S1-1 physical admission / straight transit is **MECHANICALLY QUALIFIED**.
 
 Exact checkpoint:
 
@@ -241,7 +222,7 @@ Exact checkpoint:
 - CI `36472821286` — SUCCESS;
 - 197 / 197 Node PASS + Chromium PASS.
 
-S1-2A independent transit stimulus axes is now **MECHANICALLY QUALIFIED**.
+S1-2A independent transit stimulus axes is **MECHANICALLY QUALIFIED**.
 
 Exact checkpoint:
 
@@ -251,19 +232,33 @@ Exact checkpoint:
 
 Demand, flow mode, trajectory topology, completion semantics and break policy are independently authored and matched-diff comparable.
 
+S1-2B two-sided ordinary-valid straight counterflow is **MECHANICALLY QUALIFIED**.
+
+Exact mechanistic checkpoint:
+
+- `ac7a0b62ab86f4c1d6ea3c2b8eac31634d6b3a7f`;
+- CI `36494129550` — SUCCESS;
+- full Node gate + live Chromium Workbench PASS.
+
+Bounded result:
+
+> in one fixed straight source/sink topology, higher matched demand can increase admitted active congestion until physical source blockage converts additional demand into visible backlog, without overlap admission, hidden demand loss or sticky completion semantics.
+
+The cell deliberately permits real same-lane head-on jam.
+It does not add passing competence, R1/D1 authority, personal space or unsafe burst mechanics.
+
+Important new observation:
+
+> dense jam can expose residual coupled-solver penetration even when every admission was hard-valid.
+
+Keep that fact in the solver/validity plane; do not misclassify it as invalid spawn or automatically “repair” the jam.
+
 Immediate boundary:
 
-> **S1-2B may now build the first two-sided ordinary-valid straight counterflow cell on hard-valid source/sink admission, without obstacles, crossing targets or new crowd behavior authority.**
+> **S1-3 macro causal-health observation should distinguish source backlog, active-world congestion, completion throughput, behavioral stall/contact, current solver stress and runtime overload without collapsing them into one health score.**
 
-The strongest ordinary-transit candidate remains source/sink flow:
-
-- demand may exceed current admission capacity;
-- blocked source creates visible backlog rather than overlap spawn;
-- completion is an explicit sink-crossing event;
-- completed participants leave the transit-active contact set by declared scenario semantics;
-- intentional unsafe burst remains a separate later break regime.
-
-Do not integrate M1/R1/D1 into frozen public R0 before S1 provides a clean experiment substrate.
+Do not integrate M1/R1/D1 into frozen public R0 yet.
+S1-3 is the next bounded apparatus unit before recomposition decisions.
 
 
 ## 7. Canonical records

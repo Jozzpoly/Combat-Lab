@@ -13,7 +13,7 @@ test("canonical entrypoints contain one current project state",()=>{
 
   assert.match(readme,/Canonical live branch/);
   assert.match(readme,/Workbench mechanical foundation — QUALIFIED; current Lab usability\/information architecture has MATERIAL OWNER FINDINGS/i);
-  assert.match(readme,/first Active Spatial Ecology Owner rehearsal and feedback\/evidence campaign are \*\*closed\*\*/i);
+  assert.match(readme,/first Ecology feedback campaign are closed/i);
   assert.doesNotMatch(readme,/no selected next research specimen/i);
   assert.match(readme,/6bd4b4492261b9fe3b8edbca276cf9b7de3d822d/);
   assert.doesNotMatch(readme,/waits for new Owner instruction/i);
@@ -24,12 +24,15 @@ test("canonical entrypoints contain one current project state",()=>{
   assert.match(state,/Workbench \+ B0 CLOSED/);
   assert.match(state,/first Ecology feedback campaign CLOSED/i);
   assert.match(state,/TARGET HYPOTHESIS INCONCLUSIVE — APPARATUS LIMITATIONS BECAME THE DOMINANT FINDING/i);
-  assert.match(state,/bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 \+ R1 STATIC-ROUTE FOUNDATIONS MECHANICALLY QUALIFIED; D1 REPEATED DYNAMIC ENCOUNTER FOUNDATION MECHANICALLY QUALIFIED AND CLOSED; S1 APPARATUS REFOUNDATION ACTIVE; S1-0 \+ S1-1 \+ S1-2A QUALIFIED; S1-2B TWO-SIDED PHYSICAL PRESSURE CELL NEXT/i);
+  assert.match(state,/bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 \+ R1 STATIC-ROUTE FOUNDATIONS MECHANICALLY QUALIFIED; D1 REPEATED DYNAMIC ENCOUNTER FOUNDATION MECHANICALLY QUALIFIED AND CLOSED; S1 APPARATUS REFOUNDATION ACTIVE; S1-0 \+ S1-1 \+ S1-2A \+ S1-2B QUALIFIED; S1-3 MACRO CAUSAL-HEALTH OBSERVATION NEXT/i);
   assert.match(state,/9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd/);
   assert.match(state,/integrated-ecology-rehearsal-r0/);
   assert.match(state,/ACTIVE_SECOND_OWNER_REHEARSAL_RECORDING_FEEDBACK_2026-09-27\.md/);
   assert.match(state,/R1_EMBODIED_ROUTE_EXECUTION_RECOVERY_RESEARCH_2026-09-28\.md/);
   assert.match(state,/D1_REPEATED_DYNAMIC_ENCOUNTER_EPISODES_2026-09-28\.md/);
+  assert.match(state,/ac7a0b62ab86f4c1d6ea3c2b8eac31634d6b3a7f/);
+  assert.match(state,/36494129550/);
+  assert.doesNotMatch(state,/D1-2 current candidate/i);
   assert.match(state,/optional explicit linkage \/ correlated scaling/i);
   assert.match(state,/Feniks, ReflexBrain, Companion and SPC/);
   assert.doesNotMatch(state,/waiting for new Owner instruction/i);
