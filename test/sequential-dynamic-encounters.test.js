@@ -105,3 +105,26 @@ test("D1-1 second challenge is released only after factual D1-0 rearm evidence",
   assert.equal(out.releaseHistory[0].triggerPartnerId,"B");
   assert.ok(out.releaseHistory[0].gap>out.passive.C.radius*2);
 });
+
+
+test("D1-1 released C is an exact opposing challenge on A's current goal ray",()=>{
+  const out=runSequentialDynamicEncounterTrial({
+    episodeMode:"lifetime",
+    passingSideA:1
+  });
+  const release=out.releaseHistory[0];
+  assert.ok(release);
+
+  const ax=release.aTarget.x-release.aPosition.x;
+  const ay=release.aTarget.y-release.aPosition.y;
+  const cx=release.cTarget.x-release.cPosition.x;
+  const cy=release.cTarget.y-release.cPosition.y;
+  const aLength=Math.hypot(ax,ay);
+  const cLength=Math.hypot(cx,cy);
+  const cross=ax*cy-ay*cx;
+  const dot=(ax/aLength)*(cx/cLength)+(ay/aLength)*(cy/cLength);
+
+  assert.ok(Math.abs(cross)<1e-6,JSON.stringify(release));
+  assert.ok(dot<-0.999999,JSON.stringify({dot,release}));
+  assert.ok(release.gap>out.passive.C.radius*2);
+});
