@@ -1,7 +1,7 @@
 # Combat Lab — S1 Valid Pressure / Completion / Macro-Observability Refoundation
 
 **Date:** 2026-09-28  
-**Status:** **S1-0 FLOW-TRUTH LEDGER MECHANICALLY QUALIFIED · S1-1 PHYSICAL ADMISSION / STRAIGHT TRANSIT NEXT · NO CROWD RECOMPOSITION YET**  
+**Status:** **S1-0 + S1-1 MECHANICALLY QUALIFIED · S1-2 INDEPENDENT STIMULUS AXES NEXT · NO CROWD RECOMPOSITION YET**  
 **Parent foundations:** M1 + R1 static-route foundations mechanically qualified; D1 repeated dynamic encounter foundation mechanically qualified and closed  
 **Frozen Owner-tested R0:** `9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd`
 
@@ -543,3 +543,57 @@ Required falsifiers:
 5. admitted + queued + completed must equal demanded;
 6. exact extreme demand remains authored even when only a small fraction is physically admitted;
 7. no dynamic encounter, route planner or personal-space authority is introduced.
+
+
+## 16. S1-1 qualification result
+
+Exact checkpoint:
+
+`5f49fe164daa3df2a7664a516acd97d94e58cf39`
+
+CI:
+
+`36472821286` — **SUCCESS**
+
+Evidence:
+
+- **197 / 197** Node tests PASS;
+- live Chromium Workbench regression PASS;
+- first admitted hard body physically blocks the source portal until its envelope clears;
+- every admission carries an explicit hard-clear portal proof;
+- high exact demand (256) becomes visible backlog rather than initial overlap;
+- queued + active + completed conserves exact demand;
+- physical collider count equals ledger active count throughout sampled long runs;
+- sink crossing records one explicit completion;
+- completed participant collider is removed from the transit-active set;
+- no route planner, D1 episode logic, personal-space layer or hidden population cap is present.
+
+Bounded verdict:
+
+> **S1-1 PASS — a physical straight-transit source can admit hard bodies only when the spawn envelope is actually clear, preserve excess exact demand as backlog, and retire bodies explicitly on sink completion without sticky target occupancy.**
+
+This qualifies apparatus semantics only.
+
+It does not qualify counterflow, pressure response or crowd behavior.
+
+## 17. S1-2 immediate boundary — independent stimulus axes
+
+Before building bidirectional pressure, formalize one small scenario contract.
+
+Required authored axes:
+
+- `demand` — how many participants are requested per source;
+- `flowMode` — one-way / counterflow;
+- `trajectoryMode` — straight / crossing;
+- `completionMode` — sink-retire / persistent-destination;
+- `breakMode` — ordinary-valid / intentional-unsafe.
+
+Critical invariant:
+
+> **changing demand alone must not silently change trajectory topology, completion semantics or break policy.**
+
+This directly falsifies the R0 coupling where population changed spacing and `floor(sideCount/3)` target permutation.
+
+S1-2A is only the scenario contract and matched-diff evidence.
+
+S1-2B may then build a two-sided hard-body source/sink cell from that contract.

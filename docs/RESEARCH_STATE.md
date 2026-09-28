@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-28  
 **Authority:** current live truth; supersedes historical "active/current/next" wording  
 **Canonical branch:** `main`  
-**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 + R1 STATIC-ROUTE FOUNDATIONS MECHANICALLY QUALIFIED; D1 REPEATED DYNAMIC ENCOUNTER FOUNDATION MECHANICALLY QUALIFIED AND CLOSED; S1 APPARATUS REFOUNDATION ACTIVE; S1-0 FLOW-TRUTH QUALIFIED; S1-1 PHYSICAL ADMISSION / STRAIGHT TRANSIT NEXT**
+**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 + R1 STATIC-ROUTE FOUNDATIONS MECHANICALLY QUALIFIED; D1 REPEATED DYNAMIC ENCOUNTER FOUNDATION MECHANICALLY QUALIFIED AND CLOSED; S1 APPARATUS REFOUNDATION ACTIVE; S1-0 + S1-1 QUALIFIED; S1-2 INDEPENDENT STIMULUS AXES NEXT**
 
 ## 1. Owner intent
 
@@ -233,9 +233,17 @@ Exact checkpoint:
 - CI `36472032893` — SUCCESS;
 - 191 / 191 Node PASS + Chromium PASS.
 
+S1-1 physical admission / straight transit is now **MECHANICALLY QUALIFIED**.
+
+Exact checkpoint:
+
+- `5f49fe164daa3df2a7664a516acd97d94e58cf39`;
+- CI `36472821286` — SUCCESS;
+- 197 / 197 Node PASS + Chromium PASS.
+
 Immediate boundary:
 
-> **S1-1 must prove physically collision-free admission and explicit sink completion in a single-direction straight-transit cell while S1-0 preserves exact backlog truth.**
+> **S1-2 must make demand, flow topology, trajectory topology, completion semantics and break policy independent authored axes before a bidirectional physical pressure cell is admitted.**
 
 The strongest ordinary-transit candidate remains source/sink flow:
 
