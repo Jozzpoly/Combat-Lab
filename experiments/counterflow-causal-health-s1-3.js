@@ -213,6 +213,20 @@ export const counterflowCausalHealthS13={
             ]
           },
           {
+            id:"subject",
+            label:"Selected subject",
+            description:"Click one body. Geometry/contact detail is probed explicitly at selection time rather than globally every frame.",
+            values:[
+              {id:"selectedId",label:"Participant",format:value=>String(value || "click a body")},
+              {id:"subjectSide",label:"Flow side",format:value=>String(value || "—")},
+              {id:"subjectProgress",label:"Progress state",format:value=>String(value || "—")},
+              {id:"subjectNoProgress",label:"Since material progress",format:value=>Number.isFinite(value) ? value.toFixed(2)+" s" : "—"},
+              {id:"subjectSolverPartners",label:"Solver-step partners",format:value=>String(value || "—")},
+              {id:"subjectGeometryPartners",label:"Last geometry partners",format:value=>String(value || "—")},
+              {id:"subjectProbeAge",label:"Geometry probe age",format:value=>Number.isFinite(value) ? value.toFixed(2)+" s" : "—"}
+            ]
+          },
+          {
             id:"solver",
             label:"Contact / solver",
             description:"Current work, historical saturation and explicit geometry probes are not interchangeable.",
@@ -247,20 +261,6 @@ export const counterflowCausalHealthS13={
               {id:"boundaryViolations",label:"Boundary violations",decimals:0}
             ]
           },
-          {
-            id:"subject",
-            label:"Selected subject",
-            description:"Click one body. Geometry/contact detail is probed explicitly at selection time rather than globally every frame.",
-            values:[
-              {id:"selectedId",label:"Participant",format:value=>String(value || "click a body")},
-              {id:"subjectSide",label:"Flow side",format:value=>String(value || "—")},
-              {id:"subjectProgress",label:"Progress state",format:value=>String(value || "—")},
-              {id:"subjectNoProgress",label:"Since material progress",format:value=>Number.isFinite(value) ? value.toFixed(2)+" s" : "—"},
-              {id:"subjectSolverPartners",label:"Solver-step partners",format:value=>String(value || "—")},
-              {id:"subjectGeometryPartners",label:"Last geometry partners",format:value=>String(value || "—")},
-              {id:"subjectProbeAge",label:"Geometry probe age",format:value=>Number.isFinite(value) ? value.toFixed(2)+" s" : "—"}
-            ]
-          }
         ]
       },
 
