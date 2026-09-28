@@ -1,7 +1,7 @@
 # Combat Lab — R1 Embodied Route Execution / Recovery Research
 
 **Date:** 2026-09-28  
-**Status:** **ACTIVE DESIGN · R1-0 AUTHORITY AUDIT NEXT · NO ROUTE RECOVERY PROMOTION YET**  
+**Status:** **R1-0 AUTHORITY AUDIT MECHANICALLY QUALIFIED · R1-1 LOCAL SUFFIX RECONNECTION NEXT · NO GLOBAL RECOVERY PROMOTION YET**  
 **Parent foundation:** M1 constraint-aware static locomotion mechanically qualified  
 **Qualified M1 checkpoint:** `f4d92076fb88f2b538b309a56deffdc51eeeda94`  
 **Frozen Owner-tested R0:** `9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd`
@@ -391,3 +391,56 @@ Do not implement global recovery in the same change.
 Use existing N0 hard traversal, N0b witness evidence and exact filmed residual fixtures.
 
 If R1-0 cannot classify those states cleanly without inventing route policy, stop and redesign before any recovery state machine.
+
+
+## 15. R1-0 qualification result
+
+Exact qualified checkpoint:
+
+`9eb76892f4a6116e1065bbc9027069b2f42f7391`
+
+CI:
+
+`36425234758` — **SUCCESS**
+
+Evidence:
+
+- **138 / 138** Node tests PASS;
+- live Chromium Workbench regression PASS;
+- source screenshot artifact PASS;
+- R1-0 module imports only N0 hard traversal and contains no N0b/global route-query authority;
+- unchanged / harmlessly displaced witness execution remains `ACTIVE_EDGE_CLEAR`;
+- active waypoint blocked + later witness suffix locally clear is distinguished as `RECONNECTABLE_SUFFIX`;
+- exact three filmed clean-18 residual anchors all classify as **`LOST_EXECUTABILITY`**;
+- those anchors have zero reachable remaining suffix candidates under the old witness;
+- invalid-target witness truth outranks Euclidean near-target distance;
+- obstacle enumeration reversal preserves authority classification.
+
+Bounded verdict:
+
+> **R1-0 PASS — current executability of an existing route witness can be classified from actual embodied position without mutating the witness or invoking a fresh global route search.**
+
+This qualifies:
+
+- route-witness authority boundary;
+- local hard-feasibility audit of remaining witness suffix;
+- explicit distinction between active-edge authority, locally reconnectable suffix and complete loss of executability.
+
+This does **not** qualify:
+
+- choosing or executing a reconnect;
+- temporal progress;
+- recovery episodes;
+- fresh global route queries;
+- crowd behavior.
+
+### Next boundary
+
+Open **R1-1 local suffix reconnection** only.
+
+R1-1 must prove that a `RECONNECTABLE_SUFFIX` body can resume the same witness using one fresh local hard-feasible connection and qualified M1, while:
+
+- preserving witness identity;
+- never calling N0b;
+- preventing reconnect target oscillation;
+- not changing behavior for `LOST_EXECUTABILITY` states.

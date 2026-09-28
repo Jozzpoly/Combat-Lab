@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-27  
 **Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
 **Canonical branch:** `main` after repository canonicalization  
-**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 STATIC LOCOMOTION MECHANICALLY QUALIFIED; R1 ROUTE EXECUTION / RECOVERY RESEARCH ACTIVE; R1-0 AUTHORITY AUDIT NEXT**
+**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 STATIC LOCOMOTION MECHANICALLY QUALIFIED; R1-0 ROUTE AUTHORITY MECHANICALLY QUALIFIED; R1-1 LOCAL SUFFIX RECONNECTION NEXT**
 
 ## 1. Owner intent
 
@@ -294,11 +294,21 @@ Canonical records:
 - M1: `docs/M1_CONSTRAINT_AWARE_STATIC_LOCOMOTION_RESEARCH_2026-09-27.md`;
 - R1: `docs/R1_EMBODIED_ROUTE_EXECUTION_RECOVERY_RESEARCH_2026-09-28.md`.
 
-Immediate implementation boundary:
+R1-0 route-execution authority is now **MECHANICALLY QUALIFIED**.
 
-> **R1-0 must classify current route-witness executability from the embodied body's actual position without performing a fresh global N0b query.**
+Exact checkpoint:
 
-Only after that authority layer is qualified may R1 open local suffix reconnection and bounded recovery episodes.
+- `9eb76892f4a6116e1065bbc9027069b2f42f7391`;
+- CI `36425234758` — SUCCESS;
+- 138 / 138 Node PASS + live Chromium regression PASS.
+
+The three exact filmed residuals are full `LOST_EXECUTABILITY` under their old witnesses; a separate controlled case proves `RECONNECTABLE_SUFFIX` can exist without global replanning.
+
+Immediate next boundary:
+
+> **R1-1 may execute only locally reconnectable suffix evidence using M1; it must contain no N0b/global route-query authority.**
+
+Global recovery episodes remain unopened until R1-1 is qualified.
 
 M1 qualified a minimal residual-slide candidate that preserves hard blocking, tangent authority, body-size capacity and causal observability in the isolated static substrate.
 
