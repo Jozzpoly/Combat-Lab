@@ -8,6 +8,7 @@ const screenshotPath=process.env.SCREENSHOT_PATH || "";
 const extremeScreenshotPath=process.env.EXTREME_SCREENSHOT_PATH || "";
 const compactScreenshotPath=process.env.COMPACT_SCREENSHOT_PATH || "";
 const rehearsalScreenshotPath=process.env.REHEARSAL_SCREENSHOT_PATH || "";
+const s13ScreenshotPath=process.env.S1_3_SCREENSHOT_PATH || "workbench-s1-3.png";
 if(!chromeBin) throw new Error("CHROME_BIN is required");
 
 const port=9222;
@@ -777,6 +778,8 @@ try{
      !(Number(s13Subject?.geometryProbe?.ageSeconds)>=0)){
     throw new Error(`S1-3 selected-subject drilldown failed: ${JSON.stringify(s13Subject)}`);
   }
+
+  await captureScreenshot(s13ScreenshotPath);
 
   await evaluate(`(()=>{
     const s=document.querySelector("#experiment-select");
