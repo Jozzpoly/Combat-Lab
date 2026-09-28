@@ -174,8 +174,8 @@ test("D1-0 true pass, physical separation and resumed goal progress re-arm broad
       for(let i=0;i<=90;i++){
         out=observe(monitor,{
           time:i/120,
-          x:i*0.6,
-          goal:120-i*0.6,
+          x:i*1.0,
+          goal:120-i*1.0,
           partners:[]
         });
       }
