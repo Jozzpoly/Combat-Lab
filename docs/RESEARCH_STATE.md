@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-28  
 **Authority:** current live truth; supersedes historical "active/current/next" wording  
 **Canonical branch:** `main`  
-**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 + R1 STATIC-ROUTE FOUNDATIONS MECHANICALLY QUALIFIED; D1 REPEATED DYNAMIC ENCOUNTER FOUNDATION MECHANICALLY QUALIFIED AND CLOSED; S1 APPARATUS REFOUNDATION ACTIVE; S1-0 + S1-1 QUALIFIED; S1-2 INDEPENDENT STIMULUS AXES NEXT**
+**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 + R1 STATIC-ROUTE FOUNDATIONS MECHANICALLY QUALIFIED; D1 REPEATED DYNAMIC ENCOUNTER FOUNDATION MECHANICALLY QUALIFIED AND CLOSED; S1 APPARATUS REFOUNDATION ACTIVE; S1-0 + S1-1 + S1-2A QUALIFIED; S1-2B TWO-SIDED PHYSICAL PRESSURE CELL NEXT**
 
 ## 1. Owner intent
 
@@ -241,9 +241,19 @@ Exact checkpoint:
 - CI `36472821286` — SUCCESS;
 - 197 / 197 Node PASS + Chromium PASS.
 
+S1-2A independent transit stimulus axes is now **MECHANICALLY QUALIFIED**.
+
+Exact checkpoint:
+
+- `3da8c83a56d974d5f128faf3d75eb905384e41ab`;
+- CI `36473484490` — SUCCESS;
+- 204 / 204 Node PASS + Chromium PASS.
+
+Demand, flow mode, trajectory topology, completion semantics and break policy are independently authored and matched-diff comparable.
+
 Immediate boundary:
 
-> **S1-2 must make demand, flow topology, trajectory topology, completion semantics and break policy independent authored axes before a bidirectional physical pressure cell is admitted.**
+> **S1-2B may now build the first two-sided ordinary-valid straight counterflow cell on hard-valid source/sink admission, without obstacles, crossing targets or new crowd behavior authority.**
 
 The strongest ordinary-transit candidate remains source/sink flow:
 

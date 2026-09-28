@@ -1,7 +1,7 @@
 # Combat Lab — S1 Valid Pressure / Completion / Macro-Observability Refoundation
 
 **Date:** 2026-09-28  
-**Status:** **S1-0 + S1-1 MECHANICALLY QUALIFIED · S1-2 INDEPENDENT STIMULUS AXES NEXT · NO CROWD RECOMPOSITION YET**  
+**Status:** **S1-0 + S1-1 + S1-2A MECHANICALLY QUALIFIED · S1-2B TWO-SIDED PHYSICAL PRESSURE CELL NEXT · NO CROWD RECOMPOSITION YET**  
 **Parent foundations:** M1 + R1 static-route foundations mechanically qualified; D1 repeated dynamic encounter foundation mechanically qualified and closed  
 **Frozen Owner-tested R0:** `9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd`
 
@@ -597,3 +597,68 @@ This directly falsifies the R0 coupling where population changed spacing and `fl
 S1-2A is only the scenario contract and matched-diff evidence.
 
 S1-2B may then build a two-sided hard-body source/sink cell from that contract.
+
+
+## 18. S1-2A qualification result
+
+Exact checkpoint:
+
+`3da8c83a56d974d5f128faf3d75eb905384e41ab`
+
+CI:
+
+`36473484490` — **SUCCESS**
+
+Evidence:
+
+- **204 / 204** Node tests PASS;
+- live Chromium Workbench regression PASS;
+- `demand`, `flowMode`, `trajectoryMode`, `completionMode` and `breakMode` are explicit authored axes;
+- changing demand alone changes only the demand axis;
+- trajectory topology is no longer derived from population/demand;
+- completion semantics are independent of demand and trajectory mode;
+- ordinary-valid and intentional-unsafe break policy preserve the same exact authored extreme demand;
+- inconsistent authored flow declaration produces visible warning evidence instead of silent rewriting;
+- scenario snapshots contain no waypoint, route, pillar or population-derived spawn-spacing authority.
+
+Bounded verdict:
+
+> **S1-2A PASS — the transit apparatus can express demand, flow topology, trajectory topology, completion semantics and break policy as independently attributable authored variables.**
+
+This qualifies the scenario contract only.
+
+It does not qualify:
+
+- bidirectional physical counterflow;
+- source competition between two directions;
+- throughput pressure;
+- bottleneck behavior;
+- crossing trajectories;
+- persistent-destination behavior;
+- unsafe raw burst mechanics;
+- crowd intelligence.
+
+## 19. S1-2B boundary — two-sided physical pressure cell
+
+The next implementation unit is deliberately narrow.
+
+Use the qualified S1-2A contract to build **ordinary-valid, straight, sink-retire counterflow** from two physical source portals.
+
+Required invariants:
+
+1. both sources use hard-valid admission;
+2. excess exact demand remains queued;
+3. changing demand must not change straight trajectory topology;
+4. sink completion retires the participant explicitly;
+5. no invalid initial overlap is introduced by ordinary admission;
+6. current active hard bodies equal ledger active participants;
+7. physical counterflow may legitimately jam;
+8. no D1 repeated-encounter authority is required for the first apparatus qualification unless the experiment specifically tests it;
+9. no R1 static-route logic or obstacle bottleneck is introduced yet;
+10. intentional-unsafe remains a separate later break-mode cell.
+
+S1-2B should answer only:
+
+> **Can two independently authored hard-body source/sink flows generate increasing physical pressure through admitted throughput/backlog while preserving valid spawn and completion truth?**
+
+Do not open S1-3 macro UI in the same change.
