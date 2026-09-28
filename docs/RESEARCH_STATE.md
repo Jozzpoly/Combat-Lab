@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-28  
 **Authority:** current live truth; supersedes historical "active/current/next" wording  
 **Canonical branch:** `main`  
-**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 + R1 STATIC-ROUTE FOUNDATIONS MECHANICALLY QUALIFIED; D1 REPEATED DYNAMIC ENCOUNTER FOUNDATION MECHANICALLY QUALIFIED AND CLOSED; S1 APPARATUS REFOUNDATION NEXT**
+**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 + R1 STATIC-ROUTE FOUNDATIONS MECHANICALLY QUALIFIED; D1 REPEATED DYNAMIC ENCOUNTER FOUNDATION MECHANICALLY QUALIFIED AND CLOSED; S1 APPARATUS REFOUNDATION ACTIVE; S1-0 FLOW-TRUTH LEDGER NEXT**
 
 ## 1. Owner intent
 
@@ -219,31 +219,23 @@ Keep separate:
 
 ## 6. Current frontier
 
-D1 is **CLOSED** as an isolated repeated dynamic-episode foundation.
+S1 valid pressure / completion / macro-observability refoundation is **ACTIVE DESIGN**.
 
-Final D1 checkpoint:
+Canonical S1 record:
 
-- `cdcf305339f3c8da4987105ca6c31a5524fc84b1`;
-- CI `36470797852` — SUCCESS;
-- 184 / 184 Node PASS + live Chromium PASS.
+- `docs/S1_VALID_PRESSURE_COMPLETION_OBSERVABILITY_2026-09-28.md`.
 
-Qualified D1 boundary:
+Immediate boundary:
 
-- factual clear/progress evidence is required before re-arm;
-- new partner after re-arm can become episode 2;
-- same partner after re-arm can become a new episode;
-- partner handoff without a zero-contact interval remains the same unresolved episode;
-- NONE can still preserve material gridlock.
+> **S1-0 must separate exact demand, queued participants, admitted active transit and exactly-once completion without owning any physics/spawn-capacity policy.**
 
-Next frontier is **S1 valid pressure / completion / macro-observability refoundation**.
+The strongest ordinary-transit candidate is source/sink flow:
 
-Immediate S1 questions:
-
-1. how to raise pressure without invalid spawn/target overlap;
-2. how to separate straight counterflow from crossing/permuted trajectory pressure;
-3. how completion should behave in transit experiments;
-4. how macro Debug distinguishes behavioral stall, contact state, solver effort and realtime loss;
-5. how ordinary valid presets coexist with explicit permissive break regimes.
+- demand may exceed current admission capacity;
+- blocked source creates visible backlog rather than overlap spawn;
+- completion is an explicit sink-crossing event;
+- completed participants leave the transit-active contact set by declared scenario semantics;
+- intentional unsafe burst remains a separate later break regime.
 
 Do not integrate M1/R1/D1 into frozen public R0 before S1 provides a clean experiment substrate.
 
@@ -256,6 +248,7 @@ Start with:
 - `docs/M1_CONSTRAINT_AWARE_STATIC_LOCOMOTION_RESEARCH_2026-09-27.md`;
 - `docs/R1_EMBODIED_ROUTE_EXECUTION_RECOVERY_RESEARCH_2026-09-28.md`;
 - `docs/D1_REPEATED_DYNAMIC_ENCOUNTER_EPISODES_2026-09-28.md`;
+- `docs/S1_VALID_PRESSURE_COMPLETION_OBSERVABILITY_2026-09-28.md`;
 - `docs/EXPERIMENT_PROTOCOL.md`;
 - `docs/HISTORY_INDEX.md`.
 
