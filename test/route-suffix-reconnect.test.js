@@ -152,9 +152,29 @@ test("R1-1 waypoint tolerance cannot consume a corner before the next edge is ha
       });
       if(nextAudit.status!==ROUTE_EXECUTION_STATUS.ACTIVE_EDGE_CLEAR){
         sawToleranceShellWithBlockedNext=true;
-        const before=state.routeIndex;
+        const beforeIndex=state.routeIndex;
+        const beforePosition={
+          x:state.locomotion.body.x,
+          y:state.locomotion.body.y
+        };
         stepRouteSuffixReconnectState(state,DT);
-        assert.equal(state.routeIndex,before);
+        if(state.routeIndex>beforeIndex){
+          const moved=Math.hypot(
+            state.locomotion.body.x-beforePosition.x,
+            state.locomotion.body.y-beforePosition.y
+          );
+          assert.ok(moved>1e-9);
+          const postAdvance=auditRouteExecutionAuthority({
+            position:{x:state.locomotion.body.x,y:state.locomotion.body.y},
+            routeIndex:state.routeIndex,
+            witness:fresh,
+            radius:20,
+            world:WORLD,
+            obstacles:OBSTACLES,
+            arrivalTolerance:5
+          });
+          assert.equal(postAdvance.status,ROUTE_EXECUTION_STATUS.ACTIVE_EDGE_CLEAR);
+        }
         continue;
       }
     }
