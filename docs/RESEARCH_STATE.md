@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-27  
 **Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
 **Canonical branch:** `main` after repository canonicalization  
-**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 STATIC LOCOMOTION MECHANICALLY QUALIFIED; R1-0 + R1-1 MECHANICALLY QUALIFIED; R1-2 SINGLE RECOVERY EPISODE NEXT**
+**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 STATIC LOCOMOTION MECHANICALLY QUALIFIED; R1-0 + R1-1 + R1-2 MECHANICALLY QUALIFIED; R1-3 RECOVERY EPISODE RE-ARM NEXT**
 
 ## 1. Owner intent
 
@@ -314,11 +314,25 @@ Exact checkpoint:
 
 R1-1 can reconnect monotonically to a later hard-proven suffix without N0b and leaves full film-anchor LOST states untouched.
 
+R1-2 single bounded global recovery episode is now **MECHANICALLY QUALIFIED** on the hardened R1-1 substrate.
+
+Exact checkpoint:
+
+- `24b0f85f16a41953fab201ff2d19185f7a85e176`;
+- CI `36427598685` — SUCCESS;
+- 151 / 151 Node PASS + live Chromium regression PASS.
+
+Important falsification history:
+
+- initial R1-2 `803a774...` failed exact film fixture 0 because waypoint tolerance advanced route authority before the next edge was hard-clear;
+- R1-1 was reopened and hardened;
+- post-hardening all three exact filmed LOST anchors recover with exactly one fresh N0b query.
+
 Immediate next boundary:
 
-> **R1-2 may permit exactly one fresh N0b query only after persistent full LOST_EXECUTABILITY.**
+> **R1-3 may research when healthy verified execution re-arms a new independent recovery episode.**
 
-Episode re-arm is a separate R1-3 problem and remains unopened.
+Do not weaken R1-2's one-query-per-episode budget.
 
 M1 qualified a minimal residual-slide candidate that preserves hard blocking, tangent authority, body-size capacity and causal observability in the isolated static substrate.
 

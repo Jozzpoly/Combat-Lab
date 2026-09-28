@@ -519,3 +519,136 @@ Required cells:
 Only after R1-2 qualifies may R1-3 research **episode re-arm after healthy verified progress**.
 
 R1-3 must not inherit donor thresholds or reuse the already-falsified waypoint/distance heuristics.
+
+
+## 18. R1-2 qualification result
+
+Exact qualified checkpoint:
+
+`24b0f85f16a41953fab201ff2d19185f7a85e176`
+
+CI:
+
+`36427598685` — **SUCCESS**
+
+Final suite:
+
+- **151 / 151** Node tests PASS;
+- live Chromium Workbench regression PASS.
+
+### Important falsification history
+
+The first R1-2 implementation checkpoint:
+
+`803a77467ddbf0db4cfc67144ff19771f6402bf8`
+
+did **not** qualify.
+
+CI `36426660018` produced:
+
+- 149 / 150 PASS;
+- exact filmed recovery fixture 0 FAIL;
+- fresh N0b query returned a valid witness;
+- executor later entered `RECOVERY_EXHAUSTED` after a second LOST state.
+
+This was not evidence that one fresh recovery witness was inherently insufficient.
+
+The failing trace exposed an R1-1 route-execution authority defect:
+
+> entering a waypoint tolerance shell was allowed to advance the route cursor even when the next witness edge was not yet hard-feasible from the actual embodied position.
+
+For fixture 0:
+
+- fresh recovery query at ~0.35 s returned a valid witness;
+- the executor approached the first corner;
+- route cursor advanced numerically;
+- current position -> target was still blocked by `pillar.upper`;
+- the replacement witness then appeared lost and the single-query episode exhausted.
+
+R1-1 was therefore reopened and hardened.
+
+### R1-1 hardening invariant
+
+A waypoint can be consumed only when:
+
+1. current embodied position still has hard authority to the active node;
+2. if another witness edge follows, the next edge is also hard-clear from the actual embodied position.
+
+Being merely within `arrivalTolerance` of a node is insufficient.
+
+This preserves a critical distinction:
+
+> **waypoint proximity is geometric evidence; route-cursor advancement is an authority transition.**
+
+After the hardening:
+
+- the body may continue legal M1 movement around the corner while still targeting the current witness node;
+- only once the next edge has fresh hard proof may the cursor advance;
+- R1-2 exact filmed anchors then recover with the same single fresh N0b query.
+
+### Qualified R1-2 evidence
+
+The post-hardening checkpoint proves:
+
+- locally reconnectable suffix case completes with **zero** global queries;
+- full LOST must persist for the bounded loss window before any fresh N0b query;
+- all three exact filmed LOST anchors recover with **exactly one** fresh N0b query each;
+- no-witness recovery becomes explicit `NO_WITNESS`;
+- a second loss in the same episode cannot trigger a second fresh query;
+- invalid/near-target truth cannot alias into arrival;
+- fresh-witness execution obeys the hardened R1-1 corner-authority rule;
+- no route-query storm is introduced.
+
+Bounded verdict:
+
+> **R1-2 PASS — one persistent full-loss episode may receive exactly one fresh global N0b witness and recover through hardened R1-1 + qualified M1, while repeated failure in that same episode remains bounded and explicit.**
+
+This qualifies:
+
+- one bounded fresh-witness recovery episode;
+- persistence before route-query authority;
+- one-query episode budget;
+- explicit no-witness / exhausted outcomes;
+- exact recovery of the three filmed clean-18 dead-body anchors.
+
+This does **not** qualify:
+
+- re-arming a new episode after later healthy progress;
+- repeated independent displacement episodes;
+- dynamic-body encounter recovery;
+- crowd integration;
+- Owner-visible movement feel.
+
+## 19. R1-3 boundary — recovery episode re-arm
+
+R1-3 is now the only remaining route-recovery question before R1 integration can be considered.
+
+Question:
+
+> **What observable evidence proves that the actor has genuinely recovered enough that a later loss should count as a new independent recovery episode rather than continuation of the old failure?**
+
+Already rejected:
+
+- waypoint advancement alone;
+- route-index advancement alone;
+- movement by one scalar distance threshold;
+- immediate blocked-edge requery.
+
+R1-3 must preserve the R1-2 one-query-per-episode guarantee.
+
+Candidate evidence must combine:
+
+- material body motion;
+- verified route-execution authority;
+- improvement in a verified remaining-route metric;
+- persistence of that healthy progress over a bounded temporal window.
+
+Re-arm must not be triggered by:
+
+- lateral/orbit motion that does not reduce verified remaining cost;
+- M1 sliding that merely moves without route progress;
+- one lucky frame;
+- bookkeeping-only cursor changes;
+- target/metric change without body progress.
+
+R1-3 should be researched as a **small temporal monitor around R1-2**, not by weakening the R1-2 query budget.
