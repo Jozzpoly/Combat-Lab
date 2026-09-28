@@ -133,45 +133,47 @@ function releaseSecondChallenge(state,boundary){
   if(state.actorA.encounterCount!==1) return;
 
   const a=bodyById(state,"A");
-  const c=bodyById(state,"C");
+  const partnerId=state.policy.secondChallengePartner;
+  const challengeBody=bodyById(state,partnerId);
+  const challengeActor=state.passiveActors[partnerId];
   const forward=normalizedToward(a,state.actorA.target);
-  const cPosition={
+  const challengePosition={
     x:a.x+forward.x*state.policy.secondChallengeGap,
     y:a.y+forward.y*state.policy.secondChallengeGap
   };
   if(
-    cPosition.x-c.radius<0 ||
-    cPosition.x+c.radius>state.world.width ||
-    cPosition.y-c.radius<0 ||
-    cPosition.y+c.radius>state.world.height
+    challengePosition.x-challengeBody.radius<0 ||
+    challengePosition.x+challengeBody.radius>state.world.width ||
+    challengePosition.y-challengeBody.radius<0 ||
+    challengePosition.y+challengeBody.radius>state.world.height
   ){
     throw new Error("second challenge release would violate world bounds");
   }
 
-  c.x=cPosition.x;
-  c.y=cPosition.y;
-  c.vx=0;
-  c.vy=0;
-  c.desiredVelocity={x:0,y:0};
+  challengeBody.x=challengePosition.x;
+  challengeBody.y=challengePosition.y;
+  challengeBody.vx=0;
+  challengeBody.vy=0;
+  challengeBody.desiredVelocity={x:0,y:0};
 
-  const actorC=state.passiveActors.C;
-  actorC.mode="DIRECT";
-  actorC.target={
+  challengeActor.mode="DIRECT";
+  challengeActor.target={
     x:a.x-forward.x*state.policy.secondChallengeBacktrack,
     y:a.y-forward.y*state.policy.secondChallengeBacktrack
   };
-  actorC.goalDistance=distance(c,actorC.target);
+  challengeActor.goalDistance=distance(challengeBody,challengeActor.target);
 
   state.secondChallengeReleased=true;
   state.releaseHistory.push({
     time:state.time,
+    partnerId,
     triggerEpisodeId:state.actorA.episodeId,
     triggerPartnerId:boundary.triggerPartnerId,
     aPosition:{x:a.x,y:a.y},
     aTarget:{...state.actorA.target},
     challengeAxis:{...forward},
-    cPosition:{x:c.x,y:c.y},
-    cTarget:{...actorC.target},
+    challengePosition:{x:challengeBody.x,y:challengeBody.y},
+    challengeTarget:{...challengeActor.target},
     gap:state.policy.secondChallengeGap,
     backtrack:state.policy.secondChallengeBacktrack
   });
@@ -284,6 +286,7 @@ export function createSequentialDynamicEncounterState({
   rearmProgressEpsilon=8,
   secondChallengeGap=220,
   secondChallengeBacktrack=500,
+  secondChallengePartner="C",
   trialDuration=14
 }={}){
   if(!["lifetime","episodic"].includes(String(episodeMode))){
@@ -291,6 +294,10 @@ export function createSequentialDynamicEncounterState({
   }
   const r=positive(radius,"radius");
   const s=positive(speed,"speed");
+  const challengePartner=String(secondChallengePartner);
+  if(!["B","C"].includes(challengePartner)){
+    throw new Error("secondChallengePartner must be B or C");
+  }
   const side=normalizePassingSide(passingSideA);
   const aStart=point(startA,"startA");
   const bStart=point(startB,"startB");
@@ -361,7 +368,8 @@ export function createSequentialDynamicEncounterState({
       rearmClearSeconds:positive(rearmClearSeconds,"rearmClearSeconds"),
       rearmProgressEpsilon:positive(rearmProgressEpsilon,"rearmProgressEpsilon"),
       secondChallengeGap:positive(secondChallengeGap,"secondChallengeGap"),
-      secondChallengeBacktrack:positive(secondChallengeBacktrack,"secondChallengeBacktrack")
+      secondChallengeBacktrack:positive(secondChallengeBacktrack,"secondChallengeBacktrack"),
+      secondChallengePartner:challengePartner
     },
     secondChallengeReleased:false,
     releaseHistory:[],
@@ -423,6 +431,7 @@ export function sequentialDynamicEncounterSnapshot(state){
     time:state.time,
     status:state.status,
     episodeMode:state.policy.episodeMode,
+    secondChallengePartner:state.policy.secondChallengePartner,
     secondChallengeReleased:state.secondChallengeReleased,
     releaseHistory:structuredClone(state.releaseHistory),
     actorA:{
