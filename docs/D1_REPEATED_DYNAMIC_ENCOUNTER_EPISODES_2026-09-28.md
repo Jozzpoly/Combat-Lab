@@ -399,3 +399,67 @@ Required causal proof:
 - one unresolved contact still cannot spam sidesteps.
 
 Do not claim crowd intelligence if D1-1 passes.
+
+
+## 16. D1-1 first stimulus falsification and challenge redesign
+
+Initial D1-1 checkpoint:
+
+`c987d1a6ff9d83fd058f95c4f9f56fe08ae9531c`
+
+CI:
+
+`36456317521` — **FAIL**
+
+Result:
+
+- 174 / 178 Node tests PASS;
+- four D1-1 assertions FAIL;
+- baseline lifetime A unexpectedly reaches its target;
+- episodic A also records only one encounter;
+- C never appears in A's contact-partner evidence in the default sequential world.
+
+The failure is **not** evidence against D1-0 episodic re-arm.
+
+The initial stimulus assumed that two left-travelling passive bodies placed farther along the same original Y lane would automatically create two sequential head-on encounters.
+
+That assumption is false under the existing D0 motion.
+
+After A resolves B with a sidestep:
+
+- A retains substantial lateral displacement;
+- ordinary DIRECT movement only gradually converges back toward its target line;
+- C travelling on the original `y=350` line can pass without hard contact;
+- baseline and episodic candidate therefore never face a factual second encounter.
+
+This is valuable movement evidence:
+
+> **a successful local sidestep changes later encounter geometry; “put another body farther down the old lane” is not a valid repeated-encounter stimulus.**
+
+### D1-1 challenge redesign
+
+Active candidate checkpoint:
+
+`6ee3f03ffe0b1067fe2a609ea91621f96b9d5936`
+
+C is now an explicit **research challenge**, not an assumed natural crossing.
+
+Rules:
+
+1. C begins dormant and exerts no movement/steering authority.
+2. Both lifetime and episodic variants observe the same D1-0 boundary after B.
+3. Only when D1-0 proves the first encounter factually complete is C released.
+4. C is placed without overlap a fixed distance ahead of A and on A's **actual current body Y**, then travels directly against A.
+5. Release time, A position, C position and gap are preserved as experiment provenance.
+6. Lifetime baseline and episodic candidate receive the **same release event**.
+7. The only intended causal difference is whether A is allowed to consume another encounter decision after D1-0 re-arm.
+
+This is a harness intervention, not agent behavior.
+
+It must not be promoted into runtime spawning, prediction or choreography.
+
+Promotion criterion remains:
+
+- lifetime baseline resolves B once but stalls on released C;
+- episodic candidate records trigger partners exactly `B -> C` and completes;
+- no-convention first encounter remains a stable material gridlock and never releases C.
