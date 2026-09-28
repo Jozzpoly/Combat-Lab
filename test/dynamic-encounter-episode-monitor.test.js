@@ -237,3 +237,50 @@ test("D1-0 exact D0 LEFT pass eventually supplies healthy re-arm evidence only a
   assert.equal(triggerSeen,true);
   assert.equal(rearmed,true);
 });
+
+
+test("D1 closure guardrail: partner handoff without a zero-contact interval remains one unresolved episode",()=>{
+  const monitor=createDynamicEncounterEpisodeMonitor({
+    triggerPartnerId:"B",
+    requiredClearWindowSeconds:0.35,
+    progressEpsilon:8
+  });
+
+  let out=null;
+
+  // Initial factual conflict with B.
+  for(let i=0;i<60;i++){
+    out=observe(monitor,{
+      time:i/120,
+      x:i*0.1,
+      goal:120-i*0.1,
+      partners:["B"]
+    });
+  }
+
+  // C joins before B has cleared.
+  for(let i=60;i<90;i++){
+    out=observe(monitor,{
+      time:i/120,
+      x:i*0.1,
+      goal:120-i*0.1,
+      partners:["B","C"]
+    });
+  }
+
+  // B leaves, but C remains continuously in hard contact.
+  for(let i=90;i<=180;i++){
+    out=observe(monitor,{
+      time:i/120,
+      x:i*0.3,
+      goal:120-i*0.3,
+      partners:["C"]
+    });
+  }
+
+  assert.equal(out.rearmed,false);
+  assert.equal(out.status,"EPISODE_ACTIVE");
+  assert.equal(out.sampleCount,0);
+  assert.deepEqual(out.currentPartners,["C"]);
+  assert.deepEqual(out.partnersSeen,["B","C"]);
+});
