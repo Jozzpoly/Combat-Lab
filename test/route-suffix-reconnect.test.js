@@ -9,6 +9,10 @@ import {
   routeSuffixReconnectSnapshot,
   stepRouteSuffixReconnectState
 } from "../src/research/route-suffix-reconnect.js";
+import {
+  ROUTE_EXECUTION_STATUS,
+  auditRouteExecutionAuthority
+} from "../src/research/route-execution-authority.js";
 
 const DT=1/120;
 const WORLD={width:1100,height:700};
@@ -104,6 +108,63 @@ test("R1-1 reconnects monotonically to a later hard-proven suffix and completes"
   snap=run(state,4);
   assert.equal(snap.status,"COMPLETE");
   assert.equal(snap.reconnectCount,1);
+});
+
+
+
+test("R1-1 waypoint tolerance cannot consume a corner before the next edge is hard-clear",()=>{
+  const spec=buildDistributedCounterflowTopology(18,{world:WORLD})[0];
+  const position={x:490,y:275.996};
+  const fresh=witnessFor({
+    from:position,
+    to:spec.target,
+    radius:20
+  });
+  assert.equal(fresh.status,"witness");
+
+  const state=createRouteSuffixReconnectState({
+    position,
+    routeIndex:0,
+    witness:fresh,
+    radius:20,
+    speed:140,
+    world:WORLD,
+    obstacles:OBSTACLES,
+    arrivalTolerance:5
+  });
+
+  let sawToleranceShellWithBlockedNext=false;
+  for(let i=0;i<600 && state.status==="EXECUTING";i++){
+    const active=fresh.waypoints[state.routeIndex];
+    const d=Math.hypot(
+      state.locomotion.body.x-active.x,
+      state.locomotion.body.y-active.y
+    );
+    if(d<=5 && state.routeIndex<fresh.waypoints.length-1){
+      const nextAudit=auditRouteExecutionAuthority({
+        position:{x:state.locomotion.body.x,y:state.locomotion.body.y},
+        routeIndex:state.routeIndex+1,
+        witness:fresh,
+        radius:20,
+        world:WORLD,
+        obstacles:OBSTACLES,
+        arrivalTolerance:5
+      });
+      if(nextAudit.status!==ROUTE_EXECUTION_STATUS.ACTIVE_EDGE_CLEAR){
+        sawToleranceShellWithBlockedNext=true;
+        const before=state.routeIndex;
+        stepRouteSuffixReconnectState(state,DT);
+        assert.equal(state.routeIndex,before);
+        continue;
+      }
+    }
+    stepRouteSuffixReconnectState(state,DT);
+  }
+
+  assert.equal(sawToleranceShellWithBlockedNext,true);
+  const out=run(state,6);
+  assert.equal(out.status,"COMPLETE",JSON.stringify(out));
+  assert.equal(out.reconnectCount,0);
 });
 
 test("R1-1 exact filmed lost-executability anchors do not silently reconnect",()=>{

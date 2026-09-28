@@ -75,12 +75,37 @@ function updateArrival(state){
   const position=bodyPosition(state);
   if(distance(position,node.position)>state.arrivalTolerance+EPS) return false;
 
+  // Being numerically near a verified node does not grant authority to the
+  // next edge. Crowd/physics may place the body on the wrong side of a corner
+  // while still inside the waypoint tolerance shell.
+  const currentAudit=auditRouteExecutionAuthority({
+    position,
+    routeIndex:state.routeIndex,
+    witness:state.witness,
+    radius:state.radius,
+    world:state.world,
+    obstacles:state.obstacles,
+    arrivalTolerance:state.arrivalTolerance
+  });
+  if(currentAudit.status!==ROUTE_EXECUTION_STATUS.ACTIVE_EDGE_CLEAR) return false;
+
   const lastWaypointIndex=state.witness.routeNodeIds.length-2;
   if(state.routeIndex>=lastWaypointIndex){
     state.status="COMPLETE";
     setStaticLocomotionDesiredVelocity(state.locomotion,{x:0,y:0});
     return true;
   }
+
+  const nextAudit=auditRouteExecutionAuthority({
+    position,
+    routeIndex:state.routeIndex+1,
+    witness:state.witness,
+    radius:state.radius,
+    world:state.world,
+    obstacles:state.obstacles,
+    arrivalTolerance:state.arrivalTolerance
+  });
+  if(nextAudit.status!==ROUTE_EXECUTION_STATUS.ACTIVE_EDGE_CLEAR) return false;
 
   state.routeIndex+=1;
   return true;
