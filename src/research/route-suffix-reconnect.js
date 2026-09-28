@@ -250,6 +250,13 @@ export function routeSuffixReconnectSnapshot(state){
     position:bodyPosition(state),
     reconnectCount:state.reconnectCount,
     reconnectHistory:structuredClone(state.reconnectHistory),
+    witness:{
+      status:String(state.witness.status || ""),
+      target:structuredClone(state.witness.target),
+      routeNodeIds:[...(state.witness.routeNodeIds || [])],
+      routeEdgeIds:[...(state.witness.routeEdgeIds || [])],
+      clearance:Number(state.witness.clearance || 0)
+    },
     lastAuthority:state.lastAuthority ? structuredClone(state.lastAuthority) : null,
     locomotion:staticLocomotionSnapshot(state.locomotion)
   };
