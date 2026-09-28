@@ -242,3 +242,52 @@ test("R1-3 no recovery query means no episode re-arm authority",()=>{
   assert.equal(out.rearmReady,false);
   assert.equal(out.episodeId,1);
 });
+
+
+test("R1-3 re-arm remains episodic across three independent recovery episodes",()=>{
+  const state=createFixtureState();
+
+  // Episode 1: recover once, then prove healthy execution.
+  assert.equal(stepUntil(state,current=>current.rearmReady,1800),true);
+  assert.equal(state.episodeId,1);
+  assert.equal(state.totalFreshQueryCount,1);
+
+  const witness1=structuredClone(state.episode.executor.witness);
+  const loss2=findRecoverableLostPosition(state);
+  injectRearmableRouteRecoveryDisplacement(state,loss2,{reason:"open-episode-2"});
+  assert.equal(state.episodeId,2);
+  assert.equal(state.archivedEpisodes.length,1);
+
+  // Episode 2: one query only, then independently regain health.
+  assert.equal(stepUntil(state,current=>current.rearmReady,1800),true);
+  assert.equal(state.episodeId,2);
+  assert.equal(state.totalFreshQueryCount,2);
+  assert.equal(state.rearmReady,true);
+  assert.deepEqual(
+    state.archivedEpisodes[0].snapshot.executor.witness.routeNodeIds,
+    witness1.routeNodeIds
+  );
+
+  const loss3=findRecoverableLostPosition(state);
+  injectRearmableRouteRecoveryDisplacement(state,loss3,{reason:"open-episode-3"});
+  assert.equal(state.episodeId,3);
+  assert.equal(state.archivedEpisodes.length,2);
+  assert.equal(state.rearmReady,false);
+
+  // Episode 3 receives one fresh query, proving the episode rule is repeatable
+  // rather than a one-off transition hard-coded for 1 -> 2.
+  assert.equal(stepUntil(
+    state,
+    current=>current.totalFreshQueryCount===3,
+    600
+  ),true);
+
+  const out=rearmableRouteRecoverySnapshot(state);
+  assert.equal(out.episodeId,3);
+  assert.equal(out.totalFreshQueryCount,3);
+  assert.equal(out.archivedEpisodes.length,2);
+  assert.equal(out.externalDisplacements.length,2);
+  assert.equal(out.externalDisplacements[0].episodeIdAfter,2);
+  assert.equal(out.externalDisplacements[1].episodeIdAfter,3);
+  assert.ok(["RECOVERING","EXECUTING","COMPLETE"].includes(out.status));
+});
