@@ -65,7 +65,7 @@ function desiredForA(actor,body){
 }
 
 function desiredForPassive(actor,body){
-  if(actor.mode==="ARRIVED") return {x:0,y:0};
+  if(actor.mode==="DORMANT" || actor.mode==="ARRIVED") return {x:0,y:0};
   const forward=normalizedToward(body,actor.target);
   return {x:forward.x*body.maxSpeed,y:forward.y*body.maxSpeed};
 }
@@ -86,6 +86,7 @@ function contactPartners(state,id){
 }
 
 function updatePassiveArrival(state,actor,body){
+  if(actor.mode==="DORMANT") return;
   const d=distance(body,actor.target);
   actor.goalDistance=d;
   if(d>state.policy.arrivalTolerance) return;
@@ -124,6 +125,40 @@ function beginEncounter(state,actor,partnerId){
     actor.sidestepFor=0;
     actor.noProgressFor=0;
   }
+}
+
+function releaseSecondChallenge(state,boundary){
+  if(state.secondChallengeReleased) return;
+  if(!boundary?.rearmed) return;
+  if(state.actorA.encounterCount!==1) return;
+
+  const a=bodyById(state,"A");
+  const c=bodyById(state,"C");
+  const x=a.x+state.policy.secondChallengeGap;
+  if(x+c.radius>=state.world.width){
+    throw new Error("second challenge release would violate world width");
+  }
+
+  c.x=x;
+  c.y=a.y;
+  c.vx=0;
+  c.vy=0;
+  c.desiredVelocity={x:0,y:0};
+
+  const actorC=state.passiveActors.C;
+  actorC.mode="DIRECT";
+  actorC.target={x:state.policy.passiveTargetX,y:a.y};
+  actorC.goalDistance=distance(c,actorC.target);
+
+  state.secondChallengeReleased=true;
+  state.releaseHistory.push({
+    time:state.time,
+    triggerEpisodeId:state.actorA.episodeId,
+    triggerPartnerId:boundary.triggerPartnerId,
+    aPosition:{x:a.x,y:a.y},
+    cPosition:{x:c.x,y:c.y},
+    gap:state.policy.secondChallengeGap
+  });
 }
 
 function updateActorA(state,dt){
@@ -195,6 +230,8 @@ function updateEpisodeBoundary(state){
   });
   actor.lastEpisodeBoundary=out;
 
+  releaseSecondChallenge(state,out);
+
   if(
     out.rearmed &&
     state.policy.episodeMode==="episodic" &&
@@ -218,10 +255,9 @@ export function createSequentialDynamicEncounterState({
   world={width:2000,height:700},
   startA={x:250,y:350},
   startB={x:850,y:350},
-  startC={x:1450,y:350},
+  dormantC={x:1900,y:100},
   targetA={x:1750,y:350},
   targetB={x:150,y:350},
-  targetC={x:150,y:350},
   radius=36,
   speed=140,
   noProgressSeconds=0.45,
@@ -230,6 +266,8 @@ export function createSequentialDynamicEncounterState({
   arrivalTolerance=3,
   rearmClearSeconds=0.35,
   rearmProgressEpsilon=8,
+  secondChallengeGap=220,
+  passiveTargetX=150,
   trialDuration=14
 }={}){
   if(!["lifetime","episodic"].includes(String(episodeMode))){
@@ -240,10 +278,9 @@ export function createSequentialDynamicEncounterState({
   const side=normalizePassingSide(passingSideA);
   const aStart=point(startA,"startA");
   const bStart=point(startB,"startB");
-  const cStart=point(startC,"startC");
+  const cDormant=point(dormantC,"dormantC");
   const aTarget=point(targetA,"targetA");
   const bTarget=point(targetB,"targetB");
-  const cTarget=point(targetC,"targetC");
 
   const bodies=[
     createContactBody({
@@ -255,17 +292,10 @@ export function createSequentialDynamicEncounterState({
       contactResistance:1,desiredVelocity:{x:-s,y:0},maxSpeed:s
     }),
     createContactBody({
-      id:"C",position:cStart,radius:r,mass:1,motorAuthority:1,
-      contactResistance:1,desiredVelocity:{x:-s,y:0},maxSpeed:s
+      id:"C",position:cDormant,radius:r,mass:1,motorAuthority:1,
+      contactResistance:1,desiredVelocity:{x:0,y:0},maxSpeed:s
     })
   ];
-
-  const passive=(id,target)=>({
-    bodyId:id,
-    target,
-    mode:"DIRECT",
-    goalDistance:distance(bodyById({bodies},id),target)
-  });
 
   return {
     schema:SEQUENTIAL_DYNAMIC_ENCOUNTERS_SCHEMA,
@@ -293,8 +323,18 @@ export function createSequentialDynamicEncounterState({
       contactPartnersSeen:new Set()
     },
     passiveActors:{
-      B:passive("B",bTarget),
-      C:passive("C",cTarget)
+      B:{
+        bodyId:"B",
+        target:bTarget,
+        mode:"DIRECT",
+        goalDistance:distance(bStart,bTarget)
+      },
+      C:{
+        bodyId:"C",
+        target:{x:finite(passiveTargetX,"passiveTargetX"),y:cDormant.y},
+        mode:"DORMANT",
+        goalDistance:null
+      }
     },
     policy:{
       episodeMode:String(episodeMode),
@@ -303,8 +343,12 @@ export function createSequentialDynamicEncounterState({
       sidestepSeconds:positive(sidestepSeconds,"sidestepSeconds"),
       arrivalTolerance:Math.max(0,finite(arrivalTolerance,"arrivalTolerance")),
       rearmClearSeconds:positive(rearmClearSeconds,"rearmClearSeconds"),
-      rearmProgressEpsilon:positive(rearmProgressEpsilon,"rearmProgressEpsilon")
+      rearmProgressEpsilon:positive(rearmProgressEpsilon,"rearmProgressEpsilon"),
+      secondChallengeGap:positive(secondChallengeGap,"secondChallengeGap"),
+      passiveTargetX:finite(passiveTargetX,"passiveTargetX")
     },
+    secondChallengeReleased:false,
+    releaseHistory:[],
     time:0,
     trialDuration:positive(trialDuration,"trialDuration"),
     status:"RUNNING",
@@ -363,6 +407,8 @@ export function sequentialDynamicEncounterSnapshot(state){
     time:state.time,
     status:state.status,
     episodeMode:state.policy.episodeMode,
+    secondChallengeReleased:state.secondChallengeReleased,
+    releaseHistory:structuredClone(state.releaseHistory),
     actorA:{
       mode:state.actorA.mode,
       position:bodySnapshot("A").position,

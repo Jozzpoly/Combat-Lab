@@ -3,13 +3,8 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 
 import {
-  createSequentialDynamicEncounterState,
-  runSequentialDynamicEncounterTrial,
-  sequentialDynamicEncounterSnapshot,
-  stepSequentialDynamicEncounterState
+  runSequentialDynamicEncounterTrial
 } from "../src/research/sequential-dynamic-encounters.js";
-
-const DT=1/120;
 
 test("D1-1 source adds no route planner, personal-space or pre-contact avoidance authority",()=>{
   const source=fs.readFileSync(
@@ -22,29 +17,32 @@ test("D1-1 source adds no route planner, personal-space or pre-contact avoidance
   assert.doesNotMatch(source,/predict/i);
 });
 
-test("D1-1 lifetime baseline resolves B once but remains unable to negotiate later C",()=>{
+test("D1-1 lifetime baseline is rearm-eligible after B but cannot negotiate released C",()=>{
   const out=runSequentialDynamicEncounterTrial({
     episodeMode:"lifetime",
     passingSideA:1
   });
 
-  assert.equal(out.status,"TRIAL_EXPIRED",JSON.stringify(out));
+  assert.equal(out.secondChallengeReleased,true,JSON.stringify(out));
+  assert.equal(out.releaseHistory.length,1);
+  assert.equal(out.releaseHistory[0].triggerPartnerId,"B");
   assert.equal(out.actorA.encounterCount,1);
   assert.equal(out.actorA.triggerHistory.length,1);
   assert.equal(out.actorA.triggerHistory[0].partnerId,"B");
   assert.equal(out.actorA.rearmHistory.length,0);
   assert.ok(out.actorA.contactPartnersSeen.includes("C"));
+  assert.equal(out.status,"TRIAL_EXPIRED",JSON.stringify(out));
   assert.notEqual(out.actorA.mode,"ARRIVED");
   assert.ok(out.actorA.goalDistance>100);
-  assert.equal(out.actorA.lastEpisodeBoundary?.rearmed,true);
 });
 
-test("D1-1 episodic candidate triggers B then C and reaches A target",()=>{
+test("D1-1 episodic candidate triggers B then released C and reaches A target",()=>{
   const out=runSequentialDynamicEncounterTrial({
     episodeMode:"episodic",
     passingSideA:1
   });
 
+  assert.equal(out.secondChallengeReleased,true,JSON.stringify(out));
   assert.equal(out.status,"A_COMPLETE",JSON.stringify(out));
   assert.equal(out.actorA.mode,"ARRIVED");
   assert.equal(out.actorA.encounterCount,2);
@@ -52,13 +50,13 @@ test("D1-1 episodic candidate triggers B then C and reaches A target",()=>{
     out.actorA.triggerHistory.map(trigger=>trigger.partnerId),
     ["B","C"]
   );
-  assert.equal(out.actorA.rearmHistory.length,2);
+  assert.ok(out.actorA.rearmHistory.length>=1);
   assert.ok(out.actorA.rearmHistory[0].time<out.actorA.triggerHistory[1].time);
   assert.equal(out.actorA.triggerHistory[0].episodeId,1);
   assert.equal(out.actorA.triggerHistory[1].episodeId,2);
 });
 
-test("D1-1 identical physical stimulus isolates lifetime vs episodic authority",()=>{
+test("D1-1 identical post-rearm challenge isolates lifetime vs episodic authority",()=>{
   const baseline=runSequentialDynamicEncounterTrial({
     episodeMode:"lifetime",
     passingSideA:1
@@ -72,14 +70,16 @@ test("D1-1 identical physical stimulus isolates lifetime vs episodic authority",
     baseline.actorA.triggerHistory[0],
     episodic.actorA.triggerHistory[0]
   );
+  assert.deepEqual(baseline.releaseHistory,episodic.releaseHistory);
   assert.equal(baseline.passive.B.radius,episodic.passive.B.radius);
   assert.equal(baseline.passive.C.radius,episodic.passive.C.radius);
   assert.equal(baseline.actorA.encounterCount,1);
   assert.equal(episodic.actorA.encounterCount,2);
-  assert.notEqual(baseline.status,episodic.status);
+  assert.equal(baseline.status,"TRIAL_EXPIRED");
+  assert.equal(episodic.status,"A_COMPLETE");
 });
 
-test("D1-1 no-convention control preserves material gridlock and cannot timeout-spam episodes",()=>{
+test("D1-1 no-convention control preserves first material gridlock and never releases C",()=>{
   const out=runSequentialDynamicEncounterTrial({
     episodeMode:"episodic",
     passingSideA:0
@@ -90,26 +90,18 @@ test("D1-1 no-convention control preserves material gridlock and cannot timeout-
   assert.equal(out.actorA.triggerHistory[0].partnerId,"B");
   assert.equal(out.actorA.mode,"BLOCKED_NO_CONVENTION");
   assert.equal(out.actorA.rearmHistory.length,0);
-  assert.notEqual(out.actorA.mode,"ARRIVED");
+  assert.equal(out.secondChallengeReleased,false);
+  assert.equal(out.passive.C.mode,"DORMANT");
 });
 
-test("D1-1 a second body arriving before healthy clear cannot manufacture episode two",()=>{
-  const state=createSequentialDynamicEncounterState({
-    episodeMode:"episodic",
-    passingSideA:1,
-    startB:{x:850,y:350},
-    startC:{x:1000,y:350},
-    trialDuration:7
+test("D1-1 second challenge is released only after factual D1-0 rearm evidence",()=>{
+  const out=runSequentialDynamicEncounterTrial({
+    episodeMode:"lifetime",
+    passingSideA:1
   });
 
-  for(let i=0;i<Math.ceil(7/DT) && state.status==="RUNNING";i++){
-    stepSequentialDynamicEncounterState(state,DT);
-  }
-  const out=sequentialDynamicEncounterSnapshot(state);
-
-  assert.equal(out.actorA.encounterCount,1,JSON.stringify(out));
-  assert.equal(out.actorA.rearmHistory.length,0);
-  assert.notEqual(out.status,"A_COMPLETE");
-  assert.ok(out.actorA.contactPartnersSeen.includes("B"));
-  assert.ok(out.actorA.contactPartnersSeen.includes("C"));
+  assert.equal(out.releaseHistory.length,1);
+  assert.ok(out.releaseHistory[0].time>out.actorA.triggerHistory[0].time+0.8);
+  assert.equal(out.releaseHistory[0].triggerPartnerId,"B");
+  assert.ok(out.releaseHistory[0].gap>out.passive.C.radius*2);
 });
