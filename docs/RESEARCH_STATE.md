@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-28  
 **Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
 **Canonical branch:** `main` after repository canonicalization  
-**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 + R1 STATIC-ROUTE FOUNDATIONS MECHANICALLY QUALIFIED; D1 REPEATED DYNAMIC ENCOUNTER RESEARCH ACTIVE; D1-0 EPISODE-BOUNDARY AUDIT NEXT**
+**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 + R1 STATIC-ROUTE FOUNDATIONS MECHANICALLY QUALIFIED; D1-0 DYNAMIC EPISODE BOUNDARY MECHANICALLY QUALIFIED; D1-1 SEQUENTIAL NEW-PARTNER ENCOUNTER NEXT**
 
 ## 1. Owner intent
 
@@ -340,11 +340,21 @@ Canonical D1 record:
 
 - `docs/D1_REPEATED_DYNAMIC_ENCOUNTER_EPISODES_2026-09-28.md`.
 
+D1-0 dynamic encounter episode boundary is now **MECHANICALLY QUALIFIED**.
+
+Exact checkpoint:
+
+- `ae0a9f3fbfe6894aacd77ebd1250bd3797713866`;
+- CI `36455674093` — SUCCESS;
+- 172 / 172 Node PASS + live Chromium regression PASS.
+
+D1-0 re-arms only after the previous action ended, hard contact remained continuously clear, the body travelled materially and goal distance materially improved.
+
 Immediate boundary:
 
-> **D1-0 must classify when a consumed dynamic encounter is genuinely over using hard-contact clearance + material body travel + goal-distance improvement.**
+> **D1-1 must compare lifetime one-shot vs D1-0 episodic authority in the same sequential A→B then A→C encounter cell.**
 
-D1-0 has no sidestep authority. Personal-space / comfort envelopes remain out of scope.
+Personal-space, comfort envelopes, global coordination and static-route recovery remain out of scope.
 
 M1 qualified a minimal residual-slide candidate that preserves hard blocking, tangent authority, body-size capacity and causal observability in the isolated static substrate.
 

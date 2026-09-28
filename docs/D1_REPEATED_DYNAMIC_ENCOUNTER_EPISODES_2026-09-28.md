@@ -1,7 +1,7 @@
 # Combat Lab — D1 Repeated Dynamic Encounter Episodes
 
 **Date:** 2026-09-28  
-**Status:** **ACTIVE DESIGN · D1-0 EPISODE-BOUNDARY AUDIT NEXT · NO REPEATED ENCOUNTER AUTHORITY YET**  
+**Status:** **D1-0 EPISODE BOUNDARY MECHANICALLY QUALIFIED · D1-1 SEQUENTIAL NEW-PARTNER ENCOUNTER NEXT · NO CROWD PROMOTION**  
 **Parent evidence:** D0 single dynamic encounter qualified; second Owner rehearsal evidence campaign closed; M1 + R1 static-route foundations mechanically qualified  
 **Frozen Owner-tested R0:** `9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd`
 
@@ -333,3 +333,69 @@ Implement **D1-0 episode-boundary monitor first**.
 It should be a pure research module with no sidestep/contact-solving authority.
 
 Only after D1-0 passes should D1-1 receive repeated encounter execution authority.
+
+
+## 14. D1-0 qualification result
+
+Exact qualified checkpoint:
+
+`ae0a9f3fbfe6894aacd77ebd1250bd3797713866`
+
+CI:
+
+`36455674093` — **SUCCESS**
+
+Evidence:
+
+- **172 / 172** Node tests PASS;
+- live Chromium Workbench regression PASS;
+- D1-0 monitor owns no sidestep, contact-solver or static-route authority;
+- continuous hard contact never re-arms merely because time passed;
+- prior SIDESTEP must end before clear/progress evidence can accumulate;
+- brief contact gaps reset and cannot split one unresolved encounter;
+- lateral body travel without goal improvement cannot re-arm;
+- goal-distance improvement without body travel cannot re-arm;
+- sustained clean progress passes across a broad region of clear-window/progress thresholds;
+- the exact qualified D0 LEFT pass produces valid D1-0 re-arm evidence only after SIDESTEP ends.
+
+### Falsification history
+
+Initial D1-0 checkpoint `9766ada...` produced one red synthetic positive-control cell.
+
+The monitor itself was not changed.
+
+The test requested `progressEpsilon=16` inside a `0.2 s` window while its synthetic actor moved only `72 u/s`, making at most `14.4` units of progress physically available in the entire required window.
+
+The positive-control stimulus was corrected to `120 u/s`, still below the D0 body's `140 u/s` authored speed, so every tested threshold/window pair is physically satisfiable.
+
+Post-correction all D1-0 cells pass.
+
+Bounded verdict:
+
+> **D1-0 PASS — one consumed hard-body encounter may be considered factually over only after the prior action has ended, hard contact remains continuously clear, the body travels materially, and goal distance improves materially for a bounded window.**
+
+This qualifies only the episode boundary.
+
+It does not grant another sidestep.
+
+## 15. D1-1 immediate boundary
+
+Open the sequential new-partner cell.
+
+The same physical three-body stimulus must compare:
+
+1. **lifetime one-shot baseline** — A can negotiate only its first encounter;
+2. **episodic candidate** — A receives a new encounter opportunity only after D1-0 re-arms.
+
+Required causal proof:
+
+- A's first trigger names B;
+- D1-0 proves the first episode ended;
+- later A enters a factual persistent contact/no-progress episode with C;
+- baseline cannot consume a second encounter;
+- episodic candidate triggers exactly one second local encounter;
+- B and C never require pair-level choreography or a global side choice;
+- no pre-contact steering is introduced;
+- one unresolved contact still cannot spam sidesteps.
+
+Do not claim crowd intelligence if D1-1 passes.
