@@ -537,3 +537,99 @@ Required result:
 - partner provenance preserves that the identity is repeated while the encounter episode is new.
 
 Same partner identity must not mean one lifetime encounter.
+
+
+## 19. D1-2 qualification and D1 closure
+
+Final qualified checkpoint:
+
+`cdcf305339f3c8da4987105ca6c31a5524fc84b1`
+
+CI:
+
+`36470797852` — **SUCCESS**
+
+Final suite:
+
+- **184 / 184** Node tests PASS;
+- live Chromium Workbench regression PASS.
+
+### D1-2 same-partner recurrence
+
+The same-partner cell proves:
+
+- lifetime one-shot A resolves the first B encounter but cannot negotiate recycled B after a factual re-arm interval;
+- episodic A records two distinct encounters with the same partner identity:
+  - `B / episode 1`;
+  - `B / episode 2`;
+- baseline and episodic candidate receive the identical recycled-B challenge;
+- no-convention conflict never earns a recycle/re-arm;
+- partner identity therefore does not define encounter identity.
+
+Bounded verdict:
+
+> **D1-2 PASS — after factual separation and healthy resumed purpose progress, the same hard-body partner may participate in a genuinely new local encounter episode.**
+
+### Closure guardrail — partner handoff without clear interval
+
+A final negative guardrail was added before closure.
+
+Sequence:
+
+- A remains in factual hard contact with B;
+- C joins, creating `[B,C]`;
+- B leaves while C remains continuously in hard contact;
+- no frame contains a zero-contact healthy interval.
+
+Result:
+
+- episode never re-arms;
+- status remains `EPISODE_ACTIVE`;
+- `partnersSeen = [B,C]`;
+- new partner identity does not split the unresolved conflict into a new episode.
+
+This closes an important loophole:
+
+> **episode identity is governed by factual contact-clear + resumed-purpose evidence, not by partner-ID changes.**
+
+### D1 final qualified boundary
+
+D1 now qualifies:
+
+- one local hard-body encounter trigger;
+- factual episode completion boundary;
+- repeated new-partner encounter after full re-arm;
+- repeated same-partner encounter after full re-arm;
+- conservative no-rearm behavior through continuous multi-partner handoff;
+- preservation of NONE material gridlock;
+- preservation of incompatible local conventions as potentially failing.
+
+D1 does **not** qualify:
+
+- simultaneous multi-body deadlock resolution;
+- crowd-level coordination;
+- personal space;
+- anticipatory avoidance;
+- comfort envelopes;
+- route recovery;
+- dense scaling;
+- public R0 integration.
+
+D1 is therefore **CLOSED as an isolated dynamic-episode foundation**.
+
+## 20. Next stage — S1 apparatus refoundation
+
+The next research frontier is no longer another dynamic-decision mechanism.
+
+Open **S1 valid pressure / completion / macro-observability refoundation**.
+
+S1 must separate:
+
+1. population from physically invalid initial packing;
+2. throughput pressure from target/route permutation;
+3. transit completion from persistent destination occupancy;
+4. current behavioral crowd health from solver effort;
+5. solver effort from realtime capacity loss;
+6. ordinary valid presets from intentional break regimes.
+
+Only after S1 should M1 + R1 + D1 be recomposed into E2 for a fresh Owner rehearsal.

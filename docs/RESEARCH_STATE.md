@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-28  
 **Authority:** current live truth; supersedes historical "active/current/next" wording  
 **Canonical branch:** `main`  
-**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 + R1 STATIC-ROUTE FOUNDATIONS MECHANICALLY QUALIFIED; D1-0 + D1-1 REPEATED DYNAMIC ENCOUNTER FOUNDATIONS MECHANICALLY QUALIFIED; D1-2 SAME-PARTNER SECOND ENCOUNTER NEXT**
+**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 + R1 STATIC-ROUTE FOUNDATIONS MECHANICALLY QUALIFIED; D1 REPEATED DYNAMIC ENCOUNTER FOUNDATION MECHANICALLY QUALIFIED AND CLOSED; S1 APPARATUS REFOUNDATION NEXT**
 
 ## 1. Owner intent
 
@@ -219,20 +219,34 @@ Keep separate:
 
 ## 6. Current frontier
 
-D1 is the active frontier.
+D1 is **CLOSED** as an isolated repeated dynamic-episode foundation.
 
-Immediate sequence:
+Final D1 checkpoint:
 
-1. obtain a full green gate for the compact-state + D1-2 candidate;
-2. if green, canonically qualify **D1-2 same-partner recurrence**;
-3. decide whether one additional multi-partner handoff falsifier is materially necessary to close D1;
-4. close D1 as an isolated dynamic-episode foundation;
-5. move to **S1 valid pressure / completion / macro-observability refoundation**;
-6. only then perform **E2 controlled recomposition + fresh Owner rehearsal**.
+- `cdcf305339f3c8da4987105ca6c31a5524fc84b1`;
+- CI `36470797852` — SUCCESS;
+- 184 / 184 Node PASS + live Chromium PASS.
 
-Personal-space / compressible preferred-envelope research remains later.
+Qualified D1 boundary:
 
-Do not jump from D1 success directly to a crowd system.
+- factual clear/progress evidence is required before re-arm;
+- new partner after re-arm can become episode 2;
+- same partner after re-arm can become a new episode;
+- partner handoff without a zero-contact interval remains the same unresolved episode;
+- NONE can still preserve material gridlock.
+
+Next frontier is **S1 valid pressure / completion / macro-observability refoundation**.
+
+Immediate S1 questions:
+
+1. how to raise pressure without invalid spawn/target overlap;
+2. how to separate straight counterflow from crossing/permuted trajectory pressure;
+3. how completion should behave in transit experiments;
+4. how macro Debug distinguishes behavioral stall, contact state, solver effort and realtime loss;
+5. how ordinary valid presets coexist with explicit permissive break regimes.
+
+Do not integrate M1/R1/D1 into frozen public R0 before S1 provides a clean experiment substrate.
+
 
 ## 7. Canonical records
 
