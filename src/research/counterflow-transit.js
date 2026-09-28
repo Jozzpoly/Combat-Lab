@@ -15,6 +15,7 @@ import {
 } from "./transit-scenario-contract.js";
 
 export const COUNTERFLOW_TRANSIT_SCHEMA="combat-lab-counterflow-transit-s1-v0";
+export const COUNTERFLOW_SOLVER_ITERATION_LIMIT=12;
 
 const EPS=1e-9;
 const SIDES=Object.freeze(["eastbound","westbound"]);
@@ -290,7 +291,7 @@ export function stepCounterflowTransitState(state,dt){
     body.desiredVelocity={x:direction*state.speed,y:0};
   }
 
-  stepContactWorld(state,delta,{iterations:12,pairOrder:"forward"});
+  stepContactWorld(state,delta,{iterations:COUNTERFLOW_SOLVER_ITERATION_LIMIT,pairOrder:"forward"});
   completeSinkCrossings(state);
 
   const ledger=flowTruthLedgerSnapshot(state.ledger);
@@ -334,6 +335,10 @@ export function counterflowTransitSnapshot(state){
     minPairSurfaceGap:minPairSurfaceGap(state.bodies),
     admissionHistory:state.admissionHistory.map(item=>structuredClone(item)),
     completionHistory:state.completionHistory.map(item=>structuredClone(item)),
+    solverIterationLimit:COUNTERFLOW_SOLVER_ITERATION_LIMIT,
+    solverIterationsUsed:state.solverIterationsUsed,
+    pairChecksThisStep:state.pairChecksThisStep,
+    contactResolutionsThisStep:state.contactResolutionsThisStep,
     contactPairsThisStep:state.contactPairsThisStep,
     totalContactPairSteps:state.totalContactPairSteps,
     pairChecks:state.totalPairChecks,
