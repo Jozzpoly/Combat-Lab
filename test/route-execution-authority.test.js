@@ -151,13 +151,12 @@ test("R1-0 exact filmed residual anchors no longer inherit active-edge route aut
     });
 
     assert.equal(audit.activeTraversal.clear,false,`${fixture.id}: ${JSON.stringify(audit)}`);
-    assert.ok(
-      [
-        ROUTE_EXECUTION_STATUS.LOST_EXECUTABILITY,
-        ROUTE_EXECUTION_STATUS.RECONNECTABLE_SUFFIX
-      ].includes(audit.status),
+    assert.equal(
+      audit.status,
+      ROUTE_EXECUTION_STATUS.LOST_EXECUTABILITY,
       `${fixture.id}: ${JSON.stringify(audit)}`
     );
+    assert.equal(audit.reachableSuffixCandidates.length,0);
     assert.equal(audit.arrivalEligible,false);
   }
 });
