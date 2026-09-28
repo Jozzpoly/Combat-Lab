@@ -117,18 +117,20 @@ test("S1-2B demand changes do not change straight source/sink topology",()=>{
   assert.notDeepEqual(a.scenario.demand,b.scenario.demand);
 });
 
-test("S1-2B higher matched demand creates more source backlog without changing topology",()=>{
-  const low=runCounterflowTransitTrial({scenario:scenario(8,8),trialDuration:2});
-  const high=runCounterflowTransitTrial({scenario:scenario(64,64),trialDuration:2});
+test("S1-2B higher matched demand drives a material jam back into source backlog without changing topology",()=>{
+  const low=runCounterflowTransitTrial({scenario:scenario(8,8),trialDuration:8});
+  const high=runCounterflowTransitTrial({scenario:scenario(32,32),trialDuration:8});
 
   assert.deepEqual(low.sources,high.sources);
   assert.deepEqual(low.sinks,high.sinks);
   assert.deepEqual(low.world,high.world);
   assert.equal(low.scenario.trajectoryMode,high.scenario.trajectoryMode);
-  assert.ok(
-    high.ledger.totals.queued>low.ledger.totals.queued,
-    JSON.stringify({low:low.ledger.totals,high:high.ledger.totals})
-  );
+  assert.equal(low.ledger.totals.queued,0);
+  assert.ok(high.ledger.totals.queued>0,JSON.stringify(high.ledger.totals));
+  assert.ok(high.ledger.totals.active>low.ledger.totals.active);
+  assert.ok(high.totalContactPairSteps>low.totalContactPairSteps);
+  assert.equal(high.ledger.perSide.eastbound.queued,high.ledger.perSide.westbound.queued);
+  assert.equal(high.ledger.perSide.eastbound.active,high.ledger.perSide.westbound.active);
   assert.equal(low.physicalActiveCount,low.ledger.totals.active);
   assert.equal(high.physicalActiveCount,high.ledger.totals.active);
 });
@@ -214,6 +216,15 @@ test("S1-2B rejects unsupported topology/completion/break modes instead of silen
       })
     }),
     /breakMode=ordinary-valid/
+  );
+  assert.throws(
+    ()=>createCounterflowTransitState({
+      scenario:buildTransitScenarioContract({
+        demand:{eastbound:2,westbound:0},
+        flowMode:"counterflow"
+      })
+    }),
+    /positive demand on both sides/
   );
 });
 
