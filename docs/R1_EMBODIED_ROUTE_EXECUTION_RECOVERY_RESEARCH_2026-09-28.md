@@ -1,7 +1,7 @@
 # Combat Lab — R1 Embodied Route Execution / Recovery Research
 
 **Date:** 2026-09-28  
-**Status:** **R1-0 + R1-1 MECHANICALLY QUALIFIED · R1-2 SINGLE RECOVERY EPISODE NEXT · EPISODE RE-ARM UNOPENED**  
+**Status:** **R1-0 / R1-1 / R1-2 / R1-3 MECHANICALLY QUALIFIED · ISOLATED R1 FOUNDATION CLOSED · D1 NEXT · NOT INTEGRATED INTO R0**  
 **Parent foundation:** M1 constraint-aware static locomotion mechanically qualified  
 **Qualified M1 checkpoint:** `f4d92076fb88f2b538b309a56deffdc51eeeda94`  
 **Frozen Owner-tested R0:** `9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd`
@@ -652,3 +652,119 @@ Re-arm must not be triggered by:
 - target/metric change without body progress.
 
 R1-3 should be researched as a **small temporal monitor around R1-2**, not by weakening the R1-2 query budget.
+
+
+## 20. R1-3 qualification result
+
+R1-3 was qualified in layers.
+
+### Temporal re-arm monitor
+
+Checkpoint: `02cb27c390c49d6a55bb5b63de475389dfcfed45`  
+CI: `36448373414` — **SUCCESS**
+
+Evidence:
+
+- 158 / 158 Node tests PASS;
+- live Chromium Workbench regression PASS;
+- monitor owns no N0b/global-recovery authority;
+- one lucky frame cannot re-arm;
+- lateral body travel without verified route-cost improvement cannot re-arm;
+- metric improvement without material body movement cannot re-arm;
+- route-authority loss resets the healthy window;
+- exact filmed R1-2 recovery produces sufficient healthy verified execution to re-arm;
+- a broad local epsilon region (2 / 8 / 16 world units) passes.
+
+### Episode integration
+
+Checkpoint: `36adcd7c711e1a9d07b949ae3063689cc28b3568`  
+CI: `36448864784` — **SUCCESS**
+
+Evidence:
+
+- 163 / 163 Node tests PASS;
+- displacement before healthy re-arm remains inside the old one-query episode;
+- healthy verified execution opens exactly one new independent episode;
+- episode 2 receives exactly one fresh query;
+- a further loss before episode-2 re-arm cannot query again;
+- no recovery query means no re-arm authority.
+
+### Repeat-episode audit and provenance gap
+
+A stricter `1 -> 2 -> 3` episode test at `b8625da110cfafce87d29112f3bde1c234336924` produced CI `36449316315`: **163 / 164 PASS**.
+
+The failure was not route/recovery behavior. The archived public snapshot did not expose which witness had been executed, so the test could not prove preserved route authority.
+
+That was treated as a real observability/provenance gap. The R1-1 snapshot was extended with bounded witness evidence:
+
+- witness status;
+- target;
+- route node IDs;
+- route edge IDs;
+- clearance.
+
+No movement or recovery behavior changed.
+
+Final checkpoint: `8c4861872b34641e93f88e09607a52da0775b2cc`  
+CI: `36449586770` — **SUCCESS**
+
+Final evidence:
+
+- **164 / 164** Node tests PASS;
+- live Chromium Workbench regression PASS;
+- independent recovery episodes repeat across `1 -> 2 -> 3`;
+- cumulative fresh-query count remains one per episode;
+- archived episodes retain witness provenance;
+- the same unresolved episode still cannot obtain a second query.
+
+Bounded verdict:
+
+> **R1-3 PASS — a consumed recovery episode can be re-armed only after sustained hard-valid execution with material body travel and verified remaining-route improvement, permitting later independent recovery episodes without weakening the one-query-per-episode invariant.**
+
+## 21. R1 closure
+
+R1 is now **MECHANICALLY QUALIFIED / ISOLATED / NOT INTEGRATED INTO R0**.
+
+Qualified chain:
+
+1. **M1** — legal tangent static locomotion while preserving hard blocking;
+2. **R1-0** — existing-witness execution authority audit;
+3. **R1-1** — local reconnect to a later hard-proven suffix without N0b;
+4. **R1-2** — one bounded fresh global witness after persistent full loss;
+5. **R1-3** — recovery-episode re-arm only after healthy verified progress.
+
+Bounded supported claim:
+
+> **one embodied circle can execute and recover a verified static route through externally injected displacement episodes without continuous global replanning, route-query storms, waypoint-authority overreach or wall-stick.**
+
+R1 does **not** qualify:
+
+- body-body negotiation;
+- repeated dynamic encounters;
+- crowd competence;
+- right-of-way;
+- personal space;
+- dense scaling;
+- final Feniks navigation;
+- Owner-visible movement feel;
+- integration into the public R0 rehearsal.
+
+Frozen Owner-tested R0 remains:
+
+`9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd`
+
+### Next boundary
+
+Open **D1 repeated dynamic encounter episodes**.
+
+Do not extend static route recovery further without new evidence.
+
+D1 must begin from the already-qualified clean open-space control:
+
+- hard bodies;
+- no static obstacles;
+- straight targets;
+- NONE preserves material head-on gridlock;
+- LEFT / RIGHT resolve one clean encounter.
+
+The next question is whether local dynamic competence can re-arm across genuinely distinct body-body encounters without becoming global crowd steering.

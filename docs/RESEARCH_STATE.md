@@ -1,9 +1,9 @@
 # Combat Lab — Current Research State
 
-**Canonical status date:** 2026-09-27  
+**Canonical status date:** 2026-09-28  
 **Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
 **Canonical branch:** `main` after repository canonicalization  
-**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 STATIC LOCOMOTION MECHANICALLY QUALIFIED; R1-0 + R1-1 + R1-2 MECHANICALLY QUALIFIED; R1-3 RECOVERY EPISODE RE-ARM NEXT**
+**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 + R1 STATIC-ROUTE FOUNDATIONS MECHANICALLY QUALIFIED; D1 REPEATED DYNAMIC ENCOUNTERS NEXT**
 
 ## 1. Owner intent
 
@@ -314,25 +314,29 @@ Exact checkpoint:
 
 R1-1 can reconnect monotonically to a later hard-proven suffix without N0b and leaves full film-anchor LOST states untouched.
 
-R1-2 single bounded global recovery episode is now **MECHANICALLY QUALIFIED** on the hardened R1-1 substrate.
+R1 static-route recovery is now **MECHANICALLY QUALIFIED AS AN ISOLATED FOUNDATION**.
 
-Exact checkpoint:
+Qualified checkpoints:
 
-- `24b0f85f16a41953fab201ff2d19185f7a85e176`;
-- CI `36427598685` — SUCCESS;
-- 151 / 151 Node PASS + live Chromium regression PASS.
+- R1-0 authority: `9eb76892...` — CI `36425234758`;
+- R1-1 local suffix reconnect: `5e68644e...` — CI `36425997880`;
+- R1-2 one-query recovery: post-hardening `24b0f85f...` — CI `36427598685`;
+- R1-3 episodic re-arm + witness provenance: `8c486187...` — CI `36449586770`, **164 / 164 Node PASS + Chromium PASS**.
 
-Important falsification history:
+Key R1 invariants now defended:
 
-- initial R1-2 `803a774...` failed exact film fixture 0 because waypoint tolerance advanced route authority before the next edge was hard-clear;
-- R1-1 was reopened and hardened;
-- post-hardening all three exact filmed LOST anchors recover with exactly one fresh N0b query.
+- route proximity does not grant next-edge authority;
+- locally reconnectable suffixes do not need N0b;
+- full LOST requires persistence before one fresh witness;
+- one unresolved episode cannot query twice;
+- a later episode opens only after sustained hard-valid movement **and** verified remaining-route improvement;
+- repeat episodes `1 -> 2 -> 3` preserve one-query-per-episode budget and archived witness provenance.
+
+Frozen public R0 remains unchanged and does not consume this stack.
 
 Immediate next boundary:
 
-> **R1-3 may research when healthy verified execution re-arms a new independent recovery episode.**
-
-Do not weaken R1-2's one-query-per-episode budget.
+> **D1 repeated dynamic encounter episodes — re-arm local body-body negotiation across genuinely distinct encounters without global crowd steering.**
 
 M1 qualified a minimal residual-slide candidate that preserves hard blocking, tangent authority, body-size capacity and causal observability in the isolated static substrate.
 
