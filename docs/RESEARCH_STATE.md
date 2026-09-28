@@ -1,43 +1,28 @@
 # Combat Lab — Current Research State
 
 **Canonical status date:** 2026-09-28  
-**Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
-**Canonical branch:** `main` after repository canonicalization  
+**Authority:** current live truth; supersedes historical "active/current/next" wording  
+**Canonical branch:** `main`  
 **Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 + R1 STATIC-ROUTE FOUNDATIONS MECHANICALLY QUALIFIED; D1-0 + D1-1 REPEATED DYNAMIC ENCOUNTER FOUNDATIONS MECHANICALLY QUALIFIED; D1-2 SAME-PARTNER SECOND ENCOUNTER NEXT**
 
 ## 1. Owner intent
 
-Combat Lab exists to discover combat language and embodied possibility for Feniks.
+Combat Lab is a permissive, self-directed research environment for discovering combat language and embodied possibility for Feniks.
 
-It is deliberately broader than melee or hitting. Important research territory includes:
+It is broader than melee. Relevant territory includes body envelope, mass/load, locomotor authority, occupied space, collision/support, reach, weapons, projectiles, magic, terrain, multiple actors, mixed modalities and persistent material state.
 
-- body size / envelope / proportions;
-- intrinsic and carried mass;
-- movement and locomotor authority;
-- occupied space / collision / support;
-- reach, shields, polearms, axes;
-- bows / projectiles;
-- magic;
-- terrain;
-- multiple actors and future co-op pressure;
-- mixed modalities;
-- persistent material/world state.
+Core Owner requirements:
 
-No single historical line — including R3 sword/tool contact — is the project spine.
+- preserve direct live intervention and exact/extreme editing;
+- keep important underlying dimensions independently authorable;
+- allow intentional break regimes rather than paternalistic hidden caps, ghosting or despawn;
+- explain causes, not merely expose raw counters;
+- preserve meaningful hard-body blocking and spatial consequences;
+- prefer bounded falsifiable experiments over prematurely declaring a final combat/crowd architecture.
 
-A clean implementation restart is allowed whenever accumulated architecture constrains discovery. Evidence must survive such resets.
+Future **optional explicit linkage / correlated scaling** between dimensions may be useful for quickly authored coherent phenotypes, but must remain visible, reversible and optional.
 
-### Post-closure Owner direction — 2026-09-26
-
-These are **Owner intent / future capability candidates**, not qualified mechanics and not an automatic next implementation:
-
-- preserve envelope, mass/load and locomotor authority as independently editable underlying dimensions;
-- later explore **optional explicit linkage / correlated scaling** so one authored change (for example body size) can deliberately drive selected mass, speed, force or other dimensions up/down together when the Owner wants a coherent phenotype quickly;
-- such linkage must remain visible, reversible and authorable rather than becoming a hidden universal law that destroys independent experimentation;
-- expand future test pressure toward a **larger and more varied world** with more terrain, obstacles and multiple varied opponents / residents, especially for displacement, pushing, being pushed, clearance and spatial-relation experiments;
-- population pressure must remain **permissively scalable**: a small deterministic baseline may improve readability, but the Owner must be able to spawn more bodies directly (for example +1 / +5 / +10 repeatedly) and intentionally drive the experiment into crowd, horde and break regimes;
-- targeted donor recovery from **Feniks, ReflexBrain, Companion and SPC** is question-driven rather than scheduled wholesale; the first concrete movement/feasibility need has already recovered bounded Companion whole-body feasibility evidence, while other donors remain unselected until a live dependency justifies them;
-- cross-project donor code or architecture is never local authority by default: recover the exact useful property/evidence, transplant the minimum when a Combat Lab question actually needs it, and re-qualify it locally.
+Cross-project donor recovery from **Feniks, ReflexBrain, Companion and SPC** is question-driven only. Donor architecture is never local authority by default.
 
 ## 2. Evidence hierarchy
 
@@ -45,333 +30,222 @@ For product/experience claims:
 
 > **Owner feedback and Owner-observed behavior > machine PASS > documentation > prior roadmap.**
 
-If Owner play says a feature or specimen does not work, its product-level status is FAIL until new real evidence is Owner-observed.
+Machine evidence can qualify narrow mechanisms. It cannot override an Owner-observed product FAIL.
 
-Machine evidence may remain as narrow diagnostic/mechanism evidence.
+## 3. Live repository / deployment truth
 
-## 3. Current qualified foundation
+Research topology:
 
-### Workbench substrate — MECHANICALLY QUALIFIED; CURRENT LAB UX HAS MATERIAL OWNER FINDINGS
+- `main` — canonical research/governance truth;
+- `experiment/active-spatial-ecology` — closed historical Ecology execution/evidence lane retained for provenance;
+- `rehearsal/current` — infrastructure-only exact public rehearsal control plane, not research authority.
 
-Owner-observed direct use includes:
+The **current deployed Pages artifact is frozen R0**:
 
-- sliders and exact numeric editing;
-- live manipulation while simulation runs;
-- per-parameter reset;
-- Reset World;
-- Debug;
-- experiment switching;
-- one parameter-slot capture.
+`9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd`
 
-Current substrate also has:
+Direct selector:
 
-- focus isolation between Inspector editing and world input;
-- permissive soft ranges + wide numerical safety rails;
-- explicit `EXTREME` and `SAFETY RAIL` truth;
-- authored vs derived/live values;
-- A/B parameter slots;
-- exact provenance;
-- source-tree and emitted-artifact browser qualification.
+`?experiment=integrated-ecology-rehearsal-r0`
 
-A/B capture/application is now **OWNER-USED** in the first Ecology recording, but comparison usefulness remains **UNPROVEN** because the recording ends before a clean interpreted A↔B loop is established.
+Frozen R0 remains intentionally unchanged while refoundation proceeds in isolated research modules.
 
-### B0 Load / Envelope — POSITIVE OWNER SIGNAL / STAGE CLOSED
+## 4. Qualified foundations
 
-The Owner explicitly judged the direction positively and spontaneously explored non-correlated phenotypes, including small/heavy/high-force and giant/heavy/high-force configurations.
+### Workbench + B0 — CLOSED / mechanically qualified; UX has material Owner findings
 
-Narrowly supported principle:
+Preserve:
 
-> **Spatial envelope, inertial burden/load and locomotor authority should remain separable research dimensions unless later evidence justifies correlating them.**
+- exact numeric editing and permissive extremes;
+- live intervention;
+- explicit Reset World;
+- authored vs derived truth;
+- provenance/comparison infrastructure;
+- independent envelope, mass/load and locomotor authority.
 
-Still unqualified:
+Do **not** treat the existing Inspector/Debug information architecture as a final design.
 
-- final body model;
-- final mass units;
-- final load/equipment model;
-- final locomotor-force law;
-- braking / max-speed coupling;
-- traction;
-- stance;
-- rotational inertia;
-- humanoid collider geometry;
-- armour restrictions;
-- combat consequences.
+### First Ecology target — INCONCLUSIVE
 
-## 4. Current B0 closure evidence
-
-Final Owner-feedback-driven implementation introduced:
-
-- widened B0 numerical rails:
-  - envelope `0.05 .. 12`;
-  - intrinsic body mass `0.01 .. 200`;
-  - carried load `0 .. 200`;
-  - locomotor force `0.01 .. 100`;
-- Owner-entered force `42` is legal;
-- committed numeric fields always display the value actually applied;
-- real rail contact is explicitly labelled `SAFETY RAIL`;
-- shorter Inspector copy;
-- research experiments separated from internal diagnostics.
-
-Closure implementation evidence:
-
-- **31 / 31 automated checks PASS**;
-- live Chromium gate PASS;
-- normal / Owner-derived extreme / 1280×800 screenshots inspected;
-- emitted Pages gate PASS;
-- real public Opera verification PASS.
-
-Exact Owner-verified closure specimen before repository canonicalization:
-
-- `2eb9a878eb4fa9c406ca0e90abcab33cb186332a`.
-
-Exact docs/closure checkpoint before repository cleanup:
-
-- `a7c629e6e62c61969652327416bbc19a01793a4f`.
-
-## 5. Historical combat evidence — boundaries
-
-No accepted Feniks combat model exists.
-
-Important historical outcomes remain evidence/donors:
-
-- R0 authored arc vs sampled sweep — **FAILED AS COMBAT EXPERIMENT**;
-- R1 small combat organism — **OWNER FEEL FAIL**;
-- LIVE / BOUNDED / CAPTURED control spike — **REJECTED AS NON-DISCRIMINATING**;
-- Combat Terrarium / Ruined Gate — **OWNER FAIL**, bounded material-contact donors retained;
-- Phenotype Combat Ecology — mechanism donor only;
-- O1 HOLD/BREAK — whole-organism FAIL, shield/support donors retained;
-- O2 REACH/THREAT — whole-organism FAIL, reach/clearance donors retained;
-- Adversarial Combat Organism v1 — whole-organism FAIL, screening/first-solid donors retained;
-- LINE / IMPULSE — whole-organism FAIL, projectile/impulse donors retained;
-- E0 / E0b — reusable grammar FAIL, ACCESS/DRIVE/SET donors retained;
-- Continuous Readiness R0 — causal-kernel qualified;
-- Readiness Under Pressure R1 / Follow-Through R2 — failed to convert local persistence into meaningful decision persistence;
-- Relational Manifold R3 — joint-afterstate causal-kernel qualified;
-- R3 Owner contact — first positive human signal, but literal sword-physics fit for Feniks remains unproven;
-- S0 BODY / WORLD — positive direction signal;
-- B0 — positive embodiment-decomposition signal.
-
-See [Historical evidence index](HISTORY_INDEX.md).
-
-## 6. Repository / deployment truth
-
-The completed cleanup campaign temporarily reduced repository topology to `main` only after ancestry verification of all stale refs.
-
-Current **research topology** intentionally contains:
-
-- `main` — canonical truth / governance;
-- `experiment/active-spatial-ecology` — closed Ecology execution/evidence lane retained temporarily because its unique lineage and exact public specimen still matter; not current execution authority.
-
-A separate infrastructure-only ref may be present:
-
-- `rehearsal/current` — exact public-rehearsal / rollback control plane; never an authoring lane and never research authority.
-
-Do not count `rehearsal/current` as a third research branch. Its only legitimate motion is an explicit move to an already-selected exact candidate or intended rollback source.
-
-The active lane was opened from green canonical main:
-
-- base: `4b44a001be679cb987c8470ce208d3b503d698a9`;
-- internally qualified runtime checkpoint: `d55b3b093325452e6dc730f314c886a2cbc85229`;
-- exact qualified public-rehearsal candidate: `ce96587826746efad426347a8a394048810e4ee2`.
-
-Do not use a moving branch HEAD as rehearsal provenance. Docs-only branch commits may advance independently; public rehearsal must name an exact SHA.
-
-Other repository truth remains:
-
-- all six old stale experiment/refoundation refs remain deleted;
-- unique historical lineages remain reachable from `main` through canonical Git ancestry;
-- old "active/current/next" language in historical documents is explicitly marked non-authoritative;
-- the former append-only state is preserved in `docs/archive/`;
-- permanent workflows are only `check.yml` and `pages.yml`;
-- deployments are exact-SHA and browser-qualified;
-- Pages deployment requires explicit `[deploy]` from checked `main`, a successful checked `rehearsal/current` move to an exact candidate, or manual workflow dispatch of an exact source ref;
-- ordinary `experiment/*` pushes never deploy;
-- the **current deployed Pages artifact is frozen R0 `9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd` via `rehearsal/current`**;
-- source check `36318084351` on the moved rehearsal ref — SUCCESS;
-- Pages build/deploy `36318131633` — SUCCESS;
-- emitted artifact `10931422584` contains `COMMIT.txt = 9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd` and `BRANCH.txt = rehearsal/current`, and was browser-qualified before upload;
-- ordinary root still defaults to B0;
-- direct current rehearsal selector is `?experiment=integrated-ecology-rehearsal-r0`;
-- independent external fetch from this agent runtime was unavailable after deployment (GitHub Pages inaccessible to built-in web and Opera Connector disconnected), so the fresh Owner open is also the remaining external surface verification;
-- the first Ecology specimen remains preserved as historical Git evidence at `experiment/active-spatial-ecology = ce96587826746efad426347a8a394048810e4ee2`; it is not the current Pages artifact;
-- repository closure evidence is recorded in `REPOSITORY_CLOSURE_AUDIT_2026-09-26.md`.
-
-## 7. Current objective / next move
-
-The first Ecology recording/feedback campaign remains **CLOSED**.
-
-Canonical classification remains:
+Canonical classification:
 
 > **TARGET HYPOTHESIS INCONCLUSIVE — APPARATUS LIMITATIONS BECAME THE DOMINANT FINDING.**
 
-The mechanics refoundation has now reached a bounded integration checkpoint:
+The second Owner rehearsal nevertheless produced a meaningful positive signal: the valid small-crowd regime begins to produce recognizable crowd-like compression, temporary jams, release and local collective behavior.
 
-- L0/L1 apparatus truth is mechanically qualified;
-- N0/N0b static feasibility and verified alternative witnesses are mechanically qualified;
-- N1 static-obstruction recovery is mechanically qualified;
-- C0 candidate contact semantics are mechanically qualified, not selected Feniks physics;
-- P0 performance/scaling attribution is mechanically qualified;
-- D0 dynamic encounter competence is mechanically qualified;
-- E1 bounded 8-body integration is mechanically qualified at `88a7ffe13d54e7eb3b25346fc9d4113b723733c2`, CI `36311419931`.
-
-E1 remains deliberately narrow. It does not qualify crowd-scale efficiency, production pathfinding/physics, final contact law, final passing semantics or Owner experience. Its 8-body browser probe reached `21 / 24` coupled passes and ~`174,496` pair checks over 10 s; P0 remains mandatory when scale rises.
-
-### R0 second-rehearsal candidate — INTERNALLY QUALIFIED / OWNER EXPERIENCE UNQUALIFIED
-
-Exact frozen runtime candidate:
-
-- `9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd`;
-- source CI `36317682590` — **SUCCESS**;
-- Node suite PASS;
-- live Chromium Workbench gate PASS;
-- source screenshot artifact PASS;
-- direct startup route `?experiment=integrated-ecology-rehearsal-r0` browser-qualified.
-
-R0 addresses the material apparatus findings from the first Owner recording without changing the qualified E1 mechanics:
-
-- **camera:** real mouse-wheel zoom under cursor, explicit wide `0.12× … 8×` rails, Fit, middle-drag pan;
-- **information architecture:** persistent **Tune / Observe / Compare / Session** contexts replace one long generic Inspector;
-- **pressure authoring:** exact **Population on reset** replaces repeated `Spawn +50`; current population and next-reset population remain distinct until explicit Reset World;
-- **breakability:** population soft range is convenience only; explicit numerical rail remains high and no hidden despawn/ghosting/protective cap is introduced;
-- **causal observation:** clicking one resident selects it and opens Observe with **Why now / Purpose / Immediate plan / Blocked by / No progress / Last decision** plus embodied dimensions;
-- **debug scope:** selected-subject route/intent/contact evidence replaces global target-line webs as the primary explanation surface;
-- **comparison truth:** population is intentionally excluded from A/B because changing count also rebuilds distributed topology; shared passing convention remains scoped comparison state;
-- **provenance:** the exact R0 direct URL is qualified before deployment.
-
-Important boundary:
-
-> **R0 is internally qualified as an exact public rehearsal candidate, not as a good Owner experience. Only a new Owner rehearsal can qualify usability, readability, explanatory value, feel or research usefulness.**
-
-### Immediate next move
-
-The second Owner recording feedback/evidence campaign is now **CLOSED AT EVIDENCE SATURATION**.
-
-Do not modify frozen R0 merely because the recording produced plausible feature ideas or because analysis-only counterfactuals produced promising candidates.
-
-Current high-value findings:
-
-- Owner reports that the experiment now begins to imitate a crowd;
-- Owner also observes balls that become stuck / appear to “die”;
-- every final residual in the physically valid 4–20 sweep belongs to the same stale-ROUTE / zero-fraction static-contact family;
-- exact reconstruction maps all three filmed clean-18 residuals to that mechanism;
-- static locomotion currently discards viable tangent motion at wall contact;
-- route witness authority becomes invalid after crowd displacement, but immediate route re-query causes severe replan thrashing;
-- analysis-only wall sliding fixes the complete clean 4–20 sweep but does not restore route execution truth;
-- analysis-only stale-route -> DIRECT -> bounded N1 recovery helps but cannot fix every valid case without wall sliding;
-- composing those two candidates yields a clean 4–20 sweep with bounded replan counts, but is **not yet a selected implementation**;
-- pure straight/open counterflow still requires explicit local dynamic negotiation: NONE remains a material head-on gridlock while LEFT/RIGHT resolve it;
-- `ARRIVED` is a sticky mode and becomes heavily displaced above the clean packing floor, but retiring completed bodies does not fix the clean residual family;
-- current distributed start/target topology is collision-free only through population **20**;
-- population is a scenario generator rather than a clean monotonic pressure scalar;
-- 64 and 256 remain contaminated by invalid packing, solver/capacity pressure and at 256 sustained correctness failure;
-- exact population authoring is a clear apparatus improvement;
-- selected-subject causal Observe / camera feel / Compare remain Owner-unqualified because they were not materially exercised.
-
-Canonical active evidence record:
+Canonical evidence:
 
 - `docs/ACTIVE_SECOND_OWNER_REHEARSAL_RECORDING_FEEDBACK_2026-09-27.md`.
 
-The recording/frozen-R0 extraction campaign is now **closed at evidence saturation**.
+### E1 / frozen R0
 
-Do not continue generating broad R0 counterfactuals by inertia.
+Bounded E1 integration is mechanically qualified.
 
-M1 constraint-aware static locomotion is now **MECHANICALLY QUALIFIED / NOT INTEGRATED**.
+R0 is internally/browser qualified as the exact public rehearsal specimen, but current Owner experience is not promoted as final Lab UX.
 
-Exact checkpoint:
+### M1 — constraint-aware static locomotion
 
-- `f4d92076fb88f2b538b309a56deffdc51eeeda94`;
-- CI `36356102263` — SUCCESS;
-- A–H mechanical falsifiers PASS;
-- exact three filmed wall-death anchors PASS;
-- S2 was not opened because the one-contact residual-slide candidate passed the required corner gate.
+Mechanically qualified isolated foundation:
 
-M1 remains an isolated research foundation; frozen R0 is unchanged.
+`f4d92076fb88f2b538b309a56deffdc51eeeda94`
 
-R1 embodied route execution / recovery research is now **ACTIVE DESIGN**.
+Core invariant:
 
-Canonical records:
+> remove unsupported normal authority at hard static contact while preserving legal tangent motion and hard body truth.
 
-- M1: `docs/M1_CONSTRAINT_AWARE_STATIC_LOCOMOTION_RESEARCH_2026-09-27.md`;
-- R1: `docs/R1_EMBODIED_ROUTE_EXECUTION_RECOVERY_RESEARCH_2026-09-28.md`.
+M1 is not integrated into frozen R0.
 
-R1-0 route-execution authority is now **MECHANICALLY QUALIFIED**.
+### R1 — embodied static-route execution/recovery
 
-Exact checkpoint:
+Mechanically qualified as an isolated foundation.
 
-- `9eb76892f4a6116e1065bbc9027069b2f42f7391`;
-- CI `36425234758` — SUCCESS;
-- 138 / 138 Node PASS + live Chromium regression PASS.
+Canonical record:
 
-The three exact filmed residuals are full `LOST_EXECUTABILITY` under their old witnesses; a separate controlled case proves `RECONNECTABLE_SUFFIX` can exist without global replanning.
+- `docs/R1_EMBODIED_ROUTE_EXECUTION_RECOVERY_RESEARCH_2026-09-28.md`.
 
-R1-1 local suffix reconnect is now **MECHANICALLY QUALIFIED**.
-
-Exact checkpoint:
-
-- `5e68644e55e8301acc36f22c3a209d53fd4ff59d`;
-- CI `36425997880` — SUCCESS;
-- 144 / 144 Node PASS + live Chromium regression PASS.
-
-R1-1 can reconnect monotonically to a later hard-proven suffix without N0b and leaves full film-anchor LOST states untouched.
-
-R1 static-route recovery is now **MECHANICALLY QUALIFIED AS AN ISOLATED FOUNDATION**.
-
-Qualified checkpoints:
-
-- R1-0 authority: `9eb76892...` — CI `36425234758`;
-- R1-1 local suffix reconnect: `5e68644e...` — CI `36425997880`;
-- R1-2 one-query recovery: post-hardening `24b0f85f...` — CI `36427598685`;
-- R1-3 episodic re-arm + witness provenance: `8c486187...` — CI `36449586770`, **164 / 164 Node PASS + Chromium PASS**.
-
-Key R1 invariants now defended:
+Defended invariants:
 
 - route proximity does not grant next-edge authority;
-- locally reconnectable suffixes do not need N0b;
-- full LOST requires persistence before one fresh witness;
-- one unresolved episode cannot query twice;
-- a later episode opens only after sustained hard-valid movement **and** verified remaining-route improvement;
-- repeat episodes `1 -> 2 -> 3` preserve one-query-per-episode budget and archived witness provenance.
+- local hard-proven suffix reconnect does not require global replanning;
+- full loss of executability must persist before one bounded fresh witness;
+- one unresolved episode cannot query repeatedly;
+- a later recovery episode opens only after sustained hard-valid body movement **and** verified remaining-route improvement;
+- repeated episodes preserve one-query-per-episode budget and witness provenance.
 
-Frozen public R0 remains unchanged and does not consume this stack.
+R1 remains separate from dynamic body-body negotiation and frozen R0.
 
-D1 repeated dynamic encounter research is now **ACTIVE DESIGN**.
+### D1 — repeated local dynamic encounter episodes
 
-Canonical D1 record:
+Canonical record:
 
 - `docs/D1_REPEATED_DYNAMIC_ENCOUNTER_EPISODES_2026-09-28.md`.
 
-D1-0 dynamic encounter episode boundary and D1-1 sequential new-partner recurrence are now **MECHANICALLY QUALIFIED**.
+**D1-0 mechanically qualified:**
 
-Qualified checkpoints:
+- continuous contact cannot re-arm by timeout;
+- brief contact gaps do not split one conflict;
+- prior SIDESTEP action must finish;
+- clear body travel alone is insufficient;
+- goal-metric change without body motion is insufficient;
+- re-arm requires continuous hard-contact clearance + material body travel + material goal-distance improvement.
 
-- D1-0: `ae0a9f3fbfe6894aacd77ebd1250bd3797713866` — CI `36455674093`;
-- D1-1: `7a3f7518a78ca8f820f030b24926081cfcaf078b` — CI `36457830159`, 179 / 179 Node PASS + Chromium PASS.
+Qualified checkpoint:
 
-D1-1 proves a matched causal contrast:
+`ae0a9f3fbfe6894aacd77ebd1250bd3797713866`
 
-- lifetime one-shot resolves B but fails the post-rearm C head-on challenge;
+**D1-1 mechanically qualified:**
+
+Matched post-rearm challenge proves:
+
+- lifetime one-shot resolves first partner B but fails the later factual C head-on challenge;
 - episodic authority records `B -> C` and completes;
-- NONE remains a material gridlock.
+- NONE preserves a material gridlock;
+- no route planner, personal-space layer, pre-contact avoidance or pair-level choreography is added.
 
-Immediate boundary:
+Qualified checkpoint:
 
-> **D1-2 must prove that the same partner identity can form a genuinely new episode only after D1-0 healthy re-arm.**
+`7a3f7518a78ca8f820f030b24926081cfcaf078b`
 
-Personal-space, comfort envelopes, global coordination and static-route recovery remain out of scope.
+**D1-2 current candidate:**
 
-M1 qualified a minimal residual-slide candidate that preserves hard blocking, tangent authority, body-size capacity and causal observability in the isolated static substrate.
+Checkpoint:
 
-Targeted donor recovery from `Jozzpoly/Box3d-Character-Controler@e7a98be...` contributes only the invariant/falsifier pattern “remove unsupported normal authority, preserve valid tangent authority”; donor runtime architecture is not imported.
+`35e757da0d6d2b3fbe9824d85067871a87bfda67`
 
-After M1 qualification:
+All four same-partner D1-2 cells passed in the latest machine run:
 
-1. **R1 embodied route execution / recovery episodes**;
-2. **D1 repeated dynamic encounter episodes**;
-3. **S1 valid pressure/completion/macro-observability substrate**;
-4. then **E2 controlled recomposition + fresh Owner rehearsal**.
+- lifetime baseline cannot renegotiate recycled B;
+- episodic candidate records distinct `B(ep1) -> B(ep2)`;
+- baseline/candidate receive identical recycled-B challenge;
+- NONE never earns recycle/re-arm.
 
-Personal-space / compressible-envelope research remains a later horizon after those foundations.
+The full run remained red only because this canonical state exceeded its compactness budget. D1-2 is therefore **not yet promoted** until a fresh full green gate passes after state compaction.
 
+## 5. Recording-derived findings that still constrain refoundation
+
+### Clean residual death
+
+In physically valid 4–20 R0 trials, final residual failures were dominated by one family:
+
+- crowd displacement invalidates route execution;
+- stale ROUTE state survives;
+- static contact reaches near-zero hit fraction;
+- old locomotion discards useful tangent motion;
+- route recovery cannot re-arm.
+
+M1 + R1 were created from this evidence and qualified separately.
+
+### Dynamic encounter truth
+
+Clean open-space controls establish:
+
+- NONE can preserve a genuine material head-on gridlock;
+- LEFT/RIGHT local passing conventions can resolve one encounter;
+- repeated encounter competence must be episodic rather than lifetime one-shot.
+
+D1 must preserve those controls.
+
+### Dense regime remains contaminated
+
+Current distributed start/target topology is collision-free only through population **20**.
+
+Above that, population changes simultaneously alter packing validity, target feasibility, solver pressure, completion congestion and route geometry.
+
+64 loses realtime badly; 256 is an intentional break regime.
+
+Do not use current dense R0 as clean evidence for crowd intelligence, personal space or solver quality.
+
+### Arrival semantics remain open
+
+`ARRIVED` is sticky in frozen R0 and can diverge from current geometric occupancy at invalid density.
+
+Transit completion vs persistent destination occupancy must be separated later in S1.
+
+### Debug / observability direction
+
+Useful diagnostic flow:
+
+> **macro anomaly → suspicious cohort → selected-subject causal drilldown**
+
+Keep separate:
+
+- behavioral progress/stall;
+- physical contact;
+- route/execution validity;
+- recovery state;
+- current solver effort vs historical peak;
+- realtime performance;
+- historical completion vs current physical occupancy.
+
+## 6. Current frontier
+
+D1 is the active frontier.
+
+Immediate sequence:
+
+1. obtain a full green gate for the compact-state + D1-2 candidate;
+2. if green, canonically qualify **D1-2 same-partner recurrence**;
+3. decide whether one additional multi-partner handoff falsifier is materially necessary to close D1;
+4. close D1 as an isolated dynamic-episode foundation;
+5. move to **S1 valid pressure / completion / macro-observability refoundation**;
+6. only then perform **E2 controlled recomposition + fresh Owner rehearsal**.
+
+Personal-space / compressible preferred-envelope research remains later.
+
+Do not jump from D1 success directly to a crowd system.
+
+## 7. Canonical records
+
+Start with:
+
+- `docs/ACTIVE_SECOND_OWNER_REHEARSAL_RECORDING_FEEDBACK_2026-09-27.md`;
+- `docs/M1_CONSTRAINT_AWARE_STATIC_LOCOMOTION_RESEARCH_2026-09-27.md`;
+- `docs/R1_EMBODIED_ROUTE_EXECUTION_RECOVERY_RESEARCH_2026-09-28.md`;
+- `docs/D1_REPEATED_DYNAMIC_ENCOUNTER_EPISODES_2026-09-28.md`;
+- `docs/EXPERIMENT_PROTOCOL.md`;
+- `docs/HISTORY_INDEX.md`.
+
+Historical detail belongs in those records and Git history, not by duplication into this live state.
 
 ### Active invariant
 
