@@ -692,6 +692,101 @@ try{
     return evaluate('window.__combatLabRuntime.activeExperimentId==="load-envelope-field-b0" && !!document.querySelector(\'[data-param-id="loadMass"]\')');
   });
 
+  // S1-3 browser observation: macro anomaly -> cohort -> selected-subject drilldown.
+  await evaluate(`(()=>{
+    const s=document.querySelector("#experiment-select");
+    s.value="counterflow-causal-health-s1-3";
+    s.dispatchEvent(new Event("change",{bubbles:true}));
+  })()`);
+  await waitFor("switch B0 to S1-3 causal-health cell",async()=>{
+    return evaluate(`(()=>{
+      const r=window.__combatLabRuntime;
+      return r?.activeExperimentId==="counterflow-causal-health-s1-3" &&
+        r?.snapshot?.macro?.flow?.demanded===32 &&
+        !document.querySelector("#camera-tools")?.hidden &&
+        !!document.querySelector('[data-param-id="eastboundDemand"]') &&
+        !!document.querySelector('[data-param-id="westboundDemand"]');
+    })()`);
+  });
+
+  await waitFor("S1-3 real material jam becomes macro-visible",async()=>{
+    return evaluate(`(()=>{
+      const m=window.__combatLabRuntime.query("macro-causal-health");
+      return m?.flow?.active>0 &&
+        m?.flow?.completed===0 &&
+        m?.behavior?.stalled?.count>0 &&
+        m?.contact?.solverStep?.bodyCount>0 &&
+        m?.validity?.invalidAdmissionCount===0 &&
+        m?.validity?.physicalLedgerActiveMatch===true;
+    })()`);
+  },{timeout:8000,interval:80});
+
+  const s13Macro=await evaluate('window.__combatLabRuntime.query("macro-causal-health")');
+  const s13Flow=s13Macro?.flow;
+  const s13Conserved=Number(s13Flow?.queued)+Number(s13Flow?.active)+Number(s13Flow?.completed)===Number(s13Flow?.demanded);
+  if(s13Macro?.runtime?.available!==true ||
+     !s13Conserved ||
+     !(Number(s13Flow?.active)>0) ||
+     !(Number(s13Macro?.behavior?.stalled?.count)>0) ||
+     !(Number(s13Macro?.contact?.solverStep?.bodyCount)>0) ||
+     s13Macro?.validity?.invalidAdmissionCount!==0 ||
+     s13Macro?.validity?.physicalLedgerActiveMatch!==true){
+    throw new Error(`S1-3 macro truth planes failed: ${JSON.stringify(s13Macro)}`);
+  }
+
+  const s13Probe=await evaluate('window.__combatLabRuntime.query("current-contact-probe")');
+  if(!(s13Probe?.pairChecks>0) || !(s13Probe?.contactPairCount>0) ||
+     !(Number(s13Probe?.maxResidualPenetration)>=0)){
+    throw new Error(`S1-3 explicit geometry probe failed: ${JSON.stringify(s13Probe)}`);
+  }
+
+  const s13Selected=await evaluate(`(()=>{
+    const r=window.__combatLabRuntime;
+    const stalled=r.query("macro-causal-health")?.behavior?.stalled?.ids || [];
+    const transit=r.query("transit-state");
+    const id=stalled[0];
+    const body=transit?.bodies?.find(item=>item.id===id);
+    if(!id || !body) return {error:"no stalled body"};
+    const canvas=document.querySelector("#lab");
+    const rect=canvas.getBoundingClientRect();
+    const camera=r.camera.snapshot();
+    const x=rect.left+rect.width/2+(body.x-camera.center.x)*camera.zoom;
+    const y=rect.top+rect.height/2+(body.y-camera.center.y)*camera.zoom;
+    canvas.dispatchEvent(new PointerEvent("pointerdown",{
+      bubbles:true,
+      button:0,
+      pointerId:73,
+      clientX:x,
+      clientY:y
+    }));
+    return {
+      expected:id,
+      selected:r.snapshot?.selectedId,
+      observeActive:document.querySelector('[data-inspector-mode="observe"]')?.getAttribute("aria-selected"),
+      observeHidden:document.querySelector('[data-inspector-panel="observe"]')?.hidden
+    };
+  })()`);
+  if(s13Selected.error || s13Selected.selected!==s13Selected.expected ||
+     s13Selected.observeActive!=="true" || s13Selected.observeHidden!==false){
+    throw new Error(`S1-3 cohort-to-subject selection failed: ${JSON.stringify(s13Selected)}`);
+  }
+
+  const s13Subject=await evaluate('window.__combatLabRuntime.query("selected-subject")');
+  if(s13Subject?.subject?.progressState!=="STALLED" ||
+     s13Subject?.geometryProbe?.available!==true ||
+     !(Number(s13Subject?.geometryProbe?.ageSeconds)>=0)){
+    throw new Error(`S1-3 selected-subject drilldown failed: ${JSON.stringify(s13Subject)}`);
+  }
+
+  await evaluate(`(()=>{
+    const s=document.querySelector("#experiment-select");
+    s.value="load-envelope-field-b0";
+    s.dispatchEvent(new Event("change",{bubbles:true}));
+  })()`);
+  await waitFor("switch S1-3 back to B0",async()=>{
+    return evaluate('window.__combatLabRuntime.activeExperimentId==="load-envelope-field-b0" && !!document.querySelector(\'[data-param-id="loadMass"]\')');
+  });
+
   // Rehearsal R0: real camera input, selected-subject causal observation and exact population-on-reset authoring.
   await evaluate(`(()=>{
     const s=document.querySelector("#experiment-select");

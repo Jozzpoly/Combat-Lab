@@ -22,6 +22,7 @@ import {minimalReplanCellN1} from "./experiments/minimal-replan-cell-n1.js";
 import {contactSemanticsCellC0} from "./experiments/contact-semantics-cell-c0.js";
 import {dynamicEncounterCellD0} from "./experiments/dynamic-encounter-cell-d0.js";
 import {integratedEcologyRehearsalR0} from "./experiments/integrated-ecology-rehearsal-r0.js";
+import {counterflowCausalHealthS13} from "./experiments/counterflow-causal-health-s1-3.js";
 
 const canvas=document.querySelector("#lab");
 const ctx=canvas.getContext("2d");
@@ -61,6 +62,7 @@ registry.register(minimalReplanCellN1);
 registry.register(contactSemanticsCellC0);
 registry.register(dynamicEncounterCellD0);
 registry.register(integratedEcologyRehearsalR0);
+registry.register(counterflowCausalHealthS13);
 
 const runner=new FixedStepRunner({dt:1/120,maxFrame:0.05,maxAccum:0.10});
 const input=new BrowserInput({pointerTarget:canvas});
@@ -240,7 +242,7 @@ function syncCameraUi(){
 }
 
 function loadExperiment(id){
-  current=registry.create(id);
+  current=registry.create(id,{runtimePerformance});
   runtime.activeExperimentId=id;
   cameraBounds=experimentCameraBounds();
   cameraNeedsFit=Boolean(cameraBounds);
