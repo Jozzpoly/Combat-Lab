@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-27  
 **Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
 **Canonical branch:** `main` after repository canonicalization  
-**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 STATIC LOCOMOTION MECHANICALLY QUALIFIED; R1-0 ROUTE AUTHORITY MECHANICALLY QUALIFIED; R1-1 LOCAL SUFFIX RECONNECTION NEXT**
+**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 STATIC LOCOMOTION MECHANICALLY QUALIFIED; R1-0 + R1-1 MECHANICALLY QUALIFIED; R1-2 SINGLE RECOVERY EPISODE NEXT**
 
 ## 1. Owner intent
 
@@ -304,11 +304,21 @@ Exact checkpoint:
 
 The three exact filmed residuals are full `LOST_EXECUTABILITY` under their old witnesses; a separate controlled case proves `RECONNECTABLE_SUFFIX` can exist without global replanning.
 
+R1-1 local suffix reconnect is now **MECHANICALLY QUALIFIED**.
+
+Exact checkpoint:
+
+- `5e68644e55e8301acc36f22c3a209d53fd4ff59d`;
+- CI `36425997880` — SUCCESS;
+- 144 / 144 Node PASS + live Chromium regression PASS.
+
+R1-1 can reconnect monotonically to a later hard-proven suffix without N0b and leaves full film-anchor LOST states untouched.
+
 Immediate next boundary:
 
-> **R1-1 may execute only locally reconnectable suffix evidence using M1; it must contain no N0b/global route-query authority.**
+> **R1-2 may permit exactly one fresh N0b query only after persistent full LOST_EXECUTABILITY.**
 
-Global recovery episodes remain unopened until R1-1 is qualified.
+Episode re-arm is a separate R1-3 problem and remains unopened.
 
 M1 qualified a minimal residual-slide candidate that preserves hard blocking, tangent authority, body-size capacity and causal observability in the isolated static substrate.
 

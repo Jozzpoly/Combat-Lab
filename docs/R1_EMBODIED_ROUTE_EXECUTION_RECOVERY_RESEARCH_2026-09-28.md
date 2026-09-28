@@ -1,7 +1,7 @@
 # Combat Lab — R1 Embodied Route Execution / Recovery Research
 
 **Date:** 2026-09-28  
-**Status:** **R1-0 AUTHORITY AUDIT MECHANICALLY QUALIFIED · R1-1 LOCAL SUFFIX RECONNECTION NEXT · NO GLOBAL RECOVERY PROMOTION YET**  
+**Status:** **R1-0 + R1-1 MECHANICALLY QUALIFIED · R1-2 SINGLE RECOVERY EPISODE NEXT · EPISODE RE-ARM UNOPENED**  
 **Parent foundation:** M1 constraint-aware static locomotion mechanically qualified  
 **Qualified M1 checkpoint:** `f4d92076fb88f2b538b309a56deffdc51eeeda94`  
 **Frozen Owner-tested R0:** `9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd`
@@ -444,3 +444,78 @@ R1-1 must prove that a `RECONNECTABLE_SUFFIX` body can resume the same witness u
 - never calling N0b;
 - preventing reconnect target oscillation;
 - not changing behavior for `LOST_EXECUTABILITY` states.
+
+
+## 16. R1-1 qualification result
+
+Exact qualified checkpoint:
+
+`5e68644e55e8301acc36f22c3a209d53fd4ff59d`
+
+CI:
+
+`36425997880` — **SUCCESS**
+
+Evidence:
+
+- **144 / 144** Node tests PASS;
+- live Chromium Workbench regression PASS;
+- R1-1 source explicitly contains no N0b / `findStaticRouteWitness` authority;
+- active hard-valid witness edge executes through qualified M1 with zero reconnects;
+- blocked active edge + later hard-proven witness suffix reconnects monotonically and completes;
+- reconnect preserves original witness identity;
+- route cursor never moves backward under stable static geometry;
+- exact three filmed `LOST_EXECUTABILITY` anchors remain LOST with zero motion and zero reconnect attempts;
+- hard body radius / M1 final occupancy remain intact.
+
+Bounded verdict:
+
+> **R1-1 PASS — a body may locally reconnect to a later still-verified suffix of the same witness without a fresh global route search, while complete loss of witness executability remains explicit and inert.**
+
+This qualifies:
+
+- monotonic local suffix reconnect;
+- preservation of witness identity;
+- no opportunistic shortcut while active edge remains valid;
+- no hidden recovery for full LOST states.
+
+This does **not** qualify:
+
+- any fresh global route query;
+- temporal loss persistence;
+- retry budgets;
+- recovery re-arm;
+- repeated displacement episodes.
+
+## 17. R1-2 — single bounded global recovery episode
+
+R1-2 is intentionally narrower than the earlier design wording.
+
+Question:
+
+> **After a body enters full LOST_EXECUTABILITY and remains there as a genuine no-progress condition, can exactly one bounded fresh N0b query recover execution without route-query thrash?**
+
+R1-2 must not yet solve episode re-arm.
+
+Candidate boundary:
+
+1. R1-1 executor reaches `LOST_EXECUTABILITY`;
+2. desired route progress remains unsatisfied;
+3. loss persists over a bounded temporal window;
+4. one fresh N0b query is permitted;
+5. if direct/witness route is returned, replace the exhausted witness and resume through R1-1 + M1;
+6. if no witness exists, expose explicit no-witness/unreachable evidence;
+7. **no second fresh query is allowed in the same episode**, even if the replacement witness later fails.
+
+Required cells:
+
+- exact three filmed LOST anchors -> one fresh query -> completion if current N0b can recover them;
+- transient/local reconnect case -> zero global queries;
+- LOST state shorter than persistence window -> zero query;
+- fresh witness fails immediately -> one query total, then explicit exhausted/no-progress state;
+- no-witness result -> one query total, explicit terminal evidence;
+- Euclidean-near invalid target -> no arrival alias.
+
+Only after R1-2 qualifies may R1-3 research **episode re-arm after healthy verified progress**.
+
+R1-3 must not inherit donor thresholds or reuse the already-falsified waypoint/distance heuristics.
