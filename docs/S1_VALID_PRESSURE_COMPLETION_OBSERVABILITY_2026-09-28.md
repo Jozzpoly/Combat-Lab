@@ -1,7 +1,7 @@
 # Combat Lab — S1 Valid Pressure / Completion / Macro-Observability Refoundation
 
 **Date:** 2026-09-28  
-**Status:** **ACTIVE DESIGN · S1-0 FLOW-TRUTH LEDGER NEXT · NO CROWD RECOMPOSITION YET**  
+**Status:** **S1-0 FLOW-TRUTH LEDGER MECHANICALLY QUALIFIED · S1-1 PHYSICAL ADMISSION / STRAIGHT TRANSIT NEXT · NO CROWD RECOMPOSITION YET**  
 **Parent foundations:** M1 + R1 static-route foundations mechanically qualified; D1 repeated dynamic encounter foundation mechanically qualified and closed  
 **Frozen Owner-tested R0:** `9fe3e7f7ecbd94636cee7d9b3cdbb9e54cab60cd`
 
@@ -475,3 +475,71 @@ Implement **S1-0 flow-truth ledger** as a pure research module + tests.
 Do not put physics or portal-clearance logic into S1-0.
 
 The first PASS should establish that extreme exact demand, queue state, active transit and completion can coexist without hidden clamps, dropped participants or sticky completion ambiguity.
+
+
+## 14. S1-0 qualification result
+
+Exact checkpoint:
+
+`bd2684d1397e3a00acc4d0e028c45e01ac87b732`
+
+CI:
+
+`36472032893` — **SUCCESS**
+
+Evidence:
+
+- **191 / 191** Node tests PASS;
+- live Chromium Workbench regression PASS;
+- exact demand of 256 is preserved without hidden cap/drop;
+- a physically blocked future source can leave demand queued simply by emitting no ADMIT event;
+- admission preserves deterministic per-source queue order;
+- active transit and completed transit are disjoint states;
+- completion is exactly-once;
+- queued/non-active participants cannot complete;
+- per-side demanded / queued / active / completed truth is preserved;
+- event provenance is time-monotonic;
+- the ledger contains no contact solver, occupancy query or population-cap authority;
+- stress demand of 10,000 remains representable as queued truth.
+
+Bounded verdict:
+
+> **S1-0 PASS — exact authored flow demand, queued demand, admitted active transit and exactly-once completion can be represented independently without hidden capacity policy or physical admission authority.**
+
+This does not prove:
+
+- collision-free admission;
+- source portal semantics;
+- physical throughput;
+- sink crossing;
+- counterflow pressure;
+- crowd behavior.
+
+## 15. S1-1 immediate boundary
+
+Open a **single-direction hard-body straight-transit cell**.
+
+Why single-direction first:
+
+> admission/backlog/completion must be qualified before opposing-flow behavior is allowed to contaminate the result.
+
+S1-1 should:
+
+- request an exact cohort through S1-0;
+- use one physical source portal;
+- admit only when a real hard-body occupancy check says the spawn envelope is clear;
+- preserve all blocked demand in the queue;
+- drive admitted bodies straight toward a sink;
+- count completion on sink crossing;
+- remove completed bodies from the transit-active contact set by explicit scenario semantics;
+- preserve admission/completion event provenance.
+
+Required falsifiers:
+
+1. high demand cannot create overlap at admission;
+2. blocked portal cannot silently drop/replace demand;
+3. completion cannot leave an invisible active collider behind;
+4. physical body count must equal ledger active count;
+5. admitted + queued + completed must equal demanded;
+6. exact extreme demand remains authored even when only a small fraction is physically admitted;
+7. no dynamic encounter, route planner or personal-space authority is introduced.

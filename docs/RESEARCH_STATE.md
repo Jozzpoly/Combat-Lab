@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-28  
 **Authority:** current live truth; supersedes historical "active/current/next" wording  
 **Canonical branch:** `main`  
-**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 + R1 STATIC-ROUTE FOUNDATIONS MECHANICALLY QUALIFIED; D1 REPEATED DYNAMIC ENCOUNTER FOUNDATION MECHANICALLY QUALIFIED AND CLOSED; S1 APPARATUS REFOUNDATION ACTIVE; S1-0 FLOW-TRUTH LEDGER NEXT**
+**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 + R1 STATIC-ROUTE FOUNDATIONS MECHANICALLY QUALIFIED; D1 REPEATED DYNAMIC ENCOUNTER FOUNDATION MECHANICALLY QUALIFIED AND CLOSED; S1 APPARATUS REFOUNDATION ACTIVE; S1-0 FLOW-TRUTH QUALIFIED; S1-1 PHYSICAL ADMISSION / STRAIGHT TRANSIT NEXT**
 
 ## 1. Owner intent
 
@@ -225,11 +225,19 @@ Canonical S1 record:
 
 - `docs/S1_VALID_PRESSURE_COMPLETION_OBSERVABILITY_2026-09-28.md`.
 
+S1-0 flow-truth ledger is now **MECHANICALLY QUALIFIED**.
+
+Exact checkpoint:
+
+- `bd2684d1397e3a00acc4d0e028c45e01ac87b732`;
+- CI `36472032893` — SUCCESS;
+- 191 / 191 Node PASS + Chromium PASS.
+
 Immediate boundary:
 
-> **S1-0 must separate exact demand, queued participants, admitted active transit and exactly-once completion without owning any physics/spawn-capacity policy.**
+> **S1-1 must prove physically collision-free admission and explicit sink completion in a single-direction straight-transit cell while S1-0 preserves exact backlog truth.**
 
-The strongest ordinary-transit candidate is source/sink flow:
+The strongest ordinary-transit candidate remains source/sink flow:
 
 - demand may exceed current admission capacity;
 - blocked source creates visible backlog rather than overlap spawn;
