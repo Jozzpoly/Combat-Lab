@@ -3,7 +3,7 @@
 **Canonical status date:** 2026-09-28  
 **Authority:** current live truth; supersedes older "active/current/next" wording inside historical campaign documents  
 **Canonical branch:** `main` after repository canonicalization  
-**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 + R1 STATIC-ROUTE FOUNDATIONS MECHANICALLY QUALIFIED; D1 REPEATED DYNAMIC ENCOUNTERS NEXT**
+**Stage:** **Workbench + B0 CLOSED; first Ecology feedback campaign CLOSED; bounded E1 MECHANICALLY QUALIFIED; R0 DEPLOYED; SECOND OWNER REHEARSAL FEEDBACK CAMPAIGN CLOSED AT EVIDENCE SATURATION; CROWD-LIKE OWNER SIGNAL POSITIVE; M1 + R1 STATIC-ROUTE FOUNDATIONS MECHANICALLY QUALIFIED; D1 REPEATED DYNAMIC ENCOUNTER RESEARCH ACTIVE; D1-0 EPISODE-BOUNDARY AUDIT NEXT**
 
 ## 1. Owner intent
 
@@ -334,9 +334,17 @@ Key R1 invariants now defended:
 
 Frozen public R0 remains unchanged and does not consume this stack.
 
-Immediate next boundary:
+D1 repeated dynamic encounter research is now **ACTIVE DESIGN**.
 
-> **D1 repeated dynamic encounter episodes — re-arm local body-body negotiation across genuinely distinct encounters without global crowd steering.**
+Canonical D1 record:
+
+- `docs/D1_REPEATED_DYNAMIC_ENCOUNTER_EPISODES_2026-09-28.md`.
+
+Immediate boundary:
+
+> **D1-0 must classify when a consumed dynamic encounter is genuinely over using hard-contact clearance + material body travel + goal-distance improvement.**
+
+D1-0 has no sidestep authority. Personal-space / comfort envelopes remain out of scope.
 
 M1 qualified a minimal residual-slide candidate that preserves hard blocking, tangent authority, body-size capacity and causal observability in the isolated static substrate.
 
