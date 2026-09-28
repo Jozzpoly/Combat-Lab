@@ -123,13 +123,14 @@ Start here:
 11. [R1 embodied route execution / recovery research](docs/R1_EMBODIED_ROUTE_EXECUTION_RECOVERY_RESEARCH_2026-09-28.md)
 12. [D1 repeated dynamic encounter episodes](docs/D1_REPEATED_DYNAMIC_ENCOUNTER_EPISODES_2026-09-28.md)
 13. [S1 valid pressure / completion / macro-observability refoundation](docs/S1_VALID_PRESSURE_COMPLETION_OBSERVABILITY_2026-09-28.md)
-14. [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md)
-15. [Owner scope correction](docs/COMBAT_LAB_SCOPE_CORRECTION_2026-09-25.md)
-16. [Workbench design record](docs/COMBAT_LAB_WORKBENCH_REFOUNDATION_2026-09-25.md)
-17. [B0 Owner recording feedback](docs/B0_WORKBENCH_OWNER_RECORDING_FEEDBACK_2026-09-25.md)
-18. [B0 / Workbench stage closure](docs/B0_WORKBENCH_STAGE_CLOSURE_2026-09-25.md)
-19. [Repository closure audit](docs/REPOSITORY_CLOSURE_AUDIT_2026-09-26.md)
-20. [Historical evidence index](docs/HISTORY_INDEX.md)
+14. [S1-2A closure / new-conversation handoff](docs/COMBAT_LAB_HANDOFF_2026-09-28_S1_2A_BOUNDARY.md)
+15. [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md)
+16. [Owner scope correction](docs/COMBAT_LAB_SCOPE_CORRECTION_2026-09-25.md)
+17. [Workbench design record](docs/COMBAT_LAB_WORKBENCH_REFOUNDATION_2026-09-25.md)
+18. [B0 Owner recording feedback](docs/B0_WORKBENCH_OWNER_RECORDING_FEEDBACK_2026-09-25.md)
+19. [B0 / Workbench stage closure](docs/B0_WORKBENCH_STAGE_CLOSURE_2026-09-25.md)
+20. [Repository closure audit](docs/REPOSITORY_CLOSURE_AUDIT_2026-09-26.md)
+21. [Historical evidence index](docs/HISTORY_INDEX.md)
 
 The previous append-only canonical state is preserved verbatim as historical evidence at:
 
