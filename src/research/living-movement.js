@@ -244,53 +244,101 @@ function chooseContinuation(state,actor,body){
   const currentOffset=finite(actor.continuation.offset,"continuation.offset");
   const currentSpeedScale=finite(actor.continuation.speedScale,"continuation.speedScale");
   const current=continuationCandidate(
-    "keep",baseDirection,currentOffset,currentSpeedScale,body,neighbours,state
+    actor.continuation.id,
+    baseDirection,
+    currentOffset,
+    currentSpeedScale,
+    body,
+    neighbours,
+    state
   );
-  const safetyGap=state.policy.safetyGap;
+  const warningGap=state.policy.safetyGap;
+  const meaningfulGain=Math.max(3,body.radius*0.22);
 
-  if(current.minGap>=safetyGap && current.progress>=body.maxSpeed*0.2){
+  const direct=continuationCandidate(
+    "direct",baseDirection,0,1,body,neighbours,state
+  );
+
+  // Prospection is evidence, not a no-contact policy. If the current
+  // continuation remains comfortably supported, keep it. A previously
+  // corrective continuation may return to direct once that future reopens.
+  if(current.minGap>=warningGap && current.progress>=body.maxSpeed*0.2){
+    if(
+      actor.continuation.id!=="direct" &&
+      direct.minGap>=warningGap &&
+      direct.progress>current.progress+body.maxSpeed*0.05
+    ){
+      return {...direct,reason:"direct-reopened",neighbourCount:neighbours.length};
+    }
     return {...current,reason:"supported",neighbourCount:neighbours.length};
   }
 
   const turn=state.policy.correctionAngle;
-  const candidates=[
-    continuationCandidate("direct",baseDirection,0,1,body,neighbours,state),
-    continuationCandidate("left",baseDirection,-turn,0.92,body,neighbours,state),
-    continuationCandidate("right",baseDirection,turn,0.92,body,neighbours,state),
-    continuationCandidate("slow",baseDirection,0,0.42,body,neighbours,state),
-    continuationCandidate("wait",baseDirection,0,0,body,neighbours,state)
-  ];
-
-  const safe=candidates
-    .filter(candidate=>candidate.minGap>=safetyGap)
-    .sort((a,b)=>
-      b.progress-a.progress ||
-      Math.abs(a.offset)-Math.abs(b.offset) ||
-      b.minGap-a.minGap ||
-      a.id.localeCompare(b.id)
-    );
-
-  if(safe.length>=2 && symmetricOpposition(safe[0],safe[1])){
-    const slow=safe.find(candidate=>candidate.id==="slow") ||
-      safe.find(candidate=>candidate.id==="wait") ||
-      candidates.find(candidate=>candidate.id==="wait");
-    return {...slow,reason:"ambiguous-wait",neighbourCount:neighbours.length};
-  }
-  if(safe.length){
-    return {...safe[0],reason:"threat-correction",neighbourCount:neighbours.length};
-  }
-
-  const leastBad=[...candidates].sort((a,b)=>
+  const left=continuationCandidate(
+    "left",baseDirection,-turn,0.92,body,neighbours,state
+  );
+  const right=continuationCandidate(
+    "right",baseDirection,turn,0.92,body,neighbours,state
+  );
+  const moving=[direct,left,right].sort((a,b)=>
     b.minGap-a.minGap ||
     b.progress-a.progress ||
     Math.abs(a.offset)-Math.abs(b.offset) ||
     a.id.localeCompare(b.id)
   );
-  if(leastBad.length>=2 && symmetricOpposition(leastBad[0],leastBad[1])){
-    const wait=candidates.find(candidate=>candidate.id==="wait");
-    return {...wait,reason:"ambiguous-wait",neighbourCount:neighbours.length};
+
+  const bestMoving=moving[0];
+  const runnerUp=moving[1];
+  const movingGain=bestMoving.minGap-current.minGap;
+
+  // Exact symmetric lateral evidence is not permission to invent a passing
+  // convention. First test whether yielding speed buys real future clearance.
+  if(
+    bestMoving &&
+    runnerUp &&
+    symmetricOpposition(bestMoving,runnerUp) &&
+    movingGain>=meaningfulGain
+  ){
+    const slow=continuationCandidate(
+      "slow",baseDirection,0,0.42,body,neighbours,state
+    );
+    if(slow.minGap>=current.minGap+meaningfulGain){
+      return {...slow,reason:"symmetric-yield",neighbourCount:neighbours.length};
+    }
+    const wait=continuationCandidate(
+      "wait",baseDirection,0,0,body,neighbours,state
+    );
+    if(wait.minGap>=current.minGap+meaningfulGain){
+      return {...wait,reason:"symmetric-wait",neighbourCount:neighbours.length};
+    }
+    return {...current,reason:"symmetric-contact-tolerated",neighbourCount:neighbours.length};
   }
-  return {...leastBad[0],reason:"least-bad",neighbourCount:neighbours.length};
+
+  // Change course only when the prospective evidence materially improves the
+  // threatened future. Small clearance differences do not own the body.
+  if(bestMoving && movingGain>=meaningfulGain){
+    return {...bestMoving,reason:"prospective-correction",neighbourCount:neighbours.length};
+  }
+
+  // Severe predicted overlap can justify reducing vigor even when no lateral
+  // continuation clearly wins. Otherwise tolerate the conflict and let
+  // material contact/world truth answer rather than manufacturing safety.
+  if(current.minGap<-body.radius*0.35){
+    const slow=continuationCandidate(
+      "slow",baseDirection,0,0.42,body,neighbours,state
+    );
+    if(slow.minGap>=current.minGap+meaningfulGain){
+      return {...slow,reason:"pressure-slow",neighbourCount:neighbours.length};
+    }
+    const wait=continuationCandidate(
+      "wait",baseDirection,0,0,body,neighbours,state
+    );
+    if(wait.minGap>=current.minGap+meaningfulGain){
+      return {...wait,reason:"pressure-wait",neighbourCount:neighbours.length};
+    }
+  }
+
+  return {...current,reason:"contact-tolerated",neighbourCount:neighbours.length};
 }
 
 function constrainToWorld(body,world){
