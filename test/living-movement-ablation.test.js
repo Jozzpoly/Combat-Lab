@@ -36,6 +36,7 @@ function runTrial(options,{seconds=12,dt=1/120}={}){
   }
 
   const actors=Object.values(state.actors);
+  const total=fn=>actors.reduce((sum,actor)=>sum+fn(actor),0);
   const mean=fn=>actors.length
     ? actors.reduce((sum,actor)=>sum+fn(actor),0)/actors.length
     : 0;
@@ -50,6 +51,11 @@ function runTrial(options,{seconds=12,dt=1/120}={}){
       rapidTransitions,
       lateralReversals,
       waitOrSlowEntries,
+      sameLabelDemandChangeFrames:total(actor=>actor.demandTelemetry.sameLabelDemandChangeFrames),
+      cumulativeDemandTurnRadians:total(actor=>actor.demandTelemetry.cumulativeDemandAngularChurn),
+      sameLabelDemandTurnRadians:total(actor=>actor.demandTelemetry.sameLabelDemandAngularChurn),
+      cumulativeDemandVectorChurn:total(actor=>actor.demandTelemetry.cumulativeDemandVectorChurn),
+      netActivityProgress:total(actor=>actor.demandTelemetry.netActivityProgress),
       meanEffortLoad:mean(actor=>actor.effortLoad),
       meanCapabilityScale:mean(actor=>actor.capabilityScale),
       meanDemandOutcomeError:mean(actor=>Number(actor.lastOutcome?.demandOutcomeError || 0))
