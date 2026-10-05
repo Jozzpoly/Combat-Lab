@@ -5,6 +5,7 @@ import {
   buildLivingMovementActivities,
   capabilityScaleFromLoad,
   createLivingMovementState,
+  externallyPlaceLivingMovementBody,
   livingMovementActorTrace,
   livingMovementSnapshot,
   stepLivingMovementState
@@ -119,4 +120,34 @@ test("material demand trace distinguishes command continuity from labels",()=>{
     true,
     "L0 microscope must reveal motor-demand change even when the semantic continuation label is unchanged"
   );
+});
+
+
+test("external perturbation is explicit apparatus evidence rather than motor outcome",()=>{
+  const state=createLivingMovementState({count:4,effortHistoryStrength:0});
+  const body=state.bodies.find(candidate=>candidate.id==="organism-1");
+  body.vx=25;
+  body.vy=-10;
+  const before={x:body.x,y:body.y};
+
+  const event=externallyPlaceLivingMovementBody(
+    state,
+    body.id,
+    {x:body.x+70,y:body.y+35},
+    {zeroVelocity:true,source:"test-hand"}
+  );
+
+  assert.equal(event.source,"test-hand");
+  assert.ok(event.displacement>70);
+  assert.equal(body.vx,0);
+  assert.equal(body.vy,0);
+  assert.ok(body.x>before.x+60);
+  assert.ok(body.y>before.y+25);
+
+  const actor=state.actors[body.id];
+  assert.equal(actor.externalPerturbationCount,1);
+  assert.equal(actor.lastExternalPerturbation.source,"test-hand");
+  const trace=livingMovementActorTrace(state,body.id,{limit:10});
+  assert.equal(trace.at(-1).kind,"external-perturbation");
+  assert.equal(trace.at(-1).source,"test-hand");
 });
