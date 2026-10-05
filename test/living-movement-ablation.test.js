@@ -17,6 +17,9 @@ function runTrial(options,{seconds=12,dt=1/120}={}){
   let rapidTransitions=0;
   let lateralReversals=0;
   let waitOrSlowEntries=0;
+  const transitionPairs={};
+  const transitionReasons={};
+  const dwellSeconds=[];
 
   for(let i=0;i<steps;i++){
     stepLivingMovementState(state,dt);
@@ -24,6 +27,13 @@ function runTrial(options,{seconds=12,dt=1/120}={}){
       const prior=previous.get(actor.id);
       const now=actor.continuation.id;
       if(now===prior.id) continue;
+      const pair=prior.id+"→"+now;
+      transitionPairs[pair]=(transitionPairs[pair] || 0)+1;
+      const reason=String(actor.lastDecision?.reason || "unknown");
+      transitionReasons[reason]=(transitionReasons[reason] || 0)+1;
+      if(Number.isFinite(prior.lastChangeStep)){
+        dwellSeconds.push((i-prior.lastChangeStep)*dt);
+      }
       if(i-prior.lastChangeStep<=Math.round(0.25/dt)) rapidTransitions+=1;
       if(
         (prior.id==="left" && now==="right") ||
@@ -51,6 +61,11 @@ function runTrial(options,{seconds=12,dt=1/120}={}){
       rapidTransitions,
       lateralReversals,
       waitOrSlowEntries,
+      transitionPairs,
+      transitionReasons,
+      meanDwellSeconds:dwellSeconds.length
+        ? dwellSeconds.reduce((sum,value)=>sum+value,0)/dwellSeconds.length
+        : null,
       sameLabelDemandChangeFrames:total(actor=>actor.demandTelemetry.sameLabelDemandChangeFrames),
       cumulativeDemandTurnRadians:total(actor=>actor.demandTelemetry.cumulativeDemandAngularChurn),
       sameLabelDemandTurnRadians:total(actor=>actor.demandTelemetry.sameLabelDemandAngularChurn),
@@ -117,4 +132,22 @@ test("L0 ablation matrix reports behavior without promoting one metric to succes
   assert.equal(results["no-effort-history"].meanCapabilityScale,1);
   assert.equal(results.bare.meanCapabilityScale,1);
   console.log("L0_ABLATION_METRICS "+JSON.stringify(results));
+});
+
+
+test("L0 four-organism microscope reports transition anatomy without changing policy",()=>{
+  const baseline=runTrial({
+    count:4,
+    prospectionHorizon:0.72,
+    effortHistoryStrength:0
+  },{seconds:12}).metrics;
+  const noProspection=runTrial({
+    count:4,
+    prospectionHorizon:0,
+    effortHistoryStrength:0
+  },{seconds:12}).metrics;
+
+  assert.equal(baseline.active+baseline.completed,4);
+  assert.equal(noProspection.active+noProspection.completed,4);
+  console.log("L0_MICROSCOPE_METRICS "+JSON.stringify({baseline,noProspection}));
 });
