@@ -462,7 +462,7 @@ function applyLivingMotor(state,actor,body,dt){
   actor.motorUse=clamp(motorDelta/availableDelta,0,2);
   actor.capabilityScale=capabilityScale;
   actor.effectiveAcceleration=effectiveAcceleration;
-
+}
 
 function contactIds(state){
   const ids=new Set();
