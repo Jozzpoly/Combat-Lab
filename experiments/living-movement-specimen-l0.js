@@ -2,6 +2,7 @@ import {
   LIVING_MOVEMENT_WORLD,
   createLivingMovementState,
   livingMovementActorSnapshot,
+  livingMovementActorTrace,
   livingMovementSnapshot,
   setLivingMovementPolicy,
   stepLivingMovementState
@@ -170,6 +171,13 @@ export const livingMovementSpecimenL0={
               {id:"demandSpeed",label:"Demand speed",decimals:1},
               {id:"realizedSpeed",label:"Realized speed",decimals:1},
               {id:"demandError",label:"Demand↔outcome error",decimals:1},
+              {id:"demandTurn",label:"Demand turn this step",decimals:1,unit:"°"},
+              {id:"demandVectorDelta",label:"Demand vector change",decimals:2},
+              {id:"outcomeTurnError",label:"Demand↔outcome turn",decimals:1,unit:"°"},
+              {id:"activityProgress",label:"Activity progress this step",decimals:3},
+              {id:"realizedDisplacement",label:"Realized displacement",decimals:3},
+              {id:"sameLabelDemandFrames",label:"Same-label demand-change frames",decimals:0},
+              {id:"sameLabelDemandTurn",label:"Same-label demand turn total",decimals:1,unit:"°"},
               {id:"effortLoad",label:"Effort history",decimals:3},
               {id:"capability",label:"Capability scale",decimals:3},
               {id:"motorUse",label:"Motor use",decimals:3}
@@ -235,6 +243,19 @@ export const livingMovementSpecimenL0={
           return v ? Math.hypot(v.x,v.y) : NaN;
         }
         if(id==="demandError") return selected?.outcome?.demandOutcomeError ?? NaN;
+        if(id==="demandTurn") return selected?.outcome
+          ? selected.outcome.demandAngleDelta*180/Math.PI
+          : NaN;
+        if(id==="demandVectorDelta") return selected?.outcome?.demandVectorDelta ?? NaN;
+        if(id==="outcomeTurnError") return selected?.outcome
+          ? selected.outcome.demandOutcomeAngularError*180/Math.PI
+          : NaN;
+        if(id==="activityProgress") return selected?.outcome?.activityProgress ?? NaN;
+        if(id==="realizedDisplacement") return selected?.outcome?.realizedDisplacement ?? NaN;
+        if(id==="sameLabelDemandFrames") return selected?.demandTelemetry?.sameLabelDemandChangeFrames ?? NaN;
+        if(id==="sameLabelDemandTurn") return selected?.demandTelemetry
+          ? selected.demandTelemetry.sameLabelDemandAngularChurn*180/Math.PI
+          : NaN;
         if(id==="effortLoad") return selected?.body?.effortLoad ?? NaN;
         if(id==="capability") return selected?.body?.capabilityScale ?? NaN;
         if(id==="motorUse") return selected?.body?.motorUse ?? NaN;
@@ -349,6 +370,9 @@ export const livingMovementSpecimenL0={
 
       query(name){
         if(name==="selected-subject") return subject();
+        if(name==="selected-demand-trace"){
+          return selectedId ? livingMovementActorTrace(state,selectedId,{limit:180}) : [];
+        }
         if(name==="living-movement-state") return livingMovementSnapshot(state);
         return null;
       },
