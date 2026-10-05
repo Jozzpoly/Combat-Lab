@@ -998,10 +998,27 @@ try{
      !livingSubject?.continuation ||
      !livingSubject?.decision ||
      !livingSubject?.outcome ||
+     !livingSubject?.demandTelemetry ||
      !Number.isFinite(Number(livingSubject?.body?.effortLoad)) ||
      !Number.isFinite(Number(livingSubject?.body?.capabilityScale)) ||
-     !Number.isFinite(Number(livingSubject?.outcome?.demandOutcomeError))){
+     !Number.isFinite(Number(livingSubject?.outcome?.demandOutcomeError)) ||
+     !Number.isFinite(Number(livingSubject?.outcome?.demandVectorDelta)) ||
+     !Number.isFinite(Number(livingSubject?.outcome?.demandAngleDelta)) ||
+     !Number.isFinite(Number(livingSubject?.outcome?.activityProgress))){
     throw new Error(`L0 demand→realization causal drilldown failed: ${JSON.stringify(livingSubject)}`);
+  }
+
+  await sleep(700);
+  const livingTrace=await evaluate('window.__combatLabRuntime.query("selected-demand-trace")');
+  if(!Array.isArray(livingTrace) ||
+     livingTrace.length<20 ||
+     !livingTrace.every(sample=>
+       Number.isFinite(Number(sample?.demandVectorDelta)) &&
+       Number.isFinite(Number(sample?.demandAngleDelta)) &&
+       Number.isFinite(Number(sample?.activityProgress)) &&
+       Number.isFinite(Number(sample?.realizedDisplacement))
+     )){
+    throw new Error(`L0 material demand trace failed: ${JSON.stringify(livingTrace?.slice?.(-4))}`);
   }
 
   const livingObserveText=await evaluate(
@@ -1015,6 +1032,13 @@ try{
     "Demand speed",
     "Realized speed",
     "Demand↔outcome error",
+    "Demand turn this step",
+    "Demand vector change",
+    "Demand↔outcome turn",
+    "Activity progress this step",
+    "Realized displacement",
+    "Same-label demand-change frames",
+    "Same-label demand turn total",
     "Effort history",
     "Capability scale"
   ]){
