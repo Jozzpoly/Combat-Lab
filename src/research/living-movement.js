@@ -49,6 +49,14 @@ function dot(a,b){
   return a.x*b.x+a.y*b.y;
 }
 
+function vectorAngleDelta(a,b){
+  const am=Math.hypot(a.x,a.y);
+  const bm=Math.hypot(b.x,b.y);
+  if(am<EPS || bm<EPS) return 0;
+  const cosine=clamp(dot(a,b)/(am*bm),-1,1);
+  return Math.acos(cosine);
+}
+
 function moveVectorToward(vx,vy,targetX,targetY,maxDelta){
   const dx=targetX-vx;
   const dy=targetY-vy;
@@ -162,6 +170,11 @@ function nearestExitPoint(activity,body,world){
 function activityDirection(activity,body,world){
   const target=nearestExitPoint(activity,body,world);
   return normalize({x:target.x-body.x,y:target.y-body.y});
+}
+
+function activityRemainingDistance(activity,position,world){
+  const target=nearestExitPoint(activity,position,world);
+  return Math.hypot(target.x-position.x,target.y-position.y);
 }
 
 function completedActivity(activity,body,world){
@@ -488,6 +501,48 @@ function updateEffortAndOutcome(state,actor,body,before,dt,contacted){
     ? clamp(1-Math.max(0,realizedForward)/expectedForward,0,1)
     : 0;
 
+  const telemetry=actor.demandTelemetry;
+  const previousDemand=telemetry.lastDemand;
+  const previousContinuationId=telemetry.lastContinuationId;
+  const demandVectorDelta=previousDemand
+    ? Math.hypot(demand.x-previousDemand.x,demand.y-previousDemand.y)
+    : 0;
+  const demandAngleDelta=previousDemand
+    ? vectorAngleDelta(demand,previousDemand)
+    : 0;
+  const sameContinuation=previousContinuationId===actor.continuation.id;
+  const beforeRemaining=activityRemainingDistance(
+    actor.activity,{x:before.x,y:before.y},state.world
+  );
+  const afterRemaining=activityRemainingDistance(
+    actor.activity,{x:body.x,y:body.y},state.world
+  );
+  const activityProgress=beforeRemaining-afterRemaining;
+  const realizedDisplacement=Math.hypot(body.x-before.x,body.y-before.y);
+  const demandOutcomeAngularError=vectorAngleDelta(demand,realizedVelocity);
+
+  telemetry.samples+=1;
+  telemetry.lastDemand={...demand};
+  telemetry.lastContinuationId=actor.continuation.id;
+  telemetry.lastDemandVectorDelta=demandVectorDelta;
+  telemetry.lastDemandAngleDelta=demandAngleDelta;
+  telemetry.lastActivityProgress=activityProgress;
+  telemetry.lastRealizedDisplacement=realizedDisplacement;
+  telemetry.lastDemandOutcomeAngularError=demandOutcomeAngularError;
+  telemetry.cumulativeDemandVectorChurn+=demandVectorDelta;
+  telemetry.cumulativeDemandAngularChurn+=demandAngleDelta;
+  telemetry.cumulativeAbsoluteActivityProgress+=Math.abs(activityProgress);
+  telemetry.netActivityProgress+=activityProgress;
+  if(
+    sameContinuation &&
+    previousDemand &&
+    demandVectorDelta>1e-6
+  ){
+    telemetry.sameLabelDemandChangeFrames+=1;
+    telemetry.sameLabelDemandVectorChurn+=demandVectorDelta;
+    telemetry.sameLabelDemandAngularChurn+=demandAngleDelta;
+  }
+
   actor.effortLoad=advanceEffortLoad({
     load:actor.effortLoad,
     motorUse:actor.motorUse,
@@ -497,6 +552,7 @@ function updateEffortAndOutcome(state,actor,body,before,dt,contacted){
     buildRate:state.policy.effortBuildRate,
     recoveryRate:state.policy.effortRecoveryRate
   });
+
   actor.lastOutcome={
     beforePosition:{x:before.x,y:before.y},
     finalPosition:{x:body.x,y:body.y},
@@ -507,9 +563,37 @@ function updateEffortAndOutcome(state,actor,body,before,dt,contacted){
       demand.x-realizedVelocity.x,
       demand.y-realizedVelocity.y
     ),
+    demandOutcomeAngularError,
+    demandVectorDelta,
+    demandAngleDelta,
+    sameContinuationAsPreviousDemand:sameContinuation,
+    activityProgress,
+    activityRemainingDistance:afterRemaining,
+    realizedDisplacement,
     blockedFraction,
     contacted:Boolean(contacted)
   };
+
+  actor.causalTrace.push({
+    time:state.time+dt,
+    continuationId:actor.continuation.id,
+    decisionReason:actor.lastDecision.reason,
+    demandedVelocity:{...demand},
+    realizedVelocity:{...realizedVelocity},
+    demandVectorDelta,
+    demandAngleDelta,
+    sameContinuationAsPreviousDemand:sameContinuation,
+    demandOutcomeError:actor.lastOutcome.demandOutcomeError,
+    demandOutcomeAngularError,
+    activityProgress,
+    activityRemainingDistance:afterRemaining,
+    realizedDisplacement,
+    contacted:Boolean(contacted),
+    blockedFraction
+  });
+  if(actor.causalTrace.length>240){
+    actor.causalTrace.splice(0,actor.causalTrace.length-240);
+  }
 }
 
 function createActor(spec,index,state){
@@ -544,6 +628,24 @@ function createActor(spec,index,state){
     capabilityScale:1,
     effectiveAcceleration:contactAcceleration(body),
     continuationChanges:0,
+    demandTelemetry:{
+      samples:0,
+      lastDemand:null,
+      lastContinuationId:null,
+      lastDemandVectorDelta:0,
+      lastDemandAngleDelta:0,
+      lastActivityProgress:0,
+      lastRealizedDisplacement:0,
+      lastDemandOutcomeAngularError:0,
+      cumulativeDemandVectorChurn:0,
+      cumulativeDemandAngularChurn:0,
+      sameLabelDemandChangeFrames:0,
+      sameLabelDemandVectorChurn:0,
+      sameLabelDemandAngularChurn:0,
+      cumulativeAbsoluteActivityProgress:0,
+      netActivityProgress:0
+    },
+    causalTrace:[],
     lastOutcome:null,
     completedAt:null
   };
@@ -715,8 +817,16 @@ export function livingMovementActorSnapshot(state,id){
       motorUse:actor.motorUse
     } : null,
     outcome:actor.lastOutcome ? structuredClone(actor.lastOutcome) : null,
+    demandTelemetry:structuredClone(actor.demandTelemetry),
     continuationChanges:actor.continuationChanges
   };
+}
+
+export function livingMovementActorTrace(state,id,{limit=120}={}){
+  const actor=state.actors[String(id)];
+  if(!actor) return [];
+  const count=Math.max(1,Math.min(240,Math.floor(Number(limit) || 120)));
+  return structuredClone(actor.causalTrace.slice(-count));
 }
 
 export function livingMovementSnapshot(state){
