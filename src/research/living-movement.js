@@ -59,8 +59,8 @@ function moveVectorToward(vx,vy,targetX,targetY,maxDelta){
 }
 
 function sideSlotCoordinate(slot,span){
-  const min=86;
-  const max=span-86;
+  const min=132;
+  const max=span-132;
   if(EDGE_SLOTS<=1) return (min+max)*0.5;
   return min+(max-min)*(slot/(EDGE_SLOTS-1));
 }
@@ -96,7 +96,8 @@ export function buildLivingMovementActivities(count,{world=DEFAULT_WORLD,bandHal
   const specs=[];
   for(let i=0;i<n;i++){
     const side=actorSide(i);
-    const slot=Math.floor(i/4);
+    const slotOrder=[0,4,2,6,1,5,3,7];
+    const slot=slotOrder[Math.floor(i/4)];
     const exitSide=oppositeSide(side);
     specs.push({
       id:"organism-"+String(i+1),
@@ -271,8 +272,9 @@ function chooseContinuation(state,actor,body){
 
   if(safe.length>=2 && symmetricOpposition(safe[0],safe[1])){
     const slow=safe.find(candidate=>candidate.id==="slow") ||
-      safe.find(candidate=>candidate.id==="wait");
-    if(slow) return {...slow,reason:"ambiguous-wait",neighbourCount:neighbours.length};
+      safe.find(candidate=>candidate.id==="wait") ||
+      candidates.find(candidate=>candidate.id==="wait");
+    return {...slow,reason:"ambiguous-wait",neighbourCount:neighbours.length};
   }
   if(safe.length){
     return {...safe[0],reason:"threat-correction",neighbourCount:neighbours.length};
