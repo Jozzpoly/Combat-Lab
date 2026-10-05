@@ -88,3 +88,34 @@ test("zero prospection and zero effort-history remain explicit ablation conditio
     assert.equal(actor.body.capabilityScale,1);
   }
 });
+
+
+test("material demand trace distinguishes command continuity from labels",()=>{
+  const state=createLivingMovementState({
+    count:16,
+    prospectionHorizon:0.72,
+    effortHistoryStrength:0
+  });
+  for(let i=0;i<720;i++) stepLivingMovementState(state,1/120);
+
+  const traces=Object.keys(state.actors).map(id=>livingMovementActorTrace(state,id,{limit:240}));
+  const samples=traces.flat();
+  assert.ok(samples.length>0);
+  for(const sample of samples){
+    assert.ok(Number.isFinite(sample.demandVectorDelta));
+    assert.ok(Number.isFinite(sample.demandAngleDelta));
+    assert.ok(Number.isFinite(sample.activityProgress));
+    assert.ok(Number.isFinite(sample.realizedDisplacement));
+    assert.ok(Number.isFinite(sample.demandOutcomeError));
+  }
+
+  const sameLabelMaterialChange=samples.some(sample=>
+    sample.sameContinuationAsPreviousDemand &&
+    sample.demandVectorDelta>1e-6
+  );
+  assert.equal(
+    sameLabelMaterialChange,
+    true,
+    "L0 microscope must reveal motor-demand change even when the semantic continuation label is unchanged"
+  );
+});
