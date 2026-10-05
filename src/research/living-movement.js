@@ -673,6 +673,8 @@ function createActor(spec,index,state){
       netActivityProgress:0
     },
     causalTrace:[],
+    externalPerturbationCount:0,
+    lastExternalPerturbation:null,
     lastOutcome:null,
     completedAt:null
   };
@@ -726,6 +728,56 @@ export function createLivingMovementState({
   const specs=buildLivingMovementActivities(state.authoredCount,{world:normalizedWorld});
   specs.forEach((spec,index)=>createActor(spec,index,state));
   return state;
+}
+
+export function externallyPlaceLivingMovementBody(
+  state,
+  id,
+  position,
+  {zeroVelocity=true,source="owner-drag"}={}
+){
+  const actor=state.actors[String(id)];
+  const body=state.bodies.find(candidate=>candidate.id===String(id));
+  if(!actor || !body) return null;
+
+  const target={
+    x:finite(position?.x,"external position x"),
+    y:finite(position?.y,"external position y")
+  };
+  const before={x:body.x,y:body.y,vx:body.vx,vy:body.vy};
+  body.x=target.x;
+  body.y=target.y;
+  if(zeroVelocity){
+    body.vx=0;
+    body.vy=0;
+  }
+  constrainToWorld(body,state.world);
+
+  const after={x:body.x,y:body.y,vx:body.vx,vy:body.vy};
+  const moved=Math.hypot(after.x-before.x,after.y-before.y);
+  if(moved>1e-6 || before.vx!==after.vx || before.vy!==after.vy){
+    actor.externalPerturbationCount=(actor.externalPerturbationCount || 0)+1;
+    actor.lastExternalPerturbation={
+      time:state.time,
+      source:String(source),
+      before,
+      after,
+      displacement:moved,
+      zeroVelocity:Boolean(zeroVelocity)
+    };
+    actor.causalTrace.push({
+      kind:"external-perturbation",
+      time:state.time,
+      source:String(source),
+      before,
+      after,
+      displacement:moved
+    });
+    if(actor.causalTrace.length>240){
+      actor.causalTrace.splice(0,actor.causalTrace.length-240);
+    }
+  }
+  return structuredClone(actor.lastExternalPerturbation);
 }
 
 export function setLivingMovementPolicy(state,id,value){
@@ -853,6 +905,10 @@ export function livingMovementActorSnapshot(state,id){
     } : null,
     outcome:actor.lastOutcome ? structuredClone(actor.lastOutcome) : null,
     demandTelemetry:structuredClone(actor.demandTelemetry),
+    externalPerturbationCount:actor.externalPerturbationCount || 0,
+    lastExternalPerturbation:actor.lastExternalPerturbation
+      ? structuredClone(actor.lastExternalPerturbation)
+      : null,
     continuationChanges:actor.continuationChanges
   };
 }
