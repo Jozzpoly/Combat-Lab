@@ -8,7 +8,32 @@ import {
 function runTrial(options,{seconds=12,dt=1/120}={}){
   const state=createLivingMovementState(options);
   const steps=Math.round(seconds/dt);
-  for(let i=0;i<steps;i++) stepLivingMovementState(state,dt);
+  const previous=new Map(
+    Object.values(state.actors).map(actor=>[actor.id,{
+      id:actor.continuation.id,
+      lastChangeStep:-Infinity
+    }])
+  );
+  let rapidTransitions=0;
+  let lateralReversals=0;
+  let waitOrSlowEntries=0;
+
+  for(let i=0;i<steps;i++){
+    stepLivingMovementState(state,dt);
+    for(const actor of Object.values(state.actors)){
+      const prior=previous.get(actor.id);
+      const now=actor.continuation.id;
+      if(now===prior.id) continue;
+      if(i-prior.lastChangeStep<=Math.round(0.25/dt)) rapidTransitions+=1;
+      if(
+        (prior.id==="left" && now==="right") ||
+        (prior.id==="right" && now==="left")
+      ) lateralReversals+=1;
+      if(now==="wait" || now==="slow") waitOrSlowEntries+=1;
+      prior.id=now;
+      prior.lastChangeStep=i;
+    }
+  }
 
   const actors=Object.values(state.actors);
   const mean=fn=>actors.length
@@ -22,6 +47,9 @@ function runTrial(options,{seconds=12,dt=1/120}={}){
       completed:state.completedIds.length,
       contactResolutions:state.totalContactResolutions,
       continuationChanges:actors.reduce((sum,actor)=>sum+actor.continuationChanges,0),
+      rapidTransitions,
+      lateralReversals,
+      waitOrSlowEntries,
       meanEffortLoad:mean(actor=>actor.effortLoad),
       meanCapabilityScale:mean(actor=>actor.capabilityScale),
       meanDemandOutcomeError:mean(actor=>Number(actor.lastOutcome?.demandOutcomeError || 0))
