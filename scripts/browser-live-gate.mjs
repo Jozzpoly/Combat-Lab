@@ -1039,6 +1039,8 @@ try{
     "Realized displacement",
     "Same-label demand-change frames",
     "Same-label demand turn total",
+    "External perturbation samples",
+    "Owner hand",
     "Effort history",
     "Capability scale"
   ]){
@@ -1048,6 +1050,92 @@ try{
   }
 
   await captureScreenshot(livingScreenshotPath);
+
+  const perturbation=await evaluate(`(()=>{
+    const r=window.__combatLabRuntime;
+    const actor=r.query("selected-subject");
+    const canvas=document.querySelector("#lab");
+    const rect=canvas.getBoundingClientRect();
+    const camera=r.camera.snapshot();
+    const p=actor?.body?.position;
+    if(!p) return {error:"no selected L0 body for perturbation"};
+
+    const start={
+      x:rect.left+rect.width/2+(p.x-camera.center.x)*camera.zoom,
+      y:rect.top+rect.height/2+(p.y-camera.center.y)*camera.zoom
+    };
+    const target={x:start.x+90,y:start.y+45};
+    return {
+      id:actor.id,
+      before:{x:p.x,y:p.y},
+      start,
+      target
+    };
+  })()`);
+  if(perturbation.error) throw new Error(perturbation.error);
+
+  await cdp.send("Input.dispatchKeyEvent",{
+    type:"keyDown",code:"ShiftLeft",key:"Shift",windowsVirtualKeyCode:16
+  });
+  await cdp.send("Input.dispatchMouseEvent",{
+    type:"mousePressed",
+    x:perturbation.start.x,
+    y:perturbation.start.y,
+    button:"left",
+    buttons:1,
+    clickCount:1,
+    modifiers:8
+  });
+  await cdp.send("Input.dispatchMouseEvent",{
+    type:"mouseMoved",
+    x:perturbation.target.x,
+    y:perturbation.target.y,
+    button:"left",
+    buttons:1,
+    modifiers:8
+  });
+  await sleep(220);
+  await cdp.send("Input.dispatchMouseEvent",{
+    type:"mouseReleased",
+    x:perturbation.target.x,
+    y:perturbation.target.y,
+    button:"left",
+    buttons:0,
+    clickCount:1,
+    modifiers:8
+  });
+  await cdp.send("Input.dispatchKeyEvent",{
+    type:"keyUp",code:"ShiftLeft",key:"Shift",windowsVirtualKeyCode:16
+  });
+
+  const perturbationEvidence=await waitFor("L0 Owner drag becomes explicit external evidence",async()=>{
+    return evaluate(`(()=>{
+      const s=window.__combatLabRuntime.query("selected-subject");
+      const trace=window.__combatLabRuntime.query("selected-demand-trace") || [];
+      const external=trace.filter(sample=>sample?.kind==="external-perturbation");
+      if(
+        s?.id==="${perturbation.id}" &&
+        Number(s?.externalPerturbationCount)>0 &&
+        s?.lastExternalPerturbation?.source==="owner-shift-drag" &&
+        external.length>0
+      ){
+        return {
+          position:s.body?.position,
+          count:s.externalPerturbationCount,
+          last:s.lastExternalPerturbation,
+          externalSamples:external.length
+        };
+      }
+      return null;
+    })()`);
+  },{timeout:4000,interval:80});
+  const perturbTravel=Math.hypot(
+    Number(perturbationEvidence.position?.x)-Number(perturbation.before.x),
+    Number(perturbationEvidence.position?.y)-Number(perturbation.before.y)
+  );
+  if(!(perturbTravel>30)){
+    throw new Error(`L0 Owner perturbation did not materially move body: ${JSON.stringify({perturbation,perturbationEvidence,perturbTravel})}`);
+  }
 
   await evaluate('document.querySelector(\'[data-inspector-mode="tune"]\').click()');
   await setNumber("prospectionHorizon",0);
