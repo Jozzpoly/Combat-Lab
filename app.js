@@ -23,6 +23,7 @@ import {contactSemanticsCellC0} from "./experiments/contact-semantics-cell-c0.js
 import {dynamicEncounterCellD0} from "./experiments/dynamic-encounter-cell-d0.js";
 import {integratedEcologyRehearsalR0} from "./experiments/integrated-ecology-rehearsal-r0.js";
 import {counterflowCausalHealthS13} from "./experiments/counterflow-causal-health-s1-3.js";
+import {livingMovementSpecimenL0} from "./experiments/living-movement-specimen-l0.js";
 
 const canvas=document.querySelector("#lab");
 const ctx=canvas.getContext("2d");
@@ -63,6 +64,7 @@ registry.register(contactSemanticsCellC0);
 registry.register(dynamicEncounterCellD0);
 registry.register(integratedEcologyRehearsalR0);
 registry.register(counterflowCausalHealthS13);
+registry.register(livingMovementSpecimenL0);
 
 const runner=new FixedStepRunner({dt:1/120,maxFrame:0.05,maxAccum:0.10});
 const input=new BrowserInput({pointerTarget:canvas});
