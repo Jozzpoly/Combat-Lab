@@ -296,7 +296,8 @@ function chooseContinuation(state,actor,body){
     currentSpeedScale,
     body,
     neighbours,
-    state
+    state,
+    projectionAcceleration
   );
   const warningGap=state.policy.safetyGap;
   const meaningfulGain=Math.max(3,body.radius*0.22);
