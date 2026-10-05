@@ -182,19 +182,49 @@ function completedActivity(activity,body,world){
     Math.abs(body.x-band.center)<=band.half+body.radius;
 }
 
-function predictedSurfaceGap(self,velocity,others,horizon){
+function predictedSurfaceGap(self,desiredVelocity,others,horizon,acceleration){
+  if(others.length===0) return Infinity;
+
   let minGap=Infinity;
   for(const other of others){
-    const rx=other.x-self.x;
-    const ry=other.y-self.y;
-    const rvx=other.vx-velocity.x;
-    const rvy=other.vy-velocity.y;
-    const vv=rvx*rvx+rvy*rvy;
-    const t=vv<EPS ? 0 : clamp(-(rx*rvx+ry*rvy)/vv,0,horizon);
-    const dx=rx+rvx*t;
-    const dy=ry+rvy*t;
-    const gap=Math.hypot(dx,dy)-self.radius-other.radius;
-    minGap=Math.min(minGap,gap);
+    minGap=Math.min(
+      minGap,
+      Math.hypot(other.x-self.x,other.y-self.y)-self.radius-other.radius
+    );
+  }
+
+  const future=Math.max(0,finite(horizon,"horizon"));
+  if(future<=EPS) return minGap;
+
+  const availableAcceleration=Math.max(
+    EPS,
+    nonNegative(acceleration,"prediction acceleration")
+  );
+  const samples=Math.max(2,Math.min(10,Math.ceil(future/0.08)));
+  const dt=future/samples;
+  let x=self.x;
+  let y=self.y;
+  let vx=self.vx;
+  let vy=self.vy;
+
+  for(let step=1;step<=samples;step++){
+    const next=moveVectorToward(
+      vx,vy,
+      desiredVelocity.x,desiredVelocity.y,
+      availableAcceleration*dt
+    );
+    vx=next.vx;
+    vy=next.vy;
+    x+=vx*dt;
+    y+=vy*dt;
+
+    const t=step*dt;
+    for(const other of others){
+      const ox=other.x+other.vx*t;
+      const oy=other.y+other.vy*t;
+      const gap=Math.hypot(ox-x,oy-y)-self.radius-other.radius;
+      minGap=Math.min(minGap,gap);
+    }
   }
   return minGap;
 }
@@ -211,14 +241,29 @@ function perceivedNeighbours(state,body){
   return out;
 }
 
-function continuationCandidate(id,baseDirection,offset,speedScale,body,others,state){
+function continuationCandidate(
+  id,
+  baseDirection,
+  offset,
+  speedScale,
+  body,
+  others,
+  state,
+  projectionAcceleration
+){
   const direction=rotate(baseDirection,offset);
   const velocity={
     x:direction.x*body.maxSpeed*speedScale,
     y:direction.y*body.maxSpeed*speedScale
   };
   const minGap=others.length
-    ? predictedSurfaceGap(body,velocity,others,state.policy.prospectionHorizon)
+    ? predictedSurfaceGap(
+        body,
+        velocity,
+        others,
+        state.policy.prospectionHorizon,
+        projectionAcceleration
+      )
     : Infinity;
   return {
     id,
@@ -241,6 +286,7 @@ function symmetricOpposition(a,b){
 function chooseContinuation(state,actor,body){
   const baseDirection=activityDirection(actor.activity,body,state.world);
   const neighbours=perceivedNeighbours(state,body);
+  const projectionAcceleration=Math.max(EPS,actor.estimatedAcceleration);
   const currentOffset=finite(actor.continuation.offset,"continuation.offset");
   const currentSpeedScale=finite(actor.continuation.speedScale,"continuation.speedScale");
   const current=continuationCandidate(
@@ -256,7 +302,7 @@ function chooseContinuation(state,actor,body){
   const meaningfulGain=Math.max(3,body.radius*0.22);
 
   const direct=continuationCandidate(
-    "direct",baseDirection,0,1,body,neighbours,state
+    "direct",baseDirection,0,1,body,neighbours,state,projectionAcceleration
   );
 
   // Prospection is evidence, not a no-contact policy. If the current
@@ -275,10 +321,10 @@ function chooseContinuation(state,actor,body){
 
   const turn=state.policy.correctionAngle;
   const left=continuationCandidate(
-    "left",baseDirection,-turn,0.92,body,neighbours,state
+    "left",baseDirection,-turn,0.92,body,neighbours,state,projectionAcceleration
   );
   const right=continuationCandidate(
-    "right",baseDirection,turn,0.92,body,neighbours,state
+    "right",baseDirection,turn,0.92,body,neighbours,state,projectionAcceleration
   );
   const moving=[direct,left,right].sort((a,b)=>
     b.minGap-a.minGap ||
@@ -300,13 +346,13 @@ function chooseContinuation(state,actor,body){
     movingGain>=meaningfulGain
   ){
     const slow=continuationCandidate(
-      "slow",baseDirection,0,0.42,body,neighbours,state
+      "slow",baseDirection,0,0.42,body,neighbours,state,projectionAcceleration
     );
     if(slow.minGap>=current.minGap+meaningfulGain){
       return {...slow,reason:"symmetric-yield",neighbourCount:neighbours.length};
     }
     const wait=continuationCandidate(
-      "wait",baseDirection,0,0,body,neighbours,state
+      "wait",baseDirection,0,0,body,neighbours,state,projectionAcceleration
     );
     if(wait.minGap>=current.minGap+meaningfulGain){
       return {...wait,reason:"symmetric-wait",neighbourCount:neighbours.length};
@@ -325,13 +371,13 @@ function chooseContinuation(state,actor,body){
   // material contact/world truth answer rather than manufacturing safety.
   if(current.minGap<-body.radius*0.35){
     const slow=continuationCandidate(
-      "slow",baseDirection,0,0.42,body,neighbours,state
+      "slow",baseDirection,0,0.42,body,neighbours,state,projectionAcceleration
     );
     if(slow.minGap>=current.minGap+meaningfulGain){
       return {...slow,reason:"pressure-slow",neighbourCount:neighbours.length};
     }
     const wait=continuationCandidate(
-      "wait",baseDirection,0,0,body,neighbours,state
+      "wait",baseDirection,0,0,body,neighbours,state,projectionAcceleration
     );
     if(wait.minGap>=current.minGap+meaningfulGain){
       return {...wait,reason:"pressure-wait",neighbourCount:neighbours.length};
@@ -388,6 +434,16 @@ function applyLivingMotor(state,actor,body,dt){
   actor.motorUse=clamp(motorDelta/availableDelta,0,2);
   actor.capabilityScale=capabilityScale;
   actor.effectiveAcceleration=effectiveAcceleration;
+
+  // L0 does not hand the predictor exact future capability. It slowly
+  // calibrates a private motor-response estimate only when the body was
+  // actually driven near its current acceleration limit.
+  if(actor.motorUse>=0.85){
+    const observedAcceleration=motorDelta/dt;
+    const adaptation=clamp(dt*3,0,1);
+    actor.estimatedAcceleration+=
+      (observedAcceleration-actor.estimatedAcceleration)*adaptation;
+  }
 }
 
 function contactIds(state){
@@ -468,6 +524,7 @@ function createActor(spec,index,state){
     motorUse:0,
     capabilityScale:1,
     effectiveAcceleration:contactAcceleration(body),
+    estimatedAcceleration:contactAcceleration(body),
     continuationChanges:0,
     lastOutcome:null,
     completedAt:null
@@ -635,6 +692,7 @@ export function livingMovementActorSnapshot(state,id){
       contactResistance:body.contactResistance,
       maxSpeed:body.maxSpeed,
       effectiveAcceleration:actor.effectiveAcceleration,
+      estimatedAcceleration:actor.estimatedAcceleration,
       capabilityScale:actor.capabilityScale,
       effortLoad:actor.effortLoad,
       motorUse:actor.motorUse
