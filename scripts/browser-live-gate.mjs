@@ -932,13 +932,13 @@ try{
 
 
   // Living Movement L0: exercise the actual new specimen rather than inheriting a green gate from older surfaces.
-  await evaluate(\`(()=>{
+  await evaluate(`(()=>{
     const s=document.querySelector("#experiment-select");
     s.value="living-movement-specimen-l0";
     s.dispatchEvent(new Event("change",{bubbles:true}));
-  })()\`);
+  })()`);
   await waitFor("switch B0 to living movement L0",async()=>{
-    return evaluate(\`(()=>{
+    return evaluate(`(()=>{
       const r=window.__combatLabRuntime;
       return r?.activeExperimentId==="living-movement-specimen-l0" &&
         r?.snapshot?.populationAuthored===16 &&
@@ -946,11 +946,11 @@ try{
         !document.querySelector("#camera-tools")?.hidden &&
         !!document.querySelector('[data-param-id="prospectionHorizon"]') &&
         !!document.querySelector('[data-param-id="effortHistoryStrength"]');
-    })()\`);
+    })()`);
   },{timeout:5000,interval:80});
 
   await waitFor("living movement produces demand/outcome evidence",async()=>{
-    return evaluate(\`(()=>{
+    return evaluate(`(()=>{
       const s=window.__combatLabRuntime.snapshot;
       const actor=s?.actors?.[0];
       return actor?.outcome &&
@@ -958,10 +958,10 @@ try{
         Number.isFinite(Number(actor?.outcome?.realizedVelocity?.x)) &&
         Number.isFinite(Number(actor?.body?.effortLoad)) &&
         Number.isFinite(Number(actor?.body?.capabilityScale));
-    })()\`);
+    })()`);
   },{timeout:5000,interval:80});
 
-  const livingSelection=await evaluate(\`(()=>{
+  const livingSelection=await evaluate(`(()=>{
     const r=window.__combatLabRuntime;
     const actor=r.snapshot?.actors?.[0];
     if(!actor?.body?.position) return {error:"no active L0 actor"};
@@ -984,12 +984,12 @@ try{
       observeActive:document.querySelector('[data-inspector-mode="observe"]')?.getAttribute("aria-selected"),
       observeHidden:document.querySelector('[data-inspector-panel="observe"]')?.hidden
     };
-  })()\`);
+  })()`);
   if(livingSelection.error ||
      livingSelection.selected!==livingSelection.expected ||
      livingSelection.observeActive!=="true" ||
      livingSelection.observeHidden!==false){
-    throw new Error(\`L0 subject selection failed: \${JSON.stringify(livingSelection)}\`);
+    throw new Error(`L0 subject selection failed: ${JSON.stringify(livingSelection)}`);
   }
 
   const livingSubject=await evaluate('window.__combatLabRuntime.query("selected-subject")');
@@ -1001,11 +1001,11 @@ try{
      !Number.isFinite(Number(livingSubject?.body?.effortLoad)) ||
      !Number.isFinite(Number(livingSubject?.body?.capabilityScale)) ||
      !Number.isFinite(Number(livingSubject?.outcome?.demandOutcomeError))){
-    throw new Error(\`L0 demand→realization causal drilldown failed: \${JSON.stringify(livingSubject)}\`);
+    throw new Error(`L0 demand→realization causal drilldown failed: ${JSON.stringify(livingSubject)}`);
   }
 
   const livingObserveText=await evaluate(
-    'document.querySelector(\\'[data-inspector-panel="observe"]\\')?.innerText'
+    'document.querySelector(\'[data-inspector-panel="observe"]\')?.innerText'
   );
   for(const required of [
     "Selected organism",
@@ -1019,17 +1019,17 @@ try{
     "Capability scale"
   ]){
     if(!livingObserveText?.includes(required)){
-      throw new Error(\`L0 Observe missing \${required}: \${livingObserveText}\`);
+      throw new Error(`L0 Observe missing ${required}: ${livingObserveText}`);
     }
   }
 
   await captureScreenshot(livingScreenshotPath);
 
-  await evaluate('document.querySelector(\\'[data-inspector-mode="tune"]\\').click()');
+  await evaluate('document.querySelector(\'[data-inspector-mode="tune"]\').click()');
   await setNumber("prospectionHorizon",0);
   await setNumber("effortHistoryStrength",0);
   await waitFor("L0 ablations remain truthful live authoring",async()=>{
-    return evaluate(\`(()=>{
+    return evaluate(`(()=>{
       const s=window.__combatLabRuntime.snapshot;
       const p=document.querySelector('[data-param-id="prospectionHorizon"] .parameter-number');
       const e=document.querySelector('[data-param-id="effortHistoryStrength"] .parameter-number');
@@ -1037,26 +1037,26 @@ try{
         s?.policy?.effortHistoryStrength===0 &&
         Number(p?.value)===0 &&
         Number(e?.value)===0;
-    })()\`);
+    })()`);
   });
 
   await evaluate('document.querySelector("#reset-world").click()');
   await waitFor("L0 zero-history reset preserves explicit ablation",async()=>{
-    return evaluate(\`(()=>{
+    return evaluate(`(()=>{
       const s=window.__combatLabRuntime.snapshot;
       return s?.policy?.prospectionHorizon===0 &&
         s?.policy?.effortHistoryStrength===0 &&
         s?.actors?.every(actor=>Math.abs(Number(actor?.body?.capabilityScale)-1)<1e-9);
-    })()\`);
+    })()`);
   });
 
-  await evaluate(\`(()=>{
+  await evaluate(`(()=>{
     const s=document.querySelector("#experiment-select");
     s.value="load-envelope-field-b0";
     s.dispatchEvent(new Event("change",{bubbles:true}));
-  })()\`);
+  })()`);
   await waitFor("switch living movement L0 back to B0",async()=>{
-    return evaluate('window.__combatLabRuntime.activeExperimentId==="load-envelope-field-b0" && !!document.querySelector(\\'[data-param-id="loadMass"]\\')');
+    return evaluate('window.__combatLabRuntime.activeExperimentId==="load-envelope-field-b0" && !!document.querySelector(\'[data-param-id="loadMass"]\')');
   });
 
   // E1 browser-only integration qualification. Do not expose E1 in the Owner selector yet.
