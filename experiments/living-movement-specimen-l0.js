@@ -1,6 +1,7 @@
 import {
   LIVING_MOVEMENT_WORLD,
   createLivingMovementState,
+  externallyPlaceLivingMovementBody,
   livingMovementActorSnapshot,
   livingMovementActorTrace,
   livingMovementSnapshot,
@@ -62,7 +63,7 @@ export const livingMovementSpecimenL0={
   title:"Living Movement Specimen L0",
   kind:"research",
   purpose:"First falsifiable organism specimen: bounded motor demand, material body/world realization, short local prospection and smooth effort-history effects without crowd scripts.",
-  controls:"Click organism → causal Observe · wheel zoom · middle-drag pan · Population applies on Reset World",
+  controls:"Click organism → causal Observe · Shift+left-drag selected organism = external perturbation · wheel zoom · middle-drag pan · Population applies on Reset World",
   camera:{
     bounds:{x:0,y:0,width:LIVING_MOVEMENT_WORLD.width,height:LIVING_MOVEMENT_WORLD.height}
   },
@@ -71,6 +72,9 @@ export const livingMovementSpecimenL0={
     const authored={...DEFAULTS};
     let state=createState(authored);
     let selectedId=null;
+    let latestCamera=null;
+    let latestView=null;
+    let externalDragActive=false;
 
     function subject(){
       return selectedId ? livingMovementActorSnapshot(state,selectedId) : null;
@@ -178,6 +182,8 @@ export const livingMovementSpecimenL0={
               {id:"realizedDisplacement",label:"Realized displacement",decimals:3},
               {id:"sameLabelDemandFrames",label:"Same-label demand-change frames",decimals:0},
               {id:"sameLabelDemandTurn",label:"Same-label demand turn total",decimals:1,unit:"°"},
+              {id:"externalMoves",label:"External perturbation samples",decimals:0},
+              {id:"externalActive",label:"Owner hand",format:value=>value ? "ACTIVE" : "—"},
               {id:"effortLoad",label:"Effort history",decimals:3},
               {id:"capability",label:"Capability scale",decimals:3},
               {id:"motorUse",label:"Motor use",decimals:3}
@@ -256,6 +262,8 @@ export const livingMovementSpecimenL0={
         if(id==="sameLabelDemandTurn") return selected?.demandTelemetry
           ? selected.demandTelemetry.sameLabelDemandAngularChurn*180/Math.PI
           : NaN;
+        if(id==="externalMoves") return selected?.externalPerturbationCount ?? NaN;
+        if(id==="externalActive") return Boolean(externalDragActive && selectedId);
         if(id==="effortLoad") return selected?.body?.effortLoad ?? NaN;
         if(id==="capability") return selected?.body?.capabilityScale ?? NaN;
         if(id==="motorUse") return selected?.body?.motorUse ?? NaN;
@@ -264,15 +272,42 @@ export const livingMovementSpecimenL0={
     };
 
     return {
-      step(_input,dt){
+      step(input,dt){
+        const shift=Boolean(
+          input?.keys?.includes("ShiftLeft") ||
+          input?.keys?.includes("ShiftRight")
+        );
+        const leftDown=Boolean(input?.buttons?.includes(0));
+        externalDragActive=Boolean(
+          selectedId &&
+          shift &&
+          leftDown &&
+          input?.pointer?.valid &&
+          latestCamera &&
+          latestView
+        );
+
+        if(externalDragActive){
+          const world=latestCamera.screenToWorld(input.pointer,latestView);
+          externallyPlaceLivingMovementBody(
+            state,
+            selectedId,
+            world,
+            {zeroVelocity:true,source:"owner-shift-drag"}
+          );
+        }
+
         stepLivingMovementState(state,dt);
         if(selectedId && !state.bodies.some(body=>body.id===selectedId)){
           selectedId=null;
+          externalDragActive=false;
         }
       },
 
       render(ctx,view,{debug=false,camera=null}={}){
         if(!camera) return;
+        latestCamera=camera;
+        latestView=view;
         const zoom=camera.zoom;
 
         ctx.save();
@@ -347,6 +382,7 @@ export const livingMovementSpecimenL0={
       reset(){
         state=createState(authored);
         selectedId=null;
+        externalDragActive=false;
       },
 
       pick({screen,camera,view}={}){
