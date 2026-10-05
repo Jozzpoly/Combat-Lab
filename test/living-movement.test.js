@@ -5,6 +5,7 @@ import {
   buildLivingMovementActivities,
   capabilityScaleFromLoad,
   createLivingMovementState,
+  livingMovementActorTrace,
   livingMovementSnapshot,
   stepLivingMovementState
 } from "../src/research/living-movement.js";
