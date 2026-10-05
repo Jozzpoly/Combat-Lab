@@ -323,11 +323,20 @@ function chooseContinuation(state,actor,body){
   // outcome evidence about that same attempt. Do not judge a new continuation
   // using the previous continuation's result.
   if(actor.continuation.id!=="direct"){
+    const startDirectGap=Number(actor.continuation.directGapAtStart);
+    const directGapImprovement=Number.isFinite(startDirectGap)
+      ? direct.minGap-startDirectGap
+      : -Infinity;
     if(
       direct.minGap>=warningGap &&
+      directGapImprovement>=meaningfulGain &&
       direct.progress>current.progress+body.maxSpeed*0.05
     ){
-      return {...direct,reason:"direct-reopened",neighbourCount:neighbours.length};
+      return {
+        ...direct,
+        reason:"direct-reopened-after-material-improvement",
+        neighbourCount:neighbours.length
+      };
     }
 
     const outcome=actor.lastOutcome?.continuationId===actor.continuation.id
@@ -350,13 +359,6 @@ function chooseContinuation(state,actor,body){
   // continuation remains comfortably supported, keep it. A previously
   // corrective continuation may return to direct once that future reopens.
   if(current.minGap>=warningGap && current.progress>=body.maxSpeed*0.2){
-    if(
-      actor.continuation.id!=="direct" &&
-      direct.minGap>=warningGap &&
-      direct.progress>current.progress+body.maxSpeed*0.05
-    ){
-      return {...direct,reason:"direct-reopened",neighbourCount:neighbours.length};
-    }
     return {...current,reason:"supported",neighbourCount:neighbours.length};
   }
 
@@ -390,13 +392,23 @@ function chooseContinuation(state,actor,body){
       "slow",baseDirection,0,0.42,body,neighbours,state,projectionAcceleration
     );
     if(slow.minGap>=current.minGap+meaningfulGain){
-      return {...slow,reason:"symmetric-yield",neighbourCount:neighbours.length};
+      return {
+        ...slow,
+        reason:"symmetric-yield",
+        neighbourCount:neighbours.length,
+        directGapAtSelection:direct.minGap
+      };
     }
     const wait=continuationCandidate(
       "wait",baseDirection,0,0,body,neighbours,state,projectionAcceleration
     );
     if(wait.minGap>=current.minGap+meaningfulGain){
-      return {...wait,reason:"symmetric-wait",neighbourCount:neighbours.length};
+      return {
+        ...wait,
+        reason:"symmetric-wait",
+        neighbourCount:neighbours.length,
+        directGapAtSelection:direct.minGap
+      };
     }
     return {...current,reason:"symmetric-contact-tolerated",neighbourCount:neighbours.length};
   }
@@ -404,7 +416,12 @@ function chooseContinuation(state,actor,body){
   // Change course only when the prospective evidence materially improves the
   // threatened future. Small clearance differences do not own the body.
   if(bestMoving && movingGain>=meaningfulGain){
-    return {...bestMoving,reason:"prospective-correction",neighbourCount:neighbours.length};
+    return {
+      ...bestMoving,
+      reason:"prospective-correction",
+      neighbourCount:neighbours.length,
+      directGapAtSelection:bestMoving.id==="direct" ? null : direct.minGap
+    };
   }
 
   // Severe predicted overlap can justify reducing vigor even when no lateral
@@ -415,13 +432,23 @@ function chooseContinuation(state,actor,body){
       "slow",baseDirection,0,0.42,body,neighbours,state,projectionAcceleration
     );
     if(slow.minGap>=current.minGap+meaningfulGain){
-      return {...slow,reason:"pressure-slow",neighbourCount:neighbours.length};
+      return {
+        ...slow,
+        reason:"pressure-slow",
+        neighbourCount:neighbours.length,
+        directGapAtSelection:direct.minGap
+      };
     }
     const wait=continuationCandidate(
       "wait",baseDirection,0,0,body,neighbours,state,projectionAcceleration
     );
     if(wait.minGap>=current.minGap+meaningfulGain){
-      return {...wait,reason:"pressure-wait",neighbourCount:neighbours.length};
+      return {
+        ...wait,
+        reason:"pressure-wait",
+        neighbourCount:neighbours.length,
+        directGapAtSelection:direct.minGap
+      };
     }
   }
 
@@ -612,7 +639,7 @@ function createActor(spec,index,state){
     id:spec.id,
     index,
     activity:structuredClone(spec),
-    continuation:{offset:0,speedScale:1,id:"direct"},
+    continuation:{offset:0,speedScale:1,id:"direct",directGapAtStart:null},
     lastDecision:{
       id:"direct",
       offset:0,
@@ -726,17 +753,25 @@ export function stepLivingMovementState(state,dt){
     before.set(body.id,{x:body.x,y:body.y,vx:body.vx,vy:body.vy});
 
     const decision=chooseContinuation(state,actor,body);
-    if(
+    const continuationChanged=(
       decision.id!==actor.continuation.id ||
       Math.abs(decision.offset-actor.continuation.offset)>1e-9 ||
       Math.abs(decision.speedScale-actor.continuation.speedScale)>1e-9
-    ){
+    );
+    if(continuationChanged){
       actor.continuationChanges+=1;
     }
     actor.continuation={
       id:decision.id,
       offset:decision.offset,
-      speedScale:decision.speedScale
+      speedScale:decision.speedScale,
+      directGapAtStart:decision.id==="direct"
+        ? null
+        : continuationChanged
+          ? Number.isFinite(Number(decision.directGapAtSelection))
+            ? Number(decision.directGapAtSelection)
+            : null
+          : actor.continuation.directGapAtStart
     };
     actor.lastDecision=decision;
     applyLivingMotor(state,actor,body,delta);
