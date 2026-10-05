@@ -286,7 +286,7 @@ function symmetricOpposition(a,b){
 function chooseContinuation(state,actor,body){
   const baseDirection=activityDirection(actor.activity,body,state.world);
   const neighbours=perceivedNeighbours(state,body);
-  const projectionAcceleration=Math.max(EPS,actor.estimatedAcceleration);
+  const projectionAcceleration=contactAcceleration(body);
   const currentOffset=finite(actor.continuation.offset,"continuation.offset");
   const currentSpeedScale=finite(actor.continuation.speedScale,"continuation.speedScale");
   const current=continuationCandidate(
@@ -305,6 +305,33 @@ function chooseContinuation(state,actor,body){
   const direct=continuationCandidate(
     "direct",baseDirection,0,1,body,neighbours,state,projectionAcceleration
   );
+
+  // A corrective continuation owns its next attempt until the world supplies
+  // outcome evidence about that same attempt. Do not judge a new continuation
+  // using the previous continuation's result.
+  if(actor.continuation.id!=="direct"){
+    if(
+      direct.minGap>=warningGap &&
+      direct.progress>current.progress+body.maxSpeed*0.05
+    ){
+      return {...direct,reason:"direct-reopened",neighbourCount:neighbours.length};
+    }
+
+    const outcome=actor.lastOutcome?.continuationId===actor.continuation.id
+      ? actor.lastOutcome
+      : null;
+    const materiallyBlocked=Boolean(
+      outcome?.contacted && Number(outcome.blockedFraction)>=0.25
+    );
+
+    if(!materiallyBlocked){
+      return {
+        ...current,
+        reason:outcome ? "continuation-supported-by-outcome" : "continuation-awaiting-outcome",
+        neighbourCount:neighbours.length
+      };
+    }
+  }
 
   // Prospection is evidence, not a no-contact policy. If the current
   // continuation remains comfortably supported, keep it. A previously
@@ -436,16 +463,6 @@ function applyLivingMotor(state,actor,body,dt){
   actor.capabilityScale=capabilityScale;
   actor.effectiveAcceleration=effectiveAcceleration;
 
-  // L0 does not hand the predictor exact future capability. It slowly
-  // calibrates a private motor-response estimate only when the body was
-  // actually driven near its current acceleration limit.
-  if(actor.motorUse>=0.85){
-    const observedAcceleration=motorDelta/dt;
-    const adaptation=clamp(dt*3,0,1);
-    actor.estimatedAcceleration+=
-      (observedAcceleration-actor.estimatedAcceleration)*adaptation;
-  }
-}
 
 function contactIds(state){
   const ids=new Set();
@@ -483,6 +500,7 @@ function updateEffortAndOutcome(state,actor,body,before,dt,contacted){
   actor.lastOutcome={
     beforePosition:{x:before.x,y:before.y},
     finalPosition:{x:body.x,y:body.y},
+    continuationId:actor.continuation.id,
     demandedVelocity:{...demand},
     realizedVelocity,
     demandOutcomeError:Math.hypot(
@@ -525,7 +543,6 @@ function createActor(spec,index,state){
     motorUse:0,
     capabilityScale:1,
     effectiveAcceleration:contactAcceleration(body),
-    estimatedAcceleration:contactAcceleration(body),
     continuationChanges:0,
     lastOutcome:null,
     completedAt:null
@@ -693,7 +710,6 @@ export function livingMovementActorSnapshot(state,id){
       contactResistance:body.contactResistance,
       maxSpeed:body.maxSpeed,
       effectiveAcceleration:actor.effectiveAcceleration,
-      estimatedAcceleration:actor.estimatedAcceleration,
       capabilityScale:actor.capabilityScale,
       effortLoad:actor.effortLoad,
       motorUse:actor.motorUse
