@@ -228,3 +228,105 @@ Do not tune thresholds to maximize completion or minimize contact.
 A living movement substrate may legitimately contain contact, hesitation, yielding, failed attempts and local jams. The target is causal, legible, embodied continuity that survives repeated perturbation without global orchestration.
 
 The world should create the question; the apparatus should make the cause inspectable.
+
+
+## Post-recovery evidence: material future improvement
+
+After the recovered-state record, L0 first gained a non-authoritative demand microscope. This records raw motor-demand change, realized motion, activity progress and demand/outcome discrepancy without changing policy.
+
+The microscope corrected an earlier diagnosis:
+
+- same-label motor-demand change is real;
+- but it is not the dominant source of angular churn in the current baseline;
+- at the recovered baseline, total demand turn was ~67.93 rad across the 16-actor run, while same-label demand turn accounted for only ~5.47 rad.
+
+Transition anatomy then isolated the dominant loop.
+
+### Four-organism microscope before the intervention
+
+With prospection ON and effort-history OFF:
+
+- 4/4 completed;
+- 0 contact resolutions;
+- 32 continuation changes;
+- 29 rapid transitions;
+- mean dwell ~0.114 s;
+- transition pairs were almost a pure oscillator:
+  - direct -> right: 15
+  - right -> direct: 15
+  - direct -> left: 1
+  - left -> direct: 1
+- transition reasons:
+  - prospective-correction: 16
+  - direct-reopened: 16
+
+The no-prospection comparison completed 4/4 with 9 contact resolutions and zero continuation changes.
+
+Finding:
+
+> L0 was creating a prospective correction and then revoking it almost immediately when direct motion merely crossed the current safety condition. The correction did not need to have materially changed the threatened future.
+
+### Evidence-based intervention
+
+The policy was changed without a decision cooldown or commitment bonus.
+
+When a non-direct correction is selected, L0 now preserves the direct-path predicted gap from that moment. Direct motion may regain authority only after the actual evolving body/world relation improves that originally threatened direct future by a material amount.
+
+This is still a research heuristic, not accepted locomotion semantics. Its purpose is to test whether material world evidence can supply continuity that a timer would otherwise fake.
+
+### Result
+
+Four-organism microscope:
+
+- 4/4 completed;
+- 0 contact resolutions;
+- continuation changes: 32 -> 6;
+- rapid transitions: 29 -> 1;
+- mean dwell: ~0.114 s -> ~0.758 s;
+- total demand angular churn: ~15.42 rad -> ~2.99 rad.
+
+Sixteen-organism baseline:
+
+- completion: 13/16 -> 16/16;
+- contact resolutions: 292 -> 255;
+- continuation changes: 132 -> 63;
+- rapid transitions: 84 -> 6;
+- total demand angular churn: ~67.93 rad -> ~36.86 rad;
+- net activity progress recovered to approximately the no-prospection run.
+
+This is a **material finding**, not an Owner experiential PASS.
+
+It supports the narrower hypothesis:
+
+> A local correction becomes more coherent when release authority is tied to evidence that the world/body relation has actually improved, rather than to elapsed time or a transient prediction crossing.
+
+### Effort-history remains unqualified
+
+In the same 16-actor run, baseline vs effort-history OFF remained very close in movement-level outcomes:
+
+- completion 16/16 in both;
+- contacts 255 vs 249;
+- continuation changes 63 vs 62;
+- rapid transitions 6 vs 6;
+- demand angular churn ~36.86 vs ~36.78 rad.
+
+The current effort-history model therefore has not yet earned a causal role in this movement problem. It remains a candidate mechanism and Owner-intent direction, but the next movement-continuity work should keep it OFF unless the experiment specifically studies effort.
+
+## Updated next move
+
+Do not add more crowd competence yet.
+
+The next high-value step is Owner-readable live perturbation of the now calmer organism:
+
+1. use 4 organisms and effort-history OFF as the causal microscope;
+2. preserve the same organism implementation and playground;
+3. add the smallest reversible way for the Owner to perturb the live scene directly;
+4. observe whether a correction:
+   - begins for an intelligible reason,
+   - receives enough material realization to become legible,
+   - survives irrelevant noise,
+   - releases when the relevant future genuinely changes,
+   - and recovers after the Owner closes and reopens an opportunity;
+5. only after concrete live episodes reveal a missing cause should policy change again.
+
+Do not promote the current aggregate improvements to living-crowd qualification.
