@@ -15,6 +15,8 @@ The previous prototype/research families — including B0/Ecology/R0/N1/C0/D0/M1
 
 Historical existence does not qualify anything as a donor or foundation.
 
+The single ref `archive/forensic-pre-cleanroom-2026-10-06` exists only to keep the old commit graph reachable. **It has zero execution or research authority.** Never continue work from it, merge it into `main`, or mine it broadly for candidate architecture. Enter it only for a concrete forensic question, then bring back evidence rather than lineage.
+
 If a future question appears to benefit from an old mechanism, recover it from Git history only after stating the new question and re-validating the mechanism against that question. “We already built it” is not evidence.
 
 ## Current frontier
