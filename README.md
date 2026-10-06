@@ -6,7 +6,7 @@ Combat Lab is a **disposable research laboratory** for discovering embodied comb
 
 There is **no active combat specimen, movement/crowd architecture, organism architecture or mechanically qualified research foundation**.
 
-The only runnable experiment, once the neutral execution substrate is present, is `substrate-smoke`. It exists to prove raw browser input, fixed stepping, reset and rendering plumbing. It is not a combat prototype, movement model, organism or research direction.
+The only runnable surface is a self-contained neutral smoke probe for raw browser input, stepping, reset and rendering. It is not an experiment result, combat prototype, movement model, organism or research direction.
 
 The previous prototype/research line is deliberately absent from this tree. Historical Git commits are forensic archaeology only and carry no present authority.
 
