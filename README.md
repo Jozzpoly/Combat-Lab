@@ -38,4 +38,6 @@ Read only:
 
 Old commits may be consulted only when a concrete new question needs forensic evidence.
 
+`archive/forensic-pre-cleanroom-2026-10-06` is a **forensic reachability anchor only**. It exists solely to keep pre-refoundation commits recoverable after legacy working branches are deleted. It is not a research branch, donor catalog, fallback implementation, or continuation candidate.
+
 > **The Lab exists to lab. A prototype that answered its question is allowed to die.**
