@@ -1,8 +1,8 @@
 {
-  "name": "combat-lab-clean-substrate",
+  "name": "combat-lab-clean-room",
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test"
+    "test": "node --check app.js"
   }
 }
