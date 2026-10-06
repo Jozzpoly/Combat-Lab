@@ -1,0 +1,50 @@
+name: check
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify clean-room tree
+        shell: bash
+        run: |
+          test ! -e src
+          test ! -e experiments
+          test ! -e scripts
+          test "$(find docs -maxdepth 1 -type f | wc -l)" -eq 3
+          test -f docs/RESEARCH_STATE.md
+          test -f docs/EXPERIMENT_PROTOCOL.md
+          test -f docs/FAILURE_SCAR_2026-10-06.md
+
+      - name: Check runtime syntax
+        run: npm test
+
+      - name: Browser smoke gate
+        shell: bash
+        run: |
+          python3 -m http.server 4173 > /tmp/combat-lab-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:4173/ > /dev/null; then
+              break
+            fi
+            sleep 0.25
+          done
+
+          CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
+          test -n "$CHROME"
+
+          "$CHROME" --headless=new --no-sandbox --disable-gpu             --virtual-time-budget=1200             --dump-dom http://127.0.0.1:4173/ > /tmp/combat-lab-dom.html
+
+          grep -q "Neutral smoke surface" /tmp/combat-lab-dom.html
+          grep -q "clean-room substrate" /tmp/combat-lab-dom.html
