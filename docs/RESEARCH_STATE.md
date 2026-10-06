@@ -7,7 +7,7 @@ There is no active research specimen.
 
 There is no accepted combat, locomotion, crowd or organism architecture in the active tree.
 
-The only executable experiment is `substrate-smoke`, retained solely to prove neutral browser/input/render/reset plumbing. It carries no research semantics.
+The only executable surface is a self-contained neutral smoke probe retained solely to prove browser/input/render/reset plumbing. It carries no research semantics.
 
 ## Removed authority
 
