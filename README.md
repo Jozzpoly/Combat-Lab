@@ -1,30 +1,41 @@
 # Combat Lab
 
-Experimental laboratory for discovering the combat substrate that may later inform Feniks.
+Combat Lab is a **disposable research laboratory** for discovering embodied combat and world interactions.
 
-## Core question
+## Current state — CLEAN REFOUNDATION (2026-10-06)
 
-Can top-down combat remain responsive and player-authored while making bodies, weapon reach, movement, contact and spatial consequence materially real?
+There is **no active combat specimen, movement/crowd architecture, organism architecture or mechanically qualified research foundation**.
 
-This repository is a research lab, not the Feniks combat implementation.
+The only runnable experiment, once the neutral execution substrate is present, is `substrate-smoke`. It exists to prove raw browser input, fixed stepping, reset and rendering plumbing. It is not a combat prototype, movement model, organism or research direction.
 
-## Research stance
+The previous prototype/research line is deliberately absent from this tree. Historical Git commits are forensic archaeology only and carry no present authority.
 
-- prototype before architecture;
-- preserve player control during attacks unless evidence earns a stronger commitment mechanism;
-- prefer physical/spatial causes over invisible permissions, invulnerability windows or target-only abstractions;
-- distinguish input intent, combat intent, realized motion/contact, factual outcome and presentation;
-- compare simple authored approximations against more geometric/physical candidates instead of assuming higher simulation fidelity is better;
-- keep experiments small enough that animation, VFX and AI cannot hide a weak mechanical core;
-- promote only findings that survive A/B feel tests and causal/debug inspection.
+## Default law: disposable until promoted
 
-## Current frontier
+An experiment has **no continuity rights** because it exists, took time to build, has tests, produced a local finding or is easier to extend than replace.
 
-R0 will compare two deliberately different melee-hit models under the same movement and aiming substrate:
+The normal end state of a bounded experiment is **deletion after learning**.
 
-1. an authored instantaneous arc/cone check;
-2. a rotating blade whose swept spatial path is tested against target geometry.
+Code survives only after a separate promotion decision demonstrates that preserving it is materially better than rebuilding or re-deriving it. Survival by inertia is forbidden.
 
-Both retain live movement during attack. The purpose is not to pick a final system from one prototype, but to expose where geometric weapon truth improves or harms responsiveness, legibility, forgiveness and weapon identity.
+## Owner contract
 
-Sibling projects (LLM Live NPC / SPC, Companion Brain Lab, ReflexBrain Lab) are donors and pressure sources, not architecture authority.
+- explicit Owner feedback outranks machine PASS for experiential claims;
+- a request to move beyond a crude prototype is not a request to polish it;
+- intentional break regimes and direct manipulation are first-class research operations;
+- the apparatus must not protect its own preferred answer;
+- mechanistic evidence may inform a later build but may not masquerade as delivered progress;
+- donor recovery is question-driven, never automatic inheritance;
+- no specimen becomes architecture merely because later work happened around it.
+
+## Active authority
+
+Read only:
+
+1. `docs/RESEARCH_STATE.md`
+2. `docs/EXPERIMENT_PROTOCOL.md`
+3. `docs/FAILURE_SCAR_2026-10-06.md`
+
+Old commits may be consulted only when a concrete new question needs forensic evidence.
+
+> **The Lab exists to lab. A prototype that answered its question is allowed to die.**
