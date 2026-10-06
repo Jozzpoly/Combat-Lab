@@ -1,0 +1,49 @@
+name: pages
+
+on:
+  workflow_run:
+    workflows: ["check"]
+    types: [completed]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      (github.event.workflow_run.head_branch == 'main' ||
+       github.event.workflow_run.head_branch == 'rehearsal/current')
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Prepare exact clean-room artifact
+        shell: bash
+        run: |
+          mkdir -p dist/docs
+          cp index.html app.js style.css dist/
+          cp docs/RESEARCH_STATE.md docs/EXPERIMENT_PROTOCOL.md docs/FAILURE_SCAR_2026-10-06.md dist/docs/
+          printf '%s\n' "${{ github.event.workflow_run.head_sha }}" > dist/COMMIT.txt
+          printf '%s\n' "${{ github.event.workflow_run.head_branch }}" > dist/BRANCH.txt
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./dist
+
+      - name: Deploy exact checked state
+        id: deployment
+        uses: actions/deploy-pages@v4
