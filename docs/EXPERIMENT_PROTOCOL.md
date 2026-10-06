@@ -1,269 +1,66 @@
 # Combat Lab — Experiment Protocol
 
-This file defines how Combat Lab should behave during long autonomous runs and short Owner commands such as **“kontynuuj.”**
+## 1. Start from a question
 
-Its purpose is to prevent implementation momentum from becoming research authority.
+Every experiment begins with one concrete uncertainty. It exists only to create evidence about that uncertainty. It is not automatically a seed for the next system.
 
-## 1. Start from live truth
+## 2. Declare expiry before coding
 
-Before substantial work:
+State:
 
-- read `README.md` and `docs/RESEARCH_STATE.md`;
-- inspect current branches and the public deployment source;
-- distinguish Owner-confirmed intent from candidate hypotheses;
-- treat the newest Owner play evidence as stronger than an older roadmap.
-
-Do not continue an implementation merely because it already exists.
-
-## 2. Hypothesis before code
-
-Every new lane needs a compact hypothesis card containing:
-
-- **player action** — what the player does with hands/input;
-- **realized behavior** — what body/weapon/world actually do;
-- **30-second discriminator** — what should be unmistakably different in play;
-- **Feniks relevance** — why the distinction matters;
-- **falsifier** — what would make us stop.
-
-If the discriminator cannot be stated clearly, do not code the lane.
-
-## 3. Phenomenon-level differences, not parameter theater
-
-Different constants do not automatically make different hypotheses.
-
-Bad comparison:
-
-- 20° steering;
-- 40° steering;
-- 60° steering.
-
-Potentially valid comparison:
-
-- direct weapon expression;
-- body/momentum-driven attack;
-- persistent guard/contact combat.
-
-The test is player-facing: **would a player naturally behave differently?**
-
-## 3.1 Discovery before attribution
-
-Combat Lab uses two different experimental modes and must not confuse them.
-
-### Discovery mode — current phase
-
-When we do not yet know the right combat language, compare a few **deliberately divergent whole organisms**. Multiple coupled mechanics may differ if that is necessary to make the player-facing phenomena genuinely different.
-
-The goal is not yet to prove which individual variable caused an effect. The goal is to discover **where there is something worth explaining**.
-
-### Attribution mode — later
-
-Once an organism repeatedly survives Owner play and contains a valuable phenomenon, narrow A/B experiments can isolate steering, timing, contact, assistance, momentum, hit fidelity or other variables.
-
-Do not enter attribution mode merely because it is easier to make a clean experiment.
-
-Early over-isolation can remove the phenomenon we are trying to discover; R0 and the LIVE / BOUNDED / CAPTURED spike are preserved warnings of this failure mode.
-
-## 3.2 Possibility-richness gate
-
-Before a discovery specimen earns Owner attention, ask whether it contains a **possibility surface**, not merely a mechanism demonstration.
-
-A useful whole organism should normally permit several materially different legal responses to pressure, such as combinations of:
-
-- approach / retreat / angle change;
-- hold / yield / displace;
-- attack / threaten / interrupt;
-- use of reach, cover, choke, obstruction or open space;
-- bypass, reposition or terrain exploitation.
-
-The specimen fails this gate when its claimed strategy is substantially pre-authored by the test apparatus itself.
-
-Warning signs:
-
-- one route exists mainly so one preset fits and another does not;
-- AI threat is active only inside a hand-authored lane that encodes the intended answer;
-- an automated policy knows the solution before the organism has demonstrated that a player could discover it;
-- labels, HUD text or test instructions tell the Owner which role or strategy to enact;
-- the same interaction would remain after replacing the combat organism with a generic movement puzzle.
-
-Discovery specimens may still be small and authored. The requirement is not sandbox breadth. The requirement is that **multiple useful possibilities arise from the organism/world relationship rather than from the test script declaring the correct move**.
-
-A mechanism cell may intentionally violate this gate. If it does, classify it as mechanism evidence and do not promote it to Owner-product evidence.
-
-## 3.3 Classless-emergence check
-
-When an experiment claims to demonstrate a natural combat role, that role must not exist only because of a hidden class flag.
-
-Prefer shared explanatory properties such as body envelope, mass, equipment burden, acceleration, contact resistance, weapon geometry, shield coverage, stance and learned technique.
-
-Temporary anchor presets are allowed for discovery. They are **test points**, not classes.
-
-Before promotion, perform a continuity check by changing equipment/body properties or creating an awkward hybrid. If the role only survives at handcrafted presets, the classless-emergence claim failed.
-
-Do not confuse this with a ban on discrete learned abilities. The rule is narrower: a role cannot be called emergent if its base identity is produced by `if class == ...`.
-
-## 4. Keep the situation comparable, not the mechanics identical
-
-A comparison may share:
-
-- arena;
-- opponent intent;
-- objective;
-- broad visual language;
-- input hardware.
-
-It does **not** need to share the same attack animation, resolver, body contract or timing if those are part of the hypothesis.
-
-Forcing every candidate through one mechanism can erase the very difference being investigated.
-
-## 5. Minimum playable organism
-
-A specimen must contain enough game to judge fighting:
-
-- controllable embodied character;
-- meaningful opponent or pressure;
-- spatial consequence;
-- readable contact / miss / threat;
-- quick reset;
-- enough feedback to understand causality.
-
-Avoid both extremes:
-
-- algorithm visualizer with no fight;
-- mini-game feature pile that hides the tested phenomenon.
-
-## 6. Evidence boundaries
-
-### Machine evidence can qualify
-
-- deterministic helpers;
-- geometry/math;
-- runtime health;
-- input plumbing;
-- provenance;
-- deployment correctness.
-
-### Machine evidence cannot qualify
-
-- combat feel;
-- weight;
-- responsiveness;
-- mastery;
-- readability;
-- desire to continue playing;
-- whether a mechanic belongs in Feniks.
-
-Those require Owner play.
-
-## 7. Deployment discipline
-
-Automatic Pages deployment is reserved for `main`.
-
-An experimental specimen may be deployed only after its checks are green and deployment intent is explicit.
-
-Supported explicit paths:
-
-- manual workflow dispatch of an exact ref/SHA; or
-- a checked commit on the **currently whitelisted active experiment branch** whose message contains `[deploy]`. The Pages workflow deploys that exact checked `head_sha`.
-
-Ordinary experiment pushes never deploy.
-
-The public URL must never silently become an experiment merely because an experiment branch received a push.
-
-After a rejected experiment:
-
-1. restore Pages to `main` / reset truth;
-2. record the finding and preserved commit SHA in `RESEARCH_STATE.md`;
-3. remove or retire the experiment branch instead of accumulating stale lanes.
-
-## 8. Branch hygiene
-
-Target state:
-
-- `main`;
-- at most **one active experiment lane** unless a simultaneous comparison genuinely requires more.
-
-Rejected experiments are historical evidence, not permanent branches. Preserve their commit SHA and result in documentation, then clean the branch.
-
-Do not create branch forests for checkpoints, retries or minor parameter changes.
-
-## 9. Meaning of “kontynuuj”
-
-A short Owner command is authorization to continue the **current research objective**, not the last bullet point mechanically.
-
-On each continuation:
-
-1. recover the current live state;
-2. identify the highest-value unresolved uncertainty;
-3. check whether new evidence invalidates the old plan;
-4. choose a reversible next action;
-5. execute as far as evidence permits;
-6. stop or pivot when the research question is answered or falsified.
-
-Do not manufacture work for momentum.
-
-## 10. Promotion rule
-
-Nothing becomes “Feniks combat” because:
-
-- it exists;
-- it is elegant;
-- tests pass;
-- it took a long time to build;
-- it resembles a known game;
-- it is the least bad current specimen.
-
-Promotion requires repeated Owner evidence that the player-facing combat language is valuable enough to deserve deeper investment.
-
-
-## 11. Owner exposure timing
-
-Machine-side falsification exists to prevent obviously invalid Owner tests. It must not become a substitute for human discovery.
-
-When a whole organism is:
-
-- stable enough to manipulate;
-- causally understandable enough that obvious runtime bugs will not dominate;
-- genuinely different at the phenomenon level;
-- safe to expose without contaminating the question with instructions;
-
-then prefer an **early raw Owner observation** over another long chain of agent-only tuning.
-
-Do not require exhaustive mechanistic attribution before the first human-facing discovery test.
-
-A short Owner reaction such as:
-
-- "this is dead";
-- "this is sticky";
-- "I don't understand what I can do";
-- "this is already something";
-
-may be more valuable than dozens of deterministic tests when the question is fundamentally experiential.
-
-Machine evidence remains authoritative only for the narrow facts it can actually establish.
-
-## 12. Execution-substrate refoundation rule
-
-A clean execution reset is allowed when accumulated implementation begins to bias what the lab can ask.
-
-A refoundation must preserve:
-
-- exact experiment SHAs;
-- Owner evidence;
+- the question;
+- the smallest apparatus needed;
 - falsifiers;
-- qualified causal kernels;
-- donor findings;
-- protocol lessons.
+- what evidence ends the experiment;
+- which parts are deliberately fake, crude or temporary.
 
-It does **not** need to preserve:
+## 3. Disposable is the default
 
-- current runtime architecture;
-- current player controller;
-- current actor representation;
-- attack/action abstractions;
-- weapon/contact semantics;
-- experiment numbering;
-- branch ancestry as design authority.
+After the question is answered, the normal action is to delete the experiment from the active tree.
 
-The neutral substrate should share only machinery that cannot answer a combat hypothesis by construction.
+Preserve the finding when useful. Do not preserve implementation because deletion feels wasteful.
 
-If a supposedly shared abstraction already assumes what an actor, attack, weapon, spell, projectile, hit, block or commitment is, it belongs in an experiment until multiple independent families justify promoting it.
+## 4. Promotion has a separate burden of proof
+
+Passing tests, commit count, age and sunk cost do not qualify a mechanism for survival.
+
+Promotion must explain what exact capability is worth preserving, what evidence shows it generalizes beyond its original fixture, what future freedom it does not constrain, and why reuse is epistemically cheaper than rebuilding.
+
+## 5. Owner request to move forward ends prototype authority
+
+When the Owner says the current thing is a crude prosthesis and asks for a substantially more serious organism, continuing to elaborate the prosthesis is a process failure.
+
+It may remain temporarily as a measuring instrument. It loses product authority immediately.
+
+## 6. Internal falsifier != Owner specimen
+
+A narrow fixture may be ugly and artificial when that helps answer one causal question.
+
+It must never be presented as the payoff for a long integration campaign.
+
+## 7. Lab freedom is apparatus
+
+Where relevant, preserve direct live perturbation, exact/extreme values, break regimes, strange combinations, causal inspection and continuation from damaged or surprising states.
+
+Safety rails are justified only by actual program/runtime risk and must be explicit.
+
+## 8. Prefer knowledge inheritance over code inheritance
+
+Prefer:
+
+> experiment → finding → new question → fresh implementation
+
+over:
+
+> experiment → permanent subsystem → more permanent subsystem.
+
+## 9. End every run explicitly
+
+Choose:
+
+- **DELETE**
+- **REBUILD FROM FINDING**
+- **PROMOTE WITH JUSTIFICATION**
+- **UNRESOLVED — MORE EVIDENCE REQUIRED**
+
+“Keep it around just in case” is not a valid classification.
