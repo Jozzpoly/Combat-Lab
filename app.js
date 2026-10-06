@@ -22,7 +22,10 @@ import {minimalReplanCellN1} from "./experiments/minimal-replan-cell-n1.js";
 import {contactSemanticsCellC0} from "./experiments/contact-semantics-cell-c0.js";
 import {dynamicEncounterCellD0} from "./experiments/dynamic-encounter-cell-d0.js";
 import {integratedEcologyRehearsalR0} from "./experiments/integrated-ecology-rehearsal-r0.js";
-import {counterflowCausalHealthS13} from "./experiments/counterflow-causal-health-s1-3.js";\nimport {staticLocomotionSalvageM1} from "./experiments/static-locomotion-salvage-m1.js";\nimport {routeRecoverySalvageR1} from "./experiments/route-recovery-salvage-r1.js";\nimport {dynamicEncounterSalvageD1} from "./experiments/dynamic-encounter-salvage-d1.js";
+import {counterflowCausalHealthS13} from "./experiments/counterflow-causal-health-s1-3.js";
+import {staticLocomotionSalvageM1} from "./experiments/static-locomotion-salvage-m1.js";
+import {routeRecoverySalvageR1} from "./experiments/route-recovery-salvage-r1.js";
+import {dynamicEncounterSalvageD1} from "./experiments/dynamic-encounter-salvage-d1.js";
 
 const canvas=document.querySelector("#lab");
 const ctx=canvas.getContext("2d");
@@ -62,7 +65,10 @@ registry.register(minimalReplanCellN1);
 registry.register(contactSemanticsCellC0);
 registry.register(dynamicEncounterCellD0);
 registry.register(integratedEcologyRehearsalR0);
-registry.register(counterflowCausalHealthS13);\nregistry.register(staticLocomotionSalvageM1);\nregistry.register(routeRecoverySalvageR1);\nregistry.register(dynamicEncounterSalvageD1);
+registry.register(counterflowCausalHealthS13);
+registry.register(staticLocomotionSalvageM1);
+registry.register(routeRecoverySalvageR1);
+registry.register(dynamicEncounterSalvageD1);
 
 const runner=new FixedStepRunner({dt:1/120,maxFrame:0.05,maxAccum:0.10});
 const input=new BrowserInput({pointerTarget:canvas});
