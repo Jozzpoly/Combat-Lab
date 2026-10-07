@@ -46,15 +46,50 @@ jobs:
         with:
           ref: ${{ steps.source.outputs.source }}
 
-      - name: Prepare exact static artifact
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install declared dependencies
+        if: ${{ hashFiles('package.json') != '' }}
         shell: bash
         run: |
-          rm -rf dist
-          mkdir dist
+          HAS_DEPS="$(node -e 'const p=require("./package.json"); const d={...(p.dependencies||{}),...(p.devDependencies||{})}; process.stdout.write(Object.keys(d).length ? "yes" : "no")')"
+          if [ "$HAS_DEPS" = "yes" ]; then
+            if [ -f package-lock.json ]; then
+              npm ci --no-audit --no-fund
+            else
+              npm install --no-audit --no-fund
+            fi
+          fi
 
-          rsync -a             --exclude='.git/'             --exclude='.github/'             --exclude='node_modules/'             --exclude='dist/'             --exclude='test/'             --exclude='tests/'             --exclude='docs/'             --exclude='*.md'             ./ dist/
+      - name: Prepare exact artifact
+        shell: bash
+        run: |
+          HAS_BUILD="no"
+          if [ -f package.json ]; then
+            HAS_BUILD="$(node -e 'const p=require("./package.json"); process.stdout.write(p.scripts?.build ? "yes" : "no")')"
+          fi
 
-          test -f dist/index.html
+          if [ "$HAS_BUILD" = "yes" ]; then
+            npm run build
+            test -f dist/index.html
+          else
+            rm -rf dist
+            mkdir dist
+            rsync -a \
+              --exclude='.git/' \
+              --exclude='.github/' \
+              --exclude='node_modules/' \
+              --exclude='dist/' \
+              --exclude='test/' \
+              --exclude='tests/' \
+              --exclude='docs/' \
+              --exclude='*.md' \
+              ./ dist/
+            test -f dist/index.html
+          fi
+
           printf '%s\n' "$(git rev-parse HEAD)" > dist/COMMIT.txt
           printf '%s\n' "${{ steps.source.outputs.label }}" > dist/BRANCH.txt
 
@@ -75,10 +110,12 @@ jobs:
           CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
           test -n "$CHROME"
 
-          if [ -f dist/scripts/browser-live-gate.mjs ]; then
-            CHROME_BIN="$CHROME" node dist/scripts/browser-live-gate.mjs http://127.0.0.1:4182/
+          if [ -f scripts/browser-live-gate.mjs ]; then
+            CHROME_BIN="$CHROME" node scripts/browser-live-gate.mjs http://127.0.0.1:4182/
           else
-            "$CHROME" --headless=new --no-sandbox --disable-gpu               --virtual-time-budget=1200               --dump-dom http://127.0.0.1:4182/ > /tmp/combat-lab-dist-dom.html
+            "$CHROME" --headless=new --no-sandbox --disable-gpu \
+              --virtual-time-budget=1200 \
+              --dump-dom http://127.0.0.1:4182/ > /tmp/combat-lab-dist-dom.html
             test -s /tmp/combat-lab-dist-dom.html
           fi
 
