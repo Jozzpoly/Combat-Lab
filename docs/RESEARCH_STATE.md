@@ -31,6 +31,45 @@ CI no longer forbids `src/`, `experiments/` or `scripts/`, and no longer asserts
 
 Pages no longer deploys every successful `main` change automatically. Public rehearsal is controlled by the explicit `rehearsal/current` pointer or an exact manual source.
 
+## Durable Owner intent
+
+Combat Lab is not a sword project, a crowd project or a single-combat-system project.
+
+Its durable role is to discover useful **embodied/material possibility** across domains such as:
+
+- body size, envelope, proportions, mass, burden and locomotor authority;
+- occupied space, contact, yielding, displacement, support and stance;
+- terrain, obstruction, clearance, multiple routes and local access;
+- persistent tools, shields, reach, polearms, axes and other equipment relations;
+- bows, projectiles, magic and mixed modalities;
+- multiple actors, asymmetric pressure, future party/co-op relations and crowd/horde regimes;
+- persistent material/world afterstate and other phenomena not yet named.
+
+The list is a possibility map, not a roadmap.
+
+The Lab must remain permissive and self-directed:
+
+- live intervention;
+- independent raw dimensions;
+- exact/extreme authoring;
+- intentional break regimes;
+- direct causal inspection;
+- no paternalistic protection from strange or destructive experiments unless the program itself is at risk.
+
+Cheap fixtures are allowed when they answer a narrow question.
+
+They must not become the project's identity merely because they exist.
+
+Conversely, when evidence or explicit Owner direction calls for a serious qualitative step, the Lab must be able to spend substantial time building a coherent whole rather than endlessly substituting more tiny fixtures.
+
+### Broader horizon
+
+The wider dream reaches beyond Combat Lab toward living material worlds and autonomous embodied actors with continuity, local history, consequences and their own trajectories.
+
+Combat Lab should contribute **material capability and embodied-world evidence** to that horizon.
+
+It must not absorb the full cognition, NPC, Companion, ReflexBrain or Feniks architecture merely because those projects are related.
+
 ## Removed authority
 
 The previous implementation families — including B0, Ecology, R0, N1, C0, D0, M1, R1, D1, S1 and Living Movement L0 — are absent from the active tree and have no execution or roadmap authority.
