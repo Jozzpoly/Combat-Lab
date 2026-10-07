@@ -13,6 +13,19 @@ jobs:
         with:
           node-version: 22
 
+      - name: Install declared dependencies
+        if: ${{ hashFiles('package.json') != '' }}
+        shell: bash
+        run: |
+          HAS_DEPS="$(node -e 'const p=require("./package.json"); const d={...(p.dependencies||{}),...(p.devDependencies||{})}; process.stdout.write(Object.keys(d).length ? "yes" : "no")')"
+          if [ "$HAS_DEPS" = "yes" ]; then
+            if [ -f package-lock.json ]; then
+              npm ci --no-audit --no-fund
+            else
+              npm install --no-audit --no-fund
+            fi
+          fi
+
       - name: Run project checks when present
         shell: bash
         run: |
@@ -43,6 +56,8 @@ jobs:
           if [ -f scripts/browser-live-gate.mjs ]; then
             CHROME_BIN="$CHROME" node scripts/browser-live-gate.mjs http://127.0.0.1:4173/
           else
-            "$CHROME" --headless=new --no-sandbox --disable-gpu               --virtual-time-budget=1200               --dump-dom http://127.0.0.1:4173/ > /tmp/combat-lab-dom.html
+            "$CHROME" --headless=new --no-sandbox --disable-gpu \
+              --virtual-time-budget=1200 \
+              --dump-dom http://127.0.0.1:4173/ > /tmp/combat-lab-dom.html
             test -s /tmp/combat-lab-dom.html
           fi
