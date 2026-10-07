@@ -1,11 +1,11 @@
 # Combat Lab — Research State
 
 **Date:** 2026-10-07  
-**Status:** RECOVERY QUARANTINE · FRONTIER OPEN
+**Status:** RECOVERY QUARANTINE · BODY/WORLD FRONTIER RESELECTED · PRE-IMPLEMENTATION DESIGN
 
 There is no active research specimen.
 
-There is no selected next combat / locomotion / crowd / organism direction.
+The broad body/world discovery frontier has been deliberately reselected after separate reassessment and red-team.
 
 There is no accepted active combat, locomotion, crowd or organism architecture in the current tree.
 
@@ -132,19 +132,27 @@ Machine evidence remains authoritative only for the narrow facts it actually est
 
 ## Current frontier
 
-**OPEN.**
+**RESELECTED — embodied material agency beyond transit.**
 
-Do not open a new specimen merely because the repository is clean again.
+Canonical selection record:
 
-The next research direction must be selected fresh from:
+- `docs/FRONTIER_REASSESSMENT_2026-10-07.md`
 
-- durable Owner intent;
-- the useful phenomena already observed;
-- the broad possibility space of Combat Lab;
-- current technical reality;
-- the lessons from the failed diagnostic tunnel.
+Working question:
 
-A diagnostic finding may inform that selection. It may not choose it automatically.
+> **When materially different embodied actors share a varied material world, do body/world differences create multiple useful, legible possibilities that the Owner naturally discovers — beyond simple traversal, fit/no-fit and crowd flow?**
+
+This is a reselection of the unresolved broad body/world question, not a continuation of Ecology/R0/L0 implementation.
+
+The old traffic topology, route system, contact policy, crowd harness and old "foundation" labels have no inheritance rights.
+
+Pre-implementation design:
+
+- `docs/BODY_WORLD_SUBSTRATE_AND_SPECIMEN_2026-10-07.md`
+
+The preferred trial physics substrate is Rapier 2D deterministic behind a thin Combat Lab-owned world boundary. Character Controller and Companion provide bounded donor properties only; neither architecture is imported wholesale.
+
+The next substantial implementation should be one coherent serious discovery specimen, not a chain of diagnostic cells.
 
 ## Current operating boundary
 
