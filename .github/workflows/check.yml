@@ -31,15 +31,21 @@ jobs:
         run: |
           if [ -f package.json ]; then
             npm test
+            npm run build --if-present
           else
             echo "No package.json; no project checks declared."
           fi
 
-      - name: Generic browser smoke when present
-        if: ${{ hashFiles('index.html') != '' }}
+      - name: Browser smoke
+        if: ${{ hashFiles('index.html') != '' || hashFiles('dist/index.html') != '' }}
         shell: bash
         run: |
-          python3 -m http.server 4173 > /tmp/combat-lab-http.log 2>&1 &
+          ROOT="."
+          if [ -f dist/index.html ]; then
+            ROOT="dist"
+          fi
+
+          python3 -m http.server 4173 --directory "$ROOT" > /tmp/combat-lab-http.log 2>&1 &
           SERVER_PID=$!
           trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
 
