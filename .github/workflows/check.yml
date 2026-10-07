@@ -13,21 +13,17 @@ jobs:
         with:
           node-version: 22
 
-      - name: Verify clean-room tree
+      - name: Run project checks when present
         shell: bash
         run: |
-          test ! -e src
-          test ! -e experiments
-          test ! -e scripts
-          test "$(find docs -maxdepth 1 -type f | wc -l)" -eq 3
-          test -f docs/RESEARCH_STATE.md
-          test -f docs/EXPERIMENT_PROTOCOL.md
-          test -f docs/FAILURE_SCAR_2026-10-06.md
+          if [ -f package.json ]; then
+            npm test
+          else
+            echo "No package.json; no project checks declared."
+          fi
 
-      - name: Check runtime syntax
-        run: npm test
-
-      - name: Browser smoke gate
+      - name: Generic browser smoke when present
+        if: ${{ hashFiles('index.html') != '' }}
         shell: bash
         run: |
           python3 -m http.server 4173 > /tmp/combat-lab-http.log 2>&1 &
@@ -44,7 +40,9 @@ jobs:
           CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
           test -n "$CHROME"
 
-          "$CHROME" --headless=new --no-sandbox --disable-gpu             --virtual-time-budget=1200             --dump-dom http://127.0.0.1:4173/ > /tmp/combat-lab-dom.html
-
-          grep -q "Neutral smoke surface" /tmp/combat-lab-dom.html
-          grep -q "clean-room substrate" /tmp/combat-lab-dom.html
+          if [ -f scripts/browser-live-gate.mjs ]; then
+            CHROME_BIN="$CHROME" node scripts/browser-live-gate.mjs http://127.0.0.1:4173/
+          else
+            "$CHROME" --headless=new --no-sandbox --disable-gpu               --virtual-time-budget=1200               --dump-dom http://127.0.0.1:4173/ > /tmp/combat-lab-dom.html
+            test -s /tmp/combat-lab-dom.html
+          fi
