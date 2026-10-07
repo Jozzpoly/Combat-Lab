@@ -1,10 +1,67 @@
 <!doctype html>
-<meta charset="utf-8">
-<title>Combat Lab — Clean Substrate</title>
-<link rel="stylesheet" href="./style.css">
-<main class="shell">
-<header><div><p class="eyebrow">Combat Lab · clean neutral substrate</p><h1 id="experiment-title">Loading…</h1><p id="experiment-purpose" class="purpose"></p></div><div class="controls"><button id="pause">Pause</button><button id="reset">Reset</button><button id="debug">Debug</button></div></header>
-<section class="viewport"><canvas id="lab" aria-label="Combat Lab neutral experiment surface"></canvas></section>
-<footer><div><strong>Controls</strong><span id="controls-text">—</span></div><div class="status"><span id="run-state">RUNNING</span><span id="sim-time">0.00 s</span><span id="build-id">source: local</span></div></footer>
-</main>
-<script type="module" src="./app.js"></script>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Combat Lab — Material Agency Yard</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body data-combat-lab-ready="false" data-active-bodies="0">
+  <main class="shell">
+    <section class="stage">
+      <canvas id="lab" aria-label="Material Agency Yard"></canvas>
+      <div class="hud">
+        <strong>Material Agency Yard</strong>
+        <span id="runtime-summary">initializing physical world…</span>
+      </div>
+      <div class="controls-hint">WASD move · wheel zoom · middle-drag pan · F follow · left select · right-hold grip</div>
+    </section>
+
+    <aside class="panel">
+      <header>
+        <p class="eyebrow">SERIOUS DISCOVERY SPECIMEN · INTERNAL</p>
+        <h1>Body / world agency</h1>
+        <p>No score and no correct route. Change the body, disturb the world, and see what remains physically possible.</p>
+      </header>
+
+      <section>
+        <h2>Embodiment</h2>
+        <div class="fields">
+          <label>Envelope <input data-profile="radius" type="number" step="0.05" value="0.45"></label>
+          <label>Mass <input data-profile="mass" type="number" step="1" value="40"></label>
+          <label>Max speed <input data-profile="maxSpeed" type="number" step="0.1" value="4.5"></label>
+          <label>Acceleration <input data-profile="acceleration" type="number" step="0.5" value="18"></label>
+          <label>Braking <input data-profile="braking" type="number" step="0.5" value="24"></label>
+          <label>Grip reach <input data-profile="gripReach" type="number" step="0.1" value="2.6"></label>
+          <label>Grip force <input data-profile="gripForce" type="number" step="10" value="260"></label>
+        </div>
+        <div class="button-row">
+          <button id="restore-body">Restore body</button>
+          <button id="reset-world">Reset world</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>Disturb the world</h2>
+        <div class="button-row">
+          <button id="spawn-light">+ light crate</button>
+          <button id="spawn-heavy">+ heavy crate</button>
+        </div>
+        <p class="muted">No population cap. Spawns are allowed to become ugly or expensive; the runtime reports what happens.</p>
+      </section>
+
+      <section>
+        <h2>Selected</h2>
+        <pre id="selected-readout">click a body or object</pre>
+      </section>
+
+      <section>
+        <h2>Research boundary</h2>
+        <p class="muted">This is not R0/L0 traffic, not crowd AI, and not accepted combat. The whole must earn Owner attention before rehearsal/current moves here.</p>
+      </section>
+    </aside>
+  </main>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
