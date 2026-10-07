@@ -119,19 +119,20 @@ Combat Lab should provide material capability/evidence that those projects can l
 
 ## 3. Selection
 
-The strongest fresh discovery frontier is **A — embodied material agency beyond transit**.
+The strongest frontier after fresh reassessment is **A — embodied material agency beyond transit**.
 
-This is not a continuation of Ecology/R0/L0.
+This is a **reselection of the unresolved broad body/world question**, not a continuation of Ecology/R0/L0 implementation.
 
 The old code, traffic topology, route system, contact policy and crowd harness have no authority.
 
 The selected working question is:
 
-> **When a small number of materially different embodied actors share a varied and manipulable world, do body/world differences create multiple useful, legible possibilities that the Owner naturally discovers — beyond simple traversal, fit/no-fit and crowd flow?**
+> **When materially different embodied actors share a varied material world, do body/world differences create multiple useful, legible possibilities that the Owner naturally discovers — beyond simple traversal, fit/no-fit and crowd flow?**
 
 This question earns selection because:
 
 - it has the strongest repeated human-positive evidence;
+- the original broad body/world hypothesis was never cleanly falsified; its old implementation failed to realize it well enough;
 - it attacks assumptions shared by melee, ranged, magic, tools and future co-op;
 - it is broad enough to escape the old crowd tunnel but narrow enough to test as one serious whole;
 - it contributes material-world capability to the wider dream without turning Combat Lab into an NPC/cognition project;
@@ -193,10 +194,10 @@ Reassess or stop the frontier if:
 - the interesting behavior disappears when crowd density is low;
 - navigation sophistication becomes the main phenomenon;
 - resident policy has to know the intended role/route;
-- world manipulation does not change meaningful continuations;
+- world/body material relations do not create meaningfully different continuations;
 - the specimen remains qualitatively equivalent to R0/L0 despite internal sophistication;
 - the apparatus consumes more attention than the phenomenon.
 
 ## Working invariant
 
-> **The selected frontier is body/world possibility, not the old body/world implementation.**
+> **The reselected frontier is body/world possibility, not the old body/world implementation.**
