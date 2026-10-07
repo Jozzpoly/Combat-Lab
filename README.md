@@ -1,43 +1,65 @@
 # Combat Lab
 
-Combat Lab is a **disposable research laboratory** for discovering embodied combat and world interactions.
+Combat Lab is a research laboratory for discovering embodied combat, movement and world-interaction possibilities.
 
-## Current state — CLEAN REFOUNDATION (2026-10-06)
+## Current state — RECOVERY QUARANTINE
 
-There is **no active combat specimen, movement/crowd architecture, organism architecture or mechanically qualified research foundation**.
+There is currently **no active research specimen and no selected next frontier**.
 
-The only runnable surface is a self-contained neutral smoke probe for raw browser input, stepping, reset and rendering. It is not an experiment result, combat prototype, movement model, organism or research direction.
+The active tree contains only a neutral smoke surface plus repository/deployment infrastructure. It is not a combat prototype, movement model, crowd model, organism architecture or accepted research foundation.
 
-The previous prototype/research line is deliberately absent from this tree. Historical Git commits are forensic archaeology only and carry no present authority.
+The previous implementation line is absent from the active tree. Its Git history remains reachable only for deliberate forensic recovery.
 
-## Default law: disposable until promoted
+## What survives the failure
 
-An experiment has **no continuity rights** because it exists, took time to build, has tests, produced a local finding or is easier to extend than replace.
+The project keeps:
 
-The normal end state of a bounded experiment is **deletion after learning**.
+- Owner evidence and corrections;
+- observed phenomena;
+- falsifiers and causal findings;
+- provenance;
+- protocol lessons;
+- the ability to recover old commits when a concrete future question needs them.
 
-Code survives only after a separate promotion decision demonstrates that preserving it is materially better than rebuilding or re-deriving it. Survival by inertia is forbidden.
+It does **not** grant automatic authority to:
 
-## Owner contract
+- old branch ancestry;
+- green mechanism tests;
+- previous "foundation" labels;
+- the last canonical `NEXT`;
+- code merely because it already exists.
 
-- explicit Owner feedback outranks machine PASS for experiential claims;
-- a request to move beyond a crude prototype is not a request to polish it;
-- intentional break regimes and direct manipulation are first-class research operations;
-- the apparatus must not protect its own preferred answer;
-- mechanistic evidence may inform a later build but may not masquerade as delivered progress;
-- donor recovery is question-driven, never automatic inheritance;
-- no specimen becomes architecture merely because later work happened around it.
+## Current operating model
 
-## Active authority
+The repaired experiment protocol distinguishes:
 
-Read only:
+- **discovery** — find valuable whole phenomena first;
+- **diagnosis / attribution** — explain a phenomenon without letting the diagnostic fixture own the roadmap;
+- **serious construction** — build a coherent qualitative step when evidence or Owner direction calls for one;
+- **Lab infrastructure** — neutral capabilities that expand experimentation without encoding the answer.
+
+A diagnostic PASS is a finding, not an automatic parent implementation.
+
+A local improvement against the previous branch version is not enough; relevant progress must be judged against the actual Owner baseline and project goal.
+
+## Repository contract
+
+- `main` is the neutral current Lab state and durable research truth.
+- `rehearsal/current` is an exact deployment pointer only.
+- `archive/forensic-pre-cleanroom-2026-10-06` is forensic reachability only.
+- CI may prove runtime/mechanical/repository facts but may not assert research-roadmap semantics.
+- Public rehearsal occurs only from an explicitly selected exact source.
+
+Repository administration is the agent's responsibility. The Owner should not need to manage branches, SHAs, CI or deployment in normal work.
+
+## Current authority
+
+Read:
 
 1. `docs/RESEARCH_STATE.md`
 2. `docs/EXPERIMENT_PROTOCOL.md`
 3. `docs/FAILURE_SCAR_2026-10-06.md`
 
-Old commits may be consulted only when a concrete new question needs forensic evidence.
+The protocol is explicitly provisional and may be changed when evidence shows a better way to run the Lab.
 
-`archive/forensic-pre-cleanroom-2026-10-06` is a **forensic reachability anchor only**. It exists solely to keep pre-refoundation commits recoverable after legacy working branches are deleted. It is not a research branch, donor catalog, fallback implementation, or continuation candidate.
-
-> **The Lab exists to lab. A prototype that answered its question is allowed to die.**
+> **Discover valuable phenomena first; diagnose them when needed; build serious wholes from knowledge rather than from the accidental ancestry of diagnostic fixtures.**
