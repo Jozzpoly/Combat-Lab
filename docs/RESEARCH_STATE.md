@@ -19,11 +19,13 @@ Current live refs:
 - `rehearsal/current` — deployment pointer only;
 - `archive/forensic-pre-cleanroom-2026-10-06` — forensic reachability only.
 
-Current live `main` and `rehearsal/current` are aligned at:
+The repaired deployment path was validated by moving `rehearsal/current` to:
 
 `cb4b44d417db612f3333fe515e6f6afffa3e56d8`
 
 Public Pages provenance was independently verified against that exact SHA.
+
+`main` may advance through non-rehearsal work without changing the public specimen; that separation is intentional.
 
 CI no longer forbids `src/`, `experiments/` or `scripts/`, and no longer asserts research-roadmap text.
 
