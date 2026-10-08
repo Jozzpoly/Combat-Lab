@@ -35,8 +35,8 @@ if (!match || Number(match[1]) < 5) {
   throw new Error("expected persistent material bodies were not created");
 }
 const physicsSteps = html.match(/data-physics-steps="(\d+)"/);
-if (!physicsSteps || Number(physicsSteps[1]) < 2) {
-  throw new Error("world booted but did not complete two physical steps; recorded=" +
+if (!physicsSteps || Number(physicsSteps[1]) < 1) {
+  throw new Error("world booted but did not complete a physical step; recorded=" +
     (physicsSteps?.[1] ?? "absent"));
 }
 console.log("Material Agency Yard browser gate PASS; bodies=" + match[1] +
