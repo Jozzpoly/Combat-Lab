@@ -47,7 +47,8 @@ function distance(a, b) {
 
 export class MaterialWorld {
   static async create() {
-    await RAPIER.init();
+    // The non-compat Rapier ESM build loads its WASM through the module import.
+    // Its default export does not expose the explicit init() of the -compat build.
     return new MaterialWorld();
   }
 
