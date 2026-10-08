@@ -1622,6 +1622,57 @@ await trial("opposite-moving-actor-sees-forward-contact-with-correct-flip", worl
     "/" + firstResidentFront + "; no collider identity inside sensors";
 });
 
+await trial("two-actors-can-have-different-local-laws-across-reset", world => {
+  world.setPeerEnabled(true);
+  world.setResidentMode("tactile-recovery");
+  world.setPeerMode("directional-recovery");
+  assert(world.residentMode === "tactile-recovery" &&
+    world.peerMode === "directional-recovery",
+    "control law change accidentally affected the other actor");
+  const oldPeer = world.entities.get("peer").body.handle;
+  world.reset();
+  assert(world.peerMode === "directional-recovery" &&
+    world.residentMode === "tactile-recovery" &&
+    world.peerControl.tick === 0,
+    "simulation reset overwrote authored heterogeneity");
+  for (let i = 0; i < 110; i++) world.step(still);
+  assert(world.peerSense && world.residentSense &&
+    world.peerSense !== world.residentSense,
+    "actor-local sensory histories were joined during shared simulation");
+  world.setPeerMode("baseline");
+  assert(world.peerMode === "baseline" &&
+    world.residentMode === "tactile-recovery",
+    "changing peer mode unexpectedly changed resident policy");
+  let bad = false;
+  try { world.setPeerMode("world-oracle"); }
+  catch (error) { bad = error instanceof RangeError; }
+  assert(bad && world.peerMode === "baseline",
+    "invalid peer control law silently accepted");
+  finite(world, "heterogeneous actor laws");
+  return "separate baseline/directional/tactile modes; reset retains choices; no shared sensor";
+});
+
+try {
+  document.querySelector("#fixture-pressure-chain").click();
+  const selector = document.querySelector("#peer-mode");
+  const peerStatus = document.querySelector("#peer-status");
+  assert(selector && selector.value === "tactile-recovery",
+    "pressure fixture did not expose initial peer mode");
+  selector.value = "directional-recovery";
+  selector.dispatchEvent(new Event("change", { bubbles: true }));
+  document.querySelector("#reset-world").click();
+  document.querySelector("#single-step").click();
+  assert(selector.value === "directional-recovery" &&
+    peerStatus.textContent.includes("directional-recovery"),
+    "peer control mode did not persist physically through UI reset");
+  document.querySelector("#pause-simulation").click();
+  cases.push({ name: "live-ui-independent-peer-control-mode", status: "PASS",
+    detail: "peer changed to directional locally; real reset preserved, UI reported it" });
+} catch (error) {
+  cases.push({ name: "live-ui-independent-peer-control-mode", status: "FAIL",
+    detail: String(error?.message ?? error).slice(0, 300) });
+}
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
