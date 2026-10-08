@@ -86,6 +86,7 @@ export class MaterialWorld {
     this.braceEnabled = false;
     this.braceMass = 120;
     this.braceBraking = 30;
+    this.peerMode = "tactile-recovery";
     // These are authored edits, distinct from runtime motion/afterstate.
     // Ordinary reset replays them; clear/undo deliberately change the authored scene.
     this.authoredShapes = [];
@@ -131,7 +132,6 @@ export class MaterialWorld {
       estimatedX: 0, state: "cruise", lastTransition: null
     };
     this.peerDirection = -1;
-    this.peerMode = "tactile-recovery";
     this.peerSense = null;
     this.peerControl = this.#newLocalControl();
 
@@ -729,6 +729,20 @@ export class MaterialWorld {
     });
     this.residentDirection = result.direction;
     return result;
+  }
+
+  setPeerMode(mode) {
+    if (mode !== "baseline" && mode !== "tactile-recovery" &&
+        mode !== "directional-recovery") {
+      throw new RangeError("peer mode must be baseline, tactile-recovery or directional-recovery");
+    }
+    if (this.peerMode === mode) return;
+    this.peerMode = mode;
+    this.peerControl.blockedTicks = 0;
+    this.peerControl.recoveryTicks = 0;
+    this.peerControl.state = "cruise";
+    this.peerControl.lastTransition = null;
+    this.#recordEvent("actor.peerMode", "peer controller=" + mode);
   }
 
   #stepPeer() {
