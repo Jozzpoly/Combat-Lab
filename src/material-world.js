@@ -41,12 +41,19 @@ function authoredNumber(value, name, strictlyPositive) {
     throw new RangeError(name + " must be finite and " +
       (strictlyPositive ? "greater than zero" : "nonnegative"));
   }
+  if (!Number.isFinite(Math.fround(number)) ||
+      (number !== 0 && Math.fround(number) === 0)) {
+    throw new RangeError(name + " cannot be represented safely by the physical solver");
+  }
   return number;
 }
 
 function authoredCoordinate(value, name) {
   const number = Number(value);
-  if (!Number.isFinite(number)) throw new RangeError(name + " must be finite");
+  if (!Number.isFinite(number) || !Number.isFinite(Math.fround(number)) ||
+      (number !== 0 && Math.fround(number) === 0)) {
+    throw new RangeError(name + " must be finite and representable by the physical solver");
+  }
   return number;
 }
 

@@ -2391,6 +2391,60 @@ try{
     detail:String(error?.message??error).slice(0,300)});
 }
 
+await trial("extreme-authored-float-values-are-rejected-before-rapier-overflow", world => {
+  const state=world.snapshot().entities.length;
+  const mass=world.residentProfile.mass;
+  const position=at(world,"resident").position.x;
+  let rejected=0;
+  for(const fn of [
+    () => world.setResidentProfile({ ...world.residentProfile, radius: 1e-300 }),
+    () => world.setResidentProfile({ ...world.residentProfile, mass: 1e300 }),
+    () => world.repositionBody("resident",{x:1e300,y:11.4}),
+    () => world.authorRect({kind:"object",cx:1,y:2,width:1e300,height:.5,mass:10}),
+    () => world.applyBodyImpulse("light-crate",{x:1e300,y:0})
+  ]) {
+    try { fn(); } catch(error) { if(error instanceof RangeError) rejected++; }
+  }
+  assert(rejected===5 &&
+    world.residentProfile.mass===mass &&
+    at(world,"resident").position.x===position &&
+    world.authoredShapes.length===0 &&
+    world.snapshot().entities.length===state,
+    "unsafe f32 overflow or underflow partially altered physically valid world");
+  for(let i=0;i<60;i++)world.step(still);
+  finite(world,"solver numeric authority guard");
+  return "5 unrepresentable numerics rejected; physical world intact and responsive";
+});
+
+try {
+  const button=document.querySelector("#fixture-beam-torque");
+  const form=document.querySelector("#brace-form");
+  const mode=document.querySelector("#experiment-impulse-mode");
+  const feedback=document.querySelector("#fixture-feedback");
+  const status=document.querySelector("#brace-status");
+  const step=document.querySelector("#single-step");
+  const readout=document.querySelector("#selected-readout");
+  assert(button&&form&&mode&&feedback&&status&&step&&readout,
+    "one-click rotating-beam encounter UI controls absent");
+  button.click();
+  assert(document.body.dataset.experimentFixture==="beam" &&
+    document.body.dataset.simulationPaused==="true" &&
+    form.value==="beam" && mode.value==="tangential" &&
+    status.textContent.includes("beam") &&
+    feedback.textContent.includes("Rotating beam"),
+    "rotating-beam seed failed to set actual physics and research settings");
+  step.click();
+  assert(readout.textContent.includes("brace") &&
+    readout.textContent.includes("angular "),
+    "rotating-beam fixture body not inspectable");
+  document.querySelector("#pause-simulation").click();
+  cases.push({name:"live-ui-one-click-rotating-beam-experiment",status:"PASS",
+    detail:"beam collider, zero holding authority, tangential poke, paused and inspected"});
+} catch(error){
+  cases.push({name:"live-ui-one-click-rotating-beam-experiment",status:"FAIL",
+    detail:String(error?.message??error).slice(0,300)});
+}
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);

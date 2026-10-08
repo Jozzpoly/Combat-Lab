@@ -579,6 +579,16 @@ function loadFixture(kind) {
     fixtureFeedback.textContent =
       "Finite lateral response: short wall at x=16.8. Compare directional " +
       "reversal with finite side-stepping and try longer walls, body sizes, and side bias.";
+  } else if (kind === "beam") {
+    world.setBraceForm("beam");
+    world.setBraceAngle(0);
+    world.setBraceProfile({ mass: 120, braking: 0 });
+    world.setBraceEnabled(true);
+    world.reset();
+    fixtureFeedback.textContent =
+      "Rotating beam: 1.8×0.56m, 120kg, zero hold braking. " +
+      "Use tangential impulse at an offset cursor, then one physical step. " +
+      "Change shape, mass, or angle and compare.";
   } else {
     throw new Error("unrecognized experiment fixture");
   }
@@ -594,9 +604,11 @@ function loadFixture(kind) {
   braceAngleInput.value = String(world.braceAngle);
   refreshPeerControls();
   refreshBraceControls();
+  experimentImpulse.value = "150";
+  experimentImpulseMode.value = kind === "beam" ? "tangential" : "center";
   camera.follow = true;
-  camera.followTarget = "resident";
-  world.selectedId = "resident";
+  camera.followTarget = kind === "beam" ? "brace" : "resident";
+  world.selectedId = camera.followTarget;
   document.body.dataset.experimentFixture = kind;
   setSimulationPaused(true);
   render();
@@ -607,6 +619,8 @@ document.querySelector("#fixture-side-touch").addEventListener(
   "click", () => loadFixture("side"));
 document.querySelector("#fixture-short-block").addEventListener(
   "click", () => loadFixture("short"));
+document.querySelector("#fixture-beam-torque").addEventListener(
+  "click", () => loadFixture("beam"));
 
 function drawStaticRect(item, selected) {
   const p = worldToScreen({ x: item.cx, y: item.cy });
