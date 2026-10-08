@@ -785,6 +785,112 @@ await trial("resident-lane-reversal-does-not-query-absolute-world-x", (world) =>
     " motor remains positive until actual proprioceptive travel";
 });
 
+await trial("peer-is-optional-and-reset-is-physical-not-identity-loss", (world) => {
+  assert(!world.peerEnabled && !world.entities.has("peer"),
+    "existing single-resident baseline was modified");
+  for (let i = 0; i < 15; i++) world.step(still);
+  const before = at(world, "resident").position;
+  const beforeTick = world.physicsTick;
+  world.setPeerEnabled(true);
+  assert(world.entities.has("peer") && world.snapshot().entities.length === 6,
+    "peer not physically present in shared World");
+  assert(world.physicsTick === beforeTick && world.residentControl.tick === beforeTick,
+    "peer spawn silently reset live resident time");
+  assert(JSON.stringify(at(world, "resident").position) === JSON.stringify(before),
+    "peer spawn teleported the original resident");
+  assert(world.entities.get("peer").mass === 210 &&
+    world.entities.get("resident").mass === 72, "bodies not physically distinct");
+  for (let i = 0; i < 12; i++) world.step(still);
+  assert(world.residentSense && world.peerSense &&
+    world.residentSense !== world.peerSense &&
+    world.residentControl !== world.peerControl,
+    "actor sensor or decision history accidentally shared");
+  assert(Object.keys(world.peerSense).sort().join(",") ===
+    "deltaX,motorEffort,progressAlongIntent,touch",
+    "peer received World oracle or extra cross-actor knowledge");
+  world.reset();
+  assert(world.peerEnabled && world.entities.has("peer") &&
+    world.snapshot().entities.length === 6 &&
+    world.peerControl.tick === 0 && world.residentControl.tick === 0,
+    "reset failed to reconstruct two isolated actor-local states");
+  world.setPeerEnabled(false);
+  assert(!world.entities.has("peer") && world.snapshot().entities.length === 5 &&
+    !world.lastCausalObservations.has("peer"),
+    "removing peer leaked body or stale observation");
+  finite(world, "peer spawn/remove");
+  return "5→6 bodies; independent traces; reset rebuilds; disable returns to 5";
+});
+
+await trial("two-real-bodies-contact-and-produce-mutual-physical-response", (world) => {
+  world.setPeerEnabled(true);
+  world.setResidentMode("tactile-recovery");
+  let firstDirectContact = null;
+  let observedContactTicks = 0;
+  let maxPeerChange = 0;
+  for (let tick = 1; tick <= 200; tick++) {
+    world.step(still);
+    const a = world.lastCausalObservations.get("resident");
+    const b = world.lastCausalObservations.get("peer");
+    assert(a && b, "one actor failed to execute an independent motor step");
+    const joined = a.contacts.includes("peer") && b.contacts.includes("resident");
+    if (joined) {
+      if (firstDirectContact === null) firstDirectContact = tick;
+      observedContactTicks++;
+    }
+    maxPeerChange = Math.max(maxPeerChange,
+      Math.abs(at(world, "peer").position.x - 19));
+    if (tick === 20) {
+      assert(!world.residentSense?.contacts && !world.peerSense?.contacts,
+        "private actor sensor carried debugging contact identities");
+    }
+  }
+  finite(world, "two-body contact");
+  assert(Number.isInteger(firstDirectContact),
+    "actors never made reciprocal physical contact");
+  assert(maxPeerChange > 0.2, "second physical body never moved");
+  assert(observedContactTicks > 0, "reciprocal contact did not persist for a sampled step");
+  return "first reciprocal contact t=" + firstDirectContact +
+    "; contact ticks=" + observedContactTicks +
+    "; peer max travel=" + maxPeerChange.toFixed(2) +
+    "m; resident recoveries=" + world.residentControl.recoveries +
+    ", peer recoveries=" + world.peerControl.recoveries;
+});
+
+await trial("empty-lane-one-vs-two-only-diverges-after-material-encounter", (world) => {
+  const run = (withPeer) => {
+    world.reset();
+    world.setPeerEnabled(withPeer);
+    world.setResidentMode("tactile-recovery");
+    const timeline = [];
+    for (let tick = 1; tick <= 190; tick++) {
+      world.step(still);
+      const a = at(world, "resident");
+      const obs = world.lastCausalObservations.get("resident");
+      timeline.push({
+        tick, x: a.position.x, vx: a.velocity.x,
+        demand: obs.intendedVelocity.x,
+        directContact: obs.contacts.includes("peer")
+      });
+    }
+    return timeline;
+  };
+  const control = run(false);
+  const together = run(true);
+  const touch = together.find((x) => x.directContact)?.tick;
+  const firstDifference = control.find((x,i) =>
+    Math.abs(x.x - together[i].x) > 1e-7 ||
+    Math.abs(x.vx - together[i].vx) > 1e-7 ||
+    x.demand !== together[i].demand)?.tick;
+  assert(Number.isInteger(touch), "no physical encounter in two-body arm");
+  assert(Number.isInteger(firstDifference), "second physical body had no causal effect");
+  assert(firstDifference >= touch,
+    "resident changed before direct physical interaction: t=" +
+      firstDifference + " versus touch " + touch);
+  return "first contact t=" + touch +
+    "; first material/motor divergence t=" + firstDifference +
+    "; control and two-body histories identical beforehand";
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
