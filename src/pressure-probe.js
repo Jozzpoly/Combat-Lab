@@ -1099,11 +1099,7 @@ await trial("holder-finite-braking-is-different-from-zero-authority", (world) =>
     "finite holding authority did not change applied motor impulse");
   assert(passive.contacts > 0 && active.contacts > 0,
     "comparison never physically reached holding body");
-  const firstBodyDivergence = passive.held.find((x, i) =>
-    Math.abs(x.x - active.held[i].x) > 1e-7 ||
-    Math.abs(x.vx - active.held[i].vx) > 1e-7)?.tick;
-  // Capture first tick explicitly; timing is diagnostic and does not
-  // classify the other actors' intentions.
+  // Capture first tick explicitly; timing does not classify intent.
   let first = null, peakDiff = 0;
   for (let i = 0; i < passive.held.length; i++) {
     const diff = Math.abs(passive.held[i].x - active.held[i].x);
