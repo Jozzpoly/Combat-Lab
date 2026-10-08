@@ -1,4 +1,4 @@
-import { DEFAULT_PROFILE, FIXED_DT, MaterialWorld } from "./material-world.js";
+import { DEFAULT_PROFILE, DEFAULT_RESIDENT_PROFILE, FIXED_DT, MaterialWorld } from "./material-world.js";
 
 const canvas = document.querySelector("#lab");
 const ctx = canvas.getContext("2d");
@@ -10,6 +10,7 @@ const worldEditFeedback = document.querySelector("#world-edit-feedback");
 const boxMassInput = document.querySelector("#author-mass");
 const residentModeSelect = document.querySelector("#resident-mode");
 const residentStatus = document.querySelector("#resident-status");
+const residentProfileFeedback = document.querySelector("#resident-profile-feedback");
 
 const camera = {
   center: { x: 12, y: 7 },
@@ -229,6 +230,34 @@ function bindProfileControls() {
   }
 }
 bindProfileControls();
+
+function syncResidentProfileFields(profile) {
+  for (const field of document.querySelectorAll("[data-resident-profile]")) {
+    field.value = String(profile[field.dataset.residentProfile]);
+  }
+}
+for (const field of document.querySelectorAll("[data-resident-profile]")) {
+  field.addEventListener("change", () => {
+    const next = { ...world.residentProfile };
+    for (const inputEl of document.querySelectorAll("[data-resident-profile]")) {
+      next[inputEl.dataset.residentProfile] = Number(inputEl.value);
+    }
+    try {
+      world.setResidentProfile(next);
+      syncResidentProfileFields(world.residentProfile);
+      residentProfileFeedback.textContent = "";
+    } catch (error) {
+      syncResidentProfileFields(world.residentProfile);
+      residentProfileFeedback.textContent =
+        "Not applied: " + String(error?.message ?? error);
+    }
+  });
+}
+document.querySelector("#restore-resident-body").addEventListener("click", () => {
+  world.setResidentProfile(DEFAULT_RESIDENT_PROFILE);
+  syncResidentProfileFields(world.residentProfile);
+  residentProfileFeedback.textContent = "";
+});
 
 function syncProfileFields(profile) {
   for (const field of document.querySelectorAll("[data-profile]")) {
