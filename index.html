@@ -14,7 +14,7 @@
         <strong>Material Agency Yard</strong>
         <span id="runtime-summary">initializing physical world…</span>
       </div>
-      <div class="controls-hint">WASD move · wheel zoom · middle-drag pan · F follow · left select · right-hold grip · Shift+left-drag: material box · Ctrl+left-drag: fixed obstacle</div>
+      <div class="controls-hint">WASD move · wheel zoom · middle-drag pan · F follow · left select · right-hold grip · Shift+drag: material box · Ctrl+drag: fixed obstacle · pause + Alt+drag: reposition body</div>
     </section>
 
     <aside class="panel">
@@ -31,6 +31,12 @@
           <button id="single-step" disabled>Advance 1 physical step (.)</button>
         </div>
         <p id="simulation-control-status" class="muted" aria-live="polite">Running. You can place and remove matter while paused, then observe the consequences.</p>
+        <p class="muted">Pause, then Alt+left-drag any body to author its starting position. Reset world restores that placement. This is a deliberate research intervention, not organism movement.</p>
+        <div class="button-row">
+          <button id="place-selected-at-cursor" disabled>Place selected at cursor</button>
+          <button id="restore-body-positions">Restore original body starts</button>
+        </div>
+        <p id="body-position-feedback" class="muted" aria-live="polite">No manual body relocation.</p>
       </section>
 
       <section>
