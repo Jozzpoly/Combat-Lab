@@ -383,6 +383,55 @@ document.querySelector("#clear-edits").addEventListener("click", () => {
   worldEditFeedback.textContent = "Removed " + count + " authored shape(s).";
 });
 
+const fixtureFeedback = document.querySelector("#fixture-feedback");
+function loadFixture(kind) {
+  // Explicit reset, never a background re-authoring operation. Every
+  // post-seed shape remains live-editable with the existing canvas tools.
+  world.clearAuthored();
+  world.setPeerEnabled(false);
+  world.setBraceEnabled(false);
+  world.setPeerMass(210);
+  world.setBraceProfile({ mass: 120, braking: 30 });
+  world.setResidentProfile(DEFAULT_RESIDENT_PROFILE);
+  world.setResidentMode("tactile-recovery");
+  if (kind === "pressure") {
+    world.setPeerMass(30);
+    world.setPeerEnabled(true);
+    world.setBraceEnabled(true);
+    world.reset();
+    fixtureFeedback.textContent =
+      "3-body pressure: resident 72kg, opposing body 30kg, holder 120kg / braking 30. " +
+      "Try changing holder braking to zero, then Reset world for an A/B.";
+  } else if (kind === "side") {
+    world.setResidentProfile({ ...DEFAULT_RESIDENT_PROFILE, acceleration: 0.45 });
+    world.reset();
+    world.authorRect({ kind: "wall", cx: 17.5, cy: 12.13,
+      width: 10, height: 0.45 });
+    fixtureFeedback.textContent =
+      "Side-contact: slow drive against a lateral surface. Compare " +
+      "any-touch vs forward-contact mode; Reset world between trials.";
+  } else {
+    throw new Error("unrecognized experiment fixture");
+  }
+  residentModeSelect.value = world.residentMode;
+  syncResidentProfileFields(world.residentProfile);
+  peerMassField.value = String(world.peerMass);
+  braceMassInput.value = String(world.braceMass);
+  braceBrakingInput.value = String(world.braceBraking);
+  refreshPeerControls();
+  refreshBraceControls();
+  camera.follow = true;
+  camera.followTarget = "resident";
+  world.selectedId = "resident";
+  document.body.dataset.experimentFixture = kind;
+  setSimulationPaused(true);
+  render();
+}
+document.querySelector("#fixture-pressure-chain").addEventListener(
+  "click", () => loadFixture("pressure"));
+document.querySelector("#fixture-side-touch").addEventListener(
+  "click", () => loadFixture("side"));
+
 function drawStaticRect(item, selected) {
   const p = worldToScreen({ x: item.cx, y: item.cy });
   ctx.fillStyle = selected ? "#5d6873" : "#313a44";
