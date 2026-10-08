@@ -22,7 +22,13 @@ if (!html.includes("Material Agency Yard")) {
   throw new Error("Material Agency Yard title missing from emitted artifact");
 }
 if (!html.includes('data-combat-lab-ready="true"')) {
-  throw new Error("runtime never reached ready state");
+  const error = html.match(/data-combat-lab-error="([^"]*)"/)?.[1];
+  const summary = html.match(/<span id="runtime-summary">([^<]*)<\/span>/)?.[1];
+  const state = html.match(/data-combat-lab-ready="([^"]*)"/)?.[1];
+  throw new Error("runtime never reached ready state; state=" + String(state) +
+    "; runtimeError=" + (error ?? "not reported") +
+    "; hud=" + (summary ?? "not rendered") +
+    "; documentBytes=" + html.length);
 }
 const match = html.match(/data-active-bodies="(\d+)"/);
 if (!match || Number(match[1]) < 5) {
