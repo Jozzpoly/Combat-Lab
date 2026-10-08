@@ -64,6 +64,18 @@
       </section>
 
       <section>
+        <h2>Resident — physical contact response</h2>
+        <p class="muted">Two low-level control laws over the same physical body. The challenger reacts only after sustained motor effort, low progress and tactile contact; this is not route planning or NPC intelligence. Draw a wall in the resident's lane to change what happens.</p>
+        <label>Local control
+          <select id="resident-mode">
+            <option value="tactile-recovery">Contact-contingent reversal</option>
+            <option value="baseline">Fixed lane reversal only</option>
+          </select>
+        </label>
+        <p id="resident-status" class="muted" aria-live="polite">Resident awaiting simulation.</p>
+      </section>
+
+      <section>
         <h2>Selected</h2>
         <pre id="selected-readout">click a body or object</pre>
         <details open>
