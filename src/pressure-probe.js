@@ -219,6 +219,41 @@ await trial("body-extremes-are-not-silently-normalized", (world) => {
   return "small-fast and large-heavy bodies remain physically represented";
 });
 
+await trial("observability-contact-versus-intent", (world) => {
+  const wallId = world.authorRect({
+    kind: "wall", cx: 16.8, cy: 11.4, width: 0.6, height: 2.5
+  });
+  for (let i = 0; i < 180; i++) world.step(still);
+  world.selectedId = "resident";
+  const selected = world.selectedSnapshot();
+  const observation = selected.observedMotor;
+  assert(Boolean(observation), "driven resident has no motor trace");
+  assert(observation.intendedVelocity.x > 1.5, "resident stopped requesting motion");
+  assert(observation.contacts.includes(wallId),
+    "motor shortfall cannot be examined beside actual wall contact");
+  assert(observation.progressAlongIntent < 0.5,
+    "wall appeared, but motor progress was not materially reduced");
+  assert(selected.position.x < 16.8, "resident went through authored wall");
+  return "resident requested " + observation.intendedVelocity.x.toFixed(2) +
+    "m/s; progressed " + observation.progressAlongIntent.toFixed(2) +
+    "m/s with contact " + wallId;
+});
+
+await trial("observability-no-authority-versus-contact", (world) => {
+  world.setPlayerProfile({ ...world.profile, acceleration: 0, braking: 0 });
+  for (let i = 0; i < 15; i++) world.step(right);
+  const observation = world.selectedSnapshot().observedMotor;
+  assert(observation.intendedVelocity.x > 1, "lost intended command");
+  assert(Math.hypot(observation.motorImpulse.x, observation.motorImpulse.y) === 0,
+    "disabled motor still applied impulse");
+  assert(Math.abs(observation.progressAlongIntent) < 1e-4,
+    "stationary motorless actor falsely recorded progress");
+  assert(observation.contacts.length === 0,
+    "unexpected contacts would confound the no-authority observation");
+  return "intended speed " + observation.intendedVelocity.x.toFixed(2) +
+    "; motor impulse 0; no contact";
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
