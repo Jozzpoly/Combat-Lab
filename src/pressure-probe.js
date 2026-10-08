@@ -1590,6 +1590,38 @@ await trial("long-running-perturbed-world-rebuilds-deterministically", world => 
     ", resident contact samples=" + one.contactSamples;
 });
 
+await trial("opposite-moving-actor-sees-forward-contact-with-correct-flip", world => {
+  world.setPeerMass(30);
+  world.setPeerEnabled(true);
+  world.setBraceProfile({ mass: 120, braking: 30 });
+  world.setBraceEnabled(true);
+  world.peerMode = "directional-recovery";
+  let firstPeerFront = null, firstResidentFront = null;
+  let peerDirectTouch = null, residentDirectTouch = null;
+  for (let tick = 1; tick <= 130; tick++) {
+    world.step(still);
+    const peer = world.lastCausalObservations.get("peer");
+    const resident = world.lastCausalObservations.get("resident");
+    if (peerDirectTouch === null && peer.contacts.includes("brace")) peerDirectTouch = tick;
+    if (residentDirectTouch === null &&
+        resident.contacts.includes("brace")) residentDirectTouch = tick;
+    if (firstPeerFront === null && world.peerSense.forwardTouch &&
+        peer.intendedVelocity.x < 0) firstPeerFront = tick;
+    if (firstResidentFront === null && world.residentSense.forwardTouch &&
+        resident.intendedVelocity.x > 0) firstResidentFront = tick;
+  }
+  assert(peerDirectTouch && residentDirectTouch &&
+    firstPeerFront && firstResidentFront,
+    "left/right actor could not infer forward body contact from Rapier normals");
+  assert(firstPeerFront >= peerDirectTouch &&
+    firstResidentFront >= residentDirectTouch,
+    "forward signal occurred before actual body contact");
+  return "moving -X peer first holder contact/front t=" +
+    peerDirectTouch + "/" + firstPeerFront +
+    "; moving +X resident t=" + residentDirectTouch +
+    "/" + firstResidentFront + "; no collider identity inside sensors";
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
