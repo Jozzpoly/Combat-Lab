@@ -657,8 +657,9 @@ export class MaterialWorld {
   }
 
   setResidentMode(mode) {
-    if (mode !== "baseline" && mode !== "tactile-recovery") {
-      throw new RangeError("resident mode must be baseline or tactile-recovery");
+    if (mode !== "baseline" && mode !== "tactile-recovery" &&
+        mode !== "directional-recovery") {
+      throw new RangeError("resident mode must be baseline, tactile-recovery or directional-recovery");
     }
     this.residentMode = mode;
     this.residentControl.blockedTicks = 0;
@@ -676,9 +677,14 @@ export class MaterialWorld {
     const entity = this.entities.get(id);
     ctl.tick += 1;
     ctl.estimatedX += sense?.deltaX ?? 0;
-    if (mode === "tactile-recovery" && ctl.recoveryTicks === 0) {
+    if ((mode === "tactile-recovery" || mode === "directional-recovery") &&
+        ctl.recoveryTicks === 0) {
       const driven = sense && sense.motorEffort > 0.01;
-      const resisted = sense && sense.touch &&
+      // Directional mode demands *forward* tactile evidence. Pure lateral
+      // touch must not masquerade as an obstacle in the requested direction.
+      const contactEvidence = sense && (mode === "directional-recovery" ?
+        sense.forwardTouch : sense.touch);
+      const resisted = contactEvidence &&
         sense.progressAlongIntent !== null &&
         sense.progressAlongIntent < entity.maxSpeed * 0.12;
       ctl.blockedTicks = driven && resisted ? ctl.blockedTicks + 1 : 0;
@@ -846,9 +852,26 @@ export class MaterialWorld {
         // Each body receives independent local tactile/proprioceptive samples.
         // Neither receives World colliders/IDs, another body history or provenance.
         let touch = false;
-        this.world.contactPairsWith(entity.collider, () => { touch = true; });
+        let forwardTouch = false;
+        const requestedSpeed = Math.hypot(
+          drive.intendedVelocity.x, drive.intendedVelocity.y
+        );
+        this.world.contactPairsWith(entity.collider, other => {
+          touch = true;
+          // Manifold normal is a *local sensory direction*. Identifiers
+          // and material category remain on the debug side of the boundary.
+          this.world.contactPair(entity.collider, other, (manifold, flipped) => {
+            if (!manifold.numSolverContacts() || requestedSpeed < 1e-8) return;
+            const n = manifold.normal();
+            const outwardSign = flipped ? -1 : 1;
+            const alignment = outwardSign *
+              (n.x * drive.intendedVelocity.x +
+               n.y * drive.intendedVelocity.y) / requestedSpeed;
+            if (alignment > 0.55) forwardTouch = true;
+          });
+        });
         const localSample = {
-          touch,
+          touch, forwardTouch,
           motorEffort: Math.hypot(drive.motorImpulse.x, drive.motorImpulse.y),
           progressAlongIntent,
           deltaX: now.x - from.x
