@@ -2200,7 +2200,7 @@ try {
   }));
   inputEl.value="150";
   button.click();
-  assert(feedback.textContent.includes("Applied to resident") &&
+  assert(feedback.textContent.includes("impulse to resident") &&
     timeline.textContent.includes("world.impulse"),
     "physical impulse button did not reach actual World and research trace");
   step.click();
