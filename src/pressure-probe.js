@@ -634,6 +634,60 @@ try {
   cases.push({ name: "live-ui-pause-and-exact-step", status: "FAIL",
     detail: String(error?.message ?? error).slice(0, 300) });
 }
+await trial("resident-physical-profile-validates-and-survives-reset", (world) => {
+  const before = { ...world.residentProfile };
+  let rejected = false;
+  try {
+    world.setResidentProfile({ ...world.residentProfile, mass: -1, acceleration: 0 });
+  } catch (error) { rejected = error instanceof RangeError; }
+  assert(rejected, "invalid resident body profile was accepted");
+  assert(JSON.stringify(world.residentProfile) === JSON.stringify(before),
+    "invalid resident edit partially mutated its profile");
+  const resident = world.entities.get("resident");
+  const priorCollider = resident.collider.handle;
+  world.setResidentProfile({ ...before, acceleration: 0, braking: 0,
+    maxSpeed: 0 });
+  assert(resident.collider.handle === priorCollider,
+    "drive-only edit recreated a physical collider");
+  for (let t = 0; t < 50; t++) world.step(still);
+  assert(world.residentControl.recoveries === 0,
+    "resident falsely inferred an obstacle with zero motor authority");
+  world.setResidentProfile({ radius: 0.33, mass: 350,
+    maxSpeed: 3, acceleration: 12, braking: 16 });
+  assert(resident.mass === 350 && resident.radius === 0.33,
+    "authored resident body failed to change");
+  world.reset();
+  assert(world.residentProfile.mass === 350 && world.residentProfile.radius === 0.33,
+    "reset erased authored resident physiology");
+  assert(at(world, "resident").mass === 350 && at(world, "resident").radius === 0.33,
+    "reset failed to reconstruct physical resident collider");
+  finite(world, "resident profile and reset");
+  return "rejected invalid profile; zero drive; mass+radius reconstructed on reset";
+});
+
+for (const actorMass of [72, 350]) {
+  await observation("same-heavy-obstacle-resident-mass-" + actorMass, (world) => {
+    world.setResidentProfile({ ...world.residentProfile, mass: actorMass });
+    const id = world.authorRect({ kind: "object", cx: 16.8, cy: 11.4,
+      width: 0.7, height: 0.7, mass: 450 });
+    world.setResidentMode("tactile-recovery");
+    let contacts = 0;
+    let maxMovement = 0;
+    for (let tick = 1; tick <= 180; tick++) {
+      world.step(still);
+      if (world.lastCausalObservations.get("resident").contacts.includes(id)) contacts++;
+      maxMovement = Math.max(maxMovement, Math.abs(at(world, id).position.x - 16.8));
+    }
+    finite(world, "same obstacle vs actor mass " + actorMass);
+    return "resident mass=" + actorMass + "kg; fixed obstacle mass=450kg;" +
+      " obstacle max travel=" + maxMovement.toFixed(3) + "m;" +
+      " resident x=" + at(world, "resident").position.x.toFixed(3) +
+      "; touch ticks=" + contacts +
+      "; recoveries=" + world.residentControl.recoveries +
+      "; no general affordance verdict";
+  });
+}
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
