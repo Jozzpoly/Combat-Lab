@@ -28,6 +28,18 @@ async function trial(name, fn) {
     if (world?.world) world.world.free();
   }
 }
+async function observation(name, fn) {
+  let world;
+  try {
+    world = await MaterialWorld.create();
+    const detail = await fn(world);
+    cases.push({ name, status: "OBSERVED", detail });
+  } catch (error) {
+    cases.push({ name, status: "FAIL", detail: String(error?.message ?? error).slice(0, 300) });
+  } finally {
+    if (world?.world) world.world.free();
+  }
+}
 const still = { x: 0, y: 0 };
 const right = { x: 1, y: 0 };
 
@@ -253,6 +265,44 @@ await trial("observability-no-authority-versus-contact", (world) => {
   return "intended speed " + observation.intendedVelocity.x.toFixed(2) +
     "; motor impulse 0; no contact";
 });
+
+// Donor-informed curiosity: E17 Owner feedback reported both emergent physical
+// verbs and poor grip precision/oscillation. These are measurements, NOT PASSes
+// for manipulation feel or for the donor's 3D implementation.
+for (const specimen of [
+  { name: "light-center", id: "light-crate", player: { x: 5.5, y: 5.8 },
+    pick: { x: 6.9, y: 5.8 }, target: { x: 7.9, y: 5.8 } },
+  { name: "light-offcenter", id: "light-crate", player: { x: 5.5, y: 5.8 },
+    pick: { x: 6.9, y: 6.14 }, target: { x: 7.9, y: 6.14 } },
+  { name: "heavy-offcenter", id: "heavy-crate", player: { x: 15.1, y: 5.25 },
+    pick: { x: 16.5, y: 5.65 }, target: { x: 17.5, y: 5.65 } }
+]) {
+  await observation("grip-response-" + specimen.name, (world) => {
+    world.player().body.setTranslation(specimen.player, true);
+    const before = at(world, specimen.id);
+    assert(world.beginGrip(specimen.pick), "grip acquisition failed");
+    world.setGripTarget(specimen.target);
+    let maxAngularSpeed = 0;
+    let maxBeyondTarget = 0;
+    for (let i = 0; i < 120; i++) {
+      world.step(still);
+      const obj = world.entities.get(specimen.id);
+      maxAngularSpeed = Math.max(maxAngularSpeed, Math.abs(obj.body.angvel()));
+      const radial = world.grip.localAnchor;
+      const c = Math.cos(obj.body.rotation()), si = Math.sin(obj.body.rotation());
+      const anchorX = obj.body.translation().x + radial.x * c - radial.y * si;
+      maxBeyondTarget = Math.max(maxBeyondTarget, anchorX - specimen.target.x);
+    }
+    const after = at(world, specimen.id);
+    const player = at(world, "player");
+    finite(world, specimen.name);
+    return "object dx=" + (after.position.x - before.position.x).toFixed(2) +
+      "m; final angle=" + after.rotation.toFixed(2) +
+      "rad; peak angular speed=" + maxAngularSpeed.toFixed(2) +
+      "rad/s; overshoot beyond cursor x=" + maxBeyondTarget.toFixed(2) +
+      "m; player x=" + player.position.x.toFixed(2) + "m; no quality verdict";
+  });
+}
 
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
