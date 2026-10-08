@@ -1234,6 +1234,34 @@ await observation("three-way-overlapping-contact-pressure-survey", world => {
     "; no crowd-level inference";
 });
 
+try {
+  const peerToggle = document.querySelector("#toggle-peer");
+  const braceToggle = document.querySelector("#toggle-brace");
+  const pause = document.querySelector("#pause-simulation");
+  const advance = document.querySelector("#single-step");
+  const overlay = document.querySelector("#contact-overlay");
+  const readout = document.querySelector("#contact-overlay-summary");
+  assert(peerToggle && braceToggle && pause && advance && overlay && readout,
+    "live contact graph controls missing");
+  peerToggle.click();
+  braceToggle.click();
+  pause.click();
+  overlay.checked = true;
+  for (let tick = 0; tick < 50; tick++) advance.click();
+  const pairs = Number(document.body.dataset.liveBodyContactPairs || "0");
+  assert(pairs > 0, "actual 3-body encounter did not expose contact links");
+  assert(readout.textContent.includes("Live body pairs"),
+    "the live overlay does not report the actual contact graph");
+  overlay.checked = false;
+  braceToggle.click();
+  peerToggle.click();
+  pause.click();
+  cases.push({ name: "live-ui-three-body-contact-graph", status: "PASS",
+    detail: pairs + " reciprocal contact-pair edges visualizable during actual DOM step-run" });
+} catch (error) {
+  cases.push({ name: "live-ui-three-body-contact-graph", status: "FAIL",
+    detail: String(error?.message ?? error).slice(0, 300) });
+}
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
