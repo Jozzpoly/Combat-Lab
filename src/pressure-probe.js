@@ -304,6 +304,37 @@ for (const specimen of [
   });
 }
 
+for (const braking of [24, 0]) {
+  await observation("grip-player-reaction-braking-" + braking, (world) => {
+    world.setPlayerProfile({ ...world.profile, braking });
+    world.player().body.setTranslation({ x: 5.5, y: 5.8 }, true);
+    assert(world.beginGrip({ x: 6.9, y: 5.8 }), "could not grasp light crate");
+    world.setGripTarget({ x: 7.9, y: 5.8 });
+    let motorImpulseSum = 0;
+    let gripReactionSum = 0;
+    let maxPlayerExcursion = 0;
+    for (let i = 0; i < 120; i++) {
+      world.step(still);
+      const evidence = world.selectedSnapshot().observedMotor;
+      motorImpulseSum += Math.abs(evidence.motorImpulse.x);
+      gripReactionSum += Math.abs(evidence.gripReactionImpulse.x);
+      maxPlayerExcursion = Math.max(maxPlayerExcursion,
+        Math.abs(world.player().body.translation().x - 5.5));
+    }
+    finite(world, "grip-braking-" + braking);
+    const player = at(world, "player");
+    const crate = at(world, "light-crate");
+    assert(gripReactionSum > 0.01, "grip never coupled force back to player");
+    return "braking=" + braking +
+      "; player dx=" + (player.position.x - 5.5).toFixed(3) +
+      "m; max excursion=" + maxPlayerExcursion.toFixed(3) +
+      "m; accumulated |motor impulse x|=" + motorImpulseSum.toFixed(2) +
+      "N·s; accumulated |grip reaction x|=" + gripReactionSum.toFixed(2) +
+      "N·s; crate x=" + crate.position.x.toFixed(2) +
+      "m; causal interpretation still open";
+  });
+}
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
