@@ -701,6 +701,8 @@ function render() {
       selected.id + "\n" +
       "kind " + selected.kind + "\n" +
       "mass " + selected.mass.toFixed(2) + "\n" +
+      "position " + selected.position.x.toFixed(2) + ", " +
+        selected.position.y.toFixed(2) + " m\n" +
       (selected.radius ? "radius " + selected.radius.toFixed(2) + "\n" : "") +
       "speed " + selected.speed.toFixed(2) + "\n" +
       "velocity " + selected.velocity.x.toFixed(2) + ", " + selected.velocity.y.toFixed(2) + "\n" +
