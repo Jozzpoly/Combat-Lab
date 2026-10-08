@@ -41,3 +41,25 @@ if (!physicsSteps || Number(physicsSteps[1]) < 1) {
 }
 console.log("Material Agency Yard browser gate PASS; bodies=" + match[1] +
   "; physicsSteps=" + physicsSteps[1]);
+
+const pressureHtml = execFileSync(chrome, [
+  "--headless=new",
+  "--no-sandbox",
+  "--disable-gpu",
+  "--virtual-time-budget=6500",
+  "--dump-dom",
+  url + (url.includes("?") ? "&" : "?") + "pressureProbe=1"
+], {
+  encoding: "utf8",
+  timeout: 30000,
+  maxBuffer: 8 * 1024 * 1024
+});
+const state = pressureHtml.match(/data-pressure-probe="([^"]*)"/)?.[1];
+const failure = pressureHtml.match(/data-pressure-failure="([^"]*)"/)?.[1];
+const count = pressureHtml.match(/data-pressure-case-count="(\d+)"/)?.[1];
+if (state !== "pass") {
+  throw new Error("material pressure " + String(state ?? "not reached") +
+    "; failures=" + (failure ?? "not reported") +
+    "; cases=" + (count ?? "unknown"));
+}
+console.log("Material Agency Yard live physics pressure PASS; cases=" + count);
