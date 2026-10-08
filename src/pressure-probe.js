@@ -1113,6 +1113,47 @@ await trial("holder-finite-braking-is-different-from-zero-authority", (world) =>
     " vs braked=" + active.impulseTotal.toFixed(2) + " N·s";
 });
 
+try {
+  const toggle = document.querySelector("#toggle-brace");
+  const focus = document.querySelector("#focus-brace");
+  const m = document.querySelector("#brace-mass");
+  const b = document.querySelector("#brace-braking");
+  const message = document.querySelector("#brace-profile-feedback");
+  const readout = document.querySelector("#selected-readout");
+  assert(toggle && focus && m && b && message && readout,
+    "holder experiment controls not mounted");
+  assert(toggle.getAttribute("aria-pressed") === "false" && focus.disabled,
+    "holder UI was enabled before it existed physically");
+  toggle.click();
+  assert(toggle.getAttribute("aria-pressed") === "true" && !focus.disabled,
+    "holder toggle did not instantiate live body");
+  focus.click();
+  document.querySelector("#pause-simulation").click();
+  document.querySelector("#single-step").click();
+  assert(readout.textContent.includes("brace") &&
+    readout.textContent.includes("mass 120.00"),
+    "holder camera/selection does not expose real physical body");
+  m.value = "180";
+  b.value = "0";
+  m.dispatchEvent(new Event("change", { bubbles: true }));
+  document.querySelector("#single-step").click();
+  assert(readout.textContent.includes("mass 180.00") &&
+    m.value === "180" && b.value === "0",
+    "material holder mass/authority not applied via DOM");
+  b.value = "-5";
+  b.dispatchEvent(new Event("change", { bubbles: true }));
+  assert(b.value === "0" && message.textContent.startsWith("Not applied:"),
+    "invalid finite braking was accepted or UI not synchronized");
+  toggle.click();
+  assert(focus.disabled && toggle.getAttribute("aria-pressed") === "false",
+    "removal left an active holder UI");
+  document.querySelector("#pause-simulation").click();
+  cases.push({ name: "live-ui-finite-holder-edit-and-remove", status: "PASS",
+    detail: "add/focus, mass 180kg, braking 0, reject -5, remove; shared World intact" });
+} catch (error) {
+  cases.push({ name: "live-ui-finite-holder-edit-and-remove", status: "FAIL",
+    detail: String(error?.message ?? error).slice(0, 300) });
+}
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
