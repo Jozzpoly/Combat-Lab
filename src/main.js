@@ -16,7 +16,8 @@ const camera = {
   zoom: 52,
   minZoom: 18,
   maxZoom: 220,
-  follow: true
+  follow: true,
+  followTarget: "player"
 };
 
 const input = {
@@ -78,7 +79,10 @@ function movementInput() {
 window.addEventListener("keydown", (event) => {
   if (event.target instanceof HTMLInputElement) return;
   input.keys.add(event.code);
-  if (event.code === "KeyF") camera.follow = true;
+  if (event.code === "KeyF") {
+    camera.follow = true;
+    camera.followTarget = "player";
+  }
 });
 window.addEventListener("keyup", (event) => input.keys.delete(event.code));
 window.addEventListener("blur", () => input.keys.clear());
@@ -203,6 +207,16 @@ document.querySelector("#spawn-heavy").addEventListener("click", () => world.spa
 residentModeSelect.value = world.residentMode;
 residentModeSelect.addEventListener("change", () => {
   world.setResidentMode(residentModeSelect.value);
+});
+document.querySelector("#focus-resident").addEventListener("click", () => {
+  camera.follow = true;
+  camera.followTarget = "resident";
+  world.selectedId = "resident";
+});
+document.querySelector("#focus-player").addEventListener("click", () => {
+  camera.follow = true;
+  camera.followTarget = "player";
+  world.selectedId = "player";
 });
 document.querySelector("#undo-edit").addEventListener("click", () => {
   worldEditFeedback.textContent = world.undoAuthored() ? "Last authored shape removed." :
@@ -418,7 +432,7 @@ function render() {
     " · authored " + snapshot.authoredCount +
     " · physics " + lastStep.stepMs.toFixed(2) + " ms" +
     " · zoom " + camera.zoom.toFixed(0) + " px/m" +
-    (camera.follow ? " · follow" : " · free camera");
+    (camera.follow ? " · follow " + camera.followTarget : " · free camera");
 
   document.body.dataset.activeBodies = String(snapshot.entities.length);
 }
@@ -435,9 +449,12 @@ function frame(now) {
   }
 
   if (camera.follow) {
-    const p = world.player().body.translation();
-    camera.center.x = p.x;
-    camera.center.y = p.y;
+    const subject = world.entities.get(camera.followTarget);
+    if (subject) {
+      const p = subject.body.translation();
+      camera.center.x = p.x;
+      camera.center.y = p.y;
+    }
   }
 
   render();
