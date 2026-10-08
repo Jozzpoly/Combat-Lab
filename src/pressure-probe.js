@@ -1070,6 +1070,53 @@ await trial("finite-holder-enters-real-contact-chain-with-two-moving-actors", (w
     (afterImpulse - beforeImpulse).toFixed(4) + "m";
 });
 
+await trial("holder-finite-braking-is-different-from-zero-authority", (world) => {
+  const run = (braking) => {
+    world.setBraceProfile({ mass: 120, braking });
+    world.setPeerMass(30);
+    world.setPeerEnabled(true);
+    world.setBraceEnabled(true);
+    world.reset();
+    const held = [];
+    let impulseTotal = 0;
+    let contacts = 0;
+    for (let tick = 1; tick <= 260; tick++) {
+      world.step(still);
+      const state = at(world, "brace");
+      const obs = world.lastCausalObservations.get("brace");
+      impulseTotal += Math.hypot(obs.motorImpulse.x, obs.motorImpulse.y);
+      if (obs.contacts.length) contacts++;
+      held.push({ x: state.position.x, vx: state.velocity.x,
+        withResident: obs.contacts.includes("resident"),
+        withPeer: obs.contacts.includes("peer") });
+    }
+    finite(world, "bracing AB");
+    return { held, impulseTotal, contacts };
+  };
+  const passive = run(0);
+  const active = run(30);
+  assert(passive.impulseTotal === 0 && active.impulseTotal > 0,
+    "finite holding authority did not change applied motor impulse");
+  assert(passive.contacts > 0 && active.contacts > 0,
+    "comparison never physically reached holding body");
+  const firstBodyDivergence = passive.held.find((x, i) =>
+    Math.abs(x.x - active.held[i].x) > 1e-7 ||
+    Math.abs(x.vx - active.held[i].vx) > 1e-7)?.tick;
+  // Capture first tick explicitly; timing is diagnostic and does not
+  // classify the other actors' intentions.
+  let first = null, peakDiff = 0;
+  for (let i = 0; i < passive.held.length; i++) {
+    const diff = Math.abs(passive.held[i].x - active.held[i].x);
+    if (first === null && diff > 1e-7) first = i + 1;
+    peakDiff = Math.max(peakDiff, diff);
+  }
+  assert(first !== null, "holding authority changed effort but never material afterstate");
+  return "first material difference t=" + first +
+    "; max holder x divergence=" + peakDiff.toFixed(4) +
+    "m; summed |motor impulse| zero=" + passive.impulseTotal.toFixed(2) +
+    " vs braked=" + active.impulseTotal.toFixed(2) + " N·s";
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
