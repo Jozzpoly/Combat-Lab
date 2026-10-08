@@ -908,6 +908,18 @@ try {
   assert(trace.textContent.includes("peer") &&
     status.textContent.includes("Second body"),
     "peer camera/selection or local-inspection surface failed");
+  const massField = document.querySelector("#peer-mass");
+  const massFeedback = document.querySelector("#peer-mass-feedback");
+  assert(massField && massFeedback, "counter-body mass UI missing");
+  massField.value = "390";
+  massField.dispatchEvent(new Event("change", { bubbles: true }));
+  document.querySelector("#single-step").click();
+  assert(trace.textContent.includes("mass 390.00"),
+    "selected counter-body did not receive physical 390kg");
+  massField.value = "-1";
+  massField.dispatchEvent(new Event("change", { bubbles: true }));
+  assert(massField.value === "390" && massFeedback.textContent.startsWith("Not applied:"),
+    "counter-body mass invalid edit not rejected visibly");
   toggle.click();
   assert(toggle.getAttribute("aria-pressed") === "false" && focus.disabled,
     "disabling peer did not leave usable one-body UI");
