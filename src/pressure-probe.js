@@ -431,6 +431,43 @@ await trial("no-wall-control-recovery-does-not-invent-obstruction", (world) => {
   return "same empty-lane behavior; largest divergence=" + largestDifference.toExponential(1);
 });
 
+// Donor-informed effectivity contrast: a world-object may obstruct geometry
+// while being physically displaceable for this actor. Measure, do not label
+// an authored material box impassable from shape alone.
+for (const mass of [4, 450]) {
+  await observation("movable-obstacle-effectivity-mass-" + mass, (world) => {
+    const targetId = world.authorRect({ kind: "object", cx: 16.8, cy: 11.4,
+      width: 0.7, height: 0.7, mass });
+    world.setResidentMode("tactile-recovery");
+    let touchTicks = 0;
+    let firstTouch = null;
+    let firstRecovery = null;
+    let maxObjectDisplacement = 0;
+    for (let tick = 1; tick <= 180; tick++) {
+      world.step(still);
+      const observation = world.lastCausalObservations.get("resident");
+      if (observation.contacts.includes(targetId)) {
+        touchTicks++;
+        if (firstTouch === null) firstTouch = tick;
+      }
+      if (world.residentControl.recoveries > 0 && firstRecovery === null) {
+        firstRecovery = tick;
+      }
+      maxObjectDisplacement = Math.max(maxObjectDisplacement,
+        Math.abs(at(world, targetId).position.x - 16.8));
+    }
+    finite(world, "movable mass " + mass);
+    return "mass=" + mass +
+      "; first touch=" + String(firstTouch) +
+      "; contact ticks=" + touchTicks +
+      "; recoveries=" + world.residentControl.recoveries +
+      "; first recovery=" + String(firstRecovery) +
+      "; max obstacle travel=" + maxObjectDisplacement.toFixed(2) +
+      "m; actor final x=" + at(world, "resident").position.x.toFixed(2) +
+      "m; no affordance verdict";
+  });
+}
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
