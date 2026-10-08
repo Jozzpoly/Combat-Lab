@@ -315,7 +315,7 @@ for (const braking of [24, 0]) {
     let maxPlayerExcursion = 0;
     for (let i = 0; i < 120; i++) {
       world.step(still);
-      const evidence = world.selectedSnapshot().observedMotor;
+      const evidence = world.lastCausalObservations.get("player");
       motorImpulseSum += Math.abs(evidence.motorImpulse.x);
       gripReactionSum += Math.abs(evidence.gripReactionImpulse.x);
       maxPlayerExcursion = Math.max(maxPlayerExcursion,
