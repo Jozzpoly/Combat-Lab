@@ -16,6 +16,7 @@ const togglePeer = document.querySelector("#toggle-peer");
 const focusPeer = document.querySelector("#focus-peer");
 const peerMassField = document.querySelector("#peer-mass");
 const peerModeSelect = document.querySelector("#peer-mode");
+const peerSideSelect = document.querySelector("#peer-lateral-side");
 const peerMassFeedback = document.querySelector("#peer-mass-feedback");
 const toggleBrace = document.querySelector("#toggle-brace");
 const focusBrace = document.querySelector("#focus-brace");
@@ -432,6 +433,10 @@ peerModeSelect.value = world.peerMode;
 peerModeSelect.addEventListener("change", () => {
   world.setPeerMode(peerModeSelect.value);
 });
+peerSideSelect.value = String(world.peerSidePreference);
+peerSideSelect.addEventListener("change", () => {
+  world.setActorSidePreference("peer", Number(peerSideSelect.value));
+});
 peerMassField.addEventListener("change", () => {
   try {
     world.setPeerMass(Number(peerMassField.value));
@@ -516,6 +521,7 @@ function loadFixture(kind) {
   residentModeSelect.value = world.residentMode;
   residentSideSelect.value = String(world.residentSidePreference);
   peerModeSelect.value = world.peerMode;
+  peerSideSelect.value = String(world.peerSidePreference);
   syncResidentProfileFields(world.residentProfile);
   peerMassField.value = String(world.peerMass);
   braceMassInput.value = String(world.braceMass);
@@ -793,7 +799,8 @@ function render() {
       (selected?.localControl ?
         "\nlocal controller: " + selected.localControl.mode +
         " / " + selected.localControl.state +
-        " / recoveries=" + selected.localControl.recoveries : "");
+        " / recoveries=" + selected.localControl.recoveries +
+        " / lateral=" + selected.localControl.lateralAttempts : "");
   } else {
     causalReadout.textContent = selected ?
       "No own motor trace for this body. It may still receive contact/grip impulses." :
@@ -813,7 +820,8 @@ function render() {
     "Second body: " + snapshot.peerMass + " kg · " +
       snapshot.peerControl.mode + " · local state " +
       snapshot.peerControl.state + " · recoveries " +
-      snapshot.peerControl.recoveries + " · travel " +
+      snapshot.peerControl.recoveries + " · lateral attempts " +
+      snapshot.peerControl.lateralAttempts + " · travel " +
       snapshot.peerControl.estimatedX.toFixed(2) + "m" :
     "Second body absent. The original one-resident control remains available.";
 
