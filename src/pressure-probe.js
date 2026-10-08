@@ -1704,7 +1704,7 @@ await observation("four-heterogeneous-policy-combinations-under-same-pressure", 
   return results.join("; ") + "; measurements only, no behavioral-quality verdict";
 });
 
-await observation("different-local-laws-propagate-through-physical-group-or-not", world => {
+await trial("lateral-policy-divergence-reaches-peer-only-through-later-contact", world => {
   world.setPeerEnabled(true);
   world.setBraceEnabled(true);
   world.setPeerMass(30);
@@ -1745,6 +1745,13 @@ await observation("different-local-laws-propagate-through-physical-group-or-not"
   }
   assert(firstActorMotor && firstActorMotor > 1,
     "side-contact policies failed to yield their expected bounded action contrast");
+  assert(directed.residentGroupTouch && firstOthersBody &&
+    firstOthersBody >= directed.residentGroupTouch,
+    "another body changed before meaningful direct material contact");
+  assert(allTouch.residentGroupTouch === null,
+    "old any-touch actor unexpectedly reached the contact group in this bounded fixture");
+  assert(maxPeerDiff > 0.02,
+    "local sensory contrast failed to propagate a useful physical difference to peer");
   return "motor divergence t=" + firstActorMotor +
     "; first another-body divergence=" + String(firstOthersBody) +
     "; resident first group touch any/directed=" +
