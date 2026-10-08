@@ -267,7 +267,8 @@ export class MaterialWorld {
   #newLocalControl() {
     return {
       tick: 0, blockedTicks: 0, recoveryTicks: 0, recoveries: 0,
-      estimatedX: 0, state: "cruise", lastTransition: null
+      estimatedX: 0, estimatedY: 0, lateralTicks: 0, lateralAttempts: 0,
+      state: "cruise", lastTransition: null
     };
   }
 
@@ -724,7 +725,7 @@ export class MaterialWorld {
   setResidentMode(mode) {
     if (mode !== "baseline" && mode !== "tactile-recovery" &&
         mode !== "directional-recovery" && mode !== "lateral-maneuver") {
-      throw new RangeError("resident mode must be baseline, tactile-recovery or directional-recovery");
+      throw new RangeError("resident mode must be baseline, tactile-recovery, directional-recovery or lateral-maneuver");
     }
     this.residentMode = mode;
     this.residentControl.blockedTicks = 0;
@@ -783,8 +784,8 @@ export class MaterialWorld {
 
   setPeerMode(mode) {
     if (mode !== "baseline" && mode !== "tactile-recovery" &&
-        mode !== "directional-recovery") {
-      throw new RangeError("peer mode must be baseline, tactile-recovery or directional-recovery");
+        mode !== "directional-recovery" && mode !== "lateral-maneuver") {
+      throw new RangeError("peer mode must be baseline, tactile-recovery, directional-recovery or lateral-maneuver");
     }
     if (this.peerMode === mode) return;
     this.peerMode = mode;
