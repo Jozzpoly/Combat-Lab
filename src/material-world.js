@@ -80,6 +80,7 @@ export class MaterialWorld {
     // Off by default, so single-resident evidence remains an untouched null.
     // This switch adds a second embodied participant to the *same* World.
     this.peerEnabled = false;
+    this.peerMass = 210;
     // These are authored edits, distinct from runtime motion/afterstate.
     // Ordinary reset replays them; clear/undo deliberately change the authored scene.
     this.authoredShapes = [];
@@ -251,7 +252,7 @@ export class MaterialWorld {
   }
 
   #createPeer() {
-    const profile = { radius: 0.71, mass: 210, maxSpeed: 1.55,
+    const profile = { radius: 0.71, mass: this.peerMass, maxSpeed: 1.55,
       acceleration: 6, braking: 8 };
     const body = this.world.createRigidBody(
       RAPIER.RigidBodyDesc.dynamic().setTranslation(19.0, 11.4)
@@ -270,6 +271,26 @@ export class MaterialWorld {
     this.entities.set(entity.id, entity);
     this.colliderLabels.set(collider.handle, entity.id);
     return entity;
+  }
+
+  setPeerMass(value) {
+    const next = authoredNumber(value, "peer mass", true);
+    if (next === this.peerMass) return;
+    const peer = this.entities.get("peer");
+    if (peer) {
+      this.colliderLabels.delete(peer.collider.handle);
+      this.world.removeCollider(peer.collider, true);
+      peer.collider = this.world.createCollider(
+        RAPIER.ColliderDesc.ball(peer.radius)
+          .setMass(next).setFriction(0.55).setRestitution(0),
+        peer.body
+      );
+      this.colliderLabels.set(peer.collider.handle, peer.id);
+      peer.mass = next;
+      peer.body.wakeUp();
+    }
+    this.peerMass = next;
+    this.#recordEvent("actor.peerBody", "peer mass=" + next + "kg");
   }
 
   setPeerEnabled(enabled) {
@@ -808,6 +829,7 @@ export class MaterialWorld {
       interventionEvents: this.interventionEvents.map((event) => ({ ...event })),
       residentControl: { mode: this.residentMode, ...this.residentControl },
       peerEnabled: this.peerEnabled,
+      peerMass: this.peerMass,
       peerControl: this.peerEnabled ? { mode: this.peerMode, ...this.peerControl } : null,
       authoredCount: this.authoredShapes.length,
       grip: this.grip ? {
