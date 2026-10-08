@@ -22,9 +22,16 @@ const COLORS = Object.freeze({
   plank: "#a78c68"
 });
 
-function finitePositive(value, fallback) {
-  const n = Number(value);
-  return Number.isFinite(n) && n > 0 ? n : fallback;
+// Accept zero for authored motor/grip authority, but not zero-sized or
+// massless rigid bodies. Invalid values fail visibly rather than silently
+// restoring a previous value that contradicts the user's input.
+function authoredNumber(value, name, strictlyPositive) {
+  const number = Number(value);
+  if (!Number.isFinite(number) || (strictlyPositive ? number <= 0 : number < 0)) {
+    throw new RangeError(name + " must be finite and " +
+      (strictlyPositive ? "greater than zero" : "nonnegative"));
+  }
+  return number;
 }
 
 function rotate(v, angle) {
@@ -246,20 +253,27 @@ export class MaterialWorld {
   }
 
   setPlayerProfile(next) {
+    // Validate the full edit before mutating the live body: one invalid
+    // number cannot leave a partially accepted profile behind.
+    const accepted = {};
     for (const key of Object.keys(DEFAULT_PROFILE)) {
-      this.profile[key] = finitePositive(next[key], this.profile[key]);
+      accepted[key] = authoredNumber(next[key], key, key === "radius" || key === "mass");
     }
+    const rebuildCollider = accepted.mass !== this.profile.mass ||
+      accepted.radius !== this.profile.radius;
+    this.profile = accepted;
 
+    if (!rebuildCollider) return;
     const player = this.player();
-    player.mass = this.profile.mass;
-    player.radius = this.profile.radius;
-    player.pickRadius = this.profile.radius + 0.15;
+    player.mass = accepted.mass;
+    player.radius = accepted.radius;
+    player.pickRadius = accepted.radius + 0.15;
 
     this.colliderLabels.delete(player.collider.handle);
     this.world.removeCollider(player.collider, true);
     player.collider = this.world.createCollider(
-      RAPIER.ColliderDesc.ball(this.profile.radius)
-        .setMass(this.profile.mass)
+      RAPIER.ColliderDesc.ball(accepted.radius)
+        .setMass(accepted.mass)
         .setFriction(0.55)
         .setRestitution(0),
       player.body
