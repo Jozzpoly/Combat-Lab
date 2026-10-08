@@ -34,6 +34,12 @@ function authoredNumber(value, name, strictlyPositive) {
   return number;
 }
 
+function authoredCoordinate(value, name) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) throw new RangeError(name + " must be finite");
+  return number;
+}
+
 function rotate(v, angle) {
   const c = Math.cos(angle);
   const s = Math.sin(angle);
@@ -274,8 +280,8 @@ export class MaterialWorld {
     }
     const accepted = {
       kind,
-      cx: authoredNumber(cx, "author x", false),
-      cy: authoredNumber(cy, "author y", false),
+      cx: authoredCoordinate(cx, "author x"),
+      cy: authoredCoordinate(cy, "author y"),
       width: authoredNumber(width, "author width", true),
       height: authoredNumber(height, "author height", true),
       mass: kind === "object" ? authoredNumber(mass, "author mass", true) : 0,
