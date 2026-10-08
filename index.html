@@ -84,6 +84,7 @@
         <div class="button-row">
           <button id="fixture-pressure-chain">3-body pressure</button>
           <button id="fixture-side-touch">Side-contact falsifier</button>
+          <button id="fixture-short-block">Short obstruction / side maneuver</button>
         </div>
         <p id="fixture-feedback" class="muted" aria-live="polite">No preset loaded; direct authoring remains free.</p>
       </section>
@@ -95,6 +96,7 @@
           <select id="resident-mode">
             <option value="tactile-recovery">Any-touch recovery (control)</option>
             <option value="directional-recovery">Forward-contact recovery (challenger)</option>
+            <option value="lateral-maneuver">Finite lateral maneuver (experimental)</option>
             <option value="baseline">Fixed lane reversal only</option>
           </select>
         </label>
@@ -111,6 +113,13 @@
           <div class="button-row"><button id="restore-resident-body">Restore resident defaults</button></div>
           <p id="resident-profile-feedback" class="muted" aria-live="polite"></p>
         </details>
+        <label>Preferred lateral side
+          <select id="resident-lateral-side">
+            <option value="1">Down (+Y)</option>
+            <option value="-1">Up (-Y)</option>
+          </select>
+        </label>
+        <p class="muted">The maneuver adds finite sideways motor intent after sustained forward contact. It does not know obstacle extent or calculate a route; long walls may still stop it.</p>
         <p id="resident-status" class="muted" aria-live="polite">Resident awaiting simulation.</p>
         <div class="button-row">
           <button id="focus-resident">Follow resident</button>
@@ -124,6 +133,7 @@
           <select id="peer-mode">
             <option value="tactile-recovery">Any-touch recovery</option>
             <option value="directional-recovery">Forward-contact recovery</option>
+            <option value="lateral-maneuver">Finite lateral maneuver</option>
             <option value="baseline">Fixed shuttle only</option>
           </select>
         </label>
