@@ -857,11 +857,13 @@ export class MaterialWorld {
           drive.intendedVelocity.x, drive.intendedVelocity.y
         );
         this.world.contactPairsWith(entity.collider, other => {
-          touch = true;
-          // Manifold normal is a *local sensory direction*. Identifiers
-          // and material category remain on the debug side of the boundary.
+          // contactPairsWith returns *candidates*. Only a manifold that
+          // reached the solver is evidence of an active physical contact.
+          // Candidate-only proximity must not become the actor's touch.
           this.world.contactPair(entity.collider, other, (manifold, flipped) => {
-            if (!manifold.numSolverContacts() || requestedSpeed < 1e-8) return;
+            if (!manifold.numSolverContacts()) return;
+            touch = true;
+            if (requestedSpeed < 1e-8) return;
             const n = manifold.normal();
             const outwardSign = flipped ? -1 : 1;
             const alignment = outwardSign *
@@ -898,7 +900,13 @@ export class MaterialWorld {
     if (!entity) return [];
     const out = [];
     this.world.contactPairsWith(entity.collider, (other) => {
-      out.push(this.colliderLabels.get(other.handle) ?? ("collider-" + other.handle));
+      let active = false;
+      this.world.contactPair(entity.collider, other, manifold => {
+        if (manifold.numSolverContacts() > 0) active = true;
+      });
+      if (active) {
+        out.push(this.colliderLabels.get(other.handle) ?? ("collider-" + other.handle));
+      }
     });
     return [...new Set(out)].sort();
   }
