@@ -106,6 +106,20 @@
         <label>Second body mass (kg) <input id="peer-mass" type="number" step="1" value="210"></label>
         <p id="peer-mass-feedback" class="muted" aria-live="polite"></p>
         <p id="peer-status" class="muted">Second body absent. Add it to create a real encounter; remove it to repeat the original single-body null.</p>
+        <details>
+          <summary>Third role — finite-force holder (pressure-chain experiment)</summary>
+          <p class="muted">This is a dynamic physical body with a zero-velocity intent and finite braking. It can be moved by other bodies; it is neither a static wall nor a third walking AI. Compare with/without it.</p>
+          <div class="button-row">
+            <button id="toggle-brace" aria-pressed="false">Add holding body</button>
+            <button id="focus-brace" disabled>Follow holder</button>
+          </div>
+          <div class="fields">
+            <label>Holder mass (kg) <input id="brace-mass" type="number" step="1" value="120"></label>
+            <label>Finite braking (m/s²) <input id="brace-braking" type="number" step="1" value="30"></label>
+          </div>
+          <p id="brace-profile-feedback" class="muted" aria-live="polite"></p>
+          <p id="brace-status" class="muted">Third role disabled: original two-body experiment unchanged.</p>
+        </details>
       </section>
 
       <section>
