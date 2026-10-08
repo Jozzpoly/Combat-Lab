@@ -2,11 +2,11 @@
 
 Combat Lab is a research laboratory for discovering embodied combat, movement and world-interaction possibilities.
 
-## Current state — RECOVERY QUARANTINE
+## Current state — neutral main, independently evolving research
 
-There is currently **no active research specimen and no selected next frontier**.
+`main` contains a neutral smoke surface, repository/deployment infrastructure and canonical research documentation. It is **not** an accepted combat, crowd, movement or organism implementation.
 
-The active tree contains only a neutral smoke surface plus repository/deployment infrastructure. It is not a combat prototype, movement model, crowd model, organism architecture or accepted research foundation.
+For the current selected research question and its evidence boundary, enter [docs/RESEARCH_STATE.md](docs/RESEARCH_STATE.md). For *what is being built or published now*, also verify live experiment branches, their exact CI results and the separate `rehearsal/current` pointer. A static README must not duplicate or override that changing operational state.
 
 The previous implementation line is absent from the active tree. Its Git history remains reachable only for deliberate forensic recovery.
 
