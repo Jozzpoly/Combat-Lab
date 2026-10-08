@@ -21,6 +21,8 @@ const braceMassInput = document.querySelector("#brace-mass");
 const braceBrakingInput = document.querySelector("#brace-braking");
 const braceFeedback = document.querySelector("#brace-profile-feedback");
 const braceStatus = document.querySelector("#brace-status");
+const contactOverlayInput = document.querySelector("#contact-overlay");
+const contactOverlaySummary = document.querySelector("#contact-overlay-summary");
 const residentProfileFeedback = document.querySelector("#resident-profile-feedback");
 const interventionTimeline = document.querySelector("#intervention-timeline");
 
@@ -464,6 +466,44 @@ function render() {
     const selected = entity.id === snapshot.selectedId;
     if (entity.shape === "circle") drawCircle(entity, selected);
     else drawBox(entity, selected);
+  }
+
+  // The graph belongs to the experimenter's presentation layer: draw
+  // only reciprocal Rapier contact pairs, never inferred affiliation,
+  // intention, or knowledge attributed to the organisms.
+  const byId = new Map(snapshot.entities.map(entity => [entity.id, entity]));
+  const links = [];
+  for (const entity of snapshot.entities) {
+    for (const peerId of entity.contacts) {
+      if (entity.id >= peerId) continue;
+      const other = byId.get(peerId);
+      if (other && other.contacts.includes(entity.id)) {
+        links.push([entity, other]);
+      }
+    }
+  }
+  contactOverlaySummary.textContent = contactOverlayInput.checked ?
+    "Live body pairs: " + links.length + " (Rapier contact observations)" :
+    "Contact overlay off.";
+  document.body.dataset.liveBodyContactPairs = String(links.length);
+  if (contactOverlayInput.checked) {
+    ctx.save();
+    ctx.strokeStyle = "rgba(247,202,111,.9)";
+    ctx.lineWidth = 2;
+    ctx.setLineDash([4, 4]);
+    for (const [a, b] of links) {
+      const start = worldToScreen(a.position);
+      const end = worldToScreen(b.position);
+      ctx.beginPath();
+      ctx.moveTo(start.x, start.y);
+      ctx.lineTo(end.x, end.y);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc((start.x + end.x) / 2, (start.y + end.y) / 2, 3, 0, Math.PI * 2);
+      ctx.fillStyle = "#f7ca6f";
+      ctx.fill();
+    }
+    ctx.restore();
   }
 
   const selectedBodyState = world.selectedSnapshot();
