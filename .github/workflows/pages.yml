@@ -30,16 +30,25 @@ jobs:
       - name: Resolve explicit deploy source
         id: source
         shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          MANUAL_SOURCE: ${{ inputs.source_ref }}
+          CHECKED_SHA: ${{ github.event.workflow_run.head_sha }}
+          CHECKED_BRANCH: ${{ github.event.workflow_run.head_branch }}
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            SOURCE="${{ inputs.source_ref }}"
-            LABEL="${{ inputs.source_ref }}"
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            SOURCE="$MANUAL_SOURCE"
+            LABEL="$MANUAL_SOURCE"
           else
-            SOURCE="${{ github.event.workflow_run.head_sha }}"
-            LABEL="${{ github.event.workflow_run.head_branch }}"
+            SOURCE="$CHECKED_SHA"
+            LABEL="$CHECKED_BRANCH"
           fi
-          echo "source=$SOURCE" >> "$GITHUB_OUTPUT"
-          echo "label=$LABEL" >> "$GITHUB_OUTPUT"
+          if [[ ! "$SOURCE" =~ ^[A-Za-z0-9._/-]+$ ]] || [[ ! "$LABEL" =~ ^[A-Za-z0-9._/-]+$ ]]; then
+            echo "Invalid deploy source or label" >&2
+            exit 1
+          fi
+          printf 'source=%s\n' "$SOURCE" >> "$GITHUB_OUTPUT"
+          printf 'label=%s\n' "$LABEL" >> "$GITHUB_OUTPUT"
 
       - name: Checkout exact deploy source
         uses: actions/checkout@v4
@@ -61,6 +70,13 @@ jobs:
             else
               npm install --no-audit --no-fund
             fi
+          fi
+
+      - name: Run declared project tests for the selected source
+        shell: bash
+        run: |
+          if [ -f package.json ]; then
+            npm test --if-present
           fi
 
       - name: Prepare exact artifact
