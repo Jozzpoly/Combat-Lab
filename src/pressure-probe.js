@@ -116,6 +116,28 @@ await trial("zero-motor-authority-is-authorable", (world) => {
   return "zero motor and grip authority retained";
 });
 
+await trial("invalid-body-edit-is-atomic", (world) => {
+  const before = { ...world.profile };
+  let rejected = false;
+  try {
+    world.setPlayerProfile({ ...world.profile, mass: -3, maxSpeed: 0 });
+  } catch (error) {
+    rejected = error instanceof RangeError;
+  }
+  assert(rejected, "invalid mass was silently accepted or thrown as an unrelated error");
+  assert(JSON.stringify(world.profile) === JSON.stringify(before),
+    "invalid partial edit changed the live body profile");
+  return "invalid mass rejected without partial changes";
+});
+
+await trial("motor-only-edit-preserves-physical-collider", (world) => {
+  const handle = world.player().collider.handle;
+  world.setPlayerProfile({ ...world.profile, acceleration: 0, braking: 0 });
+  assert(world.player().collider.handle === handle,
+    "changing motor authority unnecessarily recreated a physical collider");
+  return "stable collider after motor-only edit";
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
