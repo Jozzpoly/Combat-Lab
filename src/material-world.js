@@ -81,6 +81,11 @@ export class MaterialWorld {
     // This switch adds a second embodied participant to the *same* World.
     this.peerEnabled = false;
     this.peerMass = 210;
+    // Optional third physical role: a finite-braking dynamic buffer.
+    // Not a wall, not a static collider, and not a third copy of the patrol.
+    this.braceEnabled = false;
+    this.braceMass = 120;
+    this.braceBraking = 30;
     // These are authored edits, distinct from runtime motion/afterstate.
     // Ordinary reset replays them; clear/undo deliberately change the authored scene.
     this.authoredShapes = [];
@@ -134,6 +139,7 @@ export class MaterialWorld {
     this.#createPlayer();
     this.#createResident();
     if (this.peerEnabled) this.#createPeer();
+    if (this.braceEnabled) this.#createBrace();
     this.#createBox("light-crate", { x: 6.9, y: 5.8 }, { x: 0.48, y: 0.48 }, 14, COLORS.light, true);
     this.#createBox("plank", { x: 12.8, y: 6.6 }, { x: 1.05, y: 0.28 }, 34, COLORS.plank, true);
     this.#createBox("heavy-crate", { x: 16.5, y: 5.25 }, { x: 0.68, y: 0.68 }, 120, COLORS.heavy, true);
@@ -271,6 +277,71 @@ export class MaterialWorld {
     this.entities.set(entity.id, entity);
     this.colliderLabels.set(collider.handle, entity.id);
     return entity;
+  }
+
+  #createBrace() {
+    const radius = 0.5;
+    const body = this.world.createRigidBody(
+      RAPIER.RigidBodyDesc.dynamic()
+        .setTranslation(17.35, 11.4)
+        .setLinearDamping(0.4).setAngularDamping(1.5).setCcdEnabled(true)
+    );
+    const collider = this.world.createCollider(
+      RAPIER.ColliderDesc.ball(radius).setMass(this.braceMass)
+        .setFriction(0.55).setRestitution(0), body
+    );
+    const entity = {
+      id: "brace", label: "finite-force holding body",
+      kind: "brace", shape: "circle", radius, mass: this.braceMass,
+      maxSpeed: 0, acceleration: 0, braking: this.braceBraking,
+      body, collider, color: "#79b9a5", grabbable: false,
+      pickRadius: radius + 0.16
+    };
+    this.entities.set(entity.id, entity);
+    this.colliderLabels.set(collider.handle, entity.id);
+    return entity;
+  }
+
+  setBraceEnabled(enabled) {
+    const next = Boolean(enabled);
+    if (this.braceEnabled === next) return;
+    this.braceEnabled = next;
+    if (next) this.#createBrace();
+    else {
+      const brace = this.entities.get("brace");
+      if (brace) {
+        this.colliderLabels.delete(brace.collider.handle);
+        this.world.removeRigidBody(brace.body);
+        this.entities.delete("brace");
+        this.lastCausalObservations.delete("brace");
+      }
+      if (this.selectedId === "brace") this.selectedId = "resident";
+    }
+    this.#recordEvent("actor.brace", next ?
+      "finite-force holding body entered shared physics" :
+      "finite-force holding body removed from shared physics");
+  }
+
+  setBraceProfile({ mass, braking }) {
+    const m = authoredNumber(mass, "brace mass", true);
+    const b = authoredNumber(braking, "brace braking", false);
+    if (m !== this.braceMass && this.braceEnabled) {
+      const entity = this.entities.get("brace");
+      this.colliderLabels.delete(entity.collider.handle);
+      this.world.removeCollider(entity.collider, true);
+      entity.collider = this.world.createCollider(
+        RAPIER.ColliderDesc.ball(entity.radius)
+          .setMass(m).setFriction(0.55).setRestitution(0), entity.body
+      );
+      this.colliderLabels.set(entity.collider.handle, entity.id);
+      entity.mass = m;
+      entity.body.wakeUp();
+    }
+    if (this.braceEnabled) this.entities.get("brace").braking = b;
+    this.braceMass = m;
+    this.braceBraking = b;
+    this.#recordEvent("actor.braceProfile",
+      "finite-force holder mass=" + m + "kg, braking=" + b + "m/s²");
   }
 
   setPeerMass(value) {
@@ -722,7 +793,9 @@ export class MaterialWorld {
     };
 
     const before = new Map();
-    for (const id of ["player", "resident", ...(this.peerEnabled ? ["peer"] : [])]) {
+    for (const id of ["player", "resident",
+      ...(this.peerEnabled ? ["peer"] : []),
+      ...(this.braceEnabled ? ["brace"] : [])]) {
       const entity = this.entities.get(id);
       before.set(id, { ...entity.body.translation() });
     }
@@ -734,6 +807,14 @@ export class MaterialWorld {
     );
     const residentDrive = this.#stepResident();
     const peerDrive = this.peerEnabled ? this.#stepPeer() : null;
+    // The holder's only intent is local zero velocity, maintained with a
+    // finite motor impulse. World contact may physically displace it.
+    const braceDrive = this.braceEnabled ? {
+      intendedVelocity: { x: 0, y: 0 },
+      motorImpulse: this.#applyMotor(
+        this.entities.get("brace"), { x: 0, y: 0 }, 0, this.braceBraking
+      )
+    } : null;
     this.#stepGrip();
 
     const started = performance.now();
@@ -745,7 +826,8 @@ export class MaterialWorld {
     for (const [id, drive] of [
       ["player", { intendedVelocity: desired, motorImpulse: playerImpulse }],
       ["resident", residentDrive],
-      ...(peerDrive ? [["peer", peerDrive]] : [])
+      ...(peerDrive ? [["peer", peerDrive]] : []),
+      ...(braceDrive ? [["brace", braceDrive]] : [])
     ]) {
       const entity = this.entities.get(id);
       const from = before.get(id);
@@ -830,6 +912,9 @@ export class MaterialWorld {
       residentControl: { mode: this.residentMode, ...this.residentControl },
       peerEnabled: this.peerEnabled,
       peerMass: this.peerMass,
+      braceEnabled: this.braceEnabled,
+      braceMass: this.braceMass,
+      braceBraking: this.braceBraking,
       peerControl: this.peerEnabled ? { mode: this.peerMode, ...this.peerControl } : null,
       authoredCount: this.authoredShapes.length,
       grip: this.grip ? {
