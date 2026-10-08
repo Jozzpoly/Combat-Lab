@@ -622,6 +622,16 @@ try {
   pause.click();
   assert(document.body.dataset.simulationPaused === "true" && !single.disabled,
     "pause button failed to freeze simulation mode");
+  window.dispatchEvent(new KeyboardEvent("keydown", {
+    code: "Space", repeat: true, bubbles: true, cancelable: true
+  }));
+  assert(document.body.dataset.simulationPaused === "true",
+    "held Space repeated and unexpectedly toggled simulation");
+  window.dispatchEvent(new KeyboardEvent("keydown", {
+    code: "Period", repeat: true, bubbles: true, cancelable: true
+  }));
+  assert(Number(document.body.dataset.physicsSteps || "0") === before,
+    "held Period repeated and unexpectedly advanced physics");
   single.click();
   const after = Number(document.body.dataset.physicsSteps || "0");
   assert(after === before + 1, "single-step did not advance exactly one physics tick");
