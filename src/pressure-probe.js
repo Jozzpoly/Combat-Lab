@@ -918,6 +918,66 @@ try {
   cases.push({ name: "live-ui-peer-toggle-and-inspection", status: "FAIL",
     detail: String(error?.message ?? error).slice(0, 300) });
 }
+await trial("second-body-mass-is-real-and-authorable-without-shared-state", (world) => {
+  world.setPeerEnabled(true);
+  const actor = world.entities.get("peer");
+  const original = world.peerMass;
+  let rejected = false;
+  try { world.setPeerMass(-200); } catch (error) { rejected = error instanceof RangeError; }
+  assert(rejected && world.peerMass === original && actor.mass === original,
+    "invalid peer body edit partially applied");
+  const firstIdentity = actor.id;
+  world.setPeerMass(430);
+  assert(actor.mass === 430 && world.peerMass === 430 &&
+    world.entities.get("resident").mass === 72 && actor.id === firstIdentity,
+    "mass changed globally or physical object identity lost");
+  for (let i = 0; i < 55; i++) world.step(still);
+  assert(world.peerControl.tick === 55 && world.residentControl.tick === 55,
+    "actor-local controllers stopped while mass was edited");
+  world.reset();
+  assert(world.peerEnabled && world.entities.get("peer").mass === 430,
+    "reset silently lost authored peer mass");
+  assert(world.peerSense === null && world.residentSense === null,
+    "reset retained private samples from previous experiment");
+  finite(world, "peer mass");
+  return "rejected -200kg, set 430kg in live physics, kept resident 72kg, reset persisted";
+});
+
+await trial("mass-only-peer-intervention-causes-later-physical-divergence", (world) => {
+  const run = (mass) => {
+    world.setPeerMass(mass);
+    world.setPeerEnabled(true);
+    world.reset();
+    world.setResidentMode("tactile-recovery");
+    const samples = [];
+    for (let tick = 1; tick <= 190; tick++) {
+      world.step(still);
+      const a = at(world, "resident");
+      const o = world.lastCausalObservations.get("resident");
+      samples.push({
+        tick, x: a.position.x, vx: a.velocity.x,
+        demand: o.intendedVelocity.x, touching: o.contacts.includes("peer")
+      });
+    }
+    finite(world, "mass AB");
+    return samples;
+  };
+  const light = run(30);
+  const heavy = run(430);
+  const touch = light.find((v) => v.touching)?.tick;
+  const firstChange = light.find((v,i) =>
+    Math.abs(v.x - heavy[i].x) > 1e-7 ||
+    Math.abs(v.vx - heavy[i].vx) > 1e-7 ||
+    v.demand !== heavy[i].demand)?.tick;
+  assert(touch && firstChange && firstChange >= touch,
+    "different material mass changed behavior before actual contact");
+  const delta = Math.abs(light.at(-1).x - heavy.at(-1).x);
+  assert(delta > 0.2, "large mass contrast produced no material difference: " + delta);
+  return "contact t=" + touch + "; first physical/motor difference t=" + firstChange +
+    "; resident x: peer 30kg " + light.at(-1).x.toFixed(2) +
+    "m vs peer 430kg " + heavy.at(-1).x.toFixed(2) + "m";
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
