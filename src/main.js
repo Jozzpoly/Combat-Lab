@@ -5,6 +5,8 @@ const ctx = canvas.getContext("2d");
 const summary = document.querySelector("#runtime-summary");
 const selectedReadout = document.querySelector("#selected-readout");
 const profileFeedback = document.querySelector("#profile-feedback");
+const worldEditFeedback = document.querySelector("#world-edit-feedback");
+const boxMassInput = document.querySelector("#author-mass");
 
 const camera = {
   center: { x: 12, y: 7 },
@@ -17,6 +19,7 @@ const camera = {
 const input = {
   keys: new Set(),
   draggingCamera: false,
+  drawing: null,
   dragStart: null,
   cameraStart: null,
   pointer: { x: 0, y: 0 }
@@ -80,6 +83,7 @@ window.addEventListener("blur", () => input.keys.clear());
 canvas.addEventListener("contextmenu", (event) => event.preventDefault());
 canvas.addEventListener("pointermove", (event) => {
   input.pointer = screenToWorld(event.clientX, event.clientY);
+  if (input.drawing) input.drawing.end = { ...input.pointer };
   if (input.draggingCamera && input.dragStart) {
     const dx = (event.clientX - input.dragStart.x) / camera.zoom;
     const dy = (event.clientY - input.dragStart.y) / camera.zoom;
@@ -92,6 +96,15 @@ canvas.addEventListener("pointermove", (event) => {
 canvas.addEventListener("pointerdown", (event) => {
   const point = screenToWorld(event.clientX, event.clientY);
   input.pointer = point;
+  if (event.button === 0 && (event.ctrlKey || event.shiftKey)) {
+    input.drawing = {
+      kind: event.ctrlKey ? "wall" : "object",
+      start: { ...point }, end: { ...point }, pointerId: event.pointerId
+    };
+    canvas.setPointerCapture(event.pointerId);
+    event.preventDefault();
+    return;
+  }
   if (event.button === 1) {
     input.draggingCamera = true;
     input.dragStart = { x: event.clientX, y: event.clientY };
@@ -111,9 +124,27 @@ canvas.addEventListener("pointerdown", (event) => {
 canvas.addEventListener("pointerup", (event) => {
   if (event.button === 1) input.draggingCamera = false;
   if (event.button === 2) world.endGrip();
+  if (input.drawing && event.pointerId === input.drawing.pointerId) {
+    const draft = input.drawing;
+    input.drawing = null;
+    const cx = (draft.start.x + draft.end.x) / 2;
+    const cy = (draft.start.y + draft.end.y) / 2;
+    const width = Math.abs(draft.end.x - draft.start.x);
+    const height = Math.abs(draft.end.y - draft.start.y);
+    try {
+      const id = world.authorRect({
+        kind: draft.kind, cx, cy, width, height, mass: Number(boxMassInput.value)
+      });
+      worldEditFeedback.textContent = "Added " + draft.kind + " " + id +
+        " (" + width.toFixed(2) + " × " + height.toFixed(2) + " m)";
+    } catch (error) {
+      worldEditFeedback.textContent = "Not placed: " + String(error?.message ?? error);
+    }
+  }
 });
 canvas.addEventListener("pointercancel", () => {
   input.draggingCamera = false;
+  input.drawing = null;
   world.endGrip();
 });
 canvas.addEventListener("wheel", (event) => {
@@ -159,9 +190,21 @@ document.querySelector("#restore-body").addEventListener("click", () => {
   world.setPlayerProfile(DEFAULT_PROFILE);
   profileFeedback.textContent = "";
 });
-document.querySelector("#reset-world").addEventListener("click", () => world.reset());
+document.querySelector("#reset-world").addEventListener("click", () => {
+  world.reset();
+  worldEditFeedback.textContent = "Simulation reset; " + world.authoredShapes.length +
+    " authored shape(s) restored.";
+});
 document.querySelector("#spawn-light").addEventListener("click", () => world.spawnCrate("light"));
 document.querySelector("#spawn-heavy").addEventListener("click", () => world.spawnCrate("heavy"));
+document.querySelector("#undo-edit").addEventListener("click", () => {
+  worldEditFeedback.textContent = world.undoAuthored() ? "Last authored shape removed." :
+    "No authored shape to remove.";
+});
+document.querySelector("#clear-edits").addEventListener("click", () => {
+  const count = world.clearAuthored();
+  worldEditFeedback.textContent = "Removed " + count + " authored shape(s).";
+});
 
 function drawStaticRect(item, selected) {
   const p = worldToScreen({ x: item.cx, y: item.cy });
@@ -248,6 +291,22 @@ function render() {
     else drawBox(entity, selected);
   }
 
+  if (input.drawing) {
+    const a = worldToScreen(input.drawing.start);
+    const b = worldToScreen(input.drawing.end);
+    ctx.save();
+    ctx.fillStyle = input.drawing.kind === "wall" ?
+      "rgba(190,200,210,.24)" : "rgba(201,170,106,.24)";
+    ctx.strokeStyle = input.drawing.kind === "wall" ? "#d7e2f0" : "#eed29a";
+    ctx.setLineDash([6, 4]);
+    ctx.lineWidth = 2;
+    ctx.fillRect(Math.min(a.x, b.x), Math.min(a.y, b.y),
+      Math.abs(b.x - a.x), Math.abs(b.y - a.y));
+    ctx.strokeRect(Math.min(a.x, b.x), Math.min(a.y, b.y),
+      Math.abs(b.x - a.x), Math.abs(b.y - a.y));
+    ctx.restore();
+  }
+
   if (snapshot.grip) {
     const a = worldToScreen(snapshot.grip.worldAnchor);
     const b = worldToScreen(snapshot.grip.target);
@@ -278,6 +337,7 @@ function render() {
 
   summary.textContent =
     "bodies " + snapshot.entities.length +
+    " · authored " + snapshot.authoredCount +
     " · physics " + lastStep.stepMs.toFixed(2) + " ms" +
     " · zoom " + camera.zoom.toFixed(0) + " px/m" +
     (camera.follow ? " · follow" : " · free camera");
