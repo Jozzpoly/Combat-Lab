@@ -725,6 +725,8 @@ try {
   step.click();
   assert(readout.textContent.includes("mass 72.00"),
     "restore resident defaults failed to reconstruct physical selected body");
+  assert(document.querySelector("#resident-status").textContent.includes("local travel"),
+    "resident status omitted its bounded body-local odometry");
   assert(document.querySelector("#intervention-timeline").textContent.includes("actor.body"),
     "visible experiment workbench omitted a real resident body intervention");
   pause.click();
