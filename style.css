@@ -6,7 +6,7 @@
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; }
-button, input { font: inherit; }
+button, input, select { font: inherit; }
 .shell { display: grid; grid-template-columns: minmax(0, 1fr) 330px; height: 100vh; }
 .stage { position: relative; min-width: 0; background: #151a20; }
 #lab { display: block; width: 100%; height: 100%; cursor: crosshair; }
@@ -32,10 +32,11 @@ p { margin: 0 0 10px; line-height: 1.35; font-size: 13px; color: #c7d0d8; }
 section { padding: 14px 0; border-top: 1px solid #27303a; }
 .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .fields label { display: grid; gap: 4px; color: #aebbc6; font-size: 11px; }
-input {
+input, select {
   width: 100%; padding: 7px 8px; border: 1px solid #37424d; border-radius: 6px;
   background: #0d1116; color: #edf3f7;
 }
+select { margin: 5px 0 8px; }
 .button-row { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
 button {
   border: 1px solid #3a4652; border-radius: 7px; padding: 7px 10px;
