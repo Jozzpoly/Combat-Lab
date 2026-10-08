@@ -61,6 +61,10 @@ export class MaterialWorld {
 
   constructor() {
     this.profile = { ...DEFAULT_PROFILE };
+    // These are authored edits, distinct from runtime motion/afterstate.
+    // Ordinary reset replays them; clear/undo deliberately change the authored scene.
+    this.authoredShapes = [];
+    this.authoredSerial = 0;
     this.spawnSerial = 0;
     this.selectedId = "player";
     this.grip = null;
@@ -79,6 +83,7 @@ export class MaterialWorld {
     this.entities.clear();
     this.colliderLabels.clear();
     this.staticRects = [];
+    this.staticColliderById = new Map();
     this.grip = null;
     this.lastGripForce = 0;
     this.spawnSerial = 0;
@@ -90,6 +95,7 @@ export class MaterialWorld {
     this.#createBox("light-crate", { x: 6.9, y: 5.8 }, { x: 0.48, y: 0.48 }, 14, COLORS.light, true);
     this.#createBox("plank", { x: 12.8, y: 6.6 }, { x: 1.05, y: 0.28 }, 34, COLORS.plank, true);
     this.#createBox("heavy-crate", { x: 16.5, y: 5.25 }, { x: 0.68, y: 0.68 }, 120, COLORS.heavy, true);
+    for (const shape of this.authoredShapes) this.#instantiateAuthored(shape);
     this.selectedId = "player";
   }
 
@@ -100,6 +106,7 @@ export class MaterialWorld {
       .setRestitution(0);
     const collider = this.world.createCollider(desc);
     this.colliderLabels.set(collider.handle, id);
+    this.staticColliderById.set(id, collider);
     this.staticRects.push({ id, cx, cy, width, height });
   }
 
@@ -246,6 +253,72 @@ export class MaterialWorld {
       COLORS.light,
       true
     );
+  }
+
+  // A bounded authoring seam for real scene intervention, not a final Studio
+  // schema. These shapes survive a simulation reset, while their runtime
+  // rigid bodies/colliders are rebuilt from the authored description.
+  #instantiateAuthored(shape) {
+    if (shape.kind === "wall") {
+      this.#staticRect(shape.id, shape.cx, shape.cy, shape.width, shape.height);
+    } else {
+      this.#createBox(shape.id, { x: shape.cx, y: shape.cy },
+        { x: shape.width / 2, y: shape.height / 2 },
+        shape.mass, COLORS.light, true);
+    }
+  }
+
+  authorRect({ kind, cx, cy, width, height, mass = 20 }) {
+    if (kind !== "wall" && kind !== "object") {
+      throw new RangeError("authored kind must be wall or object");
+    }
+    const accepted = {
+      kind,
+      cx: authoredNumber(cx, "author x", false),
+      cy: authoredNumber(cy, "author y", false),
+      width: authoredNumber(width, "author width", true),
+      height: authoredNumber(height, "author height", true),
+      mass: kind === "object" ? authoredNumber(mass, "author mass", true) : 0,
+      id: "authored-" + (++this.authoredSerial)
+    };
+    // Rapier cannot reliably represent effectively zero-area fixtures.
+    // This is a visible rejection, never a silent change to authored size.
+    if (accepted.width < 0.04 || accepted.height < 0.04) {
+      throw new RangeError("authored rectangle must span at least 0.04 m in each axis");
+    }
+    this.#instantiateAuthored(accepted);
+    this.authoredShapes.push(accepted);
+    return accepted.id;
+  }
+
+  undoAuthored() {
+    const shape = this.authoredShapes.pop();
+    if (!shape) return false;
+    if (shape.kind === "wall") {
+      const collider = this.staticColliderById.get(shape.id);
+      if (collider) {
+        this.colliderLabels.delete(collider.handle);
+        this.world.removeCollider(collider, true);
+        this.staticColliderById.delete(shape.id);
+      }
+      this.staticRects = this.staticRects.filter((rect) => rect.id !== shape.id);
+    } else {
+      const entity = this.entities.get(shape.id);
+      if (entity) {
+        if (this.grip?.entityId === shape.id) this.endGrip();
+        this.colliderLabels.delete(entity.collider.handle);
+        this.world.removeRigidBody(entity.body);
+        this.entities.delete(shape.id);
+      }
+      if (this.selectedId === shape.id) this.selectedId = "player";
+    }
+    return true;
+  }
+
+  clearAuthored() {
+    let count = 0;
+    while (this.undoAuthored()) count++;
+    return count;
   }
 
   player() {
@@ -468,6 +541,7 @@ export class MaterialWorld {
       entities,
       selectedId: this.selectedId,
       profile: { ...this.profile },
+      authoredCount: this.authoredShapes.length,
       grip: this.grip ? {
         entityId: this.grip.entityId,
         worldAnchor: { ...this.grip.worldAnchor },
