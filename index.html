@@ -40,7 +40,13 @@
         <label>Physical impulse (N·s; negative = away from cursor)
           <input id="experiment-impulse" type="number" step="25" value="150">
         </label>
-        <button id="poke-selected-body">Impulse selected body toward cursor</button>
+        <label>How to apply impulse
+          <select id="experiment-impulse-mode">
+            <option value="center">Center push toward cursor (linear)</option>
+            <option value="tangential">Tangential push at cursor (rotation)</option>
+          </select>
+        </label>
+        <button id="poke-selected-body">Impulse selected body</button>
         <p id="impulse-feedback" class="muted" aria-live="polite">An actual force impulse, not teleportation or NPC intent. Works while paused; advance a physics step to observe.</p>
       </section>
 

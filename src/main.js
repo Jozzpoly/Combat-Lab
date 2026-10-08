@@ -34,6 +34,7 @@ const placeBodyButton = document.querySelector("#place-selected-at-cursor");
 const restoreBodyStartsButton = document.querySelector("#restore-body-positions");
 const bodyPositionFeedback = document.querySelector("#body-position-feedback");
 const experimentImpulse = document.querySelector("#experiment-impulse");
+const experimentImpulseMode = document.querySelector("#experiment-impulse-mode");
 const pokeBodyButton = document.querySelector("#poke-selected-body");
 const impulseFeedback = document.querySelector("#impulse-feedback");
 
@@ -510,11 +511,17 @@ pokeBodyButton.addEventListener("click", () => {
     const length = Math.hypot(delta.x, delta.y);
     if (length < 0.00001)
       throw new RangeError("move cursor away from the body center");
+    const tangential = experimentImpulseMode.value === "tangential";
+    const unit = tangential ?
+      { x: -delta.y / length, y: delta.x / length } :
+      { x: delta.x / length, y: delta.y / length };
     const result = world.applyBodyImpulse(entity.id, {
-      x: magnitude * delta.x / length,
-      y: magnitude * delta.y / length
-    });
-    impulseFeedback.textContent = "Applied to " + entity.id + ": (" +
+      x: magnitude * unit.x,
+      y: magnitude * unit.y
+    }, tangential ? { atPoint: input.pointer } : {});
+    impulseFeedback.textContent = "Applied " +
+      (tangential ? "tangential off-center" : "center") +
+      " impulse to " + entity.id + ": (" +
       result.x.toFixed(2) + ", " + result.y.toFixed(2) +
       ") N·s. Observe the next physical step.";
     render();
@@ -828,6 +835,8 @@ function render() {
       "position " + selected.position.x.toFixed(2) + ", " +
         selected.position.y.toFixed(2) + " m\n" +
       (selected.radius ? "radius " + selected.radius.toFixed(2) + "\n" : "") +
+      "rotation " + (selected.rotation * 180 / Math.PI).toFixed(2) +
+        "° · angular " + selected.angularVelocity.toFixed(2) + " rad/s\n" +
       "speed " + selected.speed.toFixed(2) + "\n" +
       "velocity " + selected.velocity.x.toFixed(2) + ", " + selected.velocity.y.toFixed(2) + "\n" +
       "contacts " + (selected.contacts.length ? selected.contacts.join(", ") : "none") + "\n" +

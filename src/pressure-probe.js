@@ -2317,6 +2317,77 @@ try{
   cases.push({name:"live-ui-third-body-morphology-and-angle",status:"FAIL",
     detail:String(error?.message??error).slice(0,300)});
 }
+await trial("off-center-impulse-rotates-dynamic-beam-by-actual-physics", world => {
+  const run = point => {
+    world.setPeerEnabled(false);
+    world.setBraceEnabled(true);
+    world.setBraceForm("beam");
+    world.setBraceAngle(0);
+    world.setBraceProfile({ mass:120, braking:0 });
+    world.reset();
+    const center=at(world,"brace").position;
+    world.applyBodyImpulse("brace",{x:0,y:80},
+      point ? { atPoint: { x:center.x+.75, y:center.y }} : {});
+    world.step(still);
+    finite(world,"off-center physical impulse");
+    const body=world.entities.get("brace").body;
+    return { angle:body.rotation(),omega:body.angvel() };
+  };
+  const plain=run(false),offCenter=run(true);
+  assert(Math.abs(plain.omega)<1e-4,
+    "center-of-mass impulse produced nontrivial torque without contact");
+  assert(Math.abs(offCenter.omega)>0.1 &&
+    Math.abs(offCenter.angle)>0.001,
+    "actual off-center Rapier impulse produced no rigid-body rotation");
+  const body=world.entities.get("brace").body;
+  const prevOmega=body.angvel();
+  let bad=false;
+  try{world.applyBodyImpulse("brace",{x:0,y:80},
+    {atPoint:{x:NaN,y:11.4}});}catch(e){bad=e instanceof RangeError;}
+  assert(bad && Math.abs(body.angvel()-prevOmega)<1e-8,
+    "invalid impact point partially changed angular momentum");
+  return "center omega="+plain.omega.toFixed(3)+
+    ", offset omega="+offCenter.omega.toFixed(3)+
+    " rad/s; rot="+(offCenter.angle*180/Math.PI).toFixed(2)+"° after one tick";
+});
+
+try{
+  document.querySelector("#fixture-pressure-chain").click();
+  const form=document.querySelector("#brace-form");
+  const focus=document.querySelector("#focus-brace");
+  const canvas=document.querySelector("#lab");
+  const mode=document.querySelector("#experiment-impulse-mode");
+  const button=document.querySelector("#poke-selected-body");
+  const feedback=document.querySelector("#impulse-feedback");
+  const one=document.querySelector("#single-step");
+  const readout=document.querySelector("#selected-readout");
+  assert(form&&focus&&canvas&&mode&&button&&feedback&&one&&readout,
+    "tangential experiment DOM controls absent");
+  form.value="beam";
+  form.dispatchEvent(new Event("change",{bubbles:true}));
+  focus.click();
+  const rect=canvas.getBoundingClientRect();
+  canvas.dispatchEvent(new PointerEvent("pointermove",{
+    clientX:rect.left+rect.width*.7,
+    clientY:rect.top+rect.height*.43,bubbles:true
+  }));
+  mode.value="tangential";
+  button.click();
+  assert(feedback.textContent.includes("tangential off-center") &&
+    document.querySelector("#intervention-timeline").textContent.includes("world.impulse"),
+    "tangential UI did not apply a real off-center impulse");
+  one.click();
+  assert(readout.textContent.includes("rotation ") &&
+    readout.textContent.includes("angular "),
+    "actual angular response is not inspectable");
+  document.querySelector("#pause-simulation").click();
+  cases.push({name:"live-ui-tangential-impulse-into-real-beam",status:"PASS",
+    detail:"tangential impulse at cursor authored; actual angular velocity exposed"});
+}catch(error){
+  cases.push({name:"live-ui-tangential-impulse-into-real-beam",status:"FAIL",
+    detail:String(error?.message??error).slice(0,300)});
+}
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);

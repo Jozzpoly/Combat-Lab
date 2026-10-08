@@ -687,17 +687,26 @@ export class MaterialWorld {
     return { ...p };
   }
 
-  applyBodyImpulse(id, impulse) {
+  applyBodyImpulse(id, impulse, { atPoint = null } = {}) {
     const entity = this.entities.get(id);
     if (!entity) throw new RangeError("unknown physical body: " + id);
     const x = authoredCoordinate(impulse.x, "impulse x");
     const y = authoredCoordinate(impulse.y, "impulse y");
-    entity.body.applyImpulse({ x, y }, true);
+    const point = atPoint === null ? null : {
+      x: authoredCoordinate(atPoint.x, "impulse contact x"),
+      y: authoredCoordinate(atPoint.y, "impulse contact y")
+    };
+    // Validate everything first. An off-center impulse transfers angular
+    // momentum through the actual Rapier body/inertia tensor.
+    if (point) entity.body.applyImpulseAtPoint({ x, y }, point, true);
+    else entity.body.applyImpulse({ x, y }, true);
     this.#recordEvent("world.impulse", id + " applied (" +
-      x.toFixed(2) + ", " + y.toFixed(2) + ") N·s by experimenter");
-    // This is a physical intervention; actor-local sensing remains intact.
-    // Motor effort and material consequences are observed on the next step.
-    return { x, y };
+      x.toFixed(2) + ", " + y.toFixed(2) + ") N·s " +
+      (point ? "at (" + point.x.toFixed(2) + "," +
+        point.y.toFixed(2) + ")" : "at center") +
+      " by experimenter");
+    // The actor receives consequences only through subsequent physics.
+    return { x, y, atPoint: point };
   }
 
   clearBodyStartOverrides() {
@@ -1107,6 +1116,8 @@ export class MaterialWorld {
       radius: entity.radius ?? null,
       position: { x: p.x, y: p.y },
       velocity: { x: v.x, y: v.y },
+      rotation: entity.body.rotation(),
+      angularVelocity: entity.body.angvel(),
       speed: Math.hypot(v.x, v.y),
       contacts: this.contactsFor(entity.id),
       observedMotor: this.lastCausalObservations.get(entity.id) ?? null,
