@@ -1,9 +1,9 @@
 # Combat Lab — Research State
 
 **Date:** 2026-10-07  
-**Status:** RECOVERY QUARANTINE · BODY/WORLD FRONTIER RESELECTED · PRE-IMPLEMENTATION DESIGN
+**Status:** RECOVERY QUARANTINE · BODY/WORLD FRONTIER SELECTED · NO OWNER-QUALIFIED SPECIMEN
 
-There is no active research specimen.
+No new research specimen has been accepted by the Owner. Candidate implementation work occurs on separate experimental refs; it does not become canonical by existing or passing a machine test. Check live branch heads and their latest CI before claiming a runnable candidate.
 
 The broad body/world discovery frontier has been deliberately reselected after separate reassessment and red-team.
 
@@ -13,11 +13,14 @@ The runnable surface is still only a neutral smoke probe for browser/input/rende
 
 ## Current repository truth
 
-Current live refs:
+Stable repository roles (not an exhaustive or automatically refreshed branch inventory):
 
-- `main` — neutral Lab state;
+- `main` — neutral Lab state and selected research question;
+- experimental refs — isolated, replaceable candidate work; query live branches and CI for the current head;
 - `rehearsal/current` — deployment pointer only;
 - `archive/forensic-pre-cleanroom-2026-10-06` — forensic reachability only.
+
+An experimental branch may have a machine-green browser boot and still lack both Owner qualification and the intended phenomenon.
 
 The repaired deployment path was validated by moving `rehearsal/current` to:
 
@@ -146,7 +149,7 @@ This is a reselection of the unresolved broad body/world question, not a continu
 
 The old traffic topology, route system, contact policy, crowd harness and old "foundation" labels have no inheritance rights.
 
-Pre-implementation design:
+Selected-question design record (not a declaration that implementation has not begun, nor accepted architecture):
 
 - `docs/BODY_WORLD_SUBSTRATE_AND_SPECIMEN_2026-10-07.md`
 
@@ -156,11 +159,12 @@ The next substantial implementation should be one coherent serious discovery spe
 
 ## Current operating boundary
 
-Until a fresh frontier is deliberately selected:
+While the selected frontier is explored:
 
-- no old implementation is revived as a continuation;
-- no new combat/crowd/organism architecture is promoted;
-- repo/infrastructure work is allowed only when it increases experimental freedom without selecting a hypothesis;
-- forensic reading is allowed only when it resolves a concrete recovery question.
+- no old implementation is revived merely as a continuation;
+- no candidate gains organism/product authority from passing narrow CI;
+- an experiment may be built, tested, substantially redesigned or retired according to the still-open body/world question;
+- neutral repo/infrastructure work must serve experimentation rather than silently selecting the hypothesis;
+- forensic reading remains scoped to concrete recovery questions.
 
 > **The Lab exists to discover. Repository state, green tests and old foundations are evidence-management tools, not a substitute for choosing what is worth discovering next.**
