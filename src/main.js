@@ -9,6 +9,7 @@ const profileFeedback = document.querySelector("#profile-feedback");
 const worldEditFeedback = document.querySelector("#world-edit-feedback");
 const boxMassInput = document.querySelector("#author-mass");
 const residentModeSelect = document.querySelector("#resident-mode");
+const residentSideSelect = document.querySelector("#resident-lateral-side");
 const residentStatus = document.querySelector("#resident-status");
 const peerStatus = document.querySelector("#peer-status");
 const togglePeer = document.querySelector("#toggle-peer");
@@ -355,6 +356,10 @@ residentModeSelect.value = world.residentMode;
 residentModeSelect.addEventListener("change", () => {
   world.setResidentMode(residentModeSelect.value);
 });
+residentSideSelect.value = String(world.residentSidePreference);
+residentSideSelect.addEventListener("change", () => {
+  world.setActorSidePreference("resident", Number(residentSideSelect.value));
+});
 document.querySelector("#focus-resident").addEventListener("click", () => {
   camera.follow = true;
   camera.followTarget = "resident";
@@ -479,6 +484,8 @@ function loadFixture(kind) {
   world.setResidentProfile(DEFAULT_RESIDENT_PROFILE);
   world.setResidentMode("tactile-recovery");
   world.setPeerMode("tactile-recovery");
+  world.setActorSidePreference("resident", 1);
+  world.setActorSidePreference("peer", -1);
   if (kind === "pressure") {
     world.setPeerMass(30);
     world.setPeerEnabled(true);
@@ -495,10 +502,19 @@ function loadFixture(kind) {
     fixtureFeedback.textContent =
       "Side-contact: slow drive against a lateral surface. Compare " +
       "any-touch vs forward-contact mode; Reset world between trials.";
+  } else if (kind === "short") {
+    world.setResidentMode("lateral-maneuver");
+    world.reset();
+    world.authorRect({ kind: "wall", cx: 16.8, cy: 11.4,
+      width: 0.6, height: 1.0 });
+    fixtureFeedback.textContent =
+      "Finite lateral response: short wall at x=16.8. Compare directional " +
+      "reversal with finite side-stepping and try longer walls, body sizes, and side bias.";
   } else {
     throw new Error("unrecognized experiment fixture");
   }
   residentModeSelect.value = world.residentMode;
+  residentSideSelect.value = String(world.residentSidePreference);
   peerModeSelect.value = world.peerMode;
   syncResidentProfileFields(world.residentProfile);
   peerMassField.value = String(world.peerMass);
@@ -517,6 +533,8 @@ document.querySelector("#fixture-pressure-chain").addEventListener(
   "click", () => loadFixture("pressure"));
 document.querySelector("#fixture-side-touch").addEventListener(
   "click", () => loadFixture("side"));
+document.querySelector("#fixture-short-block").addEventListener(
+  "click", () => loadFixture("short"));
 
 function drawStaticRect(item, selected) {
   const p = worldToScreen({ x: item.cx, y: item.cy });
@@ -801,7 +819,9 @@ function render() {
 
   residentStatus.textContent =
     "local state: " + snapshot.residentControl.state +
-    " · local travel " + snapshot.residentControl.estimatedX.toFixed(2) + "m" +
+    " · local travel " + snapshot.residentControl.estimatedX.toFixed(2) +
+      "," + snapshot.residentControl.estimatedY.toFixed(2) + "m" +
+    " · lateral attempts " + snapshot.residentControl.lateralAttempts +
     " · obstruction evidence " + snapshot.residentControl.blockedTicks + "/12 steps" +
     " · recovery count " + snapshot.residentControl.recoveries +
     (snapshot.residentControl.lastTransition ?
