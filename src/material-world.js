@@ -82,6 +82,9 @@ export class MaterialWorld {
     this.entities = new Map();
     this.colliderLabels = new Map();
     this.residentDirection = 1;
+    // This probe preserves two selectable, explicitly authored low-level
+    // control laws. Neither one is autonomous cognition or a world planner.
+    this.residentMode = "tactile-recovery";
     this.reset();
   }
 
@@ -99,6 +102,10 @@ export class MaterialWorld {
     this.lastCausalObservations.clear();
     this.spawnSerial = 0;
     this.residentDirection = 1;
+    this.residentControl = {
+      tick: 0, blockedTicks: 0, recoveryTicks: 0, recoveries: 0,
+      state: "cruise", lastTransition: null
+    };
 
     this.#buildStaticWorld();
     this.#createPlayer();
@@ -436,15 +443,64 @@ export class MaterialWorld {
     return impulse;
   }
 
+  setResidentMode(mode) {
+    if (mode !== "baseline" && mode !== "tactile-recovery") {
+      throw new RangeError("resident mode must be baseline or tactile-recovery");
+    }
+    this.residentMode = mode;
+    this.residentControl.blockedTicks = 0;
+    this.residentControl.recoveryTicks = 0;
+    this.residentControl.state = "cruise";
+    this.residentControl.lastTransition = null;
+  }
+
   #stepResident() {
     const entity = this.entities.get("resident");
+    const ctl = this.residentControl;
+    ctl.tick += 1;
+    const previous = this.lastCausalObservations.get("resident");
+
+    // Locally testable evidence, not a map/obstacle-label oracle:
+    // commanded effort, realized progress and bare tactile contact.
+    // A contact alone is not proof of blockage; a stationary motorless
+    // actor must not be misclassified as blocked.
+    if (this.residentMode === "tactile-recovery" && ctl.recoveryTicks === 0) {
+      const driven = previous && Math.hypot(
+        previous.motorImpulse.x, previous.motorImpulse.y
+      ) > 0.01;
+      const resistance = previous && previous.contacts.length > 0 &&
+        previous.progressAlongIntent !== null &&
+        previous.progressAlongIntent < entity.maxSpeed * 0.12;
+      ctl.blockedTicks = driven && resistance ? ctl.blockedTicks + 1 : 0;
+      if (ctl.blockedTicks >= 12) {
+        const formerDirection = this.residentDirection;
+        this.residentDirection = -formerDirection;
+        ctl.recoveryTicks = 58;
+        ctl.blockedTicks = 0;
+        ctl.recoveries += 1;
+        ctl.lastTransition = {
+          tick: ctl.tick,
+          reason: "sustained contact + low realized progress + motor effort",
+          fromDirection: formerDirection,
+          toDirection: this.residentDirection
+        };
+      }
+    }
+
     const p = entity.body.translation();
-    if (p.x > 20.7) this.residentDirection = -1;
-    if (p.x < 13.2) this.residentDirection = 1;
+    // The existing lane endpoints are fixture policy, not discovered
+    // knowledge. Recovery suppresses these endpoints temporarily.
+    if (ctl.recoveryTicks === 0) {
+      if (p.x > 20.7) this.residentDirection = -1;
+      if (p.x < 13.2) this.residentDirection = 1;
+    }
+    ctl.state = ctl.recoveryTicks > 0 ? "backoff" :
+      ctl.blockedTicks > 0 ? "contact-pressure" : "cruise";
     const intendedVelocity = { x: entity.maxSpeed * this.residentDirection, y: 0 };
     const motorImpulse = this.#applyMotor(
       entity, intendedVelocity, entity.acceleration, entity.braking
     );
+    if (ctl.recoveryTicks > 0) ctl.recoveryTicks -= 1;
     return { intendedVelocity, motorImpulse };
   }
 
@@ -590,6 +646,7 @@ export class MaterialWorld {
       entities,
       selectedId: this.selectedId,
       profile: { ...this.profile },
+      residentControl: { mode: this.residentMode, ...this.residentControl },
       authoredCount: this.authoredShapes.length,
       grip: this.grip ? {
         entityId: this.grip.entityId,
@@ -615,6 +672,8 @@ export class MaterialWorld {
       speed: Math.hypot(v.x, v.y),
       contacts: this.contactsFor(entity.id),
       observedMotor: this.lastCausalObservations.get(entity.id) ?? null,
+      localControl: entity.kind === "resident" ?
+        { mode: this.residentMode, ...this.residentControl } : null,
       grabbable: entity.grabbable
     };
   }
