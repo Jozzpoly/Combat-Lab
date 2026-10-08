@@ -1526,6 +1526,70 @@ await observation("contact-candidate-versus-solved-manifold-timing", world => {
     "; do not call broad-phase candidates physical collision";
 });
 
+await trial("long-running-perturbed-world-rebuilds-deterministically", world => {
+  const repeat = () => {
+    world.clearAuthored();
+    world.setPeerEnabled(true);
+    world.setBraceEnabled(true);
+    world.setPeerMass(70);
+    world.setBraceProfile({ mass: 120, braking: 30 });
+    world.setResidentProfile(DEFAULT_RESIDENT_PROFILE);
+    world.setResidentMode("directional-recovery");
+    world.reset();
+    let contactSamples = 0;
+    for (let tick = 1; tick <= 1000; tick++) {
+      if (tick === 100) world.authorRect({ kind: "object", cx: 17.0, cy: 11.4,
+        width: 0.45, height: 0.45, mass: 12 });
+      if (tick === 200) world.setBraceProfile({ mass: 240, braking: 0 });
+      if (tick === 350) world.setBraceEnabled(false);
+      if (tick === 420) world.setBraceEnabled(true);
+      if (tick === 550) world.authorRect({ kind: "wall", cx: 16.8, cy: 11.4,
+        width: 0.8, height: 2.5 });
+      if (tick === 620) assert(world.undoAuthored(), "cannot remove live wall");
+      if (tick === 700) assert(world.undoAuthored(), "cannot remove live object");
+      if (tick === 750) world.setPeerMass(15);
+      if (tick === 900) world.setBraceProfile({ mass: 240, braking: 60 });
+      world.step(still);
+      if (tick % 20 === 0) {
+        finite(world, "long perturbation tick " + tick);
+        assert(world.interventionEvents.length <= 24,
+          "research workbench exceeded bounded event history");
+        const local = world.residentSense;
+        assert(Object.keys(local).sort().join(",") ===
+          "deltaX,forwardTouch,motorEffort,progressAlongIntent,touch",
+          "World/other-actor truth leaked into prolonged local sensing");
+      }
+      if (world.lastCausalObservations.get("resident").contacts.length)
+        contactSamples++;
+    }
+    assert(world.physicsTick === 1000 &&
+      world.snapshot().entities.length === 7 &&
+      world.authoredShapes.length === 0,
+      "long-run authored edits left hidden matter or lost actual bodies");
+    return {
+      state: world.snapshot().entities.map(entity => [
+        entity.id, entity.position.x, entity.position.y,
+        entity.velocity.x, entity.velocity.y, entity.rotation
+      ]),
+      contactSamples
+    };
+  };
+  const one = repeat(), two = repeat();
+  assert(one.state.length === two.state.length, "repeat lost a body");
+  let worst = 0;
+  for (let i = 0; i < one.state.length; i++) {
+    assert(one.state[i][0] === two.state[i][0], "repeat changed actor identities");
+    for (let j = 1; j < 6; j++) {
+      worst = Math.max(worst, Math.abs(one.state[i][j] - two.state[i][j]));
+    }
+  }
+  assert(worst < 1e-6,
+    "same 1000-step intervention schedule yielded non-repeatable afterstate: " + worst);
+  return "1000 steps×2, 3 material actors, live insertion/deletion and body edits;" +
+    " worst position/velocity divergence=" + worst.toExponential(1) +
+    ", resident contact samples=" + one.contactSamples;
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
