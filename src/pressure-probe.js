@@ -176,6 +176,51 @@ await trial("authoring-rejects-degenerate-not-signed-coordinates", (world) => {
   return "signed positions allowed; unsafe dimensions rejected without mutation";
 });
 
+await trial("replay-from-reset-reproduces-world", (world) => {
+  const run = () => {
+    for (let i = 0; i < 130; i++) {
+      const input = i < 35 ? { x: 1, y: 0 } :
+        i < 70 ? { x: 0, y: -1 } :
+        i < 105 ? { x: -1, y: 0 } : still;
+      world.step(input);
+    }
+    return world.snapshot().entities.map((e) => ({
+      id: e.id, x: e.position.x, y: e.position.y,
+      vx: e.velocity.x, vy: e.velocity.y, angle: e.rotation
+    }));
+  };
+  const first = run();
+  world.reset();
+  const second = run();
+  assert(first.length === second.length, "replay lost bodies");
+  let worst = 0;
+  for (let i = 0; i < first.length; i++) {
+    assert(first[i].id === second[i].id, "replay reordered entities");
+    for (const key of ["x", "y", "vx", "vy", "angle"]) {
+      worst = Math.max(worst, Math.abs(first[i][key] - second[i][key]));
+    }
+  }
+  assert(worst < 1e-7, "same initial scene and inputs diverged: " + worst);
+  return "max state divergence=" + worst.toExponential(1);
+});
+
+await trial("body-extremes-are-not-silently-normalized", (world) => {
+  world.setPlayerProfile({ ...world.profile, radius: 0.08, mass: 0.5,
+    maxSpeed: 15, acceleration: 120, braking: 300 });
+  assert(world.profile.radius === 0.08 && world.profile.mass === 0.5 &&
+    world.profile.maxSpeed === 15, "small fast body silently normalized");
+  for (let i = 0; i < 75; i++) world.step(right);
+  finite(world, "small-fast body");
+  world.reset();
+  world.setPlayerProfile({ ...world.profile, radius: 2.5, mass: 5000,
+    maxSpeed: 0, acceleration: 0, braking: 0 });
+  assert(world.profile.radius === 2.5 && world.profile.mass === 5000,
+    "large heavy body silently normalized");
+  for (let i = 0; i < 40; i++) world.step(still);
+  finite(world, "large-stationary body");
+  return "small-fast and large-heavy bodies remain physically represented";
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
