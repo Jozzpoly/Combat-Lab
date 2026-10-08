@@ -114,11 +114,11 @@ window.addEventListener("keydown", (event) => {
       event.target instanceof HTMLButtonElement) return;
   if (event.code === "Space") {
     event.preventDefault();
-    setSimulationPaused(!simulationPaused);
+    if (!event.repeat) setSimulationPaused(!simulationPaused);
     return;
   }
   if (event.code === "Period") {
-    if (simulationPaused) {
+    if (simulationPaused && !event.repeat) {
       event.preventDefault();
       stepButton.click();
     }
