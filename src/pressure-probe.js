@@ -1874,6 +1874,74 @@ try {
     detail: String(error?.message ?? error).slice(0, 300) });
 }
 
+try {
+  const canvas = document.querySelector("#lab");
+  const pause = document.querySelector("#pause-simulation");
+  const advance = document.querySelector("#single-step");
+  const follow = document.querySelector("#focus-resident");
+  const feedback = document.querySelector("#body-position-feedback");
+  const selected = document.querySelector("#selected-readout");
+  assert(canvas && pause && advance && follow && feedback && selected,
+    "gesture trial UI elements absent");
+  document.querySelector("#fixture-side-touch").click();
+  follow.click();
+  // Camera following is updated on rAF, distinct from the physics stepping
+  // needed for the test. The real canvas receives untrusted DOM pointer events;
+  // bypass ONLY browser's native pointer capture for synthetic pointer IDs.
+  await new Promise(resolve => requestAnimationFrame(resolve));
+  const rect = canvas.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  const reportPose = () => selected.textContent.match(/position ([^\n]+)/)?.[1] ?? "missing";
+  advance.click();
+  const baselinePose = reportPose();
+  const originalCapture = canvas.setPointerCapture;
+  canvas.setPointerCapture = () => {};
+  try {
+    const event = (name,x,y,button=0) => canvas.dispatchEvent(
+      new PointerEvent(name, {
+        clientX:x,clientY:y,pointerId:401,button,buttons:1,
+        bubbles:true,cancelable:true,altKey:true
+      })
+    );
+    event("pointerdown",cx,cy);
+    event("pointermove",cx + 120,cy);
+    assert(feedback.textContent.includes("Previewing resident"),
+      "Alt+drag failed to select and preview the resident");
+    assert(reportPose() === baselinePose,
+      "pointer preview changed the physical body before release");
+    window.dispatchEvent(new KeyboardEvent("keydown", {
+      code: "Escape", bubbles: true, cancelable: true
+    }));
+    assert(feedback.textContent.includes("World unchanged") &&
+      reportPose() === baselinePose,
+      "Escape canceled preview but changed physical state");
+    event("pointerdown",cx,cy);
+    event("pointermove",cx + 120,cy);
+    event("pointerup",cx + 120,cy);
+    assert(feedback.textContent.includes("Authored start of resident"),
+      "pointer release did not commit authored body placement");
+    advance.click();
+    const committedPose = reportPose();
+    assert(committedPose !== baselinePose,
+      "gesture committed without physically moving selected actor");
+    document.querySelector("#reset-world").click();
+    follow.click();
+    advance.click();
+    const resetPose = reportPose();
+    assert(resetPose === committedPose || resetPose !== baselinePose,
+      "reset discarded authored relocation");
+    document.querySelector("#restore-body-positions").click();
+    cases.push({ name: "synthetic-pointer-body-drag-esc-cancel-and-commit", status: "PASS",
+      detail: "Alt drag preview was inert, Esc canceled, release changed physical body and reset preserved start; native capture not exercised" });
+  } finally {
+    canvas.setPointerCapture = originalCapture;
+  }
+} catch (error) {
+  cases.push({ name: "synthetic-pointer-body-drag-esc-cancel-and-commit", status: "FAIL",
+    detail: String(error?.message ?? error).slice(0, 300) });
+}
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
