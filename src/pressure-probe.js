@@ -511,6 +511,49 @@ await trial("same-physics-private-touch-ablation-first-divergence", (world) => {
     "; sensory cut prevented recovery without altering World contact";
 });
 
+await trial("wall-inserted-during-live-simulation-changes-only-subsequent-response", (world) => {
+  const run = (mode) => {
+    world.clearAuthored();
+    world.reset();
+    world.setResidentMode(mode);
+    const frames = [];
+    let wallId = null;
+    for (let tick = 1; tick <= 155; tick++) {
+      if (tick === 22) {
+        wallId = world.authorRect({ kind: "wall", cx: 16.8, cy: 11.4,
+          width: 0.6, height: 2.5 });
+      }
+      world.step(still);
+      const body = at(world, "resident");
+      const trace = world.lastCausalObservations.get("resident");
+      frames.push({
+        tick, x: body.position.x, vx: body.velocity.x,
+        motor: trace.intendedVelocity.x, touch: wallId ?
+          trace.contacts.includes(wallId) : false
+      });
+    }
+    return frames;
+  };
+  const fixed = run("baseline");
+  const reactive = run("tactile-recovery");
+  const firstTouch = fixed.find((f) => f.touch)?.tick;
+  const firstMotor = fixed.find((f, i) => f.motor !== reactive[i].motor)?.tick;
+  const firstBody = fixed.find((f, i) =>
+    Math.abs(f.x - reactive[i].x) > 1e-7 ||
+    Math.abs(f.vx - reactive[i].vx) > 1e-7)?.tick;
+  assert(firstTouch && firstTouch >= 22 && firstMotor && firstBody,
+    "no lawful contact or resulting behavioral divergence after live edit");
+  assert(firstMotor > firstTouch && firstBody >= firstMotor,
+    "intervention response diverged before receiving tactile evidence");
+  for (let i = 0; i < 21; i++) {
+    assert(fixed[i].x === reactive[i].x && fixed[i].motor === reactive[i].motor,
+      "control mode altered the world before owner live intervention");
+  }
+  return "live wall placed t=22; first touch t=" + firstTouch +
+    "; motor divergence t=" + firstMotor +
+    "; body divergence t=" + firstBody;
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
