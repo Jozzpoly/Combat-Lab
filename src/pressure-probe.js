@@ -610,6 +610,30 @@ await trial("removing-a-live-wall-reopens-the-material-lane", (world) => {
     "m; initial histories identical";
 });
 
+// Exercise the real DOM control bindings as well as the physics model,
+// without adding a third (flaky/expensive) headless-Chrome process.
+try {
+  const pause = document.querySelector("#pause-simulation");
+  const single = document.querySelector("#single-step");
+  assert(pause && single, "pause/step controls absent from actual HTML");
+  assert(document.body.dataset.simulationPaused === "false" && single.disabled,
+    "simulation initially paused or step available while running");
+  const before = Number(document.body.dataset.physicsSteps || "0");
+  pause.click();
+  assert(document.body.dataset.simulationPaused === "true" && !single.disabled,
+    "pause button failed to freeze simulation mode");
+  single.click();
+  const after = Number(document.body.dataset.physicsSteps || "0");
+  assert(after === before + 1, "single-step did not advance exactly one physics tick");
+  pause.click();
+  assert(document.body.dataset.simulationPaused === "false" && single.disabled,
+    "resume failed or single-step remained enabled");
+  cases.push({ name: "live-ui-pause-and-exact-step", status: "PASS",
+    detail: "DOM buttons paused, advanced one Rapier tick and resumed" });
+} catch (error) {
+  cases.push({ name: "live-ui-pause-and-exact-step", status: "FAIL",
+    detail: String(error?.message ?? error).slice(0, 300) });
+}
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
