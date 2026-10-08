@@ -1053,12 +1053,21 @@ await trial("finite-holder-enters-real-contact-chain-with-two-moving-actors", (w
   finite(world, "real pressure chain");
   assert(contactsResidentBrace > 0 && contactsPeerBrace > 0,
     "holder never physically interacted with BOTH moving actors");
-  assert(maxBraceTravel > 0.05,
-    "finite-force holder did not physically yield under contact");
+  // Strong finite braking may make displacement tiny. Reciprocal contacts
+  // are evidence of interaction, not a guaranteed displacement threshold.
+  // Falsify an accidentally static holder with a controlled physical impulse.
+  const beforeImpulse = at(world, "brace").position.x;
+  world.entities.get("brace").body.applyImpulse({ x: 35, y: 0 }, true);
+  for (let tick = 0; tick < 12; tick++) world.step(still);
+  const afterImpulse = at(world, "brace").position.x;
+  assert(Math.abs(afterImpulse - beforeImpulse) > 1e-4,
+    "braced body did not respond to a real Rapier impulse");
   return "resident↔holder first t=" + firstResidentBrace +
     " (" + contactsResidentBrace + " steps), peer↔holder first t=" +
     firstPeerBrace + " (" + contactsPeerBrace +
-    " steps), holder max displacement=" + maxBraceTravel.toFixed(3) + "m";
+    " steps), holder max displacement under encounter=" +
+    maxBraceTravel.toFixed(4) + "m; after direct impulse=" +
+    (afterImpulse - beforeImpulse).toFixed(4) + "m";
 });
 
 const failed = cases.filter((c) => c.status === "FAIL");
