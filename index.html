@@ -62,6 +62,17 @@
     </aside>
   </main>
 
+  <script>
+    // Fail visibly rather than leaving a forever-initializing laboratory.
+    function reportRuntimeFailure(error) {
+      const message = String(error?.message ?? error ?? "unknown runtime failure").slice(0, 600);
+      document.body.dataset.combatLabError = message;
+      const summary = document.querySelector("#runtime-summary");
+      if (summary) summary.textContent = "Runtime error: " + message;
+    }
+    window.addEventListener("error", (event) => reportRuntimeFailure(event.error ?? event.message));
+    window.addEventListener("unhandledrejection", (event) => reportRuntimeFailure(event.reason));
+  </script>
   <script type="module" src="./src/main.js"></script>
 </body>
 </html>
