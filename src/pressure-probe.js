@@ -560,6 +560,56 @@ await trial("wall-inserted-during-live-simulation-changes-only-subsequent-respon
     "; body divergence t=" + firstBody;
 });
 
+await trial("removing-a-live-wall-reopens-the-material-lane", (world) => {
+  const run = (removeAtTick) => {
+    world.clearAuthored();
+    world.reset();
+    world.setResidentMode("tactile-recovery");
+    const id = world.authorRect({ kind: "wall", cx: 16.8, cy: 11.4,
+      width: 0.6, height: 2.5 });
+    const samples = [];
+    for (let tick = 1; tick <= 350; tick++) {
+      if (tick === removeAtTick) {
+        assert(world.undoAuthored(), "could not remove authored obstruction during live run");
+        assert(!world.snapshot().staticRects.some((s) => s.id === id),
+          "world retained removed wall collider");
+      }
+      world.step(still);
+      const resident = at(world, "resident");
+      const trace = world.lastCausalObservations.get("resident");
+      samples.push({
+        tick, x: resident.position.x, motor: trace.intendedVelocity.x,
+        touchedWall: trace.contacts.includes(id),
+        recoveries: world.residentControl.recoveries
+      });
+    }
+    finite(world, "live wall removal");
+    return samples;
+  };
+  const held = run(Infinity);
+  const removed = run(75);
+  for (let i = 0; i < 74; i++) {
+    assert(held[i].x === removed[i].x && held[i].motor === removed[i].motor,
+      "removal counterfactual diverged before the actual intervention");
+  }
+  assert(held.some((s) => s.touchedWall) && removed.some((s) => s.touchedWall),
+    "comparison lacked the same initial wall-contact history");
+  assert(removed.slice(74).every((s) => !s.touchedWall),
+    "removed wall persisted as contact or ghost collider");
+  const firstWorldDifference = held.find((s, i) => Math.abs(s.x - removed[i].x) > 1e-7 ||
+    Math.abs(s.motor - removed[i].motor) > 1e-7)?.tick;
+  assert(firstWorldDifference >= 75,
+    "changed outcome precedes material removal");
+  const maxRightAfterRemoval = Math.max(...removed.slice(74).map((s) => s.x));
+  assert(maxRightAfterRemoval > 17.3,
+    "material lane was reopened but resident never advanced beyond former wall: " +
+      maxRightAfterRemoval.toFixed(2));
+  return "remove at t=75; first changed trajectory/motor t=" + firstWorldDifference +
+    "; max x after removal=" + maxRightAfterRemoval.toFixed(2) +
+    "m; max x with wall=" + Math.max(...held.map((s) => s.x)).toFixed(2) +
+    "m; initial histories identical";
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
