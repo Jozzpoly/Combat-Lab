@@ -15,6 +15,12 @@ const togglePeer = document.querySelector("#toggle-peer");
 const focusPeer = document.querySelector("#focus-peer");
 const peerMassField = document.querySelector("#peer-mass");
 const peerMassFeedback = document.querySelector("#peer-mass-feedback");
+const toggleBrace = document.querySelector("#toggle-brace");
+const focusBrace = document.querySelector("#focus-brace");
+const braceMassInput = document.querySelector("#brace-mass");
+const braceBrakingInput = document.querySelector("#brace-braking");
+const braceFeedback = document.querySelector("#brace-profile-feedback");
+const braceStatus = document.querySelector("#brace-status");
 const residentProfileFeedback = document.querySelector("#resident-profile-feedback");
 const interventionTimeline = document.querySelector("#intervention-timeline");
 
@@ -317,6 +323,44 @@ focusPeer.addEventListener("click", () => {
   camera.follow = true;
   world.selectedId = "peer";
 });
+function refreshBraceControls() {
+  toggleBrace.textContent = world.braceEnabled ?
+    "Remove holding body" : "Add holding body";
+  toggleBrace.setAttribute("aria-pressed", String(world.braceEnabled));
+  focusBrace.disabled = !world.braceEnabled;
+  if (!world.braceEnabled && camera.followTarget === "brace") {
+    camera.followTarget = world.peerEnabled ? "peer" : "resident";
+    camera.follow = true;
+  }
+}
+toggleBrace.addEventListener("click", () => {
+  world.setBraceEnabled(!world.braceEnabled);
+  refreshBraceControls();
+});
+focusBrace.addEventListener("click", () => {
+  if (!world.braceEnabled) return;
+  camera.follow = true;
+  camera.followTarget = "brace";
+  world.selectedId = "brace";
+});
+function applyBraceFields() {
+  try {
+    world.setBraceProfile({
+      mass: Number(braceMassInput.value),
+      braking: Number(braceBrakingInput.value)
+    });
+    braceMassInput.value = String(world.braceMass);
+    braceBrakingInput.value = String(world.braceBraking);
+    braceFeedback.textContent = "";
+  } catch (error) {
+    braceMassInput.value = String(world.braceMass);
+    braceBrakingInput.value = String(world.braceBraking);
+    braceFeedback.textContent = "Not applied: " + String(error?.message ?? error);
+  }
+}
+braceMassInput.addEventListener("change", applyBraceFields);
+braceBrakingInput.addEventListener("change", applyBraceFields);
+refreshBraceControls();
 peerMassField.addEventListener("change", () => {
   try {
     world.setPeerMass(Number(peerMassField.value));
@@ -532,6 +576,11 @@ function render() {
   interventionTimeline.textContent = snapshot.interventionEvents.slice(-10)
     .map((event) => "t" + event.tick + " " + event.type + " — " + event.note)
     .join("\n") || "No research events in current run.";
+
+  braceStatus.textContent = snapshot.braceEnabled ?
+    "Holder: " + snapshot.braceMass + " kg, finite braking " +
+    snapshot.braceBraking + " m/s² · not a static obstacle" :
+    "Third role disabled. Existing two-body control remains available.";
 
   peerStatus.textContent = snapshot.peerControl ?
     "Second body: " + snapshot.peerMass + " kg, counter-moving · local state " +
