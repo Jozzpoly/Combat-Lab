@@ -479,34 +479,40 @@ await trial("same-physics-private-touch-ablation-first-divergence", (world) => {
       world.step(still);
       const obs = world.lastCausalObservations.get("resident");
       const body = at(world, "resident");
-      frames.push({
-        tick, x: body.position.x, vx: body.velocity.x,
-        motor: obs.intendedVelocity.x, worldContact: obs.contacts.includes(wallId),
-        recoveries: world.residentControl.recoveries
-      });
       const sensor = world.residentSense;
       assert(Object.keys(sensor).sort().join(",") ===
         "motorEffort,progressAlongIntent,touch",
         "local controller's sensory boundary gained World identity or geometry");
       if (ablateTouch) sensor.touch = false;
+      frames.push({
+        tick, x: body.position.x, vx: body.velocity.x,
+        motor: obs.intendedVelocity.x, worldContact: obs.contacts.includes(wallId),
+        privateTouch: sensor.touch,
+        recoveries: world.residentControl.recoveries
+      });
     }
     return frames;
   };
   const normal = run(false);
   const cut = run(true);
   const firstTouch = normal.find((f) => f.worldContact)?.tick;
+  const firstPrivate = normal.find((f, i) => f.privateTouch !== cut[i].privateTouch)?.tick;
   const firstMotor = normal.find((f, i) => f.motor !== cut[i].motor)?.tick;
   const firstBody = normal.find((f, i) =>
     Math.abs(f.x - cut[i].x) > 1e-7 || Math.abs(f.vx - cut[i].vx) > 1e-7)?.tick;
-  assert(firstTouch && firstMotor && firstBody, "sensory ablation had no bounded causal contrast");
-  assert(firstMotor > firstTouch && firstBody >= firstMotor,
-    "motor or material outcome diverged before lawful touch evidence");
+  assert(firstTouch && firstPrivate && firstMotor && firstBody,
+    "sensory ablation had no bounded causal contrast");
+  assert(firstPrivate === firstTouch &&
+    firstMotor > firstPrivate && firstBody >= firstMotor,
+    "private sensory / motor / material first-divergence order invalid");
   assert(normal.some((f) => f.recoveries > 0), "intact actor did not react");
   assert(cut.every((f) => f.recoveries === 0),
     "local touch ablation failed; unexpected world-authority shortcut");
   assert(normal[firstTouch - 1].worldContact && cut[firstTouch - 1].worldContact,
     "World contact was modified by private sensory intervention");
-  return "world touch t=" + firstTouch + ", first motor difference t=" + firstMotor +
+  return "world touch t=" + firstTouch +
+    ", private evidence divergence t=" + firstPrivate +
+    ", first motor difference t=" + firstMotor +
     ", first material difference t=" + firstBody +
     "; sensory cut prevented recovery without altering World contact";
 });
