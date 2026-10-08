@@ -25,6 +25,15 @@
       </header>
 
       <section>
+        <h2>Simulation control</h2>
+        <div class="button-row">
+          <button id="pause-simulation" aria-pressed="false">Pause simulation (Space)</button>
+          <button id="single-step" disabled>Advance 1 physical step (.)</button>
+        </div>
+        <p id="simulation-control-status" class="muted" aria-live="polite">Running. You can place and remove matter while paused, then observe the consequences.</p>
+      </section>
+
+      <section>
         <h2>Embodiment</h2>
         <div class="fields">
           <label>Envelope <input data-profile="radius" type="number" step="0.05" value="0.45"></label>
