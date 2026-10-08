@@ -2077,6 +2077,68 @@ try {
     detail:String(error?.message??error).slice(0,300)});
 }
 
+await observation("different-physical-envelopes-change-side-maneuver-effectivity", world => {
+  const values=[0.3,0.56,1.2];
+  const outputs=[];
+  for(const radius of values){
+    world.clearAuthored();
+    world.setResidentProfile({...DEFAULT_RESIDENT_PROFILE,radius});
+    world.setResidentMode("lateral-maneuver");
+    world.setActorSidePreference("resident",1);
+    world.reset();
+    world.authorRect({kind:"wall",cx:16.8,cy:11.4,width:.6,height:1});
+    let firstCross=null,ySpan=0,maxX=-Infinity;
+    for(let tick=1;tick<=300;tick++){
+      world.step(still);
+      const p=at(world,"resident").position;
+      if(firstCross===null&&p.x>17.5)firstCross=tick;
+      ySpan=Math.max(ySpan,Math.abs(p.y-11.4));
+      maxX=Math.max(maxX,p.x);
+    }
+    finite(world,"different physical envelope");
+    outputs.push("radius "+radius.toFixed(2)+"m"+
+      ": crossed="+String(firstCross)+", xMax="+maxX.toFixed(2)+
+      ", sideways="+ySpan.toFixed(2)+"m"+
+      ", attempts="+world.residentControl.lateralAttempts);
+  }
+  return outputs.join("; ")+"; actor-relative outcome, not a general maneuver guarantee";
+});
+
+await observation("moveable-matter-and-fixed-wall-require-different-reactions", world => {
+  const scenarios=[
+    {kind:"wall",mass:0,label:"immovable"},
+    {kind:"object",mass:10,label:"light"},
+    {kind:"object",mass:450,label:"heavy"}
+  ];
+  const out=[];
+  for(const sc of scenarios){
+    world.clearAuthored();
+    world.setResidentProfile(DEFAULT_RESIDENT_PROFILE);
+    world.setResidentMode("lateral-maneuver");
+    world.setActorSidePreference("resident",1);
+    world.reset();
+    const id=world.authorRect({
+      kind:sc.kind,cx:16.8,cy:11.4,width:.6,height:1,
+      mass:sc.kind==="object"?sc.mass:0
+    });
+    let firstTouch=null,maxX=-Infinity,boxTravel=0;
+    for(let tick=1;tick<=250;tick++){
+      world.step(still);
+      const obs=world.lastCausalObservations.get("resident");
+      if(firstTouch===null&&obs.contacts.includes(id))firstTouch=tick;
+      maxX=Math.max(maxX,at(world,"resident").position.x);
+      if(sc.kind==="object")boxTravel=Math.max(boxTravel,
+        Math.abs(at(world,id).position.x-16.8));
+    }
+    finite(world,"material body affordance");
+    out.push(sc.label+": first touch="+String(firstTouch)+
+      ", side attempts="+world.residentControl.lateralAttempts+
+      ", xMax="+maxX.toFixed(2)+
+      ", material shift="+boxTravel.toFixed(2)+"m");
+  }
+  return out.join("; ")+"; moving-body cases may create contact without sustained blockage";
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
