@@ -688,6 +688,42 @@ for (const actorMass of [72, 350]) {
   });
 }
 
+try {
+  const pause = document.querySelector("#pause-simulation");
+  const step = document.querySelector("#single-step");
+  const mass = document.querySelector('[data-resident-profile="mass"]');
+  const feedback = document.querySelector("#resident-profile-feedback");
+  const readout = document.querySelector("#selected-readout");
+  const reset = document.querySelector("#restore-resident-body");
+  assert(pause && step && mass && feedback && readout && reset,
+    "resident authoring UI bindings missing");
+  document.querySelector("#focus-resident").click();
+  pause.click();
+  assert(document.body.dataset.simulationPaused === "true",
+    "resident UI test could not pause real simulation");
+  mass.value = "350";
+  mass.dispatchEvent(new Event("change", { bubbles: true }));
+  step.click();
+  assert(readout.textContent.includes("resident") &&
+    readout.textContent.includes("mass 350.00"),
+    "resident mass UI did not change the real selected physical body");
+  mass.value = "-2";
+  mass.dispatchEvent(new Event("change", { bubbles: true }));
+  assert(mass.value === "350" && feedback.textContent.startsWith("Not applied:"),
+    "invalid physical edit did not visibly reject and restore accepted value");
+  reset.click();
+  step.click();
+  assert(readout.textContent.includes("mass 72.00"),
+    "restore resident defaults failed to reconstruct physical selected body");
+  pause.click();
+  assert(document.body.dataset.simulationPaused === "false",
+    "resident UI probe left simulation paused");
+  cases.push({ name: "live-ui-resident-authoring-and-rejection", status: "PASS",
+    detail: "selected physical body changed to 350kg; invalid -2kg visibly rejected; default 72kg restored" });
+} catch (error) {
+  cases.push({ name: "live-ui-resident-authoring-and-rejection", status: "FAIL",
+    detail: String(error?.message ?? error).slice(0, 300) });
+}
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
