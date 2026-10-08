@@ -25,6 +25,7 @@ const world = await MaterialWorld.create();
 let accumulator = 0;
 let previous = performance.now();
 let lastStep = { desiredVelocity: { x: 0, y: 0 }, stepMs: 0 };
+let completedPhysicsSteps = 0;
 
 function resize() {
   const rect = canvas.getBoundingClientRect();
@@ -214,6 +215,7 @@ function render() {
   ctx.fillRect(0, 0, size.width, size.height);
 
   const snapshot = world.snapshot();
+  document.body.dataset.physicsSteps = String(completedPhysicsSteps);
 
   ctx.save();
   ctx.strokeStyle = "rgba(255,255,255,.035)";
@@ -280,6 +282,7 @@ function frame(now) {
 
   while (accumulator >= FIXED_DT) {
     lastStep = world.step(movementInput());
+    completedPhysicsSteps += 1;
     accumulator -= FIXED_DT;
   }
 
