@@ -18,14 +18,12 @@ const finite = (world, scope) => {
 };
 async function trial(name, fn) {
   let world;
-  const begin = performance.now();
   try {
     world = await MaterialWorld.create();
     const detail = await fn(world);
-    cases.push({ name, status: "PASS", detail: detail ?? "", ms: +(performance.now() - begin).toFixed(1) });
+    cases.push({ name, status: "PASS", detail: detail ?? "" });
   } catch (error) {
-    cases.push({ name, status: "FAIL", detail: String(error?.message ?? error).slice(0, 300),
-      ms: +(performance.now() - begin).toFixed(1) });
+    cases.push({ name, status: "FAIL", detail: String(error?.message ?? error).slice(0, 300) });
   } finally {
     if (world?.world) world.world.free();
   }
@@ -96,15 +94,13 @@ await trial("contact-with-boundary", (world) => {
 await trial("deliberate-overlap-pressure-32", (world) => {
   for (let i = 0; i < 32; i++) world.spawnCrate(i % 3 === 0 ? "heavy" : "light");
   assert(world.snapshot().entities.length === 37, "objects lost before stepping");
-  let worstMs = 0;
   for (let i = 0; i < 100; i++) {
-    const result = world.step(i % 40 < 20 ? right : still);
-    worstMs = Math.max(worstMs, result.stepMs);
+    world.step(i % 40 < 20 ? right : still);
     if (i % 20 === 0) finite(world, "overlap tick " + i);
   }
   finite(world, "overlap final");
   assert(world.snapshot().entities.length === 37, "objects silently despawned");
-  return "37 bodies; max step " + worstMs.toFixed(1) + "ms (diagnostic only)";
+  return "37 bodies survived 100 steps; performance not measured under virtual time";
 });
 
 await trial("zero-motor-authority-is-authorable", (world) => {
@@ -229,6 +225,6 @@ document.body.dataset.pressureFailure = failed.map((c) => c.name + ": " + c.deta
 const node = document.createElement("pre");
 node.id = "pressure-report";
 node.hidden = true;
-node.textContent = cases.map((c) => c.status + " " + c.name + " — " + c.detail + " (" + c.ms + "ms)").join("\n");
+node.textContent = cases.map((c) => c.status + " " + c.name + " — " + c.detail).join("\n");
 document.body.append(node);
 console.log("Material Agency Yard pressure probe", cases);
