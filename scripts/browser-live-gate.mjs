@@ -64,4 +64,8 @@ if (state !== "pass") {
     "; failures=" + (failure ?? "not reported") +
     "; cases=" + (count ?? "unknown"));
 }
+const report = pressureHtml.match(/<pre[^>]*id="pressure-report"[^>]*>([\s\S]*?)<\/pre>/)?.[1];
+if (!report) throw new Error("pressure probe did not expose per-case evidence");
 console.log("Material Agency Yard live physics pressure PASS; cases=" + count);
+console.log(report.replaceAll("&amp;", "&").replaceAll("&quot;", '"')
+  .replaceAll("&lt;", "<").replaceAll("&gt;", ">"));
