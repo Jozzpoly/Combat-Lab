@@ -1154,6 +1154,86 @@ try {
   cases.push({ name: "live-ui-finite-holder-edit-and-remove", status: "FAIL",
     detail: String(error?.message ?? error).slice(0, 300) });
 }
+await trial("third-role-addition-only-alters-other-actors-after-actual-contact", (world) => {
+  const run = (withHolder) => {
+    world.setPeerMass(30);
+    world.setBraceProfile({ mass: 120, braking: 30 });
+    world.setPeerEnabled(true);
+    world.setBraceEnabled(withHolder);
+    world.reset();
+    const observations = [];
+    for (let tick = 1; tick <= 200; tick++) {
+      world.step(still);
+      const resident = at(world, "resident"), peer = at(world, "peer");
+      const residentTrace = world.lastCausalObservations.get("resident");
+      const peerTrace = world.lastCausalObservations.get("peer");
+      observations.push({
+        tick,
+        residentX: resident.position.x, residentVX: resident.velocity.x,
+        residentDemand: residentTrace.intendedVelocity.x,
+        peerX: peer.position.x, peerVX: peer.velocity.x,
+        peerDemand: peerTrace.intendedVelocity.x,
+        residentHolder: residentTrace.contacts.includes("brace"),
+        peerHolder: peerTrace.contacts.includes("brace")
+      });
+    }
+    finite(world, "third-role counterfactual");
+    return observations;
+  };
+  const no = run(false), yes = run(true);
+  const firstTouch = yes.find(x => x.residentHolder || x.peerHolder)?.tick;
+  let peerDifference = null, residentDifference = null;
+  for (let i = 0; i < no.length; i++) {
+    const a = no[i], b = yes[i];
+    if (peerDifference === null &&
+      (Math.abs(a.peerX - b.peerX) > 1e-7 ||
+       Math.abs(a.peerVX - b.peerVX) > 1e-7 ||
+       a.peerDemand !== b.peerDemand)) peerDifference = i + 1;
+    if (residentDifference === null &&
+      (Math.abs(a.residentX - b.residentX) > 1e-7 ||
+       Math.abs(a.residentVX - b.residentVX) > 1e-7 ||
+       a.residentDemand !== b.residentDemand)) residentDifference = i + 1;
+  }
+  assert(firstTouch && peerDifference && residentDifference,
+    "optional third role had no measured shared-world causal consequence");
+  assert(peerDifference >= firstTouch && residentDifference >= firstTouch,
+    "body divergence predates contact with new physical participant");
+  return "first holder contact t=" + firstTouch +
+    "; peer material/motor divergence t=" + peerDifference +
+    "; resident material/motor divergence t=" + residentDifference;
+});
+
+await observation("three-way-overlapping-contact-pressure-survey", world => {
+  world.setPeerMass(30);
+  world.setBraceProfile({ mass: 120, braking: 30 });
+  world.setPeerEnabled(true);
+  world.setBraceEnabled(true);
+  world.reset();
+  let threeBodyContactTicks = 0, maxLiveEdges = 0, peakOverlaps = 0;
+  let contactStart = null;
+  for (let tick = 1; tick <= 400; tick++) {
+    world.step(still);
+    const res = world.lastCausalObservations.get("resident").contacts;
+    const peer = world.lastCausalObservations.get("peer").contacts;
+    const holder = world.lastCausalObservations.get("brace").contacts;
+    const rh = res.includes("brace") && holder.includes("resident");
+    const hp = peer.includes("brace") && holder.includes("peer");
+    const rp = peer.includes("resident") && res.includes("peer");
+    const edges = Number(rh) + Number(hp) + Number(rp);
+    maxLiveEdges = Math.max(maxLiveEdges, edges);
+    if (edges >= 2) {
+      if (contactStart === null) contactStart = tick;
+      threeBodyContactTicks++;
+    }
+    peakOverlaps = Math.max(peakOverlaps, edges);
+  }
+  finite(world, "simultaneous contact survey");
+  return "shared 2+ simultaneous contact edges for " + threeBodyContactTicks +
+    " steps; first t=" + String(contactStart) +
+    "; max live physical edges=" + maxLiveEdges +
+    "; no crowd-level inference";
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
