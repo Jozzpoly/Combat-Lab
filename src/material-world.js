@@ -15,6 +15,14 @@ export const DEFAULT_PROFILE = Object.freeze({
   gripForce: 260
 });
 
+export const DEFAULT_RESIDENT_PROFILE = Object.freeze({
+  radius: 0.56,
+  mass: 72,
+  maxSpeed: 2.1,
+  acceleration: 7,
+  braking: 10
+});
+
 const COLORS = Object.freeze({
   player: "#73b7ff",
   resident: "#e08b5c",
@@ -68,6 +76,7 @@ export class MaterialWorld {
 
   constructor() {
     this.profile = { ...DEFAULT_PROFILE };
+    this.residentProfile = { ...DEFAULT_RESIDENT_PROFILE };
     // These are authored edits, distinct from runtime motion/afterstate.
     // Ordinary reset replays them; clear/undo deliberately change the authored scene.
     this.authoredShapes = [];
@@ -187,8 +196,8 @@ export class MaterialWorld {
         .setCcdEnabled(true)
     );
     const collider = this.world.createCollider(
-      RAPIER.ColliderDesc.ball(0.56)
-        .setMass(72)
+      RAPIER.ColliderDesc.ball(this.residentProfile.radius)
+        .setMass(this.residentProfile.mass)
         .setFriction(0.55)
         .setRestitution(0),
       body
@@ -198,16 +207,16 @@ export class MaterialWorld {
       label: "simple pressure body",
       kind: "resident",
       shape: "circle",
-      radius: 0.56,
-      mass: 72,
-      maxSpeed: 2.1,
-      acceleration: 7,
-      braking: 10,
+      radius: this.residentProfile.radius,
+      mass: this.residentProfile.mass,
+      maxSpeed: this.residentProfile.maxSpeed,
+      acceleration: this.residentProfile.acceleration,
+      braking: this.residentProfile.braking,
       body,
       collider,
       color: COLORS.resident,
       grabbable: false,
-      pickRadius: 0.72
+      pickRadius: this.residentProfile.radius + 0.16
     };
     this.entities.set(entity.id, entity);
     this.colliderLabels.set(collider.handle, entity.id);
@@ -374,6 +383,33 @@ export class MaterialWorld {
     );
     this.colliderLabels.set(player.collider.handle, player.id);
     player.body.wakeUp();
+  }
+
+  setResidentProfile(next) {
+    const accepted = {};
+    for (const key of Object.keys(DEFAULT_RESIDENT_PROFILE)) {
+      accepted[key] = authoredNumber(next[key], "resident " + key,
+        key === "radius" || key === "mass");
+    }
+    const changeMaterialBody = accepted.radius !== this.residentProfile.radius ||
+      accepted.mass !== this.residentProfile.mass;
+    const entity = this.entities.get("resident");
+    if (changeMaterialBody) {
+      this.colliderLabels.delete(entity.collider.handle);
+      this.world.removeCollider(entity.collider, true);
+      entity.collider = this.world.createCollider(
+        RAPIER.ColliderDesc.ball(accepted.radius)
+          .setMass(accepted.mass)
+          .setFriction(0.55)
+          .setRestitution(0),
+        entity.body
+      );
+      this.colliderLabels.set(entity.collider.handle, entity.id);
+      entity.body.wakeUp();
+    }
+    // All authored fields were validated before changing any profile value.
+    this.residentProfile = accepted;
+    Object.assign(entity, accepted, { pickRadius: accepted.radius + 0.16 });
   }
 
   selectAt(point) {
@@ -658,6 +694,7 @@ export class MaterialWorld {
       entities,
       selectedId: this.selectedId,
       profile: { ...this.profile },
+      residentProfile: { ...this.residentProfile },
       residentControl: { mode: this.residentMode, ...this.residentControl },
       authoredCount: this.authoredShapes.length,
       grip: this.grip ? {
