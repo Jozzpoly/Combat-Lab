@@ -74,10 +74,11 @@
 
       <section>
         <h2>Resident — physical contact response</h2>
-        <p class="muted">Two low-level control laws over the same physical body. The challenger reacts only after sustained motor effort, low progress and tactile contact; this is not route planning or NPC intelligence. Draw a wall in the resident's lane to change what happens.</p>
+        <p class="muted">Compare three bounded rules on the same body: scripted shuttle, any-touch recovery, or forward-directed tactile recovery. Draw barriers and side contacts while running. No map knowledge, pathfinding, or autonomous NPC cognition is implied.</p>
         <label>Local control
           <select id="resident-mode">
-            <option value="tactile-recovery">Contact-contingent reversal</option>
+            <option value="tactile-recovery">Any-touch recovery (control)</option>
+            <option value="directional-recovery">Forward-contact recovery (challenger)</option>
             <option value="baseline">Fixed lane reversal only</option>
           </select>
         </label>
