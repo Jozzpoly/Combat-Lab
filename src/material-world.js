@@ -10,6 +10,7 @@ export const DEFAULT_PROFILE = Object.freeze({
   maxSpeed: 4.5,
   acceleration: 18,
   braking: 24,
+  gripBraking: 24,
   gripReach: 2.6,
   gripForce: 260
 });
@@ -511,7 +512,7 @@ export class MaterialWorld {
       this.player(),
       desired,
       this.profile.acceleration,
-      this.profile.braking
+      this.grip ? this.profile.gripBraking : this.profile.braking
     );
     const residentDrive = this.#stepResident();
     this.#stepGrip();
