@@ -67,3 +67,42 @@ test("the same forward signal causes a finite-duration recovery without World la
 test("invalid local policy is explicitly rejected", () => {
   assert.throws(() => step(initial(), "oracle", sample()), RangeError);
 });
+
+test("finite lateral maneuver changes two-axis motor intent, not the actor's position", () => {
+  let state = initial();
+  let direction = 1;
+  let trigger = null;
+  for (let tick = 1; tick <= 13; tick++) {
+    const result = stepLocalShuttle({
+      state, sense: sample({
+        touch: true, forwardTouch: true, motorEffort: 1.2, progressAlongIntent: 0
+      }), direction, mode: "lateral-maneuver", maxSpeed: 2.1,
+      lower: -1.8, upper: 5.7, recoveryDuration: 58, resistanceTicks: 12,
+      sidePreference: -1, lateralTicks: 96
+    });
+    if (result.transition) trigger = result;
+    state = result.state;
+    direction = result.direction;
+  }
+  assert.ok(trigger);
+  assert.equal(trigger.transition.tick, 12);
+  assert.equal(trigger.direction, 1, "sidestep is not a disguised reversal");
+  assert.equal(trigger.state.lateralAttempts, 1);
+  assert.ok(trigger.intendedVelocity.x > 0 && trigger.intendedVelocity.y < 0);
+  assert.equal(state.estimatedY, 0, "intent alone must not invent actual lateral travel");
+  assert.equal(state.recoveries, 0);
+});
+
+test("lateral body displacement enters only from local measured deltaY", () => {
+  const input = initial();
+  const result = stepLocalShuttle({
+    state: input, sense: sample({ deltaX: 0.1, deltaY: 0.4 }),
+    direction: -1, mode: "lateral-maneuver", maxSpeed: 2.1,
+    lower: -5, upper: 1.3, recoveryDuration: 70, resistanceTicks: 20,
+    sidePreference: 1, lateralTicks: 96
+  });
+  assert.equal(result.state.estimatedY, 0.4);
+  assert.equal(result.state.estimatedX, 0.1);
+  assert.equal(input.estimatedY, undefined);
+  assert.deepEqual(result.intendedVelocity, { x: -2.1, y: 0 });
+});
