@@ -673,6 +673,12 @@ function frame(now) {
   requestAnimationFrame(frame);
 }
 
+// A headless DOM capture can precede the first requestAnimationFrame.
+// Expose the already-created physics bodies at bootstrap; do not claim any
+// physical step before it has actually run. Browser pressure separately
+// exercises explicit Rapier steps.
+document.body.dataset.activeBodies = String(world.snapshot().entities.length);
+document.body.dataset.physicsSteps = String(completedPhysicsSteps);
 document.body.dataset.combatLabReady = "true";
 requestAnimationFrame(frame);
 
