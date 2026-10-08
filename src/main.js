@@ -11,6 +11,7 @@ const boxMassInput = document.querySelector("#author-mass");
 const residentModeSelect = document.querySelector("#resident-mode");
 const residentStatus = document.querySelector("#resident-status");
 const residentProfileFeedback = document.querySelector("#resident-profile-feedback");
+const interventionTimeline = document.querySelector("#intervention-timeline");
 
 const camera = {
   center: { x: 12, y: 7 },
@@ -491,6 +492,10 @@ function render() {
       "No own motor trace for this body. It may still receive contact/grip impulses." :
       "No selected body.";
   }
+
+  interventionTimeline.textContent = snapshot.interventionEvents.slice(-10)
+    .map((event) => "t" + event.tick + " " + event.type + " — " + event.note)
+    .join("\n") || "No research events in current run.";
 
   residentStatus.textContent =
     "local state: " + snapshot.residentControl.state +
