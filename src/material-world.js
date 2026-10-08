@@ -576,58 +576,72 @@ export class MaterialWorld {
     this.#recordEvent("actor.mode", "resident controller=" + mode);
   }
 
-  #stepResident() {
-    const entity = this.entities.get("resident");
-    const ctl = this.residentControl;
+  // Shared law, separate local histories and physically distinct actors.
+  // Never receives the World layout, obstacle IDs, actor global x or
+  // another actor's private samples.
+  #advanceLocalActor({ id, sense, ctl, direction, mode, lower, upper,
+    recoveryDuration, resistanceTicks }) {
+    const entity = this.entities.get(id);
     ctl.tick += 1;
-    const previous = this.residentSense;
-    // Dead-reckoned body-relative displacement, not a query of World x.
-    // Drift is deliberately possible under imperfect proprioception.
-    ctl.estimatedX += previous?.deltaX ?? 0;
-
-    // Locally testable evidence, not a map/obstacle-label oracle:
-    // commanded effort, realized progress and bare tactile contact.
-    // A contact alone is not proof of blockage; a stationary motorless
-    // actor must not be misclassified as blocked.
-    if (this.residentMode === "tactile-recovery" && ctl.recoveryTicks === 0) {
-      const driven = previous && previous.motorEffort > 0.01;
-      const resistance = previous && previous.touch &&
-        previous.progressAlongIntent !== null &&
-        previous.progressAlongIntent < entity.maxSpeed * 0.12;
-      ctl.blockedTicks = driven && resistance ? ctl.blockedTicks + 1 : 0;
-      if (ctl.blockedTicks >= 12) {
-        const formerDirection = this.residentDirection;
-        this.residentDirection = -formerDirection;
-        ctl.recoveryTicks = 58;
+    ctl.estimatedX += sense?.deltaX ?? 0;
+    if (mode === "tactile-recovery" && ctl.recoveryTicks === 0) {
+      const driven = sense && sense.motorEffort > 0.01;
+      const resisted = sense && sense.touch &&
+        sense.progressAlongIntent !== null &&
+        sense.progressAlongIntent < entity.maxSpeed * 0.12;
+      ctl.blockedTicks = driven && resisted ? ctl.blockedTicks + 1 : 0;
+      if (ctl.blockedTicks >= resistanceTicks) {
+        const former = direction;
+        direction = -direction;
+        ctl.recoveryTicks = recoveryDuration;
         ctl.blockedTicks = 0;
         ctl.recoveries += 1;
         ctl.lastTransition = {
           tick: ctl.tick,
-          reason: "sustained contact + low realized progress + motor effort",
-          fromDirection: formerDirection,
-          toDirection: this.residentDirection
+          reason: "sustained touch + low progress + motor effort",
+          fromDirection: former, toDirection: direction
         };
         this.#recordEvent("actor.reversal",
-          "resident changed motor direction after sustained resistance; " +
-          formerDirection + " -> " + this.residentDirection);
+          id + " changed direction after local resistance " +
+          former + " -> " + direction);
       }
     }
-
-    // Authored travel offsets from the resident's start, reconstructed
-    // solely from body-local deltas. These are a shuttle fixture policy,
-    // NOT discovered map knowledge or autonomous intent.
+    // Lane length is authored; estimated position is integrated only
+    // from the individual's own actual physical displacements.
     if (ctl.recoveryTicks === 0) {
-      if (ctl.estimatedX > 5.7) this.residentDirection = -1;
-      if (ctl.estimatedX < -1.8) this.residentDirection = 1;
+      if (ctl.estimatedX > upper) direction = -1;
+      if (ctl.estimatedX < lower) direction = 1;
     }
     ctl.state = ctl.recoveryTicks > 0 ? "backoff" :
       ctl.blockedTicks > 0 ? "contact-pressure" : "cruise";
-    const intendedVelocity = { x: entity.maxSpeed * this.residentDirection, y: 0 };
+    const intendedVelocity = { x: entity.maxSpeed * direction, y: 0 };
     const motorImpulse = this.#applyMotor(
       entity, intendedVelocity, entity.acceleration, entity.braking
     );
     if (ctl.recoveryTicks > 0) ctl.recoveryTicks -= 1;
-    return { intendedVelocity, motorImpulse };
+    return { intendedVelocity, motorImpulse, direction };
+  }
+
+  #stepResident() {
+    const result = this.#advanceLocalActor({
+      id: "resident", sense: this.residentSense,
+      ctl: this.residentControl, direction: this.residentDirection,
+      mode: this.residentMode, lower: -1.8, upper: 5.7,
+      recoveryDuration: 58, resistanceTicks: 12
+    });
+    this.residentDirection = result.direction;
+    return result;
+  }
+
+  #stepPeer() {
+    const result = this.#advanceLocalActor({
+      id: "peer", sense: this.peerSense, ctl: this.peerControl,
+      direction: this.peerDirection, mode: this.peerMode,
+      lower: -5.0, upper: 1.3,
+      recoveryDuration: 70, resistanceTicks: 20
+    });
+    this.peerDirection = result.direction;
+    return result;
   }
 
   #stepGrip() {
@@ -687,7 +701,7 @@ export class MaterialWorld {
     };
 
     const before = new Map();
-    for (const id of ["player", "resident"]) {
+    for (const id of ["player", "resident", ...(this.peerEnabled ? ["peer"] : [])]) {
       const entity = this.entities.get(id);
       before.set(id, { ...entity.body.translation() });
     }
@@ -698,6 +712,7 @@ export class MaterialWorld {
       this.grip ? this.profile.gripBraking : this.profile.braking
     );
     const residentDrive = this.#stepResident();
+    const peerDrive = this.peerEnabled ? this.#stepPeer() : null;
     this.#stepGrip();
 
     const started = performance.now();
@@ -708,7 +723,8 @@ export class MaterialWorld {
     // NOT a classification of why contact or lost progress occurred.
     for (const [id, drive] of [
       ["player", { intendedVelocity: desired, motorImpulse: playerImpulse }],
-      ["resident", residentDrive]
+      ["resident", residentDrive],
+      ...(peerDrive ? [["peer", peerDrive]] : [])
     ]) {
       const entity = this.entities.get(id);
       const from = before.get(id);
@@ -723,18 +739,19 @@ export class MaterialWorld {
       const progressAlongIntent = requestedSpeed > 1e-8 ?
         (measuredVelocity.x * drive.intendedVelocity.x +
           measuredVelocity.y * drive.intendedVelocity.y) / requestedSpeed : null;
-      if (id === "resident") {
-        // The on-board controller receives only synthetic tactile/proprioceptive
-        // evidence. World object IDs, authored geometry and global positions
-        // remain on the research/debug plane, never in this local sample.
+      if (id === "resident" || id === "peer") {
+        // Each body receives independent local tactile/proprioceptive samples.
+        // Neither receives World colliders/IDs, another body history or provenance.
         let touch = false;
         this.world.contactPairsWith(entity.collider, () => { touch = true; });
-        this.residentSense = {
+        const localSample = {
           touch,
           motorEffort: Math.hypot(drive.motorImpulse.x, drive.motorImpulse.y),
           progressAlongIntent,
           deltaX: now.x - from.x
         };
+        if (id === "resident") this.residentSense = localSample;
+        else this.peerSense = localSample;
       }
       this.lastCausalObservations.set(id, {
         intendedVelocity: { ...drive.intendedVelocity },
