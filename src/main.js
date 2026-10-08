@@ -13,6 +13,8 @@ const residentStatus = document.querySelector("#resident-status");
 const peerStatus = document.querySelector("#peer-status");
 const togglePeer = document.querySelector("#toggle-peer");
 const focusPeer = document.querySelector("#focus-peer");
+const peerMassField = document.querySelector("#peer-mass");
+const peerMassFeedback = document.querySelector("#peer-mass-feedback");
 const residentProfileFeedback = document.querySelector("#resident-profile-feedback");
 const interventionTimeline = document.querySelector("#intervention-timeline");
 
@@ -315,6 +317,16 @@ focusPeer.addEventListener("click", () => {
   camera.follow = true;
   world.selectedId = "peer";
 });
+peerMassField.addEventListener("change", () => {
+  try {
+    world.setPeerMass(Number(peerMassField.value));
+    peerMassField.value = String(world.peerMass);
+    peerMassFeedback.textContent = "";
+  } catch (error) {
+    peerMassField.value = String(world.peerMass);
+    peerMassFeedback.textContent = "Not applied: " + String(error?.message ?? error);
+  }
+});
 refreshPeerControls();
 document.querySelector("#undo-edit").addEventListener("click", () => {
   worldEditFeedback.textContent = world.undoAuthored() ? "Last authored shape removed." :
@@ -522,7 +534,7 @@ function render() {
     .join("\n") || "No research events in current run.";
 
   peerStatus.textContent = snapshot.peerControl ?
-    "Second body: 210 kg, counter-moving · local state " +
+    "Second body: " + snapshot.peerMass + " kg, counter-moving · local state " +
       snapshot.peerControl.state + " · recoveries " +
       snapshot.peerControl.recoveries + " · travel " +
       snapshot.peerControl.estimatedX.toFixed(2) + "m" :
