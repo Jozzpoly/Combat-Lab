@@ -2445,6 +2445,47 @@ try {
     detail:String(error?.message??error).slice(0,300)});
 }
 
+await observation("off-axis-peer-pressure-rotates-beam-or-not", world => {
+  const run = peerStartY => {
+    world.clearBodyStartOverrides();
+    world.setPeerEnabled(true);
+    world.setBraceEnabled(true);
+    world.setPeerMass(30);
+    world.setBraceProfile({mass:120,braking:30});
+    world.setBraceForm("beam");
+    world.setBraceAngle(0);
+    world.setResidentProfile(DEFAULT_RESIDENT_PROFILE);
+    world.setResidentMode("tactile-recovery");
+    world.setPeerMode("tactile-recovery");
+    world.reset();
+    world.repositionBody("peer",{x:19,y:peerStartY});
+    let firstContact=null,firstTurn=null,peakAngular=0,peakAngle=0,peakHolderTravel=0;
+    for(let tick=1;tick<=260;tick++){
+      world.step(still);
+      const beam=at(world,"brace");
+      const touching=world.lastCausalObservations.get("brace").contacts.includes("peer");
+      const angular=Math.abs(world.entities.get("brace").body.angvel());
+      if(firstContact===null&&touching)firstContact=tick;
+      if(firstTurn===null&&angular>0.001)firstTurn=tick;
+      peakAngular=Math.max(peakAngular,angular);
+      peakAngle=Math.max(peakAngle,Math.abs(beam.rotation));
+      peakHolderTravel=Math.max(peakHolderTravel,
+        Math.abs(beam.position.x-17.35));
+    }
+    finite(world,"off-axis material torque");
+    return {peerStartY,firstContact,firstTurn,peakAngular,peakAngle,peakHolderTravel};
+  };
+  const centered=run(11.4),offset=run(12.0);
+  return "centered: first touch "+centered.firstContact+
+    ", angular="+centered.peakAngular.toFixed(4)+"rad/s"+
+    ", angle="+(centered.peakAngle*180/Math.PI).toFixed(2)+"°;"+
+    " offset y=12.0: first touch "+offset.firstContact+
+    ", first turn "+offset.firstTurn+
+    ", peak angular="+offset.peakAngular.toFixed(4)+"rad/s"+
+    ", angle="+(offset.peakAngle*180/Math.PI).toFixed(2)+"°"+
+    "; observed only, actor knows no World geometry";
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
