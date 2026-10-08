@@ -81,6 +81,19 @@
             <option value="baseline">Fixed lane reversal only</option>
           </select>
         </label>
+        <details>
+          <summary>Resident body and drive — experimental</summary>
+          <p class="muted">Change the actor, not the obstacle. These values have physical consequences and persist across Reset world. This is not a resident archetype or final AI design.</p>
+          <div class="fields">
+            <label>Body radius (m) <input data-resident-profile="radius" type="number" step="0.05" value="0.56"></label>
+            <label>Body mass (kg) <input data-resident-profile="mass" type="number" step="1" value="72"></label>
+            <label>Max speed (m/s) <input data-resident-profile="maxSpeed" type="number" step="0.1" value="2.1"></label>
+            <label>Acceleration (m/s²) <input data-resident-profile="acceleration" type="number" step="0.5" value="7"></label>
+            <label>Braking (m/s²) <input data-resident-profile="braking" type="number" step="0.5" value="10"></label>
+          </div>
+          <div class="button-row"><button id="restore-resident-body">Restore resident defaults</button></div>
+          <p id="resident-profile-feedback" class="muted" aria-live="polite"></p>
+        </details>
         <p id="resident-status" class="muted" aria-live="polite">Resident awaiting simulation.</p>
         <div class="button-row">
           <button id="focus-resident">Follow resident</button>
