@@ -285,7 +285,7 @@ export class MaterialWorld {
       width: authoredNumber(width, "author width", true),
       height: authoredNumber(height, "author height", true),
       mass: kind === "object" ? authoredNumber(mass, "author mass", true) : 0,
-      id: "authored-" + (++this.authoredSerial)
+      id: "authored-" + (this.authoredSerial + 1)
     };
     // Rapier cannot reliably represent effectively zero-area fixtures.
     // This is a visible rejection, never a silent change to authored size.
@@ -294,6 +294,7 @@ export class MaterialWorld {
     }
     this.#instantiateAuthored(accepted);
     this.authoredShapes.push(accepted);
+    this.authoredSerial += 1;
     return accepted.id;
   }
 
