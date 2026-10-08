@@ -3,22 +3,32 @@
 // this module. Its only outputs are motor intent and a local state transition.
 export function stepLocalShuttle({
   state, sense, direction, mode, maxSpeed,
-  lower, upper, recoveryDuration, resistanceTicks
+  lower, upper, recoveryDuration, resistanceTicks,
+  sidePreference = 1, lateralTicks = 96
 }) {
-  if (!["baseline", "tactile-recovery", "directional-recovery"].includes(mode)) {
+  if (!["baseline", "tactile-recovery", "directional-recovery", "lateral-maneuver"].includes(mode)) {
     throw new RangeError("unrecognized local shuttle mode");
+  }
+  if (!Number.isInteger(sidePreference) || Math.abs(sidePreference) !== 1 ||
+      !Number.isInteger(lateralTicks) || lateralTicks < 1) {
+    throw new RangeError("lateral maneuver requires +/-1 side and positive duration");
   }
   const next = {
     ...state,
     tick: state.tick + 1,
-    estimatedX: state.estimatedX + (sense?.deltaX ?? 0)
+    estimatedX: state.estimatedX + (sense?.deltaX ?? 0),
+    estimatedY: (state.estimatedY ?? 0) + (sense?.deltaY ?? 0),
+    lateralTicks: state.lateralTicks ?? 0,
+    lateralAttempts: state.lateralAttempts ?? 0
   };
   let transition = null;
-  if ((mode === "tactile-recovery" || mode === "directional-recovery") &&
-      next.recoveryTicks === 0) {
+  if ((mode === "tactile-recovery" || mode === "directional-recovery" ||
+       mode === "lateral-maneuver") &&
+      next.recoveryTicks === 0 && next.lateralTicks === 0) {
     const driven = Boolean(sense && sense.motorEffort > 0.01);
     const contactEvidence = Boolean(sense && (
-      mode === "directional-recovery" ? sense.forwardTouch : sense.touch
+      (mode === "directional-recovery" || mode === "lateral-maneuver") ?
+        sense.forwardTouch : sense.touch
     ));
     const resisted = contactEvidence &&
       sense.progressAlongIntent !== null &&
@@ -26,25 +36,43 @@ export function stepLocalShuttle({
     next.blockedTicks = driven && resisted ? next.blockedTicks + 1 : 0;
     if (next.blockedTicks >= resistanceTicks) {
       const former = direction;
-      direction = -direction;
-      next.recoveryTicks = recoveryDuration;
       next.blockedTicks = 0;
-      next.recoveries += 1;
-      transition = {
-        tick: next.tick,
-        reason: "sustained touch + low progress + motor effort",
-        fromDirection: former, toDirection: direction
-      };
+      if (mode === "lateral-maneuver") {
+        next.lateralTicks = lateralTicks;
+        next.lateralAttempts += 1;
+        transition = {
+          tick: next.tick,
+          reason: "sustained forward resistance; finite side maneuver",
+          fromDirection: former, toDirection: direction,
+          lateralDirection: sidePreference
+        };
+      } else {
+        direction = -direction;
+        next.recoveryTicks = recoveryDuration;
+        next.recoveries += 1;
+        transition = {
+          tick: next.tick,
+          reason: "sustained touch + low progress + motor effort",
+          fromDirection: former, toDirection: direction
+        };
+      }
       next.lastTransition = transition;
     }
   }
-  if (next.recoveryTicks === 0) {
+  if (next.recoveryTicks === 0 && next.lateralTicks === 0) {
     if (next.estimatedX > upper) direction = -1;
     if (next.estimatedX < lower) direction = 1;
   }
-  next.state = next.recoveryTicks > 0 ? "backoff" :
+  next.state = next.lateralTicks > 0 ? "lateral" :
+    next.recoveryTicks > 0 ? "backoff" :
     next.blockedTicks > 0 ? "contact-pressure" : "cruise";
-  const intendedVelocity = { x: maxSpeed * direction, y: 0 };
+  // A bounded exploratory vector, not path planning. It can visibly fail
+  // against longer obstacles or in a crowded corridor.
+  const intendedVelocity = next.lateralTicks > 0 ?
+    { x: maxSpeed * direction * 0.55,
+      y: maxSpeed * sidePreference * 0.84 } :
+    { x: maxSpeed * direction, y: 0 };
+  if (next.lateralTicks > 0) next.lateralTicks -= 1;
   if (next.recoveryTicks > 0) next.recoveryTicks -= 1;
   return { state: next, direction, intendedVelocity, transition };
 }
