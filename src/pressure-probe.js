@@ -161,6 +161,7 @@ await trial("authoring-rejects-degenerate-not-signed-coordinates", (world) => {
   assert(world.snapshot().staticRects.some((x) => x.id === id && x.cx === -3),
     "authored world was silently confined inside default arena");
   const count = world.authoredShapes.length;
+  const serial = world.authoredSerial;
   let rejected = false;
   try {
     world.authorRect({ kind: "wall", cx: 3, cy: 3, width: 0.001, height: 1 });
@@ -169,6 +170,7 @@ await trial("authoring-rejects-degenerate-not-signed-coordinates", (world) => {
   }
   assert(rejected, "program-unsafe near-degenerate geometry was accepted");
   assert(world.authoredShapes.length === count, "invalid edit partially mutated scene");
+  assert(world.authoredSerial === serial, "rejected edit consumed source identity");
   return "signed positions allowed; unsafe dimensions rejected without mutation";
 });
 
