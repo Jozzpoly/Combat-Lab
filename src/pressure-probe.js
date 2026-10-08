@@ -1,4 +1,4 @@
-import { MaterialWorld } from "./material-world.js";
+import { DEFAULT_RESIDENT_PROFILE, MaterialWorld } from "./material-world.js";
 
 // This module is deliberately invoked only by ?pressureProbe=1 on the emitted
 // browser artifact. It exercises the same WASM bundle as the actual Lab.
