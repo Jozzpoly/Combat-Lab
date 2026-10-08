@@ -77,6 +77,9 @@ export class MaterialWorld {
   constructor() {
     this.profile = { ...DEFAULT_PROFILE };
     this.residentProfile = { ...DEFAULT_RESIDENT_PROFILE };
+    // Off by default, so single-resident evidence remains an untouched null.
+    // This switch adds a second embodied participant to the *same* World.
+    this.peerEnabled = false;
     // These are authored edits, distinct from runtime motion/afterstate.
     // Ordinary reset replays them; clear/undo deliberately change the authored scene.
     this.authoredShapes = [];
@@ -121,10 +124,15 @@ export class MaterialWorld {
       tick: 0, blockedTicks: 0, recoveryTicks: 0, recoveries: 0,
       estimatedX: 0, state: "cruise", lastTransition: null
     };
+    this.peerDirection = -1;
+    this.peerMode = "tactile-recovery";
+    this.peerSense = null;
+    this.peerControl = this.#newLocalControl();
 
     this.#buildStaticWorld();
     this.#createPlayer();
     this.#createResident();
+    if (this.peerEnabled) this.#createPeer();
     this.#createBox("light-crate", { x: 6.9, y: 5.8 }, { x: 0.48, y: 0.48 }, 14, COLORS.light, true);
     this.#createBox("plank", { x: 12.8, y: 6.6 }, { x: 1.05, y: 0.28 }, 34, COLORS.plank, true);
     this.#createBox("heavy-crate", { x: 16.5, y: 5.25 }, { x: 0.68, y: 0.68 }, 120, COLORS.heavy, true);
@@ -233,6 +241,61 @@ export class MaterialWorld {
     };
     this.entities.set(entity.id, entity);
     this.colliderLabels.set(collider.handle, entity.id);
+  }
+
+  #newLocalControl() {
+    return {
+      tick: 0, blockedTicks: 0, recoveryTicks: 0, recoveries: 0,
+      estimatedX: 0, state: "cruise", lastTransition: null
+    };
+  }
+
+  #createPeer() {
+    const profile = { radius: 0.71, mass: 210, maxSpeed: 1.55,
+      acceleration: 6, braking: 8 };
+    const body = this.world.createRigidBody(
+      RAPIER.RigidBodyDesc.dynamic().setTranslation(19.0, 11.4)
+        .setLinearDamping(0.4).setAngularDamping(1.5).setCcdEnabled(true)
+    );
+    const collider = this.world.createCollider(
+      RAPIER.ColliderDesc.ball(profile.radius)
+        .setMass(profile.mass).setFriction(0.55).setRestitution(0), body
+    );
+    const entity = {
+      id: "peer", label: "counter-moving heavy body", kind: "peer",
+      shape: "circle", ...profile, body, collider,
+      color: "#c2a8dc", grabbable: false,
+      pickRadius: profile.radius + 0.16
+    };
+    this.entities.set(entity.id, entity);
+    this.colliderLabels.set(collider.handle, entity.id);
+    return entity;
+  }
+
+  setPeerEnabled(enabled) {
+    const next = Boolean(enabled);
+    if (this.peerEnabled === next) return;
+    this.peerEnabled = next;
+    if (next) {
+      this.peerDirection = -1;
+      this.peerSense = null;
+      this.peerControl = this.#newLocalControl();
+      this.#createPeer();
+    } else {
+      const peer = this.entities.get("peer");
+      if (peer) {
+        this.colliderLabels.delete(peer.collider.handle);
+        this.world.removeRigidBody(peer.body);
+        this.entities.delete("peer");
+        this.lastCausalObservations.delete("peer");
+      }
+      if (this.selectedId === "peer") this.selectedId = "resident";
+      this.peerSense = null;
+      this.peerControl = this.#newLocalControl();
+    }
+    this.#recordEvent("actor.peer", next ?
+      "counter-moving body entered shared physics" :
+      "counter-moving body removed from shared physics");
   }
 
   #createBox(id, position, half, mass, color, grabbable) {
@@ -727,6 +790,8 @@ export class MaterialWorld {
       physicsTick: this.physicsTick,
       interventionEvents: this.interventionEvents.map((event) => ({ ...event })),
       residentControl: { mode: this.residentMode, ...this.residentControl },
+      peerEnabled: this.peerEnabled,
+      peerControl: this.peerEnabled ? { mode: this.peerMode, ...this.peerControl } : null,
       authoredCount: this.authoredShapes.length,
       grip: this.grip ? {
         entityId: this.grip.entityId,
@@ -753,7 +818,9 @@ export class MaterialWorld {
       contacts: this.contactsFor(entity.id),
       observedMotor: this.lastCausalObservations.get(entity.id) ?? null,
       localControl: entity.kind === "resident" ?
-        { mode: this.residentMode, ...this.residentControl } : null,
+        { mode: this.residentMode, ...this.residentControl } :
+        entity.kind === "peer" ?
+          { mode: this.peerMode, ...this.peerControl } : null,
       grabbable: entity.grabbable
     };
   }
