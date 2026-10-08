@@ -471,14 +471,17 @@ function render() {
   // The graph belongs to the experimenter's presentation layer: draw
   // only reciprocal Rapier contact pairs, never inferred affiliation,
   // intention, or knowledge attributed to the organisms.
-  const byId = new Map(snapshot.entities.map(entity => [entity.id, entity]));
   const links = [];
-  for (const entity of snapshot.entities) {
-    for (const peerId of entity.contacts) {
-      if (entity.id >= peerId) continue;
-      const other = byId.get(peerId);
-      if (other && other.contacts.includes(entity.id)) {
-        links.push([entity, other]);
+  if (contactOverlayInput.checked) {
+    const byId = new Map(snapshot.entities.map(entity => [entity.id, entity]));
+    const contacts = new Map(snapshot.entities.map(entity => [
+      entity.id, new Set(world.contactsFor(entity.id))
+    ]));
+    for (const entity of snapshot.entities) {
+      for (const peerId of contacts.get(entity.id)) {
+        if (entity.id >= peerId) continue;
+        const other = byId.get(peerId);
+        if (other && contacts.get(peerId)?.has(entity.id)) links.push([entity, other]);
       }
     }
   }
