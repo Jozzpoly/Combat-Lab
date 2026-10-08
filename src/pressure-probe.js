@@ -481,7 +481,7 @@ await trial("same-physics-private-touch-ablation-first-divergence", (world) => {
       const body = at(world, "resident");
       const sensor = world.residentSense;
       assert(Object.keys(sensor).sort().join(",") ===
-        "deltaX,motorEffort,progressAlongIntent,touch",
+        "deltaX,forwardTouch,motorEffort,progressAlongIntent,touch",
         "local controller's sensory boundary gained World identity or geometry");
       if (ablateTouch) sensor.touch = false;
       frames.push({
@@ -750,7 +750,7 @@ await trial("research-event-trace-does-not-enter-resident-sensors", (world) => {
   assert(reversals.length > 0 && reversals[0].tick >= 35,
     "resident reversal not causally placed after material contact");
   assert(Object.keys(world.residentSense).sort().join(",") ===
-    "deltaX,motorEffort,progressAlongIntent,touch",
+    "deltaX,forwardTouch,motorEffort,progressAlongIntent,touch",
     "research-plane source history leaked into local resident sensing");
   assert(world.undoAuthored(), "could not undo wall for event trace");
   assert(world.interventionEvents.some((e) => e.type === "world.remove" &&
@@ -779,7 +779,7 @@ await trial("resident-lane-reversal-does-not-query-absolute-world-x", (world) =>
   assert(Math.abs(controller.estimatedX) < 1e-7,
     "local odometry fabricated a teleport displacement before moving");
   assert(Object.keys(world.residentSense).sort().join(",") ===
-    "deltaX,motorEffort,progressAlongIntent,touch",
+    "deltaX,forwardTouch,motorEffort,progressAlongIntent,touch",
     "resident received extra World truth instead of bounded proprioception");
   return "global x=21.1 beyond former endpoint, local estimate=0;" +
     " motor remains positive until actual proprioceptive travel";
@@ -806,7 +806,7 @@ await trial("peer-is-optional-and-reset-is-physical-not-identity-loss", (world) 
     world.residentControl !== world.peerControl,
     "actor sensor or decision history accidentally shared");
   assert(Object.keys(world.peerSense).sort().join(",") ===
-    "deltaX,motorEffort,progressAlongIntent,touch",
+    "deltaX,forwardTouch,motorEffort,progressAlongIntent,touch",
     "peer received World oracle or extra cross-actor knowledge");
   world.reset();
   assert(world.peerEnabled && world.entities.has("peer") &&
