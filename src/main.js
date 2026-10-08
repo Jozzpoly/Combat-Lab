@@ -499,6 +499,7 @@ function render() {
 
   residentStatus.textContent =
     "local state: " + snapshot.residentControl.state +
+    " · local travel " + snapshot.residentControl.estimatedX.toFixed(2) + "m" +
     " · obstruction evidence " + snapshot.residentControl.blockedTicks + "/12 steps" +
     " · recovery count " + snapshot.residentControl.recoveries +
     (snapshot.residentControl.lastTransition ?
