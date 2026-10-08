@@ -292,8 +292,12 @@ function render() {
     else drawBox(entity, selected);
   }
 
-  const selectedEntity = snapshot.entities.find((entity) => entity.id === snapshot.selectedId);
-  const selectedCausality = world.selectedSnapshot()?.observedMotor ?? null;
+  const selectedBodyState = world.selectedSnapshot();
+  const observedMotorId = selectedBodyState?.observedMotor ? selectedBodyState.id :
+    (snapshot.grip ? "player" : null);
+  const selectedEntity = snapshot.entities.find((entity) => entity.id === observedMotorId);
+  const selectedCausality = observedMotorId ?
+    world.lastCausalObservations.get(observedMotorId) : null;
   if (selectedEntity && selectedCausality) {
     const anchor = worldToScreen(selectedEntity.position);
     for (const arrow of [
@@ -364,12 +368,17 @@ function render() {
       (snapshot.grip ? "grip force " + snapshot.grip.force.toFixed(1) : "");
   }
 
-  const motor = selected?.observedMotor ?? null;
+  // Grip selection belongs to the object, but the reciprocal motor/reaction
+  // trace belongs to the gripping player. Never conceal that authority split.
+  const motor = selected?.observedMotor ??
+    (snapshot.grip ? world.lastCausalObservations.get("player") : null);
   if (motor) {
     const speed = (v) => Math.hypot(v.x, v.y).toFixed(2);
     const impulse = Math.hypot(motor.motorImpulse.x, motor.motorImpulse.y).toFixed(2);
     causalReadout.textContent =
-      "driven: " + selected.id + "\n" +
+      "driven: " + (observedMotorId ?? selected.id) +
+        (snapshot.grip && observedMotorId === "player" ?
+          " (gripping " + snapshot.grip.entityId + ")" : "") + "\n" +
       "intended speed: " + speed(motor.intendedVelocity) + " m/s\n" +
       "realized step travel: " + speed(motor.measuredVelocity) + " m/s\n" +
       "applied motor impulse: " + impulse + " N·s\n" +
