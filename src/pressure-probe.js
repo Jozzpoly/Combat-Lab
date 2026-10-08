@@ -2003,6 +2003,80 @@ await trial("no-physical-obstruction-does-not-fabricate-a-lateral-maneuver", wor
   return "same unobstructed trajectory, max 2D state divergence=" + worst.toExponential(1);
 });
 
+await trial("finite-lateral-action-clears-short-but-not-long-wall", world => {
+  const run = (height, mode) => {
+    world.clearAuthored();
+    world.setResidentProfile(DEFAULT_RESIDENT_PROFILE);
+    world.setResidentMode(mode);
+    world.setActorSidePreference("resident", 1);
+    world.reset();
+    world.authorRect({ kind: "wall", cx: 16.8, cy: 11.4,
+      width: .6, height });
+    let farthestX = -Infinity, farthestLateral = 0, firstPass = null;
+    for (let tick=1;tick<=350;tick++){
+      world.step(still);
+      const pos=at(world,"resident").position;
+      farthestX=Math.max(farthestX,pos.x);
+      farthestLateral=Math.max(farthestLateral,Math.abs(pos.y-11.4));
+      if(firstPass===null && pos.x>17.5)firstPass=tick;
+    }
+    finite(world, "lateral physical truth");
+    return { farthestX, farthestLateral, firstPass,
+      attempts:world.residentControl.lateralAttempts };
+  };
+  const reverse=run(1,"directional-recovery");
+  const short=run(1,"lateral-maneuver");
+  const long=run(8,"lateral-maneuver");
+  assert(reverse.firstPass===null && reverse.farthestX<16.1,
+    "reversal control unexpectedly crossed wall");
+  assert(short.firstPass!==null && short.farthestX>17.5 &&
+    short.farthestLateral>1 && short.attempts>0,
+    "finite lateral locomotion did not clear genuinely short obstacle");
+  assert(long.firstPass===null && long.farthestX<16.1 &&
+    long.attempts>0,
+    "finite timed maneuver falsely guarantees passage through longer obstruction");
+  return "reverse xMax="+reverse.farthestX.toFixed(2)+
+    "; short side xMax="+short.farthestX.toFixed(2)+
+    ", pass t="+short.firstPass+
+    "; long side xMax="+long.farthestX.toFixed(2)+
+    ", passage not achieved";
+});
+
+try {
+  const select = document.querySelector("#resident-mode");
+  const side = document.querySelector("#resident-lateral-side");
+  const pause = document.querySelector("#pause-simulation");
+  const single = document.querySelector("#single-step");
+  const status = document.querySelector("#resident-status");
+  const feedback = document.querySelector("#fixture-feedback");
+  const button = document.querySelector("#fixture-short-block");
+  assert(select && side && pause && single && status && feedback && button,
+    "new physical maneuver not authorable through browser UI");
+  button.click();
+  assert(document.body.dataset.experimentFixture==="short" &&
+    document.body.dataset.simulationPaused==="true" &&
+    select.value==="lateral-maneuver" && side.value==="1" &&
+    feedback.textContent.includes("short wall"),
+    "one-click short-wall study failed to set real physical lab");
+  for(let i=0;i<62;i++)single.click();
+  assert(status.textContent.includes("lateral attempts 1"),
+    "bounded lateral controller did not start after actual forward collision");
+  document.querySelector("#reset-world").click();
+  select.value="directional-recovery";
+  select.dispatchEvent(new Event("change",{bubbles:true}));
+  document.querySelector("#reset-world").click();
+  for(let i=0;i<62;i++)single.click();
+  assert(status.textContent.includes("lateral attempts 0") &&
+    status.textContent.includes("recovery count 1"),
+    "old backoff and new lateral choice were not independently reproducible");
+  pause.click();
+  cases.push({name:"live-ui-reproducible-lateral-versus-backoff",status:"PASS",
+    detail:"same short wall; lateral attempts 1 versus backoff 1 after 62 actual physics steps"});
+} catch(error){
+  cases.push({name:"live-ui-reproducible-lateral-versus-backoff",status:"FAIL",
+    detail:String(error?.message??error).slice(0,300)});
+}
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
