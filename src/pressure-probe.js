@@ -2077,7 +2077,7 @@ try {
     detail:String(error?.message??error).slice(0,300)});
 }
 
-await observation("different-physical-envelopes-change-side-maneuver-effectivity", world => {
+await trial("same-side-maneuver-has-body-size-dependent-physical-affordance", world => {
   const values=[0.3,0.56,1.2];
   const outputs=[];
   for(const radius of values){
@@ -2096,6 +2096,11 @@ await observation("different-physical-envelopes-change-side-maneuver-effectivity
       maxX=Math.max(maxX,p.x);
     }
     finite(world,"different physical envelope");
+    assert((radius < 1 && firstCross !== null) ||
+        (radius > 1 && firstCross === null),
+      "same embodied response produced unexpected physical passage at radius=" + radius);
+    assert(world.residentControl.lateralAttempts > 0,
+      "different radius caused no actual lateral intent");
     outputs.push("radius "+radius.toFixed(2)+"m"+
       ": crossed="+String(firstCross)+", xMax="+maxX.toFixed(2)+
       ", sideways="+ySpan.toFixed(2)+"m"+
@@ -2104,7 +2109,7 @@ await observation("different-physical-envelopes-change-side-maneuver-effectivity
   return outputs.join("; ")+"; actor-relative outcome, not a general maneuver guarantee";
 });
 
-await observation("moveable-matter-and-fixed-wall-require-different-reactions", world => {
+await trial("pushable-material-effectivity-diverts-unnecessary-side-maneuvers", world => {
   const scenarios=[
     {kind:"wall",mass:0,label:"immovable"},
     {kind:"object",mass:10,label:"light"},
@@ -2131,6 +2136,14 @@ await observation("moveable-matter-and-fixed-wall-require-different-reactions", 
         Math.abs(at(world,id).position.x-16.8));
     }
     finite(world,"material body affordance");
+    if (sc.kind === "wall") {
+      assert(world.residentControl.lateralAttempts > 0,
+        "fixed wall failed to trigger physical lateral response");
+    } else {
+      assert(boxTravel > 1 &&
+        world.residentControl.lateralAttempts === 0,
+        "movable obstacle did not yield and preserve forward progress");
+    }
     out.push(sc.label+": first touch="+String(firstTouch)+
       ", side attempts="+world.residentControl.lateralAttempts+
       ", xMax="+maxX.toFixed(2)+
