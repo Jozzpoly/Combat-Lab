@@ -232,6 +232,9 @@ await trial("body-extremes-are-not-silently-normalized", (world) => {
 });
 
 await trial("observability-contact-versus-intent", (world) => {
+  // Frozen baseline law: this test specifically validates sustained motor
+  // pressure, not the newer local-contact recovery challenger.
+  world.setResidentMode("baseline");
   const wallId = world.authorRect({
     kind: "wall", cx: 16.8, cy: 11.4, width: 0.6, height: 2.5
   });
