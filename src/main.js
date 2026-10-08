@@ -131,6 +131,13 @@ window.addEventListener("keydown", (event) => {
       event.target instanceof HTMLSelectElement ||
       event.target instanceof HTMLTextAreaElement ||
       event.target instanceof HTMLButtonElement) return;
+  if (event.code === "Escape" && input.reposition) {
+    event.preventDefault();
+    input.reposition = null;
+    bodyPositionFeedback.textContent = "Body move canceled; World unchanged.";
+    render();
+    return;
+  }
   if (event.code === "Space") {
     event.preventDefault();
     if (!event.repeat) setSimulationPaused(!simulationPaused);
@@ -158,11 +165,12 @@ canvas.addEventListener("pointermove", (event) => {
   if (input.drawing) input.drawing.end = { ...input.pointer };
   if (input.reposition) {
     const draft = input.reposition;
-    const point = { x: input.pointer.x + draft.offset.x,
-      y: input.pointer.y + draft.offset.y };
-    world.repositionBody(draft.id, point, { persist: false, record: false });
+    draft.preview = {
+      x: input.pointer.x + draft.offset.x,
+      y: input.pointer.y + draft.offset.y
+    };
     bodyPositionFeedback.textContent =
-      "Moving " + draft.id + " · release to save reset starting position.";
+      "Previewing " + draft.id + " · release to commit, Esc to cancel.";
     render();
   }
   if (input.draggingCamera && input.dragStart) {
@@ -190,7 +198,8 @@ canvas.addEventListener("pointerdown", (event) => {
     const start = selected.body.translation();
     input.reposition = {
       id: selected.id, pointerId: event.pointerId,
-      offset: { x: start.x - point.x, y: start.y - point.y }
+      offset: { x: start.x - point.x, y: start.y - point.y },
+      preview: { x: start.x, y: start.y }
     };
     camera.follow = false;
     canvas.setPointerCapture(event.pointerId);
@@ -258,7 +267,10 @@ canvas.addEventListener("pointerup", (event) => {
 canvas.addEventListener("pointercancel", () => {
   input.draggingCamera = false;
   input.drawing = null;
-  input.reposition = null;
+  if (input.reposition) {
+    input.reposition = null;
+    bodyPositionFeedback.textContent = "Body move canceled; World unchanged.";
+  }
   world.endGrip();
 });
 canvas.addEventListener("wheel", (event) => {
@@ -661,6 +673,35 @@ function render() {
       ctx.arc(ex, ey, 3, 0, Math.PI * 2);
       ctx.fillStyle = arrow.color;
       ctx.fill();
+    }
+  }
+
+  if (input.reposition) {
+    const moved = input.reposition;
+    const entity = snapshot.entities.find(e => e.id === moved.id);
+    if (entity) {
+      const a = worldToScreen(entity.position);
+      const b = worldToScreen(moved.preview);
+      ctx.save();
+      ctx.strokeStyle = "#74dbed";
+      ctx.lineWidth = 2;
+      ctx.setLineDash([5, 4]);
+      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+      if (entity.shape === "circle") {
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, entity.radius * camera.zoom, 0, Math.PI * 2);
+        ctx.stroke();
+      } else {
+        ctx.save();
+        ctx.translate(b.x, b.y);
+        ctx.rotate(entity.rotation);
+        ctx.strokeRect(-entity.half.x * camera.zoom,
+          -entity.half.y * camera.zoom,
+          2 * entity.half.x * camera.zoom,
+          2 * entity.half.y * camera.zoom);
+        ctx.restore();
+      }
+      ctx.restore();
     }
   }
 
