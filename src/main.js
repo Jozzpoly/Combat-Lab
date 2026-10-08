@@ -34,6 +34,35 @@ let accumulator = 0;
 let previous = performance.now();
 let lastStep = { desiredVelocity: { x: 0, y: 0 }, stepMs: 0 };
 let completedPhysicsSteps = 0;
+let simulationPaused = false;
+const pauseButton = document.querySelector("#pause-simulation");
+const stepButton = document.querySelector("#single-step");
+const simulationControlStatus = document.querySelector("#simulation-control-status");
+
+function updateSimulationControl() {
+  pauseButton.textContent = simulationPaused ? "Resume simulation (Space)" : "Pause simulation (Space)";
+  pauseButton.setAttribute("aria-pressed", String(simulationPaused));
+  stepButton.disabled = !simulationPaused;
+  document.body.dataset.simulationPaused = String(simulationPaused);
+  simulationControlStatus.textContent = simulationPaused ?
+    "Paused. Edit matter without advancing physics; single-step to inspect the response." :
+    "Running. Live edits immediately affect subsequent physics steps.";
+}
+function setSimulationPaused(next) {
+  simulationPaused = next;
+  accumulator = 0;
+  previous = performance.now();
+  updateSimulationControl();
+}
+pauseButton.addEventListener("click", () => setSimulationPaused(!simulationPaused));
+stepButton.addEventListener("click", () => {
+  if (!simulationPaused) return;
+  lastStep = world.step(movementInput());
+  completedPhysicsSteps += 1;
+  document.body.dataset.physicsSteps = String(completedPhysicsSteps);
+  render();
+});
+updateSimulationControl();
 
 function resize() {
   const rect = canvas.getBoundingClientRect();
@@ -77,7 +106,22 @@ function movementInput() {
 }
 
 window.addEventListener("keydown", (event) => {
-  if (event.target instanceof HTMLInputElement) return;
+  if (event.target instanceof HTMLInputElement ||
+      event.target instanceof HTMLSelectElement ||
+      event.target instanceof HTMLTextAreaElement ||
+      event.target instanceof HTMLButtonElement) return;
+  if (event.code === "Space") {
+    event.preventDefault();
+    setSimulationPaused(!simulationPaused);
+    return;
+  }
+  if (event.code === "Period") {
+    if (simulationPaused) {
+      event.preventDefault();
+      stepButton.click();
+    }
+    return;
+  }
   input.keys.add(event.code);
   if (event.code === "KeyF") {
     camera.follow = true;
@@ -432,7 +476,8 @@ function render() {
     " · authored " + snapshot.authoredCount +
     " · physics " + lastStep.stepMs.toFixed(2) + " ms" +
     " · zoom " + camera.zoom.toFixed(0) + " px/m" +
-    (camera.follow ? " · follow " + camera.followTarget : " · free camera");
+    (camera.follow ? " · follow " + camera.followTarget : " · free camera") +
+    (simulationPaused ? " · PAUSED" : "");
 
   document.body.dataset.activeBodies = String(snapshot.entities.length);
 }
@@ -440,9 +485,9 @@ function render() {
 function frame(now) {
   let elapsed = Math.min(0.1, (now - previous) / 1000);
   previous = now;
-  accumulator += elapsed;
+  if (!simulationPaused) accumulator += elapsed;
 
-  while (accumulator >= FIXED_DT) {
+  while (!simulationPaused && accumulator >= FIXED_DT) {
     lastStep = world.step(movementInput());
     completedPhysicsSteps += 1;
     accumulator -= FIXED_DT;
