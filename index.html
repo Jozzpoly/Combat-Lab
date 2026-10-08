@@ -14,7 +14,7 @@
         <strong>Material Agency Yard</strong>
         <span id="runtime-summary">initializing physical world…</span>
       </div>
-      <div class="controls-hint">WASD move · wheel zoom · middle-drag pan · F follow · left select · right-hold grip</div>
+      <div class="controls-hint">WASD move · wheel zoom · middle-drag pan · F follow · left select · right-hold grip · Shift+left-drag: material box · Ctrl+left-drag: fixed obstacle</div>
     </section>
 
     <aside class="panel">
@@ -49,6 +49,17 @@
           <button id="spawn-heavy">+ heavy crate</button>
         </div>
         <p class="muted">No population cap. Spawns are allowed to become ugly or expensive; the runtime reports what happens.</p>
+      </section>
+
+      <section>
+        <h2>Live world authoring</h2>
+        <p class="muted">Draw a material box with Shift+left-drag, or a fixed obstruction with Ctrl+left-drag. Edits stay in the scene when simulation resets. They may overlap existing matter; contact consequences are not hidden.</p>
+        <label>New box mass <input id="author-mass" type="number" step="1" value="20"></label>
+        <div class="button-row">
+          <button id="undo-edit">Undo last edit</button>
+          <button id="clear-edits">Clear authored edits</button>
+        </div>
+        <p id="world-edit-feedback" class="muted" aria-live="polite">No scene edits.</p>
       </section>
 
       <section>
