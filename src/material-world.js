@@ -1,5 +1,6 @@
 import RAPIER from "@dimforge/rapier2d-deterministic";
 import { clampMagnitude, computeGripImpulse, computeMotorImpulse } from "./control-laws.js";
+import { stepLocalShuttle } from "./local-shuttle.js";
 
 export const FIXED_DT = 1 / 60;
 export const WORLD_SIZE = Object.freeze({ width: 24, height: 14 });
@@ -675,49 +676,26 @@ export class MaterialWorld {
   #advanceLocalActor({ id, sense, ctl, direction, mode, lower, upper,
     recoveryDuration, resistanceTicks }) {
     const entity = this.entities.get(id);
-    ctl.tick += 1;
-    ctl.estimatedX += sense?.deltaX ?? 0;
-    if ((mode === "tactile-recovery" || mode === "directional-recovery") &&
-        ctl.recoveryTicks === 0) {
-      const driven = sense && sense.motorEffort > 0.01;
-      // Directional mode demands *forward* tactile evidence. Pure lateral
-      // touch must not masquerade as an obstacle in the requested direction.
-      const contactEvidence = sense && (mode === "directional-recovery" ?
-        sense.forwardTouch : sense.touch);
-      const resisted = contactEvidence &&
-        sense.progressAlongIntent !== null &&
-        sense.progressAlongIntent < entity.maxSpeed * 0.12;
-      ctl.blockedTicks = driven && resisted ? ctl.blockedTicks + 1 : 0;
-      if (ctl.blockedTicks >= resistanceTicks) {
-        const former = direction;
-        direction = -direction;
-        ctl.recoveryTicks = recoveryDuration;
-        ctl.blockedTicks = 0;
-        ctl.recoveries += 1;
-        ctl.lastTransition = {
-          tick: ctl.tick,
-          reason: "sustained touch + low progress + motor effort",
-          fromDirection: former, toDirection: direction
-        };
-        this.#recordEvent("actor.reversal",
-          id + " changed direction after local resistance " +
-          former + " -> " + direction);
-      }
+    const decision = stepLocalShuttle({
+      state: ctl, sense, direction, mode, maxSpeed: entity.maxSpeed,
+      lower, upper, recoveryDuration, resistanceTicks
+    });
+    // The policy cannot see World: the host merely applies its declared
+    // intent to the physical body and records a research-only explanation.
+    Object.assign(ctl, decision.state);
+    if (decision.transition) {
+      this.#recordEvent("actor.reversal",
+        id + " changed direction after local resistance " +
+        decision.transition.fromDirection + " -> " +
+        decision.transition.toDirection);
     }
-    // Lane length is authored; estimated position is integrated only
-    // from the individual's own actual physical displacements.
-    if (ctl.recoveryTicks === 0) {
-      if (ctl.estimatedX > upper) direction = -1;
-      if (ctl.estimatedX < lower) direction = 1;
-    }
-    ctl.state = ctl.recoveryTicks > 0 ? "backoff" :
-      ctl.blockedTicks > 0 ? "contact-pressure" : "cruise";
-    const intendedVelocity = { x: entity.maxSpeed * direction, y: 0 };
     const motorImpulse = this.#applyMotor(
-      entity, intendedVelocity, entity.acceleration, entity.braking
+      entity, decision.intendedVelocity, entity.acceleration, entity.braking
     );
-    if (ctl.recoveryTicks > 0) ctl.recoveryTicks -= 1;
-    return { intendedVelocity, motorImpulse, direction };
+    return {
+      intendedVelocity: decision.intendedVelocity,
+      motorImpulse, direction: decision.direction
+    };
   }
 
   #stepResident() {
