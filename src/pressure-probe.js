@@ -1942,6 +1942,67 @@ try {
     detail: String(error?.message ?? error).slice(0, 300) });
 }
 
+await observation("finite-lateral-maneuver-short-versus-long-obstruction", world => {
+  const run = ({ height, mode, side }) => {
+    world.clearAuthored();
+    world.setPeerEnabled(false);
+    world.setBraceEnabled(false);
+    world.setResidentProfile(DEFAULT_RESIDENT_PROFILE);
+    world.setResidentMode(mode);
+    world.setActorSidePreference("resident", side);
+    world.reset();
+    const wall = world.authorRect({ kind: "wall", cx: 16.8, cy: 11.4,
+      width: .6, height });
+    let maxX = -Infinity, maxYShift = 0, firstBeyond = null;
+    for (let tick = 1; tick <= 350; tick++) {
+      world.step(still);
+      const state = at(world, "resident");
+      maxX = Math.max(maxX, state.position.x);
+      maxYShift = Math.max(maxYShift, Math.abs(state.position.y-11.4));
+      if (firstBeyond === null && state.position.x > 17.5) firstBeyond=tick;
+    }
+    finite(world, "finite lateral pressure");
+    return { wall, mode, height, side, maxX, maxYShift,
+      firstBeyond, attempts: world.residentControl.lateralAttempts,
+      recoveries: world.residentControl.recoveries };
+  };
+  const shortBackoff = run({ height:1, mode:"directional-recovery", side:1 });
+  const shortLateral = run({ height:1, mode:"lateral-maneuver", side:1 });
+  const longLateral = run({ height:8, mode:"lateral-maneuver", side:1 });
+  return "short wall: backoff xMax=" + shortBackoff.maxX.toFixed(2) +
+    " vs lateral xMax=" + shortLateral.maxX.toFixed(2) +
+    " (first beyond wall t=" + String(shortLateral.firstBeyond) + ")" +
+    "; lateral yMaxShift=" + shortLateral.maxYShift.toFixed(2) +
+    "m; attempts=" + shortLateral.attempts +
+    "; long wall xMax=" + longLateral.maxX.toFixed(2) +
+    ", yMaxShift=" + longLateral.maxYShift.toFixed(2) +
+    ", first beyond t=" + String(longLateral.firstBeyond);
+});
+
+await trial("no-physical-obstruction-does-not-fabricate-a-lateral-maneuver", world => {
+  const run = mode => {
+    world.clearAuthored();
+    world.setResidentMode(mode);
+    world.setActorSidePreference("resident",1);
+    world.reset();
+    const positions=[];
+    for(let i=0;i<180;i++){
+      world.step(still);
+      const e=at(world,"resident");
+      positions.push([e.position.x,e.position.y,e.velocity.x,e.velocity.y]);
+    }
+    assert(world.residentControl.lateralAttempts===0,
+      "side maneuver invented obstruction in the empty lane");
+    return positions;
+  };
+  const a=run("directional-recovery"),b=run("lateral-maneuver");
+  let worst=0;
+  for(let i=0;i<a.length;i++)for(let j=0;j<4;j++)
+    worst=Math.max(worst,Math.abs(a[i][j]-b[i][j]));
+  assert(worst<1e-6,"no-contact maneuver changed material trajectory: "+worst);
+  return "same unobstructed trajectory, max 2D state divergence=" + worst.toExponential(1);
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
