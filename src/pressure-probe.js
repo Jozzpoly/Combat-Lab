@@ -306,7 +306,7 @@ for (const specimen of [
 
 for (const braking of [24, 0]) {
   await observation("grip-player-reaction-braking-" + braking, (world) => {
-    world.setPlayerProfile({ ...world.profile, braking });
+    world.setPlayerProfile({ ...world.profile, braking, gripBraking: braking });
     world.player().body.setTranslation({ x: 5.5, y: 5.8 }, true);
     assert(world.beginGrip({ x: 6.9, y: 5.8 }), "could not grasp light crate");
     world.setGripTarget({ x: 7.9, y: 5.8 });
@@ -334,6 +334,23 @@ for (const braking of [24, 0]) {
       "m; causal interpretation still open";
   });
 }
+
+await trial("grip-braking-can-be-varied-without-changing-normal-braking", (world) => {
+  world.setPlayerProfile({ ...world.profile, braking: 24, gripBraking: 0 });
+  world.player().body.setTranslation({ x: 5.5, y: 5.8 }, true);
+  assert(world.beginGrip({ x: 6.9, y: 5.8 }), "grip acquisition failed");
+  world.setGripTarget({ x: 7.9, y: 5.8 });
+  for (let i = 0; i < 120; i++) world.step(still);
+  const playerDx = world.player().body.translation().x - 5.5;
+  assert(playerDx < -0.1,
+    "independent grip braking did not expose physical reaction: dx=" + playerDx);
+  assert(world.profile.braking === 24 && world.profile.gripBraking === 0,
+    "experiment silently coupled independent braking authorities");
+  world.endGrip();
+  finite(world, "grip-braking decoupled");
+  return "ordinary braking=24, grip braking=0; player dx=" +
+    playerDx.toFixed(3) + "m";
+});
 
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
