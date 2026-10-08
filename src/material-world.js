@@ -428,6 +428,8 @@ export class MaterialWorld {
     // All authored fields were validated before changing any profile value.
     this.residentProfile = accepted;
     Object.assign(entity, accepted, { pickRadius: accepted.radius + 0.16 });
+    this.#recordEvent("actor.body", "resident radius=" + accepted.radius +
+      "m, mass=" + accepted.mass + "kg, maxSpeed=" + accepted.maxSpeed);
   }
 
   selectAt(point) {
