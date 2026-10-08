@@ -110,6 +110,8 @@ export class MaterialWorld {
     // This probe preserves two selectable, explicitly authored low-level
     // control laws. Neither one is autonomous cognition or a world planner.
     this.residentMode = "tactile-recovery";
+    this.residentSidePreference = 1;
+    this.peerSidePreference = -1;
     this.reset();
   }
 
@@ -136,7 +138,8 @@ export class MaterialWorld {
     this.interventionEvents = [];
     this.residentControl = {
       tick: 0, blockedTicks: 0, recoveryTicks: 0, recoveries: 0,
-      estimatedX: 0, state: "cruise", lastTransition: null
+      estimatedX: 0, estimatedY: 0, lateralTicks: 0, lateralAttempts: 0,
+      state: "cruise", lastTransition: null
     };
     this.peerDirection = -1;
     this.peerSense = null;
@@ -720,7 +723,7 @@ export class MaterialWorld {
 
   setResidentMode(mode) {
     if (mode !== "baseline" && mode !== "tactile-recovery" &&
-        mode !== "directional-recovery") {
+        mode !== "directional-recovery" && mode !== "lateral-maneuver") {
       throw new RangeError("resident mode must be baseline, tactile-recovery or directional-recovery");
     }
     this.residentMode = mode;
@@ -739,16 +742,24 @@ export class MaterialWorld {
     const entity = this.entities.get(id);
     const decision = stepLocalShuttle({
       state: ctl, sense, direction, mode, maxSpeed: entity.maxSpeed,
-      lower, upper, recoveryDuration, resistanceTicks
+      lower, upper, recoveryDuration, resistanceTicks,
+      sidePreference: id === "resident" ?
+        this.residentSidePreference : this.peerSidePreference
     });
     // The policy cannot see World: the host merely applies its declared
     // intent to the physical body and records a research-only explanation.
     Object.assign(ctl, decision.state);
     if (decision.transition) {
-      this.#recordEvent("actor.reversal",
-        id + " changed direction after local resistance " +
-        decision.transition.fromDirection + " -> " +
-        decision.transition.toDirection);
+      if (decision.transition.lateralDirection) {
+        this.#recordEvent("actor.lateral",
+          id + " chose bounded lateral velocity from own forward-touch pressure; side=" +
+          decision.transition.lateralDirection);
+      } else {
+        this.#recordEvent("actor.reversal",
+          id + " changed direction after local resistance " +
+          decision.transition.fromDirection + " -> " +
+          decision.transition.toDirection);
+      }
     }
     const motorImpulse = this.#applyMotor(
       entity, decision.intendedVelocity, entity.acceleration, entity.braking
@@ -782,6 +793,18 @@ export class MaterialWorld {
     this.peerControl.state = "cruise";
     this.peerControl.lastTransition = null;
     this.#recordEvent("actor.peerMode", "peer controller=" + mode);
+  }
+
+  setActorSidePreference(id, value) {
+    if (id !== "resident" && id !== "peer") {
+      throw new RangeError("lateral preference is only authored for locally driven actors");
+    }
+    const side = Number(value);
+    if (side !== -1 && side !== 1)
+      throw new RangeError("lateral direction must be -1 (up) or 1 (down)");
+    if (id === "resident") this.residentSidePreference = side;
+    else this.peerSidePreference = side;
+    this.#recordEvent("actor.sidePreference", id + " side=" + side);
   }
 
   #stepPeer() {
@@ -929,7 +952,8 @@ export class MaterialWorld {
           touch, forwardTouch,
           motorEffort: Math.hypot(drive.motorImpulse.x, drive.motorImpulse.y),
           progressAlongIntent,
-          deltaX: now.x - from.x
+          deltaX: now.x - from.x,
+          deltaY: now.y - from.y
         };
         if (id === "resident") this.residentSense = localSample;
         else this.peerSense = localSample;
@@ -996,6 +1020,8 @@ export class MaterialWorld {
       residentControl: { mode: this.residentMode, ...this.residentControl },
       peerEnabled: this.peerEnabled,
       peerMass: this.peerMass,
+      residentSidePreference: this.residentSidePreference,
+      peerSidePreference: this.peerSidePreference,
       braceEnabled: this.braceEnabled,
       braceMass: this.braceMass,
       braceBraking: this.braceBraking,
