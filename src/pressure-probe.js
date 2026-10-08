@@ -138,6 +138,44 @@ await trial("motor-only-edit-preserves-physical-collider", (world) => {
   return "stable collider after motor-only edit";
 });
 
+await trial("authored-world-survives-reset-and-undo", (world) => {
+  const baseStatic = world.snapshot().staticRects.length;
+  const wallId = world.authorRect({ kind: "wall", cx: 3, cy: 3, width: 1.5, height: 0.3 });
+  const boxId = world.authorRect({ kind: "object", cx: 6, cy: 9,
+    width: 0.9, height: 1.2, mass: 27 });
+  assert(world.snapshot().authoredCount === 2, "authored record not created");
+  assert(world.snapshot().staticRects.length === baseStatic + 1, "wall missing");
+  assert(at(world, boxId).mass === 27, "authored object mass not retained");
+  for (let i = 0; i < 30; i++) world.step(still);
+  world.reset();
+  assert(world.snapshot().authoredCount === 2, "reset erased authored scene");
+  assert(world.snapshot().staticRects.some((x) => x.id === wallId), "wall lost on reset");
+  assert(at(world, boxId).mass === 27, "authored object lost on reset");
+  assert(world.undoAuthored(), "cannot undo authored box");
+  assert(!world.snapshot().entities.some((x) => x.id === boxId), "undone box still in world");
+  assert(world.clearAuthored() === 1, "cannot clear remaining wall");
+  assert(world.snapshot().staticRects.length === baseStatic, "authored wall still present");
+  finite(world, "authored scene");
+  return "wall+box persisted; undo/clear removed live matter";
+});
+
+await trial("authoring-rejects-degenerate-not-signed-coordinates", (world) => {
+  const id = world.authorRect({ kind: "wall", cx: -3, cy: -2,
+    width: 0.25, height: 0.25 });
+  assert(world.snapshot().staticRects.some((x) => x.id === id && x.cx === -3),
+    "authored world was silently confined inside default arena");
+  const count = world.authoredShapes.length;
+  let rejected = false;
+  try {
+    world.authorRect({ kind: "wall", cx: 3, cy: 3, width: 0.001, height: 1 });
+  } catch (error) {
+    rejected = error instanceof RangeError;
+  }
+  assert(rejected, "program-unsafe near-degenerate geometry was accepted");
+  assert(world.authoredShapes.length === count, "invalid edit partially mutated scene");
+  return "signed positions allowed; unsafe dimensions rejected without mutation";
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
