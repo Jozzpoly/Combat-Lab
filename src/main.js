@@ -4,6 +4,7 @@ const canvas = document.querySelector("#lab");
 const ctx = canvas.getContext("2d");
 const summary = document.querySelector("#runtime-summary");
 const selectedReadout = document.querySelector("#selected-readout");
+const causalReadout = document.querySelector("#causal-readout");
 const profileFeedback = document.querySelector("#profile-feedback");
 const worldEditFeedback = document.querySelector("#world-edit-feedback");
 const boxMassInput = document.querySelector("#author-mass");
@@ -291,6 +292,34 @@ function render() {
     else drawBox(entity, selected);
   }
 
+  const selectedEntity = snapshot.entities.find((entity) => entity.id === snapshot.selectedId);
+  const selectedCausality = world.selectedSnapshot()?.observedMotor ?? null;
+  if (selectedEntity && selectedCausality) {
+    const anchor = worldToScreen(selectedEntity.position);
+    for (const arrow of [
+      { velocity: selectedCausality.intendedVelocity, color: "#73b7ff" },
+      { velocity: selectedCausality.measuredVelocity, color: "#efca73" }
+    ]) {
+      const vx = arrow.velocity.x;
+      const vy = arrow.velocity.y;
+      const length = Math.hypot(vx, vy);
+      if (length < 0.02) continue;
+      const shown = Math.min(length, 3.2) * camera.zoom * 0.28;
+      const ex = anchor.x + vx / length * shown;
+      const ey = anchor.y + vy / length * shown;
+      ctx.beginPath();
+      ctx.moveTo(anchor.x, anchor.y);
+      ctx.lineTo(ex, ey);
+      ctx.strokeStyle = arrow.color;
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(ex, ey, 3, 0, Math.PI * 2);
+      ctx.fillStyle = arrow.color;
+      ctx.fill();
+    }
+  }
+
   if (input.drawing) {
     const a = worldToScreen(input.drawing.start);
     const b = worldToScreen(input.drawing.end);
@@ -333,6 +362,27 @@ function render() {
       "velocity " + selected.velocity.x.toFixed(2) + ", " + selected.velocity.y.toFixed(2) + "\n" +
       "contacts " + (selected.contacts.length ? selected.contacts.join(", ") : "none") + "\n" +
       (snapshot.grip ? "grip force " + snapshot.grip.force.toFixed(1) : "");
+  }
+
+  const motor = selected?.observedMotor ?? null;
+  if (motor) {
+    const speed = (v) => Math.hypot(v.x, v.y).toFixed(2);
+    const impulse = Math.hypot(motor.motorImpulse.x, motor.motorImpulse.y).toFixed(2);
+    causalReadout.textContent =
+      "driven: " + selected.id + "\n" +
+      "intended speed: " + speed(motor.intendedVelocity) + " m/s\n" +
+      "realized step travel: " + speed(motor.measuredVelocity) + " m/s\n" +
+      "applied motor impulse: " + impulse + " N·s\n" +
+      "progress on intended axis: " +
+        (motor.progressAlongIntent === null ? "no requested movement" :
+          motor.progressAlongIntent.toFixed(2) + " m/s") + "\n" +
+      "co-observed contacts: " +
+        (motor.contacts.length ? motor.contacts.join(", ") : "none") + "\n" +
+      "No physical-cause inference is made from this snapshot.";
+  } else {
+    causalReadout.textContent = selected ?
+      "No own motor trace for this body. It may still receive contact/grip impulses." :
+      "No selected body.";
   }
 
   summary.textContent =
