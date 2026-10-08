@@ -1379,6 +1379,86 @@ await trial("same-lateral-wall-old-touch-reverses-new-directional-does-not", wor
     firstWorldDifference + "; both touched same side wall";
 });
 
+await trial("live-third-actor-entry-changes-others-only-after-real-contact", world => {
+  const run = insert => {
+    world.setPeerEnabled(true);
+    world.setPeerMass(30);
+    world.setBraceEnabled(false);
+    world.reset();
+    const snapshots = [];
+    for (let tick = 1; tick <= 220; tick++) {
+      if (tick === 20 && insert) world.setBraceEnabled(true);
+      world.step(still);
+      const res = at(world, "resident");
+      const peer = at(world, "peer");
+      const obsA = world.lastCausalObservations.get("resident");
+      const obsB = world.lastCausalObservations.get("peer");
+      snapshots.push({
+        tick, ax: res.position.x, bx: peer.position.x,
+        av: res.velocity.x, bv: peer.velocity.x,
+        amotor: obsA.intendedVelocity.x, bmotor: obsB.intendedVelocity.x,
+        braceTouch: obsA.contacts.includes("brace") ||
+          obsB.contacts.includes("brace")
+      });
+    }
+    finite(world, "live 3rd actor arrival");
+    return snapshots;
+  };
+  const alone = run(false);
+  const inserted = run(true);
+  const firstTouch = inserted.find(x => x.braceTouch)?.tick;
+  let firstAnyDiff = null;
+  for (let i = 0; i < alone.length; i++) {
+    const a = alone[i], b = inserted[i];
+    if (firstAnyDiff === null &&
+      ["ax", "bx", "av", "bv", "amotor", "bmotor"].some(
+        key => Math.abs(a[key] - b[key]) > 1e-7
+      )) firstAnyDiff = i + 1;
+  }
+  assert(firstTouch && firstAnyDiff,
+    "live participant insertion did not enter physical causal graph");
+  assert(firstTouch >= 20 && firstAnyDiff >= firstTouch,
+    "adding a body changed other trajectories before it physically touched them");
+  assert(alone.slice(0, 19).every((frame, i) =>
+    frame.ax === inserted[i].ax && frame.bx === inserted[i].bx &&
+    frame.amotor === inserted[i].amotor &&
+    frame.bmotor === inserted[i].bmotor),
+    "live third-body addition retroactively altered earlier physics");
+  return "holder inserted t=20; first contact t=" + firstTouch +
+    "; first other-body motor/material difference t=" + firstAnyDiff;
+});
+
+await observation("remove-holder-during-live-encounter-survey", world => {
+  world.setPeerEnabled(true);
+  world.setPeerMass(30);
+  world.setBraceProfile({ mass: 120, braking: 30 });
+  world.setBraceEnabled(true);
+  world.reset();
+  let contactsBefore = 0, ghostAfter = 0, removedAt = 90;
+  const beforeBodies = world.snapshot().entities.length;
+  for (let tick = 1; tick <= 220; tick++) {
+    if (tick === removedAt) {
+      world.setBraceEnabled(false);
+      if (world.entities.has("brace")) throw Error("holder body still in World");
+    }
+    world.step(still);
+    const res = world.lastCausalObservations.get("resident");
+    const peer = world.lastCausalObservations.get("peer");
+    if (tick < removedAt &&
+      (res.contacts.includes("brace") || peer.contacts.includes("brace")))
+      contactsBefore++;
+    if (tick >= removedAt &&
+      (res.contacts.includes("brace") || peer.contacts.includes("brace")))
+      ghostAfter++;
+  }
+  finite(world, "holder removal while pressured");
+  assert(beforeBodies === 7 && world.snapshot().entities.length === 6 &&
+    contactsBefore > 0 && ghostAfter === 0,
+    "removal failed physically or left ghost contact history");
+  return "holder removed at t=90; contacts before=" + contactsBefore +
+    "; ghost contacts after=" + ghostAfter + "; remaining bodies=6";
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
