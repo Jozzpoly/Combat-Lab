@@ -82,6 +82,7 @@ export class MaterialWorld {
     this.entities = new Map();
     this.colliderLabels = new Map();
     this.residentDirection = 1;
+    this.residentSense = null;
     // This probe preserves two selectable, explicitly authored low-level
     // control laws. Neither one is autonomous cognition or a world planner.
     this.residentMode = "tactile-recovery";
@@ -102,6 +103,7 @@ export class MaterialWorld {
     this.lastCausalObservations.clear();
     this.spawnSerial = 0;
     this.residentDirection = 1;
+    this.residentSense = null;
     this.residentControl = {
       tick: 0, blockedTicks: 0, recoveryTicks: 0, recoveries: 0,
       state: "cruise", lastTransition: null
@@ -458,17 +460,15 @@ export class MaterialWorld {
     const entity = this.entities.get("resident");
     const ctl = this.residentControl;
     ctl.tick += 1;
-    const previous = this.lastCausalObservations.get("resident");
+    const previous = this.residentSense;
 
     // Locally testable evidence, not a map/obstacle-label oracle:
     // commanded effort, realized progress and bare tactile contact.
     // A contact alone is not proof of blockage; a stationary motorless
     // actor must not be misclassified as blocked.
     if (this.residentMode === "tactile-recovery" && ctl.recoveryTicks === 0) {
-      const driven = previous && Math.hypot(
-        previous.motorImpulse.x, previous.motorImpulse.y
-      ) > 0.01;
-      const resistance = previous && previous.contacts.length > 0 &&
+      const driven = previous && previous.motorEffort > 0.01;
+      const resistance = previous && previous.touch &&
         previous.progressAlongIntent !== null &&
         previous.progressAlongIntent < entity.maxSpeed * 0.12;
       ctl.blockedTicks = driven && resistance ? ctl.blockedTicks + 1 : 0;
@@ -596,6 +596,18 @@ export class MaterialWorld {
       const progressAlongIntent = requestedSpeed > 1e-8 ?
         (measuredVelocity.x * drive.intendedVelocity.x +
           measuredVelocity.y * drive.intendedVelocity.y) / requestedSpeed : null;
+      if (id === "resident") {
+        // The on-board controller receives only synthetic tactile/proprioceptive
+        // evidence. World object IDs, authored geometry and global positions
+        // remain on the research/debug plane, never in this local sample.
+        let touch = false;
+        this.world.contactPairsWith(entity.collider, () => { touch = true; });
+        this.residentSense = {
+          touch,
+          motorEffort: Math.hypot(drive.motorImpulse.x, drive.motorImpulse.y),
+          progressAlongIntent
+        };
+      }
       this.lastCausalObservations.set(id, {
         intendedVelocity: { ...drive.intendedVelocity },
         motorImpulse: { x: drive.motorImpulse.x, y: drive.motorImpulse.y },
