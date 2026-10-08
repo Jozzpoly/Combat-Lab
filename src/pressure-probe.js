@@ -2218,6 +2218,105 @@ try {
     detail:String(error?.message??error).slice(0,300)});
 }
 
+await trial("dynamic-holder-morphology-and-angle-persist-through-reset", world => {
+  world.setPeerEnabled(true);
+  world.setBraceEnabled(true);
+  const original = world.entities.get("brace");
+  const handle = original.body.handle;
+  world.setBraceForm("beam");
+  world.setBraceAngle(35);
+  const beam = at(world, "brace");
+  assert(world.entities.get("brace").body.handle === handle &&
+    beam.shape === "box" && beam.half.x > beam.half.y &&
+    Math.abs(beam.rotation - 35*Math.PI/180) < 1e-4,
+    "morphological edit did not create a rotated physical beam on the same body");
+  world.setBraceProfile({mass:220,braking:10});
+  assert(world.entities.get("brace").shape === "box" &&
+    world.entities.get("brace").mass === 220,
+    "mass edit reverted beam collider to a circle");
+  for(let i=0;i<160;i++)world.step(still);
+  finite(world,"mixed morphology pressure");
+  world.reset();
+  const after=at(world,"brace");
+  assert(after.shape==="box" && after.mass===220 &&
+    Math.abs(after.rotation-35*Math.PI/180)<1e-4 &&
+    world.braceForm==="beam",
+    "reset lost authored physical form/orientation");
+  let bad=false;
+  try{world.setBraceForm("ghost");}catch(e){bad=e instanceof RangeError;}
+  assert(bad && world.braceForm==="beam",
+    "invalid third-body form changed scene truth");
+  world.setBraceForm("round");
+  assert(at(world,"brace").shape==="circle" &&
+    !at(world,"brace").half,
+    "switching morphology did not restore real round collider");
+  finite(world,"morphology toggles");
+  return "dynamic round→rotated beam→round, same body ID, physical mass 220kg and reset persistence";
+});
+
+await observation("same-three-body-pressure-round-versus-beam-holder", world => {
+  const run=form=>{
+    world.setPeerEnabled(true);
+    world.setPeerMass(30);
+    world.setBraceEnabled(true);
+    world.setBraceProfile({mass:120,braking:30});
+    world.setBraceForm(form);
+    world.setBraceAngle(0);
+    world.reset();
+    let contacts=0,peakAngular=0;
+    for(let i=0;i<230;i++){
+      world.step(still);
+      const brace=at(world,"brace");
+      const obs=world.lastCausalObservations.get("brace");
+      if(obs.contacts.length)contacts++;
+      peakAngular=Math.max(peakAngular,
+        Math.abs(world.entities.get("brace").body.angvel()));
+    }
+    finite(world,"holder morphology A/B");
+    return {holder:at(world,"brace"),peer:at(world,"peer"),
+      resident:at(world,"resident"),contacts,peakAngular};
+  };
+  const circle=run("round"), beam=run("beam");
+  return "round: holder x="+circle.holder.position.x.toFixed(3)+
+    ", contacts="+circle.contacts+", angular peak="+circle.peakAngular.toFixed(3)+
+    "; beam: holder x="+beam.holder.position.x.toFixed(3)+
+    ", contacts="+beam.contacts+", angular peak="+beam.peakAngular.toFixed(3)+
+    "; peer x round/beam="+circle.peer.position.x.toFixed(3)+
+    "/"+beam.peer.position.x.toFixed(3)+
+    "; material morphology comparison only";
+});
+
+try{
+  document.querySelector("#fixture-pressure-chain").click();
+  const form=document.querySelector("#brace-form");
+  const angle=document.querySelector("#brace-angle");
+  const focus=document.querySelector("#focus-brace");
+  const readout=document.querySelector("#selected-readout");
+  const step=document.querySelector("#single-step");
+  assert(form&&angle&&focus&&readout&&step,
+    "holder morphology not authorable through actual browser DOM");
+  form.value="beam";
+  form.dispatchEvent(new Event("change",{bubbles:true}));
+  angle.value="30";
+  angle.dispatchEvent(new Event("change",{bubbles:true}));
+  focus.click();
+  step.click();
+  assert(readout.textContent.includes("brace") &&
+    !readout.textContent.includes("radius 0.50") &&
+    document.querySelector("#brace-status").textContent.includes("beam"),
+    "DOM physical holder remained a round body after morphology change");
+  document.querySelector("#reset-world").click();
+  focus.click();step.click();
+  assert(form.value==="beam" && angle.value==="30" &&
+    document.querySelector("#brace-status").textContent.includes("beam"),
+    "UI lost authored physical holder form through reset");
+  document.querySelector("#pause-simulation").click();
+  cases.push({name:"live-ui-third-body-morphology-and-angle",status:"PASS",
+    detail:"beam 1.8x0.56m, rotated 30deg, selected physical body, reset persisted"});
+}catch(error){
+  cases.push({name:"live-ui-third-body-morphology-and-angle",status:"FAIL",
+    detail:String(error?.message??error).slice(0,300)});
+}
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);

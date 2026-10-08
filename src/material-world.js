@@ -87,6 +87,8 @@ export class MaterialWorld {
     this.braceEnabled = false;
     this.braceMass = 120;
     this.braceBraking = 30;
+    this.braceForm = "round";
+    this.braceAngle = 0;
     this.peerMode = "tactile-recovery";
     // These are authored edits, distinct from runtime motion/afterstate.
     // Ordinary reset replays them; clear/undo deliberately change the authored scene.
@@ -294,27 +296,74 @@ export class MaterialWorld {
     return entity;
   }
 
+  #braceColliderDesc(mass) {
+    const shape = this.braceForm === "beam" ?
+      RAPIER.ColliderDesc.cuboid(0.9, 0.28) :
+      RAPIER.ColliderDesc.ball(0.5);
+    return shape.setMass(mass).setFriction(0.55).setRestitution(0);
+  }
+
+  #describeBraceBody(entity) {
+    entity.shape = this.braceForm === "beam" ? "box" : "circle";
+    entity.radius = this.braceForm === "beam" ? null : 0.5;
+    entity.half = this.braceForm === "beam" ? { x: 0.9, y: 0.28 } : null;
+    entity.pickRadius = this.braceForm === "beam" ? 1.1 : 0.66;
+  }
+
+  #replaceBraceCollider(entity, mass) {
+    this.colliderLabels.delete(entity.collider.handle);
+    this.world.removeCollider(entity.collider, true);
+    entity.collider = this.world.createCollider(
+      this.#braceColliderDesc(mass), entity.body
+    );
+    this.colliderLabels.set(entity.collider.handle, entity.id);
+    entity.mass = mass;
+    this.#describeBraceBody(entity);
+    entity.body.wakeUp();
+  }
+
   #createBrace() {
-    const radius = 0.5;
     const body = this.world.createRigidBody(
       RAPIER.RigidBodyDesc.dynamic()
         .setTranslation(17.35, 11.4)
+        .setRotation(this.braceAngle * Math.PI / 180)
         .setLinearDamping(0.4).setAngularDamping(1.5).setCcdEnabled(true)
     );
     const collider = this.world.createCollider(
-      RAPIER.ColliderDesc.ball(radius).setMass(this.braceMass)
-        .setFriction(0.55).setRestitution(0), body
+      this.#braceColliderDesc(this.braceMass), body
     );
     const entity = {
       id: "brace", label: "finite-force holding body",
-      kind: "brace", shape: "circle", radius, mass: this.braceMass,
+      kind: "brace", shape: "circle", radius: 0.5, half: null,
+      mass: this.braceMass,
       maxSpeed: 0, acceleration: 0, braking: this.braceBraking,
       body, collider, color: "#79b9a5", grabbable: false,
-      pickRadius: radius + 0.16
+      pickRadius: 0.66
     };
+    this.#describeBraceBody(entity);
     this.entities.set(entity.id, entity);
     this.colliderLabels.set(collider.handle, entity.id);
     return entity;
+  }
+
+  setBraceForm(form) {
+    if (form !== "round" && form !== "beam")
+      throw new RangeError("holder form must be round or beam");
+    if (form === this.braceForm) return;
+    this.braceForm = form;
+    if (this.braceEnabled) this.#replaceBraceCollider(
+      this.entities.get("brace"), this.braceMass
+    );
+    this.#recordEvent("actor.braceForm", "finite-force holder shape=" + form);
+  }
+
+  setBraceAngle(degrees) {
+    const angle = authoredCoordinate(degrees, "brace orientation");
+    this.braceAngle = angle;
+    if (this.braceEnabled) {
+      this.entities.get("brace").body.setRotation(angle * Math.PI / 180, true);
+    }
+    this.#recordEvent("actor.braceAngle", "holder orientation=" + angle + "°");
   }
 
   setBraceEnabled(enabled) {
@@ -345,15 +394,7 @@ export class MaterialWorld {
     const b = authoredNumber(braking, "brace braking", false);
     if (m !== this.braceMass && this.braceEnabled) {
       const entity = this.entities.get("brace");
-      this.colliderLabels.delete(entity.collider.handle);
-      this.world.removeCollider(entity.collider, true);
-      entity.collider = this.world.createCollider(
-        RAPIER.ColliderDesc.ball(entity.radius)
-          .setMass(m).setFriction(0.55).setRestitution(0), entity.body
-      );
-      this.colliderLabels.set(entity.collider.handle, entity.id);
-      entity.mass = m;
-      entity.body.wakeUp();
+      this.#replaceBraceCollider(entity, m);
     }
     if (this.braceEnabled) this.entities.get("brace").braking = b;
     this.braceMass = m;
@@ -1039,6 +1080,8 @@ export class MaterialWorld {
       braceEnabled: this.braceEnabled,
       braceMass: this.braceMass,
       braceBraking: this.braceBraking,
+      braceForm: this.braceForm,
+      braceAngle: this.braceAngle,
       peerControl: this.peerEnabled ? { mode: this.peerMode, ...this.peerControl } : null,
       authoredCount: this.authoredShapes.length,
       authoredBodyStarts: [...this.bodyStarts].map(([id, point]) =>

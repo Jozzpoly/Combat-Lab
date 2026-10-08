@@ -159,6 +159,15 @@
             <button id="focus-brace" disabled>Follow holder</button>
           </div>
           <div class="fields">
+            <label>Physical holder form
+              <select id="brace-form">
+                <option value="round">Round body</option>
+                <option value="beam">Rotatable 1.8 × 0.56 m beam</option>
+              </select>
+            </label>
+            <label>Beam orientation (degrees)
+              <input id="brace-angle" type="number" step="15" value="0">
+            </label>
             <label>Holder mass (kg) <input id="brace-mass" type="number" step="1" value="120"></label>
             <label>Finite braking (m/s²) <input id="brace-braking" type="number" step="1" value="30"></label>
           </div>

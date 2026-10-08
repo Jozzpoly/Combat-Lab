@@ -22,6 +22,8 @@ const toggleBrace = document.querySelector("#toggle-brace");
 const focusBrace = document.querySelector("#focus-brace");
 const braceMassInput = document.querySelector("#brace-mass");
 const braceBrakingInput = document.querySelector("#brace-braking");
+const braceFormSelect = document.querySelector("#brace-form");
+const braceAngleInput = document.querySelector("#brace-angle");
 const braceFeedback = document.querySelector("#brace-profile-feedback");
 const braceStatus = document.querySelector("#brace-status");
 const contactOverlayInput = document.querySelector("#contact-overlay");
@@ -431,6 +433,26 @@ function applyBraceFields() {
 }
 braceMassInput.addEventListener("change", applyBraceFields);
 braceBrakingInput.addEventListener("change", applyBraceFields);
+braceFormSelect.addEventListener("change", () => {
+  try {
+    world.setBraceForm(braceFormSelect.value);
+    braceFeedback.textContent = "";
+  } catch (error) {
+    braceFormSelect.value = world.braceForm;
+    braceFeedback.textContent = "Not applied: " + String(error?.message ?? error);
+  }
+});
+braceAngleInput.addEventListener("change", () => {
+  try {
+    if (!braceAngleInput.value.trim()) throw new RangeError("enter holder angle");
+    world.setBraceAngle(Number(braceAngleInput.value));
+    braceAngleInput.value = String(world.braceAngle);
+    braceFeedback.textContent = "";
+  } catch (error) {
+    braceAngleInput.value = String(world.braceAngle);
+    braceFeedback.textContent = "Not applied: " + String(error?.message ?? error);
+  }
+});
 refreshBraceControls();
 peerModeSelect.value = world.peerMode;
 peerModeSelect.addEventListener("change", () => {
@@ -519,6 +541,8 @@ function loadFixture(kind) {
   world.setBraceEnabled(false);
   world.setPeerMass(210);
   world.setBraceProfile({ mass: 120, braking: 30 });
+  world.setBraceForm("round");
+  world.setBraceAngle(0);
   world.setResidentProfile(DEFAULT_RESIDENT_PROFILE);
   world.setResidentMode("tactile-recovery");
   world.setPeerMode("tactile-recovery");
@@ -559,6 +583,8 @@ function loadFixture(kind) {
   peerMassField.value = String(world.peerMass);
   braceMassInput.value = String(world.braceMass);
   braceBrakingInput.value = String(world.braceBraking);
+  braceFormSelect.value = world.braceForm;
+  braceAngleInput.value = String(world.braceAngle);
   refreshPeerControls();
   refreshBraceControls();
   camera.follow = true;
@@ -846,7 +872,8 @@ function render() {
 
   braceStatus.textContent = snapshot.braceEnabled ?
     "Holder: " + snapshot.braceMass + " kg, finite braking " +
-    snapshot.braceBraking + " m/s² · not a static obstacle" :
+    snapshot.braceBraking + " m/s² · " + snapshot.braceForm +
+      " @ " + snapshot.braceAngle + "° · not a static obstacle" :
     "Third role disabled. Existing two-body control remains available.";
 
   peerStatus.textContent = snapshot.peerControl ?
