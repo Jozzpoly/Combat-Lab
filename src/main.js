@@ -298,3 +298,13 @@ function frame(now) {
 
 document.body.dataset.combatLabReady = "true";
 requestAnimationFrame(frame);
+
+// Isolated internal pressure query; no change to normal Owner interaction.
+// A cold headless browser exercises this exact emitted physics/runtime build.
+if (new URLSearchParams(window.location.search).has("pressureProbe")) {
+  document.body.dataset.pressureProbe = "running";
+  import("./pressure-probe.js").catch((error) => {
+    document.body.dataset.pressureProbe = "fail";
+    document.body.dataset.pressureFailure = String(error?.message ?? error).slice(0, 500);
+  });
+}
