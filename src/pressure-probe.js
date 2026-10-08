@@ -1673,6 +1673,37 @@ try {
     detail: String(error?.message ?? error).slice(0, 300) });
 }
 
+await observation("four-heterogeneous-policy-combinations-under-same-pressure", world => {
+  const modes = ["tactile-recovery", "directional-recovery"];
+  const results = [];
+  for (const residentMode of modes) {
+    for (const peerMode of modes) {
+      world.setPeerEnabled(true);
+      world.setBraceEnabled(true);
+      world.setPeerMass(30);
+      world.setBraceProfile({ mass: 120, braking: 30 });
+      world.setResidentProfile(DEFAULT_RESIDENT_PROFILE);
+      world.setResidentMode(residentMode);
+      world.setPeerMode(peerMode);
+      world.reset();
+      let touchingBoth = 0;
+      for (let tick = 1; tick <= 240; tick++) {
+        world.step(still);
+        const holder = world.lastCausalObservations.get("brace").contacts;
+        if (holder.includes("resident") && holder.includes("peer")) touchingBoth++;
+      }
+      finite(world, "mixed local laws");
+      results.push(residentMode[0] + "/" + peerMode[0] +
+        ": resident x=" + at(world, "resident").position.x.toFixed(3) +
+        ", peer x=" + at(world, "peer").position.x.toFixed(3) +
+        ", recoveries " + world.residentControl.recoveries +
+        "/" + world.peerControl.recoveries +
+        ", dual-contact steps " + touchingBoth);
+    }
+  }
+  return results.join("; ") + "; measurements only, no behavioral-quality verdict";
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
