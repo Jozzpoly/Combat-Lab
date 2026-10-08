@@ -373,6 +373,7 @@ function render() {
       "intended speed: " + speed(motor.intendedVelocity) + " m/s\n" +
       "realized step travel: " + speed(motor.measuredVelocity) + " m/s\n" +
       "applied motor impulse: " + impulse + " N·s\n" +
+      "grip reaction on player: " + speed(motor.gripReactionImpulse) + " N·s\n" +
       "progress on intended axis: " +
         (motor.progressAlongIntent === null ? "no requested movement" :
           motor.progressAlongIntent.toFixed(2) + " m/s") + "\n" +
