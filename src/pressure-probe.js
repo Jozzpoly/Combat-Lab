@@ -2372,6 +2372,9 @@ try{
     clientY:rect.top+rect.height*.43,bubbles:true
   }));
   mode.value="tangential";
+  // Prior DOM trial deliberately left the numeric input invalid; restore
+  // a valid impulse so tests measure torque instead of test-order leakage.
+  document.querySelector("#experiment-impulse").value="150";
   button.click();
   assert(feedback.textContent.includes("tangential off-center") &&
     document.querySelector("#intervention-timeline").textContent.includes("world.impulse"),
