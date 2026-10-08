@@ -481,7 +481,7 @@ await trial("same-physics-private-touch-ablation-first-divergence", (world) => {
       const body = at(world, "resident");
       const sensor = world.residentSense;
       assert(Object.keys(sensor).sort().join(",") ===
-        "motorEffort,progressAlongIntent,touch",
+        "deltaX,motorEffort,progressAlongIntent,touch",
         "local controller's sensory boundary gained World identity or geometry");
       if (ablateTouch) sensor.touch = false;
       frames.push({
@@ -748,7 +748,7 @@ await trial("research-event-trace-does-not-enter-resident-sensors", (world) => {
   assert(reversals.length > 0 && reversals[0].tick >= 35,
     "resident reversal not causally placed after material contact");
   assert(Object.keys(world.residentSense).sort().join(",") ===
-    "motorEffort,progressAlongIntent,touch",
+    "deltaX,motorEffort,progressAlongIntent,touch",
     "research-plane source history leaked into local resident sensing");
   assert(world.undoAuthored(), "could not undo wall for event trace");
   assert(world.interventionEvents.some((e) => e.type === "world.remove" &&
@@ -761,6 +761,26 @@ await trial("research-event-trace-does-not-enter-resident-sensors", (world) => {
     "new simulation inherited earlier run's intervention events");
   return "world.add@0, reversal@" + reversals[0].tick +
     ", world.remove@70; reset clears previous run trace; actor sample remains private";
+});
+
+await trial("resident-lane-reversal-does-not-query-absolute-world-x", (world) => {
+  world.setResidentMode("tactile-recovery");
+  const controller = world.residentControl;
+  assert(controller.estimatedX === 0, "initial local travel estimate is not zero");
+  // A research-plane placement intentionally changes World x without
+  // fabricating private movement history. It is a falsifier of global-x access.
+  world.entities.get("resident").body.setTranslation({ x: 21.1, y: 11.4 }, true);
+  world.step(still);
+  const trace = world.lastCausalObservations.get("resident");
+  assert(trace.intendedVelocity.x > 0,
+    "resident silently used World position beyond old endpoint to reverse");
+  assert(Math.abs(controller.estimatedX) < 1e-7,
+    "local odometry fabricated a teleport displacement before moving");
+  assert(Object.keys(world.residentSense).sort().join(",") ===
+    "deltaX,motorEffort,progressAlongIntent,touch",
+    "resident received extra World truth instead of bounded proprioception");
+  return "global x=21.1 beyond former endpoint, local estimate=0;" +
+    " motor remains positive until actual proprioceptive travel";
 });
 
 const failed = cases.filter((c) => c.status === "FAIL");
