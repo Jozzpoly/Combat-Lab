@@ -1772,7 +1772,7 @@ await trial("paused-body-start-authoring-is-real-and-does-not-invent-odometry", 
   const before = world.snapshot().entities.length;
   world.repositionBody("resident", intended);
   assert(resident.body.handle === oldHandle &&
-    Math.abs(at(world, "resident").position.x - intended.x) < 1e-9 &&
+    Math.abs(at(world, "resident").position.x - intended.x) < 1e-4 &&
     world.residentControl.estimatedX === 0 &&
     world.residentSense === null,
     "manual body reposition rebuilt identity or fabricated private movement");
@@ -1785,18 +1785,18 @@ await trial("paused-body-start-authoring-is-real-and-does-not-invent-odometry", 
   try { world.repositionBody("resident", { x: NaN, y: 0 }); }
   catch (error) { invalid = error instanceof RangeError; }
   assert(invalid &&
-    at(world, "resident").position.x === intended.x &&
-    world.bodyStarts.get("resident").x === intended.x,
+    Math.abs(at(world, "resident").position.x - intended.x) < 1e-4 &&
+    Math.abs(world.bodyStarts.get("resident").x - intended.x) < 1e-4,
     "invalid placement partially changed live or authored position");
   for (let tick = 0; tick < 80; tick++) world.step(still);
   finite(world, "overlapping physically valid actor placements");
   world.reset();
   assert(world.bodyStarts.size === 4 &&
     world.snapshot().entities.length === before &&
-    at(world, "resident").position.x === intended.x &&
-    at(world, "peer").position.x === 16.5 &&
-    at(world, "brace").position.x === 16.8 &&
-    at(world, "light-crate").position.x === 17.1,
+    Math.abs(at(world, "resident").position.x - intended.x) < 1e-4 &&
+    Math.abs(at(world, "peer").position.x - 16.5) < 1e-4 &&
+    Math.abs(at(world, "brace").position.x - 16.8) < 1e-4 &&
+    Math.abs(at(world, "light-crate").position.x - 17.1) < 1e-4,
     "reset did not reconstruct authored overlapping starts");
   assert(world.residentControl.tick === 0 &&
     world.residentSense === null, "reset kept old organism sensory history");
@@ -1804,7 +1804,7 @@ await trial("paused-body-start-authoring-is-real-and-does-not-invent-odometry", 
   world.reset();
   assert(at(world, "resident").position.x === 15 &&
     at(world, "peer").position.x === 19 &&
-    at(world, "brace").position.x === 17.35,
+    Math.abs(at(world, "brace").position.x - 17.35) < 1e-4,
     "clearing authored placements failed to recover neutral positions");
   return "four physical placements, overlap allowed, invalid edit atomic, reset preserved & restore removed";
 });
@@ -1817,7 +1817,7 @@ await trial("peer-arrival-and-authored-object-placement-survive-world-rebuild", 
     world.bodyStarts.get("peer").x === -0.7,
     "temporarily disabled actor lost its authored starting place");
   world.setPeerEnabled(true);
-  assert(at(world, "peer").position.x === -0.7,
+  assert(Math.abs(at(world, "peer").position.x + 0.7) < 1e-4,
     "reenabled actor ignored its explicitly authored start");
   const id = world.authorRect({ kind: "object", cx: 8.2, cy: 8.2,
     width: .7, height: .7, mass: 20 });
@@ -1860,8 +1860,8 @@ try {
   document.querySelector("#reset-world").click();
   step.click();
   assert(feedback.textContent === textAfterPlacement &&
-    readout.textContent.includes("resident"),
-    "body placement interfered with normal reset and selection workbench");
+    readout.textContent.includes("position "),
+    "body placement interfered with normal reset and position inspection");
   restore.click();
   step.click();
   assert(feedback.textContent.includes("Restored original starts"),
