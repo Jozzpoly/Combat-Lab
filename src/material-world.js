@@ -646,6 +646,19 @@ export class MaterialWorld {
     return { ...p };
   }
 
+  applyBodyImpulse(id, impulse) {
+    const entity = this.entities.get(id);
+    if (!entity) throw new RangeError("unknown physical body: " + id);
+    const x = authoredCoordinate(impulse.x, "impulse x");
+    const y = authoredCoordinate(impulse.y, "impulse y");
+    entity.body.applyImpulse({ x, y }, true);
+    this.#recordEvent("world.impulse", id + " applied (" +
+      x.toFixed(2) + ", " + y.toFixed(2) + ") N·s by experimenter");
+    // This is a physical intervention; actor-local sensing remains intact.
+    // Motor effort and material consequences are observed on the next step.
+    return { x, y };
+  }
+
   clearBodyStartOverrides() {
     const count = this.bodyStarts.size;
     this.bodyStarts.clear();

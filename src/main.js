@@ -31,6 +31,9 @@ const interventionTimeline = document.querySelector("#intervention-timeline");
 const placeBodyButton = document.querySelector("#place-selected-at-cursor");
 const restoreBodyStartsButton = document.querySelector("#restore-body-positions");
 const bodyPositionFeedback = document.querySelector("#body-position-feedback");
+const experimentImpulse = document.querySelector("#experiment-impulse");
+const pokeBodyButton = document.querySelector("#poke-selected-body");
+const impulseFeedback = document.querySelector("#impulse-feedback");
 
 const camera = {
   center: { x: 12, y: 7 },
@@ -467,6 +470,34 @@ placeBodyButton.addEventListener("click", () => {
     p.y.toFixed(2) + "). Reset reconstructs this scene.";
   camera.follow = false;
   render();
+});
+pokeBodyButton.addEventListener("click", () => {
+  const entity = world.entities.get(world.selectedId);
+  if (!entity) return;
+  try {
+    const magnitude = Number(experimentImpulse.value);
+    if (!Number.isFinite(magnitude))
+      throw new RangeError("impulse must be a finite signed number");
+    const pos = entity.body.translation();
+    const delta = {
+      x: input.pointer.x - pos.x,
+      y: input.pointer.y - pos.y
+    };
+    const length = Math.hypot(delta.x, delta.y);
+    if (length < 0.00001)
+      throw new RangeError("move cursor away from the body center");
+    const result = world.applyBodyImpulse(entity.id, {
+      x: magnitude * delta.x / length,
+      y: magnitude * delta.y / length
+    });
+    impulseFeedback.textContent = "Applied to " + entity.id + ": (" +
+      result.x.toFixed(2) + ", " + result.y.toFixed(2) +
+      ") N·s. Observe the next physical step.";
+    render();
+  } catch (error) {
+    impulseFeedback.textContent =
+      "Not applied: " + String(error?.message ?? error);
+  }
 });
 restoreBodyStartsButton.addEventListener("click", () => {
   const count = world.clearBodyStartOverrides();

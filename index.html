@@ -37,6 +37,11 @@
           <button id="restore-body-positions">Restore original body starts</button>
         </div>
         <p id="body-position-feedback" class="muted" aria-live="polite">No manual body relocation.</p>
+        <label>Physical impulse (N·s; negative = away from cursor)
+          <input id="experiment-impulse" type="number" step="25" value="150">
+        </label>
+        <button id="poke-selected-body">Impulse selected body toward cursor</button>
+        <p id="impulse-feedback" class="muted" aria-live="polite">An actual force impulse, not teleportation or NPC intent. Works while paused; advance a physics step to observe.</p>
       </section>
 
       <section>

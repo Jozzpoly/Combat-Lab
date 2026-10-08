@@ -2152,6 +2152,72 @@ await trial("pushable-material-effectivity-diverts-unnecessary-side-maneuvers", 
   return out.join("; ")+"; moving-body cases may create contact without sustained blockage";
 });
 
+await trial("physical-impulse-changes-material-momentum-not-private-knowledge", world => {
+  const before = {
+    light: at(world, "light-crate").position,
+    heavy: at(world, "heavy-crate").position
+  };
+  const residentHistory = world.residentControl.tick;
+  world.applyBodyImpulse("light-crate", { x: 80, y: 0 });
+  world.applyBodyImpulse("heavy-crate", { x: 80, y: 0 });
+  assert(world.residentControl.tick === residentHistory &&
+    world.residentSense === null, "research impulse fabricated cognition");
+  world.step(still);
+  const light = at(world, "light-crate"), heavy = at(world, "heavy-crate");
+  assert(light.velocity.x > heavy.velocity.x * 3 && heavy.velocity.x > 0,
+    "physically different body masses did not yield different response to same impulse");
+  assert(light.position.x > before.light.x && heavy.position.x > before.heavy.x,
+    "impulse modified a label but not actual material motion");
+  assert(world.interventionEvents.filter(e => e.type === "world.impulse").length === 2,
+    "external material impulse events missing research provenance");
+  let rejected = false;
+  const pos = light.position.x;
+  try { world.applyBodyImpulse("light-crate", { x: NaN, y: 0 }); }
+  catch (error) { rejected = error instanceof RangeError; }
+  assert(rejected && Math.abs(at(world, "light-crate").position.x - pos) < 1e-5,
+    "invalid impulse partially changed material state");
+  finite(world, "actual researcher impulse");
+  return "equal 80 N·s impulses; light 14kg vx=" + light.velocity.x.toFixed(2) +
+    " vs heavy 120kg vx=" + heavy.velocity.x.toFixed(2) + "; no actor history injection";
+});
+
+try {
+  const button=document.querySelector("#poke-selected-body");
+  const inputEl=document.querySelector("#experiment-impulse");
+  const feedback=document.querySelector("#impulse-feedback");
+  const timeline=document.querySelector("#intervention-timeline");
+  const canvas=document.querySelector("#lab");
+  const pause=document.querySelector("#pause-simulation");
+  const step=document.querySelector("#single-step");
+  assert(button&&inputEl&&feedback&&timeline&&canvas&&pause&&step,
+    "physical impulse workbench missing from DOM");
+  document.querySelector("#fixture-short-block").click();
+  document.querySelector("#focus-resident").click();
+  const rect=canvas.getBoundingClientRect();
+  canvas.dispatchEvent(new PointerEvent("pointermove",{
+    clientX:rect.left + rect.width*.75,
+    clientY:rect.top + rect.height*.45,bubbles:true
+  }));
+  inputEl.value="150";
+  button.click();
+  assert(feedback.textContent.includes("Applied to resident") &&
+    timeline.textContent.includes("world.impulse"),
+    "physical impulse button did not reach actual World and research trace");
+  step.click();
+  assert(document.querySelector("#selected-readout").textContent.includes("velocity "),
+    "physical response after actual impulse cannot be inspected");
+  inputEl.value="not-a-number";
+  button.click();
+  assert(feedback.textContent.startsWith("Not applied:"),
+    "non-numeric impulse did not fail visibly");
+  pause.click();
+  cases.push({name:"live-ui-apply-physical-impulse",status:"PASS",
+    detail:"selected actor physically poked, research event visible, invalid value rejected"});
+} catch(error){
+  cases.push({name:"live-ui-apply-physical-impulse",status:"FAIL",
+    detail:String(error?.message??error).slice(0,300)});
+}
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
