@@ -10,6 +10,9 @@ const worldEditFeedback = document.querySelector("#world-edit-feedback");
 const boxMassInput = document.querySelector("#author-mass");
 const residentModeSelect = document.querySelector("#resident-mode");
 const residentStatus = document.querySelector("#resident-status");
+const peerStatus = document.querySelector("#peer-status");
+const togglePeer = document.querySelector("#toggle-peer");
+const focusPeer = document.querySelector("#focus-peer");
 const residentProfileFeedback = document.querySelector("#resident-profile-feedback");
 const interventionTimeline = document.querySelector("#intervention-timeline");
 
@@ -292,6 +295,27 @@ document.querySelector("#focus-player").addEventListener("click", () => {
   camera.followTarget = "player";
   world.selectedId = "player";
 });
+function refreshPeerControls() {
+  togglePeer.textContent = world.peerEnabled ? "Remove second body" :
+    "Add counter-moving body";
+  togglePeer.setAttribute("aria-pressed", String(world.peerEnabled));
+  focusPeer.disabled = !world.peerEnabled;
+  if (!world.peerEnabled && camera.followTarget === "peer") {
+    camera.followTarget = "resident";
+    camera.follow = true;
+  }
+}
+togglePeer.addEventListener("click", () => {
+  world.setPeerEnabled(!world.peerEnabled);
+  refreshPeerControls();
+});
+focusPeer.addEventListener("click", () => {
+  if (!world.peerEnabled) return;
+  camera.followTarget = "peer";
+  camera.follow = true;
+  world.selectedId = "peer";
+});
+refreshPeerControls();
 document.querySelector("#undo-edit").addEventListener("click", () => {
   worldEditFeedback.textContent = world.undoAuthored() ? "Last authored shape removed." :
     "No authored shape to remove.";
@@ -496,6 +520,13 @@ function render() {
   interventionTimeline.textContent = snapshot.interventionEvents.slice(-10)
     .map((event) => "t" + event.tick + " " + event.type + " — " + event.note)
     .join("\n") || "No research events in current run.";
+
+  peerStatus.textContent = snapshot.peerControl ?
+    "Second body: 210 kg, counter-moving · local state " +
+      snapshot.peerControl.state + " · recoveries " +
+      snapshot.peerControl.recoveries + " · travel " +
+      snapshot.peerControl.estimatedX.toFixed(2) + "m" :
+    "Second body absent. The original one-resident control remains available.";
 
   residentStatus.textContent =
     "local state: " + snapshot.residentControl.state +
