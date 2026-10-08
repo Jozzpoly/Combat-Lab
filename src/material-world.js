@@ -75,6 +75,7 @@ export class MaterialWorld {
     this.selectedId = "player";
     this.grip = null;
     this.lastGripForce = 0;
+    this.lastGripReaction = { x: 0, y: 0 };
     this.lastCausalObservations = new Map();
     this.staticRects = [];
     this.entities = new Map();
@@ -93,6 +94,7 @@ export class MaterialWorld {
     this.staticColliderById = new Map();
     this.grip = null;
     this.lastGripForce = 0;
+    this.lastGripReaction = { x: 0, y: 0 };
     this.lastCausalObservations.clear();
     this.spawnSerial = 0;
     this.residentDirection = 1;
@@ -416,6 +418,7 @@ export class MaterialWorld {
   endGrip() {
     this.grip = null;
     this.lastGripForce = 0;
+    this.lastGripReaction = { x: 0, y: 0 };
   }
 
   #applyMotor(entity, desiredVelocity, acceleration, braking) {
@@ -447,6 +450,7 @@ export class MaterialWorld {
   #stepGrip() {
     if (!this.grip) {
       this.lastGripForce = 0;
+      this.lastGripReaction = { x: 0, y: 0 };
       return;
     }
     const object = this.entities.get(this.grip.entityId);
@@ -484,6 +488,7 @@ export class MaterialWorld {
     object.body.applyImpulseAtPoint({ x: impulse.x, y: impulse.y }, anchor, true);
     player.body.applyImpulse({ x: -impulse.x, y: -impulse.y }, true);
 
+    this.lastGripReaction = { x: -impulse.x, y: -impulse.y };
     this.lastGripForce = Math.hypot(impulse.x, impulse.y) / FIXED_DT;
     this.grip.worldAnchor = anchor;
     this.grip.clampedTarget = target;
@@ -537,6 +542,8 @@ export class MaterialWorld {
       this.lastCausalObservations.set(id, {
         intendedVelocity: { ...drive.intendedVelocity },
         motorImpulse: { x: drive.motorImpulse.x, y: drive.motorImpulse.y },
+        gripReactionImpulse: id === "player" ?
+          { ...this.lastGripReaction } : { x: 0, y: 0 },
         measuredVelocity,
         progressAlongIntent,
         contacts: this.contactsFor(id)
