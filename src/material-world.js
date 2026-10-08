@@ -75,6 +75,7 @@ export class MaterialWorld {
     this.selectedId = "player";
     this.grip = null;
     this.lastGripForce = 0;
+    this.lastCausalObservations = new Map();
     this.staticRects = [];
     this.entities = new Map();
     this.colliderLabels = new Map();
@@ -92,6 +93,7 @@ export class MaterialWorld {
     this.staticColliderById = new Map();
     this.grip = null;
     this.lastGripForce = 0;
+    this.lastCausalObservations.clear();
     this.spawnSerial = 0;
     this.residentDirection = 1;
 
@@ -435,12 +437,11 @@ export class MaterialWorld {
     const p = entity.body.translation();
     if (p.x > 20.7) this.residentDirection = -1;
     if (p.x < 13.2) this.residentDirection = 1;
-    this.#applyMotor(
-      entity,
-      { x: entity.maxSpeed * this.residentDirection, y: 0 },
-      entity.acceleration,
-      entity.braking
+    const intendedVelocity = { x: entity.maxSpeed * this.residentDirection, y: 0 };
+    const motorImpulse = this.#applyMotor(
+      entity, intendedVelocity, entity.acceleration, entity.braking
     );
+    return { intendedVelocity, motorImpulse };
   }
 
   #stepGrip() {
@@ -496,18 +497,51 @@ export class MaterialWorld {
       y: direction.y * this.profile.maxSpeed
     };
 
+    const before = new Map();
+    for (const id of ["player", "resident"]) {
+      const entity = this.entities.get(id);
+      before.set(id, { ...entity.body.translation() });
+    }
     const playerImpulse = this.#applyMotor(
       this.player(),
       desired,
       this.profile.acceleration,
       this.profile.braking
     );
-    this.#stepResident();
+    const residentDrive = this.#stepResident();
     this.#stepGrip();
 
     const started = performance.now();
     this.world.step();
     const stepMs = performance.now() - started;
+
+    // This is a record of attempted agency and observed consequences,
+    // NOT a classification of why contact or lost progress occurred.
+    for (const [id, drive] of [
+      ["player", { intendedVelocity: desired, motorImpulse: playerImpulse }],
+      ["resident", residentDrive]
+    ]) {
+      const entity = this.entities.get(id);
+      const from = before.get(id);
+      const now = entity.body.translation();
+      const measuredVelocity = {
+        x: (now.x - from.x) / FIXED_DT,
+        y: (now.y - from.y) / FIXED_DT
+      };
+      const requestedSpeed = Math.hypot(
+        drive.intendedVelocity.x, drive.intendedVelocity.y
+      );
+      const progressAlongIntent = requestedSpeed > 1e-8 ?
+        (measuredVelocity.x * drive.intendedVelocity.x +
+          measuredVelocity.y * drive.intendedVelocity.y) / requestedSpeed : null;
+      this.lastCausalObservations.set(id, {
+        intendedVelocity: { ...drive.intendedVelocity },
+        motorImpulse: { x: drive.motorImpulse.x, y: drive.motorImpulse.y },
+        measuredVelocity,
+        progressAlongIntent,
+        contacts: this.contactsFor(id)
+      });
+    }
 
     return { desiredVelocity: desired, playerImpulse, stepMs };
   }
@@ -572,6 +606,7 @@ export class MaterialWorld {
       velocity: { x: v.x, y: v.y },
       speed: Math.hypot(v.x, v.y),
       contacts: this.contactsFor(entity.id),
+      observedMotor: this.lastCausalObservations.get(entity.id) ?? null,
       grabbable: entity.grabbable
     };
   }
