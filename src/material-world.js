@@ -119,7 +119,7 @@ export class MaterialWorld {
     this.interventionEvents = [];
     this.residentControl = {
       tick: 0, blockedTicks: 0, recoveryTicks: 0, recoveries: 0,
-      state: "cruise", lastTransition: null
+      estimatedX: 0, state: "cruise", lastTransition: null
     };
 
     this.#buildStaticWorld();
@@ -518,6 +518,9 @@ export class MaterialWorld {
     const ctl = this.residentControl;
     ctl.tick += 1;
     const previous = this.residentSense;
+    // Dead-reckoned body-relative displacement, not a query of World x.
+    // Drift is deliberately possible under imperfect proprioception.
+    ctl.estimatedX += previous?.deltaX ?? 0;
 
     // Locally testable evidence, not a map/obstacle-label oracle:
     // commanded effort, realized progress and bare tactile contact.
@@ -547,12 +550,12 @@ export class MaterialWorld {
       }
     }
 
-    const p = entity.body.translation();
-    // The existing lane endpoints are fixture policy, not discovered
-    // knowledge. Recovery suppresses these endpoints temporarily.
+    // Authored travel offsets from the resident's start, reconstructed
+    // solely from body-local deltas. These are a shuttle fixture policy,
+    // NOT discovered map knowledge or autonomous intent.
     if (ctl.recoveryTicks === 0) {
-      if (p.x > 20.7) this.residentDirection = -1;
-      if (p.x < 13.2) this.residentDirection = 1;
+      if (ctl.estimatedX > 5.7) this.residentDirection = -1;
+      if (ctl.estimatedX < -1.8) this.residentDirection = 1;
     }
     ctl.state = ctl.recoveryTicks > 0 ? "backoff" :
       ctl.blockedTicks > 0 ? "contact-pressure" : "cruise";
@@ -666,7 +669,8 @@ export class MaterialWorld {
         this.residentSense = {
           touch,
           motorEffort: Math.hypot(drive.motorImpulse.x, drive.motorImpulse.y),
-          progressAlongIntent
+          progressAlongIntent,
+          deltaX: now.x - from.x
         };
       }
       this.lastCausalObservations.set(id, {
