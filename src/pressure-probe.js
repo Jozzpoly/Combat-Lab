@@ -1262,6 +1262,83 @@ try {
   cases.push({ name: "live-ui-three-body-contact-graph", status: "FAIL",
     detail: String(error?.message ?? error).slice(0, 300) });
 }
+await trial("forward-contact-is-actually-derived-from-rapier-manifold", (world) => {
+  const wall = world.authorRect({ kind: "wall", cx: 16.8, cy: 11.4,
+    width: 0.6, height: 2.5 });
+  world.setResidentMode("directional-recovery");
+  let firstWorldTouch = null, firstForwardTouch = null;
+  let firstBackoff = null;
+  for (let tick = 1; tick <= 100; tick++) {
+    world.step(still);
+    const local = world.residentSense;
+    const observed = world.lastCausalObservations.get("resident");
+    if (firstWorldTouch === null && observed.contacts.includes(wall))
+      firstWorldTouch = tick;
+    if (firstForwardTouch === null && local.forwardTouch) firstForwardTouch = tick;
+    if (firstBackoff === null && world.residentControl.recoveries > 0)
+      firstBackoff = tick;
+  }
+  assert(firstWorldTouch && firstForwardTouch && firstBackoff,
+    "forward normal did not produce meaningful sensor→controller sequence");
+  assert(firstForwardTouch >= firstWorldTouch && firstBackoff > firstForwardTouch,
+    "forward normal or motor action arrived before physical contact evidence");
+  assert(world.residentControl.recoveries >= 1, "directional contact never recovered");
+  return "World contact t=" + firstWorldTouch +
+    ", local forward normal t=" + firstForwardTouch +
+    ", backoff t=" + firstBackoff;
+});
+
+await trial("directional-recovery-requires-local-forward-evidence-not-just-touch", (world) => {
+  const wall = world.authorRect({ kind: "wall", cx: 16.8, cy: 11.4,
+    width: 0.6, height: 2.5 });
+  const run = cut => {
+    world.reset();
+    world.setResidentMode("directional-recovery");
+    let contacts = 0, forwardBeforeAblation = 0;
+    for (let tick = 1; tick <= 120; tick++) {
+      world.step(still);
+      const trace = world.lastCausalObservations.get("resident");
+      if (trace.contacts.includes(wall)) contacts++;
+      if (world.residentSense.forwardTouch) forwardBeforeAblation++;
+      if (cut) world.residentSense.forwardTouch = false;
+    }
+    return { recoveries: world.residentControl.recoveries,
+      contacts, forwardBeforeAblation };
+  };
+  const intact = run(false), cut = run(true);
+  assert(intact.recoveries > 0 && cut.recoveries === 0,
+    "directional law ignored or hallucinated its private tactile input");
+  assert(intact.contacts > 0 && cut.contacts > 0 &&
+    intact.forwardBeforeAblation > 0 && cut.forwardBeforeAblation > 0,
+    "World contact was lost by private sensor intervention");
+  return "intact recovered=" + intact.recoveries +
+    ", sensory-cut recovered=" + cut.recoveries +
+    ", both had World collision and forward-normal measurements";
+});
+
+await observation("lateral-touch-orientation-survey", world => {
+  world.setResidentProfile({ ...world.residentProfile, acceleration: 0.45 });
+  world.authorRect({ kind: "wall", cx: 17.5, cy: 12.13,
+    width: 10, height: 0.45 });
+  world.setResidentMode("directional-recovery");
+  let anyTouch = 0, forwardTouch = 0, lowProgress = 0, recoveries = 0;
+  for (let i = 0; i < 110; i++) {
+    world.step(still);
+    const sensor = world.residentSense;
+    if (sensor.touch) anyTouch++;
+    if (sensor.forwardTouch) forwardTouch++;
+    if (sensor.progressAlongIntent !== null &&
+        sensor.progressAlongIntent < world.residentProfile.maxSpeed * .12)
+      lowProgress++;
+  }
+  recoveries = world.residentControl.recoveries;
+  finite(world, "lateral fixture");
+  return "any touch=" + anyTouch + " frames, forward touch=" + forwardTouch +
+    ", low-progress=" + lowProgress +
+    ", backoffs=" + recoveries +
+    "; geometry-specific observation, not validated universal side-contact classification";
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
