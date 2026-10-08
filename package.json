@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test test/*.test.js",
+    "test": "node --test test/control-laws.test.js",
     "build": "vite build --base=./"
   },
   "dependencies": {
