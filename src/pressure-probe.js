@@ -891,6 +891,33 @@ await trial("empty-lane-one-vs-two-only-diverges-after-material-encounter", (wor
     "; control and two-body histories identical beforehand";
 });
 
+try {
+  const toggle = document.querySelector("#toggle-peer");
+  const focus = document.querySelector("#focus-peer");
+  const status = document.querySelector("#peer-status");
+  assert(toggle && focus && status, "second-actor UI not mounted");
+  assert(toggle.getAttribute("aria-pressed") === "false" && focus.disabled,
+    "peer UI enabled before physical body existed");
+  toggle.click();
+  assert(toggle.getAttribute("aria-pressed") === "true" && !focus.disabled,
+    "peer button did not instantiate and enable second actor");
+  focus.click();
+  const trace = document.querySelector("#selected-readout");
+  document.querySelector("#pause-simulation").click();
+  document.querySelector("#single-step").click();
+  assert(trace.textContent.includes("peer") &&
+    status.textContent.includes("Second body"),
+    "peer camera/selection or local-inspection surface failed");
+  toggle.click();
+  assert(toggle.getAttribute("aria-pressed") === "false" && focus.disabled,
+    "disabling peer did not leave usable one-body UI");
+  document.querySelector("#pause-simulation").click();
+  cases.push({ name: "live-ui-peer-toggle-and-inspection", status: "PASS",
+    detail: "Add → focus/inspect → remove second physical body through actual DOM controls" });
+} catch (error) {
+  cases.push({ name: "live-ui-peer-toggle-and-inspection", status: "FAIL",
+    detail: String(error?.message ?? error).slice(0, 300) });
+}
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
