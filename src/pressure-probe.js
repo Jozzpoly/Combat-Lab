@@ -1498,6 +1498,34 @@ try {
   cases.push({ name: "live-ui-one-click-physical-ab-fixtures", status: "FAIL",
     detail: String(error?.message ?? error).slice(0, 300) });
 }
+await observation("contact-candidate-versus-solved-manifold-timing", world => {
+  const wall = world.authorRect({ kind: "wall", cx: 16.8, cy: 11.4,
+    width: 0.6, height: 2.5 });
+  let firstCandidate = null, firstSolved = null;
+  let candidateWithoutSolver = 0;
+  for (let tick = 1; tick <= 90; tick++) {
+    world.step(still);
+    const actor = world.entities.get("resident");
+    let touchingCandidates = false, solved = false;
+    world.world.contactPairsWith(actor.collider, other => {
+      if (world.colliderLabels.get(other.handle) !== wall) return;
+      touchingCandidates = true;
+      world.world.contactPair(actor.collider, other, manifold => {
+        if (manifold.numSolverContacts() > 0) solved = true;
+      });
+    });
+    if (touchingCandidates && firstCandidate === null) firstCandidate = tick;
+    if (solved && firstSolved === null) firstSolved = tick;
+    if (touchingCandidates && !solved) candidateWithoutSolver++;
+  }
+  assert(firstCandidate && firstSolved && firstSolved >= firstCandidate,
+    "contact graph and solver yielded no meaningful wall sequence");
+  return "candidate pair first t=" + firstCandidate +
+    ", active solver manifold first t=" + firstSolved +
+    "; candidate-only frames=" + candidateWithoutSolver +
+    "; do not call broad-phase candidates physical collision";
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
