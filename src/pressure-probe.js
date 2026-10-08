@@ -1763,6 +1763,117 @@ await trial("lateral-policy-divergence-reaches-peer-only-through-later-contact",
     "m; no generalized crowd classification";
 });
 
+await trial("paused-body-start-authoring-is-real-and-does-not-invent-odometry", world => {
+  world.setPeerEnabled(true);
+  world.setBraceEnabled(true);
+  const resident = world.entities.get("resident");
+  const oldHandle = resident.body.handle;
+  const intended = { x: 17.9, y: 12.4 };
+  const before = world.snapshot().entities.length;
+  world.repositionBody("resident", intended);
+  assert(resident.body.handle === oldHandle &&
+    Math.abs(at(world, "resident").position.x - intended.x) < 1e-9 &&
+    world.residentControl.estimatedX === 0 &&
+    world.residentSense === null,
+    "manual body reposition rebuilt identity or fabricated private movement");
+  world.repositionBody("peer", { x: 16.5, y: 12.4 });
+  world.repositionBody("brace", { x: 16.8, y: 12.4 });
+  world.repositionBody("light-crate", { x: 17.1, y: 12.4 });
+  assert(world.bodyStarts.size === 4 && world.snapshot().entities.length === before,
+    "authoring placements leaked or deleted an actor");
+  let invalid = false;
+  try { world.repositionBody("resident", { x: NaN, y: 0 }); }
+  catch (error) { invalid = error instanceof RangeError; }
+  assert(invalid &&
+    at(world, "resident").position.x === intended.x &&
+    world.bodyStarts.get("resident").x === intended.x,
+    "invalid placement partially changed live or authored position");
+  for (let tick = 0; tick < 80; tick++) world.step(still);
+  finite(world, "overlapping physically valid actor placements");
+  world.reset();
+  assert(world.bodyStarts.size === 4 &&
+    world.snapshot().entities.length === before &&
+    at(world, "resident").position.x === intended.x &&
+    at(world, "peer").position.x === 16.5 &&
+    at(world, "brace").position.x === 16.8 &&
+    at(world, "light-crate").position.x === 17.1,
+    "reset did not reconstruct authored overlapping starts");
+  assert(world.residentControl.tick === 0 &&
+    world.residentSense === null, "reset kept old organism sensory history");
+  assert(world.clearBodyStartOverrides() === 4, "could not clear starts");
+  world.reset();
+  assert(at(world, "resident").position.x === 15 &&
+    at(world, "peer").position.x === 19 &&
+    at(world, "brace").position.x === 17.35,
+    "clearing authored placements failed to recover neutral positions");
+  return "four physical placements, overlap allowed, invalid edit atomic, reset preserved & restore removed";
+});
+
+await trial("peer-arrival-and-authored-object-placement-survive-world-rebuild", world => {
+  world.setPeerEnabled(true);
+  world.repositionBody("peer", { x: -0.7, y: 11.4 });
+  world.setPeerEnabled(false);
+  assert(!world.entities.has("peer") &&
+    world.bodyStarts.get("peer").x === -0.7,
+    "temporarily disabled actor lost its authored starting place");
+  world.setPeerEnabled(true);
+  assert(at(world, "peer").position.x === -0.7,
+    "reenabled actor ignored its explicitly authored start");
+  const id = world.authorRect({ kind: "object", cx: 8.2, cy: 8.2,
+    width: .7, height: .7, mass: 20 });
+  world.repositionBody(id, { x: 9, y: 9 });
+  world.reset();
+  assert(at(world, id).position.x === 9, "authored dynamic box reverted to creation position");
+  assert(world.undoAuthored() &&
+    !world.bodyStarts.has(id), "removed authored box retained orphaned reset placement");
+  finite(world, "reinstated actor and object");
+  return "disabled/re-enabled actor retained reset placement; authored box move persisted; undo cleaned placement";
+});
+
+try {
+  const pause = document.querySelector("#pause-simulation");
+  const step = document.querySelector("#single-step");
+  const follow = document.querySelector("#focus-resident");
+  const place = document.querySelector("#place-selected-at-cursor");
+  const restore = document.querySelector("#restore-body-positions");
+  const feedback = document.querySelector("#body-position-feedback");
+  const canvas = document.querySelector("#lab");
+  const readout = document.querySelector("#selected-readout");
+  assert(pause && step && follow && place && restore && feedback && canvas && readout,
+    "direct body placement UI not mounted");
+  follow.click();
+  pause.click();
+  assert(!place.disabled, "manual reposition button did not unlock while paused");
+  const rect = canvas.getBoundingClientRect();
+  canvas.dispatchEvent(new PointerEvent("pointermove", {
+    clientX: rect.left + rect.width * .5 + 76,
+    clientY: rect.top + rect.height * .5 - 20,
+    bubbles: true
+  }));
+  place.click();
+  assert(feedback.textContent.includes("Authored start of resident"),
+    "cursor placement did not invoke actual World editing");
+  const textAfterPlacement = feedback.textContent;
+  step.click();
+  assert(readout.textContent.includes("position "),
+    "physical position was not inspectable after moving body");
+  document.querySelector("#reset-world").click();
+  step.click();
+  assert(feedback.textContent === textAfterPlacement &&
+    readout.textContent.includes("resident"),
+    "body placement interfered with normal reset and selection workbench");
+  restore.click();
+  step.click();
+  assert(feedback.textContent.includes("Restored original starts"),
+    "restore starts button did not reset physical placements");
+  pause.click();
+  cases.push({ name: "live-ui-paused-cursor-body-placement-and-reset", status: "PASS",
+    detail: "pause → move cursor → author selected body start → step → reset → clear placements" });
+} catch (error) {
+  cases.push({ name: "live-ui-paused-cursor-body-placement-and-reset", status: "FAIL",
+    detail: String(error?.message ?? error).slice(0, 300) });
+}
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
