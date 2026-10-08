@@ -1704,6 +1704,58 @@ await observation("four-heterogeneous-policy-combinations-under-same-pressure", 
   return results.join("; ") + "; measurements only, no behavioral-quality verdict";
 });
 
+await observation("different-local-laws-propagate-through-physical-group-or-not", world => {
+  world.setPeerEnabled(true);
+  world.setBraceEnabled(true);
+  world.setPeerMass(30);
+  world.setBraceProfile({ mass: 120, braking: 30 });
+  world.setResidentProfile({ ...DEFAULT_RESIDENT_PROFILE, acceleration: 0.9 });
+  world.authorRect({ kind: "wall", cx: 15.6, cy: 12.13,
+    width: 2.4, height: 0.45 });
+  const run = mode => {
+    world.setResidentMode(mode);
+    world.setPeerMode("tactile-recovery");
+    world.reset();
+    const history = [];
+    let residentGroupTouch = null;
+    for (let tick = 1; tick <= 420; tick++) {
+      world.step(still);
+      const a = at(world, "resident"), b = at(world, "peer"), h = at(world, "brace");
+      const contacts = world.lastCausalObservations.get("resident").contacts;
+      if (residentGroupTouch === null &&
+        (contacts.includes("brace") || contacts.includes("peer"))) {
+        residentGroupTouch = tick;
+      }
+      history.push({ tick, ax:a.position.x, bx:b.position.x, hx:h.position.x,
+        av:a.velocity.x, bv:b.velocity.x, hv:h.velocity.x,
+        demand:world.lastCausalObservations.get("resident").intendedVelocity.x });
+    }
+    finite(world, "local-law group propagation " + mode);
+    return { history, residentGroupTouch, recoveries: world.residentControl.recoveries };
+  };
+  const allTouch = run("tactile-recovery"), directed = run("directional-recovery");
+  let firstActorMotor = null, firstOthersBody = null, maxPeerDiff = 0;
+  for (let i = 0; i < 420; i++) {
+    const a=allTouch.history[i], b=directed.history[i];
+    if (firstActorMotor === null && Math.abs(a.demand-b.demand)>1e-7)
+      firstActorMotor=i+1;
+    const groupDiff=Math.max(Math.abs(a.bx-b.bx),Math.abs(a.hx-b.hx));
+    if (firstOthersBody === null && groupDiff>1e-7) firstOthersBody=i+1;
+    maxPeerDiff=Math.max(maxPeerDiff,Math.abs(a.bx-b.bx));
+  }
+  assert(firstActorMotor && firstActorMotor > 1,
+    "side-contact policies failed to yield their expected bounded action contrast");
+  return "motor divergence t=" + firstActorMotor +
+    "; first another-body divergence=" + String(firstOthersBody) +
+    "; resident first group touch any/directed=" +
+    String(allTouch.residentGroupTouch) + "/" +
+    String(directed.residentGroupTouch) +
+    "; recoveries any/directed=" + allTouch.recoveries +
+    "/" + directed.recoveries +
+    "; max peer x divergence=" + maxPeerDiff.toFixed(3) +
+    "m; no generalized crowd classification";
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
