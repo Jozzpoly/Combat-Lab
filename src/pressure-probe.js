@@ -1459,6 +1459,45 @@ await observation("remove-holder-during-live-encounter-survey", world => {
     "; ghost contacts after=" + ghostAfter + "; remaining bodies=6";
 });
 
+try {
+  const side = document.querySelector("#fixture-side-touch");
+  const pressure = document.querySelector("#fixture-pressure-chain");
+  const pause = document.querySelector("#pause-simulation");
+  const step = document.querySelector("#single-step");
+  const mode = document.querySelector("#resident-mode");
+  const feedback = document.querySelector("#fixture-feedback");
+  const residentStatus = document.querySelector("#resident-status");
+  assert(side && pressure && pause && step && mode && feedback && residentStatus,
+    "A/B fixture controls absent in real emitted DOM");
+  side.click();
+  assert(document.body.dataset.experimentFixture === "side" &&
+    document.body.dataset.simulationPaused === "true" &&
+    feedback.textContent.includes("lateral surface") &&
+    document.querySelector('[data-resident-profile="acceleration"]').value === "0.45",
+    "side-contact fixture failed to author and pause editable scene");
+  for (let i = 0; i < 20; i++) step.click();
+  assert(residentStatus.textContent.includes("recovery count 1"),
+    "actual any-touch preset failed to reproduce false backoff");
+  mode.value = "directional-recovery";
+  mode.dispatchEvent(new Event("change", { bubbles: true }));
+  document.querySelector("#reset-world").click();
+  for (let i = 0; i < 20; i++) step.click();
+  assert(residentStatus.textContent.includes("recovery count 0"),
+    "actual directional preset still backed off from same lateral wall");
+  pressure.click();
+  assert(document.body.dataset.experimentFixture === "pressure" &&
+    document.body.dataset.activeBodies === "7" &&
+    document.body.dataset.simulationPaused === "true" &&
+    document.querySelector("#toggle-peer").getAttribute("aria-pressed") === "true" &&
+    document.querySelector("#toggle-brace").getAttribute("aria-pressed") === "true",
+    "pressure fixture did not reset onto real editable 3-body World");
+  pause.click();
+  cases.push({ name: "live-ui-one-click-physical-ab-fixtures", status: "PASS",
+    detail: "20-step sidewall any-touch=1 vs directional=0 backoffs; pressure fixture 7 bodies, paused" });
+} catch (error) {
+  cases.push({ name: "live-ui-one-click-physical-ab-fixtures", status: "FAIL",
+    detail: String(error?.message ?? error).slice(0, 300) });
+}
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
