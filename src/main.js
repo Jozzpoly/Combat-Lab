@@ -4,6 +4,7 @@ const canvas = document.querySelector("#lab");
 const ctx = canvas.getContext("2d");
 const summary = document.querySelector("#runtime-summary");
 const selectedReadout = document.querySelector("#selected-readout");
+const profileFeedback = document.querySelector("#profile-feedback");
 
 const camera = {
   center: { x: 12, y: 7 },
@@ -133,7 +134,15 @@ function bindProfileControls() {
         const key = field.dataset.profile;
         next[key] = Number(field.value);
       }
-      world.setPlayerProfile(next);
+      try {
+        world.setPlayerProfile(next);
+        syncProfileFields(world.profile);
+        profileFeedback.textContent = "";
+      } catch (error) {
+        // The authored reality must never silently differ from the visible form.
+        syncProfileFields(world.profile);
+        profileFeedback.textContent = "Not applied: " + String(error?.message ?? error);
+      }
     });
   }
 }
@@ -148,6 +157,7 @@ function syncProfileFields(profile) {
 document.querySelector("#restore-body").addEventListener("click", () => {
   syncProfileFields(DEFAULT_PROFILE);
   world.setPlayerProfile(DEFAULT_PROFILE);
+  profileFeedback.textContent = "";
 });
 document.querySelector("#reset-world").addEventListener("click", () => world.reset());
 document.querySelector("#spawn-light").addEventListener("click", () => world.spawnCrate("light"));
