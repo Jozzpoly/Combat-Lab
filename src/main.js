@@ -8,6 +8,8 @@ const causalReadout = document.querySelector("#causal-readout");
 const profileFeedback = document.querySelector("#profile-feedback");
 const worldEditFeedback = document.querySelector("#world-edit-feedback");
 const boxMassInput = document.querySelector("#author-mass");
+const residentModeSelect = document.querySelector("#resident-mode");
+const residentStatus = document.querySelector("#resident-status");
 
 const camera = {
   center: { x: 12, y: 7 },
@@ -198,6 +200,10 @@ document.querySelector("#reset-world").addEventListener("click", () => {
 });
 document.querySelector("#spawn-light").addEventListener("click", () => world.spawnCrate("light"));
 document.querySelector("#spawn-heavy").addEventListener("click", () => world.spawnCrate("heavy"));
+residentModeSelect.value = world.residentMode;
+residentModeSelect.addEventListener("change", () => {
+  world.setResidentMode(residentModeSelect.value);
+});
 document.querySelector("#undo-edit").addEventListener("click", () => {
   worldEditFeedback.textContent = world.undoAuthored() ? "Last authored shape removed." :
     "No authored shape to remove.";
@@ -388,12 +394,24 @@ function render() {
           motor.progressAlongIntent.toFixed(2) + " m/s") + "\n" +
       "co-observed contacts: " +
         (motor.contacts.length ? motor.contacts.join(", ") : "none") + "\n" +
-      "No physical-cause inference is made from this snapshot.";
+      "No physical-cause inference is made from this snapshot." +
+      (selected?.localControl ?
+        "\nlocal controller: " + selected.localControl.mode +
+        " / " + selected.localControl.state +
+        " / recoveries=" + selected.localControl.recoveries : "");
   } else {
     causalReadout.textContent = selected ?
       "No own motor trace for this body. It may still receive contact/grip impulses." :
       "No selected body.";
   }
+
+  residentStatus.textContent =
+    "local state: " + snapshot.residentControl.state +
+    " · obstruction evidence " + snapshot.residentControl.blockedTicks + "/12 steps" +
+    " · recovery count " + snapshot.residentControl.recoveries +
+    (snapshot.residentControl.lastTransition ?
+      " · last transition at physical step " +
+        snapshot.residentControl.lastTransition.tick : "");
 
   summary.textContent =
     "bodies " + snapshot.entities.length +
