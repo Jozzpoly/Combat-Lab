@@ -475,7 +475,9 @@ pokeBodyButton.addEventListener("click", () => {
   const entity = world.entities.get(world.selectedId);
   if (!entity) return;
   try {
-    const magnitude = Number(experimentImpulse.value);
+    const raw = experimentImpulse.value.trim();
+    if (!raw) throw new RangeError("enter an impulse strength");
+    const magnitude = Number(raw);
     if (!Number.isFinite(magnitude))
       throw new RangeError("impulse must be a finite signed number");
     const pos = entity.body.translation();
