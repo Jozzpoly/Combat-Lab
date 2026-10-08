@@ -1339,6 +1339,46 @@ await observation("lateral-touch-orientation-survey", world => {
     "; geometry-specific observation, not validated universal side-contact classification";
 });
 
+await trial("same-lateral-wall-old-touch-reverses-new-directional-does-not", world => {
+  world.setResidentProfile({ ...world.residentProfile, acceleration: 0.45 });
+  const wall = world.authorRect({ kind: "wall", cx: 17.5, cy: 12.13,
+    width: 10, height: 0.45 });
+  const run = mode => {
+    world.reset();
+    world.setResidentMode(mode);
+    const trace = [];
+    for (let tick = 1; tick <= 110; tick++) {
+      world.step(still);
+      const sense = world.residentSense;
+      const report = world.lastCausalObservations.get("resident");
+      const body = at(world, "resident");
+      trace.push({ tick, x: body.position.x,
+        demand: report.intendedVelocity.x, touch: sense.touch,
+        forwardTouch: sense.forwardTouch, recoveries: world.residentControl.recoveries,
+        wallContact: report.contacts.includes(wall) });
+    }
+    finite(world, "lateral AB " + mode);
+    return trace;
+  };
+  const old = run("tactile-recovery");
+  const improved = run("directional-recovery");
+  assert(old.some(x => x.recoveries > 0),
+    "control any-touch law did not produce hypothesized false recovery");
+  assert(improved.every(x => x.recoveries === 0),
+    "directional law still falsely classified lateral touch as blockage");
+  assert(old.some(x => x.wallContact) && improved.some(x => x.wallContact) &&
+    improved.every(x => !x.forwardTouch),
+    "lateral control fixture did not generate contact without forward normal");
+  const firstDemand = old.find((x,i) => x.demand !== improved[i].demand)?.tick;
+  const firstWorldDifference = old.find((x,i) => Math.abs(x.x - improved[i].x) > 1e-7)?.tick;
+  assert(firstDemand && firstWorldDifference && firstWorldDifference >= firstDemand,
+    "behavior diverged before changed local motor law");
+  return "any-touch false backoffs=" + old.at(-1).recoveries +
+    "; directional false backoffs=" + improved.at(-1).recoveries +
+    "; first command/body divergence=" + firstDemand + "/" +
+    firstWorldDifference + "; both touched same side wall";
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
