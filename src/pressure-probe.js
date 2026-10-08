@@ -715,6 +715,8 @@ try {
   step.click();
   assert(readout.textContent.includes("mass 72.00"),
     "restore resident defaults failed to reconstruct physical selected body");
+  assert(document.querySelector("#intervention-timeline").textContent.includes("actor.body"),
+    "visible experiment workbench omitted a real resident body intervention");
   pause.click();
   assert(document.body.dataset.simulationPaused === "false",
     "resident UI probe left simulation paused");
@@ -724,6 +726,33 @@ try {
   cases.push({ name: "live-ui-resident-authoring-and-rejection", status: "FAIL",
     detail: String(error?.message ?? error).slice(0, 300) });
 }
+await trial("research-event-trace-does-not-enter-resident-sensors", (world) => {
+  const wall = world.authorRect({ kind: "wall", cx: 16.8, cy: 11.4,
+    width: 0.6, height: 2.5 });
+  assert(world.interventionEvents.some((e) => e.type === "world.add" &&
+    e.note.includes(wall) && e.tick === 0),
+    "authored wall has no source-level intervention event");
+  for (let i = 0; i < 70; i++) world.step(still);
+  const reversals = world.interventionEvents.filter((e) =>
+    e.type === "actor.reversal");
+  assert(reversals.length > 0 && reversals[0].tick >= 35,
+    "resident reversal not causally placed after material contact");
+  assert(Object.keys(world.residentSense).sort().join(",") ===
+    "motorEffort,progressAlongIntent,touch",
+    "research-plane source history leaked into local resident sensing");
+  assert(world.undoAuthored(), "could not undo wall for event trace");
+  assert(world.interventionEvents.some((e) => e.type === "world.remove" &&
+    e.note.includes(wall) && e.tick === 70),
+    "world removal omitted material-edit timing");
+  world.reset();
+  assert(world.interventionEvents.length === 1 &&
+    world.interventionEvents[0].type === "world.reset" &&
+    world.interventionEvents[0].tick === 0,
+    "new simulation inherited earlier run's intervention events");
+  return "world.add@0, reversal@" + reversals[0].tick +
+    ", world.remove@70; reset clears previous run trace; actor sample remains private";
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
