@@ -990,6 +990,77 @@ await trial("mass-only-peer-intervention-causes-later-physical-divergence", (wor
     "m vs peer 430kg " + heavy.at(-1).x.toFixed(2) + "m";
 });
 
+await trial("third-body-role-is-dynamic-and-resets-without-oracle-leak", (world) => {
+  assert(!world.braceEnabled && !world.entities.has("brace"),
+    "new pressure role changed the old two-body starting fixture");
+  world.setPeerEnabled(true);
+  world.setBraceEnabled(true);
+  assert(world.entities.has("brace") && world.snapshot().entities.length === 7,
+    "three physical roles not instantiated in the same World");
+  const brace = world.entities.get("brace");
+  assert(brace.body.isDynamic() && brace.mass === 120 &&
+    brace.braking === 30, "holder was a fixture or did not carry finite force");
+  assert(world.residentSense === null && world.peerSense === null,
+    "new role leaked another actor's private sensor history");
+  let rejected = false;
+  try { world.setBraceProfile({ mass: -1, braking: 0 }); }
+  catch (error) { rejected = error instanceof RangeError; }
+  assert(rejected && world.braceMass === 120 && world.braceBraking === 30,
+    "invalid holder edit partially changed material or motor state");
+  world.setBraceProfile({ mass: 150, braking: 0 });
+  assert(world.entities.get("brace").mass === 150 &&
+    world.entities.get("brace").braking === 0, "zero finite authority was normalized");
+  for (let i = 0; i < 25; i++) world.step(still);
+  finite(world, "shared three-body world");
+  world.reset();
+  assert(world.braceEnabled && world.peerEnabled &&
+    world.entities.get("brace").mass === 150 &&
+    world.entities.get("brace").braking === 0 &&
+    world.snapshot().entities.length === 7,
+    "authored holder configuration did not survive reset");
+  world.setBraceEnabled(false);
+  assert(world.snapshot().entities.length === 6 &&
+    !world.lastCausalObservations.has("brace"),
+    "third role leaked body or stale observation after disabling");
+  return "dynamic holder; 7 bodies; zero authority valid; reset/disable clean";
+});
+
+await trial("finite-holder-enters-real-contact-chain-with-two-moving-actors", (world) => {
+  world.setPeerEnabled(true);
+  world.setBraceEnabled(true);
+  world.setPeerMass(30);
+  let contactsResidentBrace = 0;
+  let contactsPeerBrace = 0;
+  let maxBraceTravel = 0;
+  let firstResidentBrace = null;
+  let firstPeerBrace = null;
+  for (let tick = 1; tick <= 280; tick++) {
+    world.step(still);
+    const residentContacts = world.lastCausalObservations.get("resident").contacts;
+    const peerContacts = world.lastCausalObservations.get("peer").contacts;
+    const braceContacts = world.lastCausalObservations.get("brace").contacts;
+    if (residentContacts.includes("brace") && braceContacts.includes("resident")) {
+      contactsResidentBrace++;
+      if (firstResidentBrace === null) firstResidentBrace = tick;
+    }
+    if (peerContacts.includes("brace") && braceContacts.includes("peer")) {
+      contactsPeerBrace++;
+      if (firstPeerBrace === null) firstPeerBrace = tick;
+    }
+    maxBraceTravel = Math.max(maxBraceTravel,
+      Math.abs(at(world, "brace").position.x - 17.35));
+  }
+  finite(world, "real pressure chain");
+  assert(contactsResidentBrace > 0 && contactsPeerBrace > 0,
+    "holder never physically interacted with BOTH moving actors");
+  assert(maxBraceTravel > 0.05,
+    "finite-force holder did not physically yield under contact");
+  return "resident↔holder first t=" + firstResidentBrace +
+    " (" + contactsResidentBrace + " steps), peer↔holder first t=" +
+    firstPeerBrace + " (" + contactsPeerBrace +
+    " steps), holder max displacement=" + maxBraceTravel.toFixed(3) + "m";
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
