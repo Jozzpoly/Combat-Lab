@@ -92,6 +92,8 @@ export class MaterialWorld {
     this.colliderLabels = new Map();
     this.residentDirection = 1;
     this.residentSense = null;
+    this.physicsTick = 0;
+    this.interventionEvents = [];
     // This probe preserves two selectable, explicitly authored low-level
     // control laws. Neither one is autonomous cognition or a world planner.
     this.residentMode = "tactile-recovery";
@@ -113,6 +115,8 @@ export class MaterialWorld {
     this.spawnSerial = 0;
     this.residentDirection = 1;
     this.residentSense = null;
+    this.physicsTick = 0;
+    this.interventionEvents = [];
     this.residentControl = {
       tick: 0, blockedTicks: 0, recoveryTicks: 0, recoveries: 0,
       state: "cruise", lastTransition: null
@@ -126,6 +130,15 @@ export class MaterialWorld {
     this.#createBox("heavy-crate", { x: 16.5, y: 5.25 }, { x: 0.68, y: 0.68 }, 120, COLORS.heavy, true);
     for (const shape of this.authoredShapes) this.#instantiateAuthored(shape);
     this.selectedId = "player";
+    this.#recordEvent("world.reset", this.authoredShapes.length +
+      " authored shapes reconstructed");
+  }
+
+  #recordEvent(type, note) {
+    // Research-plane intervention history. These events never enter the
+    // resident's private tactile/proprioceptive input.
+    this.interventionEvents.push({ tick: this.physicsTick, type, note });
+    if (this.interventionEvents.length > 24) this.interventionEvents.shift();
   }
 
   #staticRect(id, cx, cy, width, height) {
@@ -318,6 +331,10 @@ export class MaterialWorld {
     this.#instantiateAuthored(accepted);
     this.authoredShapes.push(accepted);
     this.authoredSerial += 1;
+    this.#recordEvent("world.add", accepted.id + " " + accepted.kind +
+      " at (" + accepted.cx.toFixed(2) + "," + accepted.cy.toFixed(2) +
+      ") width=" + accepted.width.toFixed(2) +
+      " height=" + accepted.height.toFixed(2));
     return accepted.id;
   }
 
@@ -342,6 +359,7 @@ export class MaterialWorld {
       }
       if (this.selectedId === shape.id) this.selectedId = "player";
     }
+    this.#recordEvent("world.remove", shape.id + " " + shape.kind);
     return true;
   }
 
@@ -490,6 +508,7 @@ export class MaterialWorld {
     this.residentControl.recoveryTicks = 0;
     this.residentControl.state = "cruise";
     this.residentControl.lastTransition = null;
+    this.#recordEvent("actor.mode", "resident controller=" + mode);
   }
 
   #stepResident() {
@@ -520,6 +539,9 @@ export class MaterialWorld {
           fromDirection: formerDirection,
           toDirection: this.residentDirection
         };
+        this.#recordEvent("actor.reversal",
+          "resident changed motor direction after sustained resistance; " +
+          formerDirection + " -> " + this.residentDirection);
       }
     }
 
@@ -588,6 +610,7 @@ export class MaterialWorld {
   }
 
   step(move) {
+    this.physicsTick += 1;
     const magnitude = Math.hypot(move.x, move.y);
     const direction = magnitude > 1 ? { x: move.x / magnitude, y: move.y / magnitude } : move;
     const desired = {
@@ -695,6 +718,8 @@ export class MaterialWorld {
       selectedId: this.selectedId,
       profile: { ...this.profile },
       residentProfile: { ...this.residentProfile },
+      physicsTick: this.physicsTick,
+      interventionEvents: this.interventionEvents.map((event) => ({ ...event })),
       residentControl: { mode: this.residentMode, ...this.residentControl },
       authoredCount: this.authoredShapes.length,
       grip: this.grip ? {
