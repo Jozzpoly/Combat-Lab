@@ -92,6 +92,8 @@ export class MaterialWorld {
     // Ordinary reset replays them; clear/undo deliberately change the authored scene.
     this.authoredShapes = [];
     this.authoredSerial = 0;
+    // Authored starting positions are kept separate from runtime physics.
+    this.bodyStarts = new Map();
     this.spawnSerial = 0;
     this.selectedId = "player";
     this.grip = null;
@@ -124,6 +126,10 @@ export class MaterialWorld {
     this.lastGripReaction = { x: 0, y: 0 };
     this.lastCausalObservations.clear();
     this.spawnSerial = 0;
+    // Runtime spawned crates intentionally do not become permanent objects.
+    for (const id of this.bodyStarts.keys()) {
+      if (id.startsWith("spawn-")) this.bodyStarts.delete(id);
+    }
     this.residentDirection = 1;
     this.residentSense = null;
     this.physicsTick = 0;
@@ -145,6 +151,10 @@ export class MaterialWorld {
     this.#createBox("plank", { x: 12.8, y: 6.6 }, { x: 1.05, y: 0.28 }, 34, COLORS.plank, true);
     this.#createBox("heavy-crate", { x: 16.5, y: 5.25 }, { x: 0.68, y: 0.68 }, 120, COLORS.heavy, true);
     for (const shape of this.authoredShapes) this.#instantiateAuthored(shape);
+    for (const [id, p] of this.bodyStarts) {
+      const entity = this.entities.get(id);
+      if (entity) this.#setBodyPosition(entity, p);
+    }
     this.selectedId = "player";
     this.#recordEvent("world.reset", this.authoredShapes.length +
       " authored shapes reconstructed");
@@ -307,8 +317,11 @@ export class MaterialWorld {
     const next = Boolean(enabled);
     if (this.braceEnabled === next) return;
     this.braceEnabled = next;
-    if (next) this.#createBrace();
-    else {
+    if (next) {
+      this.#createBrace();
+      const start = this.bodyStarts.get("brace");
+      if (start) this.repositionBody("brace", start, { persist: false, record: false });
+    } else {
       const brace = this.entities.get("brace");
       if (brace) {
         this.colliderLabels.delete(brace.collider.handle);
@@ -374,6 +387,8 @@ export class MaterialWorld {
       this.peerSense = null;
       this.peerControl = this.#newLocalControl();
       this.#createPeer();
+      const start = this.bodyStarts.get("peer");
+      if (start) this.repositionBody("peer", start, { persist: false, record: false });
     } else {
       const peer = this.entities.get("peer");
       if (peer) {
@@ -515,6 +530,7 @@ export class MaterialWorld {
       }
       if (this.selectedId === shape.id) this.selectedId = "player";
     }
+    this.bodyStarts.delete(shape.id);
     this.#recordEvent("world.remove", shape.id + " " + shape.kind);
     return true;
   }
@@ -586,6 +602,51 @@ export class MaterialWorld {
     Object.assign(entity, accepted, { pickRadius: accepted.radius + 0.16 });
     this.#recordEvent("actor.body", "resident radius=" + accepted.radius +
       "m, mass=" + accepted.mass + "kg, maxSpeed=" + accepted.maxSpeed);
+  }
+
+  #setBodyPosition(entity, point) {
+    entity.body.setTranslation({ x: point.x, y: point.y }, true);
+    entity.body.setLinvel({ x: 0, y: 0 }, true);
+    entity.body.setAngvel(0, true);
+  }
+
+  repositionBody(id, point, { persist = true, record = true } = {}) {
+    const entity = this.entities.get(id);
+    if (!entity) throw new RangeError("unknown live body: " + id);
+    // Allow strange/overlapping positions: the physical solver must reveal
+    // their consequences. Reject only numerically invalid coordinates.
+    const p = {
+      x: authoredCoordinate(point.x, "body x"),
+      y: authoredCoordinate(point.y, "body y")
+    };
+    if (this.grip?.entityId === id) this.endGrip();
+    this.#setBodyPosition(entity, p);
+    if (persist) this.bodyStarts.set(id, { ...p });
+    // A research-side teleport is NOT private odometry. Do not silently
+    // feed a fabricated travel delta to either actor's local controller.
+    if (id === "resident") {
+      this.residentSense = null;
+      this.residentDirection = 1;
+      this.residentControl = this.#newLocalControl();
+    }
+    if (id === "peer") {
+      this.peerSense = null;
+      this.peerDirection = -1;
+      this.peerControl = this.#newLocalControl();
+    }
+    this.lastCausalObservations.delete(id);
+    this.selectedId = id;
+    if (record) this.#recordEvent("world.reposition",
+      id + " placed at (" + p.x.toFixed(2) + "," + p.y.toFixed(2) +
+      "); local travel reset; start=" + (persist ? "authored" : "transient"));
+    return { ...p };
+  }
+
+  clearBodyStartOverrides() {
+    const count = this.bodyStarts.size;
+    this.bodyStarts.clear();
+    this.#recordEvent("world.clearStarts", count + " authored body placements cleared");
+    return count;
   }
 
   selectAt(point) {
@@ -940,6 +1001,8 @@ export class MaterialWorld {
       braceBraking: this.braceBraking,
       peerControl: this.peerEnabled ? { mode: this.peerMode, ...this.peerControl } : null,
       authoredCount: this.authoredShapes.length,
+      authoredBodyStarts: [...this.bodyStarts].map(([id, point]) =>
+        ({ id, x: point.x, y: point.y })),
       grip: this.grip ? {
         entityId: this.grip.entityId,
         worldAnchor: { ...this.grip.worldAnchor },
