@@ -21,6 +21,10 @@ const html = execFileSync(chrome, [
 if (!html.includes("Material Agency Yard")) {
   throw new Error("Material Agency Yard title missing from emitted artifact");
 }
+const runtimeFault = html.match(/data-combat-lab-error="([^"]*)"/)?.[1];
+if (runtimeFault) {
+  throw new Error("runtime/paint error in browser: " + runtimeFault);
+}
 if (!html.includes('data-combat-lab-ready="true"')) {
   const error = html.match(/data-combat-lab-error="([^"]*)"/)?.[1];
   const summary = html.match(/<span id="runtime-summary">([^<]*)<\/span>/)?.[1];
@@ -56,6 +60,10 @@ const pressureHtml = execFileSync(chrome, [
   timeout: 35000,
   maxBuffer: 8 * 1024 * 1024
 });
+const pressureRuntimeFault = pressureHtml.match(/data-combat-lab-error="([^"]*)"/)?.[1];
+if (pressureRuntimeFault) {
+  throw new Error("runtime/paint error during physical pressure: " + pressureRuntimeFault);
+}
 const state = pressureHtml.match(/data-pressure-probe="([^"]*)"/)?.[1];
 const failure = pressureHtml.match(/data-pressure-failure="([^"]*)"/)?.[1];
 const count = pressureHtml.match(/data-pressure-case-count="(\d+)"/)?.[1];
