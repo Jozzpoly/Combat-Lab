@@ -26,6 +26,9 @@ const contactOverlayInput = document.querySelector("#contact-overlay");
 const contactOverlaySummary = document.querySelector("#contact-overlay-summary");
 const residentProfileFeedback = document.querySelector("#resident-profile-feedback");
 const interventionTimeline = document.querySelector("#intervention-timeline");
+const placeBodyButton = document.querySelector("#place-selected-at-cursor");
+const restoreBodyStartsButton = document.querySelector("#restore-body-positions");
+const bodyPositionFeedback = document.querySelector("#body-position-feedback");
 
 const camera = {
   center: { x: 12, y: 7 },
@@ -40,6 +43,7 @@ const input = {
   keys: new Set(),
   draggingCamera: false,
   drawing: null,
+  reposition: null,
   dragStart: null,
   cameraStart: null,
   pointer: { x: 0, y: 0 }
@@ -59,6 +63,7 @@ function updateSimulationControl() {
   pauseButton.textContent = simulationPaused ? "Resume simulation (Space)" : "Pause simulation (Space)";
   pauseButton.setAttribute("aria-pressed", String(simulationPaused));
   stepButton.disabled = !simulationPaused;
+  placeBodyButton.disabled = !simulationPaused;
   document.body.dataset.simulationPaused = String(simulationPaused);
   simulationControlStatus.textContent = simulationPaused ?
     "Paused. Edit matter without advancing physics; single-step to inspect the response." :
@@ -151,6 +156,15 @@ canvas.addEventListener("contextmenu", (event) => event.preventDefault());
 canvas.addEventListener("pointermove", (event) => {
   input.pointer = screenToWorld(event.clientX, event.clientY);
   if (input.drawing) input.drawing.end = { ...input.pointer };
+  if (input.reposition) {
+    const draft = input.reposition;
+    const point = { x: input.pointer.x + draft.offset.x,
+      y: input.pointer.y + draft.offset.y };
+    world.repositionBody(draft.id, point, { persist: false, record: false });
+    bodyPositionFeedback.textContent =
+      "Moving " + draft.id + " · release to save reset starting position.";
+    render();
+  }
   if (input.draggingCamera && input.dragStart) {
     const dx = (event.clientX - input.dragStart.x) / camera.zoom;
     const dy = (event.clientY - input.dragStart.y) / camera.zoom;
@@ -163,6 +177,26 @@ canvas.addEventListener("pointermove", (event) => {
 canvas.addEventListener("pointerdown", (event) => {
   const point = screenToWorld(event.clientX, event.clientY);
   input.pointer = point;
+  if (event.button === 0 && event.altKey) {
+    if (!simulationPaused) {
+      bodyPositionFeedback.textContent = "Pause simulation first to reposition a body.";
+      return;
+    }
+    const selected = world.selectAt(point);
+    if (!selected) {
+      bodyPositionFeedback.textContent = "No physical body at this point.";
+      return;
+    }
+    const start = selected.body.translation();
+    input.reposition = {
+      id: selected.id, pointerId: event.pointerId,
+      offset: { x: start.x - point.x, y: start.y - point.y }
+    };
+    camera.follow = false;
+    canvas.setPointerCapture(event.pointerId);
+    event.preventDefault();
+    return;
+  }
   if (event.button === 0 && (event.ctrlKey || event.shiftKey)) {
     input.drawing = {
       kind: event.ctrlKey ? "wall" : "object",
@@ -191,8 +225,20 @@ canvas.addEventListener("pointerdown", (event) => {
 canvas.addEventListener("pointerup", (event) => {
   if (event.button === 1) input.draggingCamera = false;
   if (event.button === 2) world.endGrip();
+  if (input.reposition && event.pointerId === input.reposition.pointerId) {
+    const draft = input.reposition;
+    input.reposition = null;
+    const pointer = screenToWorld(event.clientX, event.clientY);
+    const position = world.repositionBody(draft.id, {
+      x: pointer.x + draft.offset.x, y: pointer.y + draft.offset.y
+    });
+    bodyPositionFeedback.textContent = "Authored start of " + draft.id +
+      " at (" + position.x.toFixed(2) + ", " + position.y.toFixed(2) +
+      "). Reset reconstructs this scene.";
+  }
   if (input.drawing && event.pointerId === input.drawing.pointerId) {
     const draft = input.drawing;
+    draft.end = screenToWorld(event.clientX, event.clientY);
     input.drawing = null;
     const cx = (draft.start.x + draft.end.x) / 2;
     const cy = (draft.start.y + draft.end.y) / 2;
@@ -212,6 +258,7 @@ canvas.addEventListener("pointerup", (event) => {
 canvas.addEventListener("pointercancel", () => {
   input.draggingCamera = false;
   input.drawing = null;
+  input.reposition = null;
   world.endGrip();
 });
 canvas.addEventListener("wheel", (event) => {
@@ -388,11 +435,31 @@ document.querySelector("#clear-edits").addEventListener("click", () => {
   worldEditFeedback.textContent = "Removed " + count + " authored shape(s).";
 });
 
+placeBodyButton.addEventListener("click", () => {
+  if (!simulationPaused) return;
+  const id = world.selectedId;
+  if (!world.entities.has(id)) return;
+  const p = world.repositionBody(id, input.pointer);
+  bodyPositionFeedback.textContent =
+    "Authored start of " + id + " at (" + p.x.toFixed(2) + ", " +
+    p.y.toFixed(2) + "). Reset reconstructs this scene.";
+  camera.follow = false;
+  render();
+});
+restoreBodyStartsButton.addEventListener("click", () => {
+  const count = world.clearBodyStartOverrides();
+  world.reset();
+  bodyPositionFeedback.textContent =
+    "Restored original starts for " + count + " body placements; world reset.";
+  render();
+});
+
 const fixtureFeedback = document.querySelector("#fixture-feedback");
 function loadFixture(kind) {
   // Explicit reset, never a background re-authoring operation. Every
   // post-seed shape remains live-editable with the existing canvas tools.
   world.clearAuthored();
+  world.clearBodyStartOverrides();
   world.setPeerEnabled(false);
   world.setBraceEnabled(false);
   world.setPeerMass(210);
