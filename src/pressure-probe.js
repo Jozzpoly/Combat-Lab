@@ -352,6 +352,82 @@ await trial("grip-braking-can-be-varied-without-changing-normal-braking", (world
     playerDx.toFixed(3) + "m";
 });
 
+await trial("same-wall-first-divergence-is-after-local-contact", (world) => {
+  const wall = world.authorRect({ kind: "wall", cx: 16.8, cy: 11.4,
+    width: 0.6, height: 2.5 });
+  const run = (mode) => {
+    world.reset();
+    world.setResidentMode(mode);
+    const record = [];
+    for (let tick = 1; tick <= 165; tick++) {
+      world.step(still);
+      const e = at(world, "resident");
+      const obs = world.lastCausalObservations.get("resident");
+      record.push({
+        tick, x: e.position.x, vx: e.velocity.x,
+        demand: obs.intendedVelocity.x, touch: obs.contacts.includes(wall),
+        progress: obs.progressAlongIntent, state: world.residentControl.state,
+        recoveries: world.residentControl.recoveries
+      });
+    }
+    finite(world, mode);
+    return record;
+  };
+  const passive = run("baseline");
+  const reactive = run("tactile-recovery");
+  const contact = passive.find((x) => x.touch)?.tick;
+  const firstDemand = passive.find((x, i) =>
+    x.demand !== reactive[i].demand)?.tick;
+  const firstPhysical = passive.find((x, i) =>
+    Math.abs(x.x - reactive[i].x) > 1e-7 ||
+    Math.abs(x.vx - reactive[i].vx) > 1e-7)?.tick;
+  assert(Number.isInteger(contact), "authored wall never touched");
+  assert(Number.isInteger(firstDemand), "local recovery never changed movement demand");
+  assert(Number.isInteger(firstPhysical), "reaction never changed material trajectory");
+  assert(firstDemand > contact,
+    "different motor demand before tactile obstruction existed");
+  assert(firstPhysical >= firstDemand,
+    "material outcome diverged before motor intent");
+  assert(reactive.some((x) => x.recoveries > 0),
+    "reactive variant never initiated a recovery");
+  const baseEnd = passive.at(-1), reactiveEnd = reactive.at(-1);
+  assert(reactiveEnd.x < baseEnd.x - 0.5,
+    "claimed recovery did not produce a distinct physical outcome");
+  return "first touch t=" + contact + ", motor divergence t=" + firstDemand +
+    ", body divergence t=" + firstPhysical +
+    ", baseline x=" + baseEnd.x.toFixed(2) +
+    ", reactive x=" + reactiveEnd.x.toFixed(2);
+});
+
+await trial("no-wall-control-recovery-does-not-invent-obstruction", (world) => {
+  const run = (mode) => {
+    world.reset();
+    world.setResidentMode(mode);
+    const frames = [];
+    for (let i = 0; i < 135; i++) {
+      world.step(still);
+      const e = at(world, "resident");
+      frames.push({ x: e.position.x, vx: e.velocity.x,
+        demand: world.lastCausalObservations.get("resident").intendedVelocity.x });
+    }
+    assert(world.residentControl.recoveries === 0,
+      "local recovery fabricated an obstacle in empty lane");
+    return frames;
+  };
+  const base = run("baseline");
+  const challenge = run("tactile-recovery");
+  let largestDifference = 0;
+  for (let i = 0; i < base.length; i++) {
+    for (const key of ["x", "vx", "demand"]) {
+      largestDifference = Math.max(largestDifference,
+        Math.abs(base[i][key] - challenge[i][key]));
+    }
+  }
+  assert(largestDifference < 1e-7,
+    "control modes changed movement without material contact: " + largestDifference);
+  return "same empty-lane behavior; largest divergence=" + largestDifference.toExponential(1);
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
