@@ -14,6 +14,7 @@ const peerStatus = document.querySelector("#peer-status");
 const togglePeer = document.querySelector("#toggle-peer");
 const focusPeer = document.querySelector("#focus-peer");
 const peerMassField = document.querySelector("#peer-mass");
+const peerModeSelect = document.querySelector("#peer-mode");
 const peerMassFeedback = document.querySelector("#peer-mass-feedback");
 const toggleBrace = document.querySelector("#toggle-brace");
 const focusBrace = document.querySelector("#focus-brace");
@@ -363,6 +364,10 @@ function applyBraceFields() {
 braceMassInput.addEventListener("change", applyBraceFields);
 braceBrakingInput.addEventListener("change", applyBraceFields);
 refreshBraceControls();
+peerModeSelect.value = world.peerMode;
+peerModeSelect.addEventListener("change", () => {
+  world.setPeerMode(peerModeSelect.value);
+});
 peerMassField.addEventListener("change", () => {
   try {
     world.setPeerMass(Number(peerMassField.value));
@@ -394,6 +399,7 @@ function loadFixture(kind) {
   world.setBraceProfile({ mass: 120, braking: 30 });
   world.setResidentProfile(DEFAULT_RESIDENT_PROFILE);
   world.setResidentMode("tactile-recovery");
+  world.setPeerMode("tactile-recovery");
   if (kind === "pressure") {
     world.setPeerMass(30);
     world.setPeerEnabled(true);
@@ -414,6 +420,7 @@ function loadFixture(kind) {
     throw new Error("unrecognized experiment fixture");
   }
   residentModeSelect.value = world.residentMode;
+  peerModeSelect.value = world.peerMode;
   syncResidentProfileFields(world.residentProfile);
   peerMassField.value = String(world.peerMass);
   braceMassInput.value = String(world.braceMass);
@@ -675,7 +682,8 @@ function render() {
     "Third role disabled. Existing two-body control remains available.";
 
   peerStatus.textContent = snapshot.peerControl ?
-    "Second body: " + snapshot.peerMass + " kg, counter-moving · local state " +
+    "Second body: " + snapshot.peerMass + " kg · " +
+      snapshot.peerControl.mode + " · local state " +
       snapshot.peerControl.state + " · recoveries " +
       snapshot.peerControl.recoveries + " · travel " +
       snapshot.peerControl.estimatedX.toFixed(2) + "m" :
