@@ -58,7 +58,7 @@ function attempt(Field,{mass=18,impulse=V(65,-170),reflex=false,limit=240}={}){
       // arm starts a bounded closing response in its opposite arm.
       // The sensor never gets material identity, scene geometry,
       // research-test progress or global destinations.
-      if(reflex&&tick>=40&&latch===0&&load>1.0){
+      if(reflex&&latch===0&&load>1.0){
         const touched=sensor.loads[0]>=sensor.loads[1]?0:1;
         const target=1-touched;
         world.setArmAperture(p.id,target,0);
