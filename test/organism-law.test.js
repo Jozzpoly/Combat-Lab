@@ -81,3 +81,53 @@ test("negative allocated mass is visibly invalid",()=>{
  assert.throws(()=>finiteDrive({mass:-1,velocity:{x:0,y:0},heading:0,
    input:1,speed:3,acceleration:10,braking:10,traction:1}),RangeError);
 });
+
+test("only sustained FRONTAL obstruction starts local yielding",()=>{
+ const newborn={age:0,pressure:0,recover:0,turnSide:1,recoveries:0};
+ let side={...newborn},back={...newborn},front={...newborn};
+ for(let i=0;i<14;i++){
+  side=localResponse(side,{touch:true,progress:0,front:0,side:1},{contactYield:1}).state;
+  back=localResponse(back,{touch:true,progress:0,front:0,side:0},{contactYield:1}).state;
+  front=localResponse(front,{touch:true,progress:0,front:1,side:0},{contactYield:1}).state;
+ }
+ assert.equal(front.recoveries,1);
+ assert.equal(side.recoveries,0);
+ assert.equal(back.recoveries,0);
+});
+test("somatic yield is independent of nominal shape, inertia and body kind",()=>{
+ const newborn={age:0,pressure:0,recover:0,turnSide:1,recoveries:0};
+ let compliant={...newborn},persistent={...newborn};
+ for(let i=0;i<16;i++){
+  compliant=localResponse(compliant,{touch:true,progress:0,front:1,side:0},
+    {contactYield:1}).state;
+  persistent=localResponse(persistent,{touch:true,progress:0,front:1,side:0},
+    {contactYield:0}).state;
+ }
+ assert.equal(compliant.recoveries,1);
+ assert.equal(persistent.recoveries,0);
+ for(let i=16;i<49;i++)persistent=localResponse(persistent,
+  {touch:true,progress:0,front:1,side:0},{contactYield:0}).state;
+ assert.equal(persistent.recoveries,1);
+});
+test("free progress resets contact pressure, no omniscient obstacle awareness",()=>{
+ const fresh={age:0,pressure:0,recover:0,turnSide:1,recoveries:0};
+ let s={...fresh};
+ for(let i=0;i<9;i++)s=localResponse(s,
+  {touch:true,progress:0,front:1,side:0},{contactYield:1}).state;
+ s=localResponse(s,{touch:true,progress:.9,front:1,side:0},
+  {contactYield:1}).state;
+ assert.equal(s.pressure,0);
+ for(let i=0;i<70;i++)s=localResponse(s,
+  {touch:false,progress:0,front:1,side:0},{contactYield:1}).state;
+ assert.equal(s.recoveries,0);
+});
+test("lateral contact produces bounded local steering away, without scripted route",()=>{
+ const s={age:0,pressure:0,recover:0,turnSide:1,recoveries:0};
+ const left=localResponse(s,{touch:true,progress:1,front:0,side:1},
+   {contactYield:1});
+ const right=localResponse(s,{touch:true,progress:1,front:0,side:-1},
+   {contactYield:1});
+ assert.ok(left.steer<right.steer);
+ assert.equal(left.mode,"cruise");
+ assert.equal(right.mode,"cruise");
+});
