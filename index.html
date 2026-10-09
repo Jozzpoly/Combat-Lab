@@ -18,7 +18,7 @@
       </div>
     </div>
     <canvas id="scene" aria-label="Experimental material world"></canvas>
-    <div class="controlstrip">WASD / arrows: direct selected body · hold B: finite brace · 1/2/3/4: select · mouse wheel: zoom · middle-drag: pan · click: select · Shift+drag: obstacle · Alt+click: movable matter · right-hold: physical grip on a nearby crate · PAUSED Ctrl+drag: author new physical poses</div>
+    <div class="controlstrip">WASD / arrows: take control of selected body · hold B: finite brace · 1/2/3/4: select · mouse wheel: zoom · middle-drag: pan · click: select · Shift+drag: obstacle · Alt+click: movable matter · right-hold: physical grip on a nearby crate · PAUSED Ctrl+drag: author new physical poses</div>
   </main>
   <aside class="lab">
     <header><small>ISOLATED RESEARCH · NOT OWNER QUALIFIED</small>
@@ -27,7 +27,7 @@
     </header>
     <section><h2>Observe / intervene</h2>
       <div class="buttons"><button id="pause">Pause</button><button id="step">Single step</button><button id="reset">Reset scene</button></div>
-      <label><input id="manual" type="checkbox" checked> Direct-control selected body (others react locally)</label>
+      <label><input id="manual" type="checkbox"> Direct-control selected body (WASD/arrow keys also engage control; uncheck to release it back to local reactions)</label>
       <div class="buttons"><button id="kick">Physical impulse at cursor</button><button id="add-box">Add crate at cursor</button><button id="add-gate">Add hinged gate</button></div>
       <label>Impulse N·s <input id="impulse" type="number" value="60" step="10"></label>
       <label>Physical impulse orientation
