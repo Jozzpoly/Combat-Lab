@@ -1,5 +1,6 @@
 import { OrganismField, FIELD } from "./src/organism-field.js";
 import { MORPHS, DT, clamp } from "./src/organism-law.js";
+import { PLAYGROUNDS, PLAYGROUND_IDS, playgroundRecipe } from "./src/playgrounds.js";
 
 const $ = selector => document.querySelector(selector);
 const canvas = $("#scene"), ctx = canvas.getContext("2d");
@@ -8,6 +9,7 @@ const camera = { x: FIELD.width / 2, y: FIELD.height / 2, zoom: 1.0 };
 let field, paused = false, manual = true, mouse = { x: 17, y: 11 };
 let last = performance.now(), debt = 0, pan = null, drawWall = null, dragPose = null, targetId = null;
 let issuedSteps = 0;
+let currentSituation = null;
 function announce(message) { $("#interaction-status").textContent = message; }
 function worldScale() {
   return Math.min(canvas.width / FIELD.width, canvas.height / FIELD.height) * camera.zoom;
@@ -220,6 +222,26 @@ function syncBodyForm(){
   for(const [k,selector] of Object.entries(bodyInputs))
     $(selector).value=String(a.spec[k]);
 }
+function switchSituation(key){
+  const selected=PLAYGROUNDS[key];
+  if(!selected)throw RangeError("unknown material field");
+  const recipe=playgroundRecipe(key);
+  // Explicit authoring action: replace the starting scene, not magically
+  // transfer material afterstate between incompatible worlds.
+  field.releaseGrip();
+  field.importScene(recipe);
+  keys.clear();dragPose=null;drawWall=null;pan=null;
+  targetId=field.activeActor;
+  syncBodyForm();
+  paused=false;debt=0;last=performance.now();
+  currentSituation=key;
+  document.querySelectorAll("[data-situation]").forEach(button=>{
+    button.classList.toggle("active",button.dataset.situation===key);
+  });
+  $("#situation-caption").textContent=selected.caption;
+  announce("New physical starting arrangement: "+selected.label+
+    ". Everything now moves by the same shared world physics; intervene freely.");
+}
 function selectAt(i){
   const a=field.actors[i];if(a){field.select(a.id);targetId=a.id;syncBodyForm();
     announce("Selected "+a.spec.name+"; others retain private local behavior.");}
@@ -233,6 +255,9 @@ async function start() {
   $("#pause").onclick=()=>{paused=!paused;debt=0;};
   $("#step").onclick=()=>{if(paused)tick();};
   $("#reset").onclick=()=>{field.releaseGrip();field.reset();targetId=field.activeActor;syncBodyForm();announce("Starting scene rebuilt.");};
+  document.querySelectorAll("[data-situation]").forEach(button=>{
+    button.onclick=()=>guarded(()=>switchSituation(button.dataset.situation));
+  });
   $("#manual").onchange=e=>{manual=e.target.checked;};
   $("#apply-shape").onclick=()=>guarded(()=>{
     field.resizeMorphology(field.activeActor,{
@@ -448,6 +473,25 @@ async function start() {
     updateStatus();
     assert($("#selected").textContent.includes("internal stroke"),
       "physical worm selected readout does not expose its own actuation");
+    // A visible situation must be a real importable material world, not a
+    // cosmetic button or a separate scripted AI per scenario.
+    for(const key of PLAYGROUND_IDS){
+      const button=document.querySelector('[data-situation="'+key+'"]');
+      assert(Boolean(button),"unreachable physical world "+key);
+      button.click();
+      assert(currentSituation===key && button.classList.contains("active"),
+        "situation did not activate in the real UI "+key);
+      assert(field.actors.length>=4 && field.matter.length>0,
+        "empty physical material world from UI "+key);
+      assert($("#situation-caption").textContent.length>10,
+        "situation does not explain the observable material question");
+      for(let tick=0;tick<25;tick++)field.step(null);
+      assert(field.actors.every(a=>{
+        const p=a.root.translation();
+        return Number.isFinite(p.x+p.y);
+      }),"physical world broke immediately "+key);
+    }
+    document.body.dataset.situationUi="all four material situations loaded and simulated";
     document.body.dataset.uiProbe="pass";
     document.body.dataset.uiEvidence="4 morphology selections and 90 shared-world worm steps";
   }
