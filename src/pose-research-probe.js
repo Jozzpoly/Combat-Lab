@@ -44,7 +44,10 @@ export function poseProbe(Field) {
      "cannot author movable matter body pose");
    assert(world.pick({x:29,y:5})===some.id,
      "edited matter collider not selectable at its real position");
-   assert(world.reposition(world.gates[0].id,{x:3,y:3})===false,
+   let gateRejected=false;
+   try{world.reposition(world.gates[0].id,{x:3,y:3});}
+   catch(e){gateRejected=e instanceof RangeError;}
+   assert(gateRejected,
      "anchored hinge pivot was moved by illegal free drag");
    const positions=world.exportScene();
    assert(positions.actors.length===4 &&
