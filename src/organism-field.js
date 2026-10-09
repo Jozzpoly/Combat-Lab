@@ -28,6 +28,7 @@ export class OrganismField {
     if (this.world) this.world.free();
     this.world = new RAPIER.World(v(0, 0));
     this.world.timestep = DT;
+    this.nextId = 0; // reset reproduces stable starting-scene runtime identities
     this.actors = [];
     this.matter = [];
     this.walls = [];
