@@ -718,6 +718,7 @@ export class MaterialWorld {
   #advanceLocalActor({ id, sense, ctl, direction, mode, lower, upper,
     recoveryDuration, resistanceTicks, skirtSign }) {
     const entity = this.entities.get(id);
+    const previousFailureCount = ctl.failedDetours ?? 0;
     const decision = stepLocalShuttle({
       state: ctl, sense, direction, mode, maxSpeed: entity.maxSpeed,
       lower, upper, recoveryDuration, resistanceTicks, skirtSign
@@ -725,6 +726,11 @@ export class MaterialWorld {
     // The policy cannot see World: the host merely applies its declared
     // intent to the physical body and records a research-only explanation.
     Object.assign(ctl, decision.state);
+    if ((ctl.failedDetours ?? 0) > previousFailureCount) {
+      this.#recordEvent("actor.localTrial",
+        id + " did not achieve forward travel; next lateral sign=" +
+        ctl.adaptiveSign + " (private odometry, not a known route)");
+    }
     if (decision.transition) {
       this.#recordEvent(decision.transition.kind === "lateral-attempt" ?
         "actor.lateral" : "actor.reversal",
