@@ -313,6 +313,20 @@ async function start(){
   if(new URLSearchParams(location.search).has("probe")){
     paused=true;
     const {physicalProbe}=await import("./src/physical-probe.js");
+    $("#capture").click();
+    const setupText=$("#scene-json").value;
+    if(!setupText.includes("combat-lab.effectors.initial.v1"))
+      throw Error("Actual UI failed to capture posed physical starting scene");
+    const previous=field;
+    $("#load-scene").click();
+    if(field===previous || !paused ||
+       field.actors.length!==previous.actors.length)
+      throw Error("Actual UI failed to restore validated physical starting scene");
+    const beforeReset=field.exportScene();
+    $("#reset").click();
+    if(field.ticks!==0 || field.actors.length!==beforeReset.actors.length)
+      throw Error("Capture did not become reset-stable starting condition");
+    document.body.dataset.sceneUi="actual capture/load/reset PASS";
     document.body.dataset.probeResult=JSON.stringify(physicalProbe(EffectorField));
     const {affordanceSweep}=await import("./src/affordance-sweep.js");
     document.body.dataset.affordanceSweep=JSON.stringify(affordanceSweep(EffectorField));
