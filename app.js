@@ -141,7 +141,10 @@ function updateStatus() {
       "speed " + active.spec.speed + " m/s · turning " + active.spec.turnRate + " rad/s",
       "position (" + selected.pos.x.toFixed(2) + ", " + selected.pos.y.toFixed(2) + ")",
       "realized " + selected.speed.toFixed(2) + " m/s · contacts " + selected.contacts,
-      "traction " + selected.traction.toFixed(2) + " · mode " + selected.mode,
+      "front traction " + selected.traction.toFixed(2) +
+        (active.tail ? " · rear traction "+active.control.rearTraction.toFixed(2)+
+          " · rear drive "+active.spec.rearDrive.toFixed(2) : "")+
+        " · mode " + selected.mode,
       "local recovery events " + selected.recoveries,
       "intent→impulse " + JSON.stringify(active.control.motorImpulse || {})
     ].join("\n") : "No organism selected.";
@@ -193,6 +196,8 @@ function syncBodyForm(){
   if(!a)return;
   $("#shape-length").value=String(a.shapeScale.length);
   $("#shape-width").value=String(a.shapeScale.width);
+  $("#body-rear-drive").value=String(a.spec.rearDrive??0);
+  $("#body-rear-drive").disabled=!a.tail;
   for(const [k,selector] of Object.entries(bodyInputs))
     $(selector).value=String(a.spec[k]);
 }
@@ -470,6 +475,8 @@ async function start() {
     const changes={};
     for(const [k,selector] of Object.entries(bodyInputs))
       changes[k]=Number($(selector).value);
+    if(field.actor(field.activeActor)?.tail)
+      changes.rearDrive=Number($("#body-rear-drive").value);
     field.setActorProfile(field.activeActor,changes);
     announce("Actual collider mass and finite movement authority updated.");
     syncBodyForm();
