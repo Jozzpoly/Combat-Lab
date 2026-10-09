@@ -2819,6 +2819,8 @@ try{
   assert(report.textContent.includes("A / B — resident") &&
     Number(document.querySelector("#compare-plot").dataset.tracedPoints) > 60 &&
     Number(document.querySelector("#compare-spatial-plot").dataset.tracedPoints) > 60 &&
+    Number(document.querySelector("#compare-spatial-plot").dataset.drawnWorldRects) > 0 &&
+    Number(document.querySelector("#compare-spatial-plot").dataset.bOnlyRects) > 0 &&
     report.textContent.includes("No live World was modified"),
     "actual browser A/B comparison failed to display physical evidence");
   const before=text.value;
@@ -3037,6 +3039,11 @@ await trial("portable-a-b-retains-lateral-displacement-not-just-x", async world 
     result.traces.a.every(p=>Number.isFinite(p.x)&&Number.isFinite(p.y)) &&
     result.traces.b.every(p=>Number.isFinite(p.x)&&Number.isFinite(p.y)),
     "portable physical A/B lost a spatial axis");
+  assert(result.geometry.a.some(r=>r.id==="island") &&
+    result.geometry.b.some(r=>r.id==="island") &&
+    result.geometry.a.some(r=>r.id.startsWith("authored-")) &&
+    result.geometry.b.some(r=>r.id.startsWith("authored-")),
+    "plot was not grounded in separate actual World geometry");
   const maxYDifference=Math.max(...result.traces.a.map((p,i)=>
     Math.abs(p.y-result.traces.b[i].y)));
   assert(maxYDifference>0.5 &&
