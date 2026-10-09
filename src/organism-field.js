@@ -187,7 +187,7 @@ export class OrganismField {
       root, parts: [], joint: null, tail: null,
       state: { age: 0, pressure: 0, recover: 0, turnSide: 1, recoveries: 0 },
       strokeTick: 0,
-      sense: { touch: false, progress: 1 },
+      sense: { touch: false, progress: 1, front:0,side:0,load:0 },
       control: { mode: "local", throttle: 0, steering: 0, traction: 1 },
       contactCount: 0
     };
@@ -283,19 +283,21 @@ export class OrganismField {
       width:MORPHS[actor.kind].width*sy};
     // Avoid interpreting reset-relative proprioception as genuine travel
     // across a deliberate shape intervention. The local policy resets.
-    actor.sense={touch:false,progress:1};
+    actor.sense={touch:false,progress:1,front:0,side:0,load:0};
     actor.state={age:0,pressure:0,recover:0,turnSide:1,recoveries:0};
     return { ...actor.shapeScale };
   }
   setActorProfile(id, changes) {
     const actor = this.actor(id);
     if (!actor) throw new RangeError("select an organism to edit");
-    const fields = ["mass", "speed", "acceleration", "braking", "turnRate", "turnTorque", "gripReach", "gripForce", "rearDrive", "muscleForce", "supportForce"];
+    const fields = ["mass", "speed", "acceleration", "braking", "turnRate", "turnTorque", "gripReach", "gripForce", "rearDrive", "muscleForce", "supportForce", "contactYield"];
     const next = { ...actor.spec };
     for (const key of fields) {
       if (Object.prototype.hasOwnProperty.call(changes, key))
         next[key] = num(changes[key], key, key === "mass");
     }
+    if(next.contactYield<0||next.contactYield>1)
+      throw new RangeError("somatic contact yield must be [0,1]");
     if (next.rearDrive !== undefined && (next.rearDrive > 1 ||
         (actor.kind!=="crawler" && Object.hasOwn(changes,"rearDrive"))))
       throw new RangeError("rear drive fraction requires articulated body and range [0,1]");
@@ -432,7 +434,7 @@ export class OrganismField {
   #motor(actor, manual) {
     const body = actor.root, spec = actor.spec;
     const selected = actor.id === this.activeActor;
-    let throttle, desiredOmega;
+    let throttle, desiredOmega, somaticMode="manual";
     if (selected && manual && mag(manual) > 0.01) {
       const direction = Math.atan2(manual.y, manual.x);
       const angleError = wrap(direction - body.rotation());
@@ -442,7 +444,8 @@ export class OrganismField {
       throttle = 0;
       desiredOmega = 0;
     } else {
-      const response = localResponse(actor.state, actor.sense);
+      const response = localResponse(actor.state, actor.sense, spec);
+      somaticMode=response.mode;
       actor.state = response.state;
       throttle = response.throttle;
       desiredOmega = response.steer * spec.turnRate;
@@ -495,7 +498,7 @@ export class OrganismField {
       body.applyTorqueImpulse(-effort, true);
     }
     actor.control = {
-      mode: selected && manual ? "manual" : "local",
+      mode: selected && manual ? "manual" : somaticMode,
       throttle, steering: desiredOmega, traction, rearTraction,
       intended: v(Math.cos(body.rotation()) * spec.speed * throttle,
         Math.sin(body.rotation()) * spec.speed * throttle),
@@ -524,19 +527,41 @@ export class OrganismField {
     return massSum>0?v(x/massSum,y/massSum):v(0,0);
   }
   #readContacts(actor) {
-    let touch = false, count = 0;
-    for (const part of actor.parts) {
-      this.world.contactPairsWith(part.collider, other => {
-        const owner = this.colliderOwners.get(other.handle);
-        if (!owner || owner === actor.id) return;
-        this.world.contactPair(part.collider, other, manifold => {
-          if (!manifold.numSolverContacts()) return;
-          touch = true;
-          count += 1;
+    let touch=false,count=0,front=0,sideWeighted=0,weightSum=0,load=0;
+    const angle=actor.root.rotation();
+    const forward=v(Math.cos(angle),Math.sin(angle));
+    for(const part of actor.parts){
+      this.world.contactPairsWith(part.collider, other=>{
+        const owner=this.colliderOwners.get(other.handle);
+        if(!owner||owner===actor.id)return; // no self-contact as a stimulus
+        this.world.contactPair(part.collider,other,(manifold,flipped)=>{
+          const n=manifold.numSolverContacts();
+          if(!n)return; // geometry overlap without active solver force
+          const outward=manifold.normal();
+          // A solver manifold normal points collider1 -> collider2.
+          // Rapier flips pair orientation when the query starts at collider2.
+          const sign=flipped?-1:1;
+          const towards=v(sign*outward.x,sign*outward.y);
+          const f=forward.x*towards.x+forward.y*towards.y;
+          const lateral=forward.x*towards.y-forward.y*towards.x;
+          if(Number.isFinite(f))front=Math.max(front,f);
+          let impulse=0;
+          for(let i=0;i<n;i++){
+            const j=manifold.contactImpulse(i);
+            if(Number.isFinite(j))impulse+=Math.abs(j);
+          }
+          // At least unit weight for resting/light contacts.
+          const weight=Math.max(1,Math.min(1000,impulse));
+          if(Number.isFinite(lateral)){
+            sideWeighted+=lateral*weight;weightSum+=weight;
+          }
+          count++;touch=true;load+=impulse;
         });
       });
     }
-    return { touch, count };
+    return {touch,count,front:clamp(front,0,1),
+      side:weightSum?clamp(sideWeighted/weightSum,-1,1):0,
+      load};
   }
   step(manual = null) {
     const before = new Map(this.actors.map(a => [a.id, this.#physicalCenter(a)]));
@@ -557,7 +582,8 @@ export class OrganismField {
       const progress = speed > 0.01 ?
         ((now.x - prev.x) * intended.x + (now.y - prev.y) * intended.y) /
         (DT * speed * speed) : 1;
-      actor.sense = { touch: c.touch, progress };
+      actor.sense = { touch: c.touch, progress,front:c.front,
+        side:c.side,load:c.load };
     }
     this.activeContactCount = contacts;
   }
@@ -656,6 +682,8 @@ export class OrganismField {
         id: a.id, kind: a.kind, pos: this.#physicalCenter(a),
         angle: a.root.rotation(), speed: mag(this.#physicalVelocity(a)),
         contacts: a.contactCount, recoveries: a.state.recoveries,
+        frontContact:a.sense.front, sideContact:a.sense.side,
+        contactImpulse:a.sense.load, contactYield:a.spec.contactYield,
         traction: a.control.traction, mode: a.control.mode
       }))
     };
