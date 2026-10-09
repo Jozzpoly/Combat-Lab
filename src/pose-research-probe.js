@@ -32,8 +32,12 @@ export function poseProbe(Field) {
        assert(actor.joint.isValid(),
          "editing articulated body invalidated its real joint");
      }
-     assert(world.pick(at)===actor.id,
-       "shape-accurate pick failed on authored organism collider");
+     const picked=world.pick(at);
+     assert(picked===actor.id,
+       "shape-accurate pick failed for "+actor.kind+" at "+
+       JSON.stringify(at)+" picked="+picked+
+       " colliders="+actor.parts.map(p=>JSON.stringify({contains:p.collider.containsPoint(at),
+         centre:p.collider.translation()})).join("|"));
    }
    assert(world.ticks===tick,"reposition secretly advanced physics");
    assert(otherMatter.body.translation().x===before.x&&
