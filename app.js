@@ -224,6 +224,60 @@ async function pressureProbe() {
       "physical impulse failed to move matter");
     assert(field.tractionAt({x:15,y:11})<field.tractionAt({x:5,y:11}),
       "ground proxy not spatially material");
+    // Author the actual organ's finite grip; establish two independent
+    // zero-vs-finite Worlds rather than interpreting a static icon as grip.
+    function gripTrial(force,mass=28,offset=0){
+      const w=new OrganismField();
+      try{
+        const actor=w.actors.find(a=>a.kind==="dart");
+        w.select(actor.id);
+        actor.root.setTranslation({x:5,y:19},true);
+        actor.root.setLinvel({x:0,y:0},true);
+        w.setActorProfile(actor.id,{braking:0,gripForce:force,gripReach:2.4});
+        const box=w.addBox({x:6.2,y:19,hx:.50,hy:.50,mass},false);
+        const pick={x:6.2,y:19+offset};
+        assert(w.beginGrip(pick),"finite grip missed the real crate collider");
+        w.setGripTarget({x:8.2,y:19+offset});
+        const before=box.body.translation().x;
+        let maxDx=0,maxAngle=0,maxReaction=0;
+        for(let i=0;i<90;i++){
+          w.step({x:0,y:0});
+          const pos=box.body.translation();
+          maxDx=Math.max(maxDx,pos.x-before);
+          maxAngle=Math.max(maxAngle,Math.abs(box.body.rotation()));
+          maxReaction=Math.max(maxReaction,Math.hypot(
+            w.gripImpulse.x,w.gripImpulse.y));
+          assert(Number.isFinite(pos.x+pos.y+box.body.angvel()+
+            actor.root.translation().x),"grip generated nonfinite motion");
+        }
+        const actorDelta=actor.root.translation().x-5;
+        const finalX=box.body.translation().x;
+        w.releaseGrip();
+        assert(w.grip===null,"grip release left an actuator attached");
+        for(let i=0;i<15;i++)w.step({x:0,y:0});
+        return {maxDx,maxAngle,maxReaction,actorDelta,
+          continuedAfterRelease:box.body.translation().x-finalX};
+      } finally {w.world.free();}
+    }
+    const zero=gripTrial(0),light=gripTrial(210),
+      heavy=gripTrial(210,280),off=gripTrial(210,28,.37);
+    assert(zero.maxDx<.00001&&zero.maxReaction===0,
+      "zero grip authority moved matter or generated force");
+    assert(light.maxDx>.25 && light.maxReaction>0,
+      "finite point actuator did not move dynamic matter");
+    assert(light.actorDelta<-.01,
+      "reciprocal grip reaction did not actually displace organism");
+    assert(heavy.maxDx<light.maxDx,
+      "physical object mass did not resist same grip authority");
+    assert(off.maxAngle>.015,
+      "offcentre physical grip did not rotate object");
+    document.body.dataset.gripEvidence=[
+      "zero="+zero.maxDx.toFixed(3),
+      "light="+light.maxDx.toFixed(3),
+      "heavy="+heavy.maxDx.toFixed(3),
+      "recoil="+light.actorDelta.toFixed(3),
+      "offAngle="+off.maxAngle.toFixed(3)
+    ].join(";");
     // Morphological authoring changes actual colliders, including joint
     // anchors, without resetting the remaining physics/world afterstate.
     for(const kind of ["dart","crawler","broad"]){
