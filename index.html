@@ -78,17 +78,19 @@
         <div class="button-row">
           <button id="fixture-pressure-chain">3-body pressure</button>
           <button id="fixture-side-touch">Side-contact falsifier</button>
+          <button id="fixture-lateral-gap">Local detour vs hard wall</button>
         </div>
         <p id="fixture-feedback" class="muted" aria-live="polite">No preset loaded; direct authoring remains free.</p>
       </section>
 
       <section>
         <h2>Resident — physical contact response</h2>
-        <p class="muted">Compare three bounded rules on the same body: scripted shuttle, any-touch recovery, or forward-directed tactile recovery. Draw barriers and side contacts while running. No map knowledge, pathfinding, or autonomous NPC cognition is implied.</p>
+        <p class="muted">Compare four bounded rules: fixed shuttle, any-touch reversal, forward-touch reversal and a search-free lateral attempt. Distinct geometry may permit or defeat a detour. No map oracle, pathfinding or NPC cognition.</p>
         <label>Local control
           <select id="resident-mode">
             <option value="tactile-recovery">Any-touch recovery (control)</option>
-            <option value="directional-recovery">Forward-contact recovery (challenger)</option>
+            <option value="directional-recovery">Forward-contact recovery</option>
+            <option value="skirt-recovery">Lateral detour + local return (experimental)</option>
             <option value="baseline">Fixed lane reversal only</option>
           </select>
         </label>
@@ -118,6 +120,7 @@
           <select id="peer-mode">
             <option value="tactile-recovery">Any-touch recovery</option>
             <option value="directional-recovery">Forward-contact recovery</option>
+            <option value="skirt-recovery">Lateral detour + local return (experimental)</option>
             <option value="baseline">Fixed shuttle only</option>
           </select>
         </label>
