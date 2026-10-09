@@ -3147,7 +3147,10 @@ try {
   await new Promise(resolve=>setTimeout(resolve,0));
   assert(report.textContent.includes("A / B — resident") &&
     plot.dataset.comparisonView==="xy" && Number(plot.dataset.tracedPoints)>80,
-    "physical top-down XY comparison not rendered");
+    "physical top-down XY comparison not rendered; report="+
+    report.textContent.slice(0,155)+
+    "; view="+plot.dataset.comparisonView+
+    "; points="+plot.dataset.tracedPoints);
   view.value="y";view.dispatchEvent(new Event("change",{bubbles:true}));
   assert(plot.dataset.comparisonView==="y",
     "Y-only physical trajectory chart cannot be selected");
