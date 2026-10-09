@@ -2818,6 +2818,7 @@ try{
   await new Promise(resolve=>setTimeout(resolve,0));
   assert(report.textContent.includes("A / B — resident") &&
     Number(document.querySelector("#compare-plot").dataset.tracedPoints) > 60 &&
+    Number(document.querySelector("#compare-spatial-plot").dataset.tracedPoints) > 60 &&
     report.textContent.includes("No live World was modified"),
     "actual browser A/B comparison failed to display physical evidence");
   const before=text.value;
@@ -3015,6 +3016,37 @@ await observation("shared-passable-post-compares-fixed-and-adaptive-lateral-choi
     ", side flips="+adaptive.flips+
     ", lateral attempts="+adaptive.attempts+
     "; source baseline measured, no donor verdict yet";
+});
+
+await trial("portable-a-b-retains-lateral-displacement-not-just-x", async world => {
+  const {captureStartingScene,compareStartingScenes} =
+    await import("./starting-scene.js");
+  world.authorRect({kind:"wall",cx:16.8,cy:11.4,
+    width:.7,height:1.4,mass:0});
+  world.setResidentMode("lateral-maneuver");
+  world.setActorSidePreference("resident",-1);
+  const north=captureStartingScene(world);
+  world.setActorSidePreference("resident",1);
+  const south=captureStartingScene(world);
+  const result=await compareStartingScenes(north,south,
+    {subject:"resident",steps:320});
+  assert(result.firstPositionDifference>0 &&
+    result.firstMotorDifference>=result.firstPositionDifference,
+    "A/B motor divergence preceded physical stimulus or vanished");
+  assert(result.traces.a.length===result.traces.b.length &&
+    result.traces.a.every(p=>Number.isFinite(p.x)&&Number.isFinite(p.y)) &&
+    result.traces.b.every(p=>Number.isFinite(p.x)&&Number.isFinite(p.y)),
+    "portable physical A/B lost a spatial axis");
+  const maxYDifference=Math.max(...result.traces.a.map((p,i)=>
+    Math.abs(p.y-result.traces.b[i].y)));
+  assert(maxYDifference>0.5 &&
+    result.referenceFinal.x < 16.5 &&
+    result.candidateFinal.x > 17.5,
+    "north blocked vs south open did not create useful material XY difference");
+  return "same finite post, same body; A north first x="+
+    result.referenceFinal.x.toFixed(3)+"m, B south="+
+    result.candidateFinal.x.toFixed(3)+"m, max Y separation="+
+    maxYDifference.toFixed(3)+"m; 2D A/B evidence retained";
 });
 
 const failed = cases.filter((c) => c.status === "FAIL");
