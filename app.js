@@ -120,6 +120,7 @@ function render(){
    if(document.activeElement!==el("selected-motor"))el("selected-motor").value=a.spec.motor;
    if(document.activeElement!==el("upper"))el("upper").value=a.target[0];
    if(document.activeElement!==el("lower"))el("lower").value=a.target[1];
+   el("local-response").checked=a.control==="sense";
  }else if(m && document.activeElement!==el("selected-mass"))el("selected-mass").value=m.mass;
 }
 function controller(){
@@ -151,6 +152,12 @@ function activate(){
    stepOne();render();});
  el("reset").onclick=()=>fail(()=>{replaceWorld(saved?restore(saved):new CommonsWorld());
    message("Restored authored starting state; running solver history intentionally reset.");});
+ el("local-response").onchange=()=>fail(()=>{
+   if(!field.setLocalResponse(selected,el("local-response").checked))
+     throw Error("Select a physical organism");
+   message("Local bodily response "+(el("local-response").checked?"enabled":"disabled")+
+     " on selected organism; only affects it when not piloted.");
+ });
  el("apply-selected").onclick=()=>fail(()=>{
    const m=safe(Number(el("selected-mass").value),"mass");
    const actor=field.actor(selected),obj=field.item(selected);
