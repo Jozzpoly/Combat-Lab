@@ -1929,7 +1929,7 @@ try {
     detail: String(error?.message ?? error).slice(0,300) });
 }
 
-await observation("adaptive-local-detour-tries-both-sides-in-one-material-world", world => {
+await trial("adaptive-local-detour-discovers-an-alternate-material-route", world => {
   world.authorRect({ kind: "wall", cx: 16.8, cy: 11.4,
     width: 0.7, height: 1.4 });
   world.setResidentMode("adaptive-skirt");
@@ -1949,6 +1949,16 @@ await observation("adaptive-local-detour-tries-both-sides-in-one-material-world"
     if(firstClearance===null && p.x>18.4)firstClearance=tick;
   }
   finite(world,"adaptive material detour");
+  assert(firstSkirt && firstSideFailure && firstOpenSide && firstClearance,
+    "local failed attempt did not produce material alternate-route clearance");
+  assert(firstSkirt < firstSideFailure &&
+    firstSideFailure < firstOpenSide && firstOpenSide < firstClearance,
+    "trial → self-measured failure → changed action → material result ordering invalid");
+  assert(minY < 10.8 && maxY > 12.6 &&
+    world.residentControl.failedDetours >= 1 &&
+    world.residentControl.skirts >= 2 &&
+    maxX > 18.4,
+    "changing side did not lead to a distinct physically traversed passage");
   return "north-first initial; t first attempt="+firstSkirt+
     ", failed first side="+firstSideFailure+
     ", second side attempt="+firstOpenSide+
