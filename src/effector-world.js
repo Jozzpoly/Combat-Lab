@@ -216,7 +216,13 @@ export class EffectorField {
     for(const arm of a.arms){
       arm.bar.setHalfExtents(V(half,.13));
       arm.bar.setTranslationWrtParent(V(0,0));
-      arm.hook.setTranslationWrtParent(V(half-.11,-arm.sign*.20));
+      const localHook=V(half-.11,-arm.sign*.20);
+      arm.hook.setTranslationWrtParent(localHook);
+      // Rapier caches attached collider world poses until a solver update.
+      // This one-time authoring refresh is NOT movement: the local offset
+      // stays the physical source of truth on the next simulation step.
+      const center=arm.body.translation(),off=rotate(localHook,arm.body.rotation());
+      arm.hook.setTranslation(V(center.x+off.x,center.y+off.y));
       arm.bar.setMass(15);
       arm.hook.setMass(2.2);
       // Explicitly dirty the unchanged parent pose so cached collider
