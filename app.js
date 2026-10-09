@@ -83,17 +83,81 @@ function drawWorld() {
       const a = actor.root.translation(), b = actor.tail.translation();
       ctx.strokeStyle = "#ddc69f";ctx.lineWidth = 0.12;
       ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
+      if(actor.kind==="crawler"){
+        // Show actual revolute hinge anchor, not an invented shoulder.
+        const angle=actor.root.rotation(),offset=-.53*actor.shapeScale.length;
+        circle(a.x+Math.cos(angle)*offset,
+          a.y+Math.sin(angle)*offset,.13,"#f3e4c8");
+      }else if(actor.kind==="worm"){
+        // Real variable centre-to-centre length is a prismatic joint,
+        // represented by a telescoping two-rail connector.
+        const dx=b.x-a.x,dy=b.y-a.y,n=Math.hypot(dx,dy)||1;
+        const px=-dy/n*.085,py=dx/n*.085;
+        ctx.strokeStyle="#a5ebc3";ctx.lineWidth=.045;
+        for(const sign of [-1,1]){
+          ctx.beginPath();ctx.moveTo(a.x+px*sign,a.y+py*sign);
+          ctx.lineTo(b.x+px*sign,b.y+py*sign);ctx.stroke();
+        }
+        // Current supporting segment only: last real physical ground
+        // impulse, not a gait animation or a false "foot" collider.
+        const source=actor.controlStroke;
+        if(source?.support>.015 && source.supportPart){
+          const foot=source.supportPart==="front"?a:b;
+          ctx.strokeStyle="#aff6cb";ctx.lineWidth=.09;
+          ctx.beginPath();ctx.arc(foot.x,foot.y,.56,0,2*Math.PI);ctx.stroke();
+        }
+      }
     }
     for (const part of actor.parts) {
       const b = part.body, p = b.translation(), a = b.rotation();
       const dx = part.x * Math.cos(a) - part.y * Math.sin(a);
       const dy = part.x * Math.sin(a) + part.y * Math.cos(a);
       const shape = part.shape;
-      if (shape.type === "box") physicalBox(p.x + dx, p.y + dy,
-        shape.hx, shape.hy, a, actor.spec.color);
-      else circle(p.x + dx, p.y + dy, shape.r, actor.spec.color);
+      if (shape.type === "box") {
+        physicalBox(p.x + dx, p.y + dy,
+          shape.hx, shape.hy, a, actor.spec.color);
+        // Small inset details reveal real collider orientation/which part
+        // faces forward. The opaque physical envelope remains unchanged.
+        ctx.save();ctx.translate(p.x+dx,p.y+dy);ctx.rotate(a);
+        ctx.fillStyle="rgba(14,32,45,.38)";
+        const thick=Math.max(.04,Math.min(.14,shape.hx*.18));
+        ctx.fillRect(shape.hx-thick*1.7,-shape.hy*.76,
+          thick,shape.hy*1.52);
+        ctx.fillStyle="rgba(244,251,238,.83)";
+        ctx.fillRect(shape.hx-thick*.65,-shape.hy*.45,
+          Math.min(.075,thick*.7),shape.hy*.9);
+        if(actor.kind==="broad"){
+          // Reinforcement bars are visual markings *inside* the actual
+          // broad collision hull, not extra solid or fake limbs.
+          ctx.fillStyle="rgba(37,27,58,.24)";
+          for(const y of [-.5,0,.5])
+            ctx.fillRect(-shape.hx*.53,y*shape.hy-.045,
+              shape.hx*.8,.09);
+        }
+        ctx.restore();
+      } else {
+        circle(p.x+dx,p.y+dy,shape.r,actor.spec.color);
+        ctx.save();ctx.translate(p.x+dx,p.y+dy);ctx.rotate(a);
+        ctx.fillStyle="rgba(255,255,255,.7)";
+        ctx.fillRect(shape.r*.48,-.045,shape.r*.25,.09);
+        ctx.restore();
+      }
     }
     const p = actor.root.translation(), a = actor.root.rotation();
+    // A visible response only when the actual solver reported contact.
+    // Rings are instrumentation, not gameplay collision/force geometry.
+    if(actor.sense?.touch && actor.sense.load>1.2){
+      const mode=actor.control.mode;
+      ctx.save();
+      ctx.strokeStyle=mode==="brace"?"#82e2ea":
+        mode==="give-way"?"#eba0b8":mode==="press"?"#f0c078":"#e9b6a0";
+      ctx.globalAlpha=Math.min(.85,.30+.14*Math.log1p(actor.sense.load));
+      ctx.lineWidth=Math.min(.12,.04+.01*Math.log1p(actor.sense.load));
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,Math.max(.43,
+        Math.max(actor.spec.width,actor.spec.length)*.43),0,Math.PI*2);
+      ctx.stroke();ctx.restore();
+    }
     ctx.beginPath();ctx.moveTo(p.x,p.y);
     ctx.lineTo(p.x + Math.cos(a) * 0.9, p.y + Math.sin(a) * 0.9);
     ctx.lineWidth = 0.095;ctx.strokeStyle = selected ? "#ffe2a0" : "#e7ecdf";
