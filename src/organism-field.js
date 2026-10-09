@@ -245,12 +245,15 @@ export class OrganismField {
   setActorProfile(id, changes) {
     const actor = this.actor(id);
     if (!actor) throw new RangeError("select an organism to edit");
-    const fields = ["mass", "speed", "acceleration", "braking", "turnRate", "turnTorque", "gripReach", "gripForce"];
+    const fields = ["mass", "speed", "acceleration", "braking", "turnRate", "turnTorque", "gripReach", "gripForce", "rearDrive"];
     const next = { ...actor.spec };
     for (const key of fields) {
       if (Object.prototype.hasOwnProperty.call(changes, key))
         next[key] = num(changes[key], key, key === "mass");
     }
+    if (next.rearDrive !== undefined && (next.rearDrive > 1 ||
+        (!actor.tail && Object.hasOwn(changes,"rearDrive"))))
+      throw new RangeError("rear drive fraction requires articulated body and range [0,1]");
     // Validate *all* derived collider masses before modifying any body.
     const masses = actor.parts.map(part =>
       num(next.mass * part.mass / actor.spec.mass, "part mass", true));
@@ -368,13 +371,36 @@ export class OrganismField {
       desiredOmega = response.steer * spec.turnRate;
     }
     const traction = this.tractionAt(body.translation());
-    const vel = body.linvel();
-    const impulse = finiteDrive({
-      mass: spec.mass, velocity: vel, heading: body.rotation(),
-      input: throttle, speed: spec.speed, acceleration: spec.acceleration,
-      braking: spec.braking, traction
-    });
-    body.applyImpulse(impulse, true);
+    const rearTraction = actor.tail ?
+      this.tractionAt(actor.tail.translation()) : null;
+    let impulse;
+    if(actor.tail){
+      // Distinct supporting segment positions create independent *external*
+      // traction limits. The drive split is authored; internal bend torque
+      // remains reciprocal and is not claimed as ground-generated gait.
+      const share=spec.rearDrive;
+      const front=finiteDrive({
+        mass:spec.mass*(1-share),velocity:body.linvel(),
+        heading:body.rotation(),input:throttle,speed:spec.speed,
+        acceleration:spec.acceleration,braking:spec.braking,traction
+      });
+      const rear=finiteDrive({
+        mass:spec.mass*share,velocity:actor.tail.linvel(),
+        heading:body.rotation(),input:throttle,speed:spec.speed,
+        acceleration:spec.acceleration,braking:spec.braking,
+        traction:rearTraction
+      });
+      body.applyImpulse(front,true);
+      actor.tail.applyImpulse(rear,true);
+      impulse=v(front.x+rear.x,front.y+rear.y);
+    }else{
+      impulse=finiteDrive({
+        mass:spec.mass,velocity:body.linvel(),heading:body.rotation(),
+        input:throttle,speed:spec.speed,acceleration:spec.acceleration,
+        braking:spec.braking,traction
+      });
+      body.applyImpulse(impulse,true);
+    }
     const inertiaEstimate = spec.mass * (spec.length ** 2 + spec.width ** 2) / 12;
     const torque = clamp((desiredOmega - body.angvel()) * inertiaEstimate,
       -spec.turnTorque * traction * DT, spec.turnTorque * traction * DT);
@@ -391,7 +417,7 @@ export class OrganismField {
     }
     actor.control = {
       mode: selected && manual ? "manual" : "local",
-      throttle, steering: desiredOmega, traction,
+      throttle, steering: desiredOmega, traction, rearTraction,
       intended: v(Math.cos(body.rotation()) * spec.speed * throttle,
         Math.sin(body.rotation()) * spec.speed * throttle),
       motorImpulse: impulse
