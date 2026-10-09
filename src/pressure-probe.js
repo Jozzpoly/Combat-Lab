@@ -1994,6 +1994,47 @@ await trial("adaptive-local-retry-cannot-conjure-clearance-through-full-wall", w
     ", locally measured failures="+world.residentControl.failedDetours;
 });
 
+try {
+  document.querySelector("#fixture-lateral-gap").click();
+  const inputValue = (id,v) => {
+    document.querySelector("#" + id).value = v;
+  };
+  const initial = Number(document.body.dataset.authoredShapes);
+  assert(initial === 1, "lateral fixture has no one authored post");
+  document.querySelector("#exact-kind").value = "object";
+  inputValue("exact-x", "-2.25");
+  inputValue("exact-y", "12.5");
+  inputValue("exact-width", "0.6");
+  inputValue("exact-height", "0.7");
+  inputValue("exact-mass", "15");
+  document.querySelector("#exact-place").click();
+  assert(document.body.dataset.authoredShapes === "2" &&
+    document.querySelector("#world-edit-feedback").textContent.includes("Placed exact object"),
+    "exact signed-coordinate material box did not become live authored matter");
+  inputValue("exact-width", "0");
+  document.querySelector("#exact-place").click();
+  assert(document.body.dataset.authoredShapes === "2" &&
+    document.querySelector("#world-edit-feedback").textContent.includes("Not placed:"),
+    "invalid dimensions silently created or partially consumed source truth");
+  document.querySelector("#reset-world").click();
+  document.querySelector("#single-step").click();
+  assert(document.body.dataset.authoredShapes === "2",
+    "authoring coordinates did not persist across physics reset");
+  document.querySelector("#undo-edit").click();
+  document.querySelector("#single-step").click();
+  assert(document.body.dataset.authoredShapes === "1",
+    "undo exact authored matter did not update physical scene");
+  document.querySelector("#clear-edits").click();
+  document.querySelector("#single-step").click();
+  assert(document.body.dataset.authoredShapes === "0",
+    "clear exact authored matter left invisible source residue");
+  document.querySelector("#pause-simulation").click();
+  cases.push({ name:"live-ui-exact-world-author-and-reject", status:"PASS",
+    detail:"signed coordinates, persisted reset, invalid width rejected, undo and clear tested in DOM" });
+} catch(error) {
+  cases.push({ name:"live-ui-exact-world-author-and-reject", status:"FAIL",
+    detail:String(error?.message??error).slice(0,300) });
+}
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
