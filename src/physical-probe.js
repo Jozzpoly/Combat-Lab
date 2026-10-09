@@ -154,7 +154,34 @@ export function physicalProbe(Field){
  }
  const transported=carryTrial(780),uncharged=carryTrial(0),
    releasedHalfway=carryTrial(780,{releaseAfter:65});
+ function reachTrial(reach){
+   const w=new Field({empty:true});
+   try{
+     const a=w.spawn("pincer",{x:9,y:12},0);
+     w.select(a.id);w.setClawReach(a.id,reach);
+     const box=w.addBox({x:10.7,y:12,hx:.38,hy:.48,mass:38},false);
+     const before=box.body.translation();
+     w.setAperture(a.id,0);
+     let peak=0,contactedSteps=0;
+     for(let i=0;i<110;i++){
+       w.step({move:{x:0,y:0},aim:{x:18,y:12}});
+       if(a.contactCount)contactedSteps++;
+       peak=Math.max(peak,a.contactImpulse);
+     }
+     for(let i=0;i<120;i++){
+       w.step({move:{x:0,y:-1},aim:{x:18,y:12}});
+       if(a.contactCount)contactedSteps++;
+       peak=Math.max(peak,a.contactImpulse);
+     }
+     const after=box.body.translation();
+     return {reach,actualContactSteps:contactedSteps,
+       maxContactImpulse:+peak.toFixed(2),
+       transported:+Math.hypot(after.x-before.x,after.y-before.y).toFixed(3)};
+   }finally{w.dispose();}
+ }
+ const sameForceDifferentGeometry=[.94,1.53,2.31].map(reachTrial);
  return {live,nullMotor,heavier,
+   sameForceDifferentGeometry,
    lateralMaterialTransport:{transported,uncharged,releasedHalfway},
    authorship:"joint-preserving pause edit and live undo verified"};
 }
