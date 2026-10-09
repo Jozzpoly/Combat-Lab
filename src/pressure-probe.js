@@ -2775,6 +2775,66 @@ await trial("portable-start-replays-same-material-outcome-on-a-fresh-world", asy
   } finally {fresh.world.free();}
 });
 
+await trial("two-scene-physical-ab-detects-contact-dependent-divergence", async world => {
+  const {captureStartingScene,compareStartingScenes} =
+    await import("./starting-scene.js");
+  const baseline=captureStartingScene(world);
+  world.authorRect({kind:"wall",cx:16.8,cy:11.4,width:.6,height:2.5,mass:0});
+  const candidate=captureStartingScene(world);
+  const beforeTick=world.physicsTick;
+  const beforeShapes=world.authoredShapes.length;
+  const result=await compareStartingScenes(baseline,candidate,
+    {subject:"resident",steps:140});
+  assert(result.firstMotorDifference!==null &&
+    result.firstPositionDifference!==null &&
+    result.firstPositionDifference>0 &&
+    result.firstMotorDifference>=result.firstPositionDifference &&
+    result.candidateContactTicks>0 &&
+    result.referenceContactTicks===0 &&
+    result.maxPositionGap>0.1,
+    "A/B did not isolate material wall, sensing, changed motion and consequences");
+  assert(world.physicsTick===beforeTick &&
+    world.authoredShapes.length===beforeShapes,
+    "A/B ran inside and mutated the active World");
+  return "wall-only reference difference: body t="+result.firstPositionDifference+
+    ", motor t="+result.firstMotorDifference+
+    "; contact 0/"+result.candidateContactTicks+
+    "; gap="+result.maxPositionGap.toFixed(2)+"m; live World untouched";
+});
+
+try{
+  const exportButton=document.querySelector("#recipe-export");
+  const compareButton=document.querySelector("#compare-scenes");
+  const report=document.querySelector("#compare-report");
+  const subject=document.querySelector("#compare-subject");
+  const text=document.querySelector("#starting-scene-json");
+  assert(exportButton&&compareButton&&report&&subject&&text,
+    "A/B comparison workbench was not mounted");
+  document.querySelector("#fixture-short-block").click();
+  exportButton.click();
+  document.querySelector("#fixture-side-touch").click();
+  subject.value="resident";
+  compareButton.click();
+  await new Promise(resolve=>setTimeout(resolve,0));
+  assert(report.textContent.includes("A / B — resident") &&
+    report.textContent.includes("No live World was modified"),
+    "actual browser A/B comparison failed to display physical evidence");
+  const before=text.value;
+  subject.value="peer";
+  compareButton.click();
+  await new Promise(resolve=>setTimeout(resolve,0));
+  assert(report.textContent.includes("live World unchanged"),
+    "comparing a missing physical actor was falsely qualified");
+  assert(text.value===before &&
+    document.body.dataset.experimentFixture==="side",
+    "failed A/B compared in or modified current scene");
+  cases.push({name:"live-ui-two-scene-material-ab-is-non-destructive",status:"PASS",
+    detail:"scene A vs current B measured without changing active physics; absent actor rejected"});
+}catch(error){
+  cases.push({name:"live-ui-two-scene-material-ab-is-non-destructive",status:"FAIL",
+    detail:String(error?.message??error).slice(0,300)});
+}
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);

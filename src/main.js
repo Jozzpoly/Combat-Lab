@@ -1,5 +1,5 @@
 import { DEFAULT_PROFILE, DEFAULT_RESIDENT_PROFILE, FIXED_DT, MaterialWorld } from "./material-world.js";
-import { captureStartingScene, stageStartingScene } from "./starting-scene.js";
+import { captureStartingScene, stageStartingScene, compareStartingScenes } from "./starting-scene.js";
 
 const canvas = document.querySelector("#lab");
 const ctx = canvas.getContext("2d");
@@ -36,6 +36,9 @@ const recipeFeedback = document.querySelector("#recipe-feedback");
 const recipeExportButton = document.querySelector("#recipe-export");
 const recipeCopyButton = document.querySelector("#recipe-copy");
 const recipeImportButton = document.querySelector("#recipe-import");
+const compareSubjectSelect = document.querySelector("#compare-subject");
+const compareScenesButton = document.querySelector("#compare-scenes");
+const compareReport = document.querySelector("#compare-report");
 const placeBodyButton = document.querySelector("#place-selected-at-cursor");
 const restoreBodyStartsButton = document.querySelector("#restore-body-positions");
 const bodyPositionFeedback = document.querySelector("#body-position-feedback");
@@ -613,6 +616,42 @@ recipeImportButton.addEventListener("click", async () => {
       "Import rejected; existing World unchanged: " + String(error?.message ?? error);
   } finally {
     recipeImportButton.disabled = false;
+  }
+});
+
+compareScenesButton.addEventListener("click", async () => {
+  compareScenesButton.disabled = true;
+  try {
+    const source = recipeTextarea.value.trim();
+    if (!source || source.length > 2_000_000)
+      throw new RangeError("Export an A recipe first (max 2 MB)");
+    const reference = JSON.parse(source);
+    const candidate = captureStartingScene(world);
+    const result = await compareStartingScenes(reference, candidate, {
+      subject: compareSubjectSelect.value, steps: 240
+    });
+    const tick = value => value === null ? "none" : String(value);
+    const position = point => "(" + point.x.toFixed(2) + ", " +
+      point.y.toFixed(2) + ") m";
+    compareReport.textContent =
+      "A / B — " + result.subject + " · " + result.steps +
+        " identical fixed physics steps\n" +
+      "First motor-intent difference: t" + tick(result.firstMotorDifference) + "\n" +
+      "First body-position difference: t" + tick(result.firstPositionDifference) +
+        (result.initialStateDiffers ? " (different starting positions)" : "") + "\n" +
+      "Largest body-position gap: " + result.maxPositionGap.toFixed(3) + " m\n" +
+      "Final positions A / B: " + position(result.referenceFinal) +
+        " / " + position(result.candidateFinal) + "\n" +
+      "Active-contact ticks A / B: " + result.referenceContactTicks +
+        " / " + result.candidateContactTicks + "\n" +
+      "First active contact A / B: t" + tick(result.referenceFirstContact) +
+        " / t" + tick(result.candidateFirstContact) + "\n" +
+      "No live World was modified. This is physical measurement, not NPC quality.";
+  } catch (error) {
+    compareReport.textContent =
+      "A/B not run; live World unchanged: " + String(error?.message ?? error);
+  } finally {
+    compareScenesButton.disabled = false;
   }
 });
 

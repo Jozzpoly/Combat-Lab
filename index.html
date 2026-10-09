@@ -99,6 +99,20 @@
           <button id="recipe-import">Replace starting scene</button>
         </div>
         <p id="recipe-feedback" class="muted" aria-live="polite">No recipe loaded; importing will pause and replace the current scene.</p>
+        <details>
+          <summary>Compare saved A vs current B</summary>
+          <p class="muted">Keep exported JSON in the box above; edit the live scene, then compare 240 fixed physical steps in two isolated Worlds. Same idle player input, no live impulses or mid-run edits. This does not decide which feels better.</p>
+          <label>Body to inspect
+            <select id="compare-subject">
+              <option value="resident">First moving actor</option>
+              <option value="peer">Second moving actor</option>
+              <option value="brace">Dynamic holder / beam</option>
+              <option value="player">Player (idle input)</option>
+            </select>
+          </label>
+          <button id="compare-scenes">Compare A ↔ current B</button>
+          <pre id="compare-report">No A/B comparison yet.</pre>
+        </details>
       </section>
 
       <section>
