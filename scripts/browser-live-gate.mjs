@@ -29,3 +29,4 @@ console.log("PHYSICAL GATE: "+(probe.grab("gate-evidence")||"not exposed"));
 console.log("DISTRIBUTED DRIVE CONTRAST: "+(probe.grab("segment-evidence")||"not exposed"));
 console.log("INTERNAL-STROKE CRAWL CONTRAST: "+(probe.grab("inchworm-evidence")||"not exposed"));
 console.log("PORTABLE POSED SCENE: "+(probe.grab("scene-evidence")||"not exposed"));
+console.log("SHARED-WORLD WORM CAUSAL NULL: "+(probe.grab("integrated-worm")||"not exposed"));
