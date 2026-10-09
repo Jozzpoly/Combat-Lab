@@ -1,12 +1,13 @@
 import { execFileSync } from "node:child_process";
 const chrome=process.env.CHROME_BIN, url=process.argv[2];
 if(!chrome||!url)throw Error("Need CHROME_BIN and emitted artifact URL");
-function visit(location,budget){
- const dom=execFileSync(chrome,[
-  "--headless=new","--no-sandbox","--disable-gpu",
-  "--disable-dev-shm-usage","--virtual-time-budget="+budget,
-  "--dump-dom",location
- ],{timeout:75000,encoding:"utf8",maxBuffer:12*1024*1024});
+function visit(location,budget=null){
+ const args=["--headless=new","--no-sandbox","--disable-gpu",
+   "--disable-dev-shm-usage"];
+ if(budget!==null)args.push("--virtual-time-budget="+budget);
+ args.push("--dump-dom",location);
+ const dom=execFileSync(chrome,args,
+   {timeout:75000,encoding:"utf8",maxBuffer:12*1024*1024});
  const grab=(name)=>dom.match(new RegExp('data-'+name+'="([^"]*)"'))?.[1];
  if(grab("lab-ready")!=="true" || grab("lab-error")){
    throw Error("Browser runtime not ready: ready="+grab("lab-ready")+
@@ -32,3 +33,11 @@ console.log("PORTABLE POSED SCENE: "+(probe.grab("scene-evidence")||"not exposed
 console.log("SHARED-WORLD WORM CAUSAL NULL: "+(probe.grab("integrated-worm")||"not exposed"));
 console.log("NONDESTRUCTIVE LIVE UNDO: "+(probe.grab("live-undo")||"not exposed"));
 console.log("MIXED PHYSICAL CROWD: "+(probe.grab("crowd-evidence")||"not exposed"));
+
+const real=visit(url+(url.includes("?")?"&":"?")+"realClockProbe=1");
+if(real.grab("real-clock-probe")!=="pass")
+  throw Error("Real-clock pressure FAIL: status="+real.grab("real-clock-probe")+
+    " runtimeError="+real.grab("lab-error"));
+const timed=(real.grab("real-clock-evidence")||"not exposed")
+  .replaceAll("&quot;",'"').replaceAll("&amp;","&");
+console.log("REAL MONOTONIC CHROMIUM TIMING (runner-specific OBSERVATION): "+timed);
