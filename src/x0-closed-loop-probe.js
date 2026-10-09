@@ -29,12 +29,14 @@ function attempt(Field,{mass=18,impulse=V(65,-170),reflex=false,limit=240}={}){
   try{
     const p=world.spawn("pincer",V(9,12),0);
     world.select(p.id);
-    const b=world.spawn("ram",V(12.50,12),Math.PI);
+    const b=world.spawn("ram",V(13.20,12),Math.PI);
     const o=world.addBox({x:10.70,y:12,hx:.38,hy:.48,mass},false);
+    const secondary=world.addBox({x:9.65,y:10.55,hx:.23,hy:.24,mass:9},false);
+    const secondaryStart=V(secondary.body.translation().x,secondary.body.translation().y);
     p.spec.clawTorque=780;
     world.setAperture(p.id,.92);
     const origin=V(o.body.translation().x,o.body.translation().y);
-    let contactAt=-1,actuationAt=-1,firstB=-1;
+    let contactAt=-1,actuationAt=-1,firstB=-1,crateSecondaryAt=-1,secondaryPincerAt=-1;
     let contactCount=0,contactLoad=0;
     let lastSensor=V(),latch=0,respondedUpper=0,respondedLower=0;
     const states=[];
@@ -68,6 +70,14 @@ function attempt(Field,{mass=18,impulse=V(65,-170),reflex=false,limit=240}={}){
       }
       if(latch>0)latch--;
       if(b.contactCount>0&&firstB<0)firstB=tick;
+      world.world.contactPair(o.collider,secondary.collider,m=>{
+        if(m.numSolverContacts()>0&&crateSecondaryAt<0)crateSecondaryAt=tick;
+      });
+      for(const part of p.parts){
+        world.world.contactPair(part.collider,secondary.collider,m=>{
+          if(m.numSolverContacts()>0&&secondaryPincerAt<0)secondaryPincerAt=tick;
+        });
+      }
       for(const a of [p,b]){
         for(const part of a.parts){
           const t=part.body.translation();
@@ -85,8 +95,12 @@ function attempt(Field,{mass=18,impulse=V(65,-170),reflex=false,limit=240}={}){
       }
     }
     const finish=o.body.translation(),ram=b.root.translation();
+    const secondAfter=secondary.body.translation();
     return {mass,impulse,reflex,impulseDelivered,contactAt,actuationAt,
-      firstB,contactTicks:contactCount,totalContactLoad:round(contactLoad),
+      firstB,crateSecondaryAt,secondaryPincerAt,
+      secondary:{x:round(secondAfter.x),y:round(secondAfter.y),
+        displacement:round(diff(secondAfter,secondaryStart))},
+      contactTicks:contactCount,totalContactLoad:round(contactLoad),
       respondedUpper,respondedLower,
       crate:{x:round(finish.x),y:round(finish.y),
         displacement:round(diff(finish,origin)),
@@ -129,6 +143,11 @@ export function closedMaterialLoopPreflight(Field){
       firstB:on.firstB,crate:on.crate,otherBody:on.otherBody,
       respondedUpper:on.respondedUpper,respondedLower:on.respondedLower},
       materialDifference:round(difference),
+      secondMaterialDifference:round(diff(on.secondary,off.secondary)),
+      secondaryPath:{firstActualCrateContact:on.crateSecondaryAt,
+        firstActorContact:on.secondaryPincerAt,
+        onDisplacement:on.secondary.displacement,
+        offDisplacement:off.secondary.displacement},
       otherBodyDifference:round(diff(on.otherBody,off.otherBody)),
       preActuationMatched:true};
   });
@@ -136,5 +155,6 @@ export function closedMaterialLoopPreflight(Field){
     cases:results.length,withContact:results.filter(x=>x.on.contactAt>=0).length,
     withResponse:results.filter(x=>x.on.actuationAt>=0).length,
     withNewMaterialConsequence:results.filter(x=>x.materialDifference>.08).length,
+    withSecondaryAfterstateDifference:results.filter(x=>x.secondMaterialDifference>.08).length,
     results};
 }
