@@ -3310,6 +3310,33 @@ await trial("repositioned-authored-box-plot-matches-real-reset-start-not-creatio
   return "creation x=7.4m; actual A start (11.4,10.5), actual B start (13.2,9.1); source truth retained";
 });
 
+try {
+  const toggle=document.querySelector("#motion-overlay");
+  const status=document.querySelector("#motion-overlay-summary");
+  const step=document.querySelector("#single-step");
+  document.querySelector("#fixture-pressure-chain").click();
+  assert(toggle&&status&&step,"motion truth overlay controls missing");
+  step.click();
+  assert(document.body.dataset.motionVectorSubjects==="1",
+    "original selected-body arrows disappeared");
+  toggle.checked=true;
+  step.click();
+  assert(document.body.dataset.motionVectorSubjects==="4" &&
+    Number(document.body.dataset.motionVectorArrows)>=2 &&
+    status.textContent.includes("4 physically driven"),
+    "simultaneous all-body motor/physical traces not shown");
+  toggle.checked=false;
+  step.click();
+  assert(document.body.dataset.motionVectorSubjects==="1" &&
+    status.textContent.includes("Selected driven body only"),
+    "selected-only research view was not restored");
+  document.querySelector("#pause-simulation").click();
+  cases.push({name:"live-ui-simultaneous-motor-intent-and-material-movement",
+    status:"PASS",detail:"three-role pressure plus player: 1 selected → 4 driven → 1; optional research visualization"});
+} catch(error) {
+  cases.push({name:"live-ui-simultaneous-motor-intent-and-material-movement",
+    status:"FAIL",detail:String(error?.message??error).slice(0,300)});
+}
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
