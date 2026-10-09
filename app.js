@@ -3,9 +3,9 @@ import {EffectorField,DT,V,clamp} from "./src/effector-world.js";
 const $=selector=>document.querySelector(selector);
 const canvas=$("#lab"),ctx=canvas.getContext("2d");
 const keys=new Set();
-let field=null,paused=false,armedBox=false,savedScene=null;
+let field=null,paused=false,armedBox=false,armedPoke=false,savedScene=null;
 let selectedTarget=null,mouse=V(10,11),camera={x:18,y:12,zoom:1};
-let pan=null,dragPose=null,wallDraft=null;
+let pan=null,dragPose=null,wallDraft=null,pokeDraft=null;
 let debt=0,last=performance.now(),lastReport=0;
 
 function info(message){$("#notice").textContent=message;}
@@ -113,6 +113,16 @@ function draw(){
       0,"rgba(226,198,143,.45)");
   }
   if(armedBox)disk(mouse.x,mouse.y,.12,"#e3d6a5");
+  if(pokeDraft){
+    ctx.save();ctx.strokeStyle="#ffba73";ctx.fillStyle="#ffba73";
+    ctx.lineWidth=.09;ctx.beginPath();
+    ctx.moveTo(pokeDraft.point.x,pokeDraft.point.y);
+    ctx.lineTo(mouse.x,mouse.y);ctx.stroke();
+    const angle=Math.atan2(mouse.y-pokeDraft.point.y,mouse.x-pokeDraft.point.x);
+    ctx.translate(mouse.x,mouse.y);ctx.rotate(angle);
+    ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(-.36,-.17);
+    ctx.lineTo(-.36,.17);ctx.closePath();ctx.fill();ctx.restore();
+  }
 }
 function ui(){
   const chosen=selected(),actor=field.actor(selectedTarget);
@@ -212,8 +222,15 @@ async function start(){
     const a=field.spawn("ram",mouse);field.select(a.id);selectedTarget=a.id;ui();
   });
   $("#add-box").onclick=()=>{armedBox=!armedBox;
+    armedPoke=false;$("#poke").textContent="Impulse probe";
     info(armedBox?"Click in the material world to add a real movable crate.":
       "Crate placement cancelled.");};
+  $("#poke").onclick=()=>{armedPoke=!armedPoke;armedBox=false;
+    $("#poke").textContent=armedPoke?"Cancel impulse probe":"Impulse probe";
+    info(armedPoke?
+      "Drag from an actual dynamic collider. Arrow direction sets impulse direction; numeric N·s sets strength.":
+      "Point impulse cancelled.");
+  };
   $("#undo").onclick=()=>guard(()=>{
     if(!field.undo())throw Error("No user-authored matter to undo");
     ui();
@@ -300,6 +317,13 @@ async function start(){
       dragPose={id,dx:p.x-mouse.x,dy:p.y-mouse.y};
       canvas.setPointerCapture(event.pointerId);return;
     }
+    if(armedPoke){
+      const id=field.pick(mouse);
+      if(!id)throw Error("Impulse must begin on a real dynamic collider");
+      pokeDraft={id,point:{...mouse}};
+      if(Number.isInteger(event.pointerId))canvas.setPointerCapture(event.pointerId);
+      return;
+    }
     if(armedBox){
       const mass=Number($("#crate-mass").value),width=Number($("#crate-width").value);
       const b=field.addBox({x:mouse.x,y:mouse.y,mass,hx:width/2,hy:width/2});
@@ -324,6 +348,23 @@ async function start(){
       field.reposition(dragPose.id,V(mouse.x+dragPose.dx,mouse.y+dragPose.dy));
   }));
   canvas.addEventListener("pointerup",event=>guard(()=>{
+    if(pokeDraft){
+      const start=pokeDraft.point,dir=V(mouse.x-start.x,mouse.y-start.y);
+      const length=Math.hypot(dir.x,dir.y);
+      const magnitude=Number($("#poke-strength").value);
+      if(!Number.isFinite(magnitude)||magnitude<0)
+        throw RangeError("Impulse strength must be finite and nonnegative");
+      if(length>.08 && magnitude>0){
+        const answer=field.pokeAt(start,V(
+          dir.x/length*magnitude,dir.y/length*magnitude));
+        if(!answer)throw Error("Collider moved; no physical target received impulse");
+        selectedTarget=answer.owner;
+        field.select(field.actor(answer.owner)?answer.owner:null);
+        info("Actual "+magnitude+" N·s impulse at "+
+          answer.part+" of "+answer.owner+". Matter afterstate not reset.");
+      }else info("No impulse applied; drag a directional arrow across the material world.");
+      pokeDraft=null;armedPoke=false;$("#poke").textContent="Impulse probe";
+    }
     if(wallDraft&&paused){
       const p=wallDraft;
       field.addWall({x:(p.x+mouse.x)/2,y:(p.y+mouse.y)/2,
@@ -334,7 +375,7 @@ async function start(){
     if(canvas.hasPointerCapture(event.pointerId))
       canvas.releasePointerCapture(event.pointerId);
   }));
-  canvas.addEventListener("pointercancel",()=>{pan=null;dragPose=null;wallDraft=null;});
+  canvas.addEventListener("pointercancel",()=>{pan=null;dragPose=null;wallDraft=null;pokeDraft=null;});
   ui();
   document.body.dataset.live="yes";
   if(new URLSearchParams(location.search).has("probe")){
