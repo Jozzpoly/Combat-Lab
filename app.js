@@ -386,6 +386,47 @@ async function pressureProbe() {
       "identical physical outcomes under matched-motor different shapes");
     document.body.dataset.morphEvidence=controlled.map(o=>
       o.kind+"@tick"+o.firstContact+":boxDx"+o.displacement.toFixed(3)).join("; ");
+    // Does moving *actual* power delivery between a crawler's physically
+    // separated supports create an intervention beyond a color/size change?
+    function drivePlacement(startX,rearDrive) {
+      const w=new OrganismField();
+      try {
+        for(const a of [...w.actors])w.remove(a.id);
+        const actor=w.spawn("crawler",{x:startX,y:11},0);
+        w.select(actor.id);
+        w.setActorProfile(actor.id,{rearDrive,acceleration:12,
+          braking:12,speed:3});
+        const first={...actor.root.translation()};
+        const tractionStart=[
+          w.tractionAt(actor.root.translation()),
+          w.tractionAt(actor.tail.translation())
+        ];
+        for(let i=0;i<55;i++){
+          w.step({x:1,y:0});
+          const p=actor.root.translation();
+          assert(Number.isFinite(p.x+p.y+actor.root.angvel()),
+            "articulated drive produced nonfinite body");
+        }
+        return {dx:actor.root.translation().x-first.x,tractionStart};
+      } finally {w.world.free();}
+    }
+    const dryFront=drivePlacement(5,0),dryRear=drivePlacement(5,1),
+      splitFront=drivePlacement(13.35,0),splitRear=drivePlacement(13.35,1);
+    assert(splitFront.tractionStart[0] < splitFront.tractionStart[1],
+      "two physical segments did not begin on separate ground regimes");
+    assert(Math.abs(splitRear.dx-splitFront.dx)>.05,
+      "changing real drive allocation did not affect travel on mixed footing");
+    const groundEffect=(splitRear.dx-splitFront.dx)-
+      (dryRear.dx-dryFront.dx);
+    assert(Math.abs(groundEffect)>.04,
+      "mixed footing failed to change relative front/rear drive consequences");
+    document.body.dataset.segmentEvidence=[
+      "dryFront="+dryFront.dx.toFixed(3),
+      "dryRear="+dryRear.dx.toFixed(3),
+      "mixedFront="+splitFront.dx.toFixed(3),
+      "mixedRear="+splitRear.dx.toFixed(3),
+      "groundContrast="+groundEffect.toFixed(3)
+    ].join(";");
     // Matched paired-world causality: a crate may alter a trajectory only
     // after physical contact. This is not a whole-organism quality test.
     const causal = [];
