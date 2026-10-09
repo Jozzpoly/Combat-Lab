@@ -1,10 +1,58 @@
 <!doctype html>
-<meta charset="utf-8">
-<title>Combat Lab — Clean Substrate</title>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Combat Lab — Organism Field · internal</title>
 <link rel="stylesheet" href="./style.css">
-<main class="shell">
-<header><div><p class="eyebrow">Combat Lab · clean neutral substrate</p><h1 id="experiment-title">Loading…</h1><p id="experiment-purpose" class="purpose"></p></div><div class="controls"><button id="pause">Pause</button><button id="reset">Reset</button><button id="debug">Debug</button></div></header>
-<section class="viewport"><canvas id="lab" aria-label="Combat Lab neutral experiment surface"></canvas></section>
-<footer><div><strong>Controls</strong><span id="controls-text">—</span></div><div class="status"><span id="run-state">RUNNING</span><span id="sim-time">0.00 s</span><span id="build-id">source: local</span></div></footer>
-</main>
+</head><body data-lab-ready="false" data-lab-error="">
+<div class="layout">
+  <main class="play">
+    <div class="topline"><strong>COMBAT LAB / ORGANISM FIELD</strong><span id="run-summary">Initializing physical world…</span></div>
+    <canvas id="scene" aria-label="Experimental material world"></canvas>
+    <div class="controlstrip">WASD / arrows: direct selected body · 1/2/3: select · mouse wheel: zoom · middle-drag: pan · click: select · Shift+drag: obstacle · Alt+click: movable matter</div>
+  </main>
+  <aside class="lab">
+    <header><small>ISOLATED RESEARCH · NOT OWNER QUALIFIED</small>
+      <h1>Different bodies, same physical world</h1>
+      <p>There is no right route. Disturb the situation and see which capabilities survive. These are substrate-driven physical prototypes, not simulated animal gaits.</p>
+    </header>
+    <section><h2>Observe / intervene</h2>
+      <div class="buttons"><button id="pause">Pause</button><button id="step">Single step</button><button id="reset">Reset scene</button></div>
+      <label><input id="manual" type="checkbox" checked> Direct-control selected body (others react locally)</label>
+      <div class="buttons"><button id="kick">Physical impulse at cursor</button><button id="add-box">Add crate at cursor</button></div>
+      <label>Impulse N·s <input id="impulse" type="number" value="60" step="10"></label>
+      <label>New crate mass (kg) <input id="mass" type="number" value="25" step="5"></label>
+      <p class="dim" id="interaction-status">Move the cursor into the world to intervene.</p>
+    </section>
+    <section><h2>Independent physical organisms</h2>
+      <div class="buttons"><button data-pick="0">1 · Dart</button><button data-pick="1">2 · Crawler</button><button data-pick="2">3 · Broad</button></div>
+      <label>Spawn morphology
+        <select id="kind"><option value="dart">Compact dart</option><option value="crawler">Two-body hinged crawler</option><option value="broad">Broad pusher</option></select>
+      </label>
+      <div class="buttons"><button id="spawn">Spawn at cursor</button><button id="remove">Remove selected</button></div>
+      <p class="dim">Each shape has actual 2D colliders and finite drive/turn authority. The crawler has two dynamic bodies and a physical revolute joint. No arbitrary organism/population cap.</p>
+    </section>
+    <section><h2>Material world</h2>
+      <p>Drag with Shift to add a solid fixed obstacle; Alt+click creates movable material. Existing changes persist until reset. Reset rebuilds your authored starting edits, not the disturbed afterstate.</p>
+      <div class="buttons"><button id="undo">Undo last authored addition</button><button id="clear">Clear authored edits</button></div>
+      <p class="dim">Pale patch in the centre is an authored low-traction ground region. Grip is a finite external support approximation; flat Rapier XY physics has no native ground traction.</p>
+    </section>
+    <section><h2>Selected / causal evidence</h2>
+      <pre id="selected">Select an organism</pre>
+      <label><input id="contacts" type="checkbox"> Show active contact count and collision outlines</label>
+    </section>
+    <section><h2>Internal physical checks</h2>
+      <div id="evidence">Live boot pending.</div>
+      <p class="dim">Mechanical PASS ≠ convincing organism, crowd or gameplay. Different shapes must generate meaningfully different possibilities under free play.</p>
+    </section>
+  </aside>
+</div>
+<script>
+  function fault(err) {
+    document.body.dataset.labError = String(err && (err.message || err) || 'error').slice(0,400);
+    document.querySelector('#run-summary').textContent = 'Runtime error: ' + document.body.dataset.labError;
+  }
+  window.addEventListener('error', e => fault(e.error || e.message));
+  window.addEventListener('unhandledrejection', e => fault(e.reason));
+</script>
 <script type="module" src="./app.js"></script>
+</body></html>
