@@ -158,3 +158,66 @@ export async function stageStartingScene(value) {
     throw error;
   }
 }
+
+export async function compareStartingScenes(reference, candidate, {
+  subject = "resident", steps = 240
+} = {}) {
+  required(["player", "resident", "peer", "brace"].includes(subject),
+    "comparison supports named physical actors, not inferred entities");
+  required(Number.isInteger(steps) && steps >= 1 && steps <= 2000,
+    "comparison steps must be a finite bounded integer");
+  const before = validateStartingScene(reference);
+  const after = validateStartingScene(candidate);
+  // Reconstruct two independent frozen authored starts. Neither trial may
+  // mutate the Owner's active World or inherit a live afterstate.
+  const a = await stageStartingScene(before);
+  let b;
+  try {
+    b = await stageStartingScene(after);
+    required(a.entities.has(subject) && b.entities.has(subject),
+      "selected body absent from one starting scene");
+    const aSubject = a.entities.get(subject);
+    const bSubject = b.entities.get(subject);
+    const distance = () => {
+      const x = aSubject.body.translation(), y = bSubject.body.translation();
+      return Math.hypot(x.x - y.x, x.y - y.y);
+    };
+    let firstPositionDifference = distance() > 1e-5 ? 0 : null;
+    let maxPositionGap = distance();
+    let contactA = 0, contactB = 0;
+    let firstContactA = null, firstContactB = null;
+    let firstMotorDifference = null;
+    for (let tick = 1; tick <= steps; tick++) {
+      a.step({ x: 0, y: 0 });
+      b.step({ x: 0, y: 0 });
+      const gap = distance();
+      if (firstPositionDifference === null && gap > 1e-5)
+        firstPositionDifference = tick;
+      maxPositionGap = Math.max(maxPositionGap, gap);
+      const ac = a.contactsFor(subject).length > 0;
+      const bc = b.contactsFor(subject).length > 0;
+      if (ac) { contactA++; if (firstContactA === null) firstContactA = tick; }
+      if (bc) { contactB++; if (firstContactB === null) firstContactB = tick; }
+      const am = a.lastCausalObservations.get(subject)?.intendedVelocity;
+      const bm = b.lastCausalObservations.get(subject)?.intendedVelocity;
+      if (am && bm && firstMotorDifference === null &&
+          Math.hypot(am.x - bm.x, am.y - bm.y) > 1e-7)
+        firstMotorDifference = tick;
+    }
+    const ap = aSubject.body.translation(), bp = bSubject.body.translation();
+    for (const v of [ap.x, ap.y, bp.x, bp.y, maxPositionGap])
+      required(Number.isFinite(v), "comparison became physically nonfinite");
+    return {
+      subject, steps, initialStateDiffers: firstPositionDifference === 0,
+      firstPositionDifference, firstMotorDifference,
+      maxPositionGap,
+      referenceFinal: { x: ap.x, y: ap.y },
+      candidateFinal: { x: bp.x, y: bp.y },
+      referenceContactTicks: contactA, candidateContactTicks: contactB,
+      referenceFirstContact: firstContactA, candidateFirstContact: firstContactB
+    };
+  } finally {
+    a.world.free();
+    if (b?.world) b.world.free();
+  }
+}
