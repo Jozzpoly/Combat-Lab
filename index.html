@@ -15,7 +15,7 @@
 <div class="canvas-wrap"><canvas id="lab" aria-label="Editable material world with real physical effector bodies"></canvas>
 <div class="hud"><strong id="subject">Live embodied field</strong><span id="readout">Waiting for solver</span></div></div>
 <footer><span>WASD move · mouse aims · E/Q closes/opens both jaws · Z/X upper · C/V lower · click selects physical body/object</span>
-<span>Mouse wheel zoom · middle drag pan · paused Ctrl-drag reposition · Shift drag draw wall · Impulse probe to disturb actual bodies</span></footer>
+<span>Mouse wheel zoom · middle drag pan · paused Ctrl-drag reposition / Alt-drag rotate · Shift drag draw wall · Impulse probe to disturb actual bodies</span></footer>
 </main>
 <aside><section class="lead"><h2>Physical experiment</h2><p>Click a real collider to select it. Drive the body, move each arm, rebuild its geometry or disturb matter. No scripted outcomes.</p></section><section><h2>Selected entity</h2><div id="entity">No selection</div>
 <div class="jaw-control" aria-label="Independent physical appendages"><label>Upper jaw opening <output id="upper-percent">100%</output><input id="upper-jaw" type="range" min="0" max="1" step=".01" value="1"></label><label>Lower jaw opening <output id="lower-percent">100%</output><input id="lower-jaw" type="range" min="0" max="1" step=".01" value="1"></label><p>0 = close, 100% = open. Each arm applies its own finite reciprocal joint torque. E/Q still operate both together.</p></div>
@@ -29,7 +29,7 @@
 <input id="crate-mass" type="number" min=".01" value="35" step="10"></div>
 <div class="field"><label>Crate width (m)</label>
 <input id="crate-width" type="number" min=".08" value=".9" step=".1"></div>
-<p>Place crate then click canvas. Shift-drag adds a **real fixed wall**. Paused Ctrl-drag repositions jointed bodies as wholes; every other body retains its physical history.</p>
+<p>Place crate then click canvas. Shift-drag adds a **real fixed wall**. Paused Ctrl-drag repositions jointed bodies as wholes; Alt-drag rotates an organism, crate or world-pinned gate. Neither editor action resets unrelated physical matter.</p>
 </section><details id="scene-details"><summary>Portable authored starting scene · JSON</summary>
 <p>Capture exact posed starting bodies, physical arm angles, masses and walls. This is <strong>not a running solver snapshot</strong>: velocities, active contacts and learned histories are intentionally not preserved. Reset returns to the captured starting condition until another setup replaces it.</p>
 <textarea id="scene-json" rows="7" spellcheck="false" placeholder="Capture or paste scene JSON here"></textarea>
