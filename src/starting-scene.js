@@ -221,7 +221,11 @@ export async function compareStartingScenes(reference, candidate, {
       candidateFinal: { x: bp.x, y: bp.y },
       referenceContactTicks: contactA, candidateContactTicks: contactB,
       referenceFirstContact: firstContactA, candidateFirstContact: firstContactB,
-      traces: { a: traceA, b: traceB }
+      traces: { a: traceA, b: traceB },
+      initialAuthoredMatter: {
+        a: before.shapes.map(shape => ({ ...shape })),
+        b: after.shapes.map(shape => ({ ...shape }))
+      }
     };
   } finally {
     a.world.free();

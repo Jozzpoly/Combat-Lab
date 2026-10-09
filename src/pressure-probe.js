@@ -3169,6 +3169,49 @@ try {
     detail:String(error?.message??error).slice(0,300)});
 }
 
+await trial("two-world-comparison-exposes-authored-material-without-inventing-live-afterstate", async world => {
+  const {captureStartingScene,compareStartingScenes}=await import("./starting-scene.js");
+  world.authorRect({kind:"wall",cx:16.8,cy:11.4,width:.6,height:.35,mass:0});
+  const original=captureStartingScene(world);
+  world.authorRect({kind:"object",cx:14,cy:9,width:.6,height:.6,mass:15});
+  const updated=captureStartingScene(world);
+  const result=await compareStartingScenes(original,updated,
+    {subject:"resident",steps:90});
+  assert(result.initialAuthoredMatter.a.length===1 &&
+    result.initialAuthoredMatter.b.length===2 &&
+    result.initialAuthoredMatter.b.some(s=>s.kind==="object"&&s.mass===15),
+    "A/B started scenes silently lost authored static or dynamic matter");
+  assert(result.initialAuthoredMatter.a.every(s=>s.kind!=="object"),
+    "A/B provenance associated B-only object with A");
+  return "A had 1 wall; B had wall+dynamic box; plot labels only initial authored geometry";
+});
+
+try {
+  const fixture=document.querySelector("#fixture-wrong-side");
+  const exportButton=document.querySelector("#recipe-export");
+  const compare=document.querySelector("#compare-scenes");
+  const plot=document.querySelector("#compare-plot");
+  const subject=document.querySelector("#compare-subject");
+  const mode=document.querySelector("#resident-mode");
+  const report=document.querySelector("#compare-report");
+  fixture.click();
+  subject.value="resident";
+  exportButton.click();
+  mode.value="lateral-maneuver";
+  mode.dispatchEvent(new Event("change",{bubbles:true}));
+  compare.click();
+  await new Promise(resolve=>setTimeout(resolve,0));
+  assert(report.textContent.includes("A / B — resident") &&
+    plot.dataset.comparisonView==="xy" &&
+    Number(plot.dataset.renderedAuthoredMatter)===4,
+    "top-down XY chart did not render both 2-wall authored starting scenes");
+  document.querySelector("#pause-simulation").click();
+  cases.push({name:"live-ui-physical-xy-chart-draws-authored-material",status:"PASS",
+    detail:"two live recipes, same 2 walls; 4 provenance-aware authored rectangles drawn behind trajectories"});
+}catch(error) {
+  cases.push({name:"live-ui-physical-xy-chart-draws-authored-material",status:"FAIL",
+    detail:String(error?.message??error).slice(0,300)});
+}
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);

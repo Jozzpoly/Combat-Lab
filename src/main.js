@@ -59,7 +59,14 @@ function renderPhysicalComparison(result) {
   if(view==="xy") {
     // Preserve equal meter scale on both axes so apparent clearance
     // and sideways distance cannot be distorted by chart dimensions.
-    const points=[...result.traces.a,...result.traces.b];
+    const matterA=result.initialAuthoredMatter?.a ?? [];
+    const matterB=result.initialAuthoredMatter?.b ?? [];
+    const shapes=[...matterA,...matterB];
+    const points=[...result.traces.a,...result.traces.b,
+      ...shapes.flatMap(r=>[
+        {x:r.cx-r.width/2,y:r.cy-r.height/2},
+        {x:r.cx+r.width/2,y:r.cy+r.height/2}
+      ])];
     const minX=Math.min(...points.map(p=>p.x));
     const maxX=Math.max(...points.map(p=>p.x));
     const minY=Math.min(...points.map(p=>p.y));
@@ -72,6 +79,26 @@ function renderPhysicalComparison(result) {
     const cx=(minX+maxX)/2,cy=(minY+maxY)/2;
     const sx=value=>margin.left+availableW/2+(value-cx)*scale;
     const sy=value=>margin.top+availableH/2+(value-cy)*scale;
+    // Draw only the authored *starting* matter, not a false claim about
+    // where dynamically moving boxes ended. Shared geometry is neutral;
+    // A-only/B-only matter is colored by provenance.
+    const signature=r=>[r.kind,r.cx,r.cy,r.width,r.height,r.mass].join("|");
+    const aMatter=new Set(matterA.map(signature)), bMatter=new Set(matterB.map(signature));
+    for(const [source,items] of [["a",matterA],["b",matterB]]) {
+      const duplicate=source==="a" ? bMatter : aMatter;
+      for(const shape of items){
+        if(source==="b" && duplicate.has(signature(shape)))continue;
+        const common=duplicate.has(signature(shape));
+        ctx.fillStyle=common?"rgba(165,180,195,.13)":
+          source==="a"?"rgba(217,200,154,.2)":"rgba(116,219,237,.2)";
+        ctx.strokeStyle=common?"rgba(165,180,195,.45)":
+          source==="a"?"#bcae8b":"#6caebd";
+        ctx.lineWidth=1.1;
+        const px=sx(shape.cx-shape.width/2),py=sy(shape.cy-shape.height/2);
+        ctx.fillRect(px,py,shape.width*scale,shape.height*scale);
+        ctx.strokeRect(px,py,shape.width*scale,shape.height*scale);
+      }
+    }
     ctx.strokeStyle="rgba(255,255,255,.08)";
     for(const path of plots) {
       for(const point of [path[0][0],path[0][path[0].length-1]]) {
@@ -94,9 +121,12 @@ function renderPhysicalComparison(result) {
       ctx.fillRect(sx(end.x)-3.5,sy(end.y)-3.5,7,7);
     }
     ctx.fillStyle="#a9b7c3";
-    ctx.fillText("Top-down physical path (X→ right, Y↓ down, equal meters)",10,14);
-    ctx.fillText("start ○     final ■",10,h-7);
+    ctx.fillText("XY: body paths; faint rectangles = authored starting matter",10,14);
+    ctx.fillText("X→ right, Y↓ down, equal scale · start ○  final ■",10,h-7);
+    comparePlot.dataset.renderedAuthoredMatter=String(
+      matterA.length+matterB.length);
   } else {
+    comparePlot.dataset.renderedAuthoredMatter="0";
     const values=[...result.traces.a,...result.traces.b].map(p=>p[view]);
     let low=Math.min(...values),high=Math.max(...values);
     if(Math.abs(high-low)<.01){low-=.5;high+=.5;}
