@@ -26,6 +26,8 @@ export function validateScene(data){
    const name="actor "+i;
    const result={kind:a.kind,x:num(a,"x",name),y:num(a,"y",name),
      angle:num(a,"angle",name),clawTorque:num(a,"clawTorque",name,{min:0,max:1e7}),
+     reach:a.kind==="pincer"?(a.reach===undefined?1.53:
+       num(a,"reach",name,{min:.86,max:60})):0,
      aperture:num(a,"aperture",name,{min:0,max:1})};
    if(a.kind==="pincer"){
      result.armAngles=arr(a.armAngles,name+".armAngles");
