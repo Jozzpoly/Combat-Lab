@@ -5,7 +5,7 @@ export function stepLocalShuttle({
   state, sense, direction, mode, maxSpeed,
   lower, upper, recoveryDuration, resistanceTicks, skirtSign = -1
 }) {
-  if (!["baseline", "tactile-recovery", "directional-recovery", "skirt-recovery"].includes(mode)) {
+  if (!["baseline", "tactile-recovery", "directional-recovery", "skirt-recovery", "adaptive-skirt"].includes(mode)) {
     throw new RangeError("unrecognized local shuttle mode");
   }
   const next = {
@@ -14,11 +14,16 @@ export function stepLocalShuttle({
     estimatedX: state.estimatedX + (sense?.deltaX ?? 0),
     estimatedY: (state.estimatedY ?? 0) + (sense?.deltaY ?? 0),
     skirtTicks: state.skirtTicks ?? 0,
-    skirts: state.skirts ?? 0
+    skirts: state.skirts ?? 0,
+    adaptiveSign: state.adaptiveSign ?? Math.sign(skirtSign),
+    activeSkirtSign: state.activeSkirtSign ?? Math.sign(skirtSign),
+    skirtStartX: state.skirtStartX ?? 0,
+    failedDetours: state.failedDetours ?? 0,
+    lastDetourOutcome: state.lastDetourOutcome ?? "none"
   };
   let transition = null;
   if ((mode === "tactile-recovery" || mode === "directional-recovery" ||
-       mode === "skirt-recovery") &&
+       mode === "skirt-recovery" || mode === "adaptive-skirt") &&
       next.recoveryTicks === 0 && next.skirtTicks === 0) {
     const driven = Boolean(sense && sense.motorEffort > 0.01);
     const contactEvidence = Boolean(sense && (
@@ -30,12 +35,15 @@ export function stepLocalShuttle({
     next.blockedTicks = driven && resisted ? next.blockedTicks + 1 : 0;
     if (next.blockedTicks >= resistanceTicks) {
       const former = direction;
-      if (mode === "skirt-recovery") {
+      if (mode === "skirt-recovery" || mode === "adaptive-skirt") {
         // Intentionally bounded search-free lateral motion. A body may
         // discover clearance through physics; no global target or shape
         // geometry is available to this local law.
         next.skirtTicks = 155;
         next.skirts += 1;
+        next.skirtStartX = next.estimatedX;
+        next.activeSkirtSign = mode === "adaptive-skirt" ?
+          next.adaptiveSign : Math.sign(skirtSign);
         next.blockedTicks = 0;
         transition = {
           tick: next.tick,
@@ -63,16 +71,29 @@ export function stepLocalShuttle({
     if (next.estimatedX < lower) direction = 1;
   }
   let intendedVelocity = { x: maxSpeed * direction, y: 0 };
-  if (mode === "skirt-recovery") {
+  if (mode === "skirt-recovery" || mode === "adaptive-skirt") {
     if (next.skirtTicks > 0) {
       // Forward pressure stays finite, while lateral displacement makes
       // moving around local obstacles physically possible.
       intendedVelocity = {
         x: maxSpeed * direction * 0.42,
-        y: maxSpeed * Math.sign(skirtSign) * 0.91
+        y: maxSpeed * next.activeSkirtSign * 0.91
       };
       next.skirtTicks -= 1;
       next.state = "lateral-attempt";
+      if (next.skirtTicks === 0) {
+        // No map, global position or obstacle ID: evaluate one bounded
+        // physical attempt only by signed forward *self* displacement.
+        const achievedForward =
+          (next.estimatedX - next.skirtStartX) * direction;
+        const insufficient = achievedForward < 0.6;
+        next.lastDetourOutcome = insufficient ? "insufficient-progress" :
+          "forward-progress";
+        if (mode === "adaptive-skirt" && insufficient) {
+          next.failedDetours++;
+          next.adaptiveSign *= -1;
+        }
+      }
     } else {
       // Return gradually to the *locally integrated* original lane.
       // Cannot look up current World y or the obstacle boundary.
