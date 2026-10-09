@@ -21,3 +21,5 @@ if(probe.grab("pressure-probe")!=="pass")
   throw Error("Physical pressure FAIL: "+probe.grab("pressure-probe")+
     " detail="+probe.grab("pressure-detail"));
 console.log("Integrated physical pressure PASS: "+probe.grab("pressure-detail"));
+
+console.log("Matched-drive morphology OBSERVATION: "+(probe.grab("morph-evidence")||"not exposed"));
