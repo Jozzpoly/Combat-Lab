@@ -1,4 +1,5 @@
 import RAPIER from "@dimforge/rapier2d-deterministic";
+import { validateScene, actorRecipe } from "./scene-recipe.js";
 import { MORPHS, KINDS, DT, clamp, wrap, localResponse, finiteDrive, finiteGrip } from "./organism-law.js";
 
 export const FIELD = Object.freeze({ width: 34, height: 22 });
@@ -18,6 +19,7 @@ function num(value, label, positive = false) {
 export class OrganismField {
   constructor() {
     this.authored = [];
+    this.sceneRecipe = null;
     this.nextId = 0;
     this.lastFrameMs = 0;
     this.activeContactCount = 0;
@@ -42,23 +44,37 @@ export class OrganismField {
     this.grip = null;
     this.gripImpulse = {x:0,y:0};
     this.#staticWorld();
-    this.spawn("dart", v(6.2, 9), 0);
-    this.spawn("crawler", v(15.0, 5.9), Math.PI * 0.48);
-    this.spawn("broad", v(27, 12), Math.PI);
-    for (const object of [
-      { x: 10.7, y: 11, hx: 0.6, hy: 0.55, mass: 16 },
-      { x: 13, y: 13.4, hx: 0.65, hy: 0.6, mass: 105 },
-      { x: 23.5, y: 9.0, hx: 1.1, hy: 0.27, mass: 45 },
-      { x: 20.8, y: 16.1, hx: 0.55, hy: 0.55, mass: 35 },
-      { x: 17, y: 17.2, hx: 0.9, hy: 0.30, mass: 24 }
-    ]) this.addBox(object, false);
-    this.addGate({x:19.7,y:15.7,length:3.25,mass:105},false);
-    for (const entry of this.authored) {
-      if (entry.kind === "wall") this.addWall(entry, false);
-      else if (entry.kind === "gate") this.addGate(entry,false);
-      else this.addBox(entry, false);
+    if(this.sceneRecipe){
+      for(const item of this.sceneRecipe.walls)this.addWall(item,false);
+      for(const item of this.sceneRecipe.matter){
+        const obj=this.addBox(item,false);
+        obj.body.setRotation(item.angle,true);
+      }
+      for(const item of this.sceneRecipe.gates)this.addGate(item,false);
+      for(const item of this.sceneRecipe.actors){
+        const a=this.spawn(item.kind,item.pos,item.heading);
+        this.setActorProfile(a.id,item.profile);
+        this.resizeMorphology(a.id,{length:item.length,width:item.width});
+      }
+    }else{
+      this.spawn("dart", v(6.2, 9), 0);
+      this.spawn("crawler", v(15.0, 5.9), Math.PI * 0.48);
+      this.spawn("broad", v(27, 12), Math.PI);
+      for(const object of [
+        {x:10.7,y:11,hx:.6,hy:.55,mass:16},
+        {x:13,y:13.4,hx:.65,hy:.6,mass:105},
+        {x:23.5,y:9,hx:1.1,hy:.27,mass:45},
+        {x:20.8,y:16.1,hx:.55,hy:.55,mass:35},
+        {x:17,y:17.2,hx:.9,hy:.30,mass:24}
+      ])this.addBox(object,false);
+      this.addGate({x:19.7,y:15.7,length:3.25,mass:105},false);
     }
-    this.activeActor = this.actors[0].id;
+    for(const entry of this.authored){
+      if(entry.kind==="wall")this.addWall(entry,false);
+      else if(entry.kind==="gate")this.addGate(entry,false);
+      else this.addBox(entry,false);
+    }
+    this.activeActor=this.actors[0]?.id||null;
   }
   #staticWorld() {
     for (const r of [
