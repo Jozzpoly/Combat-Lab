@@ -1766,9 +1766,10 @@ await trial("lateral-policy-divergence-reaches-peer-only-through-later-contact",
 await observation("finite-post-lateral-detour-versus-forward-reversal", world => {
   const post = world.authorRect({ kind: "wall", cx: 16.8, cy: 11.4,
     width: 0.7, height: 1.4 });
-  const run = mode => {
+  const run = (mode,side) => {
     world.reset();
     world.setResidentMode(mode);
+    world.setResidentDetourSide(side);
     const samples = [];
     let firstContact = null, firstDetour = null;
     for (let tick = 1; tick <= 440; tick++) {
@@ -1793,13 +1794,15 @@ await observation("finite-post-lateral-detour-versus-forward-reversal", world =>
       strips: samples.filter(x=>x.state==="lateral-attempt").length
     };
   };
-  const reverse = run("directional-recovery");
-  const detour = run("skirt-recovery");
+  const reverse = run("directional-recovery",-1);
+  const north = run("skirt-recovery",-1);
+  const detour = run("skirt-recovery",1);
   assert(reverse.firstContact && detour.firstContact &&
     detour.firstDetour && detour.strips > 0, "fixture never produced a real lateral attempt");
   return "reversal max x=" + reverse.maxX.toFixed(3) +
-    "m; detour max x=" + detour.maxX.toFixed(3) +
-    "m; detour y min=" + detour.minY.toFixed(3) +
+    "m; north max x=" + north.maxX.toFixed(3) +
+    "m; south max x=" + detour.maxX.toFixed(3) +
+    "m; south y min=" + detour.minY.toFixed(3) +
     ", max=" + detour.maxY.toFixed(3) +
     "; first solved contact=" + detour.firstContact +
     "; first lateral attempt=" + detour.firstDetour +
