@@ -423,13 +423,16 @@ function loadFixture(kind) {
       "any-touch vs forward-contact mode; Reset world between trials.";
   } else if (kind === "lateral") {
     world.setResidentMode("skirt-recovery");
+    // Initial example deliberately demonstrates the available south route.
+    // Owner can switch to north to make the pre-existing island defeat it.
+    world.setResidentDetourSide(1);
     world.reset();
     world.authorRect({ kind: "wall", cx: 16.8, cy: 11.4,
       width: 0.7, height: 1.4 });
     fixtureFeedback.textContent =
-      "Finite post in front of the resident. Compare forward-touch reversal " +
-      "against lateral detour, then increase the wall height to challenge clearance. " +
-      "Reset world between policies.";
+      "Finite post: SOUTH detour is initially selected and physically open. " +
+      "Switch to NORTH to encounter the existing island; choose forward-touch " +
+      "reversal or draw a tall wall to falsify clearance. Reset world between runs.";
   } else {
     throw new Error("unrecognized experiment fixture");
   }
