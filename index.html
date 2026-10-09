@@ -26,6 +26,17 @@
       <h1>Different bodies, same physical world</h1>
       <p>Observe, take control or disturb the world. All bodies share real contact physics. Switch scenes freely; capture a JSON scene before replacing one you want to preserve.</p>
     </header>
+    <section><h2>Independent physical organisms</h2>
+      <div class="buttons"><button data-pick="0">1 · Dart</button><button data-pick="1">2 · Crawler</button><button data-pick="2">3 · Broad</button><button data-pick="3">4 · Inchworm</button></div>
+      <label>Spawn morphology
+        <select id="kind"><option value="dart">Compact dart</option><option value="crawler">Two-body hinged crawler</option><option value="broad">Broad pusher</option><option value="worm">Internal-stroke inchworm</option><option value="mixed">Mixed physical organisms (batch)</option></select>
+      </label>
+      <div class="buttons"><button id="spawn">Spawn at cursor</button><button id="remove">Remove selected</button></div>
+      <label>Batch population (per action) <input id="spawn-count" type="number" value="24" min="1" max="500" step="1"></label>
+      <div class="buttons"><button id="spawn-batch">Spawn physical group</button></div>
+      <p class="dim">Batch positions use a deterministic spiral around the cursor, not a scripted movement scenario. Up to 500 new organisms per click as a runtime safety guard; existing organisms are not capped. All collide in one shared solver.</p>
+      <p class="dim">Each shape has actual 2D colliders and finite drive/turn authority. The crawler has a real revolute joint. The inchworm has a real prismatic joint, reciprocal muscle strokes and alternating finite ground support. No arbitrary organism/population cap.</p>
+    </section>
     <section><h2>Observe / intervene</h2>
       <div class="buttons"><button id="pause">Pause</button><button id="step">Single step</button><button id="reset">Reset scene</button></div>
       <label><input id="manual" type="checkbox"> Direct-control selected body (WASD/arrow keys also engage control; uncheck to release it back to local reactions)</label>
@@ -38,17 +49,6 @@
       <p id="grip-state" class="dim">No grip active.</p>
       <label>New crate mass (kg) <input id="mass" type="number" value="25" step="5"></label>
       <p class="dim" id="interaction-status">Move the cursor into the world to intervene.</p>
-    </section>
-    <section><h2>Independent physical organisms</h2>
-      <div class="buttons"><button data-pick="0">1 · Dart</button><button data-pick="1">2 · Crawler</button><button data-pick="2">3 · Broad</button><button data-pick="3">4 · Inchworm</button></div>
-      <label>Spawn morphology
-        <select id="kind"><option value="dart">Compact dart</option><option value="crawler">Two-body hinged crawler</option><option value="broad">Broad pusher</option><option value="worm">Internal-stroke inchworm</option><option value="mixed">Mixed physical organisms (batch)</option></select>
-      </label>
-      <div class="buttons"><button id="spawn">Spawn at cursor</button><button id="remove">Remove selected</button></div>
-      <label>Batch population (per action) <input id="spawn-count" type="number" value="24" min="1" max="500" step="1"></label>
-      <div class="buttons"><button id="spawn-batch">Spawn physical group</button></div>
-      <p class="dim">Batch positions use a deterministic spiral around the cursor, not a scripted movement scenario. Up to 500 new organisms per click as a runtime safety guard; existing organisms are not capped. All collide in one shared solver.</p>
-      <p class="dim">Each shape has actual 2D colliders and finite drive/turn authority. The crawler has a real revolute joint. The inchworm has a real prismatic joint, reciprocal muscle strokes and alternating finite ground support. No arbitrary organism/population cap.</p>
     </section>
     <details class="lab-details" id="physical-settings"><summary>Physical parameters · mass, shape, motor & reactions</summary>
     <section><h2>Independent physical parameters</h2>
