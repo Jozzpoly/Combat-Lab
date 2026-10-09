@@ -35,6 +35,19 @@ function circle(x, y, radius, color) {
   ctx.fillStyle = color; ctx.fill(); ctx.strokeStyle = "#182532";
   ctx.lineWidth = 0.045; ctx.stroke();
 }
+function arrow(p, direction, color) {
+  const size=Math.hypot(direction?.x||0,direction?.y||0);
+  if(size<.04)return;
+  const span=Math.min(2.4,size*.43);
+  const dx=direction.x/size*span,dy=direction.y/size*span;
+  ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=.07;
+  ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x+dx,p.y+dy);ctx.stroke();
+  const a=Math.atan2(dy,dx);
+  ctx.beginPath();ctx.moveTo(p.x+dx,p.y+dy);
+  ctx.lineTo(p.x+dx-Math.cos(a-.48)*.22,p.y+dy-Math.sin(a-.48)*.22);
+  ctx.lineTo(p.x+dx-Math.cos(a+.48)*.22,p.y+dy-Math.sin(a+.48)*.22);
+  ctx.closePath();ctx.fill();
+}
 function drawWorld() {
   fit();
   ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -82,6 +95,8 @@ function drawWorld() {
     ctx.lineWidth = 0.095;ctx.strokeStyle = selected ? "#ffe2a0" : "#e7ecdf";
     ctx.stroke();
     if (selected) {
+      arrow(p, actor.control.intended, "#6ad7ff");
+      arrow(p, actor.root.linvel(), "#ffd187");
       ctx.beginPath(); ctx.arc(p.x, p.y, Math.max(.9, actor.spec.width * .8),
         0, Math.PI*2);ctx.strokeStyle="#ffe2a0";
       ctx.lineWidth=0.045;ctx.stroke();
