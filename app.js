@@ -236,6 +236,49 @@ async function pressureProbe() {
       "physical impulse failed to move matter");
     assert(field.tractionAt({x:15,y:11})<field.tractionAt({x:5,y:11}),
       "ground proxy not spatially material");
+    // Integrate new physical body in the real shared OrganismField, not
+    // merely a separate Rapier model. Null controls preserve no-ghost motion.
+    function sharedWormTrial({muscleForce=850,supportForce=900}={}){
+      const w=new OrganismField();
+      try{
+        for(const actor of [...w.actors])w.remove(actor.id);
+        const worm=w.spawn("worm",{x:4.2,y:4.2},0);
+        w.select(worm.id);
+        w.setActorProfile(worm.id,{muscleForce,supportForce});
+        const initial=(worm.root.translation().x*worm.root.mass()+
+          worm.tail.translation().x*worm.tail.mass())/
+          (worm.root.mass()+worm.tail.mass());
+        let lastSpan=0,minSpan=Infinity,maxSpan=-Infinity;
+        for(let i=0;i<330;i++){
+          w.step({x:1,y:0});
+          const p=worm.root.translation(),q=worm.tail.translation();
+          const span=p.x-q.x;
+          minSpan=Math.min(minSpan,span);maxSpan=Math.max(maxSpan,span);
+          assert(Number.isFinite(p.x+p.y+q.x+q.y),
+            "integrated worm nonfinite under live material world");
+          lastSpan=span;
+        }
+        const com=(worm.root.translation().x*worm.root.mass()+
+          worm.tail.translation().x*worm.tail.mass())/
+          (worm.root.mass()+worm.tail.mass());
+        return {dx:com-initial,sweep:maxSpan-minSpan,span:lastSpan};
+      }finally{w.world.free();}
+    }
+    const integratedGround=sharedWormTrial();
+    const integratedNoMuscle=sharedWormTrial({muscleForce:0});
+    const integratedNoSupport=sharedWormTrial({supportForce:0});
+    assert(integratedGround.dx>.35&&integratedGround.sweep>.22,
+      "integrated worm has no actual reciprocal-stroke locomotion");
+    assert(Math.abs(integratedNoMuscle.dx)<.035,
+      "integrated worm moves without internal muscle");
+    assert(Math.abs(integratedNoSupport.dx)<.035,
+      "integrated worm moves without external ground reaction");
+    document.body.dataset.integratedWorm=[
+      "supported="+integratedGround.dx.toFixed(3),
+      "noMuscle="+integratedNoMuscle.dx.toFixed(3),
+      "noSupport="+integratedNoSupport.dx.toFixed(3),
+      "stroke="+integratedGround.sweep.toFixed(3)
+    ].join(";");
     // A live arrangement is an authored *starting condition*, not a
     // concealed recording of velocity/joint memory. Verify physical positions,
     // actor morphology and gate angle, and reject corrupt files atomically.
