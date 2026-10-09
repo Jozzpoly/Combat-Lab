@@ -2445,7 +2445,7 @@ try {
     detail:String(error?.message??error).slice(0,300)});
 }
 
-await observation("off-axis-peer-pressure-rotates-beam-or-not", world => {
+await trial("off-axis-actor-contact-physically-rotates-an-otherwise-stable-beam", world => {
   const run = peerStartY => {
     world.clearBodyStartOverrides();
     world.setPeerEnabled(true);
@@ -2476,6 +2476,12 @@ await observation("off-axis-peer-pressure-rotates-beam-or-not", world => {
     return {peerStartY,firstContact,firstTurn,peakAngular,peakAngle,peakHolderTravel};
   };
   const centered=run(11.4),offset=run(12.0);
+  assert(centered.firstContact!==null && offset.firstContact!==null &&
+    offset.firstTurn!==null && offset.firstTurn>=offset.firstContact,
+    "beam moved angularly before material contact or never made contact");
+  assert(centered.peakAngular<1e-4 && offset.peakAngular>0.1 &&
+    offset.peakAngle>0.1,
+    "off-axis body pressure did not create actual torque compared to symmetric contact");
   return "centered: first touch "+centered.firstContact+
     ", angular="+centered.peakAngular.toFixed(4)+"rad/s"+
     ", angle="+(centered.peakAngle*180/Math.PI).toFixed(2)+"°;"+
@@ -2486,6 +2492,29 @@ await observation("off-axis-peer-pressure-rotates-beam-or-not", world => {
     "; observed only, actor knows no World geometry";
 });
 
+try{
+  const button=document.querySelector("#fixture-offaxis-pressure");
+  const status=document.querySelector("#brace-status");
+  const step=document.querySelector("#single-step");
+  const readout=document.querySelector("#selected-readout");
+  assert(button&&status&&step&&readout,
+    "off-axis physical encounter fixture absent in real DOM");
+  button.click();
+  assert(document.body.dataset.experimentFixture==="offaxis" &&
+    document.body.dataset.simulationPaused==="true" &&
+    status.textContent.includes("beam"),
+    "off-axis encounter did not create real beam and independent peer");
+  for(let i=0;i<65;i++)step.click();
+  const rot=Number(readout.textContent.match(/rotation ([+-]?\d+(?:\.\d+)?)/)?.[1]);
+  assert(Number.isFinite(rot) && Math.abs(rot)>0.1,
+    "actual off-axis contact did not rotate visibly inspected beam: "+String(rot));
+  document.querySelector("#pause-simulation").click();
+  cases.push({name:"live-ui-offaxis-actor-rotates-real-beam",status:"PASS",
+    detail:"one-click group contact produced "+rot.toFixed(2)+"° of beam rotation in 65 real physics steps"});
+}catch(error){
+  cases.push({name:"live-ui-offaxis-actor-rotates-real-beam",status:"FAIL",
+    detail:String(error?.message??error).slice(0,300)});
+}
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);

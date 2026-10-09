@@ -589,6 +589,18 @@ function loadFixture(kind) {
       "Rotating beam: 1.8×0.56m, 120kg, zero hold braking. " +
       "Use tangential impulse at an offset cursor, then one physical step. " +
       "Change shape, mass, or angle and compare.";
+  } else if (kind === "offaxis") {
+    world.setPeerMass(30);
+    world.setPeerEnabled(true);
+    world.setBraceForm("beam");
+    world.setBraceAngle(0);
+    world.setBraceProfile({ mass: 120, braking: 30 });
+    world.setBraceEnabled(true);
+    world.reset();
+    world.repositionBody("peer", { x: 19, y: 12 });
+    fixtureFeedback.textContent =
+      "A counter-moving actor hits the beam off-axis: watch real rotation " +
+      "without external impulse. Move the peer to Y=11.4 for a symmetric contact null.";
   } else {
     throw new Error("unrecognized experiment fixture");
   }
@@ -607,7 +619,7 @@ function loadFixture(kind) {
   experimentImpulse.value = "150";
   experimentImpulseMode.value = kind === "beam" ? "tangential" : "center";
   camera.follow = true;
-  camera.followTarget = kind === "beam" ? "brace" : "resident";
+  camera.followTarget = kind === "beam" || kind === "offaxis" ? "brace" : "resident";
   world.selectedId = camera.followTarget;
   document.body.dataset.experimentFixture = kind;
   setSimulationPaused(true);
@@ -621,6 +633,8 @@ document.querySelector("#fixture-short-block").addEventListener(
   "click", () => loadFixture("short"));
 document.querySelector("#fixture-beam-torque").addEventListener(
   "click", () => loadFixture("beam"));
+document.querySelector("#fixture-offaxis-pressure").addEventListener(
+  "click", () => loadFixture("offaxis"));
 
 function drawStaticRect(item, selected) {
   const p = worldToScreen({ x: item.cx, y: item.cy });
