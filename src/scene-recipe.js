@@ -23,7 +23,7 @@ function rect(src,label,mass=false){
   return {...pos,hx,hy,...(mass?{mass:finite(src.mass,label+".mass",true)}:{})};
 }
 const PHYSICAL_KEYS=["mass","speed","acceleration","braking","turnRate",
-  "turnTorque","gripForce","gripReach"];
+  "turnTorque","gripForce","gripReach","contactYield"];
 export function validateScene(input){
   if(!input||typeof input!=="object" || Array.isArray(input) ||
     input.format!=="combat-lab.initial-scene.v1")
@@ -48,8 +48,13 @@ export function validateScene(input){
        width<(src.kind==="crawler"?.13:minScale))
       throw new RangeError(label+" has unresolvable real collider dimensions");
     const profile={};
-    for(const key of PHYSICAL_KEYS)profile[key]=
-      finite(src.profile?.[key],label+".profile."+key,key==="mass");
+    for(const key of PHYSICAL_KEYS){
+      const raw=key==="contactYield" && src.profile?.[key]===undefined ?
+        MORPHS[src.kind].contactYield : src.profile?.[key];
+      profile[key]=finite(raw,label+".profile."+key,key==="mass");
+    }
+    if(profile.contactYield<0||profile.contactYield>1)
+      throw new RangeError(label+" contactYield must be within [0,1]");
     for(const key of PHYSICAL_KEYS)if(profile[key]<0)
       throw new RangeError(label+" has negative physical authority "+key);
     if(src.kind==="worm"){
