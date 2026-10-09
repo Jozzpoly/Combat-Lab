@@ -652,6 +652,20 @@ async function start() {
     field.step(null);
     assert(field.actor(field.activeActor).control.mode!=="manual",
       "returning to local autonomy left motor possessed");
+    const inspected=field.matter.find(o=>o.kind==="matter");
+    assert(Boolean(inspected),"no physical object available to inspect");
+    targetId=inspected.id;updateStatus();
+    assert($("#live-inspect-title").textContent.includes(
+      inspected.mass+" kg"),"selected material mass not visible in live inspector");
+    assert($("#live-inspect-details").textContent.includes("angular"),
+      "material velocity missing from real-world inspector");
+    targetId=field.activeActor;updateStatus();
+    assert($("#live-inspect-title").textContent.includes(
+      field.actor(field.activeActor).spec.name),
+      "material selection left organism readout stale");
+    assert(!$("#physical-settings").open && !$("#internal-evidence").open,
+      "advanced parameters should not eclipse the first physical view");
+    document.body.dataset.materialInspect="selected crate live mass/motion; compact world-first UI"; 
     document.body.dataset.possessionUi="autonomous-first; WASD possession; release-to-local";
     document.body.dataset.uiProbe="pass";
     document.body.dataset.uiEvidence="4 morphology selections and 90 shared-world worm steps";
