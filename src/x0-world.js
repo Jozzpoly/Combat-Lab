@@ -67,7 +67,7 @@ export class CommonsWorld{
     const a={id,form,spec,root,parts:[],arms:[],target:[.82,.82],
       observed:{load:0,parts:[0,0,0],contacts:0},
       response:{latch:0,arm:-1,bracing:false,events:0},
-      color:PALETTE[form],control:"sense"};
+      color:PALETTE[form],control:"sense",armReflexEnabled:true};
     const hull=this.box(root,spec.hx,spec.hy,spec.mass,V(),id);
     a.parts.push({body:root,collider:hull,tag:"hull"});
     if(form==="bulk"){
@@ -163,6 +163,12 @@ export class CommonsWorld{
   actor(id){return this.actors.find(a=>a.id===id)||null;}
   item(id){return this.matter.find(m=>m.id===id)||null;}
   select(id){this.selected=this.actor(id)?.id||null;return this.selected;}
+  setArmReflex(id,enabled){
+    const a=this.actor(id);if(!a)return false;
+    a.armReflexEnabled=Boolean(enabled);
+    if(!enabled){a.response.latch=0;a.response.arm=-1;}
+    return true;
+  }
   setLocalResponse(id,enabled){
     const a=this.actor(id);if(!a)return false;
     a.control=enabled?"sense":"quiet";
@@ -239,7 +245,7 @@ export class CommonsWorld{
     }else a.response.bracing=false;
     // A purely local, bounded pressure reaction on a distinct physical
     // effector. No name, position, identity or objective is read.
-    if(!command && a.control==="sense" && a.arms.length>0 && a.response.latch<=0){
+    if(!command && a.control==="sense" && a.armReflexEnabled && a.arms.length>0 && a.response.latch<=0){
       const signals=a.observed.parts.slice(1);
       const value=Math.max(...signals);
       if(value>1.0){
