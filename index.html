@@ -20,6 +20,9 @@
       <label><input id="manual" type="checkbox" checked> Direct-control selected body (others react locally)</label>
       <div class="buttons"><button id="kick">Physical impulse at cursor</button><button id="add-box">Add crate at cursor</button><button id="add-gate">Add hinged gate</button></div>
       <label>Impulse N·s <input id="impulse" type="number" value="60" step="10"></label>
+      <label>Physical impulse orientation
+        <select id="impulse-mode"><option value="radial">Radial push (linear)</option><option value="tangential">Tangential at cursor (rotates)</option></select>
+      </label>
       <p class="dim">Right-hold directly on a crate to attach a finite physical actuator. Move cursor to drag / lever it; release preserves momentum. Reaction acts on your organism, too. Must be within authored reach.</p>
       <p id="grip-state" class="dim">No grip active.</p>
       <label>New crate mass (kg) <input id="mass" type="number" value="25" step="5"></label>
