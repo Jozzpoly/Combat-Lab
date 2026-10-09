@@ -3,7 +3,7 @@ import {EffectorField,DT,V,clamp} from "./src/effector-world.js";
 const $=selector=>document.querySelector(selector);
 const canvas=$("#lab"),ctx=canvas.getContext("2d");
 const keys=new Set();
-let field=null,paused=false,armedBox=false;
+let field=null,paused=false,armedBox=false,savedScene=null;
 let selectedTarget=null,mouse=V(10,11),camera={x:18,y:12,zoom:1};
 let pan=null,dragPose=null,wallDraft=null;
 let debt=0,last=performance.now(),lastReport=0;
@@ -152,8 +152,10 @@ function ui(){
   }
 }
 function reset(){
+  const replacement=savedScene?EffectorField.fromScene(savedScene):new EffectorField();
   field?.dispose();
-  field=new EffectorField();
+  field=replacement;
+  window.__effectorResearch=field;
   selectedTarget=field.selected;
   paused=false;debt=0;last=performance.now();
   $("#pause").textContent="Pause";
@@ -207,6 +209,25 @@ async function start(){
     if(!field.undo())throw Error("No user-authored matter to undo");
     ui();
   });
+  $("#capture").onclick=()=>guard(()=>{
+    savedScene=field.exportScene();
+    $("#scene-json").value=JSON.stringify(savedScene,null,2);
+    $("#scene-details").open=true;
+    info("Captured a portable posed starting condition; Reset now restores this.");
+  });
+  $("#load-scene").onclick=()=>guard(()=>{
+    const recipe=JSON.parse($("#scene-json").value);
+    const staged=EffectorField.fromScene(recipe);
+    const canonical=staged.exportScene();
+    field.dispose();field=staged;savedScene=canonical;
+    window.__effectorResearch=field;
+    selectedTarget=field.selected;
+    armedBox=false;paused=true;debt=0;last=performance.now();
+    $("#pause").textContent="Resume";
+    ui();
+    info("Validated and loaded physical initial scene. Paused for inspection.");
+  });
+
   $("#apply-torque").onclick=()=>guard(()=>{
     if(!field.setClawTorque(selectedTarget,Number($("#torque").value)))
       throw Error("Select an articulated pincer");
