@@ -31,6 +31,7 @@ export class OrganismField {
     this.actors = [];
     this.matter = [];
     this.walls = [];
+    this.gates = [];
     this.colliderOwners = new Map();
     this.ticks = 0;
     this.activeContactCount = 0;
@@ -50,8 +51,10 @@ export class OrganismField {
       { x: 20.8, y: 16.1, hx: 0.55, hy: 0.55, mass: 35 },
       { x: 17, y: 17.2, hx: 0.9, hy: 0.30, mass: 24 }
     ]) this.addBox(object, false);
+    this.addGate({x:19.7,y:15.7,length:3.25,mass:105},false);
     for (const entry of this.authored) {
       if (entry.kind === "wall") this.addWall(entry, false);
+      else if (entry.kind === "gate") this.addGate(entry,false);
       else this.addBox(entry, false);
     }
     this.activeActor = this.actors[0].id;
@@ -100,6 +103,31 @@ export class OrganismField {
     this.colliderOwners.set(collider.handle, id);
     if (authored) this.authored.push({ kind: "box", x, y, hx, hy, mass });
     return obj;
+  }
+  // A real dynamic gate rotates around a static world pivot. The pivot
+  // is not a script that chooses whether the actor may pass.
+  addGate({x,y,length=3,mass=80},authored=true){
+    const px=Number(x),py=Number(y),len=num(length,"gate length",true),
+      m=num(mass,"gate mass",true);
+    if(!Number.isFinite(px)||!Number.isFinite(py)||len<.20)
+      throw new RangeError("invalid physical gate");
+    const half=len/2, id="gate-"+ ++this.nextId;
+    const pivot=this.world.createRigidBody(
+      RAPIER.RigidBodyDesc.fixed().setTranslation(px,py));
+    const body=this.world.createRigidBody(RAPIER.RigidBodyDesc.dynamic()
+      .setTranslation(px+half,py).setLinearDamping(.4)
+      .setAngularDamping(1.7).setCcdEnabled(true));
+    const collider=this.world.createCollider(
+      RAPIER.ColliderDesc.cuboid(half,.18)
+        .setMass(m).setFriction(.75).setRestitution(0),body);
+    const joint=this.world.createImpulseJoint(
+      RAPIER.JointData.revolute(v(0,0),v(-half,0)),pivot,body,true);
+    const gate={id,kind:"gate",body,collider,joint,pivot,
+      pivotPoint:v(px,py),hx:half,hy:.18,mass:m};
+    this.matter.push(gate);this.gates.push(gate);
+    this.colliderOwners.set(collider.handle,id);
+    if(authored)this.authored.push({kind:"gate",x:px,y:py,length:len,mass:m});
+    return gate;
   }
   #newBody(p, heading) {
     return this.world.createRigidBody(RAPIER.RigidBodyDesc.dynamic()
