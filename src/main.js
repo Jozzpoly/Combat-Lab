@@ -195,6 +195,9 @@ canvas.addEventListener("pointerup", (event) => {
   if (event.button === 2) world.endGrip();
   if (input.drawing && event.pointerId === input.drawing.pointerId) {
     const draft = input.drawing;
+    // Pointer capture can deliver a final endpoint without an intervening
+    // pointermove. The released geometry, not the last cached move, wins.
+    draft.end = screenToWorld(event.clientX, event.clientY);
     input.drawing = null;
     const cx = (draft.start.x + draft.end.x) / 2;
     const cy = (draft.start.y + draft.end.y) / 2;
@@ -392,6 +395,27 @@ document.querySelector("#undo-edit").addEventListener("click", () => {
 document.querySelector("#clear-edits").addEventListener("click", () => {
   const count = world.clearAuthored();
   worldEditFeedback.textContent = "Removed " + count + " authored shape(s).";
+});
+document.querySelector("#exact-place").addEventListener("click", () => {
+  const read = id => {
+    const field = document.querySelector("#" + id);
+    if (!field.value.trim()) throw new RangeError(id + " must not be blank");
+    return Number(field.value);
+  };
+  try {
+    const kind = document.querySelector("#exact-kind").value;
+    const id = world.authorRect({
+      kind, cx:read("exact-x"), cy:read("exact-y"),
+      width:read("exact-width"), height:read("exact-height"),
+      mass:read("exact-mass")
+    });
+    worldEditFeedback.textContent = "Placed exact " + kind + " " + id +
+      " (live physics; undo/clear available)";
+    render();
+  } catch(error) {
+    worldEditFeedback.textContent =
+      "Not placed: " + String(error?.message ?? error);
+  }
 });
 
 const fixtureFeedback = document.querySelector("#fixture-feedback");
