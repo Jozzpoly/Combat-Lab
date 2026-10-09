@@ -8,7 +8,7 @@
   <main class="play">
     <div class="topline"><strong>COMBAT LAB / ORGANISM FIELD</strong><span id="run-summary">Initializing physical world…</span></div>
     <canvas id="scene" aria-label="Experimental material world"></canvas>
-    <div class="controlstrip">WASD / arrows: direct selected body · 1/2/3: select · mouse wheel: zoom · middle-drag: pan · click: select · Shift+drag: obstacle · Alt+click: movable matter</div>
+    <div class="controlstrip">WASD / arrows: direct selected body · 1/2/3: select · mouse wheel: zoom · middle-drag: pan · click: select · Shift+drag: obstacle · Alt+click: movable matter · right-hold: physical grip on a nearby crate</div>
   </main>
   <aside class="lab">
     <header><small>ISOLATED RESEARCH · NOT OWNER QUALIFIED</small>
@@ -20,6 +20,8 @@
       <label><input id="manual" type="checkbox" checked> Direct-control selected body (others react locally)</label>
       <div class="buttons"><button id="kick">Physical impulse at cursor</button><button id="add-box">Add crate at cursor</button></div>
       <label>Impulse N·s <input id="impulse" type="number" value="60" step="10"></label>
+      <p class="dim">Right-hold directly on a crate to attach a finite physical actuator. Move cursor to drag / lever it; release preserves momentum. Reaction acts on your organism, too. Must be within authored reach.</p>
+      <p id="grip-state" class="dim">No grip active.</p>
       <label>New crate mass (kg) <input id="mass" type="number" value="25" step="5"></label>
       <p class="dim" id="interaction-status">Move the cursor into the world to intervene.</p>
     </section>
@@ -41,9 +43,11 @@
         <label>Braking m/s² <input id="body-brake" type="number" step="0.5"></label>
         <label>Turn rate rad/s <input id="body-turnrate" type="number" step="0.1"></label>
         <label>Finite turn torque N·m <input id="body-torque" type="number" step="5"></label>
+        <label>Grip reach m <input id="body-reach" type="number" step="0.1"></label>
+        <label>Grip force N <input id="body-gripforce" type="number" step="25"></label>
       </div>
       <div class="buttons"><button id="apply-shape">Apply physical shape</button><button id="apply-body">Apply mass &amp; motor</button></div>
-      <p class="dim">Changing length and width alters real colliders; the hinged tail reanchors as an explicit edit without resetting other objects. Mass changes collider inertia. Physically representable extremes are permitted; this is not biomechanical gait.</p>
+      <p class="dim">Changing length and width alters real colliders; the hinged tail reanchors as an explicit edit without resetting other objects. Mass changes collider inertia. Grip force and reach remain independent of body mass. Physically representable extremes are permitted; this is not biomechanical gait.</p>
     </section>
     <section><h2>Material world</h2>
       <p>Drag with Shift to add a solid fixed obstacle; Alt+click creates movable material. Existing changes persist until reset. Reset rebuilds your authored starting edits, not the disturbed afterstate.</p>
