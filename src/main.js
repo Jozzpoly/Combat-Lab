@@ -416,6 +416,15 @@ function loadFixture(kind) {
     fixtureFeedback.textContent =
       "Side-contact: slow drive against a lateral surface. Compare " +
       "any-touch vs forward-contact mode; Reset world between trials.";
+  } else if (kind === "lateral") {
+    world.setResidentMode("skirt-recovery");
+    world.reset();
+    world.authorRect({ kind: "wall", cx: 16.8, cy: 11.4,
+      width: 0.7, height: 1.4 });
+    fixtureFeedback.textContent =
+      "Finite post in front of the resident. Compare forward-touch reversal " +
+      "against lateral detour, then increase the wall height to challenge clearance. " +
+      "Reset world between policies.";
   } else {
     throw new Error("unrecognized experiment fixture");
   }
@@ -438,6 +447,8 @@ document.querySelector("#fixture-pressure-chain").addEventListener(
   "click", () => loadFixture("pressure"));
 document.querySelector("#fixture-side-touch").addEventListener(
   "click", () => loadFixture("side"));
+document.querySelector("#fixture-lateral-gap").addEventListener(
+  "click", () => loadFixture("lateral"));
 
 function drawStaticRect(item, selected) {
   const p = worldToScreen({ x: item.cx, y: item.cy });
@@ -692,6 +703,8 @@ function render() {
   residentStatus.textContent =
     "local state: " + snapshot.residentControl.state +
     " · local travel " + snapshot.residentControl.estimatedX.toFixed(2) + "m" +
+    " · lateral " + snapshot.residentControl.estimatedY.toFixed(2) + "m" +
+    " · detours " + snapshot.residentControl.skirts +
     " · obstruction evidence " + snapshot.residentControl.blockedTicks + "/12 steps" +
     " · recovery count " + snapshot.residentControl.recoveries +
     (snapshot.residentControl.lastTransition ?
