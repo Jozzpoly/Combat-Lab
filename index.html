@@ -18,7 +18,7 @@
     <section><h2>Observe / intervene</h2>
       <div class="buttons"><button id="pause">Pause</button><button id="step">Single step</button><button id="reset">Reset scene</button></div>
       <label><input id="manual" type="checkbox" checked> Direct-control selected body (others react locally)</label>
-      <div class="buttons"><button id="kick">Physical impulse at cursor</button><button id="add-box">Add crate at cursor</button></div>
+      <div class="buttons"><button id="kick">Physical impulse at cursor</button><button id="add-box">Add crate at cursor</button><button id="add-gate">Add hinged gate</button></div>
       <label>Impulse N·s <input id="impulse" type="number" value="60" step="10"></label>
       <p class="dim">Right-hold directly on a crate to attach a finite physical actuator. Move cursor to drag / lever it; release preserves momentum. Reaction acts on your organism, too. Must be within authored reach.</p>
       <p id="grip-state" class="dim">No grip active.</p>
@@ -50,8 +50,9 @@
       <p class="dim">Changing length and width alters real colliders; the hinged tail reanchors as an explicit edit without resetting other objects. Mass changes collider inertia. Grip force and reach remain independent of body mass. Physically representable extremes are permitted; this is not biomechanical gait.</p>
     </section>
     <section><h2>Material world</h2>
-      <p>Drag with Shift to add a solid fixed obstacle; Alt+click creates movable material. Existing changes persist until reset. Reset rebuilds your authored starting edits, not the disturbed afterstate.</p>
+      <p>Drag with Shift to add a solid fixed obstacle; Alt+click creates movable material. Add a real hinged barrier at the cursor. Existing changes persist until reset. Reset rebuilds your authored starting edits, not the disturbed afterstate.</p>
       <div class="buttons"><button id="undo">Undo last authored addition</button><button id="clear">Clear authored edits</button></div>
+      <p class="dim">The gold hinged arm can be turned by contact or by gripping it. The pivot does not move; its angle is physical afterstate.</p>
       <p class="dim">Pale patch in the centre is an authored low-traction ground region. Grip is a finite external support approximation; flat Rapier XY physics has no native ground traction.</p>
     </section>
     <section><h2>Selected / causal evidence</h2>
