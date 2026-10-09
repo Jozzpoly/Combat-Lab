@@ -321,6 +321,10 @@ async function start(){
   if(new URLSearchParams(location.search).has("probe")){
     paused=true;
     const {physicalProbe}=await import("./src/physical-probe.js");
+    $("#reach").value="2.31";
+    $("#apply-reach").click();
+    if(Math.abs(field.actor(selectedTarget).spec.clawReach-2.31)>.0001)
+      throw Error("Actual UI did not change physical jaw geometry");
     $("#capture").click();
     const setupText=$("#scene-json").value;
     if(!setupText.includes("combat-lab.effectors.initial.v1"))
@@ -334,6 +338,8 @@ async function start(){
     $("#reset").click();
     if(field.ticks!==0 || field.actors.length!==beforeReset.actors.length)
       throw Error("Capture did not become reset-stable starting condition");
+    if(Math.abs(field.actors[0].spec.clawReach-2.31)>.0001)
+      throw Error("Reset did not preserve edited physical jaw span");
     document.body.dataset.sceneUi="actual capture/load/reset PASS";
     document.body.dataset.probeResult=JSON.stringify(physicalProbe(EffectorField));
     const {affordanceSweep}=await import("./src/affordance-sweep.js");
