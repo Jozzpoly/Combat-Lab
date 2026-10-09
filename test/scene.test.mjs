@@ -2,9 +2,9 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {SCENE_FORMAT,validateScene} from "../src/scene-contract.js";
 const scene={format:SCENE_FORMAT,
- actors:[{kind:"pincer",x:7,y:9,angle:0,clawTorque:780,reach:1.53,aperture:.2,
+ actors:[{kind:"pincer",x:7,y:9,angle:0,clawTorque:780,reach:1.53,aperture:.2,armApertures:[0.1,0.3],
    armAngles:[-.3,.25]},
-   {kind:"ram",x:21,y:10,angle:3.14,clawTorque:0,reach:0,aperture:1,
+   {kind:"ram",x:21,y:10,angle:3.14,clawTorque:0,reach:0,aperture:1,armApertures:[1,1],
    armAngles:[]}],
  matter:[{x:10,y:8,hx:.44,hy:.66,mass:12,angle:.13}],
  gates:[{x:16,y:11,length:2.6,mass:110,angle:.2}],
@@ -42,4 +42,17 @@ test("extreme physically invalid jaw span fails prior to changing scene",()=>{
  assert.throws(()=>validateScene(invalid),RangeError);
  invalid.actors[0].reach=-2;
  assert.throws(()=>validateScene(invalid),RangeError);
+});
+
+test("separate arm commands are independently validated and preserved",()=>{
+ const d=validateScene(scene);
+ assert.deepEqual(d.actors[0].armApertures,[.1,.3]);
+ const previous=structuredClone(scene);
+ delete previous.actors[0].armApertures;
+ assert.deepEqual(validateScene(previous).actors[0].armApertures,[.2,.2]);
+ for(const commands of [[-1,0],[0,1.2],[0],["0",1],[NaN,1]]){
+   const invalid=structuredClone(scene);
+   invalid.actors[0].armApertures=commands;
+   assert.throws(()=>validateScene(invalid));
+ }
 });
