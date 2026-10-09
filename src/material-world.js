@@ -130,7 +130,8 @@ export class MaterialWorld {
     this.interventionEvents = [];
     this.residentControl = {
       tick: 0, blockedTicks: 0, recoveryTicks: 0, recoveries: 0,
-      estimatedX: 0, state: "cruise", lastTransition: null
+      estimatedX: 0, estimatedY: 0, skirtTicks: 0, skirts: 0,
+      state: "cruise", lastTransition: null
     };
     this.peerDirection = -1;
     this.peerSense = null;
@@ -254,7 +255,8 @@ export class MaterialWorld {
   #newLocalControl() {
     return {
       tick: 0, blockedTicks: 0, recoveryTicks: 0, recoveries: 0,
-      estimatedX: 0, state: "cruise", lastTransition: null
+      estimatedX: 0, estimatedY: 0, skirtTicks: 0, skirts: 0,
+      state: "cruise", lastTransition: null
     };
   }
 
@@ -659,12 +661,13 @@ export class MaterialWorld {
 
   setResidentMode(mode) {
     if (mode !== "baseline" && mode !== "tactile-recovery" &&
-        mode !== "directional-recovery") {
-      throw new RangeError("resident mode must be baseline, tactile-recovery or directional-recovery");
+        mode !== "directional-recovery" && mode !== "skirt-recovery") {
+      throw new RangeError("resident mode must be baseline, tactile-recovery, directional-recovery or skirt-recovery");
     }
     this.residentMode = mode;
     this.residentControl.blockedTicks = 0;
     this.residentControl.recoveryTicks = 0;
+    this.residentControl.skirtTicks = 0;
     this.residentControl.state = "cruise";
     this.residentControl.lastTransition = null;
     this.#recordEvent("actor.mode", "resident controller=" + mode);
@@ -674,18 +677,20 @@ export class MaterialWorld {
   // Never receives the World layout, obstacle IDs, actor global x or
   // another actor's private samples.
   #advanceLocalActor({ id, sense, ctl, direction, mode, lower, upper,
-    recoveryDuration, resistanceTicks }) {
+    recoveryDuration, resistanceTicks, skirtSign }) {
     const entity = this.entities.get(id);
     const decision = stepLocalShuttle({
       state: ctl, sense, direction, mode, maxSpeed: entity.maxSpeed,
-      lower, upper, recoveryDuration, resistanceTicks
+      lower, upper, recoveryDuration, resistanceTicks, skirtSign
     });
     // The policy cannot see World: the host merely applies its declared
     // intent to the physical body and records a research-only explanation.
     Object.assign(ctl, decision.state);
     if (decision.transition) {
-      this.#recordEvent("actor.reversal",
-        id + " changed direction after local resistance " +
+      this.#recordEvent(decision.transition.kind === "lateral-attempt" ?
+        "actor.lateral" : "actor.reversal",
+        id + " " + decision.transition.kind +
+        " after local contact, heading " +
         decision.transition.fromDirection + " -> " +
         decision.transition.toDirection);
     }
@@ -703,7 +708,7 @@ export class MaterialWorld {
       id: "resident", sense: this.residentSense,
       ctl: this.residentControl, direction: this.residentDirection,
       mode: this.residentMode, lower: -1.8, upper: 5.7,
-      recoveryDuration: 58, resistanceTicks: 12
+      recoveryDuration: 58, resistanceTicks: 12, skirtSign: -1
     });
     this.residentDirection = result.direction;
     return result;
@@ -711,13 +716,14 @@ export class MaterialWorld {
 
   setPeerMode(mode) {
     if (mode !== "baseline" && mode !== "tactile-recovery" &&
-        mode !== "directional-recovery") {
-      throw new RangeError("peer mode must be baseline, tactile-recovery or directional-recovery");
+        mode !== "directional-recovery" && mode !== "skirt-recovery") {
+      throw new RangeError("peer mode must be baseline, tactile-recovery, directional-recovery or skirt-recovery");
     }
     if (this.peerMode === mode) return;
     this.peerMode = mode;
     this.peerControl.blockedTicks = 0;
     this.peerControl.recoveryTicks = 0;
+    this.peerControl.skirtTicks = 0;
     this.peerControl.state = "cruise";
     this.peerControl.lastTransition = null;
     this.#recordEvent("actor.peerMode", "peer controller=" + mode);
@@ -728,7 +734,7 @@ export class MaterialWorld {
       id: "peer", sense: this.peerSense, ctl: this.peerControl,
       direction: this.peerDirection, mode: this.peerMode,
       lower: -5.0, upper: 1.3,
-      recoveryDuration: 70, resistanceTicks: 20
+      recoveryDuration: 70, resistanceTicks: 20, skirtSign: 1
     });
     this.peerDirection = result.direction;
     return result;
@@ -868,7 +874,8 @@ export class MaterialWorld {
           touch, forwardTouch,
           motorEffort: Math.hypot(drive.motorImpulse.x, drive.motorImpulse.y),
           progressAlongIntent,
-          deltaX: now.x - from.x
+          deltaX: now.x - from.x,
+          deltaY: now.y - from.y
         };
         if (id === "resident") this.residentSense = localSample;
         else this.peerSense = localSample;
