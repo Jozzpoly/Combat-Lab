@@ -1970,6 +1970,30 @@ await trial("adaptive-local-detour-discovers-an-alternate-material-route", world
     "; no route map, no success verdict unless promoted";
 });
 
+await trial("adaptive-local-retry-cannot-conjure-clearance-through-full-wall", world => {
+  world.authorRect({ kind: "wall", cx: 16.8, cy: 7,
+    width: 0.7, height: 13 });
+  world.setResidentMode("adaptive-skirt");
+  world.setResidentDetourSide(-1);
+  let maxX=-Infinity, minY=Infinity, maxY=-Infinity;
+  for (let tick=1;tick<=660;tick++){
+    world.step(still);
+    const p=at(world,"resident").position;
+    maxX=Math.max(maxX,p.x);
+    minY=Math.min(minY,p.y);
+    maxY=Math.max(maxY,p.y);
+  }
+  finite(world,"adaptive full-height null");
+  assert(maxX<16.4 &&
+    world.residentControl.failedDetours>=1 &&
+    world.residentControl.skirts>=2,
+    "local alternate-side heuristic crossed impassable wall or never tried");
+  return "untraversable full-height wall, max x="+maxX.toFixed(3)+
+    "m, lateral range="+minY.toFixed(3)+".."+maxY.toFixed(3)+
+    "; attempts="+world.residentControl.skirts+
+    ", locally measured failures="+world.residentControl.failedDetours;
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
