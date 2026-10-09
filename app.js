@@ -1,5 +1,6 @@
 import { OrganismField, FIELD } from "./src/organism-field.js";
 import { createInchwormProbe } from "./src/inchworm-probe.js";
+import { realClockCrowdBenchmark } from "./src/real-clock-bench.js";
 import { MORPHS, DT, clamp } from "./src/organism-law.js";
 
 const $ = selector => document.querySelector(selector);
@@ -898,6 +899,12 @@ async function start() {
   if(new URLSearchParams(location.search).has("pressureProbe")){
     paused=true;
     await pressureProbe();
+  }
+  if(new URLSearchParams(location.search).has("realClockProbe")){
+    paused=true;
+    const results=realClockCrowdBenchmark(OrganismField);
+    document.body.dataset.realClockProbe="pass";
+    document.body.dataset.realClockEvidence=JSON.stringify(results);
   }
   requestAnimationFrame(loop);
 }
