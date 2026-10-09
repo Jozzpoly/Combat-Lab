@@ -223,8 +223,19 @@ export async function compareStartingScenes(reference, candidate, {
       referenceFirstContact: firstContactA, candidateFirstContact: firstContactB,
       traces: { a: traceA, b: traceB },
       initialAuthoredMatter: {
-        a: before.shapes.map(shape => ({ ...shape })),
-        b: after.shapes.map(shape => ({ ...shape }))
+        // The authored shape descriptor is NOT always its actual start:
+        // an authored movable box can have a separate reset-stable body start.
+        // Keep creation fields intact, expose the reconstructed start explicitly.
+        a: before.shapes.map(shape => {
+          const start = before.starts.find(s => s.key === shape.key);
+          return { ...shape, startX: start?.x ?? shape.cx,
+            startY: start?.y ?? shape.cy };
+        }),
+        b: after.shapes.map(shape => {
+          const start = after.starts.find(s => s.key === shape.key);
+          return { ...shape, startX: start?.x ?? shape.cx,
+            startY: start?.y ?? shape.cy };
+        })
       }
     };
   } finally {

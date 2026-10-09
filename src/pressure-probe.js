@@ -3286,6 +3286,30 @@ await observation("adaptive-side-sensitivity-geometry-grid-beyond-the-verified-f
     "; no universal robustness claim";
 });
 
+await trial("repositioned-authored-box-plot-matches-real-reset-start-not-creation-point", async world => {
+  const {captureStartingScene,compareStartingScenes}=
+    await import("./starting-scene.js");
+  const id=world.authorRect({
+    kind:"object",cx:7.4,cy:7.5,width:.6,height:.5,mass:12
+  });
+  world.repositionBody(id,{x:11.4,y:10.5});
+  const sceneA=captureStartingScene(world);
+  world.repositionBody(id,{x:13.2,y:9.1});
+  const sceneB=captureStartingScene(world);
+  const result=await compareStartingScenes(sceneA,sceneB,
+    {subject:"player",steps:80});
+  const a=result.initialAuthoredMatter.a.find(shape=>shape.key===id);
+  const b=result.initialAuthoredMatter.b.find(shape=>shape.key===id);
+  assert(a && b && a.cx===7.4 && b.cx===7.4 &&
+    Math.abs(a.startX-11.4)<1e-5 && Math.abs(a.startY-10.5)<1e-5 &&
+    Math.abs(b.startX-13.2)<1e-5 && Math.abs(b.startY-9.1)<1e-5,
+    "XY overlay would draw authored movable matter at obsolete creation coordinates");
+  assert(world.bodyStarts.get(id).x===13.2 &&
+    world.snapshot().entities.some(e=>e.id===id),
+    "side-by-side replay mutated the researcher's live authored box");
+  return "creation x=7.4m; actual A start (11.4,10.5), actual B start (13.2,9.1); source truth retained";
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);

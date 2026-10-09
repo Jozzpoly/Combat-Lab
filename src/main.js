@@ -64,8 +64,8 @@ function renderPhysicalComparison(result) {
     const shapes=[...matterA,...matterB];
     const points=[...result.traces.a,...result.traces.b,
       ...shapes.flatMap(r=>[
-        {x:r.cx-r.width/2,y:r.cy-r.height/2},
-        {x:r.cx+r.width/2,y:r.cy+r.height/2}
+        {x:r.startX-r.width/2,y:r.startY-r.height/2},
+        {x:r.startX+r.width/2,y:r.startY+r.height/2}
       ])];
     const minX=Math.min(...points.map(p=>p.x));
     const maxX=Math.max(...points.map(p=>p.x));
@@ -82,7 +82,7 @@ function renderPhysicalComparison(result) {
     // Draw only the authored *starting* matter, not a false claim about
     // where dynamically moving boxes ended. Shared geometry is neutral;
     // A-only/B-only matter is colored by provenance.
-    const signature=r=>[r.kind,r.cx,r.cy,r.width,r.height,r.mass].join("|");
+    const signature=r=>[r.kind,r.startX,r.startY,r.width,r.height,r.mass].join("|");
     const aMatter=new Set(matterA.map(signature)), bMatter=new Set(matterB.map(signature));
     for(const [source,items] of [["a",matterA],["b",matterB]]) {
       const duplicate=source==="a" ? bMatter : aMatter;
@@ -94,7 +94,7 @@ function renderPhysicalComparison(result) {
         ctx.strokeStyle=common?"rgba(165,180,195,.45)":
           source==="a"?"#bcae8b":"#6caebd";
         ctx.lineWidth=1.1;
-        const px=sx(shape.cx-shape.width/2),py=sy(shape.cy-shape.height/2);
+        const px=sx(shape.startX-shape.width/2),py=sy(shape.startY-shape.height/2);
         ctx.fillRect(px,py,shape.width*scale,shape.height*scale);
         ctx.strokeRect(px,py,shape.width*scale,shape.height*scale);
       }
@@ -121,7 +121,7 @@ function renderPhysicalComparison(result) {
       ctx.fillRect(sx(end.x)-3.5,sy(end.y)-3.5,7,7);
     }
     ctx.fillStyle="#a9b7c3";
-    ctx.fillText("XY: body paths; faint rectangles = authored starting matter",10,14);
+    ctx.fillText("XY: body paths; rectangles = actual authored physical starts",10,14);
     ctx.fillText("X→ right, Y↓ down, equal scale · start ○  final ■",10,h-7);
     comparePlot.dataset.renderedAuthoredMatter=String(
       matterA.length+matterB.length);
