@@ -31,6 +31,18 @@
       <div class="buttons"><button id="spawn">Spawn at cursor</button><button id="remove">Remove selected</button></div>
       <p class="dim">Each shape has actual 2D colliders and finite drive/turn authority. The crawler has two dynamic bodies and a physical revolute joint. No arbitrary organism/population cap.</p>
     </section>
+    <section><h2>Selected organism: independent physical parameters</h2>
+      <div class="gridfields">
+        <label>Actual body mass kg <input id="body-mass" type="number" step="1"></label>
+        <label>Requested speed m/s <input id="body-speed" type="number" step="0.1"></label>
+        <label>Ground acceleration m/s² <input id="body-accel" type="number" step="0.5"></label>
+        <label>Braking m/s² <input id="body-brake" type="number" step="0.5"></label>
+        <label>Turn rate rad/s <input id="body-turnrate" type="number" step="0.1"></label>
+        <label>Finite turn torque N·m <input id="body-torque" type="number" step="5"></label>
+      </div>
+      <div class="buttons"><button id="apply-body">Apply to real physics</button></div>
+      <p class="dim">Mass changes the collider/inertia, not merely a label. Physically representable extreme combinations are permitted. Envelope editing and biomechanical gait are not implemented yet.</p>
+    </section>
     <section><h2>Material world</h2>
       <p>Drag with Shift to add a solid fixed obstacle; Alt+click creates movable material. Existing changes persist until reset. Reset rebuilds your authored starting edits, not the disturbed afterstate.</p>
       <div class="buttons"><button id="undo">Undo last authored addition</button><button id="clear">Clear authored edits</button></div>
