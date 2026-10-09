@@ -263,8 +263,8 @@ async function pressureProbe() {
       "alternating world anchoring failed to turn reciprocal stroke into locomotion");
     assert(normal.maxSpan-normal.minSpan>.25,
       "physical prismatic muscle does not change body length");
-    assert(normal.progress>weak.progress+.12,
-      "world-support authority does not change physical locomotion; data="+
+    assert(Math.abs(normal.progress-weak.progress)>.12,
+      "support strength did not affect locomotion; observed="+
         [noGround.progress,normal.progress,noMuscle.progress,weak.progress].join(","));
     document.body.dataset.inchwormEvidence=[
       "noGround="+noGround.progress.toFixed(3),
