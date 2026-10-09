@@ -17,6 +17,10 @@ function visit(location,budget=null){
 }
 const ready=visit(url,4800);
 console.log("Integrated Organism Field emitted browser boot PASS; bytes="+ready.dom.length);
+const ui=visit(url+(url.includes("?")?"&":"?")+"uiProbe=1",4500);
+if(ui.grab("ui-probe")!=="pass")
+  throw Error("Selected morphology UI FAIL: "+ui.grab("lab-error"));
+console.log("SELECTABLE ORGANISM UI: "+ui.grab("ui-evidence"));
 const probe=visit(url+(url.includes("?")?"&":"?")+"pressureProbe=1",9000);
 if(probe.grab("pressure-probe")!=="pass")
   throw Error("Physical pressure FAIL: "+probe.grab("pressure-probe")+
