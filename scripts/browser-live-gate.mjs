@@ -55,3 +55,12 @@ if(!report)throw Error("material pressure campaign did not produce evidence");
 const output=JSON.parse(report.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
 if(output.results?.length!==6)throw Error("partial campaign data");
 console.log("FREE-WORLD MATERIAL PRESSURE: "+JSON.stringify(output));
+
+
+// ISOLATED FUTURE-WORLD HYPOTHESIS: no new environment, no product claim.
+// A matched contact-responsive on/off test in *real emitted Rapier/WASM*.
+const local=visit(url+(url.includes("?")?"&":"?")+"loopProbe=1",16000);
+const payload=local.get("loop-evidence");
+if(!payload)throw Error("contact-continuation preflight missing");
+const observations=JSON.parse(payload.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+console.log("X0 LOCAL RESPONSE PREFLIGHT: "+JSON.stringify(observations));
