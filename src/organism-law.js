@@ -3,13 +3,13 @@
 export const MORPHS = Object.freeze({
   dart: { name: "Dart / compact", mass: 18, speed: 5.2, acceleration: 26,
     braking: 32, turnRate: 3.8, turnTorque: 95, width: 0.42, length: 1.05,
-    color: "#75c6e8" },
+    gripReach: 1.8, gripForce: 120, color: "#75c6e8" },
   crawler: { name: "Crawler / hinged", mass: 88, speed: 2.75, acceleration: 12,
     braking: 14, turnRate: 1.65, turnTorque: 280, width: 0.74, length: 2.65,
-    color: "#d9b17b" },
+    gripReach: 2.3, gripForce: 330, color: "#d9b17b" },
   broad: { name: "Broad / pusher", mass: 245, speed: 2.0, acceleration: 7.5,
     braking: 10, turnRate: 0.9, turnTorque: 540, width: 2.3, length: 1.7,
-    color: "#a99ae3" }
+    gripReach: 2.6, gripForce: 750, color: "#a99ae3" }
 });
 export const KINDS = Object.freeze(Object.keys(MORPHS));
 export const DT = 1 / 60;
@@ -51,4 +51,29 @@ export function finiteDrive({ mass, velocity, heading, input, speed, acceleratio
   const mag = Math.hypot(error.x, error.y);
   const factor = mag > 0 ? Math.min(1, limit / (mass * mag)) : 0;
   return { x: mass * error.x * factor, y: mass * error.y * factor };
+}
+
+
+// Point-target intent is translated into finite reciprocal impulse. This
+// translational effective-mass approximation delegates off-axis rotation to
+// Rapier; it is deliberately not claimed as precision hand biomechanics.
+export function finiteGrip({ playerMass, objectMass, anchorVelocity,
+  targetError, maxForce, dt = DT }) {
+  for (const [key, value] of Object.entries({playerMass, objectMass,maxForce,dt,
+    ax:anchorVelocity.x, ay:anchorVelocity.y, ex:targetError.x, ey:targetError.y}))
+    if (!Number.isFinite(value)) throw new RangeError("nonfinite grip "+key);
+  if (playerMass <= 0 || objectMass <= 0 || maxForce < 0 || dt <= 0)
+    throw new RangeError("invalid grip mass/force/dt");
+  const len = Math.hypot(targetError.x, targetError.y);
+  const desiredMag = Math.min(6, len * 7);
+  const desired = len > 1e-8 ?
+    { x: targetError.x / len * desiredMag,
+      y: targetError.y / len * desiredMag } : { x: 0, y: 0 };
+  const effective = 1 / (1/playerMass + 1/objectMass);
+  const raw = {x:(desired.x-anchorVelocity.x)*effective,
+    y:(desired.y-anchorVelocity.y)*effective};
+  const requested = Math.hypot(raw.x,raw.y);
+  const limit = maxForce*dt;
+  const factor = requested > 1e-8 ? Math.min(1,limit/requested) : 0;
+  return {x:raw.x*factor,y:raw.y*factor};
 }
