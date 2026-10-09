@@ -1,7 +1,7 @@
 // Independent embodiment contrast. NO inheritance from the quarantined Yard.
 // Multiple collision-bearing arm bodies, true revolute joints, bounded
 // reciprocal actuation. A crate is NEVER glued/teleported to a hand.
-import * as RAPIER from "@dimforge/rapier2d-deterministic";
+import RAPIER from "@dimforge/rapier2d-deterministic";
 
 export const DT=1/60;
 export const V=(x=0,y=0)=>({x,y});
@@ -14,7 +14,7 @@ const safe=(n,name)=>{if(!Number.isFinite(n)||!Number.isFinite(Math.fround(n)))
  throw RangeError("Nonphysical "+name);return n};
 
 export class EffectorField {
-  static async create(){await RAPIER.init();return new EffectorField();}
+  static async create(){return new EffectorField();}
   constructor({empty=false}={}){
     this.world=new RAPIER.World(V(0,0));
     this.world.timestep=DT;
