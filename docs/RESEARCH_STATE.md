@@ -3,6 +3,8 @@
 **Last Owner-first adjudication:** 2026-10-09  
 **Status:** RECOVERY QUARANTINE · BODY/WORLD FRONTIER SELECTED · NO OWNER-QUALIFIED SPECIMEN
 
+**Conversation navigation convention:** [PROGRESS_COMPASS_CONVENTION.md](PROGRESS_COMPASS_CONVENTION.md) defines a compact four-anchor *presentation* for occasional Owner-facing checkpoints (past / current frontier / next evidence threshold / larger goal). It persists across chats but does **not** freeze any actual project status or control what to implement.
+
 No new research specimen has been accepted by the Owner. Candidate implementation work occurs on separate experimental refs; it does not become canonical by existing or passing a machine test. Check live branch heads and their latest CI before claiming a runnable candidate.
 
 **2026-10-09 Owner-truth reconciliation:** [OWNER_TRUTH_RECONCILIATION_2026-10-09.md](OWNER_TRUTH_RECONCILIATION_2026-10-09.md) is the current bounded audit of historical Owner-observed failures versus newer machine evidence. The isolated `experiment/integrated-organism-field-v0` candidate (`8d5380cf1a76086a8e7733699c51d654250c1140` at audit; [CI 37989014555](https://github.com/Jozzpoly/Combat-Lab/actions/runs/37989014555)) has narrow working physical mechanics and visually inspected Chromium frames, but **NO new Owner-observed product PASS or FAIL**. Earlier R0/R1/L0 Owner-level failures remain valid for those tested implementations; no test of the newer candidate has overturned that baseline. That candidate is NOT a foundation, a successor approved for public rehearsal, or the canonical next step. Verification of branch state should always use live GitHub; this block is dated provenance, not a CI-enforced SHA.
