@@ -142,8 +142,11 @@ function updateStatus() {
       "physical COM (" + selected.pos.x.toFixed(2) + ", " + selected.pos.y.toFixed(2) + ")",
       "realized " + selected.speed.toFixed(2) + " m/s · contacts " + selected.contacts,
       "front traction " + selected.traction.toFixed(2) +
-        (active.tail ? " · rear traction "+active.control.rearTraction.toFixed(2)+
-          " · rear drive "+active.spec.rearDrive.toFixed(2) : "")+
+        (active.kind==="crawler" ?
+          " · rear traction "+active.control.rearTraction.toFixed(2)+
+          " · rear drive "+active.spec.rearDrive.toFixed(2) :
+          active.kind==="worm" ?
+            " · support force "+active.spec.supportForce.toFixed(0)+" N" : "")+
         " · mode " + selected.mode,
       "local recovery events " + selected.recoveries,
       active.kind==="worm" ?
