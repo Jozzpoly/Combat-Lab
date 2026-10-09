@@ -9,6 +9,9 @@ function writePressureResult(status,message) {
 export async function pressureProbe(field) {
   try {
     const assert=(ok,message)=>{if(!ok)throw Error(message);};
+    const {observePlaygrounds}=await import("./playgrounds-research-probe.js");
+    document.body.dataset.playgroundEvidence=JSON.stringify(
+      observePlaygrounds(OrganismField));
     const {somaticProbe}=await import("./somatic-research-probe.js");
     const {poseProbe}=await import("./pose-research-probe.js");
     document.body.dataset.poseEvidence=JSON.stringify(poseProbe(OrganismField));
