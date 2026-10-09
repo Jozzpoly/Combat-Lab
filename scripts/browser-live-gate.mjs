@@ -43,3 +43,27 @@ console.log("FINITE GROUNDED BRACING A/B: "+(probe.grab("brace-evidence")||"not 
 console.log("PAUSED WORLD REPOSITION A/B: "+(probe.grab("pose-evidence")||"not exposed").replaceAll("&quot;",'"'));
 console.log("OPEN MATERIAL FIELD OBSERVATION: "+(probe.grab("playground-evidence")||"not exposed").replaceAll("&quot;",'"'));
 console.log("AUTONOMOUS BODY BRACE A/B: "+(probe.grab("spontaneous-brace")||"not exposed").replaceAll("&quot;",'"'));
+
+
+// TEMPORARY VISUAL AUDIT (isolated draft branch only).
+// Browser images are captured after WASM boot with headless Chrome, then
+// encoded into the Actions log solely for immediate agent review. Remove
+// this block after actual image inspection; no screenshots or private state
+// should become a permanent CI obligation.
+if(process.env.CI){
+  const {readFileSync}=await import("node:fs");
+  for(const [label,suffix] of [
+    ["original",""],
+    ["footing","?uiProbe=1"]
+  ]){
+    const file="/tmp/combat-lab-visual-"+label+".png";
+    const dest=url+suffix;
+    execFileSync(chrome,["--headless=new","--no-sandbox","--disable-gpu",
+      "--disable-dev-shm-usage","--window-size=1440,900",
+      "--force-device-scale-factor=1",
+      "--virtual-time-budget=7000","--screenshot="+file,dest],
+      {timeout:75000,encoding:"utf8",maxBuffer:6*1024*1024});
+    console.log("VISUAL_AUDIT_"+label.toUpperCase()+":"+
+      readFileSync(file).toString("base64"));
+  }
+}
