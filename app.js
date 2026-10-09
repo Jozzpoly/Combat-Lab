@@ -429,6 +429,19 @@ async function start() {
         !$("#selected").textContent.includes("NaN"),
         "UI fabricated unavailable somatic parameters");
     }
+    field.select(field.actors[2].id);
+    syncBodyForm();
+    $("#body-yield").value="0.37";
+    $("#body-brace").value="1700";
+    $("#apply-body").click();
+    assert(Math.abs(field.actors[2].spec.contactYield-.37)<.001 &&
+      field.actors[2].spec.braceForce===1700,
+      "physical/somatic authoring controls did not modify selected body");
+    field.step({x:0,y:0,brace:true});
+    updateStatus();
+    assert(field.actors[2].control.bracing &&
+      $("#selected").textContent.includes("brace"),
+      "manual brace did not enter live physical readout");
     field.select(field.actors[3].id);
     syncBodyForm();
     for(let t=0;t<90;t++)field.step({x:1,y:0});
