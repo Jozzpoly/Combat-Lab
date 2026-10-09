@@ -381,6 +381,31 @@ async function start() {
     keys.add(key);
   });
   document.addEventListener("keyup",e=>keys.delete(e.key.toLowerCase()));
+  if(new URLSearchParams(location.search).has("uiProbe")){
+    paused=true;
+    const assert=(ok,message)=>{if(!ok)throw Error(message);};
+    for(const [index,actor] of field.actors.entries()){
+      selectAt(index);updateStatus();
+      assert(field.activeActor===actor.id,"UI selected wrong organism");
+      assert($("#selected").textContent.includes(actor.spec.name),
+        "selection readout missing "+actor.kind);
+      assert($("#body-muscle").disabled===(actor.kind!=="worm"),
+        "muscle editor enabled for wrong morphology");
+      assert($("#body-rear-drive").disabled===(actor.kind!=="crawler"),
+        "rear-drive editor enabled for wrong morphology");
+      assert(!$("#selected").textContent.includes("undefined") &&
+        !$("#selected").textContent.includes("NaN"),
+        "UI fabricated unavailable somatic parameters");
+    }
+    field.select(field.actors[3].id);
+    syncBodyForm();
+    for(let t=0;t<90;t++)field.step({x:1,y:0});
+    updateStatus();
+    assert($("#selected").textContent.includes("internal stroke"),
+      "physical worm selected readout does not expose its own actuation");
+    document.body.dataset.uiProbe="pass";
+    document.body.dataset.uiEvidence="4 morphology selections and 90 shared-world worm steps";
+  }
   if(new URLSearchParams(location.search).has("pressureProbe")){
     paused=true;
     const { pressureProbe }=await import("./src/browser-pressure-probe.js");
