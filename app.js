@@ -76,6 +76,17 @@ function drawWorld() {
       box.kind==="gate" ? "#d7aa5d" : "#b3a077",
       targetId === box.id ? "#ffdfa0" : "#665e49");
     if(box.kind==="gate")circle(box.pivotPoint.x,box.pivotPoint.y,.20,"#e6ead7");
+    else if(box.hx>.35 && box.hy>.33){
+      // Physical mass is written on the actual body. The colour of a crate
+      // is deliberately NOT a hidden "heavy object" gameplay category.
+      ctx.save();ctx.translate(p.x,p.y);ctx.rotate(box.body.rotation());
+      ctx.textAlign="center";ctx.textBaseline="middle";
+      ctx.font="bold .30px system-ui,sans-serif";
+      ctx.fillStyle="#25303c";
+      ctx.fillText(Number(box.mass.toFixed(1))+" kg",0,0,
+        box.hx*1.8);
+      ctx.restore();
+    }
   }
   for (const actor of field.actors) {
     const selected = actor.id === field.activeActor;
@@ -229,15 +240,25 @@ function updateStatus() {
     snap.matterCount + " movable bodies · " + snap.activeContacts +
     " actor contact incidences";
   const selected=active && snap.actors.find(a=>a.id===active.id);
-  $("#live-inspect-title").textContent=selected ?
-    active.spec.name+" · "+selected.mode.toUpperCase() :
+  const focusMaterial=field.matter.find(item=>item.id===targetId);
+  $("#live-inspect-title").textContent=focusMaterial ?
+    (focusMaterial.kind==="gate"?"Pinned hinge":"Movable matter")+
+      " · "+focusMaterial.mass+" kg" :
+    selected ? active.spec.name+" · "+selected.mode.toUpperCase() :
     "No organism selected";
   const load=selected?.contactImpulse||0;
   const motion=selected?.speed||0;
   const contactText=selected?.contacts ?
     selected.contacts+" real contact incidences · "+load.toFixed(1)+" N·s" :
     "no active physical contact";
-  $("#live-inspect-details").textContent=selected ?
+  $("#live-inspect-details").textContent=focusMaterial ?
+    "Material motion "+Math.hypot(focusMaterial.body.linvel().x,
+      focusMaterial.body.linvel().y).toFixed(2)+" m/s · angular "+
+      focusMaterial.body.angvel().toFixed(2)+" rad/s"+
+      (focusMaterial.kind==="gate"?
+        " · pinned world pivot (cannot teleport)" :
+        " · direct drag requires nearby organism and finite grip") :
+    selected ?
     "Real COM speed "+motion.toFixed(2)+" m/s · "+contactText+
     (active.control.bracing ?
       " · grounded brace "+((active.control.braceImpulse||0)/DT).toFixed(0)+" N":
