@@ -4,7 +4,7 @@ const $=selector=>document.querySelector(selector);
 const canvas=$("#lab"),ctx=canvas.getContext("2d");
 const keys=new Set();
 let field=null,paused=false,armedBox=false,armedPoke=false,savedScene=null;
-let selectedTarget=null,mouse=V(10,11),camera={x:18,y:12,zoom:1};
+let selectedTarget=null,mouse=V(10,11),camera={x:17,y:12,zoom:1.32};
 let pan=null,dragPose=null,wallDraft=null,pokeDraft=null;
 let debt=0,last=performance.now(),lastReport=0;
 
