@@ -2125,6 +2125,37 @@ try {
   cases.push({name:"live-ui-peer-material-shape-and-reset",status:"FAIL",
     detail:String(error?.message??error).slice(0,300)});
 }
+await observation("off-center-wall-impact-reveals-body-rotation",world=>{
+  world.authorRect({kind:"wall",cx:17.0,cy:11.70,
+    width:0.5,height:0.5});
+  const run=shape=>{
+    world.setPeerShape(shape);
+    world.setPeerEnabled(true);
+    world.reset();
+    let firstContact=null,maxAngle=0,maxAngularVelocity=0;
+    for(let tick=1;tick<=170;tick++){
+      world.step(still);
+      const e=world.entities.get("peer");
+      const sample=at(world,"peer");
+      if(firstContact===null &&
+        world.lastCausalObservations.get("peer").contacts.length>0)
+          firstContact=tick;
+      maxAngle=Math.max(maxAngle,Math.abs(sample.rotation));
+      maxAngularVelocity=Math.max(maxAngularVelocity,Math.abs(e.body.angvel()));
+    }
+    finite(world,"off-center shape "+shape);
+    return {firstContact,maxAngle,maxAngularVelocity};
+  };
+  const circle=run("circle"),bar=run("bar");
+  return "same 210kg and motor, off-center wall: circle first touch="+
+    circle.firstContact+", max |angle|="+circle.maxAngle.toFixed(4)+
+    "rad, peak spin="+circle.maxAngularVelocity.toFixed(4)+
+    "rad/s; bar touch="+bar.firstContact+
+    ", max |angle|="+bar.maxAngle.toFixed(4)+
+    "rad, peak spin="+bar.maxAngularVelocity.toFixed(4)+
+    "rad/s; measurements before causal verdict";
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
