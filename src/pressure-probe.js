@@ -3212,6 +3212,33 @@ try {
   cases.push({name:"live-ui-physical-xy-chart-draws-authored-material",status:"FAIL",
     detail:String(error?.message??error).slice(0,300)});
 }
+try {
+  const button=document.querySelector("#fixture-wrong-side-ab");
+  const textarea=document.querySelector("#starting-scene-json");
+  const recipeFeedback=document.querySelector("#recipe-feedback");
+  const report=document.querySelector("#compare-report");
+  const plot=document.querySelector("#compare-plot");
+  const mode=document.querySelector("#resident-mode");
+  assert(button && textarea && recipeFeedback && report && plot && mode,
+    "one-click side-choice counterfactual not available");
+  button.click();
+  await new Promise(resolve=>setTimeout(resolve,0));
+  const baseline=JSON.parse(textarea.value);
+  assert(baseline.resident.mode==="lateral-maneuver" &&
+    mode.value==="adaptive-lateral" &&
+    recipeFeedback.textContent.includes("REPLACED") &&
+    report.textContent.includes("A / B — resident") &&
+    Number(plot.dataset.tracedPoints)>80 &&
+    plot.dataset.comparisonView==="xy" &&
+    document.body.dataset.simulationPaused==="true",
+    "one-click A/B was not grounded in two physical side-response recipes");
+  document.querySelector("#pause-simulation").click();
+  cases.push({name:"live-ui-one-click-feasible-wrong-side-ab",status:"PASS",
+    detail:"explicitly replaced saved A=fixed+Y, B=adaptive; 240-step XY comparison, paused live scene unchanged"});
+}catch(error){
+  cases.push({name:"live-ui-one-click-feasible-wrong-side-ab",status:"FAIL",
+    detail:String(error?.message??error).slice(0,300)});
+}
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);

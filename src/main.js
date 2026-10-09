@@ -890,6 +890,24 @@ document.querySelector("#fixture-short-block").addEventListener(
   "click", () => loadFixture("short"));
 document.querySelector("#fixture-wrong-side").addEventListener(
   "click", () => loadFixture("wrong"));
+document.querySelector("#fixture-wrong-side-ab").addEventListener("click", () => {
+  // This action EXPLICITLY replaces the saved-A text, never the current
+  // running afterstate without the visible preset reset.
+  loadFixture("wrong");
+  world.setResidentMode("lateral-maneuver");
+  recipeTextarea.value = JSON.stringify(captureStartingScene(world), null, 2);
+  world.setResidentMode("adaptive-lateral");
+  residentModeSelect.value = world.residentMode;
+  compareSubjectSelect.value = "resident";
+  compareViewSelect.value = "xy";
+  recipeFeedback.textContent =
+    "Saved A REPLACED by fixed wrong-side (+Y) baseline; B is locally adaptive. " +
+    "Both comparison Worlds reconstruct these exact authored starts.";
+  fixtureFeedback.textContent =
+    "A/B prepared: identical two walls and body; A persists with fixed +Y, " +
+    "B can correct -Y. The comparison runs in separate Worlds.";
+  compareScenesButton.click();
+});
 document.querySelector("#fixture-beam-torque").addEventListener(
   "click", () => loadFixture("beam"));
 document.querySelector("#fixture-offaxis-pressure").addEventListener(
