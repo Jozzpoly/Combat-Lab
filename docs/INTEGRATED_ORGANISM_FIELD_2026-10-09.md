@@ -112,3 +112,47 @@ Measured interaction: the change in the front/rear difference due to mixed suppo
 - No independent direct visual/Owner feel test has occurred. Do not promote to public rehearsal/current until the remaining human question would actually be worth asking.
 
 **Next judgment:** does this changed *whole* offer enough legible, naturally discoverable experiments to merit Owner time? If not, prioritize whole-organism/body/interaction richness and authoring of a reproducible situation over additional narrow green tests. Reject the specimen if it remains a collection of motorized geometric props. 
+
+
+## Current integrated-possibility checkpoint — 2026-10-09
+
+**Source-qualified checkpoint:** implementation commit 68b34f18a7d2afb58902adc8e1744a4be7f275b6; [check run 37980312481](https://github.com/Jozzpoly/Combat-Lab/actions/runs/37980312481): 17/17 unit checks, browser boot and physical pressure PASS. The extensive executable physics probes have been split from the normal interactive app into dynamically imported src/browser-pressure-probe.js. The existing application and experimental tests are no longer one intertwined source module.
+
+### New fourth morphology: actual internal stroke and alternating physical support
+
+The Inchworm uses a real prismatic joint between two dynamic bodies. Its internal stretch/contract impulses are equal and opposite. It only generates net free-space travel when an external, finite, position-dependent ground-support impulse acts on alternate segments.
+
+A bounded, 450-step isolated contrast measured centre-of-mass displacement:
+
+| Source of drive/support | Displacement |
+| --- | ---: |
+| No ground-support authority | 0.000 m |
+| No internal muscle authority | 0.000 m |
+| Weak ground support | 3.189 m |
+| Stronger ground support | 2.793 m |
+
+The 0.651 m extension/contraction envelope demonstrated real shape change. Stronger support actually reduced progression in that experiment: an initially presumed monotonic claim was explicitly falsified and retained as evidence.
+
+Independent real shared-field null over 330 ticks: full Inchworm moved 1.764 m; disabling the internal muscle or disabling ground support each gave approximately 0.000 m. This is a grounded possibility, NOT evidence of natural animal locomotion.
+
+Articulated progress readouts and local recovery feedback were corrected to use mass-weighted COM and COM velocity, rather than the oscillating front segment. That prevents a highly misleading false progress signal.
+
+### Reproducibility and direct intervention
+
+Initial-scene JSON now records explicit world starting poses and authoring: actual actor profiles/scales, moved/rotated crates, fixed-wall additions and physical hinged gates. A five-actor, six-matter, two-gate, one-added-wall browser trial roundtripped successfully, reproduced by reset. Malformed scenes were rejected without modifying the ongoing physical world. This is an initial condition, not a complete solver/velocity/cognition replay and not automatically saved across reloads.
+
+In-world Undo/Clear removes added walls, crates and gates without resetting the surviving physics. Separate browser trials verified three single-step undos plus a two-item clear with unrelated body afterstate preserved.
+
+Mixed-body batch authoring exists; 500 bodies per insertion is a safety boundary of one operation, not a maximum population. A four-morphology stress scenario contained 76 physical organisms through 130 steps, including actual jointed and multiple-collider bodies. It observed up to 1926 counted contact incidences, which are not unique contact pairs.
+
+### Performance remains unresolved
+
+The headless Chromium virtual-time clock returned zero-duration physics-step values. Those were invalid performance observations and have been removed from the evidence field. A native Node timing test could not resolve the browser-packaged Rapier module, while a no-virtual-time headless DOM test captured the page before async WASM startup. Both misleading timing paths were retired.
+
+There is still NO defensible throughput/FPS, long-duration crowd or scale qualification. The CI can assert finite numeric continuation under narrow contact pressure only. Future performance work should answer a concrete user-facing scale problem, not endlessly pursue benchmark infrastructure.
+
+### Open qualitative frontier
+
+The integrated field now contains four meaningfully different locomotor mechanisms, real material afterstate, finite reciprocal grips, a world-anchored swinging gate, live editable obstacles and bodies, and a reproducible initial-scene contract. The local behavior remains crude; the specimen may still resemble moving geometric props rather than living organisms. No Owner experience or visual quality approval has been obtained.
+
+**Stop condition:** when a whole-scene Owner-style inspection can only reveal raw prosthetic motion, do not promote this branch or manufacture an acceptance milestone. Instead change the physical/behavioral phenomenon itself. Main and rehearsal/current remain untouched; PR #1 is a deliberately unmerged draft.
