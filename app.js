@@ -162,8 +162,24 @@ function updateStatus() {
   const snap=field.snapshot(), active=field.actor(field.activeActor);
   $("#run-summary").textContent = (paused ? "PAUSED" : "LIVE") +
     " · " + snap.tick + " ticks · " + snap.count + " organisms · " +
-    snap.matterCount + " movable bodies · " + snap.physicsMs.toFixed(2) + " ms/step";
+    snap.matterCount + " movable bodies · " + snap.activeContacts +
+    " actor contact incidences";
   const selected=active && snap.actors.find(a=>a.id===active.id);
+  $("#live-inspect-title").textContent=selected ?
+    active.spec.name+" · "+selected.mode.toUpperCase() :
+    "No organism selected";
+  const load=selected?.contactImpulse||0;
+  const motion=selected?.speed||0;
+  const contactText=selected?.contacts ?
+    selected.contacts+" real contact incidences · "+load.toFixed(1)+" N·s" :
+    "no active physical contact";
+  $("#live-inspect-details").textContent=selected ?
+    "Real COM speed "+motion.toFixed(2)+" m/s · "+contactText+
+    (active.control.bracing ?
+      " · grounded brace "+((active.control.braceImpulse||0)/DT).toFixed(0)+" N":
+      active.kind==="worm"&&active.controlStroke?.support>0 ?
+      " · current support "+(active.controlStroke.support/DT).toFixed(0)+" N":
+      "") : "Click a collider or choose a physical organism.";
   $("#selected").textContent = selected ?
     [
       active.spec.name + "  [" + selected.id + "]",
