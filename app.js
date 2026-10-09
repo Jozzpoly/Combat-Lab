@@ -106,6 +106,17 @@ function drawWorld() {
       ctx.strokeStyle="#f07667";ctx.lineWidth=.055;ctx.stroke();
     }
   }
+  if (field.grip) {
+    const g=field.grip, body=field.actor(g.actorId)?.root, a=body?.translation();
+    if(a){
+      const b=g.worldAnchor||g.target, target=g.clampedTarget||g.target;
+      ctx.strokeStyle="#f5d68b";ctx.lineWidth=.075;
+      ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
+      ctx.setLineDash([.12,.10]);ctx.beginPath();ctx.moveTo(b.x,b.y);
+      ctx.lineTo(target.x,target.y);ctx.stroke();ctx.setLineDash([]);
+      ctx.beginPath();ctx.arc(b.x,b.y,.17,0,2*Math.PI);ctx.stroke();
+    }
+  }
   if (drawWall) {
     const a=drawWall, b=mouse;
     ctx.setLineDash([0.15,0.15]);ctx.strokeStyle="#ffe0a5";ctx.lineWidth=0.09;
@@ -136,6 +147,9 @@ function updateStatus() {
     ". Physical joints: " + field.actors.filter(a=>Boolean(a.joint)).length +
     ". Simulation backlog: " + debt.toFixed(3) + "s." +
     " No organism/product qualification asserted.";
+  $("#grip-state").textContent = snap.grip ?
+    "Physical grip: "+snap.grip.objectId+" · actual force "+snap.grip.force.toFixed(1)+" N" :
+    "No grip. Right-hold on a nearby movable object.";
   $("#pause").textContent=paused?"Resume":"Pause";
   $("#step").disabled=!paused;
 }
@@ -169,6 +183,7 @@ function cursorBox() {
 }
 const bodyInputs = {
   mass: "#body-mass", speed: "#body-speed", acceleration: "#body-accel",
+  gripReach: "#body-reach", gripForce: "#body-gripforce",
   braking: "#body-brake", turnRate: "#body-turnrate", turnTorque: "#body-torque"
 };
 function syncBodyForm(){
@@ -351,7 +366,7 @@ async function start() {
   window.combatOrganismField=field; // internal experiment readback, not private NPC data
   $("#pause").onclick=()=>{paused=!paused;debt=0;};
   $("#step").onclick=()=>{if(paused)tick();};
-  $("#reset").onclick=()=>{field.reset();targetId=field.activeActor;syncBodyForm();announce("Starting scene rebuilt.");};
+  $("#reset").onclick=()=>{field.releaseGrip();field.reset();targetId=field.activeActor;syncBodyForm();announce("Starting scene rebuilt.");};
   $("#manual").onchange=e=>{manual=e.target.checked;};
   $("#apply-shape").onclick=()=>guarded(()=>{
     field.resizeMorphology(field.activeActor,{
@@ -400,7 +415,12 @@ async function start() {
   },{passive:false});
   canvas.addEventListener("pointerdown",e=>{
     mouse=worldPoint(e);canvas.setPointerCapture(e.pointerId);
-    if(e.button===1){pan={x:e.clientX,y:e.clientY,cx:camera.x,cy:camera.y};e.preventDefault();}
+    if(e.button===2){
+      if(!field.beginGrip(mouse))announce("No movable matter in range. Select an organism, then right-hold on a crate.");
+      else announce("Finite reciprocal grip engaged — drag cursor, then release.");
+      e.preventDefault();
+    }
+    else if(e.button===1){pan={x:e.clientX,y:e.clientY,cx:camera.x,cy:camera.y};e.preventDefault();}
     else if(e.shiftKey){drawWall={...mouse};}
     else if(e.altKey){guarded(cursorBox);}
     else {
@@ -418,8 +438,10 @@ async function start() {
       camera.y=pan.cy-(e.clientY-pan.y)*sy/scale;
     }
     mouse=worldPoint(e);
+    if(field.grip)field.setGripTarget(mouse);
   });
   canvas.addEventListener("pointerup",e=>{
+    if(e.button===2)field.releaseGrip();
     if(drawWall){
       const a=drawWall,b=worldPoint(e);drawWall=null;
       guarded(()=>{
@@ -430,6 +452,7 @@ async function start() {
     }
     pan=null;
   });
+  canvas.addEventListener("pointercancel",()=>{pan=null;drawWall=null;field.releaseGrip();});
   document.addEventListener("keydown",e=>{
     if(e.target?.closest?.("input,textarea,select,[contenteditable]"))return;
     const key=e.key.toLowerCase();
