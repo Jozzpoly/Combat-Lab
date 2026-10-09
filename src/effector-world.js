@@ -34,7 +34,8 @@ export class EffectorField {
       actors:this.actors.map(a=>{
         const root=a.root.translation(),angle=a.root.rotation();
         return {kind:a.kind,x:root.x,y:root.y,angle,
-          clawTorque:a.spec.clawTorque,aperture:a.targetAperture,
+          clawTorque:a.spec.clawTorque,reach:a.spec.clawReach,
+          aperture:a.targetAperture,
           armAngles:a.arms.map(arm=>wrap(arm.body.rotation()-angle))};
       }),
       matter:this.matter.filter(x=>x.type==="box").map(m=>{
@@ -70,6 +71,7 @@ export class EffectorField {
         const created=field.spawn(a.kind,V(a.x,a.y),a.angle);
         created.spec.clawTorque=a.clawTorque;
         created.targetAperture=a.aperture;
+        if(a.kind==="pincer")field.setClawReach(created.id,a.reach);
         if(a.kind==="pincer"){
           for(let i=0;i<created.arms.length;i++){
             const arm=created.arms[i],relative=a.armAngles[i];
@@ -127,7 +129,8 @@ export class EffectorField {
     const actor={id,kind,root,parts:[],joints:[],arms:[],
       spec:{motorForce:kind==="ram"?1250:770,torque:kind==="ram"?720:440,
         speed:kind==="ram"?2.0:2.5,clawTorque:kind==="pincer"?780:0,
-        bodyMass:kind==="ram"?220:85},
+        bodyMass:kind==="ram"?220:85,
+        clawReach:kind==="pincer"?1.53:0},
       targetAperture:1, contactCount:0, contactImpulse:0};
     const bodyCollider=this.makeBox(root,kind==="ram"?1.04:.64,
       kind==="ram"?.80:.48,actor.spec.bodyMass);
@@ -199,6 +202,27 @@ export class EffectorField {
     this.gates.push(item);this.matter.push(item);this.register(id,collider);
     if(authored)this.authored.push({type:"gate",id});
     return item;
+  }
+  setClawReach(id,newReach){
+    const a=this.actor(id);
+    if(!a||a.kind!=="pincer")return false;
+    const reach=safe(newReach,"jaw geometric reach");
+    if(reach<.86||reach>60)
+      throw RangeError("Jaw reach exceeds this runtime's representable geometry");
+    const half=reach-.72;
+    // The pivot is physically fixed to the arm's local -0.72 point.
+    // Changing span changes real collider geometry, effective inertia and
+    // distal hook placement, not just the renderer's decorative length.
+    for(const arm of a.arms){
+      arm.bar.setHalfExtents(V(half,.13));
+      arm.bar.setTranslationWrtParent(V(0,0));
+      arm.hook.setTranslationWrtParent(V(half-.11,-arm.sign*.20));
+      arm.bar.setMass(15);
+      arm.hook.setMass(2.2);
+    }
+    a.spec.clawReach=reach;
+    this.world.propagateModifiedBodyPositionsToColliders();
+    return true;
   }
   setAperture(id,value){
     const a=this.actor(id);
