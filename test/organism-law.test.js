@@ -3,7 +3,9 @@ import assert from "node:assert/strict";
 import { MORPHS, localResponse, finiteDrive, finiteGrip, wrap } from "../src/organism-law.js";
 const fresh=()=>({age:0,pressure:0,recover:0,turnSide:1,recoveries:0});
 test("physically distinct shapes and motor authorities are declared independently",()=>{
- assert.equal(Object.keys(MORPHS).length,3);
+ assert.equal(Object.keys(MORPHS).length,4);
+ assert.ok(MORPHS.worm.muscleForce>0);
+ assert.ok(MORPHS.worm.supportForce>0);
  assert.ok(MORPHS.dart.width<MORPHS.broad.width);
  assert.ok(MORPHS.dart.speed>MORPHS.broad.speed);
  assert.ok(MORPHS.broad.mass>MORPHS.dart.mass);
