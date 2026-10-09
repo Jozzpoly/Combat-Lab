@@ -78,6 +78,32 @@ export function physicalProbe(Field){
    assert(authorship.undo(),"authored material cannot be removed live");
    assert(!authorship.matter.some(x=>x.id===fixture.id)&&
      authorship.ticks===tick,"Undo reset unrelated physical time");
+   const captured=authorship.exportScene();
+   const restored=Field.fromScene(captured);
+   try{
+     const replay=restored.exportScene();
+     assert(replay.actors.length===captured.actors.length,
+       "posed scene lost a physical organism");
+     assert(replay.walls.length===captured.walls.length &&
+       replay.matter.length===captured.matter.length &&
+       replay.gates.length===captured.gates.length,
+       "posed scene lost material components");
+     assert(Math.abs(replay.actors[0].x-captured.actors[0].x)<1e-4,
+       "restored body starting pose changed");
+     for(let arm=0;arm<2;arm++)
+       assert(Math.abs(replay.actors[0].armAngles[arm]-
+         captured.actors[0].armAngles[arm])<1e-4,
+         "actual articulated starting angle was not restored");
+     for(let i=0;i<120;i++)restored.step();
+     assert(restored.actors.every(a=>a.parts.every(part=>{
+       const p=part.body.translation();
+       return Number.isFinite(p.x+p.y+part.body.rotation());
+     })),"restored jointed scene unstable");
+   }finally{restored.dispose();}
+   let rejected=false;
+   try{Field.fromScene({...captured,actors:[{kind:"fake"}]});}
+   catch(error){rejected=true;}
+   assert(rejected,"invalid scene was allowed to replace real runtime");
    for(let i=0;i<160;i++)authorship.step();
    assert(authorship.actors.every(a=>a.parts.every(part=>{
      const t=part.body.translation();
