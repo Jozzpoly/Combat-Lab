@@ -459,6 +459,11 @@ async function start(){
     const {independentArmsProbe}=await import("./src/independent-arms-probe.js");
     document.body.dataset.independentArms=JSON.stringify(independentArmsProbe(EffectorField));
   }
+  if(new URLSearchParams(location.search).has("campaign")){
+    paused=true;
+    const {disturbedWorldCampaign}=await import("./src/disturbed-world-campaign.js");
+    document.body.dataset.worldCampaign=JSON.stringify(disturbedWorldCampaign(EffectorField));
+  }
   requestAnimationFrame(frame);
 }
 start().catch(error=>{
