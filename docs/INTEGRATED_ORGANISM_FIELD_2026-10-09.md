@@ -156,3 +156,61 @@ There is still NO defensible throughput/FPS, long-duration crowd or scale qualif
 The integrated field now contains four meaningfully different locomotor mechanisms, real material afterstate, finite reciprocal grips, a world-anchored swinging gate, live editable obstacles and bodies, and a reproducible initial-scene contract. The local behavior remains crude; the specimen may still resemble moving geometric props rather than living organisms. No Owner experience or visual quality approval has been obtained.
 
 **Stop condition:** when a whole-scene Owner-style inspection can only reveal raw prosthetic motion, do not promote this branch or manufacture an acceptance milestone. Instead change the physical/behavioral phenomenon itself. Main and rehearsal/current remain untouched; PR #1 is a deliberately unmerged draft.
+
+
+## Somatic contact and material affordance — 2026-10-09 next discovery
+
+**Qualification boundary:** an isolated, replaceable discovery experiment; no Owner organism/feel acceptance, public rehearsal or canonical roadmap promotion. The runtime still uses transparent finite ground-reaction approximations, not full animal biomechanics. All autonomous responses are body-local, deterministic and primitive, not a substitute for ReflexBrain.
+
+### Actual physical sensing
+
+The field's simple somatic response previously received only boolean touch and movement progress and could treat a brush against the side as frontal obstruction. The new readback receives **only real solver-active contact manifolds**: facing-relative frontal direction, signed lateral direction, and contact impulse, along with its own realized mass-weighted body progress. Contact normals are corrected using the query's flipped manifold orientation; self-collider contacts are excluded. No actor IDs, objective locations, path, material tags or authored world layout reach this response law.
+
+One editable scalar, contactYield [0,1], changes the local *duration* of physical pressing before giving way. This is not a hard-coded species brain. A highly compliant body gives way sooner to sustained frontal obstruction; a stubborn body persists; incidental side/rear touch is handled separately. The simple policy also permits a low-yielding body to brace under strong observed rear/lateral contact. Actual success depends on the solver and physical parameters.
+
+**Controlled contact A/B:** one identical Dart in the same world, with only contactYield changed:
+
+| Case | First solver contact | First local give-way |
+| --- | ---: | ---: |
+| Compliant | tick 25 | tick 39 |
+| Persistent | tick 25 | tick 74 |
+
+Both recorded true frontal contact and nonzero solver impulse. A movable heavy crate could delay response without necessarily changing the **final** displacement over a long bounded 240-tick sample; this was observed and must not be falsely presented as fully realized behavioral ecology.
+
+### Stronger material causal chain: light load -> downstream obstruction -> response
+
+With the same compliant actor and same box envelope, only the dynamic crate mass changed. **Within the first 100 ticks:**
+
+- Light 12 kg box: actor contact tick 25, box-to-fixed-world-wall contact tick 59, organism give-way tick 73; box displaced 2.390 m.
+- Heavy 220 kg box: actor contact tick 25, organism give-way tick 39; the box had **not** reached the downstream wall within the sample; box displaced 0.661 m.
+
+The actor never knew the crate mass or the downstream wall. The researcher separately verified that the light crate *actually contacted* the internal fixed divider before give-way. This is one grounded causal sequence, not a guarantee that every light/heavy distinction will produce qualitatively different behavior. It is the strongest evidence in this continuation that contact physics affects local decisions rather than only different trajectories.
+
+### Finite material bracing, not intangible hard blocking
+
+Manual hold-B bracing and a body-local stance triggered by appropriate rear/lateral contact apply bounded external ground-support impulse against motion. The force is independently authored in Newtons per body and scaled by local terrain traction. Kinematic pose locking, arbitrary no-overlap, i-frames and unlimited resisting force are prohibited by the model.
+
+**Matched material pusher trial**, 165 fixed steps, same broad-body hull and same dynamic crate pressure:
+
+| Physical condition | Broad-body displacement |
+| --- | ---: |
+| No brace | 6.830 m |
+| Active finite brace | 2.902 m |
+| Active brace on low-traction terrain | 5.808 m |
+| Brace with zero authority | 6.830 m |
+
+The peak finite support force on dry ground was 2800 N, falling to ~728 N on the local 0.26 traction region. The actor could still be moved considerably under contact; this is a pressure-dependent physical affordance, not an invulnerable stance. See [CI 37982088936](https://github.com/Jozzpoly/Combat-Lab/actions/runs/37982088936).
+
+### Paused direct world-body authoring
+
+Ctrl+drag in pause changes the *explicit authored pose* of an actual physical crate or whole articulated organism, immediately propagates body transforms to real collider poses (a crucial Rapier synchronization requirement), and preserves unrelated world afterstate. Only affected bodies have their velocities reset. Articulated bodies preserve all real inter-part joints by translating parts together; anchored hinged gates cannot be freely teleported. Real collider-containment picking replaces a misleading fixed 1.6m centre-distance selector.
+
+The first physical test caught an actual bug: Rapier did not refresh attached collider world poses until a solver step, so an edited organism was drawn at the new pose but could not be picked there while paused. Explicit World.propagateModifiedBodyPositionsToColliders() corrected the edit/pick mismatch *without advancing the simulation*. [CI 37982657403](https://github.com/Jozzpoly/Combat-Lab/actions/runs/37982657403) passed after this correction, covering four morphologies, joint retention, other-matter preservation and start-scene capture.
+
+### UI correctness, measurement caveats and hard open questions
+
+A new emitted-browser UI probe exercises selecting all four physical organisms before first physics step and after a worm run; it detected and fixed crashes caused by confusing crawler-only rear-drive fields with worm fields and reading rear traction before first initialization. Bracing and tactile-authoring UI are covered in the ongoing refinement. Only browser-mechanical proof is claimed, not live Owner usability testing.
+
+The current stand-in organisms still have very basic local behavior, sparse body morphology, no meaningful physiology/cognition and limited long-term movement repertoire. The world-first feel and visual clarity require separate scrutiny before an Owner rehearsal request. Population scale, UI FPS, determinism under varied authored configurations and realistic grip/ground response are not broadly qualified.
+
+**The next research question should be qualitative:** when freely authored physical situations meet distinct actual body capabilities and reflexes, do multiple unintuitive and reproducible phenomena emerge, or does it still feel like a set of motorized primitives? Treat negative human evidence as decisive, whatever the number of green tests.
