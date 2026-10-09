@@ -148,7 +148,8 @@ export class MaterialWorld {
     this.residentControl = {
       tick: 0, blockedTicks: 0, recoveryTicks: 0, recoveries: 0,
       estimatedX: 0, estimatedY: 0, lateralTicks: 0, lateralAttempts: 0,
-      state: "cruise", lastTransition: null
+      lateralSide: 1, lateralBlockedTicks: 0, lateralFlips: 0,
+      sideFlipUsed: false, state: "cruise", lastTransition: null
     };
     this.peerDirection = -1;
     this.peerSense = null;
@@ -277,7 +278,8 @@ export class MaterialWorld {
     return {
       tick: 0, blockedTicks: 0, recoveryTicks: 0, recoveries: 0,
       estimatedX: 0, estimatedY: 0, lateralTicks: 0, lateralAttempts: 0,
-      state: "cruise", lastTransition: null
+      lateralSide: 1, lateralBlockedTicks: 0, lateralFlips: 0,
+      sideFlipUsed: false, state: "cruise", lastTransition: null
     };
   }
 
@@ -794,12 +796,16 @@ export class MaterialWorld {
 
   setResidentMode(mode) {
     if (mode !== "baseline" && mode !== "tactile-recovery" &&
-        mode !== "directional-recovery" && mode !== "lateral-maneuver") {
+        mode !== "directional-recovery" && mode !== "lateral-maneuver" &&
+        mode !== "adaptive-lateral") {
       throw new RangeError("resident mode must be baseline, tactile-recovery, directional-recovery or lateral-maneuver");
     }
     this.residentMode = mode;
     this.residentControl.blockedTicks = 0;
     this.residentControl.recoveryTicks = 0;
+    this.residentControl.lateralTicks = 0;
+    this.residentControl.lateralBlockedTicks = 0;
+    this.residentControl.sideFlipUsed = false;
     this.residentControl.state = "cruise";
     this.residentControl.lastTransition = null;
     this.#recordEvent("actor.mode", "resident controller=" + mode);
@@ -822,7 +828,8 @@ export class MaterialWorld {
     Object.assign(ctl, decision.state);
     if (decision.transition) {
       if (decision.transition.lateralDirection) {
-        this.#recordEvent("actor.lateral",
+        this.#recordEvent(decision.transition.sideFlip ?
+          "actor.sideFlip" : "actor.lateral",
           id + " chose bounded lateral velocity from own forward-touch pressure; side=" +
           decision.transition.lateralDirection);
       } else {
@@ -854,13 +861,17 @@ export class MaterialWorld {
 
   setPeerMode(mode) {
     if (mode !== "baseline" && mode !== "tactile-recovery" &&
-        mode !== "directional-recovery" && mode !== "lateral-maneuver") {
+        mode !== "directional-recovery" && mode !== "lateral-maneuver" &&
+        mode !== "adaptive-lateral") {
       throw new RangeError("peer mode must be baseline, tactile-recovery, directional-recovery or lateral-maneuver");
     }
     if (this.peerMode === mode) return;
     this.peerMode = mode;
     this.peerControl.blockedTicks = 0;
     this.peerControl.recoveryTicks = 0;
+    this.peerControl.lateralTicks = 0;
+    this.peerControl.lateralBlockedTicks = 0;
+    this.peerControl.sideFlipUsed = false;
     this.peerControl.state = "cruise";
     this.peerControl.lastTransition = null;
     this.#recordEvent("actor.peerMode", "peer controller=" + mode);

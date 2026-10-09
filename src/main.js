@@ -741,6 +741,16 @@ function loadFixture(kind) {
     fixtureFeedback.textContent =
       "Finite lateral response: short wall at x=16.8. Compare directional " +
       "reversal with finite side-stepping and try longer walls, body sizes, and side bias.";
+  } else if (kind === "wrong") {
+    world.setResidentMode("adaptive-lateral");
+    world.reset();
+    world.authorRect({ kind: "wall", cx: 16.8, cy: 11.4,
+      width: 0.6, height: 1.0 });
+    world.authorRect({ kind: "wall", cx: 16.8, cy: 12.20,
+      width: 5, height: 0.40 });
+    fixtureFeedback.textContent =
+      "Short wall ahead, longer side barrier below. Compare finite +Y " +
+      "sidestep with an adaptive attempt that may reverse side after actual touch.";
   } else if (kind === "beam") {
     world.setBraceForm("beam");
     world.setBraceAngle(0);
@@ -793,6 +803,8 @@ document.querySelector("#fixture-side-touch").addEventListener(
   "click", () => loadFixture("side"));
 document.querySelector("#fixture-short-block").addEventListener(
   "click", () => loadFixture("short"));
+document.querySelector("#fixture-wrong-side").addEventListener(
+  "click", () => loadFixture("wrong"));
 document.querySelector("#fixture-beam-torque").addEventListener(
   "click", () => loadFixture("beam"));
 document.querySelector("#fixture-offaxis-pressure").addEventListener(
@@ -1089,6 +1101,7 @@ function render() {
     " · local travel " + snapshot.residentControl.estimatedX.toFixed(2) +
       "," + snapshot.residentControl.estimatedY.toFixed(2) + "m" +
     " · lateral attempts " + snapshot.residentControl.lateralAttempts +
+    " · side flips " + snapshot.residentControl.lateralFlips +
     " · obstruction evidence " + snapshot.residentControl.blockedTicks + "/12 steps" +
     " · recovery count " + snapshot.residentControl.recoveries +
     (snapshot.residentControl.lastTransition ?

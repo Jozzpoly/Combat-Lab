@@ -124,6 +124,7 @@
           <button id="fixture-pressure-chain">3-body pressure</button>
           <button id="fixture-side-touch">Side-contact falsifier</button>
           <button id="fixture-short-block">Short obstruction / side maneuver</button>
+          <button id="fixture-wrong-side">Short block + wrong-side barrier</button>
           <button id="fixture-beam-torque">Rotating beam / external torque</button>
           <button id="fixture-offaxis-pressure">Beam / off-axis actor contact</button>
         </div>
@@ -138,6 +139,7 @@
             <option value="tactile-recovery">Any-touch recovery (control)</option>
             <option value="directional-recovery">Forward-contact recovery (challenger)</option>
             <option value="lateral-maneuver">Finite lateral maneuver (experimental)</option>
+            <option value="adaptive-lateral">Try side; reverse on local side pressure</option>
             <option value="baseline">Fixed lane reversal only</option>
           </select>
         </label>
@@ -175,6 +177,7 @@
             <option value="tactile-recovery">Any-touch recovery</option>
             <option value="directional-recovery">Forward-contact recovery</option>
             <option value="lateral-maneuver">Finite lateral maneuver</option>
+            <option value="adaptive-lateral">Local side reversal (experimental)</option>
             <option value="baseline">Fixed shuttle only</option>
           </select>
         </label>

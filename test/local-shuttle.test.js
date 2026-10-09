@@ -64,6 +64,37 @@ test("the same forward signal causes a finite-duration recovery without World la
     ["deltaX", "deltaY", "forwardTouch", "motorEffort", "progressAlongIntent", "touch"]);
 });
 
+test("side switching requires locally felt stalled lateral contact", () => {
+  let state=initial(), direction=1;
+  const front=sample({ touch:true, forwardTouch:true,
+    motorEffort:1, progressAlongIntent:0 });
+  for(let i=0;i<12;i++){
+    const d=stepLocalShuttle({state,sense:front,direction,
+      mode:"adaptive-lateral",maxSpeed:2.1,lower:-1.8,upper:5.7,
+      recoveryDuration:58,resistanceTicks:12,sidePreference:1,lateralTicks:96});
+    state=d.state;direction=d.direction;
+  }
+  assert.equal(state.lateralAttempts,1);
+  assert.equal(state.lateralFlips,0);
+  let flipped=false;
+  for(let i=0;i<10;i++){
+    const d=stepLocalShuttle({state,sense:front,direction,
+      mode:"adaptive-lateral",maxSpeed:2.1,lower:-1.8,upper:5.7,
+      recoveryDuration:58,resistanceTicks:12,sidePreference:1,lateralTicks:96});
+    state=d.state;direction=d.direction;
+    if(d.transition?.sideFlip)flipped=true;
+  }
+  assert.ok(flipped);
+  assert.equal(state.lateralSide,-1);
+  assert.equal(state.lateralFlips,1);
+  assert.equal(state.sideFlipUsed,true);
+  const d=stepLocalShuttle({state,sense:front,direction,
+    mode:"adaptive-lateral",maxSpeed:2.1,lower:-1.8,upper:5.7,
+    recoveryDuration:58,resistanceTicks:12,sidePreference:1,lateralTicks:96});
+  assert.ok(d.intendedVelocity.y<0,"opposite side intent not issued");
+  assert.equal(state.lateralFlips,1,"policy mutated prior history");
+});
+
 test("invalid local policy is explicitly rejected", () => {
   assert.throws(() => step(initial(), "oracle", sample()), RangeError);
 });

@@ -25,7 +25,7 @@ const PROFILE_PLAYER = ["radius", "mass", "maxSpeed", "acceleration",
   "braking", "gripBraking", "gripReach", "gripForce"];
 const PROFILE_RESIDENT = ["radius", "mass", "maxSpeed", "acceleration", "braking"];
 const modes = new Set(["baseline", "tactile-recovery", "directional-recovery",
-  "lateral-maneuver"]);
+  "lateral-maneuver", "adaptive-lateral"]);
 
 export function captureStartingScene(world) {
   const authoredObjects = new Set(world.authoredShapes.map(x => x.id));

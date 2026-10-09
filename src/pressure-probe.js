@@ -2896,6 +2896,39 @@ await trial("dormant-actor-start-survives-portable-serialization", async world =
   } finally{restored.world.free();}
 });
 
+await observation("wrong-side-pressure-local-reversal-mechanical-survey", world => {
+  const run=mode=>{
+    world.clearAuthored();
+    world.setPeerEnabled(false);
+    world.setBraceEnabled(false);
+    world.setResidentProfile(DEFAULT_RESIDENT_PROFILE);
+    world.setResidentMode(mode);
+    world.setActorSidePreference("resident",1);
+    world.reset();
+    world.authorRect({kind:"wall",cx:16.8,cy:11.4,width:0.6,height:1,mass:0});
+    world.authorRect({kind:"wall",cx:16.8,cy:12.20,width:5,height:0.4,mass:0});
+    let firstPass=null,maxX=-Infinity,maxAbsY=0;
+    for(let tick=1;tick<=400;tick++){
+      world.step(still);
+      const p=at(world,"resident").position;
+      if(firstPass===null && p.x>17.5)firstPass=tick;
+      maxX=Math.max(maxX,p.x);
+      maxAbsY=Math.max(maxAbsY,Math.abs(p.y-11.4));
+    }
+    finite(world,"wrong-side exploration");
+    return {mode,firstPass,maxX,maxAbsY,
+      attempts:world.residentControl.lateralAttempts,
+      flips:world.residentControl.lateralFlips};
+  };
+  const fixed=run("lateral-maneuver");
+  const adaptive=run("adaptive-lateral");
+  return "fixed +Y: xMax="+fixed.maxX.toFixed(2)+", pass="+
+    String(fixed.firstPass)+", flips="+fixed.flips+
+    "; adaptive +Y then tactile reversal: xMax="+adaptive.maxX.toFixed(2)+
+    ", pass="+String(adaptive.firstPass)+", flips="+adaptive.flips+
+    ", attempts="+adaptive.attempts;
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
