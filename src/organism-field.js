@@ -432,6 +432,7 @@ export class OrganismField {
     anchor.applyImpulse(support,true);
     actor.strokeTick+=Math.min(3,Math.abs(throttle)*spec.speed/2);
     actor.controlStroke={phase:extending?"extend":"retract",
+      supportPart:anchor===head?"front":"rear",
       support:mag(support),stroke:mag(stroke)};
     return support;
   }
