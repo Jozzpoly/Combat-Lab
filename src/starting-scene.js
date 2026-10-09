@@ -224,7 +224,14 @@ export async function compareStartingScenes(reference, candidate, {
       candidateFinal: { x: bp.x, y: bp.y },
       referenceContactTicks: contactA, candidateContactTicks: contactB,
       referenceFirstContact: firstContactA, candidateFirstContact: firstContactB,
-      traces: { a: traceA, b: traceB }
+      traces: { a: traceA, b: traceB },
+      // Source-authority-preserving display: the experimenter may see
+      // separately authored static World geometry in A and B. Neither
+      // actor receives these rectangles as knowledge or navigation.
+      geometry: {
+        a: a.snapshot().staticRects.map(rect => ({ ...rect })),
+        b: b.snapshot().staticRects.map(rect => ({ ...rect }))
+      }
     };
   } finally {
     a.world.free();
