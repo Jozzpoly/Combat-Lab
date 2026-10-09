@@ -90,6 +90,7 @@ function attempt(Field,{mass=18,impulse=V(65,-170),reflex=false,limit=240}={}){
         states.push({tick,
           crate:V(round(po.x),round(po.y)),bodyB:V(round(pb.x),round(pb.y)),
           bodyA:V(round(pa.x),round(pa.y)),
+          secondary:V(round(secondary.body.translation().x),round(secondary.body.translation().y)),
           aperture:[...p.targetApertures],
           externalContactLoad:round(load)});
       }
@@ -132,7 +133,8 @@ export function closedMaterialLoopPreflight(Field){
       if(a.tick<earliest && (
         diff(a.crate,b.crate)>0.00015 ||
         diff(a.bodyB,b.bodyB)>0.00015 ||
-        diff(a.bodyA,b.bodyA)>0.00015))
+        diff(a.bodyA,b.bodyA)>0.00015 ||
+        diff(a.secondary,b.secondary)>0.00015))
         throw Error("false counterfactual divergence before actual actuator response");
     }
     const difference=diff(on.crate,off.crate);
