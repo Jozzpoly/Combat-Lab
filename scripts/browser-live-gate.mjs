@@ -26,3 +26,4 @@ console.log("Matched-drive morphology OBSERVATION: "+(probe.grab("morph-evidence
 console.log("Paired-world CAUSAL NULL: "+(probe.grab("causal-null")||"not exposed"));
 console.log("Reciprocal MATERIAL GRIP: "+(probe.grab("grip-evidence")||"not exposed"));
 console.log("PHYSICAL GATE: "+(probe.grab("gate-evidence")||"not exposed"));
+console.log("DISTRIBUTED DRIVE CONTRAST: "+(probe.grab("segment-evidence")||"not exposed"));
