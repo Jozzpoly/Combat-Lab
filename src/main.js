@@ -39,6 +39,47 @@ const recipeImportButton = document.querySelector("#recipe-import");
 const compareSubjectSelect = document.querySelector("#compare-subject");
 const compareScenesButton = document.querySelector("#compare-scenes");
 const compareReport = document.querySelector("#compare-report");
+const comparePlot = document.querySelector("#compare-plot");
+
+function renderPhysicalComparison(result) {
+  const ctx = comparePlot.getContext("2d");
+  const w = comparePlot.width, h = comparePlot.height;
+  ctx.clearRect(0, 0, w, h);
+  ctx.fillStyle = "#101820"; ctx.fillRect(0, 0, w, h);
+  const values = [...result.traces.a, ...result.traces.b].map(p => p.x);
+  let low = Math.min(...values), high = Math.max(...values);
+  if (Math.abs(high-low) < 0.01) {low -= 0.5; high += 0.5;}
+  const margin = { left: 50, right: 13, top: 16, bottom: 22 };
+  const x = tick => margin.left +
+    tick / result.steps * (w-margin.left-margin.right);
+  const y = value => margin.top +
+    (high-value)/(high-low)*(h-margin.top-margin.bottom);
+  ctx.font = "12px system-ui";
+  ctx.fillStyle = "#98a7b2";
+  for (let i=0;i<=4;i++) {
+    const val = low+(high-low)*i/4;
+    const yy=y(val);
+    ctx.strokeStyle = "rgba(255,255,255,.08)";
+    ctx.beginPath();ctx.moveTo(margin.left,yy);ctx.lineTo(w-margin.right,yy);ctx.stroke();
+    ctx.fillText(val.toFixed(1),5,yy+4);
+  }
+  for (const [path,color] of [
+    [result.traces.a,"#d9c89a"], [result.traces.b,"#74dbed"]
+  ]) {
+    ctx.beginPath();
+    path.forEach((p,i) => {
+      if(i===0)ctx.moveTo(x(p.tick),y(p.x));
+      else ctx.lineTo(x(p.tick),y(p.x));
+    });
+    ctx.lineWidth=2.3;
+    ctx.strokeStyle=color;ctx.stroke();
+  }
+  ctx.fillStyle="#98a7b2";
+  ctx.fillText("0",margin.left-4,h-5);
+  ctx.fillText(String(result.steps)+" steps",w-90,h-5);
+  comparePlot.dataset.tracedPoints=String(
+    result.traces.a.length+result.traces.b.length);
+}
 const placeBodyButton = document.querySelector("#place-selected-at-cursor");
 const restoreBodyStartsButton = document.querySelector("#restore-body-positions");
 const bodyPositionFeedback = document.querySelector("#body-position-feedback");
@@ -630,6 +671,7 @@ compareScenesButton.addEventListener("click", async () => {
     const result = await compareStartingScenes(reference, candidate, {
       subject: compareSubjectSelect.value, steps: 240
     });
+    renderPhysicalComparison(result);
     const tick = value => value === null ? "none" : String(value);
     const position = point => "(" + point.x.toFixed(2) + ", " +
       point.y.toFixed(2) + ") m";
@@ -648,6 +690,9 @@ compareScenesButton.addEventListener("click", async () => {
         " / t" + tick(result.candidateFirstContact) + "\n" +
       "No live World was modified. This is physical measurement, not NPC quality.";
   } catch (error) {
+    comparePlot.dataset.tracedPoints = "0";
+    const ctx = comparePlot.getContext("2d");
+    ctx.clearRect(0,0,comparePlot.width,comparePlot.height);
     compareReport.textContent =
       "A/B not run; live World unchanged: " + String(error?.message ?? error);
   } finally {

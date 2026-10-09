@@ -2817,6 +2817,7 @@ try{
   compareButton.click();
   await new Promise(resolve=>setTimeout(resolve,0));
   assert(report.textContent.includes("A / B — resident") &&
+    Number(document.querySelector("#compare-plot").dataset.tracedPoints) > 60 &&
     report.textContent.includes("No live World was modified"),
     "actual browser A/B comparison failed to display physical evidence");
   const before=text.value;
