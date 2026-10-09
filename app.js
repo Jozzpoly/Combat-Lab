@@ -599,7 +599,7 @@ async function start() {
       "physical worm selected readout does not expose its own actuation");
     // A visible situation must be a real importable material world, not a
     // cosmetic button or a separate scripted AI per scenario.
-    for(const key of ["yard",...PLAYGROUND_IDS]){
+    for(const key of ["yard","relay","footing","hinge","crush"]){
       const button=document.querySelector('[data-situation="'+key+'"]');
       assert(Boolean(button),"unreachable physical world "+key);
       button.click();
