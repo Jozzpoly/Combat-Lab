@@ -171,6 +171,8 @@ export class OrganismField {
       part.mass = masses[i];
       part.body.wakeUp();
     });
+    for (const body of new Set(actor.parts.map(part => part.body)))
+      body.recomputeMassPropertiesFromColliders();
     actor.spec = next;
     return { ...next };
   }
