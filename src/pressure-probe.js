@@ -2601,6 +2601,123 @@ await trial("combined-world-interventions-stay-finite-and-deterministic-800x2", 
     worst.toExponential(1);
 });
 
+await trial("starting-scene-roundtrip-rebuilds-physical-authoring-not-afterstate", async world => {
+  const { captureStartingScene, stageStartingScene } =
+    await import("./starting-scene.js");
+  world.setPeerEnabled(true);
+  world.setPeerMass(90);
+  world.setPeerMode("lateral-maneuver");
+  world.setActorSidePreference("peer",1);
+  world.setResidentMode("directional-recovery");
+  world.setResidentProfile({ ...DEFAULT_RESIDENT_PROFILE, radius:.8, mass:180 });
+  world.setBraceEnabled(true);
+  world.setBraceForm("beam");
+  world.setBraceAngle(40);
+  world.setBraceProfile({mass:340,braking:0});
+  world.authorRect({kind:"wall",cx:16.8,cy:11.4,width:.9,height:2,mass:0});
+  const boxId = world.authorRect({kind:"object",cx:4.2,cy:8,width:.7,height:.7,mass:55});
+  world.repositionBody("peer",{x:20,y:12});
+  world.repositionBody(boxId,{x:5.1,y:8.1});
+  const snap=captureStartingScene(world);
+  assert(snap.shapes.length===2 && snap.starts.length===2,
+    "captured recipe omitted authored material or body starts");
+  for(let i=0;i<130;i++)world.step(still);
+  const restored=await stageStartingScene(JSON.parse(JSON.stringify(snap)));
+  try {
+    assert(restored.physicsTick===0 && restored.world!==world.world,
+      "recipe loaded actual running afterstate or reused old World");
+    assert(restored.peerEnabled && restored.braceEnabled &&
+      restored.peerMass===90 && restored.braceMass===340 &&
+      restored.braceForm==="beam" && restored.braceAngle===40 &&
+      restored.residentProfile.radius===.8 &&
+      restored.peerMode==="lateral-maneuver",
+      "recipe lost physical body, policy, or component authoring");
+    const newBox=restored.authoredShapes.find(x=>x.kind==="object").id;
+    assert(restored.authoredShapes.length===2 &&
+      Math.abs(at(restored,newBox).position.x-5.1)<1e-4 &&
+      Math.abs(at(restored,"peer").position.y-12)<1e-4,
+      "recipe failed to map authored object's body start onto rebuilt entity");
+    assert(restored.lastCausalObservations.size===0 &&
+      restored.peerSense===null && restored.residentSense===null,
+      "recipe illegally serialized a resident's runtime cognition");
+    for(let i=0;i<130;i++)restored.step(still);
+    finite(restored,"recipe restored physical scene");
+    return "two authored shapes + two reset starts, profiles and beam; fresh physics and no private memory";
+  } finally { restored.world.free(); }
+});
+
+await trial("invalid-scene-recipes-are-rejected-before-world-swap", async world => {
+  const {captureStartingScene,stageStartingScene} =
+    await import("./starting-scene.js");
+  world.setPeerEnabled(true);
+  world.authorRect({kind:"object",cx:8,cy:8,width:.7,height:.7,mass:20});
+  world.step(still);
+  const before=captureStartingScene(world);
+  const oldTick=world.physicsTick;
+  const mutations=[
+    spec=>spec.shapes.push({...spec.shapes[0],key:"authored-99",mass:-5}),
+    spec=>spec.starts.push({key:"unknown-entity",x:0,y:0}),
+    spec=>spec.player.mass=1e300,
+    spec=>spec.resident.mode="world-oracle",
+    spec=>spec.brace.form="unknown",
+    spec=>spec.format="future-incompatible"
+  ];
+  let refused=0;
+  for(const alter of mutations){
+    const broken=JSON.parse(JSON.stringify(before));
+    alter(broken);
+    try{
+      const surprise=await stageStartingScene(broken);
+      surprise.world.free();
+    }catch(error){if(error instanceof RangeError)refused++;}
+  }
+  assert(refused===mutations.length &&
+    JSON.stringify(captureStartingScene(world))===JSON.stringify(before) &&
+    world.physicsTick===oldTick,
+    "invalid recipe changed existing material World or was accepted");
+  return "six corrupt inputs refused; source world, run and authoring untouched";
+});
+
+try{
+  const text=document.querySelector("#starting-scene-json");
+  const exportButton=document.querySelector("#recipe-export");
+  const importButton=document.querySelector("#recipe-import");
+  const feedback=document.querySelector("#recipe-feedback");
+  assert(text&&exportButton&&importButton&&feedback,
+    "recipe tools not mounted in real UI");
+  document.querySelector("#fixture-offaxis-pressure").click();
+  exportButton.click();
+  const before=text.value;
+  const parsed=JSON.parse(before);
+  assert(parsed.format==="combat-lab-authored-start-v1" &&
+    parsed.brace.form==="beam" && parsed.peer.enabled,
+    "export did not reflect real physical starting scene");
+  document.querySelector("#fixture-short-block").click();
+  importButton.click();
+  await new Promise(resolve=>setTimeout(resolve,0));
+  assert(document.body.dataset.experimentFixture==="imported" &&
+    document.body.dataset.simulationPaused==="true" &&
+    feedback.textContent.includes("Imported starting scene atomically") &&
+    document.querySelector("#brace-form").value==="beam",
+    "UI import failed to restore physical scene before resuming");
+  const actual=document.querySelector("#selected-readout").textContent;
+  assert(actual.includes("resident"),
+    "restored UI selection/readout remained from replaced World");
+  text.value="{invalid-json";
+  importButton.click();
+  await new Promise(resolve=>setTimeout(resolve,0));
+  assert(feedback.textContent.includes("World unchanged") &&
+    document.querySelector("#brace-form").value==="beam",
+    "invalid UI recipe destroyed previous live world");
+  text.value=before;
+  document.querySelector("#pause-simulation").click();
+  cases.push({name:"live-ui-atomic-export-and-import-physical-start",status:"PASS",
+    detail:"export beam+peer, replace with side fixture, import atomically, reject corrupt JSON"});
+}catch(error){
+  cases.push({name:"live-ui-atomic-export-and-import-physical-start",status:"FAIL",
+    detail:String(error?.message??error).slice(0,300)});
+}
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);

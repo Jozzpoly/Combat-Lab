@@ -90,6 +90,18 @@
       </section>
 
       <section>
+        <h2>Share an authored starting scene (experimental)</h2>
+        <p class="muted">A portable JSON recipe for actor configuration, placed matter and reset starts. It does not serialize a running physical afterstate, animation, grips or NPC memory. Export, copy, paste or restore after reload. Import fully stages a new World before replacing this one.</p>
+        <textarea id="starting-scene-json" rows="5" spellcheck="false" placeholder="Export here, or paste a starting scene recipe"></textarea>
+        <div class="button-row">
+          <button id="recipe-export">Export starting scene</button>
+          <button id="recipe-copy">Copy recipe</button>
+          <button id="recipe-import">Replace starting scene</button>
+        </div>
+        <p id="recipe-feedback" class="muted" aria-live="polite">No recipe loaded; importing will pause and replace the current scene.</p>
+      </section>
+
+      <section>
         <h2>Repeatable A/B starting situations</h2>
         <p class="muted">These buttons explicitly clear authored edits and reset the run. They create editable starting situations, not mandatory scenarios or hidden success conditions. The world starts paused; compare one change at a time.</p>
         <div class="button-row">

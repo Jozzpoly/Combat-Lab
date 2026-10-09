@@ -1,4 +1,5 @@
 import { DEFAULT_PROFILE, DEFAULT_RESIDENT_PROFILE, FIXED_DT, MaterialWorld } from "./material-world.js";
+import { captureStartingScene, stageStartingScene } from "./starting-scene.js";
 
 const canvas = document.querySelector("#lab");
 const ctx = canvas.getContext("2d");
@@ -30,6 +31,11 @@ const contactOverlayInput = document.querySelector("#contact-overlay");
 const contactOverlaySummary = document.querySelector("#contact-overlay-summary");
 const residentProfileFeedback = document.querySelector("#resident-profile-feedback");
 const interventionTimeline = document.querySelector("#intervention-timeline");
+const recipeTextarea = document.querySelector("#starting-scene-json");
+const recipeFeedback = document.querySelector("#recipe-feedback");
+const recipeExportButton = document.querySelector("#recipe-export");
+const recipeCopyButton = document.querySelector("#recipe-copy");
+const recipeImportButton = document.querySelector("#recipe-import");
 const placeBodyButton = document.querySelector("#place-selected-at-cursor");
 const restoreBodyStartsButton = document.querySelector("#restore-body-positions");
 const bodyPositionFeedback = document.querySelector("#body-position-feedback");
@@ -57,7 +63,7 @@ const input = {
   pointer: { x: 0, y: 0 }
 };
 
-const world = await MaterialWorld.create();
+let world = await MaterialWorld.create();
 let accumulator = 0;
 let previous = performance.now();
 let lastStep = { desiredVelocity: { x: 0, y: 0 }, stepMs: 0 };
@@ -536,6 +542,78 @@ restoreBodyStartsButton.addEventListener("click", () => {
   bodyPositionFeedback.textContent =
     "Restored original starts for " + count + " body placements; world reset.";
   render();
+});
+
+// Schema v1 is an ephemeral interchange experiment, not canonical World data.
+recipeExportButton.addEventListener("click", () => {
+  recipeTextarea.value = JSON.stringify(captureStartingScene(world), null, 2);
+  recipeFeedback.textContent = "Captured authored starts and profiles only; runtime physics was not serialized.";
+});
+recipeCopyButton.addEventListener("click", async () => {
+  if (!recipeTextarea.value.trim()) recipeExportButton.click();
+  try {
+    if (!navigator.clipboard?.writeText)
+      throw new Error("Clipboard unavailable in this browser context");
+    await navigator.clipboard.writeText(recipeTextarea.value);
+    recipeFeedback.textContent = "Recipe copied. Keep it yourself to restore after reload.";
+  } catch {
+    recipeFeedback.textContent =
+      "Clipboard unavailable; select and copy the JSON text manually.";
+    recipeTextarea.focus();
+    recipeTextarea.select();
+  }
+});
+recipeImportButton.addEventListener("click", async () => {
+  recipeImportButton.disabled = true;
+  let staged = null;
+  try {
+    const text = recipeTextarea.value.trim();
+    if (!text || text.length > 2_000_000)
+      throw new RangeError("Recipe must be a nonempty JSON text under 2 MB");
+    staged = await stageStartingScene(JSON.parse(text));
+    // The expensive/unsafe work is finished before this single swap. If
+    // validation or Rapier construction failed, the existing World is intact.
+    const old = world;
+    world = staged;
+    staged = null;
+    old.world.free();
+    input.keys.clear();
+    input.reposition = null;
+    input.drawing = null;
+    input.draggingCamera = false;
+    lastStep = { desiredVelocity: { x: 0, y: 0 }, stepMs: 0 };
+    completedPhysicsSteps = 0;
+    document.body.dataset.physicsSteps = "0";
+    syncProfileFields(world.profile);
+    syncResidentProfileFields(world.residentProfile);
+    residentModeSelect.value = world.residentMode;
+    residentSideSelect.value = String(world.residentSidePreference);
+    peerModeSelect.value = world.peerMode;
+    peerSideSelect.value = String(world.peerSidePreference);
+    peerMassField.value = String(world.peerMass);
+    braceMassInput.value = String(world.braceMass);
+    braceBrakingInput.value = String(world.braceBraking);
+    braceFormSelect.value = world.braceForm;
+    braceAngleInput.value = String(world.braceAngle);
+    refreshPeerControls();
+    refreshBraceControls();
+    camera.follow = true;
+    camera.followTarget = "resident";
+    world.selectedId = "resident";
+    document.body.dataset.experimentFixture = "imported";
+    setSimulationPaused(true);
+    render();
+    recipeFeedback.textContent =
+      "Imported starting scene atomically: " + world.authoredShapes.length +
+      " authored shapes and " + world.bodyStarts.size +
+      " placed starts. Paused. Running afterstate not restored.";
+  } catch (error) {
+    if (staged?.world) staged.world.free();
+    recipeFeedback.textContent =
+      "Import rejected; existing World unchanged: " + String(error?.message ?? error);
+  } finally {
+    recipeImportButton.disabled = false;
+  }
 });
 
 const fixtureFeedback = document.querySelector("#fixture-feedback");
