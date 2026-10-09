@@ -115,6 +115,7 @@ export function finiteBrace({mass, velocity, force, traction, dt=DT}) {
   const raw={x:-mass*velocity.x,y:-mass*velocity.y};
   const length=Math.hypot(raw.x,raw.y);
   const limit=force*clamp(traction,0,1)*dt;
-  const scale=length>0?Math.min(1,limit/length):0;
-  return {x:raw.x*scale,y:raw.y*scale};
+  if(limit===0 || length===0)return {x:0,y:0};
+  const scale=Math.min(1,limit/length);
+  return {x:raw.x===0?0:raw.x*scale,y:raw.y===0?0:raw.y*scale};
 }
