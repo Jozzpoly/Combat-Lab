@@ -1,6 +1,6 @@
 import RAPIER from "@dimforge/rapier2d-deterministic";
 import { validateScene, actorRecipe } from "./scene-recipe.js";
-import { MORPHS, KINDS, DT, clamp, wrap, localResponse, finiteDrive, finiteGrip } from "./organism-law.js";
+import { MORPHS, KINDS, DT, clamp, wrap, localResponse, finiteDrive, finiteGrip, finiteBrace } from "./organism-law.js";
 
 export const FIELD = Object.freeze({ width: 34, height: 22 });
 const v = (x, y) => ({ x, y });
@@ -290,7 +290,7 @@ export class OrganismField {
   setActorProfile(id, changes) {
     const actor = this.actor(id);
     if (!actor) throw new RangeError("select an organism to edit");
-    const fields = ["mass", "speed", "acceleration", "braking", "turnRate", "turnTorque", "gripReach", "gripForce", "rearDrive", "muscleForce", "supportForce", "contactYield"];
+    const fields = ["mass", "speed", "acceleration", "braking", "turnRate", "turnTorque", "gripReach", "gripForce", "rearDrive", "muscleForce", "supportForce", "contactYield", "braceForce"];
     const next = { ...actor.spec };
     for (const key of fields) {
       if (Object.prototype.hasOwnProperty.call(changes, key))
@@ -435,6 +435,7 @@ export class OrganismField {
     const body = actor.root, spec = actor.spec;
     const selected = actor.id === this.activeActor;
     let throttle, desiredOmega, somaticMode="manual";
+    let bracing=Boolean(selected && manual?.brace);
     if (selected && manual && mag(manual) > 0.01) {
       const direction = Math.atan2(manual.y, manual.x);
       const angleError = wrap(direction - body.rotation());
@@ -446,10 +447,12 @@ export class OrganismField {
     } else {
       const response = localResponse(actor.state, actor.sense, spec);
       somaticMode=response.mode;
+      if(response.mode==="brace")bracing=true;
       actor.state = response.state;
       throttle = response.throttle;
       desiredOmega = response.steer * spec.turnRate;
     }
+    if(bracing){throttle=0;desiredOmega=0;somaticMode="brace";}
     const traction = this.tractionAt(body.translation());
     const rearTraction = actor.tail ?
       this.tractionAt(actor.tail.translation()) : null;
@@ -483,6 +486,20 @@ export class OrganismField {
       });
       body.applyImpulse(impulse,true);
     }
+    let braceImpulse=0;
+    if(bracing){
+      const bodies=actor.tail?[actor.root,actor.tail]:[actor.root];
+      const total=bodies.reduce((sum,b)=>sum+b.mass(),0);
+      for(const support of bodies){
+        const j=finiteBrace({
+          mass:support.mass(),velocity:support.linvel(),
+          force:spec.braceForce*support.mass()/total,
+          traction:this.tractionAt(support.translation())
+        });
+        support.applyImpulse(j,true);
+        braceImpulse+=mag(j);
+      }
+    }
     const inertiaEstimate = spec.mass * (spec.length ** 2 + spec.width ** 2) / 12;
     const torque = clamp((desiredOmega - body.angvel()) * inertiaEstimate,
       -spec.turnTorque * traction * DT, spec.turnTorque * traction * DT);
@@ -500,6 +517,7 @@ export class OrganismField {
     actor.control = {
       mode: selected && manual ? "manual" : somaticMode,
       throttle, steering: desiredOmega, traction, rearTraction,
+      braceImpulse, bracing,
       intended: v(Math.cos(body.rotation()) * spec.speed * throttle,
         Math.sin(body.rotation()) * spec.speed * throttle),
       motorImpulse: impulse
