@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { MORPHS, localResponse, finiteDrive, wrap } from "../src/organism-law.js";
+import { MORPHS, localResponse, finiteDrive, finiteGrip, wrap } from "../src/organism-law.js";
 const fresh=()=>({age:0,pressure:0,recover:0,turnSide:1,recoveries:0});
 test("physically distinct shapes and motor authorities are declared independently",()=>{
  assert.equal(Object.keys(MORPHS).length,3);
@@ -48,4 +48,24 @@ test("zero motor command creates finite braking, not teleport",()=>{
 });
 test("angle math handles ±PI wrapping",()=>{
  assert.ok(Math.abs(wrap(Math.PI*2-.05)+.05)<1e-9);
+});
+
+test("finite point-grip never exceeds declared per-step impulse",()=>{
+ const r=finiteGrip({playerMass:20,objectMass:500,anchorVelocity:{x:0,y:0},
+   targetError:{x:6,y:9},maxForce:30,dt:1/60});
+ assert.ok(Math.abs(Math.hypot(r.x,r.y)-.5)<1e-9);
+});
+test("zero grip authority cannot move matter by intent",()=>{
+ const r=finiteGrip({playerMass:20,objectMass:30,anchorVelocity:{x:0,y:0},
+   targetError:{x:1,y:0},maxForce:0});
+ assert.deepEqual(r,{x:0,y:0});
+});
+test("no-grip error and velocity produce no phantom impulse",()=>{
+ const r=finiteGrip({playerMass:20,objectMass:30,anchorVelocity:{x:0,y:0},
+   targetError:{x:0,y:0},maxForce:200});
+ assert.deepEqual(r,{x:0,y:0});
+});
+test("nonphysical grip params are explicitly rejected",()=>{
+ assert.throws(()=>finiteGrip({playerMass:20,objectMass:-1,
+  anchorVelocity:{x:0,y:0},targetError:{x:1,y:0},maxForce:20}),RangeError);
 });
