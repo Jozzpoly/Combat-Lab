@@ -280,6 +280,40 @@ async function pressureProbe() {
       "recoil="+light.actorDelta.toFixed(3),
       "offAngle="+off.maxAngle.toFixed(3)
     ].join(";");
+    // A genuine gate: its pin is fixed while the dynamic lever has
+    // off-axis angular afterstate from impulse. This is material, not
+    // an authored "door open" boolean or a traffic permission.
+    {
+      const w=new OrganismField();
+      try{
+        const gate=w.gates[0],pin={...gate.pivotPoint};
+        const before=gate.body.rotation();
+        const at=gate.body.translation();
+        assert(w.kick(gate.id,{x:at.x+gate.hx*.8,y:at.y},90,"tangential"),
+          "tangential gate actuator not applied");
+        let largest=0,pinError=0;
+        for(let t=0;t<110;t++){
+          w.step({x:0,y:0});
+          const angle=gate.body.rotation(),p=gate.body.translation();
+          const anchor={x:p.x-Math.cos(angle)*gate.hx,
+            y:p.y-Math.sin(angle)*gate.hx};
+          largest=Math.max(largest,Math.abs(angle-before));
+          pinError=Math.max(pinError,Math.hypot(anchor.x-pin.x,anchor.y-pin.y));
+        }
+        assert(largest>.08,"material gate failed to rotate under offaxis impulse");
+        assert(pinError<.12,"hinge anchor detached from its authored world pin");
+        document.body.dataset.gateEvidence="maxAngle="+largest.toFixed(3)+
+          ",pinError="+pinError.toFixed(4);
+        const startId=w.actors[0].id;
+        const authored=w.addGate({x:8,y:19,length:2.4,mass:43});
+        assert(w.gates.length===2,"authored physical gate missing");
+        w.reset();
+        assert(w.actors[0].id===startId,
+          "reset changed stable starting-scene actor identity");
+        assert(w.gates.length===2&&w.gates.some(g=>g.pivotPoint.x===8),
+          "authored gate did not reconstruct its physical pivot");
+      }finally{w.world.free();}
+    }
     // Morphological authoring changes actual colliders, including joint
     // anchors, without resetting the remaining physics/world afterstate.
     for(const kind of ["dart","crawler","broad"]){
