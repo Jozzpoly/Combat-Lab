@@ -504,6 +504,15 @@ export class OrganismField {
     return sumMass>0 ? v(x/sumMass,y/sumMass) :
       {...actor.root.translation()};
   }
+  #physicalVelocity(actor){
+    const bodies=actor.tail?[actor.root,actor.tail]:[actor.root];
+    let massSum=0,x=0,y=0;
+    for(const b of bodies){
+      const m=b.mass(),vel=b.linvel();
+      massSum+=m;x+=m*vel.x;y+=m*vel.y;
+    }
+    return massSum>0?v(x/massSum,y/massSum):v(0,0);
+  }
   #readContacts(actor) {
     let touch = false, count = 0;
     for (const part of actor.parts) {
@@ -606,8 +615,8 @@ export class OrganismField {
       grip: this.grip ? {actorId:this.grip.actorId,objectId:this.grip.objectId,
         force:mag(this.gripImpulse)/DT} : null,
       actors: this.actors.map(a => ({
-        id: a.id, kind: a.kind, pos: { ...a.root.translation() },
-        angle: a.root.rotation(), speed: mag(a.root.linvel()),
+        id: a.id, kind: a.kind, pos: this.#physicalCenter(a),
+        angle: a.root.rotation(), speed: mag(this.#physicalVelocity(a)),
         contacts: a.contactCount, recoveries: a.state.recoveries,
         traction: a.control.traction, mode: a.control.mode
       }))
