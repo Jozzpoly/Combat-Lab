@@ -27,3 +27,8 @@ const sweep=probe.get("affordance-sweep");
 if(!sweep)throw Error("missing independent physical affordance sweep");
 const contrast=JSON.parse(sweep.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
 console.log("ARTICULATED TRANSPORT MATERIAL EDGE-CASES: "+JSON.stringify(contrast));
+const arms=probe.get("independent-arms");
+if(!arms)throw Error("missing independent physical arm outcomes");
+const independent=JSON.parse(arms.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+console.log("INDEPENDENT PHYSICAL ARM OUTCOMES: "+JSON.stringify(independent));
+
