@@ -11,8 +11,12 @@ function rng(seed){
 }
 export function disturbedWorldCampaign(Field){
  const results=[];
- for(const seed of [101,503,997,2017]){
-   const random=rng(seed),field=new Field({empty:true});
+ const regimes=[
+   ...[101,503,997,2017].map(seed=>({seed,solverIterations:12})),
+   ...[101,2017].map(seed=>({seed,solverIterations:24}))
+ ];
+ for(const {seed,solverIterations} of regimes){
+   const random=rng(seed),field=new Field({empty:true,solverIterations});
    try{
      for(let i=0;i<16;i++){
        const x=10.5+(i%4)*2.25+(random()-.5)*.7;
@@ -96,7 +100,7 @@ export function disturbedWorldCampaign(Field){
        if(dist(field.matter[i].body.translation(),fixedStart[i])>.15)moved++;
      }
      if(nonfinite)throw Error("nonfinite solver under free physical pressure, seed "+seed);
-     results.push({seed,actors:field.actors.length,matter:field.matter.length,
+     results.push({seed,solverIterations,actors:field.actors.length,matter:field.matter.length,
        steps:field.ticks-impulsesBefore,contactTicks,highContactTicks,
        peakContactIncidences:peakContact,independentImpulses:disruptions,
        movedMatter:moved,peakJointDrift:+peakJointDrift.toFixed(4),
