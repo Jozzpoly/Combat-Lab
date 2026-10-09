@@ -415,6 +415,34 @@ async function start(){
     document.body.dataset.sceneUi="actual capture/load/reset PASS";
     document.body.dataset.probeResult=JSON.stringify(physicalProbe(EffectorField));
     const {affordanceSweep}=await import("./src/affordance-sweep.js");
+    // Test actual drag-release input, not just helper invocation.
+    resize();
+    const target=field.matter.find(m=>m.type==="box");
+    const point=target.body.translation(),speed=target.body.linvel();
+    const rect=canvas.getBoundingClientRect(),scale=cameraScale();
+    const client=p=>{
+      const px=canvas.width/2+(p.x-camera.x)*scale;
+      const py=canvas.height/2+(p.y-camera.y)*scale;
+      return {clientX:rect.left+px*rect.width/canvas.width,
+        clientY:rect.top+py*rect.height/canvas.height};
+    };
+    $("#poke-strength").value="275";
+    $("#poke").click();
+    const startPt=client(point),endPt=client({x:point.x+1,y:point.y+.55});
+    canvas.dispatchEvent(new PointerEvent("pointerdown",
+      {...startPt,button:0,bubbles:true,pointerId:123}));
+    canvas.dispatchEvent(new PointerEvent("pointermove",
+      {...endPt,button:0,bubbles:true,pointerId:123}));
+    canvas.dispatchEvent(new PointerEvent("pointerup",
+      {...endPt,button:0,bubbles:true,pointerId:123}));
+    const after=target.body.linvel();
+    if(Math.hypot(after.x-speed.x,after.y-speed.y)<.05 ||
+       armedPoke || pokeDraft)
+      throw Error("Actual UI impulse drag did not affect dynamic matter");
+    document.body.dataset.pokeUi="finite impulse delivered via actual pointer drag";
+    const {impulseInterventionProbe}=await import("./src/impulse-intervention-probe.js");
+    document.body.dataset.impulseEvidence=JSON.stringify(
+      impulseInterventionProbe(EffectorField));
     document.body.dataset.affordanceSweep=JSON.stringify(affordanceSweep(EffectorField));
     const {independentArmsProbe}=await import("./src/independent-arms-probe.js");
     document.body.dataset.independentArms=JSON.stringify(independentArmsProbe(EffectorField));
