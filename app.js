@@ -143,7 +143,7 @@ function updateStatus() {
       "realized " + selected.speed.toFixed(2) + " m/s · contacts " + selected.contacts,
       "front traction " + selected.traction.toFixed(2) +
         (active.kind==="crawler" ?
-          " · rear traction "+active.control.rearTraction.toFixed(2)+
+          " · rear traction "+(active.control.rearTraction??field.tractionAt(active.tail.translation())).toFixed(2)+
           " · rear drive "+active.spec.rearDrive.toFixed(2) :
           active.kind==="worm" ?
             " · support force "+active.spec.supportForce.toFixed(0)+" N" : "")+
