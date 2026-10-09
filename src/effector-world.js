@@ -16,10 +16,12 @@ const safe=(n,name)=>{if(!Number.isFinite(n)||!Number.isFinite(Math.fround(n)))
 
 export class EffectorField {
   static async create(){return new EffectorField();}
-  constructor({empty=false}={}){
+  constructor({empty=false,solverIterations=12}={}){
+    if(!Number.isInteger(solverIterations)||solverIterations<4||solverIterations>40)
+      throw RangeError("Solver iteration budget must be a finite integer from 4 to 40");
     this.world=new RAPIER.World(V(0,0));
     this.world.timestep=DT;
-    this.world.integrationParameters.numSolverIterations=12;
+    this.world.integrationParameters.numSolverIterations=solverIterations;
     this.width=36;this.height=24;
     this.actors=[];this.matter=[];this.walls=[];this.gates=[];
     this.colliderOwner=new Map();this.next=0;this.ticks=0;
