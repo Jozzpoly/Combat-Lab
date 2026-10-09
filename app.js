@@ -148,7 +148,12 @@ function updateStatus() {
           active.kind==="worm" ?
             " · support force "+active.spec.supportForce.toFixed(0)+" N" : "")+
         " · mode " + selected.mode,
-      "local recovery events " + selected.recoveries,
+      "local response " + selected.mode + " · yield " +
+        active.spec.contactYield.toFixed(2) + " · front contact " +
+        selected.frontContact.toFixed(2) + " · side " +
+        selected.sideContact.toFixed(2),
+      "contact impulse " + selected.contactImpulse.toFixed(2) +
+        " N·s · recovery events " + selected.recoveries,
       active.kind==="worm" ?
         "internal stroke J=" + (active.controlStroke?.stroke??0).toFixed(3) +
         " · actual ground support J=" + (active.controlStroke?.support??0).toFixed(3) +
@@ -196,6 +201,7 @@ function cursorBox() {
 const bodyInputs = {
   mass: "#body-mass", speed: "#body-speed", acceleration: "#body-accel",
   gripReach: "#body-reach", gripForce: "#body-gripforce",
+  contactYield: "#body-yield",
   braking: "#body-brake", turnRate: "#body-turnrate", turnTorque: "#body-torque"
 };
 function syncBodyForm(){
