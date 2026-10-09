@@ -30,10 +30,20 @@ export function validateScene(data){
        num(a,"reach",name,{min:.86,max:60})):0,
      aperture:num(a,"aperture",name,{min:0,max:1})};
    if(a.kind==="pincer"){
+     // Older v1 captures only had one shared jaw command.
+     const commands=a.armApertures===undefined?
+       [result.aperture,result.aperture]:
+       arr(a.armApertures,name+".armApertures");
+     if(commands.length!==2)throw RangeError(name+" needs two independent commands");
+     result.armApertures=commands.map((n,j)=>{
+       const v=finite(n,name+".armApertures["+j+"]");
+       if(v<0||v>1)throw RangeError("Arm command outside [0,1]");
+       return v;
+     });
      result.armAngles=arr(a.armAngles,name+".armAngles");
      if(result.armAngles.length!==2)throw RangeError(name+" needs two real arms");
      result.armAngles=result.armAngles.map((v,j)=>finite(v,name+".armAngles["+j+"]"));
-   }else result.armAngles=[];
+   }else {result.armAngles=[];result.armApertures=[1,1];}
    return result;
  });
  const matter=arr(data.matter,"matter").map((m,i)=>{
