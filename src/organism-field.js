@@ -434,7 +434,7 @@ export class OrganismField {
     }
     this.activeContactCount = contacts;
   }
-  kick(id, p, amount) {
+  kick(id, p, amount, mode="radial") {
     const actor = this.actor(id);
     const box = this.matter.find(x => x.id === id);
     const body = actor?.root || box?.body;
@@ -443,7 +443,11 @@ export class OrganismField {
     const dx = p.x - center.x, dy = p.y - center.y;
     const n = Math.hypot(dx, dy) || 1;
     const a = num(amount, "impulse", false);
-    body.applyImpulseAtPoint(v(dx / n * a, dy / n * a), p, true);
+    if(!["radial","tangential"].includes(mode))throw new RangeError("unknown impulse direction");
+    const direction=mode==="tangential" ?
+      v(-dy/n*a,dx/n*a) : v(dx/n*a,dy/n*a);
+    // Unlike radial impulses, a tangent at an offset produces real torque.
+    body.applyImpulseAtPoint(direction,p,true);
     return true;
   }
   pick(p) {
