@@ -182,8 +182,10 @@ export async function compareStartingScenes(reference, candidate, {
       const x = aSubject.body.translation(), y = bSubject.body.translation();
       return Math.hypot(x.x - y.x, x.y - y.y);
     };
-    const traceA = [{ tick: 0, x: aSubject.body.translation().x }];
-    const traceB = [{ tick: 0, x: bSubject.body.translation().x }];
+    const initialA = aSubject.body.translation();
+    const initialB = bSubject.body.translation();
+    const traceA = [{ tick: 0, x: initialA.x, y: initialA.y }];
+    const traceB = [{ tick: 0, x: initialB.x, y: initialB.y }];
     let firstPositionDifference = distance() > 1e-5 ? 0 : null;
     let maxPositionGap = distance();
     let contactA = 0, contactB = 0;
@@ -194,8 +196,9 @@ export async function compareStartingScenes(reference, candidate, {
       b.step({ x: 0, y: 0 });
       const gap = distance();
       if (tick % 4 === 0 || tick === steps) {
-        traceA.push({ tick, x: aSubject.body.translation().x });
-        traceB.push({ tick, x: bSubject.body.translation().x });
+        const pa = aSubject.body.translation(), pb = bSubject.body.translation();
+        traceA.push({ tick, x: pa.x, y: pa.y });
+        traceB.push({ tick, x: pb.x, y: pb.y });
       }
       if (firstPositionDifference === null && gap > 1e-5)
         firstPositionDifference = tick;
