@@ -10,6 +10,9 @@ export async function pressureProbe(field) {
   try {
     const assert=(ok,message)=>{if(!ok)throw Error(message);};
     const {somaticProbe}=await import("./somatic-research-probe.js");
+    const {braceProbe}=await import("./brace-research-probe.js");
+    const bodyPressure=braceProbe(OrganismField);
+    document.body.dataset.braceEvidence=JSON.stringify(bodyPressure);
     const bodyContacts=somaticProbe(OrganismField);
     document.body.dataset.somaticEvidence=JSON.stringify(bodyContacts);
     assert(field.actors.length===4,"missing four different physical morphologies");
