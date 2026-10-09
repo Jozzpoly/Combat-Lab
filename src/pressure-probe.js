@@ -1820,7 +1820,7 @@ await trial("finite-post-opposite-detour-sides-produce-opposite-material-outcome
     "; no useful-clearance verdict until falsified";
 });
 
-await observation("untraversable-full-height-wall-lateral-pressure-null", world => {
+await trial("full-height-obstruction-defeats-local-detour-no-teleport", world => {
   world.authorRect({ kind: "wall", cx: 16.8, cy: 7,
     width: 0.7, height: 13 });
   world.setResidentMode("skirt-recovery");
@@ -1833,6 +1833,8 @@ await observation("untraversable-full-height-wall-lateral-pressure-null", world 
     maxY=Math.max(maxY,p.y);
   }
   finite(world,"lateral wall null");
+  assert(maxX < 16.4 && world.residentControl.skirts > 0,
+    "impassable wall was crossed or detour law never attempted");
   return "full-height obstruction; actor max x="+maxX.toFixed(3)+
     "m, y-range "+minY.toFixed(3)+".."+maxY.toFixed(3)+
     ", detours="+world.residentControl.skirts+
