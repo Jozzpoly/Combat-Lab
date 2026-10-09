@@ -5,7 +5,7 @@ export const MORPHS = Object.freeze({
     braking: 32, turnRate: 3.8, turnTorque: 95, width: 0.42, length: 1.05,
     gripReach: 1.8, gripForce: 120, color: "#75c6e8" },
   crawler: { name: "Crawler / hinged", mass: 88, speed: 2.75, acceleration: 12,
-    braking: 14, turnRate: 1.65, turnTorque: 280, width: 0.74, length: 2.65,
+    braking: 14, turnRate: 1.65, turnTorque: 280, rearDrive: 0.55, width: 0.74, length: 2.65,
     gripReach: 2.3, gripForce: 330, color: "#d9b17b" },
   broad: { name: "Broad / pusher", mass: 245, speed: 2.0, acceleration: 7.5,
     braking: 10, turnRate: 0.9, turnTorque: 540, width: 2.3, length: 1.7,
@@ -43,6 +43,8 @@ export function finiteDrive({ mass, velocity, heading, input, speed, acceleratio
   braking, traction, dt = DT }) {
   // Explicit top-down substrate traction approximation: external ground
   // reaction is represented by a bounded impulse budget, not Rapier ground contact.
+  if (!Number.isFinite(mass) || mass < 0) throw new RangeError("invalid allocated drive mass");
+  if (mass === 0) return {x:0,y:0};
   const dx = Math.cos(heading), dy = Math.sin(heading);
   const desired = { x: dx * speed * input, y: dy * speed * input };
   const error = { x: desired.x - velocity.x, y: desired.y - velocity.y };
