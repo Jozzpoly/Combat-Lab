@@ -376,6 +376,7 @@ async function start() {
     pan=null;
   });
   document.addEventListener("keydown",e=>{
+    if(e.target?.closest?.("input,textarea,select,[contenteditable]"))return;
     const key=e.key.toLowerCase();
     if([" ","arrowup","arrowdown","arrowleft","arrowright"].includes(key))
       e.preventDefault();
