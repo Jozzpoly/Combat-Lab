@@ -189,7 +189,8 @@ function updateKeys(){
     (keys.has("KeyA")||keys.has("ArrowLeft")?1:0);
   const y=(keys.has("KeyS")||keys.has("ArrowDown")?1:0)-
     (keys.has("KeyW")||keys.has("ArrowUp")?1:0);
-  field.step({move:V(x,y),aim:mouse});
+  // Operating an editor/force tool must not silently rotate the selected body.
+  field.step({move:V(x,y),aim:(armedPoke||pokeDraft||pan||dragPose||wallDraft)?null:mouse});
 }
 function frame(now){
   if(!field)return;
@@ -226,6 +227,7 @@ async function start(){
     info(armedBox?"Click in the material world to add a real movable crate.":
       "Crate placement cancelled.");};
   $("#poke").onclick=()=>{armedPoke=!armedPoke;armedBox=false;
+    if(!armedPoke)pokeDraft=null;
     $("#poke").textContent=armedPoke?"Cancel impulse probe":"Impulse probe";
     info(armedPoke?
       "Drag from an actual dynamic collider. Arrow direction sets impulse direction; numeric N·s sets strength.":
@@ -387,6 +389,16 @@ async function start(){
     $("#apply-reach").click();
     if(Math.abs(field.actor(selectedTarget).spec.clawReach-2.31)>.0001)
       throw Error("Actual UI did not change physical jaw geometry");
+    for(const key of ["KeyZ","KeyC"]){
+      dispatchEvent(new KeyboardEvent("keydown",{code:key,bubbles:true}));
+      dispatchEvent(new KeyboardEvent("keyup",{code:key,bubbles:true}));
+    }
+    if(field.actor(selectedTarget).targetApertures.some(x=>x!==0))
+      throw Error("Physical jaw keyboard command did not close arms separately");
+    dispatchEvent(new KeyboardEvent("keydown",{code:"KeyQ",bubbles:true}));
+    dispatchEvent(new KeyboardEvent("keyup",{code:"KeyQ",bubbles:true}));
+    if(field.actor(selectedTarget).targetApertures.some(x=>x!==1))
+      throw Error("Coupled open key failed after independent commands");
     $("#upper-jaw").value="0.18";
     $("#upper-jaw").dispatchEvent(new Event("input",{bubbles:true}));
     $("#lower-jaw").value="0.77";
