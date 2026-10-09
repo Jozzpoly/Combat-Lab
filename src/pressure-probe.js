@@ -3020,6 +3020,85 @@ await observation("same-wrong-side-barrier-feasibility-grid-vary-short-wall-heig
     "; this is a geometry-feasibility survey, not behavioral PASS";
 });
 
+await trial("wrong-side-recovery-is-causal-only-when-alternative-side-is-feasible", world => {
+  const run = (mode, side, height) => {
+    world.clearAuthored();
+    world.clearBodyStartOverrides();
+    world.setPeerEnabled(false);
+    world.setBraceEnabled(false);
+    world.setResidentProfile(DEFAULT_RESIDENT_PROFILE);
+    world.setResidentMode(mode);
+    world.setActorSidePreference("resident", side);
+    world.reset();
+    world.authorRect({kind:"wall",cx:16.8,cy:11.4,width:.6,height,mass:0});
+    world.authorRect({kind:"wall",cx:16.8,cy:12.2,width:5,height:.4,mass:0});
+    let firstContact=null,firstFlip=null,firstPass=null,peak=0;
+    for(let tick=1;tick<=450;tick++){
+      world.step(still);
+      const p=at(world,"resident").position;
+      peak=Math.max(peak,p.x);
+      if(firstPass===null&&p.x>17.5)firstPass=tick;
+      if(firstContact===null&&world.residentSense.forwardTouch)
+        firstContact=tick;
+      if(firstFlip===null&&world.residentControl.lateralFlips>0)
+        firstFlip=tick;
+    }
+    finite(world,"wrong side causal triple");
+    return {firstContact,firstFlip,firstPass,peak};
+  };
+  const wrong=run("lateral-maneuver",1,.35);
+  const good=run("lateral-maneuver",-1,.35);
+  const adaptive=run("adaptive-lateral",1,.35);
+  const impossible=run("lateral-maneuver",-1,.5);
+  assert(wrong.firstContact && good.firstContact &&
+    adaptive.firstContact && impossible.firstContact,
+    "one condition silently never encountered material");
+  assert(wrong.firstPass===null && wrong.peak<16.1,
+    "wrong-side fixed motor unexpectedly reached the far side");
+  assert(good.firstPass!==null && good.firstFlip===null,
+    "preselected opposite route should be physically feasible without side flip");
+  assert(adaptive.firstFlip!==null &&
+    adaptive.firstFlip>adaptive.firstContact &&
+    adaptive.firstPass!==null && adaptive.firstPass>adaptive.firstFlip,
+    "adaptive side correction was not preceded by contact and later physical passage");
+  assert(adaptive.firstPass>good.firstPass,
+    "wrong first choice imposed no real recovery penalty");
+  assert(impossible.firstPass===null,
+    "taller geometry supposed to falsify simple lateral controller is passable");
+  return "fixed wrong side fails, chosen -Y passage t="+good.firstPass+
+    ", adaptive contact t="+adaptive.firstContact+
+    " → local flip t="+adaptive.firstFlip+
+    " → passage t="+adaptive.firstPass+
+    "; taller h=0.50 manual-good-side cannot pass";
+});
+
+try {
+  const fixture = document.querySelector("#fixture-wrong-side");
+  const step = document.querySelector("#single-step");
+  const status = document.querySelector("#resident-status");
+  const selected = document.querySelector("#selected-readout");
+  const feedback = document.querySelector("#fixture-feedback");
+  assert(fixture && step && status && selected && feedback,
+    "corrected wrong-side scene missing from browser controls");
+  fixture.click();
+  assert(document.body.dataset.simulationPaused==="true" &&
+    document.body.dataset.experimentFixture==="wrong" &&
+    document.querySelector("#resident-mode").value==="adaptive-lateral" &&
+    feedback.textContent.includes("physically feasible"),
+    "wrong-side scene did not select the validated situation");
+  for(let i=0;i<195;i++)step.click();
+  const x=Number(selected.textContent.match(/position ([+-]?\d+(?:\.\d+)?)/)?.[1]);
+  assert(Number.isFinite(x) && x>17.5 &&
+    status.textContent.includes("side flips 1"),
+    "real DOM stepping did not make actor correct side and pass barrier");
+  document.querySelector("#pause-simulation").click();
+  cases.push({name:"live-ui-feasible-wrong-side-self-correction",status:"PASS",
+    detail:"195 real physics steps, selected actor x="+x.toFixed(2)+"m; local side flips 1"});
+} catch(error) {
+  cases.push({name:"live-ui-feasible-wrong-side-self-correction",status:"FAIL",
+    detail:String(error?.message??error).slice(0,300)});
+}
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);

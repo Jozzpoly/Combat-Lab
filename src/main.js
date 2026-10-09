@@ -744,13 +744,19 @@ function loadFixture(kind) {
   } else if (kind === "wrong") {
     world.setResidentMode("adaptive-lateral");
     world.reset();
+    // Exactly one physically feasible side in this bounded fixture.
+    // A taller first wall is *not* passable by the available finite motor
+    // maneuver even with the correct side, and must never be labelled
+    // a failure of side-choice alone.
     world.authorRect({ kind: "wall", cx: 16.8, cy: 11.4,
-      width: 0.6, height: 1.0 });
+      width: 0.6, height: 0.35 });
     world.authorRect({ kind: "wall", cx: 16.8, cy: 12.20,
       width: 5, height: 0.40 });
     fixtureFeedback.textContent =
-      "Short wall ahead, longer side barrier below. Compare finite +Y " +
-      "sidestep with an adaptive attempt that may reverse side after actual touch.";
+      "Wrong-side falsifier: only the -Y route is physically feasible. " +
+      "Fixed +Y never passes; manual -Y passes ~t165; adaptive +Y then local " +
+      "flip passes ~t185 (450-step reference). Increase the short wall to " +
+      "0.50m: even manual -Y then fails. Compare using identical resets.";
   } else if (kind === "beam") {
     world.setBraceForm("beam");
     world.setBraceAngle(0);
