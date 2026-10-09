@@ -709,10 +709,10 @@ async function start() {
   });
   $("#undo").onclick=()=>guarded(()=>{
     if(!field.authored.length)throw Error("No authored edit.");
-    field.authored.pop();field.reset();targetId=field.activeActor;syncBodyForm();
-    announce("One authored edit removed; experiment reset.");
+    if(!field.undoLastAuthored())throw Error("No authored edit.");
+    announce("Last authored object removed without resetting physical afterstate.");
   });
-  $("#clear").onclick=()=>{field.clearEdits();targetId=field.activeActor;syncBodyForm();announce("Authored edits cleared; scene reset.");};
+  $("#clear").onclick=()=>{const n=field.clearEdits();announce(n+" authored edits cleared; remaining world continues.");};
   $("#save-scene").onclick=()=>guarded(()=>{
     const recipe=field.exportScene();
     const file=new Blob([JSON.stringify(recipe,null,2)+"\n"],
