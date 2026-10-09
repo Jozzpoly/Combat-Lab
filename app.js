@@ -99,6 +99,34 @@ function drawWorld() {
     ctx.lineWidth = 0.095;ctx.strokeStyle = selected ? "#ffe2a0" : "#e7ecdf";
     ctx.stroke();
     if (selected) {
+      // Research-observation-only cue. No AI receives this visualization.
+      const mode=actor.control.mode||"local";
+      const modeColor=mode==="brace"?"#69d5ff":
+        mode==="give-way"?"#eea5ba":mode==="press"?"#efc374":"#d5e2e8";
+      ctx.save();
+      ctx.font="bold .42px system-ui, sans-serif";
+      ctx.textAlign="center";
+      const name=actor.kind.toUpperCase()+" / "+mode.toUpperCase();
+      const width=Math.max(1.65,ctx.measureText(name).width+.30);
+      ctx.fillStyle="rgba(15,26,36,.82)";
+      ctx.fillRect(p.x-width/2,p.y-1.48,width,.52);
+      ctx.fillStyle=modeColor;
+      ctx.fillText(name,p.x,p.y-1.09);
+      // This arrow is an approximate facing-relative resistance BEARING,
+      // not the exact manifold point and not a synthesized contact force.
+      if(actor.sense?.touch){
+        const front=actor.sense.front||0,side=actor.sense.side||0;
+        const dir={
+          x:Math.cos(a)*front-Math.sin(a)*side,
+          y:Math.sin(a)*front+Math.cos(a)*side
+        };
+        const n=Math.hypot(dir.x,dir.y);
+        if(n>.08){
+          const span=Math.min(1.25,.68+.16*Math.log1p(actor.sense.load||0));
+          arrow(p,{x:dir.x/n*span,y:dir.y/n*span},"#fa7d72");
+        }
+      }
+      ctx.restore();
       arrow(p, actor.control.intended, "#6ad7ff");
       arrow(p, actor.root.linvel(), "#ffd187");
       ctx.beginPath(); ctx.arc(p.x, p.y, Math.max(.9, actor.spec.width * .8),
