@@ -82,6 +82,8 @@ export class MaterialWorld {
     // This switch adds a second embodied participant to the *same* World.
     this.peerEnabled = false;
     this.peerMass = 210;
+    this.residentSkirtSign = -1;
+    this.peerSkirtSign = 1;
     // Optional third physical role: a finite-braking dynamic buffer.
     // Not a wall, not a static collider, and not a third copy of the patrol.
     this.braceEnabled = false;
@@ -659,6 +661,15 @@ export class MaterialWorld {
     return impulse;
   }
 
+  setResidentDetourSide(side) {
+    if (side !== -1 && side !== 1) {
+      throw new RangeError("detour side must be -1 or 1");
+    }
+    this.residentSkirtSign = side;
+    this.residentControl.skirtTicks = 0;
+    this.#recordEvent("actor.detourSide", "resident chose local lateral sign=" + side);
+  }
+
   setResidentMode(mode) {
     if (mode !== "baseline" && mode !== "tactile-recovery" &&
         mode !== "directional-recovery" && mode !== "skirt-recovery") {
@@ -708,7 +719,8 @@ export class MaterialWorld {
       id: "resident", sense: this.residentSense,
       ctl: this.residentControl, direction: this.residentDirection,
       mode: this.residentMode, lower: -1.8, upper: 5.7,
-      recoveryDuration: 58, resistanceTicks: 12, skirtSign: -1
+      recoveryDuration: 58, resistanceTicks: 12,
+      skirtSign: this.residentSkirtSign
     });
     this.residentDirection = result.direction;
     return result;
@@ -734,7 +746,8 @@ export class MaterialWorld {
       id: "peer", sense: this.peerSense, ctl: this.peerControl,
       direction: this.peerDirection, mode: this.peerMode,
       lower: -5.0, upper: 1.3,
-      recoveryDuration: 70, resistanceTicks: 20, skirtSign: 1
+      recoveryDuration: 70, resistanceTicks: 20,
+      skirtSign: this.peerSkirtSign
     });
     this.peerDirection = result.direction;
     return result;
@@ -937,6 +950,7 @@ export class MaterialWorld {
       selectedId: this.selectedId,
       profile: { ...this.profile },
       residentProfile: { ...this.residentProfile },
+      residentSkirtSign: this.residentSkirtSign,
       physicsTick: this.physicsTick,
       interventionEvents: this.interventionEvents.map((event) => ({ ...event })),
       residentControl: { mode: this.residentMode, ...this.residentControl },
