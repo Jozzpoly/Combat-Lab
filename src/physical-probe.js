@@ -84,5 +84,41 @@ export function physicalProbe(Field){
      return Number.isFinite(t.x+t.y+part.body.rotation());
    })),"continuation after physical authoring unstable");
  }finally{authorship.dispose();}
- return {live,nullMotor,heavier,authorship:"joint-preserving pause edit and live undo verified"};
+ // Material verbs beyond a one-shot squeeze: the SAME body closes
+ // its actual jaws around matter, then translates perpendicular to them.
+ // The null version has identical movement authority, only no arm torque.
+ function carryTrial(torque){
+   const world=new Field({empty:true});
+   try{
+     const p=world.spawn("pincer",{x:9,y:12},0);
+     world.select(p.id);world.setClawTorque(p.id,torque);
+     const obj=world.addBox({x:10.7,y:12,hx:.38,hy:.48,mass:13},false);
+     world.setAperture(p.id,0);
+     let contactedTicks=0;
+     for(let t=0;t<100;t++){
+       world.step({move:{x:0,y:0},aim:{x:18,y:12}});
+       if(p.contactCount)contactedTicks++;
+     }
+     const initial={...obj.body.translation()},beforeRoot={...p.root.translation()};
+     let maxLoading=0;
+     for(let t=0;t<145;t++){
+       // Sideways travel with the same body facing +X. The object is NEVER
+       // connected to this actor; joint count stays exactly two.
+       world.step({move:{x:0,y:-1},aim:{x:18,y:12}});
+       maxLoading=Math.max(maxLoading,p.contactImpulse);
+     }
+     const ending=obj.body.translation(),rootEnd=p.root.translation();
+     return {torque,contactedTicks,
+       realJointCount:p.joints.length,
+       materialTravel:+Math.hypot(ending.x-initial.x,
+         ending.y-initial.y).toFixed(4),
+       materialY:+(ending.y-initial.y).toFixed(4),
+       rootY:+(rootEnd.y-beforeRoot.y).toFixed(4),
+       loadedImpulse:+maxLoading.toFixed(4)};
+   }finally{world.dispose();}
+ }
+ const transported=carryTrial(780),uncharged=carryTrial(0);
+ return {live,nullMotor,heavier,
+   lateralMaterialTransport:{transported,uncharged},
+   authorship:"joint-preserving pause edit and live undo verified"};
 }
