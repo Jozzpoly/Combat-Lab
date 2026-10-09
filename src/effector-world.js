@@ -315,6 +315,36 @@ export class EffectorField {
     }
     return nearest;
   }
+  pokeAt(point,impulse){
+    safe(point?.x,"poke x");safe(point?.y,"poke y");
+    safe(impulse?.x,"poke impulse x");safe(impulse?.y,"poke impulse y");
+    const strength=norm(impulse);
+    if(strength>1e7)throw RangeError("Experimenter impulse exceeds solver-safe finite range");
+    if(strength===0)return null;
+    const candidates=[
+      ...this.actors.flatMap(actor=>actor.parts.map(part=>({
+        owner:actor.id,tag:part.tag,collider:part.collider,body:part.body
+      }))),
+      ...this.matter.map(item=>({owner:item.id,tag:item.type,
+        collider:item.collider,body:item.body}))
+    ];
+    let best=null,distance=Infinity;
+    for(const candidate of candidates){
+      const hit=candidate.collider.containsPoint(point);
+      const q=hit?point:candidate.collider.projectPoint(point,true).point;
+      const d=norm(V(point.x-q.x,point.y-q.y));
+      if((hit||d<.20)&&d<distance){
+        best=candidate;distance=d;
+      }
+    }
+    if(!best)return null;
+    // A physical impulse at the chosen collision point, NOT a velocity
+    // overwrite or an input to organism cognition. Articulated appendages
+    // receive the force on their OWN dynamic rigid body.
+    best.body.applyImpulseAtPoint(impulse,point,true);
+    return {owner:best.owner,part:best.tag,
+      appliedImpulse:strength,at:V(point.x,point.y)};
+  }
   motor(a,control){
     const root=a.root,pos=root.translation(),vel=root.linvel();
     const move=control?.move||V();
