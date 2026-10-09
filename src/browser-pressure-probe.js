@@ -12,6 +12,9 @@ export async function pressureProbe(field) {
     const {observePlaygrounds}=await import("./playgrounds-research-probe.js");
     document.body.dataset.playgroundEvidence=JSON.stringify(
       observePlaygrounds(OrganismField));
+    const {spontaneousBraceAB}=await import("./spontaneous-brace-ab.js");
+    document.body.dataset.spontaneousBrace=JSON.stringify(
+      spontaneousBraceAB(OrganismField));
     const {somaticProbe}=await import("./somatic-research-probe.js");
     const {poseProbe}=await import("./pose-research-probe.js");
     document.body.dataset.poseEvidence=JSON.stringify(poseProbe(OrganismField));
