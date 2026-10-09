@@ -7,10 +7,10 @@ function finite(w){for(const a of w.actors)for(const p of a.parts){const t=p.bod
 function causal(Field,trigger,{reflex=true}={}){
  const w=new Field({empty:true});try{
   const p=w.addActor("reach",V(10,12),0),b=w.addActor("bulk",V(15,12),Math.PI);
-  w.addMatter(V(12.42,12),{mass:21,hx:.42,hy:.43,created:false});
+  w.addMatter(V(12.25,10.78),{mass:21,hx:.32,hy:.28,created:false});
   const obj=w.matter[0];w.select(b.id);
   // All bodies share identical geometry. Local response only on pincer.
-  w.setLocalResponse(p.id,reflex);
+  w.setArmReflex(p.id,reflex);
   let contact=-1,respond=-1,events=0;
   for(let t=0;t<220;t++){
    if(t===40)obj.body.applyImpulseAtPoint(V(-trigger,0),obj.body.translation(),true);
@@ -64,7 +64,7 @@ export function runX0Probe(Field,capture,restore){
   catch{invalid=true;}
   check(invalid,"malformed world recipe accepted");
   // Same exact initial matter, only the local tactile response differs.
-  const variants=[90,160,240].map(power=>{
+  const variants=[65,110,185].map(power=>{
    const on=causal(Field,power,{reflex:true}),off=causal(Field,power,{reflex:false});
    check(on.respond<0||on.respond>=on.contact,
      "actuator response before actual sensor load");
@@ -73,6 +73,8 @@ export function runX0Probe(Field,capture,restore){
      crateContrast:+norm(V(on.crate.x-off.crate.x,on.crate.y-off.crate.y)).toFixed(4),
      rootContrast:+norm(V(on.root.x-off.root.x,on.root.y-off.root.y)).toFixed(4)};
   });
+  check(variants.some(v=>v.localEvents>0 && v.crateContrast>.025),
+    "all local-arm commands failed to change real matter, X0 actuation hypothesis FAIL");
   return {status:"mechanistic, NOT OWNER-QUALIFIED",defaultActors:w.actors.length,
    defaultMatter:w.matter.length,materialMoved:+moved.toFixed(4),
    hingePoseDrift:+hingeDrift.toFixed(6),portedStartScene:true,
