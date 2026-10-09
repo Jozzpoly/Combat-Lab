@@ -142,7 +142,7 @@ function ui(){
     const vel=chosen.body.linvel();
     $("#entity").textContent=chosen.type==="gate"?
       "World-pinned swinging barrier — no invented position lock beyond the real joint.":
-      "Free dynamic crate; movement, mass and torque belong to Rapier.";
+      "Free dynamic crate; movement, mass and torque belong to Rapier. Select an organism again before driving.";
     $("#subject").textContent=chosen.type.toUpperCase()+
       " · "+chosen.mass+" kg";
     $("#readout").textContent="Material speed "+
@@ -282,7 +282,8 @@ async function start(){
     const id=field.pick(mouse);
     if(id){
       selectedTarget=id;
-      if(field.actor(id))field.select(id);
+      // Never keep invisibly piloting another body while inspecting matter.
+      field.select(field.actor(id)?id:null);
       ui();
     }
   }));
