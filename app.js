@@ -174,6 +174,8 @@ const bodyInputs = {
 function syncBodyForm(){
   const a=field?.actor(field.activeActor);
   if(!a)return;
+  $("#shape-length").value=String(a.shapeScale.length);
+  $("#shape-width").value=String(a.shapeScale.width);
   for(const [k,selector] of Object.entries(bodyInputs))
     $(selector).value=String(a.spec[k]);
 }
@@ -207,6 +209,36 @@ async function pressureProbe() {
       "physical impulse failed to move matter");
     assert(field.tractionAt({x:15,y:11})<field.tractionAt({x:5,y:11}),
       "ground proxy not spatially material");
+    // Morphological authoring changes actual colliders, including joint
+    // anchors, without resetting the remaining physics/world afterstate.
+    for(const kind of ["dart","crawler","broad"]){
+      const probe=new OrganismField();
+      try{
+        const actor=probe.actors.find(a=>a.kind===kind);
+        const original=actor.parts[0].shape.hx;
+        const fixedObject=probe.matter[0];
+        const before={...fixedObject.body.translation()};
+        let rejected=false;
+        try{probe.resizeMorphology(actor.id,{length:.001,width:1});}
+        catch(e){rejected=e instanceof RangeError;}
+        assert(rejected&&actor.parts[0].shape.hx===original,
+          kind+": unsafe edit was partially accepted");
+        probe.resizeMorphology(actor.id,{length:1.3,width:.75});
+        assert(Math.abs(actor.parts[0].shape.hx-original*1.3)<.0001,
+          kind+": collider was not actually resized");
+        if(kind==="crawler")assert(Boolean(actor.joint)&&
+          Math.hypot(actor.root.translation().x-actor.tail.translation().x,
+            actor.root.translation().y-actor.tail.translation().y)>1.3,
+            "articulated morphology reanchor failed");
+        const after=fixedObject.body.translation();
+        assert(after.x===before.x&&after.y===before.y,
+          kind+": morphology authoring reset unrelated world material");
+        for(let i=0;i<70;i++)probe.step(null);
+        const p=actor.root.translation();
+        assert(Number.isFinite(p.x+p.y+actor.root.angvel()),
+          kind+": unstable after shape authoring");
+      }finally{probe.world.free();}
+    }
     const change=field.actors[0];
     const oldMass=change.spec.mass;
     field.setActorProfile(change.id,{mass:oldMass*2,speed:1.8});
@@ -321,6 +353,14 @@ async function start() {
   $("#step").onclick=()=>{if(paused)tick();};
   $("#reset").onclick=()=>{field.reset();targetId=field.activeActor;syncBodyForm();announce("Starting scene rebuilt.");};
   $("#manual").onchange=e=>{manual=e.target.checked;};
+  $("#apply-shape").onclick=()=>guarded(()=>{
+    field.resizeMorphology(field.activeActor,{
+      length:Number($("#shape-length").value),
+      width:Number($("#shape-width").value)
+    });
+    syncBodyForm();
+    announce("Actual physical collider envelope updated; shared world remains live.");
+  });
   $("#apply-body").onclick=()=>guarded(()=>{
     const changes={};
     for(const [k,selector] of Object.entries(bodyInputs))
