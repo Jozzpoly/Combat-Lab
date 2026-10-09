@@ -56,6 +56,11 @@
     <section><h2>Material world</h2>
       <p>Drag with Shift to add a solid fixed obstacle; Alt+click creates movable material. Add a real hinged barrier at the cursor. Existing changes persist until reset. Reset rebuilds your authored starting edits, not the disturbed afterstate.</p>
       <div class="buttons"><button id="undo">Undo last authored addition</button><button id="clear">Clear authored edits</button></div>
+      <div class="buttons"><button id="save-scene">Capture this arrangement (.json)</button>
+        <button id="load-scene">Load starting arrangement</button>
+        <input id="scene-file" type="file" accept=".json,application/json" hidden>
+      </div>
+      <p class="dim">Portable *initial scene*: preserves current organism starts/profiles, matter placement/rotation, additional walls and gate pivots/angles. It intentionally does not save moment-to-moment velocity, joint strain or local memory. Loading constructs a new physical starting scene; no hidden gameplay replay.</p>
       <p class="dim">The gold hinged arm can be turned by contact or by gripping it. The pivot does not move; its angle is physical afterstate.</p>
       <p class="dim">Pale patch in the centre is an authored low-traction ground region. Grip is a finite external support approximation; flat Rapier XY physics has no native ground traction.</p>
     </section>
