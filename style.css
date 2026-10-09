@@ -24,3 +24,22 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#101923;padding:10px;
 .situation-buttons button{padding:7px 10px;background:#243746;white-space:nowrap}
 .situation-buttons button.active{background:#544632;color:#f7dda4;border-color:#e4b977}
 @media(max-width:960px){.situation-heading{display:block}#situation-caption{display:block;text-align:left;margin-top:5px}.situation-buttons{flex-wrap:nowrap;overflow-x:auto;padding-bottom:2px}}
+
+
+/* Live observer is subordinate to the physics view and never intercepts input. */
+.play{position:sticky}
+.live-inspect{position:absolute;left:14px;bottom:66px;z-index:2;
+ pointer-events:none;max-width:min(485px,calc(100% - 28px));
+ padding:9px 13px;border:1px solid #496173;border-radius:9px;
+ background:rgba(13,25,36,.88);box-shadow:0 4px 20px rgba(0,0,0,.2);
+ color:#e4eef6;font-size:12px;line-height:1.42;font-variant-numeric:tabular-nums;
+ white-space:normal;backdrop-filter:blur(4px)}
+.live-inspect strong{color:#f1d8a6;font-size:12px;letter-spacing:.05em}
+.live-inspect .live-secondary{color:#aec7d3;font-size:11px;display:block;margin-top:3px}
+.lab-details{border-bottom:1px solid #344150}
+.lab-details>summary{padding:15px 2px;cursor:pointer;color:#d8e5ef;
+ list-style-position:inside;font-size:13px;font-weight:600}
+.lab-details>summary:hover{color:#f4d49b}
+.lab-details>section{padding-top:3px;border:0}
+@media(max-width:800px){.live-inspect{bottom:54px;left:8px;
+ max-width:calc(100% - 16px);font-size:11px;padding:7px 9px}}
