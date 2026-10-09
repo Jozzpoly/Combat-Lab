@@ -83,7 +83,7 @@ export class CommonsWorld{
       const armBody=this.newBody(pos.x+parentOffset.x+childOffset.x,
         pos.y+parentOffset.y+childOffset.y,angle+relative);
       const shaft=this.box(armBody,half,.13,Math.max(3,spec.mass*.18),V(),id);
-      const tip=this.box(armBody,.115,.27,2.1,V(armLength-.18,-sign*.13-half),id);
+      const tip=this.box(armBody,.115,.27,2.1,V(half-.18,-sign*.13),id);
       const joint=this.world.createImpulseJoint(
         RAPIER.JointData.revolute(shoulder,V(-half,0)),root,armBody,true);
       const unit={index:i,sign,body:armBody,joint,shaft,tip,half,shoulder};
@@ -245,8 +245,8 @@ export class CommonsWorld{
     }
     if(a.response.latch>0)a.response.latch--;
     for(const arm of a.arms){
-      const touchedCommand=command? a.target[arm.index] :
-        a.response.latch>0&&arm.index===a.response.arm?.20:.82;
+      const touchedCommand=command ? a.target[arm.index] :
+        ((a.response.latch>0 && arm.index===a.response.arm) ? .20 : .82);
       const open=arm.sign*.50,close=-arm.sign*.36;
       const target=open*touchedCommand+close*(1-touchedCommand);
       const delta=wrap(arm.body.rotation()-root.rotation());
