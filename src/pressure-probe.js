@@ -3239,6 +3239,53 @@ try {
   cases.push({name:"live-ui-one-click-feasible-wrong-side-ab",status:"FAIL",
     detail:String(error?.message??error).slice(0,300)});
 }
+await observation("adaptive-side-sensitivity-geometry-grid-beyond-the-verified-fixture", world => {
+  const outcomes=[];
+  let feasible=0, adaptiveSuccess=0, missedFeasible=0, impossible=0;
+  const run=(height,barrierY,mode,side)=>{
+    world.clearAuthored();
+    world.clearBodyStartOverrides();
+    world.setPeerEnabled(false);
+    world.setBraceEnabled(false);
+    world.setResidentProfile(DEFAULT_RESIDENT_PROFILE);
+    world.setResidentMode(mode);
+    world.setActorSidePreference("resident",side);
+    world.reset();
+    world.authorRect({kind:"wall",cx:16.8,cy:11.4,width:.6,height,mass:0});
+    world.authorRect({kind:"wall",cx:16.8,cy:barrierY,width:5,height:.4,mass:0});
+    let firstPass=null;
+    for(let tick=1;tick<=450;tick++){
+      world.step(still);
+      const p=at(world,"resident").position;
+      if(firstPass===null&&p.x>17.5)firstPass=tick;
+    }
+    finite(world,"geometry sensitivity grid");
+    return {firstPass,flips:world.residentControl.lateralFlips};
+  };
+  for(const height of [.3,.35,.4]) {
+    for(const barrierY of [12.05,12.2,12.35]) {
+      const manual=run(height,barrierY,"lateral-maneuver",-1);
+      const adaptive=run(height,barrierY,"adaptive-lateral",1);
+      if(manual.firstPass!==null){
+        feasible++;
+        if(adaptive.firstPass!==null)adaptiveSuccess++;
+        else missedFeasible++;
+      }else impossible++;
+      outcomes.push("h"+height.toFixed(2)+
+        "/b"+barrierY.toFixed(2)+
+        ": manual="+String(manual.firstPass)+
+        ", adaptive="+String(adaptive.firstPass)+
+        ", flips="+adaptive.flips);
+    }
+  }
+  return "of 9 materially perturbed scenarios: manually reachable="+feasible+
+    ", adaptive passed among reachable="+adaptiveSuccess+
+    ", missed physically feasible="+missedFeasible+
+    ", no manual route="+impossible+
+    "; "+outcomes.join("; ") +
+    "; no universal robustness claim";
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
