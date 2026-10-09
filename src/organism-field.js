@@ -109,7 +109,8 @@ export class OrganismField {
       RAPIER.ColliderDesc.cuboid(shape.hx, shape.hy);
     const collider = this.world.createCollider(
       d.setTranslation(x, y).setMass(mass).setFriction(0.7).setRestitution(0), body);
-    const part = { body, collider, shape: { ...shape }, x, y, mass };
+    const part = { body, collider, shape: { ...shape }, baseShape: { ...shape },
+      x, y, baseX: x, baseY: y, mass };
     actor.parts.push(part);
     this.colliderOwners.set(collider.handle, actor.id);
     return part;
@@ -122,7 +123,8 @@ export class OrganismField {
     const id = "organism-" + ++this.nextId;
     const root = this.#newBody(p, heading);
     const actor = {
-      id, kind, spec: { ...spec }, root, parts: [], joint: null, tail: null,
+      id, kind, spec: { ...spec }, shapeScale: { length: 1, width: 1 },
+      root, parts: [], joint: null, tail: null,
       state: { age: 0, pressure: 0, recover: 0, turnSide: 1, recoveries: 0 },
       sense: { touch: false, progress: 1 },
       control: { mode: "local", throttle: 0, steering: 0, traction: 1 },
@@ -153,6 +155,60 @@ export class OrganismField {
     if (!this.actor(id)) return false;
     this.activeActor = id;
     return true;
+  }
+  resizeMorphology(id, { length, width }) {
+    const actor = this.actor(id);
+    if (!actor) throw new RangeError("select an organism to resize");
+    const sx = num(length, "length scale", true);
+    const sy = num(width, "width scale", true);
+    // Compute and check *all* replacement collider dimensions first.
+    const edits = actor.parts.map(part => {
+      const base = part.baseShape;
+      const shape = base.type === "ball" ?
+        {type:"ball",r:base.r*Math.min(sx,sy)} :
+        {type:"box",hx:base.hx*sx,hy:base.hy*sy};
+      const x = part.baseX*sx, y = part.baseY*sy;
+      const values = base.type === "ball" ? [shape.r] : [shape.hx,shape.hy];
+      if (!values.every(n => Number.isFinite(Math.fround(n)) && n >= .04) ||
+          !Number.isFinite(Math.fround(x)) || !Number.isFinite(Math.fround(y)))
+        throw new RangeError("collider would be unrepresentably thin/large");
+      return {part,shape,x,y};
+    });
+    if (!Number.isFinite(Math.fround(1.11*sx)))
+      throw new RangeError("joint length cannot be represented by solver");
+    for (const {part,shape,x,y} of edits) {
+      if (shape.type === "ball") part.collider.setRadius(shape.r);
+      else part.collider.setHalfExtents(v(shape.hx,shape.hy));
+      part.collider.setTranslationWrtParent(v(x,y));
+      part.shape=shape;
+      part.x=x;part.y=y;
+    }
+    if (actor.joint) {
+      // Intentional research-side morphology intervention, NOT animal motion.
+      // Reanchor and reset only this articulated body's tail. Other dynamic
+      // world afterstate and all other organisms remain exactly where they are.
+      this.world.removeImpulseJoint(actor.joint,true);
+      const root=actor.root, tail=actor.tail;
+      const p=root.translation(), a=root.rotation();
+      const d=rotate(v(-1.11*sx,0),a);
+      tail.setTranslation(v(p.x+d.x,p.y+d.y),true);
+      tail.setRotation(a,true);
+      tail.setLinvel(root.linvel(),true);
+      tail.setAngvel(root.angvel(),true);
+      actor.joint=this.world.createImpulseJoint(
+        RAPIER.JointData.revolute(v(-.53*sx,0),v(.58*sx,0)),
+        root,tail,true);
+    }
+    for(const b of new Set(actor.parts.map(part=>part.body)))
+      b.recomputeMassPropertiesFromColliders();
+    actor.shapeScale={length:sx,width:sy};
+    actor.spec={...actor.spec,length:MORPHS[actor.kind].length*sx,
+      width:MORPHS[actor.kind].width*sy};
+    // Avoid interpreting reset-relative proprioception as genuine travel
+    // across a deliberate shape intervention. The local policy resets.
+    actor.sense={touch:false,progress:1};
+    actor.state={age:0,pressure:0,recover:0,turnSide:1,recoveries:0};
+    return { ...actor.shapeScale };
   }
   setActorProfile(id, changes) {
     const actor = this.actor(id);
