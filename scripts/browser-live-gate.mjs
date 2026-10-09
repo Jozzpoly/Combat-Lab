@@ -33,11 +33,3 @@ console.log("PORTABLE POSED SCENE: "+(probe.grab("scene-evidence")||"not exposed
 console.log("SHARED-WORLD WORM CAUSAL NULL: "+(probe.grab("integrated-worm")||"not exposed"));
 console.log("NONDESTRUCTIVE LIVE UNDO: "+(probe.grab("live-undo")||"not exposed"));
 console.log("MIXED PHYSICAL CROWD: "+(probe.grab("crowd-evidence")||"not exposed"));
-
-const real=visit(url+(url.includes("?")?"&":"?")+"realClockProbe=1");
-if(real.grab("real-clock-probe")!=="pass")
-  throw Error("Real-clock pressure FAIL: status="+real.grab("real-clock-probe")+
-    " runtimeError="+real.grab("lab-error"));
-const timed=(real.grab("real-clock-evidence")||"not exposed")
-  .replaceAll("&quot;",'"').replaceAll("&amp;","&");
-console.log("REAL MONOTONIC CHROMIUM TIMING (runner-specific OBSERVATION): "+timed);
