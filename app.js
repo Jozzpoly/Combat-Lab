@@ -152,8 +152,18 @@ function cursorBox() {
   field.addBox({x:mouse.x,y:mouse.y,hx:.50,hy:.38,mass});
   announce("Physical movable matter added; state continues.");
 }
+const bodyInputs = {
+  mass: "#body-mass", speed: "#body-speed", acceleration: "#body-accel",
+  braking: "#body-brake", turnRate: "#body-turnrate", turnTorque: "#body-torque"
+};
+function syncBodyForm(){
+  const a=field?.actor(field.activeActor);
+  if(!a)return;
+  for(const [k,selector] of Object.entries(bodyInputs))
+    $(selector).value=String(a.spec[k]);
+}
 function selectAt(i){
-  const a=field.actors[i];if(a){field.select(a.id);targetId=a.id;
+  const a=field.actors[i];if(a){field.select(a.id);targetId=a.id;syncBodyForm();
     announce("Selected "+a.spec.name+"; others retain private local behavior.");}
 }
 function writePressureResult(status,message) {
@@ -182,6 +192,11 @@ async function pressureProbe() {
       "physical impulse failed to move matter");
     assert(field.tractionAt({x:15,y:11})<field.tractionAt({x:5,y:11}),
       "ground proxy not spatially material");
+    const change=field.actors[0];
+    const oldMass=change.spec.mass;
+    field.setActorProfile(change.id,{mass:oldMass*2,speed:1.8});
+    assert(Math.abs(change.root.mass()-oldMass*2)<1e-2,
+      "physical mass authoring failed");
     field.addWall({x:3,y:3,hx:.5,hy:.1});
     const authored=field.authored.length;
     field.reset();
@@ -192,7 +207,7 @@ async function pressureProbe() {
       const p=a.root.translation();assert(Number.isFinite(p.x+p.y),
         "post-reset actor numerical failure");
     }
-    writePressureResult("pass","3 morphologies, physical hinge, finite matter response, authored reset, 400 steps");
+    writePressureResult("pass","3 morphologies, hinge, finite matter, real mass edit, authored reset, 400 steps");
   } catch(e) {
     writePressureResult("fail",String(e?.message??e).slice(0,250));
     throw e;
@@ -201,12 +216,21 @@ async function pressureProbe() {
 async function start() {
   field=await OrganismField.create();
   targetId=field.activeActor;
+  syncBodyForm();
   document.body.dataset.labReady="true";
   window.combatOrganismField=field; // internal experiment readback, not private NPC data
   $("#pause").onclick=()=>{paused=!paused;debt=0;};
   $("#step").onclick=()=>{if(paused)tick();};
-  $("#reset").onclick=()=>{field.reset();targetId=field.activeActor;announce("Starting scene rebuilt.");};
+  $("#reset").onclick=()=>{field.reset();targetId=field.activeActor;syncBodyForm();announce("Starting scene rebuilt.");};
   $("#manual").onchange=e=>{manual=e.target.checked;};
+  $("#apply-body").onclick=()=>guarded(()=>{
+    const changes={};
+    for(const [k,selector] of Object.entries(bodyInputs))
+      changes[k]=Number($(selector).value);
+    field.setActorProfile(field.activeActor,changes);
+    announce("Actual collider mass and finite movement authority updated.");
+    syncBodyForm();
+  });
   $("#kick").onclick=()=>guarded(()=>{
     const id=targetId||field.activeActor;
     if(!field.kick(id,mouse,Number($("#impulse").value)))
@@ -216,19 +240,19 @@ async function start() {
   $("#add-box").onclick=()=>guarded(cursorBox);
   $("#spawn").onclick=()=>guarded(()=>{
     const actor=field.spawn($("#kind").value,{...mouse});
-    field.select(actor.id);targetId=actor.id;
+    field.select(actor.id);targetId=actor.id;syncBodyForm();
     announce("New physical "+actor.spec.name+" created.");
   });
   $("#remove").onclick=()=>guarded(()=>{
     if(!field.remove(field.activeActor))throw Error("Nothing selected.");
-    targetId=field.activeActor;announce("Organism removed; other matter persists.");
+    targetId=field.activeActor;syncBodyForm();announce("Organism removed; other matter persists.");
   });
   $("#undo").onclick=()=>guarded(()=>{
     if(!field.authored.length)throw Error("No authored edit.");
-    field.authored.pop();field.reset();targetId=field.activeActor;
+    field.authored.pop();field.reset();targetId=field.activeActor;syncBodyForm();
     announce("One authored edit removed; experiment reset.");
   });
-  $("#clear").onclick=()=>{field.clearEdits();targetId=field.activeActor;announce("Authored edits cleared; scene reset.");};
+  $("#clear").onclick=()=>{field.clearEdits();targetId=field.activeActor;syncBodyForm();announce("Authored edits cleared; scene reset.");};
   document.querySelectorAll("[data-pick]").forEach(button=>{
     button.onclick=()=>selectAt(Number(button.dataset.pick));
   });
@@ -243,7 +267,7 @@ async function start() {
     else if(e.altKey){guarded(cursorBox);}
     else {
       const id=field.pick(mouse);if(id){
-        if(field.actor(id))field.select(id);
+        if(field.actor(id)){field.select(id);syncBodyForm();}
         targetId=id;announce("Selected physical "+id);
       }
     }
