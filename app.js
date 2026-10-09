@@ -293,6 +293,8 @@ async function start(){
     paused=true;
     const {physicalProbe}=await import("./src/physical-probe.js");
     document.body.dataset.probeResult=JSON.stringify(physicalProbe(EffectorField));
+    const {affordanceSweep}=await import("./src/affordance-sweep.js");
+    document.body.dataset.affordanceSweep=JSON.stringify(affordanceSweep(EffectorField));
   }
   requestAnimationFrame(frame);
 }
