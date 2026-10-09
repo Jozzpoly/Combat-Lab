@@ -36,6 +36,7 @@ export class OrganismField {
     this.walls = [];
     this.gates = [];
     this.colliderOwners = new Map();
+    this.authoredRuntimeIds=[];
     this.ticks = 0;
     this.activeContactCount = 0;
     this.activeActor = null;
@@ -71,9 +72,9 @@ export class OrganismField {
       this.addGate({x:19.7,y:15.7,length:3.25,mass:105},false);
     }
     for(const entry of this.authored){
-      if(entry.kind==="wall")this.addWall(entry,false);
-      else if(entry.kind==="gate")this.addGate(entry,false);
-      else this.addBox(entry,false);
+      const obj=entry.kind==="wall"?this.addWall(entry,false):
+        entry.kind==="gate"?this.addGate(entry,false):this.addBox(entry,false);
+      this.authoredRuntimeIds.push(typeof obj==="string"?obj:obj.id);
     }
     this.activeActor=this.actors[0]?.id||null;
   }
@@ -101,7 +102,10 @@ export class OrganismField {
         .setFriction(0.8).setRestitution(0));
     this.walls.push({ id, x, y, hx, hy, collider });
     this.colliderOwners.set(collider.handle, id);
-    if (authored) this.authored.push({ kind: "wall", x, y, hx, hy });
+    if (authored) {
+      this.authored.push({ kind: "wall", x, y, hx, hy });
+      this.authoredRuntimeIds.push(id);
+    }
     return id;
   }
   addBox(r, authored = true) {
@@ -119,7 +123,10 @@ export class OrganismField {
     const obj = { id, kind: "matter", body, collider, hx, hy, mass };
     this.matter.push(obj);
     this.colliderOwners.set(collider.handle, id);
-    if (authored) this.authored.push({ kind: "box", x, y, hx, hy, mass });
+    if (authored) {
+      this.authored.push({ kind: "box", x, y, hx, hy, mass });
+      this.authoredRuntimeIds.push(id);
+    }
     return obj;
   }
   // A real dynamic gate rotates around a static world pivot. The pivot
@@ -146,7 +153,10 @@ export class OrganismField {
       pivotPoint:v(px,py),hx:half,hy:.18,mass:m};
     this.matter.push(gate);this.gates.push(gate);
     this.colliderOwners.set(collider.handle,id);
-    if(authored)this.authored.push({kind:"gate",x:px,y:py,length:len,mass:m});
+    if(authored){
+      this.authored.push({kind:"gate",x:px,y:py,length:len,mass:m});
+      this.authoredRuntimeIds.push(id);
+    }
     return gate;
   }
   #newBody(p, heading) {
@@ -605,7 +615,35 @@ export class OrganismField {
     return {actors:this.actors.length,matter:this.matter.length,
       walls:this.walls.length,gates:this.gates.length};
   }
-  clearEdits() { this.authored = []; this.reset(); }
+  undoLastAuthored(){
+    if(!this.authored.length)return false;
+    const edit=this.authored.pop(),id=this.authoredRuntimeIds.pop();
+    if(edit.kind==="wall"){
+      const i=this.walls.findIndex(w=>w.id===id);
+      if(i<0)throw new Error("authored wall lost its runtime identity");
+      const wall=this.walls[i];
+      this.colliderOwners.delete(wall.collider.handle);
+      this.world.removeCollider(wall.collider,true);
+      this.walls.splice(i,1);
+    }else{
+      const i=this.matter.findIndex(m=>m.id===id);
+      if(i<0)throw new Error("authored matter lost its runtime identity");
+      const obj=this.matter[i];
+      if(this.grip?.objectId===id)this.releaseGrip();
+      this.colliderOwners.delete(obj.collider.handle);
+      this.world.removeRigidBody(obj.body);
+      if(obj.kind==="gate"){
+        this.world.removeRigidBody(obj.pivot);
+        this.gates=this.gates.filter(g=>g.id!==id);
+      }
+      this.matter.splice(i,1);
+    }
+    return true;
+  }
+  clearEdits(){
+    let n=0;while(this.undoLastAuthored())n++;
+    return n;
+  }
   snapshot() {
     return {
       tick: this.ticks, activeActor: this.activeActor,
