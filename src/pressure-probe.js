@@ -2558,10 +2558,18 @@ await trial("combined-world-interventions-stay-finite-and-deterministic-800x2", 
         finite(world,"compound intervention tick="+tick);
         assert(world.interventionEvents.length<=24,
           "research event history unexpectedly unbounded");
-        for(const sensor of [world.residentSense,world.peerSense]){
-          assert(sensor && Object.keys(sensor).sort().join(",")===
-            "deltaX,deltaY,forwardTouch,motorEffort,progressAlongIntent,touch",
-            "compound exercise contaminated an actor's local sensor boundary");
+        const sensorySchema =
+          "deltaX,deltaY,forwardTouch,motorEffort,progressAlongIntent,touch";
+        assert(world.residentSense &&
+          Object.keys(world.residentSense).sort().join(",")===sensorySchema,
+          "active resident's private sensory boundary contaminated");
+        if(world.peerEnabled) {
+          assert(world.peerSense &&
+            Object.keys(world.peerSense).sort().join(",")===sensorySchema,
+            "active peer's private sensory boundary contaminated");
+        } else {
+          assert(world.peerSense===null,
+            "removed peer retained active sensory state");
         }
       }
     }
