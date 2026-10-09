@@ -98,6 +98,23 @@ function renderPhysicalSpatialComparison(result) {
   let maxX = Math.max(...samples.map(p => p.x));
   let minY = Math.min(...samples.map(p => p.y));
   let maxY = Math.max(...samples.map(p => p.y));
+  const fromA = result.geometry?.a ?? [], fromB = result.geometry?.b ?? [];
+  const commonKey = r => [r.cx,r.cy,r.width,r.height].join("/");
+  const sceneRects = [...new Map([...fromA,...fromB].map(r=>[
+    commonKey(r),r
+  ])).values()];
+  // Include obstacles immediately around the measured paths, but not the
+  // entire world's distant geometry. This retains relevant clearance
+  // without zooming all micro-behavior down to nothing.
+  const near = sceneRects.filter(r =>
+    r.cx+r.width/2 >= minX-1.4 && r.cx-r.width/2 <= maxX+1.4 &&
+    r.cy+r.height/2 >= minY-1.4 && r.cy-r.height/2 <= maxY+1.4);
+  for(const r of near){
+    minX=Math.min(minX,r.cx-r.width/2);
+    maxX=Math.max(maxX,r.cx+r.width/2);
+    minY=Math.min(minY,r.cy-r.height/2);
+    maxY=Math.max(maxY,r.cy+r.height/2);
+  }
   // Preserve equal world-unit scale along both axes. Never visually
   // exaggerate a lateral detour by stretching only Y.
   const pad = 0.8;
@@ -116,6 +133,27 @@ function renderPhysicalSpatialComparison(result) {
   ctx.font = "11px system-ui";
   ctx.fillStyle = "#92a8b8";
   ctx.fillText("Top-down physical paths · 1m has the same pixel scale on X and Y", 12, 15);
+  const aKeys = new Set(fromA.map(commonKey));
+  const bKeys = new Set(fromB.map(commonKey));
+  let drawnRectCount = 0;
+  ctx.save();
+  for(const r of near){
+    const key=commonKey(r);
+    const shared=aKeys.has(key)&&bKeys.has(key);
+    const color=shared ? "#a6b2bd" : aKeys.has(key) ? "#d9c89a" : "#74dbed";
+    const topLeft=xy({x:r.cx-r.width/2,y:r.cy-r.height/2});
+    const width=r.width*scale,height=r.height*scale;
+    ctx.globalAlpha=shared?0.15:0.22;
+    ctx.fillStyle=color;
+    ctx.fillRect(topLeft.x,topLeft.y,width,height);
+    ctx.globalAlpha=shared?0.52:0.85;
+    ctx.strokeStyle=color;
+    ctx.lineWidth=shared?1.2:1.8;
+    ctx.setLineDash(shared?[]:[5,4]);
+    ctx.strokeRect(topLeft.x,topLeft.y,width,height);
+    drawnRectCount++;
+  }
+  ctx.restore();
   for (const [path, color, label] of [
     [result.traces.a, "#d9c89a", "A"],
     [result.traces.b, "#74dbed", "B"]
@@ -144,6 +182,7 @@ function renderPhysicalSpatialComparison(result) {
   ctx.fillStyle="#92a8b8";
   ctx.fillText("X →",w-38,h-12);
   ctx.fillText("Y ↓",12,h-12);
+  canvas.dataset.drawnWorldRects=String(drawnRectCount);
   canvas.dataset.tracedPoints=String(samples.length);
   canvas.dataset.measuredYSpan=String(Math.max(...samples.map(p=>p.y)) -
     Math.min(...samples.map(p=>p.y)));
