@@ -109,7 +109,7 @@ export class OrganismField {
       RAPIER.ColliderDesc.cuboid(shape.hx, shape.hy);
     const collider = this.world.createCollider(
       d.setTranslation(x, y).setMass(mass).setFriction(0.7).setRestitution(0), body);
-    const part = { body, collider, shape: { ...shape }, x, y };
+    const part = { body, collider, shape: { ...shape }, x, y, mass };
     actor.parts.push(part);
     this.colliderOwners.set(collider.handle, actor.id);
     return part;
@@ -122,7 +122,7 @@ export class OrganismField {
     const id = "organism-" + ++this.nextId;
     const root = this.#newBody(p, heading);
     const actor = {
-      id, kind, spec, root, parts: [], joint: null, tail: null,
+      id, kind, spec: { ...spec }, root, parts: [], joint: null, tail: null,
       state: { age: 0, pressure: 0, recover: 0, turnSide: 1, recoveries: 0 },
       sense: { touch: false, progress: 1 },
       control: { mode: "local", throttle: 0, steering: 0, traction: 1 },
@@ -153,6 +153,26 @@ export class OrganismField {
     if (!this.actor(id)) return false;
     this.activeActor = id;
     return true;
+  }
+  setActorProfile(id, changes) {
+    const actor = this.actor(id);
+    if (!actor) throw new RangeError("select an organism to edit");
+    const fields = ["mass", "speed", "acceleration", "braking", "turnRate", "turnTorque"];
+    const next = { ...actor.spec };
+    for (const key of fields) {
+      if (Object.prototype.hasOwnProperty.call(changes, key))
+        next[key] = num(changes[key], key, key === "mass");
+    }
+    // Validate *all* derived collider masses before modifying any body.
+    const masses = actor.parts.map(part =>
+      num(next.mass * part.mass / actor.spec.mass, "part mass", true));
+    actor.parts.forEach((part, i) => {
+      part.collider.setMass(masses[i]);
+      part.mass = masses[i];
+      part.body.wakeUp();
+    });
+    actor.spec = next;
+    return { ...next };
   }
   remove(id) {
     const actor = this.actor(id);
