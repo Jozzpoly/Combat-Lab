@@ -229,6 +229,45 @@ async function pressureProbe() {
       "identical physical outcomes under matched-motor different shapes");
     document.body.dataset.morphEvidence=controlled.map(o=>
       o.kind+"@tick"+o.firstContact+":boxDx"+o.displacement.toFixed(3)).join("; ");
+    // Matched paired-world causality: a crate may alter a trajectory only
+    // after physical contact. This is not a whole-organism quality test.
+    const causal = [];
+    for(const kind of ["dart","crawler","broad"]){
+      const trialWorlds = [new OrganismField(), new OrganismField()];
+      try{
+        const actors=[];
+        for(const w of trialWorlds){
+          for(const resident of [...w.actors])w.remove(resident.id);
+          const a=w.spawn(kind,{x:4.5,y:3},0);
+          w.select(a.id);
+          w.setActorProfile(a.id,{mass:100,speed:3,acceleration:12,
+            braking:12,turnRate:1.5,turnTorque:350});
+          actors.push(a);
+        }
+        trialWorlds[1].addBox({x:7.25,y:3,hx:.55,hy:.55,mass:55},false);
+        let firstDelta=-1,maxDelta=0,firstCollision=-1;
+        for(let frame=0;frame<180;frame++){
+          trialWorlds[0].step({x:1,y:0});
+          trialWorlds[1].step({x:1,y:0});
+          const p=actors[0].root.translation(),q=actors[1].root.translation();
+          const d=Math.hypot(p.x-q.x,p.y-q.y);
+          maxDelta=Math.max(maxDelta,d);
+          if(d>.01&&firstDelta<0)firstDelta=frame+1;
+          if(actors[1].contactCount>0&&firstCollision<0)firstCollision=frame+1;
+          // Source snapshots start identical: deviation before actual
+          // solver-active collision would invalidate a causal attribution.
+          if(firstCollision<0) assert(d<.01,
+            kind+": diverged before contact with differing matter");
+        }
+        assert(firstCollision>0&&firstDelta>=firstCollision,
+          kind+": physical contact did not precede trajectory divergence");
+        assert(maxDelta>.03,
+          kind+": no meaningful physical trajectory response to real crate");
+        causal.push(kind+"@first-contact"+firstCollision+
+          "/first-diff"+firstDelta+"/max-diff"+maxDelta.toFixed(3));
+      } finally {for(const w of trialWorlds)w.world.free();}
+    }
+    document.body.dataset.causalNull=causal.join("; ");
     // Deliberate contact/actor-count pressure; never evidence of scale capacity.
     for(let i=0;i<18;i++){
       field.spawn(["dart","crawler","broad"][i%3],
