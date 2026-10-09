@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { MORPHS, localResponse, finiteDrive, finiteGrip, wrap } from "../src/organism-law.js";
+import { MORPHS, localResponse, finiteDrive, finiteGrip, finiteBrace, wrap } from "../src/organism-law.js";
 const fresh=()=>({age:0,pressure:0,recover:0,turnSide:1,recoveries:0});
 test("physically distinct shapes and motor authorities are declared independently",()=>{
  assert.equal(Object.keys(MORPHS).length,4);
@@ -130,4 +130,34 @@ test("lateral contact produces bounded local steering away, without scripted rou
  assert.ok(left.steer<right.steer);
  assert.equal(left.mode,"cruise");
  assert.equal(right.mode,"cruise");
+});
+
+test("finite brace is reciprocal to drift, capped by force and traction",()=>{
+ const b=finiteBrace({mass:250,velocity:{x:8,y:0},force:300,traction:1});
+ assert.ok(b.x<0&&Math.abs(b.x)<=5.000001);
+ assert.equal(b.y,0);
+ const low=finiteBrace({mass:250,velocity:{x:8,y:0},force:300,traction:.2});
+ assert.ok(Math.abs(low.x)<Math.abs(b.x));
+});
+test("zero ground/zero force yields no magical support",()=>{
+ const input={mass:250,velocity:{x:8,y:-2},force:300,traction:0};
+ const no=finiteBrace(input);
+ assert.deepEqual(no,{x:0,y:0});
+ const zero=finiteBrace({...input,force:0,traction:1});
+ assert.deepEqual(zero,{x:0,y:0});
+});
+test("nonphysical brace cannot create infinite anchors",()=>{
+ assert.throws(()=>finiteBrace({mass:0,velocity:{x:5,y:0},
+   force:200,traction:1}),RangeError);
+ assert.throws(()=>finiteBrace({mass:40,velocity:{x:5,y:0},
+   force:-1,traction:1}),RangeError);
+});
+test("rear/lateral grounded pressure only braces low-yield material body",()=>{
+ const seed={age:0,pressure:0,recover:0,turnSide:1,recoveries:0};
+ const s={touch:true,front:0,side:1,load:15,progress:0};
+ const stiff=localResponse(seed,s,{contactYield:0.10});
+ const soft=localResponse(seed,s,{contactYield:0.90});
+ assert.equal(stiff.mode,"brace");
+ assert.equal(stiff.throttle,0);
+ assert.notEqual(soft.mode,"brace");
 });
