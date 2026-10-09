@@ -240,6 +240,48 @@ async function pressureProbe() {
       "physical impulse failed to move matter");
     assert(field.tractionAt({x:15,y:11})<field.tractionAt({x:5,y:11}),
       "ground proxy not spatially material");
+    // Scene composition must remain reversible without killing unrelated
+    // physical history. These are live removals, not a disguised reset.
+    {
+      const editWorld=new OrganismField();
+      try{
+        for(let i=0;i<34;i++)editWorld.step(null);
+        const tick=editWorld.ticks,remaining=editWorld.matter[0];
+        const p0={...remaining.body.translation()},
+          actorPos={...editWorld.actors[0].root.translation()};
+        const walls=editWorld.walls.length,matter=editWorld.matter.length,
+          gates=editWorld.gates.length;
+        editWorld.addWall({x:3,y:19,hx:.7,hy:.12});
+        editWorld.addBox({x:7,y:19,hx:.5,hy:.5,mass:44});
+        editWorld.addGate({x:23,y:19,length:2.1,mass:78});
+        assert(editWorld.authored.length===3&&
+          editWorld.authoredRuntimeIds.length===3,"authoring provenance lost");
+        assert(editWorld.undoLastAuthored()&&editWorld.gates.length===gates,
+          "live gate undo did not remove physical hinge and pivot");
+        assert(editWorld.undoLastAuthored()&&editWorld.matter.length===matter,
+          "live box undo did not remove only the authored matter");
+        assert(editWorld.undoLastAuthored()&&editWorld.walls.length===walls,
+          "live wall undo did not remove only the authored obstacle");
+        assert(editWorld.ticks===tick&&
+          remaining.body.translation().x===p0.x&&
+          remaining.body.translation().y===p0.y&&
+          editWorld.actors[0].root.translation().x===actorPos.x,
+          "undo secretly reset the unrelated live physical world");
+        editWorld.addGate({x:24,y:18,length:2.2,mass:45});
+        editWorld.addBox({x:12,y:18,hx:.45,hy:.35,mass:12});
+        assert(editWorld.clearEdits()===2 &&
+          editWorld.ticks===tick &&
+          editWorld.walls.length===walls &&
+          editWorld.gates.length===gates &&
+          editWorld.matter.length===matter,
+          "clear violated physical continuity or default contents");
+        for(let i=0;i<120;i++)editWorld.step(null);
+        assert(editWorld.actors.every(a=>
+          Number.isFinite(a.root.translation().x+a.root.translation().y)),
+          "live undo left unstable solver afterstate");
+        document.body.dataset.liveUndo="3 one-step undo+2 clear; afterstate preserved";
+      }finally{editWorld.world.free();}
+    }
     // Integrate new physical body in the real shared OrganismField, not
     // merely a separate Rapier model. Null controls preserve no-ghost motion.
     function sharedWormTrial({muscleForce=850,supportForce=900}={}){
