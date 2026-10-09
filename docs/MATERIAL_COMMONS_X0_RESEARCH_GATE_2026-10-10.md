@@ -4,6 +4,8 @@
 **Owner qualification: NONE. Implementation: NOT STARTED.**  
 This is a bounded experiment *proposal*, not a new canonical foundation, a feature checklist, a committed runtime, an Owner request to merge, or approval of either previous draft. The default route remains live [RESEARCH_STATE](RESEARCH_STATE.md) and most recent explicit Owner corrections. This is an outcome of [competing whole-world hypotheses](COMPETING_WHOLE_WORLD_HYPOTHESES_2026-10-10.md).
 
+**Physical mechanism preflight finished (bounded, not X0):** [observations and failed cases](X0_LOCAL_MATERIAL_CHAIN_PREFLIGHT_2026-10-10.md) show actual touch-driven arm actuation causing a later crate-to-crate contact afterstate difference in **one trajectory-informed setup**. No second actor responded; three other mass/impulse combinations yielded smaller, absent or contact-free continuations. This supports only narrow feasibility and strengthens the need for a *whole-world* experiment where qualitative actions can change for another body. Do not keep tuning that fixture or claim X0 has begun.
+
 ## Executive decision — the missing causal crossing
 
 The earlier work established real, but *separate*, facts:
