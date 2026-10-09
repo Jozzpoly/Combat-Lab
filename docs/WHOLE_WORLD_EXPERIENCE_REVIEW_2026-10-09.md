@@ -70,3 +70,14 @@ World situation selection, profile authoring and movement through the real UI ar
 6. Qualitative human/Owner testing of the **whole** is still missing. The current branch must remain a replaceable candidate, not become a self-justifying pile of green tests.
 
 **Next decision frontier:** use direct freely manipulated whole-scene evidence to determine whether genuine diverse possibilities are spontaneously discoverable and pleasant. If not, redesign bodies/interaction phenomena or the world experience; do not reward CI count or the quantity of presets.
+
+
+## Owner-style first-run consistency, live input proof
+
+A critical observation after the first scene run: headless physical observations used step(null) for *all* actors, while the actual UI had direct possession enabled by default. The selected first organism thus remained held stationary when the Owner did not press a key. That was an evidence-to-experience mismatch, and an important usability failure.
+
+**Corrected:** the normal boot, Original Yard and each open physical situation start with *all* organisms using their primitive actor-local reactions. The first WASD/arrow key immediately engages direct control of the selected body, without asking the Owner to discover a mode toggle. The direct-control checkbox remains fully explicit and can be unchecked to return the body to its local physical behavior. Pressing a physical scenario switch releases possession and restarts that authored starting condition. This is only an input orchestration correction, not automated body intelligence.
+
+[Browser check 37986302228](https://github.com/Jozzpoly/Combat-Lab/actions/runs/37986302228) showed 30/30 Node tests, emitted-browser UI and physical checks PASS, including **autonomous-first -> directional-key takeover -> release to local response** on the actual DOM/runtime.
+
+**Reality check:** this makes the first interaction more consistent with the observed test worlds but does not prove the first experience is visually understandable, satisfying to drive, or rich enough for Owner. The editor still presents long numeric configuration and its heavy instrument panel. The emerging body and local physical behavior remain simple. Treat these as material open risks, not editorial details that machine checks can qualify.
