@@ -3143,6 +3143,9 @@ try {
   const mode=document.querySelector("#resident-mode");
   mode.value="lateral-maneuver";
   mode.dispatchEvent(new Event("change",{bubbles:true}));
+  // The earlier negative DOM trial deliberately selected an absent peer.
+  // Select the present resident explicitly; never inherit another case.
+  document.querySelector("#compare-subject").value="resident";
   compareButton.click();
   await new Promise(resolve=>setTimeout(resolve,0));
   assert(report.textContent.includes("A / B — resident") &&
