@@ -47,3 +47,32 @@ Does physical articulation enable multiple naturally discoverable material actio
 **Operating boundary:** keep [PR #2](https://github.com/Jozzpoly/Combat-Lab/pull/2) as draft. Neutral \`main\`, public \`rehearsal/current\` and the quarantined PR #1 retain separate roles. No automatic inheritance or merge.
 
 Reference: [Official Rapier JavaScript 0.21 joint guide](https://rapier.rs/docs/user_guides/javascript/joints/) and [collider positioning guide](https://rapier.rs/docs/user_guides/javascript/collider_position/).
+
+
+## Next independent capability boundary — 2026-10-09 late, real UI and physics
+
+**Why continuation was needed:** two physically independent Rapier revolute arms still had only *one coupled actuator command*. This artificially prevented free body manipulation in the actual lab despite mechanical anatomy. Green squeeze-and-transport fixtures therefore overstated the realized action repertoire.
+
+### Uncoupling a real anatomy rather than adding an AI policy
+
+The pincer now has independent upper and lower actuator commands (0–1 opening) with separate finite reciprocal joint torque through the existing Rapier constraints. Coupled Q/E controls remain for convenience; Z/X and C/V, plus two live sliders, address upper and lower directly. Captured JSON starting conditions preserve each arm's **target aperture and actual physical joint pose**, falling back to the old coupled command when a prior v1 recipe has no independent targets. The 1% slider granularity issue was caught by browser event testing and corrected.
+
+[Actual Chrome/WASM independent-arm comparison](https://github.com/Jozzpoly/Combat-Lab/actions/runs/37996734359): one real 38kg box, same world, same movement authority and overall commanded translation. Upper-only, lower-only, both, and neither were run with offsets −0.48m, 0m, +0.48m. At 0m offset, the post-contact box traveled:
+- both jaws inactive: 0.760m, **NOT zero** — the original physical body still collides;
+- upper alone: 1.870m;
+- lower alone: 2.401m;
+- both: 1.829m.
+
+At all three local offsets, upper-only versus lower-only resulting object positions diverged by about 0.733–0.822m. The object also rotated by different measured angles. These results demonstrate *different material continuations* from separately authored control over actual arm bodies. They do not prove superiority of "lower-only", universal manipulation, human usability or complex organism behavior. The null-motion case is a vital counterexample to claims that all contact is newly created by appendage closure.
+
+### Breaking instead of scripting: an external point-impulse tool
+
+The live UI now permits a researcher to draw an arrow from a **real dynamic collider** (crate, gate, whole rigid body, or a jointed limb), with authored finite impulse magnitude in N·s. The force is applied once at the actual pointed Rapier rigid body at the chosen position. This is **explicit external experimenter intervention**: never credited as a capability/behavior of the creature. Paused impulses take effect upon stepping/resuming; running ones preserve material afterstate. Tool use suppresses incidental mouse-aim torque on the selected creature, avoiding an unreported second intervention.
+
+[Browser mouse-input and physics comparison](https://github.com/Jozzpoly/Combat-Lab/actions/runs/37997114786) proves that the toolbar button and actual pointer drag change real crate linear velocity and reset the tool state. A separate physical ablation applies equal 400 N·s impulses to the centre and an off-centre point on otherwise identical 45kg crates: central impact yields 0 rad; off-centre yields ~−1.123 rad after 75 steps. An impulse directed at the pincer tip reaches its own separate physical hook/arm rigid body; the constrained body chain carries some of the effect into the root (measured root velocity deviation ~0.132m/s in that particular case). This is not a magical "push object" teleport.
+
+### Direct rendered-image feedback and first-run caveat
+
+A 1440×900 Chromium screenshot of the *real* updated workbench (temporary diagnostic [run](https://github.com/Jozzpoly/Combat-Lab/actions/runs/37997291207)) showed both independently controllable jaws and the point-impulse toolbar clearly. **Major remaining experiential limitation:** the scene still looks sparse, has only two static non-autonomous specimens until interacted with, and renders the bodies as geometric mechanical prototypes. A slightly closer initial camera and shorter nonessential prose were then authored to improve discoverability, but must not be mistaken for human qualitative approval. Temporary screenshot base64 console emission was removed after inspection.
+
+**Hard boundary:** stronger mechanical manipulation evidence does not constitute a broad living-world answer. The body is a research actuator, not a qualified organism. Owner direct experience and whole-world possibility remain open; former Owner FAILs have not been overturned. Do not scale this one mechanic into an architecture by momentum.
