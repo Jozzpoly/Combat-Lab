@@ -37,18 +37,3 @@ const impulse=probe.get("impulse-evidence");
 if(!impulse)throw Error("missing physically observed point impact evidence");
 console.log("EXPERIMENTER POINT IMPULSE: "+JSON.stringify(
  JSON.parse(impulse.replaceAll("&quot;",'"').replaceAll("&amp;","&"))));
-
-
-
-
-// TEMPORARY rendering review: remove immediately after reading actual image.
-if(process.env.CI){
-  const {readFileSync}=await import("node:fs");
-  const file="/tmp/combat-effector-new-ui.png";
-  execFileSync(chrome,["--headless=new","--no-sandbox","--disable-gpu",
-    "--disable-dev-shm-usage","--window-size=1440,900",
-    "--force-device-scale-factor=1","--virtual-time-budget=6200",
-    "--screenshot="+file,url],{timeout:75000,encoding:"utf8",
-     maxBuffer:6*1024*1024});
-  console.log("EFF_INDEPENDENT_VISUAL_AUDIT:"+readFileSync(file).toString("base64"));
-}
