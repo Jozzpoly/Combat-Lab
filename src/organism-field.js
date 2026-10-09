@@ -77,6 +77,9 @@ export class OrganismField {
       this.authoredRuntimeIds.push(typeof obj==="string"?obj:obj.id);
     }
     this.activeActor=this.actors[0]?.id||null;
+    // Body setters do not automatically refresh attached collider world poses
+    // until World.step; editor queries run while PAUSED.
+    this.world.propagateModifiedBodyPositionsToColliders();
   }
   #staticWorld() {
     for (const r of [
@@ -278,6 +281,7 @@ export class OrganismField {
     }
     for(const b of new Set(actor.parts.map(part=>part.body)))
       b.recomputeMassPropertiesFromColliders();
+    this.world.propagateModifiedBodyPositionsToColliders();
     actor.shapeScale={length:sx,width:sy};
     actor.spec={...actor.spec,length:MORPHS[actor.kind].length*sx,
       width:MORPHS[actor.kind].width*sy};
@@ -644,6 +648,7 @@ export class OrganismField {
       body.setLinvel(v(0,0),true);
       body.setAngvel(0,true);
     }
+    this.world.propagateModifiedBodyPositionsToColliders();
     if(actor){
       actor.sense={touch:false,progress:1,front:0,side:0,load:0};
       actor.state={age:0,pressure:0,recover:0,turnSide:1,recoveries:0};
