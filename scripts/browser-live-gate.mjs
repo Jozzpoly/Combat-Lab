@@ -28,3 +28,4 @@ console.log("Reciprocal MATERIAL GRIP: "+(probe.grab("grip-evidence")||"not expo
 console.log("PHYSICAL GATE: "+(probe.grab("gate-evidence")||"not exposed"));
 console.log("DISTRIBUTED DRIVE CONTRAST: "+(probe.grab("segment-evidence")||"not exposed"));
 console.log("INTERNAL-STROKE CRAWL CONTRAST: "+(probe.grab("inchworm-evidence")||"not exposed"));
+console.log("PORTABLE POSED SCENE: "+(probe.grab("scene-evidence")||"not exposed"));
