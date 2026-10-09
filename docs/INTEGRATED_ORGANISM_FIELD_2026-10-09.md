@@ -58,3 +58,57 @@ The current body/motor law is an authored finite XY **ground-reaction approximat
 The initial browser surface has headless boot and measurement evidence, **not** Owner visual/readability/feel evidence. It has no scientific proof of whole-life richness, long-time contact robustness, material object ecology or scale. The next honest test is whether genuinely different, independently varied morphology/authority combinations make the person running a freely disturbed world discover several unforeseen actions and constraints — versus a collection of pleasant but still shallow moving props. If the latter, redesign rather than accrete more tests or dashboards.
 
 **No Owner rehearsal request, no release/promotion, no main merge and no replacement of the old Yard baseline are implied.**
+
+
+## Continuation research checkpoint — integrated material affordances and split-ground actuation
+
+**Evidence refs (2026-10-09):**
+- [CI / head d64ecdd3](https://github.com/Jozzpoly/Combat-Lab/actions/runs/37977122648): 13 Node tests passed, emitted Vite/WASM browser gate PASS, controlled physical pressure PASS.
+- [Hinged-gate / grip CI](https://github.com/Jozzpoly/Combat-Lab/actions/runs/37976691562): browser-grounded physical tests. These are NOT whole-experience qualifications.
+
+### Material action rather than only transit
+
+A body can now apply a selected point-grip to nearby dynamic matter. That actuator:
+- respects an independently authored reach and finite force;
+- applies impulse at the real moving object's local point, so off-centre attachment transfers angular momentum;
+- applies equal-and-opposite impulse at the selected organism's actual front-side point;
+- does not set crate pose or discard momentum on release;
+- may be zero-strength, or fail against matter heavy enough to resist.
+
+In four separate bounded physical worlds with matched intervention:
+- zero-force crate displacement **0.000 m**;
+- 28 kg crate maximal displacement **0.441 m** at 210 N;
+- 280 kg crate maximal displacement **0.069 m** at the same force;
+- driven body's displacement from reaction **-0.780 m** with zero motor braking;
+- off-centre crate peak absolute rotation **0.965 rad**.
+
+These results show a material control/afterstate possibility, NOT precision hand manipulation, realistic grip biomechanics, tuning quality or Owner feel. The model uses a translational effective-mass approximation; Rapier resolves ensuing off-centre rotations.
+
+### Hinged matter: persistent world topology can change through physics
+
+A single hinged gate is a dynamic rigid bar constrained to a fixed pivot by a real revolute joint. Additional gates can be authored without rebuilding existing matter. In the bounded off-axis impulse trial it rotated by up to **0.582 rad** with maximum world-pivot error **0.0042 m**. Neither an animation nor an authored open/closed flag grants passage. Previous code's so-called off-centre radial poke had *zero torque by construction*; it was corrected with an explicit radial-vs-tangential impulse choice. Note this as a discovered flaw in researcher apparatus, not a new scientific breakthrough.
+
+### Split-contact ground actuation: the strongest new discriminator
+
+Previously the articulated crawler received the nominal entire organism's driving impulse on its front body. This was an unfair and potentially misleading distribution relative to its separate physical segment masses. It now divides a finite physical drive budget between the front and rear bodies according to an editable rear-drive fraction [0,1]. Each body's impulse authority is mediated by the local traction coefficient *under that actual body's current position*.
+
+Two matched drive placements were compared for 55 fixed steps:
+
+| Ground arrangement | 100% front drive | 100% rear drive |
+| --- | ---: | ---: |
+| Both supports on ordinary ground | 2.386 m | 2.385 m |
+| Front support on low-traction patch, rear on ordinary ground | 1.172 m | 2.385 m |
+
+Measured interaction: the change in the front/rear difference due to mixed support was **1.214 m** in this setup. This is useful evidence that distributed *external support* matters physically. It does **not** demonstrate that unpowered internal body articulation produces travel, natural gait, feet/grip locomotion, or general fitness.
+
+### Operational state and critical counterweights
+
+- The specimen now combines different real envelopes/masses, an articulated body, finite local control, distributed traction, editable material world, physical gate, reciprocal manipulation, direct selection, impulse intervention, simple roaming, and a bounded pressure fixture. This is an integrated candidate, not an accepted ecosystem.
+- Baseline remains old R0/L0 / crossing-ball qualitative failure, **not** the previous iteration of this branch.
+- Multiple local numeric tests passing cannot establish whether the selected human can spontaneously discover diverse useful actions rather than staged obstacles.
+- A constrained 21-actor / short physical pressure sample was not a performance/scalability qualification.
+- Current in-world authoring persists added matter/gates across reset. Arbitrary live actor profile/spawn edits currently do NOT constitute a portable starting-scene contract; this is a real experimental repeatability gap, not a hidden success.
+- The physical motor and split-traction proxy are *external ground reaction*, not anatomy-generated locomotion. Broad multi-limb movement remains outside the current specimen; articulation is currently two rigid segments only.
+- No independent direct visual/Owner feel test has occurred. Do not promote to public rehearsal/current until the remaining human question would actually be worth asking.
+
+**Next judgment:** does this changed *whole* offer enough legible, naturally discoverable experiments to merit Owner time? If not, prioritize whole-organism/body/interaction richness and authoring of a reproducible situation over additional narrow green tests. Reject the specimen if it remains a collection of motorized geometric props. 
