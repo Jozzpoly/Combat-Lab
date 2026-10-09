@@ -107,6 +107,7 @@ export class MaterialWorld {
     this.residentSense = null;
     this.physicsTick = 0;
     this.interventionEvents = [];
+    this.motionTrails = new Map();
     // This probe preserves two selectable, explicitly authored low-level
     // control laws. Neither one is autonomous cognition or a world planner.
     this.residentMode = "tactile-recovery";
@@ -130,6 +131,7 @@ export class MaterialWorld {
     this.residentSense = null;
     this.physicsTick = 0;
     this.interventionEvents = [];
+    this.motionTrails.clear();
     this.residentControl = {
       tick: 0, blockedTicks: 0, recoveryTicks: 0, recoveries: 0,
       estimatedX: 0, estimatedY: 0, skirtTicks: 0, skirts: 0,
@@ -151,6 +153,27 @@ export class MaterialWorld {
     this.selectedId = "player";
     this.#recordEvent("world.reset", this.authoredShapes.length +
       " authored shapes reconstructed");
+  }
+
+  #recordMotionTrails() {
+    // Short research-plane traces. Not world truth given to local actors.
+    // Deliberately restricted to controllable/observed bodies: a spawn
+    // avalanche cannot grow unbounded debug history.
+    for (const id of ["player", "resident", "peer", "brace"]) {
+      const entity = this.entities.get(id);
+      if (!entity) { this.motionTrails.delete(id); continue; }
+      const point = entity.body.translation();
+      const trace = this.motionTrails.get(id) ?? [];
+      trace.push({ x: point.x, y: point.y, tick: this.physicsTick });
+      if (trace.length > 180) trace.shift();
+      this.motionTrails.set(id, trace);
+    }
+  }
+
+  trailSnapshot() {
+    return [...this.motionTrails].map(([id,points]) => ({
+      id, points: points.map(p => ({...p}))
+    }));
   }
 
   #recordEvent(type, note) {
@@ -319,6 +342,7 @@ export class MaterialWorld {
         this.world.removeRigidBody(brace.body);
         this.entities.delete("brace");
         this.lastCausalObservations.delete("brace");
+        this.motionTrails.delete("brace");
       }
       if (this.selectedId === "brace") this.selectedId = "resident";
     }
@@ -385,6 +409,7 @@ export class MaterialWorld {
         this.world.removeRigidBody(peer.body);
         this.entities.delete("peer");
         this.lastCausalObservations.delete("peer");
+        this.motionTrails.delete("peer");
       }
       if (this.selectedId === "peer") this.selectedId = "resident";
       this.peerSense = null;
@@ -904,6 +929,7 @@ export class MaterialWorld {
       });
     }
 
+    if (this.physicsTick % 2 === 0) this.#recordMotionTrails();
     return { desiredVelocity: desired, playerImpulse, stepMs };
   }
 
