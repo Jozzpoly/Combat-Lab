@@ -783,6 +783,7 @@ function render() {
     (simulationPaused ? " · PAUSED" : "");
 
   document.body.dataset.activeBodies = String(snapshot.entities.length);
+  document.body.dataset.authoredShapes = String(snapshot.authoredCount);
 }
 
 function frame(now) {
