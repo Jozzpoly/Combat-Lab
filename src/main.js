@@ -15,6 +15,7 @@ const peerStatus = document.querySelector("#peer-status");
 const togglePeer = document.querySelector("#toggle-peer");
 const focusPeer = document.querySelector("#focus-peer");
 const peerMassField = document.querySelector("#peer-mass");
+const peerShapeField = document.querySelector("#peer-shape");
 const peerModeSelect = document.querySelector("#peer-mode");
 const peerMassFeedback = document.querySelector("#peer-mass-feedback");
 const toggleBrace = document.querySelector("#toggle-brace");
@@ -377,10 +378,20 @@ peerModeSelect.value = world.peerMode;
 peerModeSelect.addEventListener("change", () => {
   world.setPeerMode(peerModeSelect.value);
 });
+peerShapeField.value = world.peerShape;
+peerShapeField.addEventListener("change", () => {
+  try {
+    world.setPeerShape(peerShapeField.value);
+  } catch (error) {
+    peerMassFeedback.textContent = "Not applied: " + String(error?.message ?? error);
+  }
+  peerShapeField.value = world.peerShape;
+});
 peerMassField.addEventListener("change", () => {
   try {
     world.setPeerMass(Number(peerMassField.value));
-    peerMassField.value = String(world.peerMass);
+    peerShapeField.value = world.peerShape;
+  peerMassField.value = String(world.peerMass);
     peerMassFeedback.textContent = "";
   } catch (error) {
     peerMassField.value = String(world.peerMass);
@@ -426,6 +437,7 @@ function loadFixture(kind) {
   world.setPeerEnabled(false);
   world.setBraceEnabled(false);
   world.setPeerMass(210);
+  world.setPeerShape("circle");
   world.setBraceProfile({ mass: 120, braking: 30 });
   world.setResidentProfile(DEFAULT_RESIDENT_PROFILE);
   world.setResidentMode("tactile-recovery");
@@ -753,7 +765,8 @@ function render() {
     "Third role disabled. Existing two-body control remains available.";
 
   peerStatus.textContent = snapshot.peerControl ?
-    "Second body: " + snapshot.peerMass + " kg · " +
+    "Second body: " + snapshot.peerMass + " kg · shape " +
+      snapshot.peerShape + " · " +
       snapshot.peerControl.mode + " · local state " +
       snapshot.peerControl.state + " · recoveries " +
       snapshot.peerControl.recoveries + " · travel " +
