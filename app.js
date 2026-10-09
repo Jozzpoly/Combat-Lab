@@ -5,7 +5,7 @@ const canvas=$("#lab"),ctx=canvas.getContext("2d");
 const keys=new Set();
 let field=null,paused=false,armedBox=false,armedPoke=false,savedScene=null;
 let selectedTarget=null,mouse=V(10,11),camera={x:17,y:12,zoom:1.32};
-let pan=null,dragPose=null,wallDraft=null,pokeDraft=null;
+let pan=null,dragPose=null,rotatePose=null,wallDraft=null,pokeDraft=null;
 let debt=0,last=performance.now(),lastReport=0;
 
 function info(message){$("#notice").textContent=message;}
@@ -112,6 +112,14 @@ function draw(){
       Math.max(.04,Math.abs(wallDraft.y-mouse.y)/2),
       0,"rgba(226,198,143,.45)");
   }
+  if(rotatePose){
+    ctx.save();
+    ctx.strokeStyle="#ffe2a4";ctx.lineWidth=.055;
+    ctx.beginPath();ctx.moveTo(rotatePose.pivot.x,rotatePose.pivot.y);
+    ctx.lineTo(mouse.x,mouse.y);ctx.stroke();
+    disk(rotatePose.pivot.x,rotatePose.pivot.y,.13,"#ffe2a4");
+    ctx.restore();
+  }
   if(armedBox)disk(mouse.x,mouse.y,.12,"#e3d6a5");
   if(pokeDraft){
     ctx.save();ctx.strokeStyle="#ffba73";ctx.fillStyle="#ffba73";
@@ -190,7 +198,7 @@ function updateKeys(){
   const y=(keys.has("KeyS")||keys.has("ArrowDown")?1:0)-
     (keys.has("KeyW")||keys.has("ArrowUp")?1:0);
   // Operating an editor/force tool must not silently rotate the selected body.
-  field.step({move:V(x,y),aim:(armedPoke||pokeDraft||pan||dragPose||wallDraft)?null:mouse});
+  field.step({move:V(x,y),aim:(armedPoke||pokeDraft||pan||dragPose||rotatePose||wallDraft)?null:mouse});
 }
 function frame(now){
   if(!field)return;
@@ -309,6 +317,20 @@ async function start(){
       if(!paused)throw Error("Pause before drawing a fixed wall.");
       wallDraft={...mouse};canvas.setPointerCapture(event.pointerId);return;
     }
+    if(event.altKey){
+      if(!paused)throw Error("Pause before rotating physical world bodies.");
+      const id=field.pick(mouse),actor=field.actor(id),
+        matter=field.matter.find(item=>item.id===id);
+      if(!actor&&!matter)throw Error("Rotate from a physical actor or movable object");
+      const pivot=matter?.type==="gate"?matter.pivot:
+        actor?.root.translation()||matter.body.translation();
+      const original=actor?.root.rotation()||matter.body.rotation();
+      const bearing=Math.atan2(mouse.y-pivot.y,mouse.x-pivot.x);
+      rotatePose={id,pivot:V(pivot.x,pivot.y),offset:original-bearing};
+      if(event.isTrusted&&Number.isInteger(event.pointerId))
+        canvas.setPointerCapture(event.pointerId);
+      return;
+    }
     if(event.ctrlKey){
       if(!paused)throw Error("Pause before authoring a new body pose.");
       const id=field.pick(mouse),entity=field.actor(id)||
@@ -349,6 +371,10 @@ async function start(){
     }
     if(dragPose && paused)
       field.reposition(dragPose.id,V(mouse.x+dragPose.dx,mouse.y+dragPose.dy));
+    if(rotatePose&&paused && Math.hypot(
+      mouse.x-rotatePose.pivot.x,mouse.y-rotatePose.pivot.y)>.15)
+      field.setAuthoredAngle(rotatePose.id,rotatePose.offset+Math.atan2(
+        mouse.y-rotatePose.pivot.y,mouse.x-rotatePose.pivot.x));
   }));
   canvas.addEventListener("pointerup",event=>guard(()=>{
     mouse=worldPoint(event);
@@ -375,11 +401,11 @@ async function start(){
         hx:Math.max(.06,Math.abs(mouse.x-p.x)/2),
         hy:Math.max(.06,Math.abs(mouse.y-p.y)/2)});
     }
-    pan=null;wallDraft=null;dragPose=null;
+    pan=null;wallDraft=null;dragPose=null;rotatePose=null;
     if(canvas.hasPointerCapture(event.pointerId))
       canvas.releasePointerCapture(event.pointerId);
   }));
-  canvas.addEventListener("pointercancel",()=>{pan=null;dragPose=null;wallDraft=null;pokeDraft=null;});
+  canvas.addEventListener("pointercancel",()=>{pan=null;dragPose=null;rotatePose=null;wallDraft=null;pokeDraft=null;});
   ui();
   document.body.dataset.live="yes";
   if(new URLSearchParams(location.search).has("probe")){
