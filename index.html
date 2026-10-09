@@ -33,6 +33,8 @@
     </section>
     <section><h2>Selected organism: independent physical parameters</h2>
       <div class="gridfields">
+        <label>Envelope length × <input id="shape-length" type="number" step="0.1" value="1"></label>
+        <label>Envelope width × <input id="shape-width" type="number" step="0.1" value="1"></label>
         <label>Actual body mass kg <input id="body-mass" type="number" step="1"></label>
         <label>Requested speed m/s <input id="body-speed" type="number" step="0.1"></label>
         <label>Ground acceleration m/s² <input id="body-accel" type="number" step="0.5"></label>
@@ -41,7 +43,7 @@
         <label>Finite turn torque N·m <input id="body-torque" type="number" step="5"></label>
       </div>
       <div class="buttons"><button id="apply-body">Apply to real physics</button></div>
-      <p class="dim">Mass changes the collider/inertia, not merely a label. Physically representable extreme combinations are permitted. Envelope editing and biomechanical gait are not implemented yet.</p>
+      <p class="dim">Changing length and width alters real colliders; the hinged tail reanchors as an explicit edit without resetting other objects. Mass changes collider inertia. Physically representable extremes are permitted; this is not biomechanical gait.</p>
     </section>
     <section><h2>Material world</h2>
       <p>Drag with Shift to add a solid fixed obstacle; Alt+click creates movable material. Existing changes persist until reset. Reset rebuilds your authored starting edits, not the disturbed afterstate.</p>
