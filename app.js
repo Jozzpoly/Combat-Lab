@@ -81,9 +81,10 @@ function draw(){
     }else{
       for(const arm of actor.arms){
         const t=arm.body.translation(),r=arm.body.rotation();
-        roundedBox(t.x,t.y,.81,.13,r,"#84cfb7");
-        const hx=t.x+.70*Math.cos(r)+arm.sign*.20*Math.sin(r);
-        const hy=t.y+.70*Math.sin(r)-arm.sign*.20*Math.cos(r);
+        const half=actor.spec.clawReach-.72,hookPosition=half-.11;
+        roundedBox(t.x,t.y,half,.13,r,"#84cfb7");
+        const hx=t.x+hookPosition*Math.cos(r)+arm.sign*.20*Math.sin(r);
+        const hy=t.y+hookPosition*Math.sin(r)-arm.sign*.20*Math.cos(r);
         roundedBox(hx,hy,.115,.26,r,"#b5ecd1");
         const shoulder=V(p.x+.39*Math.cos(a)-arm.sign*.72*Math.sin(a),
           p.y+.39*Math.sin(a)+arm.sign*.72*Math.cos(a));
@@ -138,6 +139,7 @@ function ui(){
       (actor.kind==="pincer"?
         " · jaw command "+Math.round((1-actor.targetAperture)*100)+"% closed":"");
     $("#torque").value=actor.spec.clawTorque;
+    $("#reach").value=actor.spec.clawReach;
   }else{
     const vel=chosen.body.linvel();
     $("#entity").textContent=chosen.type==="gate"?
@@ -232,6 +234,11 @@ async function start(){
     if(!field.setClawTorque(selectedTarget,Number($("#torque").value)))
       throw Error("Select an articulated pincer");
     info("Real reciprocal joint torque authority changed.");
+  });
+  $("#apply-reach").onclick=()=>guard(()=>{
+    if(!field.setClawReach(selectedTarget,Number($("#reach").value)))
+      throw Error("Select an articulated pincer");
+    info("Actual appendage collision envelope and inertia rebuilt, no world reset.");
   });
   $("#apply-mass").onclick=()=>guard(()=>{
     if(!field.setObjectMass(selectedTarget,Number($("#matter-mass").value)))
