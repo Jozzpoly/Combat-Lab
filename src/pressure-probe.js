@@ -1929,6 +1929,37 @@ try {
     detail: String(error?.message ?? error).slice(0,300) });
 }
 
+await observation("adaptive-local-detour-tries-both-sides-in-one-material-world", world => {
+  world.authorRect({ kind: "wall", cx: 16.8, cy: 11.4,
+    width: 0.7, height: 1.4 });
+  world.setResidentMode("adaptive-skirt");
+  world.setResidentDetourSide(-1);
+  let firstSkirt = null, firstSideFailure = null, firstOpenSide = null;
+  let firstClearance = null, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  for (let tick = 1; tick <= 650; tick++) {
+    world.step(still);
+    const p=at(world,"resident").position;
+    const local=world.residentControl;
+    maxX=Math.max(maxX,p.x);
+    minY=Math.min(minY,p.y);
+    maxY=Math.max(maxY,p.y);
+    if(firstSkirt===null && local.skirts>0)firstSkirt=tick;
+    if(firstSideFailure===null && local.failedDetours>0)firstSideFailure=tick;
+    if(firstOpenSide===null && local.skirts>=2)firstOpenSide=tick;
+    if(firstClearance===null && p.x>18.4)firstClearance=tick;
+  }
+  finite(world,"adaptive material detour");
+  return "north-first initial; t first attempt="+firstSkirt+
+    ", failed first side="+firstSideFailure+
+    ", second side attempt="+firstOpenSide+
+    ", x>18.4 clearance="+String(firstClearance)+
+    ", max x="+maxX.toFixed(3)+"m; y-range="+
+    minY.toFixed(3)+".."+maxY.toFixed(3)+
+    "; failed trials="+world.residentControl.failedDetours+
+    ", attempted skirts="+world.residentControl.skirts+
+    "; no route map, no success verdict unless promoted";
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
