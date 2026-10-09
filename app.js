@@ -264,7 +264,8 @@ async function pressureProbe() {
     assert(normal.maxSpan-normal.minSpan>.25,
       "physical prismatic muscle does not change body length");
     assert(normal.progress>weak.progress+.12,
-      "world-support authority does not change physical locomotion");
+      "world-support authority does not change physical locomotion; data="+
+        JSON.stringify({noGround,normal,noMuscle,weak}));
     document.body.dataset.inchwormEvidence=[
       "noGround="+noGround.progress.toFixed(3),
       "noMuscle="+noMuscle.progress.toFixed(3),
