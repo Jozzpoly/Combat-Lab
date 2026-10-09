@@ -163,6 +163,12 @@ export class CommonsWorld{
   actor(id){return this.actors.find(a=>a.id===id)||null;}
   item(id){return this.matter.find(m=>m.id===id)||null;}
   select(id){this.selected=this.actor(id)?.id||null;return this.selected;}
+  setLocalResponse(id,enabled){
+    const a=this.actor(id);if(!a)return false;
+    a.control=enabled?"sense":"quiet";
+    if(!enabled){a.response.latch=0;a.response.arm=-1;}
+    return true;
+  }
   setActiveArm(id,index,value){
     const a=this.actor(id);if(!a||!a.arms[index])return false;
     a.target[index]=clamp(safe(value,"arm command"),0,1);
@@ -224,7 +230,7 @@ export class CommonsWorld{
     }
     // An actor with no external input is genuinely quiet until material
     // contact acts upon it. This is NOT cyclic roaming or a target policy.
-    if(!command && a.observed.load>2 && a.spec.brace>0){
+    if(!command && a.control==="sense" && a.observed.load>2 && a.spec.brace>0){
       // A finite external top-down support proxy. Higher forces win.
       const impulse=V(-vel.x*root.mass(),-vel.y*root.mass());
       const amp=norm(impulse),scale=amp?Math.min(1,a.spec.brace*DT/amp):0;
@@ -233,7 +239,7 @@ export class CommonsWorld{
     }else a.response.bracing=false;
     // A purely local, bounded pressure reaction on a distinct physical
     // effector. No name, position, identity or objective is read.
-    if(!command && a.arms.length>0 && a.response.latch<=0){
+    if(!command && a.control==="sense" && a.arms.length>0 && a.response.latch<=0){
       const signals=a.observed.parts.slice(1);
       const value=Math.max(...signals);
       if(value>1.0){
