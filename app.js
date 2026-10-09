@@ -147,7 +147,9 @@ function updateStatus() {
           " · rear drive "+active.spec.rearDrive.toFixed(2) :
           active.kind==="worm" ?
             " · support force "+active.spec.supportForce.toFixed(0)+" N" : "")+
-        " · mode " + selected.mode,
+        " · mode " + selected.mode+
+        (active.control.bracing ? " · brace " +
+          ((active.control.braceImpulse??0)/DT).toFixed(1)+" N" : ""),
       "local response " + selected.mode + " · yield " +
         active.spec.contactYield.toFixed(2) + " · front contact " +
         selected.frontContact.toFixed(2) + " · side " +
@@ -175,7 +177,7 @@ function input() {
     (keys.has("a")||keys.has("arrowleft")?1:0);
   const y=(keys.has("s")||keys.has("arrowdown")?1:0)-
     (keys.has("w")||keys.has("arrowup")?1:0);
-  const l=Math.hypot(x,y)||1;return {x:x/l,y:y/l};
+  const l=Math.hypot(x,y)||1;return {x:x/l,y:y/l,brace:keys.has("b")};
 }
 function tick() {field.step(manual?input():null);issuedSteps++;}
 function loop(now) {
@@ -201,7 +203,7 @@ function cursorBox() {
 const bodyInputs = {
   mass: "#body-mass", speed: "#body-speed", acceleration: "#body-accel",
   gripReach: "#body-reach", gripForce: "#body-gripforce",
-  contactYield: "#body-yield",
+  contactYield: "#body-yield", braceForce:"#body-brace",
   braking: "#body-brake", turnRate: "#body-turnrate", turnTorque: "#body-torque"
 };
 function syncBodyForm(){
