@@ -43,11 +43,15 @@ export function validateScene(input){
     const heading=finite(src.heading,label+".heading");
     const length=finite(src.length,label+".length",true);
     const width=finite(src.width,label+".width",true);
-    if(length<.08||width<.08)
-      throw new RangeError(label+" has unresolvable envelope scale");
+    const minScale=src.kind==="dart"?.20:src.kind==="broad"?.10:0;
+    if(length<(src.kind==="crawler"?.08:minScale) ||
+       width<(src.kind==="crawler"?.13:minScale))
+      throw new RangeError(label+" has unresolvable real collider dimensions");
     const profile={};
     for(const key of PHYSICAL_KEYS)profile[key]=
       finite(src.profile?.[key],label+".profile."+key,key==="mass");
+    for(const key of PHYSICAL_KEYS)if(profile[key]<0)
+      throw new RangeError(label+" has negative physical authority "+key);
     if(src.kind==="crawler"){
       profile.rearDrive=finite(src.profile.rearDrive,label+".profile.rearDrive");
       if(profile.rearDrive<0||profile.rearDrive>1)
