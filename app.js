@@ -232,6 +232,73 @@ async function pressureProbe() {
       "physical impulse failed to move matter");
     assert(field.tractionAt({x:15,y:11})<field.tractionAt({x:5,y:11}),
       "ground proxy not spatially material");
+    // A live arrangement is an authored *starting condition*, not a
+    // concealed recording of velocity/joint memory. Verify physical positions,
+    // actor morphology and gate angle, and reject corrupt files atomically.
+    {
+      const source=new OrganismField(),reconstructed=new OrganismField();
+      try{
+        source.spawn("crawler",{x:12,y:15},.4);
+        const chosen=source.actors.at(-1);
+        source.setActorProfile(chosen.id,{
+          mass:145,speed:2.9,rearDrive:.35,gripForce:400
+        });
+        source.resizeMorphology(chosen.id,{length:1.3,width:.88});
+        source.addWall({x:8,y:18,hx:.55,hy:.35});
+        source.addBox({x:9.7,y:18.4,hx:.6,hy:.44,mass:74});
+        source.addGate({x:23,y:5,length:3.1,mass:95});
+        const moving=source.matter.find(m=>m.kind!=="gate");
+        moving.body.setTranslation({x:8,y:13},true);
+        moving.body.setRotation(.49,true);
+        const gate=source.gates[0];
+        const theta=.33,pin=gate.pivotPoint;
+        gate.body.setRotation(theta,true);
+        gate.body.setTranslation({x:pin.x+gate.hx*Math.cos(theta),
+          y:pin.y+gate.hx*Math.sin(theta)},true);
+        const recipe=source.exportScene();
+        assert(recipe.actors.length===4&&recipe.walls.length===1&&
+          recipe.gates.length===2&&recipe.matter.length===6,
+          "posed scene capture omitted live world authoring");
+        const before=reconstructed.snapshot(),invalid=structuredClone(recipe);
+        invalid.actors[0].profile.mass=-2;
+        let blocked=false;
+        try{reconstructed.importScene(invalid);}
+        catch(e){blocked=e instanceof RangeError;}
+        assert(blocked&&reconstructed.ticks===before.tick&&
+          reconstructed.actors.length===before.count,
+          "invalid import modified live physical scene");
+        reconstructed.importScene(recipe);
+        assert(reconstructed.actors.length===4&&
+          reconstructed.gates.length===2&&
+          reconstructed.walls.length===10,
+          "import lost physical components");
+        const imported=reconstructed.matter.find(m=>m.kind!=="gate");
+        assert(Math.hypot(imported.body.translation().x-8,
+          imported.body.translation().y-13)<.0001,
+          "import lost displaced matter position");
+        assert(Math.abs(imported.body.rotation()-.49)<.0001,
+          "import lost material orientation");
+        assert(Math.abs(reconstructed.gates[0].body.rotation()-theta)<.0001,
+          "import lost physical hinge angle");
+        const importedCrawler=reconstructed.actors.at(-1);
+        assert(importedCrawler.spec.mass===145&&
+          importedCrawler.spec.rearDrive===.35&&
+          Math.abs(importedCrawler.shapeScale.length-1.3)<.00001,
+          "import lost actor's independent profile or envelope");
+        const initial=reconstructed.exportScene();
+        reconstructed.reset();
+        const again=reconstructed.exportScene();
+        assert(JSON.stringify(initial)===JSON.stringify(again),
+          "reset failed to reproduce same posed starting scene");
+        for(let i=0;i<150;i++)reconstructed.step(null);
+        assert(reconstructed.actors.every(a=>
+          Number.isFinite(a.root.translation().x+a.root.translation().y)),
+          "imported physical scene destabilized under solver steps");
+        document.body.dataset.sceneEvidence="actors="+recipe.actors.length+
+          ";matter="+recipe.matter.length+";gates="+recipe.gates.length+
+          ";walls="+recipe.walls.length+";validRoundTrip=1";
+      }finally{source.world.free();reconstructed.world.free();}
+    }
     // Probe an entirely different source of translation: internal reciprocal
     // extension/retraction plus alternating finite world support.
     function crawlTrial({groundForce,muscleForce,tractionAt=()=>1}){
