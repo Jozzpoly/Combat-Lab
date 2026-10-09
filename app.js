@@ -591,6 +591,34 @@ async function start() {
     announce("One authored edit removed; experiment reset.");
   });
   $("#clear").onclick=()=>{field.clearEdits();targetId=field.activeActor;syncBodyForm();announce("Authored edits cleared; scene reset.");};
+  $("#save-scene").onclick=()=>guarded(()=>{
+    const recipe=field.exportScene();
+    const file=new Blob([JSON.stringify(recipe,null,2)+"\n"],
+      {type:"application/json"});
+    const link=document.createElement("a");
+    const href=URL.createObjectURL(file);
+    link.href=href;
+    link.download="combat-field-initial-scene-v1.json";
+    document.body.appendChild(link);link.click();link.remove();
+    // Browser object URLs are short-lived by design; the user's file owns
+    // the durable recipe, not a hidden in-memory or local-storage sidecar.
+    setTimeout(()=>URL.revokeObjectURL(href),15000);
+    announce("Captured current posed arrangement as portable starting scene.");
+  });
+  $("#load-scene").onclick=()=>$("#scene-file").click();
+  $("#scene-file").onchange=async e=>{
+    const file=e.target.files?.[0];
+    if(!file)return;
+    try{
+      if(file.size>3_000_000)throw Error("scene JSON exceeds 3MB safety limit");
+      const parsed=JSON.parse(await file.text());
+      field.importScene(parsed);
+      paused=true;debt=0;targetId=field.activeActor;syncBodyForm();
+      announce("Loaded validated starting arrangement; simulation paused.");
+    }catch(err){
+      announce("Scene rejected: "+String(err.message||err));
+    }finally{e.target.value="";}
+  };
   document.querySelectorAll("[data-pick]").forEach(button=>{
     button.onclick=()=>selectAt(Number(button.dataset.pick));
   });
