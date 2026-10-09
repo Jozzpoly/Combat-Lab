@@ -14,10 +14,19 @@ export function somaticProbe(Field){
      const crate=obstacles==="matter" ?
        world.addBox({x:7.25,y:4,hx:.26,hy:.9,mass},false):null;
      if(!crate)world.addWall({x:7.25,y:4,hx:.26,hy:.9},false);
-     let firstTouch=-1,firstGive=-1,maxFront=0,maxLoad=0,backwardFrames=0;
+     let firstTouch=-1,firstGive=-1,firstCrateWall=-1,
+       maxFront=0,maxLoad=0,backwardFrames=0;
      for(let tick=1;tick<=steps;tick++){
        world.step(null);
        if(a.sense.touch && firstTouch<0) firstTouch=tick;
+       if(crate && firstCrateWall<0){
+         world.world.contactPairsWith(crate.collider,other=>{
+           if(!world.walls.some(w=>w.collider.handle===other.handle))return;
+           world.world.contactPair(crate.collider,other,manifold=>{
+             if(manifold.numSolverContacts())firstCrateWall=tick;
+           });
+         });
+       }
        if(a.control.mode==="give-way" && firstGive<0)firstGive=tick;
        if(a.control.throttle<0)backwardFrames++;
        maxFront=Math.max(maxFront,a.sense.front);
@@ -26,7 +35,7 @@ export function somaticProbe(Field){
        assert(Number.isFinite(p.x+p.y+a.root.rotation()),
          "frontal-contact response became nonfinite");
      }
-     return {firstTouch,firstGive,maxFront,maxLoad,backwardFrames,
+     return {firstTouch,firstGive,firstCrateWall,maxFront,maxLoad,backwardFrames,
        objectDx:crate?crate.body.translation().x-7.25:null};
    }finally{world.world.free();}
  }
@@ -45,6 +54,12 @@ export function somaticProbe(Field){
  const heavyCompliant=attempt(1,"matter"),heavyPersistent=attempt(0,"matter");
  const light=attempt(1,"matter",12,100);
  const heavy100=attempt(1,"matter",220,100);
+ assert(light.objectDx>heavy100.objectDx+1,
+   "light material did not afford more movement than heavy in matching scene");
+ assert(light.firstGive>heavy100.firstGive,
+   "somatic withdrawal was not delayed by movable material");
+ assert(light.firstCrateWall>0 && light.firstCrateWall<=light.firstGive,
+   "delayed retreat not grounded in actual later crate-to-wall jamming");
  return {wall:{compliant,persistent},
    heavy:{compliant:heavyCompliant,persistent:heavyPersistent},
    materialAffordance:{light,heavy:heavy100}};
