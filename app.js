@@ -197,6 +197,50 @@ async function pressureProbe() {
     field.setActorProfile(change.id,{mass:oldMass*2,speed:1.8});
     assert(Math.abs(change.root.mass()-oldMass*2)<1e-2,
       "physical mass authoring failed");
+    // Three independent worlds: all motor/turn/mass axes equal; actual
+    // physical envelope and articulation are the remaining interventions.
+    const controlled = [];
+    for (const kind of ["dart","crawler","broad"]) {
+      const trial = new OrganismField();
+      try {
+        for (const resident of [...trial.actors]) trial.remove(resident.id);
+        const actor = trial.spawn(kind,{x:4.5,y:3},0);
+        trial.select(actor.id);
+        trial.setActorProfile(actor.id,{mass:100,speed:3,acceleration:12,
+          braking:12,turnRate:1.5,turnTorque:350});
+        const object=trial.addBox({x:7.25,y:3,hx:.55,hy:.55,mass:55},false);
+        let firstContact=-1;
+        for(let frame=0;frame<180;frame++){
+          trial.step({x:1,y:0});
+          if(firstContact<0&&actor.contactCount>0)firstContact=frame+1;
+          const p=actor.root.translation();
+          assert(Number.isFinite(p.x+p.y+actor.root.rotation()),
+            kind+": nonfinite under matched-authority encounter");
+        }
+        const displacement=object.body.translation().x-7.25;
+        controlled.push({kind,firstContact,displacement});
+      } finally {trial.world.free();}
+    }
+    assert(controlled.every(o=>o.firstContact>0),
+      "one morphology never entered any contact");
+    const signatures=new Set(controlled.map(o=>
+      o.firstContact+":"+o.displacement.toFixed(3)));
+    assert(signatures.size>1,
+      "identical physical outcomes under matched-motor different shapes");
+    document.body.dataset.morphEvidence=controlled.map(o=>
+      o.kind+"@tick"+o.firstContact+":boxDx"+o.displacement.toFixed(3)).join("; ");
+    // Deliberate contact/actor-count pressure; never evidence of scale capacity.
+    for(let i=0;i<18;i++){
+      field.spawn(["dart","crawler","broad"][i%3],
+        {x:13+(i%6)*.40,y:10+Math.floor(i/6)*.60},i*.31);
+    }
+    for(let i=0;i<100;i++)field.step(null);
+    assert(field.actors.length===21,"pressure run lost actors");
+    for(const actor of field.actors){
+      const p=actor.root.translation();
+      assert(Number.isFinite(p.x+p.y+actor.root.angvel()),
+        "nonfinite actor under crowded physical pressure");
+    }
     field.addWall({x:3,y:3,hx:.5,hy:.1});
     const authored=field.authored.length;
     field.reset();
@@ -207,7 +251,7 @@ async function pressureProbe() {
       const p=a.root.translation();assert(Number.isFinite(p.x+p.y),
         "post-reset actor numerical failure");
     }
-    writePressureResult("pass","3 morphologies, hinge, finite matter, real mass edit, authored reset, 400 steps");
+    writePressureResult("pass","3 physical forms + matched-motor contrast + 21 bodies under contact pressure + mass editing/reset");
   } catch(e) {
     writePressureResult("fail",String(e?.message??e).slice(0,250));
     throw e;
