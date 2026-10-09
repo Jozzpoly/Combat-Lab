@@ -9,6 +9,8 @@ No new research specimen has been accepted by the Owner. Candidate implementatio
 
 **Important conflict guard:** the public working synthesis's older "current candidate" was written before the integrated branch existed. It remains a history/evidence document, not a substitute for this updated state and live branch inspection. Neither source may promote a specimen without new Owner-level evidence.
 
+**Additional independent experiment (2026-10-09 later, NOT accepted):** [Draft PR #2](https://github.com/Jozzpoly/Combat-Lab/pull/2), \`experiment/embodied-effectors-v0\`, started from neutral \`main\` instead of PR #1. At audited HEAD \`9a8d8fcdac8a85906892574bc5b35006b3de3e11\` ([CI 37994513053](https://github.com/Jozzpoly/Combat-Lab/actions/runs/37994513053) PASS), its actual jointed physical effectors changed box contact and transport outcomes against matched zero-torque controls and showed meaningful negative mass/offset cases. This is a **new mechanical possibility donor under independent qualification**, not an accepted body, proof of experiential value or a reason to promote the branch. PR #1 remains quarantined and is not its parent. See the [bounded evidence note](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/embodied-effectors-v0/docs/EMBODIED_EFFECTOR_TRIAL_2026-10-09.md). The main frontier question remains open; live GitHub refs and fresh Owner-observed behavior outrank dated branch details.
+
 The broad body/world discovery frontier has been deliberately reselected after separate reassessment and red-team.
 
 There is no accepted active combat, locomotion, crowd or organism architecture in the current tree.
