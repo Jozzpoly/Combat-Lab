@@ -6,7 +6,7 @@ const $ = selector => document.querySelector(selector);
 const canvas = $("#scene"), ctx = canvas.getContext("2d");
 const keys = new Set();
 const camera = { x: FIELD.width / 2, y: FIELD.height / 2, zoom: 1.0 };
-let field, paused = false, manual = true, mouse = { x: 17, y: 11 };
+let field, paused = false, manual = false, mouse = { x: 17, y: 11 };
 let last = performance.now(), debt = 0, pan = null, drawWall = null, dragPose = null, targetId = null;
 let issuedSteps = 0;
 let currentSituation = null;
@@ -265,6 +265,7 @@ function switchSituation(key){
     field.reset();
   }
   keys.clear();dragPose=null;drawWall=null;pan=null;
+  manual=false;$("#manual").checked=false;
   targetId=field.activeActor;
   syncBodyForm();
   paused=false;debt=0;last=performance.now();
@@ -475,6 +476,9 @@ async function start() {
     if(key==="1"||key==="2"||key==="3"||key==="4")selectAt(Number(key)-1);
     if(key===" "&&!e.repeat){paused=!paused;debt=0;}
     if(key==="."&&paused&&!e.repeat)tick();
+    if(["w","a","s","d","arrowup","arrowdown","arrowleft","arrowright"].includes(key)){
+      manual=true;$("#manual").checked=true;
+    }
     keys.add(key);
   });
   document.addEventListener("keyup",e=>keys.delete(e.key.toLowerCase()));
