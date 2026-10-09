@@ -24,3 +24,4 @@ console.log("Integrated physical pressure PASS: "+probe.grab("pressure-detail"))
 
 console.log("Matched-drive morphology OBSERVATION: "+(probe.grab("morph-evidence")||"not exposed"));
 console.log("Paired-world CAUSAL NULL: "+(probe.grab("causal-null")||"not exposed"));
+console.log("Reciprocal MATERIAL GRIP: "+(probe.grab("grip-evidence")||"not exposed"));
