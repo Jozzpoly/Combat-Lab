@@ -710,7 +710,9 @@ function render() {
       (selected?.localControl ?
         "\nlocal controller: " + selected.localControl.mode +
         " / " + selected.localControl.state +
-        " / recoveries=" + selected.localControl.recoveries : "");
+        " / recoveries=" + selected.localControl.recoveries +
+        " / detours=" + (selected.localControl.skirts ?? 0) +
+        " / failures=" + (selected.localControl.failedDetours ?? 0) : "");
   } else {
     causalReadout.textContent = selected ?
       "No own motor trace for this body. It may still receive contact/grip impulses." :
@@ -739,6 +741,9 @@ function render() {
     " · local travel " + snapshot.residentControl.estimatedX.toFixed(2) + "m" +
     " · lateral " + snapshot.residentControl.estimatedY.toFixed(2) + "m" +
     " · detours " + snapshot.residentControl.skirts +
+    " · failed attempts " + (snapshot.residentControl.failedDetours ?? 0) +
+    " · next side " + (snapshot.residentControl.adaptiveSign === 1 ?
+      "south" : "north") +
     " · obstruction evidence " + snapshot.residentControl.blockedTicks + "/12 steps" +
     " · recovery count " + snapshot.residentControl.recoveries +
     (snapshot.residentControl.lastTransition ?
