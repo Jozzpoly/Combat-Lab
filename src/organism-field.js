@@ -492,6 +492,18 @@ export class OrganismField {
       motorImpulse: impulse
     };
   }
+  #physicalCenter(actor){
+    // A multi-part organism's progress is its *actual mass-weighted centre*,
+    // not the tip of an oscillating head or one preferred physics body.
+    const bodies=actor.tail?[actor.root,actor.tail]:[actor.root];
+    let sumMass=0,x=0,y=0;
+    for(const body of bodies){
+      const m=body.mass(),p=body.translation();
+      sumMass+=m;x+=m*p.x;y+=m*p.y;
+    }
+    return sumMass>0 ? v(x/sumMass,y/sumMass) :
+      {...actor.root.translation()};
+  }
   #readContacts(actor) {
     let touch = false, count = 0;
     for (const part of actor.parts) {
@@ -508,7 +520,7 @@ export class OrganismField {
     return { touch, count };
   }
   step(manual = null) {
-    const before = new Map(this.actors.map(a => [a.id, { ...a.root.translation() }]));
+    const before = new Map(this.actors.map(a => [a.id, this.#physicalCenter(a)]));
     for (const actor of this.actors) this.#motor(actor, manual);
     this.#stepGrip();
     const t = performance.now();
@@ -520,7 +532,7 @@ export class OrganismField {
       const c = this.#readContacts(actor);
       actor.contactCount = c.count;
       contacts += c.count;
-      const prev = before.get(actor.id), now = actor.root.translation();
+      const prev = before.get(actor.id), now = this.#physicalCenter(actor);
       const intended = actor.control.intended;
       const speed = mag(intended);
       const progress = speed > 0.01 ?
