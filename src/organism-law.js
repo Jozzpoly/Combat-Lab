@@ -3,17 +3,17 @@
 export const MORPHS = Object.freeze({
   dart: { name: "Dart / compact", mass: 18, speed: 5.2, acceleration: 26,
     braking: 32, turnRate: 3.8, turnTorque: 95, width: 0.42, length: 1.05,
-    gripReach: 1.8, gripForce: 120, color: "#75c6e8" },
+    contactYield: .90, gripReach: 1.8, gripForce: 120, color: "#75c6e8" },
   crawler: { name: "Crawler / hinged", mass: 88, speed: 2.75, acceleration: 12,
     braking: 14, turnRate: 1.65, turnTorque: 280, rearDrive: 0.55, width: 0.74, length: 2.65,
-    gripReach: 2.3, gripForce: 330, color: "#d9b17b" },
+    contactYield: .52, gripReach: 2.3, gripForce: 330, color: "#d9b17b" },
   broad: { name: "Broad / pusher", mass: 245, speed: 2.0, acceleration: 7.5,
     braking: 10, turnRate: 0.9, turnTorque: 540, width: 2.3, length: 1.7,
-    gripReach: 2.6, gripForce: 750, color: "#a99ae3" },
+    contactYield: .12, gripReach: 2.6, gripForce: 750, color: "#a99ae3" },
   worm: { name: "Inchworm / alternating support", mass: 84, speed: 2.0,
     acceleration: 9, braking: 9, turnRate: 1.1, turnTorque: 260,
     width: .62, length: 2.05, muscleForce: 850, supportForce: 900,
-    gripReach: 1.7, gripForce: 150, color: "#97cf9c" }
+    contactYield: .76, gripReach: 1.7, gripForce: 150, color: "#97cf9c" }
 });
 export const KINDS = Object.freeze(Object.keys(MORPHS));
 export const DT = 1 / 60;
@@ -21,27 +21,41 @@ export function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
 export function wrap(a) {
   return Math.atan2(Math.sin(a), Math.cos(a));
 }
-export function localResponse(state, sensed) {
-  const next = { ...state, age: (state.age || 0) + 1 };
-  // Gated by actual solver-active contact AND poor realized progress.
-  // Alternation is a private local history, not obstacle-length knowledge.
-  if (sensed.touch && sensed.progress < 0.20 && next.recover <= 0) {
-    next.pressure = (next.pressure || 0) + 1;
-  } else next.pressure = 0;
-  if (next.pressure >= 14) {
-    next.pressure = 0;
-    next.recover = 65;
-    next.turnSide = -(next.turnSide || 1);
-    next.recoveries = (next.recoveries || 0) + 1;
+// A somatic *local response*, not navigation or cognition.
+// The actor gets only its own previous-step physical contact/progress.
+// contactYield is authored on the body [0..1]: 0 = persist through frontal
+// resistance, 1 = promptly relinquish space. Solver pressure/geometry still
+// decides what is actually possible; this policy cannot ignore collision.
+export function localResponse(state, sensed, profile = null) {
+  const next={...state,age:(state.age||0)+1};
+  const yieldFactor=clamp(Number.isFinite(profile?.contactYield) ?
+    profile.contactYield:1,0,1);
+  const front=Number.isFinite(sensed.front) ? sensed.front :
+    (sensed.touch?1:0); // legacy minimal tactile clients
+  const side=Number.isFinite(sensed.side) ? sensed.side : 0;
+  const frontalStall=Boolean(sensed.touch)&&front>.28&&
+    sensed.progress<.20;
+  const requiredTicks=Math.round(14+(1-yieldFactor)*35);
+  if(frontalStall && (next.recover||0)<=0)
+    next.pressure=(next.pressure||0)+1;
+  else next.pressure=0;
+  if(next.pressure>=requiredTicks){
+    next.pressure=0;
+    next.recover=65;
+    next.turnSide=side>.25?-1:side<-.25?1:-(next.turnSide||1);
+    next.recoveries=(next.recoveries||0)+1;
   }
-  if (next.recover > 0) {
-    next.recover -= 1;
-    return { state: next, steer: (next.turnSide || 1) * 1.0,
-      throttle: next.recover > 43 ? -0.45 : 0.50 };
+  if(next.recover>0){
+    next.recover-=1;
+    return {state:next,steer:(next.turnSide||1),
+      throttle:next.recover>43?-.45:.50,mode:"give-way"};
   }
-  // Quiet, actor-local wandering; never consult a target or a map.
-  const wander = Math.sin(next.age * 0.012) * 0.12;
-  return { state: next, steer: wander, throttle: 0.85 };
+  // Incidental side contacts should not trigger a wholesale reverse.
+  // Partial steering away from contact is bounded, not path planning.
+  const wander=Math.sin(next.age*.012)*.12;
+  const sideAvoid=clamp(-side*.28*yieldFactor,-.25,.25);
+  return {state:next,steer:clamp(wander+sideAvoid,-1,1),
+    throttle:.85,mode:frontalStall?"press":"cruise"};
 }
 export function finiteDrive({ mass, velocity, heading, input, speed, acceleration,
   braking, traction, dt = DT }) {
