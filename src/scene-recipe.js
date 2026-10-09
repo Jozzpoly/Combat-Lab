@@ -43,7 +43,7 @@ export function validateScene(input){
     const heading=finite(src.heading,label+".heading");
     const length=finite(src.length,label+".length",true);
     const width=finite(src.width,label+".width",true);
-    const minScale=src.kind==="dart"?.20:src.kind==="broad"?.10:0;
+    const minScale=src.kind==="dart"?.20:src.kind==="broad"?.10:src.kind==="worm"?.10:0;
     if(length<(src.kind==="crawler"?.08:minScale) ||
        width<(src.kind==="crawler"?.13:minScale))
       throw new RangeError(label+" has unresolvable real collider dimensions");
@@ -52,6 +52,12 @@ export function validateScene(input){
       finite(src.profile?.[key],label+".profile."+key,key==="mass");
     for(const key of PHYSICAL_KEYS)if(profile[key]<0)
       throw new RangeError(label+" has negative physical authority "+key);
+    if(src.kind==="worm"){
+      profile.muscleForce=finite(src.profile.muscleForce,label+".profile.muscleForce");
+      profile.supportForce=finite(src.profile.supportForce,label+".profile.supportForce");
+      if(profile.muscleForce<0||profile.supportForce<0)
+        throw new RangeError(label+" muscle/support must be nonnegative");
+    }
     if(src.kind==="crawler"){
       profile.rearDrive=finite(src.profile.rearDrive,label+".profile.rearDrive");
       if(profile.rearDrive<0||profile.rearDrive>1)
@@ -80,7 +86,11 @@ export function actorRecipe(actor){
   const pos=actor.root.translation(), spec=actor.spec;
   const profile={};
   for(const key of PHYSICAL_KEYS)profile[key]=spec[key];
-  if(actor.tail)profile.rearDrive=spec.rearDrive;
+  if(actor.kind==="crawler")profile.rearDrive=spec.rearDrive;
+  if(actor.kind==="worm"){
+    profile.muscleForce=spec.muscleForce;
+    profile.supportForce=spec.supportForce;
+  }
   return {kind:actor.kind,pos:{...pos},heading:actor.root.rotation(),
     length:actor.shapeScale.length,width:actor.shapeScale.width,profile};
 }
