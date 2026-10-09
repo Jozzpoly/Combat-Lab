@@ -1763,7 +1763,7 @@ await trial("lateral-policy-divergence-reaches-peer-only-through-later-contact",
     "m; no generalized crowd classification";
 });
 
-await observation("finite-post-lateral-detour-versus-forward-reversal", world => {
+await trial("finite-post-opposite-detour-sides-produce-opposite-material-outcomes", world => {
   const post = world.authorRect({ kind: "wall", cx: 16.8, cy: 11.4,
     width: 0.7, height: 1.4 });
   const run = (mode,side) => {
@@ -1797,8 +1797,18 @@ await observation("finite-post-lateral-detour-versus-forward-reversal", world =>
   const reverse = run("directional-recovery",-1);
   const north = run("skirt-recovery",-1);
   const detour = run("skirt-recovery",1);
-  assert(reverse.firstContact && detour.firstContact &&
-    detour.firstDetour && detour.strips > 0, "fixture never produced a real lateral attempt");
+  assert(reverse.firstContact && detour.firstContact && north.firstContact &&
+    detour.firstDetour && north.firstDetour && detour.strips > 0,
+    "fixture never produced a real lateral attempt");
+  // The built-in island blocks the north detour; the same finite wall
+  // admits a south route for the exact same body and motor authority.
+  assert(reverse.maxX < 16.4 && north.maxX < 16.4 && detour.maxX > 18.4,
+    "claimed geometry-dependent material route is not demonstrated");
+  assert(detour.maxY > 12.6 && north.minY < 10.8,
+    "chosen local detour direction did not materially change Y");
+  assert(detour.firstDetour > detour.firstContact &&
+    north.firstDetour > north.firstContact,
+    "detour triggered before actual forward resistance");
   return "reversal max x=" + reverse.maxX.toFixed(3) +
     "m; north max x=" + north.maxX.toFixed(3) +
     "m; south max x=" + detour.maxX.toFixed(3) +
