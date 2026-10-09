@@ -37,6 +37,13 @@ const impulse=probe.get("impulse-evidence");
 if(!impulse)throw Error("missing physically observed point impact evidence");
 console.log("EXPERIMENTER POINT IMPULSE: "+JSON.stringify(
  JSON.parse(impulse.replaceAll("&quot;",'"').replaceAll("&amp;","&"))));
+if(probe.get("rotate-ui")!=="paused physical crate rotated by actual Alt-pointer path")
+  throw Error("direct physical pause rotation UI failed");
+const pose=probe.get("pose-evidence");
+if(!pose)throw Error("physical body/gate pose probe missing");
+console.log("EDITABLE WORLD BODY & GATE POSES: "+JSON.stringify(
+ JSON.parse(pose.replaceAll("&quot;",'"').replaceAll("&amp;","&"))));
+
 
 
 // A bounded, randomized-by-seed whole-world material pressure run.
