@@ -284,6 +284,39 @@ export class EffectorField {
     }
     this.world.propagateModifiedBodyPositionsToColliders();return true;
   }
+  // Direct PAUSED authoring command. Rigid-body rotation is intentionally
+  // distinct from intrinsic locomotion/actuation. Preserve every linked
+  // physical segment's relative pose; rotating a gate rotates ABOUT its
+  // real pinned world pivot, not its centre.
+  setAuthoredAngle(id,target){
+    const angle=safe(target,"authored orientation");
+    const actor=this.actor(id),matter=this.matter.find(m=>m.id===id);
+    if(!actor&&!matter)return false;
+    if(actor){
+      const root=actor.root,origin=root.translation();
+      const delta=wrap(angle-root.rotation());
+      const bodies=[...new Set(actor.parts.map(part=>part.body))];
+      for(const body of bodies){
+        const relative=body.translation();
+        const offset=rotate(V(relative.x-origin.x,relative.y-origin.y),delta);
+        const next=V(origin.x+offset.x,origin.y+offset.y);
+        body.setRotation(wrap(body.rotation()+delta),true);
+        body.setTranslation(next,true);
+        body.setLinvel(V(),true);body.setAngvel(0,true);
+      }
+    }else if(matter.type==="gate"){
+      const pivot=matter.pivot;
+      const offset=rotate(V(matter.length/2,0),angle);
+      matter.body.setRotation(angle,true);
+      matter.body.setTranslation(V(pivot.x+offset.x,pivot.y+offset.y),true);
+      matter.body.setLinvel(V(),true);matter.body.setAngvel(0,true);
+    }else{
+      matter.body.setRotation(angle,true);
+      matter.body.setLinvel(V(),true);matter.body.setAngvel(0,true);
+    }
+    this.world.propagateModifiedBodyPositionsToColliders();
+    return true;
+  }
   undo(){
     const edit=this.authored.pop();if(!edit)return false;
     if(edit.type==="wall"){
