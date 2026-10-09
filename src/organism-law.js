@@ -57,8 +57,20 @@ export function localResponse(state, sensed, profile = null) {
   // A low-yielding organism can briefly anchor itself in response to
   // *observed* lateral/rear pressure. It cannot hold against arbitrary force:
   // the body motor must supply finite ground-coupled brace impulse.
-  if(sensed.touch && front<.25 && yieldFactor<.25 &&
-      (sensed.load||0)>1 && sensed.progress<.7)
+  const directed=Number.isFinite(sensed.rearLoad) &&
+    Number.isFinite(sensed.sideLoad);
+  const supportLoad=directed ?
+    Math.max(0,sensed.rearLoad)+Math.max(0,sensed.sideLoad):
+    (front<.25 ? Math.max(0,sensed.load||0) : 0);
+  // Support is a short, renewable somatic reaction while real pressure
+  // persists, NOT a cognition state or unlimited sticky stance. The latch
+  // avoids the old false 'full progress' signal while throttle=0.
+  const wasBracing=(next.braceTicks||0)>0;
+  if(yieldFactor<.25 && sensed.touch && supportLoad>6 &&
+      (sensed.progress<.7 || wasBracing))
+    next.braceTicks=9;
+  else next.braceTicks=Math.max(0,(next.braceTicks||0)-1);
+  if(next.braceTicks>0 && !next.recover)
     return {state:next,steer:0,throttle:0,mode:"brace"};
   return {state:next,steer:clamp(wander+sideAvoid,-1,1),
     throttle:.85,mode:frontalStall?"press":"cruise"};
