@@ -325,6 +325,39 @@ async function pressureProbe() {
       "noSupport="+integratedNoSupport.dx.toFixed(3),
       "stroke="+integratedGround.sweep.toFixed(3)
     ].join(";");
+    // Different body types under actual mixed contact pressure. The timing
+    // sample is observational; a cloud runner is not a performance budget.
+    {
+      const w=new OrganismField();
+      try{
+        const varieties=["dart","crawler","broad","worm"];
+        for(let i=0;i<72;i++){
+          const angle=i*2.399963229728653,r=.38*Math.sqrt(i);
+          w.spawn(varieties[i%4],{x:17+Math.cos(angle)*r,
+            y:11+Math.sin(angle)*r},angle);
+        }
+        assert(w.actors.length===76,
+          "mixed batch did not create all live physics bodies");
+        let peakContact=0,peakMs=0,sumMs=0;
+        for(let tick=0;tick<130;tick++){
+          w.step(null);
+          peakContact=Math.max(peakContact,w.activeContactCount);
+          peakMs=Math.max(peakMs,w.lastFrameMs);
+          sumMs+=w.lastFrameMs;
+          for(const actor of w.actors){
+            const p=actor.root.translation();
+            assert(Number.isFinite(p.x+p.y+actor.root.rotation()) &&
+              (!actor.tail||Number.isFinite(actor.tail.translation().x+
+                actor.tail.translation().y)),
+              "physical crowd created nonfinite articulated afterstate");
+          }
+        }
+        assert(peakContact>0,"crowded mixed bodies had no solver-active contact");
+        document.body.dataset.crowdEvidence="actors=76;steps=130"+
+          ";maxContacts="+peakContact+";meanMs="+(sumMs/130).toFixed(3)+
+          ";maxMs="+peakMs.toFixed(3);
+      }finally{w.world.free();}
+    }
     // A live arrangement is an authored *starting condition*, not a
     // concealed recording of velocity/joint memory. Verify physical positions,
     // actor morphology and gate angle, and reject corrupt files atomically.
