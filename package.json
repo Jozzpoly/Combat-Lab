@@ -1,8 +1,15 @@
 {
-  "name": "combat-lab-clean-room",
+  "name": "combat-lab-embodied-effectors-experiment",
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --check app.js"
+    "test": "node --test test/*.test.mjs",
+    "build": "vite build --base=./"
+  },
+  "dependencies": {
+    "@dimforge/rapier2d-deterministic": "0.21.0"
+  },
+  "devDependencies": {
+    "vite": "8.2.2"
   }
 }

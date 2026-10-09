@@ -1,10 +1,41 @@
 <!doctype html>
-<meta charset="utf-8">
-<title>Combat Lab — Clean Substrate</title>
-<link rel="stylesheet" href="./style.css">
-<main class="shell">
-<header><div><p class="eyebrow">Combat Lab · clean neutral substrate</p><h1 id="experiment-title">Loading…</h1><p id="experiment-purpose" class="purpose"></p></div><div class="controls"><button id="pause">Pause</button><button id="reset">Reset</button><button id="debug">Debug</button></div></header>
-<section class="viewport"><canvas id="lab" aria-label="Combat Lab neutral experiment surface"></canvas></section>
-<footer><div><strong>Controls</strong><span id="controls-text">—</span></div><div class="status"><span id="run-state">RUNNING</span><span id="sim-time">0.00 s</span><span id="build-id">source: local</span></div></footer>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Combat Lab — Embodied Effectors / independent field</title><link rel="stylesheet" href="./style.css"></head>
+<body><div class="layout">
+<main class="stage">
+<header><div><span class="eyebrow">Combat Lab · independent material-possibility experiment</span>
+<h1>What can a body do?</h1><p>Real colliding appendages, finite forces, editable matter. No goals, route script, or magic inventory.</p>
+</div><span id="health" class="health">Loading real physics…</span></header>
+<nav class="tools" aria-label="Physical experiment controls">
+<button id="pause">Pause</button><button id="step">One step</button><button id="reset">Reset world</button>
+<button id="spawn-pincer">Add pincer</button><button id="spawn-ram">Add ram</button>
+<button id="add-box">Place crate</button><button id="poke">Impulse probe</button><button id="undo">Undo added matter</button>
+<button id="capture">Capture physical setup</button>
+</nav>
+<div class="canvas-wrap"><canvas id="lab" aria-label="Editable material world with real physical effector bodies"></canvas>
+<div class="hud"><strong id="subject">Live embodied field</strong><span id="readout">Waiting for solver</span></div></div>
+<footer><span>WASD move · mouse aims · E/Q closes/opens both jaws · Z/X upper · C/V lower · click selects physical body/object</span>
+<span>Mouse wheel zoom · middle drag pan · paused Ctrl-drag reposition / Alt-drag rotate · Shift drag draw wall · Impulse probe to disturb actual bodies</span></footer>
 </main>
-<script type="module" src="./app.js"></script>
+<aside><section class="lead"><h2>Physical experiment</h2><p>Click a real collider to select it. Drive the body, move each arm, rebuild its geometry or disturb matter. No scripted outcomes.</p></section><section><h2>Selected entity</h2><div id="entity">No selection</div>
+<div class="jaw-control" aria-label="Independent physical appendages"><label>Upper jaw opening <output id="upper-percent">100%</output><input id="upper-jaw" type="range" min="0" max="1" step=".01" value="1"></label><label>Lower jaw opening <output id="lower-percent">100%</output><input id="lower-jaw" type="range" min="0" max="1" step=".01" value="1"></label><p>0 = close, 100% = open. Each arm applies its own finite reciprocal joint torque. E/Q still operate both together.</p></div>
+<div class="field"><label>Actuator / claw torque (N·m)</label><input id="torque" type="number" min="0" value="780" step="80"></div>
+<button id="apply-torque">Apply actual joint torque</button>
+<div class="field"><label>Actual forward reach of each jaw (m)</label><input id="reach" type="number" min=".86" step=".1" value="1.53"></div>
+<button id="apply-reach">Rebuild real jaw geometry</button>
+<div class="field"><label>Object mass (kg)</label><input id="matter-mass" type="number" min=".01" value="35" step="10"></div>
+<button id="apply-mass">Apply physical object mass</button>
+</section><section><h2>Experimenter interventions</h2><div class="field"><label>Impulse strength (N·s)</label><input id="poke-strength" type="number" value="250" min="0" step="50"></div><p>Choose Impulse probe, then drag an arrow from a real body, jaw, gate or crate. Release to apply a **one-time external point impulse**. Not an organism action. Drag length sets direction; input sets magnitude. Works paused or running, and can spin objects through off-centre impact.</p></section><section><h2>Author matter</h2><div class="field"><label>New crate mass (kg)</label>
+<input id="crate-mass" type="number" min=".01" value="35" step="10"></div>
+<div class="field"><label>Crate width (m)</label>
+<input id="crate-width" type="number" min=".08" value=".9" step=".1"></div>
+<p>Place crate then click canvas. Shift-drag adds a **real fixed wall**. Paused Ctrl-drag repositions jointed bodies as wholes; Alt-drag rotates an organism, crate or world-pinned gate. Neither editor action resets unrelated physical matter.</p>
+</section><details id="scene-details"><summary>Portable authored starting scene · JSON</summary>
+<p>Capture exact posed starting bodies, physical arm angles, masses and walls. This is <strong>not a running solver snapshot</strong>: velocities, active contacts and learned histories are intentionally not preserved. Reset returns to the captured starting condition until another setup replaces it.</p>
+<textarea id="scene-json" rows="7" spellcheck="false" placeholder="Capture or paste scene JSON here"></textarea>
+<button id="load-scene">Validate and load scene</button>
+</details><details><summary>Research boundaries & diagnostics</summary>
+<p>No foot-ground Rapier contact: root movement is a bounded external 2D support force, not biological gait. Arm movement is independently constrained by two real reciprocal revolute joints. An object can only move through contact or manually authored pause intervention; there is no body-to-object grip joint.</p>
+<p id="metrics">No measurements yet</p><p id="notice">Test any unreasonable assembly. If physics breaks, preserve the failure rather than hiding it.</p>
+</details></aside></div>
+<script type="module" src="./app.js"></script></body></html>

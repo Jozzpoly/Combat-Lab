@@ -1,65 +1,21 @@
-# Combat Lab
+# Combat Lab — Independent Embodied Effectors (unaccepted experiment)
 
-Combat Lab is a research laboratory for discovering embodied combat, movement and world-interaction possibilities.
+**This is not \`main\` and not public rehearsal.** The branch \`experiment/embodied-effectors-v0\` is an isolated, replaceable physical-body hypothesis. It was started from neutral main specifically to avoid inheritance from the quarantined motorized-body experiment.
 
-## Current state — neutral main, independently evolving research
+## Research question
 
-`main` contains a neutral smoke surface, repository/deployment infrastructure and canonical research documentation. It is **not** an accepted combat, crowd, movement or organism implementation.
+Can **independently actuated, colliding body appendages** generate new physical interactions with free material that are absent when those appendage motors are inactive, without resorting to magical grip, scripted routes or invisible movement?
 
-For the current selected research question and its evidence boundary, enter [docs/RESEARCH_STATE.md](docs/RESEARCH_STATE.md). For *what is being built or published now*, also verify live experiment branches, their exact CI results and the separate `rehearsal/current` pointer. A static README must not duplicate or override that changing operational state.
+A three-body pincer with two real revolute joints shares an editable Rapier 2D world with a broad rigid pusher, movable crates, and an actual hinged barrier. The actor's chassis still uses a transparent finite top-down ground-reaction proxy, **not** physical legs or animal gait.
 
-The previous implementation line is absent from the active tree. Its Git history remains reachable only for deliberate forensic recovery.
+### Browser controls
 
-## What survives the failure
+WASD to move the currently selected organism, cursor to point its body, E/Q to close/open both *real physical jaws*, Z/X for upper jaw and C/V for lower jaw (or two independent sliders). Click a collider to select it. Pause to Ctrl-drag the entire articulated body or individual movable objects; Alt-drag rotates the whole jointed organism, a crate, or an actually hinged gate about its world pin; Shift-drag draws a solid fixed wall. Use **Impulse probe** to draw a one-shot finite external impulse arrow from an actual collider, including a separate arm. Wheel zooms and middle-drag pans. Add new pincer/ram/crate anywhere and edit real actuator torque, jaw geometry or collider mass. "Capture physical setup" saves a portable *initial-scene* JSON (including physical joint angles); load and reset use that authored starting condition, **not** serialized running physics.
 
-The project keeps:
+See the [whole-experiment checkpoint](https://github.com/Jozzpoly/Combat-Lab/blob/main/docs/BODY_WORLD_CHECKPOINT_2026-10-10.md) for the bounded multi-actor pressure and joint-integrity findings and why the current unqualified candidate should not be mistaken for a whole living-world solution.
 
-- Owner evidence and corrections;
-- observed phenomena;
-- falsifiers and causal findings;
-- provenance;
-- protocol lessons;
-- the ability to recover old commits when a concrete future question needs them.
+### Strict evidence boundary
 
-It does **not** grant automatic authority to:
+The [current observation note](docs/EMBODIED_EFFECTOR_TRIAL_2026-10-09.md) records positive and negative physical causal controls, broken/adjusted claims and experimental limits. None of these technical results is Owner-verified experiential value. **Do not merge, deploy or canonize this body model by test count or implementation momentum.**
 
-- old branch ancestry;
-- green mechanism tests;
-- previous "foundation" labels;
-- the last canonical `NEXT`;
-- code merely because it already exists.
-
-## Current operating model
-
-The repaired experiment protocol distinguishes:
-
-- **discovery** — find valuable whole phenomena first;
-- **diagnosis / attribution** — explain a phenomenon without letting the diagnostic fixture own the roadmap;
-- **serious construction** — build a coherent qualitative step when evidence or Owner direction calls for one;
-- **Lab infrastructure** — neutral capabilities that expand experimentation without encoding the answer.
-
-A diagnostic PASS is a finding, not an automatic parent implementation.
-
-A local improvement against the previous branch version is not enough; relevant progress must be judged against the actual Owner baseline and project goal.
-
-## Repository contract
-
-- `main` is the neutral current Lab state and durable research truth.
-- `rehearsal/current` is an exact deployment pointer only.
-- `archive/forensic-pre-cleanroom-2026-10-06` is forensic reachability only.
-- CI may prove runtime/mechanical/repository facts but may not assert research-roadmap semantics.
-- Public rehearsal occurs only from an explicitly selected exact source.
-
-Repository administration is the agent's responsibility. The Owner should not need to manage branches, SHAs, CI or deployment in normal work.
-
-## Current authority
-
-Read:
-
-1. `docs/RESEARCH_STATE.md`
-2. `docs/EXPERIMENT_PROTOCOL.md`
-3. `docs/FAILURE_SCAR_2026-10-06.md`
-
-The protocol is explicitly provisional and may be changed when evidence shows a better way to run the Lab.
-
-> **Discover valuable phenomena first; diagnose them when needed; build serious wholes from knowledge rather than from the accidental ancestry of diagnostic fixtures.**
+The true Combat Lab goal, prior Owner FAILs, live project authority and open frontier are defined on neutral main in [research state](https://github.com/Jozzpoly/Combat-Lab/blob/main/docs/RESEARCH_STATE.md), [Owner-first reconciliation](https://github.com/Jozzpoly/Combat-Lab/blob/main/docs/OWNER_TRUTH_RECONCILIATION_2026-10-09.md), and [experiment protocol](https://github.com/Jozzpoly/Combat-Lab/blob/main/docs/EXPERIMENT_PROTOCOL.md).
