@@ -31,7 +31,9 @@ function attempt(Field,{mass=18,impulse=V(65,-170),reflex=false,limit=240}={}){
     world.select(p.id);
     const b=world.spawn("ram",V(13.20,12),Math.PI);
     const o=world.addBox({x:10.70,y:12,hx:.38,hy:.48,mass},false);
-    const secondary=world.addBox({x:9.65,y:10.55,hx:.23,hy:.24,mass:9},false);
+    // Follow-up geometry predeclared from observed initial crate trajectory;
+    // outside direct actor arm reach. This is a *fixture*, not a free-world claim.
+    const secondary=world.addBox({x:11.45,y:10.65,hx:.35,hy:.25,mass:9},false);
     const secondaryStart=V(secondary.body.translation().x,secondary.body.translation().y);
     p.spec.clawTorque=780;
     world.setAperture(p.id,.92);
