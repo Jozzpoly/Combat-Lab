@@ -693,7 +693,6 @@ export class MaterialWorld {
     this.residentSkirtSign = side;
     this.residentControl.skirtTicks = 0;
     this.residentControl.adaptiveSign = side;
-    this.residentControl.adaptiveSign = this.residentSkirtSign;
     this.#recordEvent("actor.detourSide", "resident chose local lateral sign=" + side);
   }
 
@@ -701,7 +700,7 @@ export class MaterialWorld {
     if (mode !== "baseline" && mode !== "tactile-recovery" &&
         mode !== "directional-recovery" && mode !== "skirt-recovery" &&
         mode !== "adaptive-skirt") {
-      throw new RangeError("resident mode must be baseline, tactile-recovery, directional-recovery or skirt-recovery or adaptive-skirt");
+      throw new RangeError("resident mode must be baseline, tactile-recovery, directional-recovery, skirt-recovery or adaptive-skirt");
     }
     this.residentMode = mode;
     this.residentControl.blockedTicks = 0;
@@ -759,7 +758,7 @@ export class MaterialWorld {
     if (mode !== "baseline" && mode !== "tactile-recovery" &&
         mode !== "directional-recovery" && mode !== "skirt-recovery" &&
         mode !== "adaptive-skirt") {
-      throw new RangeError("peer mode must be baseline, tactile-recovery, directional-recovery or skirt-recovery or adaptive-skirt");
+      throw new RangeError("peer mode must be baseline, tactile-recovery, directional-recovery, skirt-recovery or adaptive-skirt");
     }
     if (this.peerMode === mode) return;
     this.peerMode = mode;
