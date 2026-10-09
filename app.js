@@ -344,6 +344,13 @@ async function start(){
     $("#apply-reach").click();
     if(Math.abs(field.actor(selectedTarget).spec.clawReach-2.31)>.0001)
       throw Error("Actual UI did not change physical jaw geometry");
+    $("#upper-jaw").value="0.18";
+    $("#upper-jaw").dispatchEvent(new Event("input",{bubbles:true}));
+    $("#lower-jaw").value="0.77";
+    $("#lower-jaw").dispatchEvent(new Event("input",{bubbles:true}));
+    const arms=field.actor(selectedTarget).targetApertures;
+    if(Math.abs(arms[0]-.18)>.00001||Math.abs(arms[1]-.77)>.00001)
+      throw Error("Actual independent appendage sliders failed to alter physical commands");
     $("#capture").click();
     const setupText=$("#scene-json").value;
     if(!setupText.includes("combat-lab.effectors.initial.v1"))
@@ -359,10 +366,15 @@ async function start(){
       throw Error("Capture did not become reset-stable starting condition");
     if(Math.abs(field.actors[0].spec.clawReach-2.31)>.0001)
       throw Error("Reset did not preserve edited physical jaw span");
+    if(Math.abs(field.actors[0].targetApertures[0]-.18)>.0001||
+       Math.abs(field.actors[0].targetApertures[1]-.77)>.0001)
+      throw Error("Scene capture/reset incorrectly fused independent jaw commands");
     document.body.dataset.sceneUi="actual capture/load/reset PASS";
     document.body.dataset.probeResult=JSON.stringify(physicalProbe(EffectorField));
     const {affordanceSweep}=await import("./src/affordance-sweep.js");
     document.body.dataset.affordanceSweep=JSON.stringify(affordanceSweep(EffectorField));
+    const {independentArmsProbe}=await import("./src/independent-arms-probe.js");
+    document.body.dataset.independentArms=JSON.stringify(independentArmsProbe(EffectorField));
   }
   requestAnimationFrame(frame);
 }
