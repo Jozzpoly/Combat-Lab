@@ -41,12 +41,26 @@ export function affordanceSweep(Field){
    }
  }
  const asymmetric=attempt(18,.10,780,1.30);
- if(!rows.every(r=>r.withArms.finite&&r.deadArms.finite)&&!asymmetric.finite)
+ if(!rows.every(r=>r.withArms.finite&&r.deadArms.finite)||!asymmetric.finite)
    throw Error("nonfinite articulated material sweep");
+ const outliers=[
+   {mass:13,offset:-1.4,width:.76},
+   {mass:13,offset:1.4,width:.76},
+   {mass:13,offset:2.25,width:.76},
+   {mass:640,offset:0,width:.76},
+   {mass:2800,offset:0,width:.76},
+   {mass:40,offset:0,width:2.3}
+ ].map(spec=>({
+   ...spec,
+   active:attempt(spec.mass,spec.offset,780,spec.width),
+   disabled:attempt(spec.mass,spec.offset,0,spec.width)
+ }));
+ if(!outliers.every(x=>x.active.finite&&x.disabled.finite))
+   throw Error("large eccentric body or heavy matter became nonfinite");
  const successes=rows.filter(r=>r.extraMaterialDisplacement>.6).length;
  const differences=rows.map(r=>r.extraMaterialDisplacement);
  return {cases:rows.length,successfulMaterialContrasts:successes,
    maxDifference:Math.max(...differences),
    minDifference:Math.min(...differences),
-   rows,extraWideBox:asymmetric};
+   rows,outliers,extraWideBox:asymmetric};
 }
