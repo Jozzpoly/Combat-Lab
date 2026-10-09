@@ -9,7 +9,11 @@ export const MORPHS = Object.freeze({
     gripReach: 2.3, gripForce: 330, color: "#d9b17b" },
   broad: { name: "Broad / pusher", mass: 245, speed: 2.0, acceleration: 7.5,
     braking: 10, turnRate: 0.9, turnTorque: 540, width: 2.3, length: 1.7,
-    gripReach: 2.6, gripForce: 750, color: "#a99ae3" }
+    gripReach: 2.6, gripForce: 750, color: "#a99ae3" },
+  worm: { name: "Inchworm / alternating support", mass: 84, speed: 2.0,
+    acceleration: 9, braking: 9, turnRate: 1.1, turnTorque: 260,
+    width: .62, length: 2.05, muscleForce: 850, supportForce: 900,
+    gripReach: 1.7, gripForce: 150, color: "#97cf9c" }
 });
 export const KINDS = Object.freeze(Object.keys(MORPHS));
 export const DT = 1 / 60;
