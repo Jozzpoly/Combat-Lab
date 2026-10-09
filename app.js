@@ -140,14 +140,18 @@ function updateStatus() {
       active.spec.name + "  [" + selected.id + "]",
       "mass " + active.spec.mass + " kg · physical parts " + active.parts.length,
       "speed " + active.spec.speed + " m/s · turning " + active.spec.turnRate + " rad/s",
-      "position (" + selected.pos.x.toFixed(2) + ", " + selected.pos.y.toFixed(2) + ")",
+      "physical COM (" + selected.pos.x.toFixed(2) + ", " + selected.pos.y.toFixed(2) + ")",
       "realized " + selected.speed.toFixed(2) + " m/s · contacts " + selected.contacts,
       "front traction " + selected.traction.toFixed(2) +
         (active.tail ? " · rear traction "+active.control.rearTraction.toFixed(2)+
           " · rear drive "+active.spec.rearDrive.toFixed(2) : "")+
         " · mode " + selected.mode,
       "local recovery events " + selected.recoveries,
-      "intent→impulse " + JSON.stringify(active.control.motorImpulse || {})
+      active.kind==="worm" ?
+        "internal stroke J=" + (active.controlStroke?.stroke??0).toFixed(3) +
+        " · actual ground support J=" + (active.controlStroke?.support??0).toFixed(3) +
+        " · phase=" + (active.controlStroke?.phase??"idle") :
+        "intent→impulse " + JSON.stringify(active.control.motorImpulse || {})
     ].join("\n") : "No organism selected.";
   $("#evidence").textContent = "Live solver-active contacts: " + snap.activeContacts +
     ". Physical joints: " + field.actors.filter(a=>Boolean(a.joint)).length +
