@@ -321,7 +321,8 @@ async function start(){
       const id=field.pick(mouse);
       if(!id)throw Error("Impulse must begin on a real dynamic collider");
       pokeDraft={id,point:{...mouse}};
-      if(Number.isInteger(event.pointerId))canvas.setPointerCapture(event.pointerId);
+      if(event.isTrusted && Number.isInteger(event.pointerId))
+        canvas.setPointerCapture(event.pointerId);
       return;
     }
     if(armedBox){
@@ -348,6 +349,7 @@ async function start(){
       field.reposition(dragPose.id,V(mouse.x+dragPose.dx,mouse.y+dragPose.dy));
   }));
   canvas.addEventListener("pointerup",event=>guard(()=>{
+    mouse=worldPoint(event);
     if(pokeDraft){
       const start=pokeDraft.point,dir=V(mouse.x-start.x,mouse.y-start.y);
       const length=Math.hypot(dir.x,dir.y);
