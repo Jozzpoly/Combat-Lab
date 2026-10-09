@@ -1875,6 +1875,60 @@ await trial("same-post-and-policy-different-body-envelope-clearance", world => {
     "; identical 72kg, motor policy and material world";
 });
 
+await trial("physical-trails-are-bounded-and-not-local-actor-memory", world => {
+  world.setPeerEnabled(true);
+  world.setBraceEnabled(true);
+  world.setResidentMode("skirt-recovery");
+  for (let i = 0; i < 480; i++) world.step(still);
+  const traces = world.trailSnapshot();
+  assert(traces.length === 4 && traces.every(t => t.points.length === 180),
+    "bounded 6s trace buffer did not retain four actors with finite cap");
+  for (const trace of traces) {
+    assert(trace.points.every(point => Number.isFinite(point.x) &&
+      Number.isFinite(point.y) && Number.isInteger(point.tick)),
+      "trajectory contains unreal or non-time-indexed state");
+  }
+  assert(!Object.keys(world.residentSense).includes("trails"),
+    "research-plane trajectory leaked into local sensor");
+  world.setBraceEnabled(false);
+  assert(world.trailSnapshot().every(x => x.id !== "brace"),
+    "deleted body retained visual ghost trail");
+  world.reset();
+  assert(world.trailSnapshot().length === 0,
+    "trails leaked across deliberate new simulation run");
+  return "4 × 180 bounded actor points, no ghost after removal, clean reset";
+});
+
+try {
+  const toggle = document.querySelector("#motion-trails");
+  const fixture = document.querySelector("#fixture-lateral-gap");
+  const side = document.querySelector("#resident-detour-side");
+  const step = document.querySelector("#single-step");
+  assert(toggle && fixture && side && step,
+    "visible 2D lateral experiment controls absent");
+  fixture.click();
+  assert(document.body.dataset.experimentFixture === "lateral" &&
+    document.body.dataset.simulationPaused === "true" &&
+    side.value === "1" &&
+    document.querySelector("#resident-mode").value === "skirt-recovery",
+    "lateral A/B fixture did not start paused on evidenced south route");
+  toggle.checked = true;
+  for (let i = 0; i < 70; i++) step.click();
+  assert(Number(document.body.dataset.liveTrailPoints) > 10,
+    "real Rapier browser steps did not draw a path");
+  document.querySelector("#reset-world").click();
+  step.click();
+  assert(Number(document.body.dataset.liveTrailPoints) === 0,
+    "reset left a visually misleading old-run path");
+  toggle.checked = false;
+  document.querySelector("#pause-simulation").click();
+  cases.push({ name: "live-ui-lateral-workbench-trail-and-reset", status: "PASS",
+    detail: "one-click paused south detour, 70 real steps rendered, reset clears 2D trail" });
+} catch(error) {
+  cases.push({ name: "live-ui-lateral-workbench-trail-and-reset", status: "FAIL",
+    detail: String(error?.message ?? error).slice(0,300) });
+}
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
