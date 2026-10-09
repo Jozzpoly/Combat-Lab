@@ -2035,6 +2035,96 @@ try {
   cases.push({ name:"live-ui-exact-world-author-and-reject", status:"FAIL",
     detail:String(error?.message??error).slice(0,300) });
 }
+await trial("second-actor-geometry-is-real-mass-preserving-and-resettable", world => {
+  world.setPeerEnabled(true);
+  let peer=world.entities.get("peer");
+  assert(peer.shape === "circle" && peer.radius === 0.71 &&
+    peer.mass === 210, "original circular body baseline silently changed");
+  let rejected=false;
+  try{world.setPeerShape("phantom")}catch(error){rejected=error instanceof RangeError}
+  assert(rejected && world.peerShape==="circle" && peer.shape==="circle",
+    "invalid physical body shape was partially accepted");
+  const rigidHandle=peer.body.handle;
+  world.setPeerShape("bar");
+  assert(peer.shape==="box" && peer.half.x===1.02 && peer.half.y===0.38 &&
+    peer.mass===210 && peer.body.handle===rigidHandle,
+    "real bar collider did not preserve own body/mass identity");
+  world.setPeerMass(330);
+  assert(peer.mass===330 && peer.shape==="box" && peer.half.y===0.38,
+    "mass edit silently reverted elongated collider");
+  for(let i=0;i<45;i++) world.step(still);
+  finite(world,"bar physical shape");
+  world.reset();
+  peer=world.entities.get("peer");
+  assert(world.peerShape==="bar" && peer.shape==="box" &&
+    peer.mass===330 && peer.half.x===1.02,
+    "reset lost authored body material shape");
+  world.setPeerShape("circle");
+  assert(peer.shape==="circle" && peer.radius===0.71 && peer.mass===330,
+    "return from bar to circular collision lost physical mass");
+  return "circle→real 2.04×0.76m rotating bar→circle; mass 210→330kg; reset stable";
+});
+
+await observation("same-mass-circle-vs-elongated-body-contact-response", world => {
+  const run=shape=>{
+    world.setPeerMass(210);
+    world.setPeerShape(shape);
+    world.setPeerEnabled(true);
+    world.setBraceEnabled(true);
+    world.reset();
+    let firstContact=null, contacts=0;
+    let maxRotation=0;
+    const trace=[];
+    for(let tick=1;tick<=240;tick++){
+      world.step(still);
+      const peer=at(world,"peer");
+      const obs=world.lastCausalObservations.get("peer");
+      if(obs.contacts.length){contacts++;if(firstContact===null)firstContact=tick;}
+      maxRotation=Math.max(maxRotation,Math.abs(peer.rotation));
+      trace.push([peer.position.x,peer.position.y,
+        peer.velocity.x,peer.velocity.y,peer.rotation]);
+    }
+    finite(world,"different body shapes");
+    return {firstContact,contacts,maxRotation,trace,last:trace.at(-1)};
+  };
+  const circle=run("circle"),bar=run("bar");
+  let firstAfterstateDiff=null,maxPositionDifference=0;
+  for(let i=0;i<circle.trace.length;i++){
+    const a=circle.trace[i],b=bar.trace[i];
+    const divergence=Math.hypot(a[0]-b[0],a[1]-b[1]);
+    if(firstAfterstateDiff===null && divergence>1e-7)firstAfterstateDiff=i+1;
+    maxPositionDifference=Math.max(maxPositionDifference,divergence);
+  }
+  return "same body mass=210kg, same motor and World; circular contact t="+
+    circle.firstContact+", bar contact t="+bar.firstContact+
+    "; first trajectory divergence="+firstAfterstateDiff+
+    "; max position divergence="+maxPositionDifference.toFixed(3)+
+    "m; max rotation circle/bar="+
+    circle.maxRotation.toFixed(3)+"/"+bar.maxRotation.toFixed(3)+"rad";
+});
+
+try {
+  document.querySelector("#fixture-pressure-chain").click();
+  const select=document.querySelector("#peer-shape");
+  const status=document.querySelector("#peer-status");
+  assert(select&&status&&select.value==="circle",
+    "peer shape control missing or default unexpectedly bar");
+  select.value="bar";
+  select.dispatchEvent(new Event("change",{bubbles:true}));
+  document.querySelector("#single-step").click();
+  assert(status.textContent.includes("shape bar"),
+    "actual DOM failed to apply elongated peer collider");
+  document.querySelector("#reset-world").click();
+  document.querySelector("#single-step").click();
+  assert(status.textContent.includes("shape bar"),
+    "UI reset silently normalized elongated body geometry");
+  document.querySelector("#pause-simulation").click();
+  cases.push({name:"live-ui-peer-material-shape-and-reset",status:"PASS",
+    detail:"shape circle→elongated bar via DOM, preserved across live Reset world"});
+} catch(error) {
+  cases.push({name:"live-ui-peer-material-shape-and-reset",status:"FAIL",
+    detail:String(error?.message??error).slice(0,300)});
+}
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
