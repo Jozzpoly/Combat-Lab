@@ -56,6 +56,12 @@ export function physicalProbe(Field){
    const other=authorship.matter[0],q={...other.body.translation()},
      tick=authorship.ticks;
    const p=authorship.actors[0];
+   const hookBefore={...p.arms[0].hook.translation()};
+   assert(authorship.setClawReach(p.id,2.31),
+     "real physical manipulator span cannot be authored");
+   const hookAfter=p.arms[0].hook.translation();
+   assert(Math.hypot(hookAfter.x-hookBefore.x,hookAfter.y-hookBefore.y)>.7,
+     "jaw reach changed only a numeric setting, not a real collider");
    const offsets=p.arms.map(arm=>{
      const b=arm.body.translation(),root=p.root.translation();
      return {x:b.x-root.x,y:b.y-root.y};
@@ -88,6 +94,8 @@ export function physicalProbe(Field){
        replay.matter.length===captured.matter.length &&
        replay.gates.length===captured.gates.length,
        "posed scene lost material components");
+     assert(Math.abs(replay.actors[0].reach-2.31)<1e-4,
+       "authored physical mandible length did not survive scene roundtrip");
      assert(Math.abs(replay.actors[0].x-captured.actors[0].x)<1e-4,
        "restored body starting pose changed");
      for(let arm=0;arm<2;arm++)
