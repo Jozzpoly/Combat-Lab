@@ -113,7 +113,7 @@ export function physicalProbe(Field){
  // Material verbs beyond a one-shot squeeze: the SAME body closes
  // its actual jaws around matter, then translates perpendicular to them.
  // The null version has identical movement authority, only no arm torque.
- function carryTrial(torque){
+ function carryTrial(torque,{releaseAfter=null}={}){
    const world=new Field({empty:true});
    try{
      const p=world.spawn("pincer",{x:9,y:12},0);
@@ -128,6 +128,7 @@ export function physicalProbe(Field){
      const initial={...obj.body.translation()},beforeRoot={...p.root.translation()};
      let maxLoading=0;
      for(let t=0;t<145;t++){
+       if(t===releaseAfter)world.setAperture(p.id,1);
        // Sideways travel with the same body facing +X. The object is NEVER
        // connected to this actor; joint count stays exactly two.
        world.step({move:{x:0,y:-1},aim:{x:18,y:12}});
@@ -143,8 +144,9 @@ export function physicalProbe(Field){
        loadedImpulse:+maxLoading.toFixed(4)};
    }finally{world.dispose();}
  }
- const transported=carryTrial(780),uncharged=carryTrial(0);
+ const transported=carryTrial(780),uncharged=carryTrial(0),
+   releasedHalfway=carryTrial(780,{releaseAfter:65});
  return {live,nullMotor,heavier,
-   lateralMaterialTransport:{transported,uncharged},
+   lateralMaterialTransport:{transported,uncharged,releasedHalfway},
    authorship:"joint-preserving pause edit and live undo verified"};
 }
