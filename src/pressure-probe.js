@@ -1841,6 +1841,40 @@ await trial("full-height-obstruction-defeats-local-detour-no-teleport", world =>
     "; no route oracle or guaranteed success";
 });
 
+await trial("same-post-and-policy-different-body-envelope-clearance", world => {
+  const post = world.authorRect({ kind: "wall", cx: 16.8, cy: 11.4,
+    width: 0.7, height: 1.4 });
+  const measure = radius => {
+    world.setResidentProfile({ ...DEFAULT_RESIDENT_PROFILE, radius });
+    world.setResidentMode("skirt-recovery");
+    world.setResidentDetourSide(1);
+    world.reset();
+    let maxX = -Infinity, maxY = -Infinity, contactTicks = 0;
+    for (let tick = 1; tick <= 440; tick++) {
+      world.step(still);
+      const entity = at(world, "resident");
+      maxX = Math.max(maxX, entity.position.x);
+      maxY = Math.max(maxY, entity.position.y);
+      if (world.lastCausalObservations.get("resident").contacts.includes(post)) contactTicks++;
+    }
+    finite(world, "envelope " + radius);
+    assert(world.residentProfile.radius === radius &&
+      at(world,"resident").radius === radius,
+      "authored envelope silently normalized");
+    return { maxX, maxY, contactTicks, skirts:world.residentControl.skirts };
+  };
+  const small = measure(0.56);
+  const large = measure(1.05);
+  assert(small.maxX > 18.4 && large.maxX < 16.4,
+    "same geometry was not differently navigable by physically distinct envelopes");
+  assert(large.contactTicks > 0 && large.skirts > 0,
+    "large body failed silently rather than attempting material detour");
+  return "radius 0.56m → max x " + small.maxX.toFixed(3) +
+    "m; radius 1.05m → max x " + large.maxX.toFixed(3) +
+    "m, contacts " + large.contactTicks + ", detours " + large.skirts +
+    "; identical 72kg, motor policy and material world";
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
