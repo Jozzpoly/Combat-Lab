@@ -478,6 +478,26 @@ async function start(){
        armedPoke || pokeDraft)
       throw Error("Actual UI impulse drag did not affect dynamic matter");
     document.body.dataset.pokeUi="finite impulse delivered via actual pointer drag";
+    if(!paused)$("#pause").click();
+    // Verify the REAL Alt-pointer path updates a collider and the pose
+    // changes before any subsequent Rapier solver step.
+    const crateForPose=field.matter.find(item=>item.type==="box");
+    const center={...crateForPose.body.translation()};
+    const beforeAngle=crateForPose.body.rotation();
+    const first=client({x:center.x+.23,y:center.y});
+    const second=client({x:center.x,y:center.y+.23});
+    canvas.dispatchEvent(new PointerEvent("pointerdown",
+      {...first,button:0,altKey:true,bubbles:true,pointerId:125}));
+    canvas.dispatchEvent(new PointerEvent("pointermove",
+      {...second,button:0,altKey:true,bubbles:true,pointerId:125}));
+    canvas.dispatchEvent(new PointerEvent("pointerup",
+      {...second,button:0,altKey:true,bubbles:true,pointerId:125}));
+    if(Math.abs(crateForPose.body.rotation()-beforeAngle)<.5 ||
+       rotatePose || !paused)
+      throw Error("Actual Alt-drag did not rotate physical crate during pause");
+    document.body.dataset.rotateUi="paused physical crate rotated by actual Alt-pointer path";
+    const {authoredPoseProbe}=await import("./src/world-authoring-probe.js");
+    document.body.dataset.poseEvidence=JSON.stringify(authoredPoseProbe(EffectorField));
     const {impulseInterventionProbe}=await import("./src/impulse-intervention-probe.js");
     document.body.dataset.impulseEvidence=JSON.stringify(
       impulseInterventionProbe(EffectorField));
