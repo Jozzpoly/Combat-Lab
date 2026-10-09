@@ -69,3 +69,13 @@ test("nonphysical grip params are explicitly rejected",()=>{
  assert.throws(()=>finiteGrip({playerMass:20,objectMass:-1,
   anchorVelocity:{x:0,y:0},targetError:{x:1,y:0},maxForce:20}),RangeError);
 });
+
+test("zero front or rear drive allocation cannot create NaN impulse",()=>{
+ const f=finiteDrive({mass:0,velocity:{x:0,y:0},heading:0,
+   input:1,speed:3,acceleration:10,braking:10,traction:1});
+ assert.deepEqual(f,{x:0,y:0});
+});
+test("negative allocated mass is visibly invalid",()=>{
+ assert.throws(()=>finiteDrive({mass:-1,velocity:{x:0,y:0},heading:0,
+   input:1,speed:3,acceleration:10,braking:10,traction:1}),RangeError);
+});
