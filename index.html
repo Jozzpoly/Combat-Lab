@@ -150,6 +150,12 @@
             <option value="baseline">Fixed shuttle only</option>
           </select>
         </label>
+        <label>Second body's physical shape
+          <select id="peer-shape">
+            <option value="circle">Circle — isotropic contact</option>
+            <option value="bar">Rotating bar — elongated contact</option>
+          </select>
+        </label>
         <label>Second body mass (kg) <input id="peer-mass" type="number" step="1" value="210"></label>
         <p id="peer-mass-feedback" class="muted" aria-live="polite"></p>
         <p id="peer-status" class="muted">Second body absent. Add it to create a real encounter; remove it to repeat the original single-body null.</p>
