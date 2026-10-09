@@ -23,7 +23,7 @@ function rect(src,label,mass=false){
   return {...pos,hx,hy,...(mass?{mass:finite(src.mass,label+".mass",true)}:{})};
 }
 const PHYSICAL_KEYS=["mass","speed","acceleration","braking","turnRate",
-  "turnTorque","gripForce","gripReach","contactYield"];
+  "turnTorque","gripForce","gripReach","contactYield","braceForce"];
 export function validateScene(input){
   if(!input||typeof input!=="object" || Array.isArray(input) ||
     input.format!=="combat-lab.initial-scene.v1")
@@ -49,8 +49,8 @@ export function validateScene(input){
       throw new RangeError(label+" has unresolvable real collider dimensions");
     const profile={};
     for(const key of PHYSICAL_KEYS){
-      const raw=key==="contactYield" && src.profile?.[key]===undefined ?
-        MORPHS[src.kind].contactYield : src.profile?.[key];
+      const raw=(key==="contactYield"||key==="braceForce") &&
+        src.profile?.[key]===undefined ? MORPHS[src.kind][key] : src.profile?.[key];
       profile[key]=finite(raw,label+".profile."+key,key==="mass");
     }
     if(profile.contactYield<0||profile.contactYield>1)
