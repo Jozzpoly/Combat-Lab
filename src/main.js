@@ -24,6 +24,7 @@ const braceBrakingInput = document.querySelector("#brace-braking");
 const braceFeedback = document.querySelector("#brace-profile-feedback");
 const braceStatus = document.querySelector("#brace-status");
 const contactOverlayInput = document.querySelector("#contact-overlay");
+const motionTrailsInput = document.querySelector("#motion-trails");
 const contactOverlaySummary = document.querySelector("#contact-overlay-summary");
 const residentProfileFeedback = document.querySelector("#resident-profile-feedback");
 const interventionTimeline = document.querySelector("#intervention-timeline");
@@ -537,6 +538,30 @@ function render() {
   ctx.restore();
 
   for (const item of snapshot.staticRects) drawStaticRect(item, false);
+
+  let drawnTrailPoints = 0;
+  if (motionTrailsInput.checked) {
+    const byId = new Map(snapshot.entities.map(e => [e.id,e]));
+    ctx.save();
+    ctx.globalAlpha = 0.70;
+    ctx.lineWidth = 2;
+    for (const trace of world.trailSnapshot()) {
+      const entity = byId.get(trace.id);
+      if (!entity || trace.points.length < 2) continue;
+      ctx.strokeStyle = entity.color;
+      ctx.beginPath();
+      let first = true;
+      for (const point of trace.points) {
+        const p = worldToScreen(point);
+        if (first) { ctx.moveTo(p.x,p.y); first=false; }
+        else ctx.lineTo(p.x,p.y);
+        drawnTrailPoints++;
+      }
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+  document.body.dataset.liveTrailPoints = String(drawnTrailPoints);
 
   for (const entity of snapshot.entities) {
     const selected = entity.id === snapshot.selectedId;
