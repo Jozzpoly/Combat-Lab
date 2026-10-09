@@ -536,6 +536,22 @@ async function start() {
       }),"physical world broke immediately "+key);
     }
     document.body.dataset.situationUi="original yard + four physical situations loaded and simulated";
+    assert(!manual&&!$("#manual").checked,
+      "material world secretly possesses and freezes selected organism");
+    document.dispatchEvent(new KeyboardEvent("keydown",{key:"d",bubbles:true}));
+    assert(manual&&$("#manual").checked,
+      "first directional input did not take control of selected organism");
+    tick();
+    assert(field.actor(field.activeActor).control.mode==="manual",
+      "possession failed to reach the actual physical motor law");
+    document.dispatchEvent(new KeyboardEvent("keyup",{key:"d",bubbles:true}));
+    $("#manual").click();
+    assert(!manual&&!$("#manual").checked,
+      "releasing direct control did not return to local physical response");
+    field.step(null);
+    assert(field.actor(field.activeActor).control.mode!=="manual",
+      "returning to local autonomy left motor possessed");
+    document.body.dataset.possessionUi="autonomous-first; WASD possession; release-to-local";
     document.body.dataset.uiProbe="pass";
     document.body.dataset.uiEvidence="4 morphology selections and 90 shared-world worm steps";
   }
