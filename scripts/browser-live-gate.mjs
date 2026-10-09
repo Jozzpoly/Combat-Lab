@@ -39,3 +39,4 @@ console.log("NONDESTRUCTIVE LIVE UNDO: "+(probe.grab("live-undo")||"not exposed"
 console.log("MIXED PHYSICAL CROWD: "+(probe.grab("crowd-evidence")||"not exposed"));
 console.log("PHYSICAL SOMATIC CONTACT A/B: "+(probe.grab("somatic-evidence")||"not exposed").replaceAll("&quot;",'"'));
 console.log("FINITE GROUNDED BRACING A/B: "+(probe.grab("brace-evidence")||"not exposed").replaceAll("&quot;",'"'));
+console.log("PAUSED WORLD REPOSITION A/B: "+(probe.grab("pose-evidence")||"not exposed").replaceAll("&quot;",'"'));
