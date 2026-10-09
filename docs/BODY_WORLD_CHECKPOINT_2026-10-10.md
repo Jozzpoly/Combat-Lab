@@ -51,6 +51,16 @@ The next owner-level discussion should decide **which phenomenon to challenge ne
 
 There is no new Owner experiential verdict on either experimental branch. At this checkpoint, stop new feature production. Ask for Owner judgement only when a well-grounded qualitative comparison or an appropriately presented, accessible rehearsal is available. Never silently deploy a draft PR to the existing public rehearsal.
 
+## Post-checkpoint top-down synthesis — hypothesis, not roadmap
+
+A cross-branch discrepancy matters more than raw fixture counts: **PR #1 offers primitive organism-local reactions without much physical action repertoire; PR #2 offers independently embodied actions but almost no organism-local initiative.** In PR #2 only the selected organism receives active steering, and the remaining actors mostly brake or stay in place. Many impressive afterstates in both candidates can be attributed to hand-authored placements, scripted probe input or external researcher impulses. None of these are equivalent to a *self-sustaining body ↔ local perception ↔ action ↔ material consequence ↔ updated perception* causal loop.
+
+**Research discriminator (not preselected implementation):** for varied bodies in a freely editable shared material world, identify **who or what originated each interesting event** — authored setup, researcher intervention, internally generated actor-local response, or ordinary solver dynamics. Under comparable conditions, do subsequent bodily and material consequences alter what actors can do and actually do, without goal/route choreography? If this remains essentially motorized geometry manipulated by researcher, a new body model may be necessary regardless of how many contact assertions pass.
+
+Do not interpret “local initiative” as an instruction to import full NPC cognition, ReflexBrain or SPC, or to force constant animation. Deliberate stillness and yielding can be meaningful physically; simple input-conditioned sensorimotor continuity may suffice for a bounded experiment. A genuine qualitative phenomenon should be inspectable by the Owner without reading metrics or deliberately following a prepared obstacle course.
+
+**Guardrail:** do not merge donor branches or declare a mandatory “PR #3” architecture from this observation. Next stage should first compare alternative whole-world hypotheses and falsifiers against historical Owner FAILs and positive S0/B0/R0 phenomena. The workbench must remain free enough for extreme experiments, and future human evaluation should test the *whole* before new product-level claims.
+
 ## Source authority
 
 [Canonical RESEARCH_STATE](RESEARCH_STATE.md) · [Owner-first reconciliation](OWNER_TRUTH_RECONCILIATION_2026-10-09.md) · [Failure scar](FAILURE_SCAR_2026-10-06.md) · [Frontier reassessment](FRONTIER_REASSESSMENT_2026-10-07.md) · [PR #1 full experiment](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/integrated-organism-field-v0/docs/WHOLE_WORLD_EXPERIENCE_REVIEW_2026-10-09.md) · [PR #2 full experiment](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/embodied-effectors-v0/docs/EMBODIED_EFFECTOR_TRIAL_2026-10-09.md).
