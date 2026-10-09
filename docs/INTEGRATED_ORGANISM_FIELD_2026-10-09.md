@@ -36,3 +36,25 @@ If the whole still feels like circles with appendages, abandon or materially red
 ## Isolation
 
 Branch: experiment/integrated-organism-field-v0. Parent: neutral main e25eaebe3330dae7563d2bd6e8a942693389cb46. Existing Yard branch and public rehearsal/current remain unchanged. This note contains no private conversational quotation.
+
+
+## Live machine checkpoint — source-qualified (2026-10-09)
+
+**Exact code checkpoint before this evidence note:** 1c303d83fe31195878f10c59a31a99155e14228e.
+**Same-source GitHub Actions:** [check 37974290338](https://github.com/Jozzpoly/Combat-Lab/actions/runs/37974290338) — completed success: 7 Node tests, emitted Vite/WASM browser boot and physical pressure probe.
+
+This checkpoint supports only the listed physical/repository claims:
+
+- Three different actual collider/mass assemblies run inside one deterministic Rapier 2D world, including one physically revolute-connected two-body organism.
+- Direct authoring changes real collider geometry and mass with independent drive/turn parameters. The test validates atomic rejection of one degenerate size and reanchors the joint; unrelated world material was not repositioned by editing another body.
+- One scripted pressure run retained 21 physical organism instances through its short sample and finite-state checks. **No throughput/large-crowd/long-duration qualification.**
+- In one matched-nominal-mass, speed, acceleration, braking and turn-authority encounter (with differing actual envelopes and compound-body mass distributions), first solver-active contact occurred at ticks **40 / 41 / 30** (dart / crawler / broad). The same movable 55 kg crate displaced **3.807 / 2.338 / 5.559 m**. This shows material results differing under that control, not a morphology-independent motor law or a performance ranking.
+- A paired-world control varied only the presence of that crate. The first measured organism trajectory difference occurred **on the same tick as first active contact** in all three cases (40 / 41 / 30). Maximum paired trajectory separations during the bounded sample were **2.152 / 3.961 / 1.970 m**. This supports causal physical interference rather than an omniscient or scripted change before touch.
+
+### Serious limitations / next research pressure
+
+The current body/motor law is an authored finite XY **ground-reaction approximation**, not leg/foot locomotion, support mechanics or realistic multi-limbed gait. The crawler's real revolute segment is dynamically material but remains propulsion-assisted by this approximation. Only three *families* of hull/contact geometry exist, albeit with independent mass, length, width and actuator authoring. The local behaviors are small pressure/recovery heuristics, not a credible organism ecology.
+
+The initial browser surface has headless boot and measurement evidence, **not** Owner visual/readability/feel evidence. It has no scientific proof of whole-life richness, long-time contact robustness, material object ecology or scale. The next honest test is whether genuinely different, independently varied morphology/authority combinations make the person running a freely disturbed world discover several unforeseen actions and constraints — versus a collection of pleasant but still shallow moving props. If the latter, redesign rather than accrete more tests or dashboards.
+
+**No Owner rehearsal request, no release/promotion, no main merge and no replacement of the old Yard baseline are implied.**
