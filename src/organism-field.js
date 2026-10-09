@@ -1,5 +1,5 @@
 import RAPIER from "@dimforge/rapier2d-deterministic";
-import { MORPHS, KINDS, DT, clamp, wrap, localResponse, finiteDrive } from "./organism-law.js";
+import { MORPHS, KINDS, DT, clamp, wrap, localResponse, finiteDrive, finiteGrip } from "./organism-law.js";
 
 export const FIELD = Object.freeze({ width: 34, height: 22 });
 const v = (x, y) => ({ x, y });
@@ -37,6 +37,8 @@ export class OrganismField {
     this.activeActor = null;
     this.contacts = [];
     this.lastFrameMs = 0;
+    this.grip = null;
+    this.gripImpulse = {x:0,y:0};
     this.#staticWorld();
     this.spawn("dart", v(6.2, 9), 0);
     this.spawn("crawler", v(15.0, 5.9), Math.PI * 0.48);
@@ -153,6 +155,7 @@ export class OrganismField {
   actor(id) { return this.actors.find(a => a.id === id) || null; }
   select(id) {
     if (!this.actor(id)) return false;
+    if (this.grip && this.grip.actorId !== id) this.releaseGrip();
     this.activeActor = id;
     return true;
   }
@@ -213,7 +216,7 @@ export class OrganismField {
   setActorProfile(id, changes) {
     const actor = this.actor(id);
     if (!actor) throw new RangeError("select an organism to edit");
-    const fields = ["mass", "speed", "acceleration", "braking", "turnRate", "turnTorque"];
+    const fields = ["mass", "speed", "acceleration", "braking", "turnRate", "turnTorque", "gripReach", "gripForce"];
     const next = { ...actor.spec };
     for (const key of fields) {
       if (Object.prototype.hasOwnProperty.call(changes, key))
@@ -235,6 +238,7 @@ export class OrganismField {
   remove(id) {
     const actor = this.actor(id);
     if (!actor) return false;
+    if(this.grip?.actorId === id) this.releaseGrip();
     // Removing a rigid body also removes its associated impulse joints.
     for (const p of actor.parts) this.colliderOwners.delete(p.collider.handle);
     if (actor.tail) this.world.removeRigidBody(actor.tail);
@@ -242,6 +246,74 @@ export class OrganismField {
     this.actors = this.actors.filter(a => a !== actor);
     if (this.activeActor === id) this.activeActor = this.actors[0]?.id || null;
     return true;
+  }
+  // Grip acquisition is against the real rotated rectangle, not object-centre
+  // proximity. Author-controlled cursor target, finite reach and force;
+  // the crate retains mass, momentum and unconstrained rotation.
+  beginGrip(point) {
+    const actor = this.actor(this.activeActor);
+    if (!actor || !Number.isFinite(point.x) || !Number.isFinite(point.y))return false;
+    const root = actor.root.translation();
+    let closest = null;
+    for (const obj of this.matter) {
+      const p = obj.body.translation(), angle=obj.body.rotation();
+      const local=rotate(v(point.x-p.x, point.y-p.y),-angle);
+      const dx=Math.max(0,Math.abs(local.x)-obj.hx);
+      const dy=Math.max(0,Math.abs(local.y)-obj.hy);
+      const error=Math.hypot(dx,dy);
+      if (error>.20)continue;
+      const reach=Math.hypot(point.x-root.x,point.y-root.y);
+      if (reach > actor.spec.gripReach + .12) continue;
+      if (!closest || error < closest.error)
+        closest={obj,local,error};
+    }
+    if(!closest)return false;
+    this.grip={actorId:actor.id,objectId:closest.obj.id,
+      local:closest.local,target:{...point},worldAnchor:{...point}};
+    this.gripImpulse=v(0,0);
+    return true;
+  }
+  setGripTarget(point) {
+    if(!Number.isFinite(point.x)||!Number.isFinite(point.y))
+      throw new RangeError("invalid grip target");
+    if(this.grip)this.grip.target={...point};
+  }
+  releaseGrip(){this.grip=null;this.gripImpulse=v(0,0);}
+  #stepGrip(){
+    const grip=this.grip;
+    if(!grip){this.gripImpulse=v(0,0);return;}
+    const actor=this.actor(grip.actorId);
+    const obj=this.matter.find(m=>m.id===grip.objectId);
+    if(!actor||!obj){this.releaseGrip();return;}
+    const pos=actor.root.translation();
+    const delta=v(grip.target.x-pos.x,grip.target.y-pos.y);
+    const len=mag(delta),range=actor.spec.gripReach;
+    const factor=len>range ? range/len : 1;
+    const target=v(pos.x+delta.x*factor,pos.y+delta.y*factor);
+    const objPos=obj.body.translation();
+    const offset=rotate(grip.local,obj.body.rotation());
+    const anchor=v(objPos.x+offset.x,objPos.y+offset.y);
+    const velocity=obj.body.linvel(),omega=obj.body.angvel();
+    const anchorVelocity=v(velocity.x-omega*offset.y,velocity.y+omega*offset.x);
+    // Force reaction at the organ's leading edge, never a kinematic
+    // teleport nor a reaction-free remotely moved crate.
+    const front=rotate(v(Math.min(actor.spec.length*.35,.65),0),
+      actor.root.rotation());
+    const hand=v(pos.x+front.x,pos.y+front.y);
+    const ownV=actor.root.linvel(), ownOmega=actor.root.angvel();
+    const handVelocity=v(ownV.x-ownOmega*front.y,ownV.y+ownOmega*front.x);
+    const impulse=finiteGrip({
+      playerMass:actor.root.mass(),objectMass:obj.body.mass(),
+      anchorVelocity:v(anchorVelocity.x-handVelocity.x,
+        anchorVelocity.y-handVelocity.y),
+      targetError:v(target.x-anchor.x,target.y-anchor.y),
+      maxForce:actor.spec.gripForce
+    });
+    obj.body.applyImpulseAtPoint(impulse,anchor,true);
+    actor.root.applyImpulseAtPoint(v(-impulse.x,-impulse.y),hand,true);
+    grip.worldAnchor=anchor;
+    grip.clampedTarget=target;
+    this.gripImpulse=impulse;
   }
   tractionAt(pos) {
     // Authored static low-traction terrain. This is an explicit XY ground
@@ -314,6 +386,7 @@ export class OrganismField {
   step(manual = null) {
     const before = new Map(this.actors.map(a => [a.id, { ...a.root.translation() }]));
     for (const actor of this.actors) this.#motor(actor, manual);
+    this.#stepGrip();
     const t = performance.now();
     this.world.step();
     this.lastFrameMs = performance.now() - t;
@@ -362,6 +435,8 @@ export class OrganismField {
       count: this.actors.length, matterCount: this.matter.length,
       activeContacts: this.activeContactCount,
       physicsMs: this.lastFrameMs,
+      grip: this.grip ? {actorId:this.grip.actorId,objectId:this.grip.objectId,
+        force:mag(this.gripImpulse)/DT} : null,
       actors: this.actors.map(a => ({
         id: a.id, kind: a.kind, pos: { ...a.root.translation() },
         angle: a.root.rotation(), speed: mag(a.root.linvel()),
