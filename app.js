@@ -741,9 +741,30 @@ async function start() {
     targetId=gate.id;announce("Real hinged gate added: its pivot is fixed, its arm reacts physically.");
   });
   $("#spawn").onclick=()=>guarded(()=>{
-    const actor=field.spawn($("#kind").value,{...mouse});
+    const kind=$("#kind").value==="mixed"?"dart":$("#kind").value;
+    const actor=field.spawn(kind,{...mouse});
     field.select(actor.id);targetId=actor.id;syncBodyForm();
     announce("New physical "+actor.spec.name+" created.");
+  });
+  $("#spawn-batch").onclick=()=>guarded(()=>{
+    const count=Number($("#spawn-count").value);
+    if(!Number.isInteger(count)||count<1||count>500)
+      throw RangeError("Batch count must be 1–500 for one click; existing total is unrestricted.");
+    const kind=$("#kind").value;
+    const kinds=["dart","crawler","broad","worm"];
+    const center={...mouse};
+    let selected=null;
+    for(let i=0;i<count;i++){
+      const angle=i*2.399963229728653;
+      const radial=.72*Math.sqrt(i);
+      const x=center.x+radial*Math.cos(angle);
+      const y=center.y+radial*Math.sin(angle);
+      const k=kind==="mixed"?kinds[i%4]:kind;
+      const actor=field.spawn(k,{x,y},angle%(Math.PI*2));
+      if(!selected)selected=actor.id;
+    }
+    field.select(selected);targetId=selected;syncBodyForm();
+    announce("Added "+count+" physically distinct bodies. All continue in shared solver.");
   });
   $("#remove").onclick=()=>guarded(()=>{
     if(!field.remove(field.activeActor))throw Error("Nothing selected.");
