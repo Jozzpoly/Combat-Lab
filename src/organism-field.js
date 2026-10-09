@@ -60,6 +60,7 @@ export class OrganismField {
       this.spawn("dart", v(6.2, 9), 0);
       this.spawn("crawler", v(15.0, 5.9), Math.PI * 0.48);
       this.spawn("broad", v(27, 12), Math.PI);
+      this.spawn("worm", v(6.2, 17), 0);
       for(const object of [
         {x:10.7,y:11,hx:.6,hy:.55,mass:16},
         {x:13,y:13.4,hx:.65,hy:.6,mass:105},
@@ -175,6 +176,7 @@ export class OrganismField {
       id, kind, spec: { ...spec }, shapeScale: { length: 1, width: 1 },
       root, parts: [], joint: null, tail: null,
       state: { age: 0, pressure: 0, recover: 0, turnSide: 1, recoveries: 0 },
+      strokeTick: 0,
       sense: { touch: false, progress: 1 },
       control: { mode: "local", throttle: 0, steering: 0, traction: 1 },
       contactCount: 0
@@ -185,6 +187,15 @@ export class OrganismField {
     } else if (kind === "broad") {
       this.#part(actor, root, { type: "box", hx: 0.73, hy: 1.12 }, 0, 0, 196);
       this.#part(actor, root, { type: "ball", r: 0.43 }, 0.68, 0, 49);
+    } else if (kind === "worm") {
+      this.#part(actor, root, { type: "box", hx: 0.44, hy: 0.31 }, 0, 0, 42);
+      const off = rotate(v(-1.16, 0), heading);
+      const tail = this.#newBody(v(p.x+off.x,p.y+off.y),heading);
+      this.#part(actor, tail, { type: "box", hx: 0.44, hy: 0.31 },0,0,42);
+      actor.tail = tail;
+      const params=RAPIER.JointData.prismatic(v(0,0),v(0,0),v(1,0));
+      params.limitsEnabled=true;params.limits=[-1.85,-.73];
+      actor.joint=this.world.createImpulseJoint(params,root,tail,true);
     } else {
       this.#part(actor, root, { type: "box", hx: 0.56, hy: 0.36 }, 0, 0, 48);
       const tailOffset = rotate(v(-1.11, 0), heading);
@@ -240,14 +251,20 @@ export class OrganismField {
       this.world.removeImpulseJoint(actor.joint,true);
       const root=actor.root, tail=actor.tail;
       const p=root.translation(), a=root.rotation();
-      const d=rotate(v(-1.11*sx,0),a);
+      const d=rotate(v(-(actor.kind==="worm"?1.16:1.11)*sx,0),a);
       tail.setTranslation(v(p.x+d.x,p.y+d.y),true);
       tail.setRotation(a,true);
       tail.setLinvel(root.linvel(),true);
       tail.setAngvel(root.angvel(),true);
-      actor.joint=this.world.createImpulseJoint(
-        RAPIER.JointData.revolute(v(-.53*sx,0),v(.58*sx,0)),
-        root,tail,true);
+      if(actor.kind==="worm"){
+        const params=RAPIER.JointData.prismatic(v(0,0),v(0,0),v(1,0));
+        params.limitsEnabled=true;params.limits=[-1.85*sx,-.73*sx];
+        actor.joint=this.world.createImpulseJoint(params,root,tail,true);
+      }else{
+        actor.joint=this.world.createImpulseJoint(
+          RAPIER.JointData.revolute(v(-.53*sx,0),v(.58*sx,0)),
+          root,tail,true);
+      }
     }
     for(const b of new Set(actor.parts.map(part=>part.body)))
       b.recomputeMassPropertiesFromColliders();
@@ -263,14 +280,14 @@ export class OrganismField {
   setActorProfile(id, changes) {
     const actor = this.actor(id);
     if (!actor) throw new RangeError("select an organism to edit");
-    const fields = ["mass", "speed", "acceleration", "braking", "turnRate", "turnTorque", "gripReach", "gripForce", "rearDrive"];
+    const fields = ["mass", "speed", "acceleration", "braking", "turnRate", "turnTorque", "gripReach", "gripForce", "rearDrive", "muscleForce", "supportForce"];
     const next = { ...actor.spec };
     for (const key of fields) {
       if (Object.prototype.hasOwnProperty.call(changes, key))
         next[key] = num(changes[key], key, key === "mass");
     }
     if (next.rearDrive !== undefined && (next.rearDrive > 1 ||
-        (!actor.tail && Object.hasOwn(changes,"rearDrive"))))
+        (actor.kind!=="crawler" && Object.hasOwn(changes,"rearDrive"))))
       throw new RangeError("rear drive fraction requires articulated body and range [0,1]");
     // Validate *all* derived collider masses before modifying any body.
     const masses = actor.parts.map(part =>
