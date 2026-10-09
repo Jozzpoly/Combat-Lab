@@ -2,6 +2,7 @@
 // Multiple collision-bearing arm bodies, true revolute joints, bounded
 // reciprocal actuation. A crate is NEVER glued/teleported to a hand.
 import RAPIER from "@dimforge/rapier2d-deterministic";
+import {SCENE_FORMAT,validateScene} from "./scene-contract.js";
 
 export const DT=1/60;
 export const V=(x=0,y=0)=>({x,y});
@@ -26,6 +27,65 @@ export class EffectorField {
     this.contactReadout={count:0,impulse:0};
     this.fixedWorld();
     if(!empty)this.populate();
+  }
+  exportScene(){
+    const data={
+      format:SCENE_FORMAT,
+      actors:this.actors.map(a=>{
+        const root=a.root.translation(),angle=a.root.rotation();
+        return {kind:a.kind,x:root.x,y:root.y,angle,
+          clawTorque:a.spec.clawTorque,aperture:a.targetAperture,
+          armAngles:a.arms.map(arm=>wrap(arm.body.rotation()-angle))};
+      }),
+      matter:this.matter.filter(x=>x.type==="box").map(m=>{
+        const p=m.body.translation();
+        return {x:p.x,y:p.y,hx:m.hx,hy:m.hy,mass:m.mass,
+          angle:m.body.rotation()};
+      }),
+      walls:this.walls.slice(8).map(w=>({
+        x:w.x,y:w.y,hx:w.hx,hy:w.hy})),
+      gates:this.gates.map(g=>({
+        x:g.pivot.x,y:g.pivot.y,length:g.length,mass:g.mass,
+        angle:g.body.rotation()}))
+    };
+    return validateScene(data);
+  }
+  static fromScene(input){
+    // Validation is pure; no live state is modified on failure.
+    const data=validateScene(input);
+    const field=new EffectorField({empty:true});
+    try{
+      for(const w of data.walls)field.addWall(w,false);
+      for(const m of data.matter){
+        const item=field.addBox(m,false);
+        item.body.setRotation(m.angle,true);
+      }
+      for(const g of data.gates){
+        const item=field.addGate(g,false);
+        item.body.setRotation(g.angle,true);
+        item.body.setTranslation(V(g.x+Math.cos(g.angle)*g.length/2,
+          g.y+Math.sin(g.angle)*g.length/2),true);
+      }
+      for(const a of data.actors){
+        const created=field.spawn(a.kind,V(a.x,a.y),a.angle);
+        created.spec.clawTorque=a.clawTorque;
+        created.targetAperture=a.aperture;
+        if(a.kind==="pincer"){
+          for(let i=0;i<created.arms.length;i++){
+            const arm=created.arms[i],relative=a.armAngles[i];
+            const r=a.angle+relative;
+            const shoulder=rotate(V(.39,arm.sign*.72),a.angle);
+            const h=rotate(V(.72,0),r);
+            arm.body.setRotation(r,true);
+            arm.body.setTranslation(V(a.x+shoulder.x+h.x,
+              a.y+shoulder.y+h.y),true);
+          }
+        }
+      }
+      field.world.propagateModifiedBodyPositionsToColliders();
+      field.select(field.actors[0]?.id||null);
+      return field;
+    }catch(error){field.dispose();throw error;}
   }
   dispose(){this.world.free();}
   register(owner,collider){this.colliderOwner.set(collider.handle,owner);}
