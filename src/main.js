@@ -40,6 +40,7 @@ const compareSubjectSelect = document.querySelector("#compare-subject");
 const compareScenesButton = document.querySelector("#compare-scenes");
 const compareReport = document.querySelector("#compare-report");
 const comparePlot = document.querySelector("#compare-plot");
+const compareSpatialPlot = document.querySelector("#compare-spatial-plot");
 
 function renderPhysicalComparison(result) {
   const ctx = comparePlot.getContext("2d");
@@ -79,6 +80,73 @@ function renderPhysicalComparison(result) {
   ctx.fillText(String(result.steps)+" steps",w-90,h-5);
   comparePlot.dataset.tracedPoints=String(
     result.traces.a.length+result.traces.b.length);
+  renderPhysicalSpatialComparison(result);
+}
+
+function renderPhysicalSpatialComparison(result) {
+  const canvas = compareSpatialPlot;
+  const ctx = canvas.getContext("2d");
+  const w = canvas.width, h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
+  ctx.fillStyle = "#101820";
+  ctx.fillRect(0, 0, w, h);
+  const samples = [...result.traces.a, ...result.traces.b];
+  if (!samples.every(p => Number.isFinite(p.x) && Number.isFinite(p.y))) {
+    throw new Error("2D comparison requires measured physical X and Y paths");
+  }
+  let minX = Math.min(...samples.map(p => p.x));
+  let maxX = Math.max(...samples.map(p => p.x));
+  let minY = Math.min(...samples.map(p => p.y));
+  let maxY = Math.max(...samples.map(p => p.y));
+  // Preserve equal world-unit scale along both axes. Never visually
+  // exaggerate a lateral detour by stretching only Y.
+  const pad = 0.8;
+  minX -= pad; maxX += pad;
+  minY -= pad; maxY += pad;
+  const scale = Math.min((w - 68) / (maxX - minX),
+    (h - 44) / (maxY - minY));
+  const physicalWidth = (maxX - minX) * scale;
+  const physicalHeight = (maxY - minY) * scale;
+  const ox = (w - physicalWidth) / 2;
+  const oy = (h - physicalHeight) / 2;
+  const xy = p => ({
+    x: ox + (p.x - minX) * scale,
+    y: oy + (p.y - minY) * scale
+  });
+  ctx.font = "11px system-ui";
+  ctx.fillStyle = "#92a8b8";
+  ctx.fillText("Top-down physical paths · 1m has the same pixel scale on X and Y", 12, 15);
+  for (const [path, color, label] of [
+    [result.traces.a, "#d9c89a", "A"],
+    [result.traces.b, "#74dbed", "B"]
+  ]) {
+    if (!path.length) continue;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2.6;
+    ctx.beginPath();
+    path.forEach((p, i) => {
+      const q = xy(p);
+      if (i === 0) ctx.moveTo(q.x,q.y);
+      else ctx.lineTo(q.x,q.y);
+    });
+    ctx.stroke();
+    const start = xy(path[0]), end = xy(path.at(-1));
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(start.x,start.y,5,0,Math.PI*2);
+    ctx.stroke();
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(end.x,end.y,4,0,Math.PI*2);
+    ctx.fill();
+    ctx.fillText(label + " end",end.x + 7,end.y - 6);
+  }
+  ctx.fillStyle="#92a8b8";
+  ctx.fillText("X →",w-38,h-12);
+  ctx.fillText("Y ↓",12,h-12);
+  canvas.dataset.tracedPoints=String(samples.length);
+  canvas.dataset.measuredYSpan=String(Math.max(...samples.map(p=>p.y)) -
+    Math.min(...samples.map(p=>p.y)));
 }
 const placeBodyButton = document.querySelector("#place-selected-at-cursor");
 const restoreBodyStartsButton = document.querySelector("#restore-body-positions");
