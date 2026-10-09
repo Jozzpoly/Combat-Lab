@@ -2978,6 +2978,45 @@ await observation("wrong-side-manual-opposite-route-vs-adaptive-transition-trace
     "; samples ["+adaptive.last.join("; ")+"]";
 });
 
+await observation("shared-passable-post-compares-fixed-and-adaptive-lateral-choice", world => {
+  const run=(mode,side)=>{
+    world.clearAuthored();
+    world.setPeerEnabled(false);
+    world.setBraceEnabled(false);
+    world.setResidentProfile(DEFAULT_RESIDENT_PROFILE);
+    world.setResidentMode(mode);
+    world.setActorSidePreference("resident",side);
+    world.reset();
+    world.authorRect({kind:"wall",cx:16.8,cy:11.4,width:0.7,height:1.4});
+    let maxX=-Infinity,minY=Infinity,maxY=-Infinity,firstBeyond=null;
+    for(let tick=1;tick<=580;tick++){
+      world.step(still);
+      const p=at(world,"resident").position;
+      maxX=Math.max(maxX,p.x);
+      minY=Math.min(minY,p.y);
+      maxY=Math.max(maxY,p.y);
+      if(firstBeyond===null && p.x>18.4)firstBeyond=tick;
+    }
+    finite(world,"medium choice candidate "+mode+"/"+side);
+    return {maxX,minY,maxY,firstBeyond,
+      attempts:world.residentControl.lateralAttempts,
+      flips:world.residentControl.lateralFlips};
+  };
+  const north=run("lateral-maneuver",-1);
+  const south=run("lateral-maneuver",1);
+  const adaptive=run("adaptive-lateral",-1);
+  return "same 0.7×1.4 post, resident 72kg radius .56: "+
+    "fixed north xMax="+north.maxX.toFixed(3)+
+    ", crossing="+String(north.firstBeyond)+
+    "; fixed south xMax="+south.maxX.toFixed(3)+
+    ", crossing="+String(south.firstBeyond)+
+    "; original adaptive north-first xMax="+adaptive.maxX.toFixed(3)+
+    ", crossing="+String(adaptive.firstBeyond)+
+    ", side flips="+adaptive.flips+
+    ", lateral attempts="+adaptive.attempts+
+    "; source baseline measured, no donor verdict yet";
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
