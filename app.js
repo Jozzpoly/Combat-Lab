@@ -198,7 +198,11 @@ function syncBodyForm(){
   $("#shape-length").value=String(a.shapeScale.length);
   $("#shape-width").value=String(a.shapeScale.width);
   $("#body-rear-drive").value=String(a.spec.rearDrive??0);
-  $("#body-rear-drive").disabled=!a.tail;
+  $("#body-rear-drive").disabled=a.kind!=="crawler";
+  $("#body-muscle").value=String(a.spec.muscleForce??0);
+  $("#body-support").value=String(a.spec.supportForce??0);
+  $("#body-muscle").disabled=a.kind!=="worm";
+  $("#body-support").disabled=a.kind!=="worm";
   for(const [k,selector] of Object.entries(bodyInputs))
     $(selector).value=String(a.spec[k]);
 }
@@ -213,10 +217,10 @@ function writePressureResult(status,message) {
 async function pressureProbe() {
   try {
     const assert=(ok,message)=>{if(!ok)throw Error(message);};
-    assert(field.actors.length===3,"missing three real organism bodies");
+    assert(field.actors.length===4,"missing four different physical morphologies");
     assert(field.actors.find(a=>a.kind==="crawler")?.joint,
       "crawler is not physically articulated");
-    assert(new Set(field.actors.map(a=>a.kind)).size===3,"morphology missing");
+    assert(new Set(field.actors.map(a=>a.kind)).size===4,"morphology missing");
     for(let i=0;i<220;i++)field.step(null);
     for(const a of field.actors){
       const p=a.root.translation();
@@ -256,7 +260,7 @@ async function pressureProbe() {
         gate.body.setTranslation({x:pin.x+gate.hx*Math.cos(theta),
           y:pin.y+gate.hx*Math.sin(theta)},true);
         const recipe=source.exportScene();
-        assert(recipe.actors.length===4&&recipe.walls.length===1&&
+        assert(recipe.actors.length===5&&recipe.walls.length===1&&
           recipe.gates.length===2&&recipe.matter.length===6,
           "posed scene capture omitted live world authoring");
         const before=reconstructed.snapshot(),invalid=structuredClone(recipe);
@@ -268,7 +272,7 @@ async function pressureProbe() {
           reconstructed.actors.length===before.count,
           "invalid import modified live physical scene");
         reconstructed.importScene(recipe);
-        assert(reconstructed.actors.length===4&&
+        assert(reconstructed.actors.length===5&&
           reconstructed.gates.length===2&&
           reconstructed.walls.length===10,
           "import lost physical components");
@@ -431,7 +435,7 @@ async function pressureProbe() {
     }
     // Morphological authoring changes actual colliders, including joint
     // anchors, without resetting the remaining physics/world afterstate.
-    for(const kind of ["dart","crawler","broad"]){
+    for(const kind of ["dart","crawler","broad","worm"]){
       const probe=new OrganismField();
       try{
         const actor=probe.actors.find(a=>a.kind===kind);
@@ -582,7 +586,7 @@ async function pressureProbe() {
         {x:13+(i%6)*.40,y:10+Math.floor(i/6)*.60},i*.31);
     }
     for(let i=0;i<100;i++)field.step(null);
-    assert(field.actors.length===21,"pressure run lost actors");
+    assert(field.actors.length===22,"pressure run lost actors");
     for(const actor of field.actors){
       const p=actor.root.translation();
       assert(Number.isFinite(p.x+p.y+actor.root.angvel()),
@@ -598,7 +602,7 @@ async function pressureProbe() {
       const p=a.root.translation();assert(Number.isFinite(p.x+p.y),
         "post-reset actor numerical failure");
     }
-    writePressureResult("pass","3 physical forms + matched-motor contrast + 21 bodies under contact pressure + mass editing/reset");
+    writePressureResult("pass","4 physical forms + matched-motor contrast + 22 bodies under contact pressure + mass editing/reset");
   } catch(e) {
     writePressureResult("fail",String(e?.message??e).slice(0,250));
     throw e;
@@ -626,8 +630,12 @@ async function start() {
     const changes={};
     for(const [k,selector] of Object.entries(bodyInputs))
       changes[k]=Number($(selector).value);
-    if(field.actor(field.activeActor)?.tail)
+    if(field.actor(field.activeActor)?.kind==="crawler")
       changes.rearDrive=Number($("#body-rear-drive").value);
+    if(field.actor(field.activeActor)?.kind==="worm"){
+      changes.muscleForce=Number($("#body-muscle").value);
+      changes.supportForce=Number($("#body-support").value);
+    }
     field.setActorProfile(field.activeActor,changes);
     announce("Actual collider mass and finite movement authority updated.");
     syncBodyForm();
@@ -738,7 +746,7 @@ async function start() {
     const key=e.key.toLowerCase();
     if([" ","arrowup","arrowdown","arrowleft","arrowright"].includes(key))
       e.preventDefault();
-    if(key==="1"||key==="2"||key==="3")selectAt(Number(key)-1);
+    if(key==="1"||key==="2"||key==="3"||key==="4")selectAt(Number(key)-1);
     if(key===" "&&!e.repeat){paused=!paused;debt=0;}
     if(key==="."&&paused&&!e.repeat)tick();
     keys.add(key);
