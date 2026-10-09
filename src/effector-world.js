@@ -219,6 +219,10 @@ export class EffectorField {
       arm.hook.setTranslationWrtParent(V(half-.11,-arm.sign*.20));
       arm.bar.setMass(15);
       arm.hook.setMass(2.2);
+      // Explicitly dirty the unchanged parent pose so cached collider
+      // world transforms reflect edited local offsets even while paused.
+      arm.body.setTranslation(V(arm.body.translation().x,
+        arm.body.translation().y),true);
     }
     a.spec.clawReach=reach;
     this.world.propagateModifiedBodyPositionsToColliders();
