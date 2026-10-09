@@ -18,12 +18,13 @@
       </div>
     </div>
     <canvas id="scene" aria-label="Experimental material world"></canvas>
+    <div id="live-inspect" class="live-inspect" aria-label="Selected organism live physical status">Select an organism to inspect its physical contacts.</div>
     <div class="controlstrip">WASD / arrows: take control of selected body · hold B: finite brace · 1/2/3/4: select · mouse wheel: zoom · middle-drag: pan · click: select · Shift+drag: obstacle · Alt+click: movable matter · right-hold: physical grip on a nearby crate · PAUSED Ctrl+drag: author new physical poses</div>
   </main>
   <aside class="lab">
     <header><small>ISOLATED RESEARCH · NOT OWNER QUALIFIED</small>
       <h1>Different bodies, same physical world</h1>
-      <p>Switch physical starting arrangements above the world, then disturb freely. Switching discards the current afterstate unless you capture its JSON first. No goals, scripted routes or forced win conditions. These are substrate-driven physical prototypes, not simulated animal gaits.</p>
+      <p>Observe, take control or disturb the world. All bodies share real contact physics. Switch scenes freely; capture a JSON scene before replacing one you want to preserve.</p>
     </header>
     <section><h2>Observe / intervene</h2>
       <div class="buttons"><button id="pause">Pause</button><button id="step">Single step</button><button id="reset">Reset scene</button></div>
@@ -49,7 +50,8 @@
       <p class="dim">Batch positions use a deterministic spiral around the cursor, not a scripted movement scenario. Up to 500 new organisms per click as a runtime safety guard; existing organisms are not capped. All collide in one shared solver.</p>
       <p class="dim">Each shape has actual 2D colliders and finite drive/turn authority. The crawler has a real revolute joint. The inchworm has a real prismatic joint, reciprocal muscle strokes and alternating finite ground support. No arbitrary organism/population cap.</p>
     </section>
-    <section><h2>Selected organism: independent physical parameters</h2>
+    <details class="lab-details" id="physical-settings"><summary>Physical parameters · mass, shape, motor & reactions</summary>
+    <section><h2>Independent physical parameters</h2>
       <div class="gridfields">
         <label>Envelope length × <input id="shape-length" type="number" step="0.1" value="1"></label>
         <label>Envelope width × <input id="shape-width" type="number" step="0.1" value="1"></label>
@@ -69,7 +71,7 @@
       </div>
       <div class="buttons"><button id="apply-shape">Apply physical shape</button><button id="apply-body">Apply mass &amp; motor</button></div>
       <p class="dim">Changing length and width alters real colliders; the hinged tail reanchors as an explicit edit without resetting other objects. Mass changes collider inertia. On the crawler, drive can shift front/rear. Inchworm translates via an internal muscle cycle plus alternating physical ground reaction; its speed setting changes cycle cadence, not rigid-body cruise speed. Grip force and reach remain independent of body mass. Yield controls a *local tactile tendency* to back away after sustained frontal blockage, independently of actual mass and strength. Holding B causes physical bracing with limited ground force, not arbitrary position lock. Physical contact still decides outcomes. Physically representable extremes are permitted; this is not biomechanical gait.</p>
-    </section>
+    </section></details>
     <section><h2>Material world</h2>
       <p>Drag with Shift to add a solid fixed obstacle; Alt+click creates movable material. Add a real hinged barrier at the cursor. Existing changes persist until reset. Undo and Clear remove your added objects live, preserving other physical afterstate. Pause and Ctrl+drag an actual body or crate to reposition it without disturbing the rest. Articulated segments move together, maintaining their joint. Colliding placements are intentionally allowed and may resolve forcefully on unpause. Reset rebuilds the authored starting edits.</p>
       <div class="buttons"><button id="undo">Undo last authored addition</button><button id="clear">Clear authored edits</button></div>
@@ -86,10 +88,11 @@
       <pre id="selected">Select an organism</pre>
       <label><input id="contacts" type="checkbox"> Show active contact count and collision outlines</label>
     </section>
+    <details class="lab-details" id="internal-evidence"><summary>Research instruments & limits</summary>
     <section><h2>Internal physical checks</h2>
       <div id="evidence">Live boot pending.</div>
       <p class="dim">Mechanical PASS ≠ convincing organism, crowd or gameplay. Different shapes must generate meaningfully different possibilities under free play.</p>
-    </section>
+    </section></details>
   </aside>
 </div>
 <script>
