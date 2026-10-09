@@ -550,6 +550,7 @@ export class OrganismField {
   }
   #readContacts(actor) {
     let touch=false,count=0,front=0,sideWeighted=0,weightSum=0,load=0;
+    let frontLoad=0,rearLoad=0,sideLoad=0;
     const angle=actor.root.rotation();
     const forward=v(Math.cos(angle),Math.sin(angle));
     for(const part of actor.parts){
@@ -574,6 +575,13 @@ export class OrganismField {
           }
           // At least unit weight for resting/light contacts.
           const weight=Math.max(1,Math.min(1000,impulse));
+          // Keep pressure contributions distinct: a body can be pressed
+          // simultaneously from behind and blocked at its front. Taking
+          // only max(front normal) previously erased the rear support.
+          if(Number.isFinite(f)&&f>.28)frontLoad+=impulse;
+          if(Number.isFinite(f)&&f<-.28)rearLoad+=impulse;
+          if(Number.isFinite(lateral)&&Math.abs(lateral)>.55)
+            sideLoad+=impulse;
           if(Number.isFinite(lateral)){
             sideWeighted+=lateral*weight;weightSum+=weight;
           }
@@ -583,7 +591,7 @@ export class OrganismField {
     }
     return {touch,count,front:clamp(front,0,1),
       side:weightSum?clamp(sideWeighted/weightSum,-1,1):0,
-      load};
+      load,frontLoad,rearLoad,sideLoad};
   }
   step(manual = null) {
     const before = new Map(this.actors.map(a => [a.id, this.#physicalCenter(a)]));
@@ -605,7 +613,8 @@ export class OrganismField {
         ((now.x - prev.x) * intended.x + (now.y - prev.y) * intended.y) /
         (DT * speed * speed) : 1;
       actor.sense = { touch: c.touch, progress,front:c.front,
-        side:c.side,load:c.load };
+        side:c.side,load:c.load,frontLoad:c.frontLoad,
+        rearLoad:c.rearLoad,sideLoad:c.sideLoad };
     }
     this.activeContactCount = contacts;
   }
@@ -745,6 +754,8 @@ export class OrganismField {
         contacts: a.contactCount, recoveries: a.state.recoveries,
         frontContact:a.sense.front, sideContact:a.sense.side,
         contactImpulse:a.sense.load, contactYield:a.spec.contactYield,
+        frontLoad:a.sense.frontLoad||0,rearLoad:a.sense.rearLoad||0,
+        sideLoad:a.sense.sideLoad||0,
         traction: a.control.traction, mode: a.control.mode
       }))
     };
