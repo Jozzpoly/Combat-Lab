@@ -85,12 +85,13 @@
 
       <section>
         <h2>Resident — physical contact response</h2>
-        <p class="muted">Compare four bounded rules: fixed shuttle, any-touch reversal, forward-touch reversal and a search-free lateral attempt. Distinct geometry may permit or defeat a detour. No map oracle, pathfinding or NPC cognition.</p>
+        <p class="muted">Compare bounded rules: fixed shuttle, two tactile reversal policies, a chosen lateral attempt, or a local-progress-based second attempt. Distinct geometry may permit or defeat a detour. No map oracle, pathfinding or NPC cognition.</p>
         <label>Local control
           <select id="resident-mode">
             <option value="tactile-recovery">Any-touch recovery (control)</option>
             <option value="directional-recovery">Forward-contact recovery</option>
             <option value="skirt-recovery">Lateral detour + local return (experimental)</option>
+            <option value="adaptive-skirt">Try other side after insufficient progress (experimental)</option>
             <option value="baseline">Fixed lane reversal only</option>
           </select>
         </label>
@@ -127,6 +128,7 @@
             <option value="tactile-recovery">Any-touch recovery</option>
             <option value="directional-recovery">Forward-contact recovery</option>
             <option value="skirt-recovery">Lateral detour + local return (experimental)</option>
+            <option value="adaptive-skirt">Try other side after insufficient progress (experimental)</option>
             <option value="baseline">Fixed shuttle only</option>
           </select>
         </label>
