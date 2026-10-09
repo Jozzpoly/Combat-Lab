@@ -15,6 +15,9 @@ function visit(path,budget=9000){
 const ready=visit(url,4000);
 console.log("NEW INDEPENDENT EMBODIED FIELD boot PASS, DOM="+ready.dom.length);
 const probe=visit(url+(url.includes("?")?"&":"?")+"probe=1",12000);
+if(probe.get("scene-ui")!=="actual capture/load/reset PASS")
+  throw Error("Live Owner-style capture/import/reset UI FAIL");
+console.log("PORTABLE MATERIAL WORLD: "+probe.get("scene-ui"));
 const json=probe.get("probe-result");
 if(!json)throw Error("PHYSICAL FIELD PROBE MISSING (maybe WASM failure)");
 const parsed=JSON.parse(json.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
@@ -24,17 +27,3 @@ const sweep=probe.get("affordance-sweep");
 if(!sweep)throw Error("missing independent physical affordance sweep");
 const contrast=JSON.parse(sweep.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
 console.log("ARTICULATED TRANSPORT MATERIAL EDGE-CASES: "+JSON.stringify(contrast));
-
-
-
-// TEMPORARY real-pixel visual audit. Delete this block after inspecting frame.
-if(process.env.CI){
-  const {readFileSync}=await import("node:fs");
-  const file="/tmp/combat-independent-effector.png";
-  execFileSync(chrome,["--headless=new","--no-sandbox","--disable-gpu",
-    "--disable-dev-shm-usage","--window-size=1440,900",
-    "--force-device-scale-factor=1","--virtual-time-budget=6000",
-    "--screenshot="+file,url],{timeout:75000,encoding:"utf8",
-     maxBuffer:6*1024*1024});
-  console.log("EMBODIED_VISUAL_AUDIT:"+readFileSync(file).toString("base64"));
-}
