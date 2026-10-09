@@ -29,6 +29,8 @@ const braceFeedback = document.querySelector("#brace-profile-feedback");
 const braceStatus = document.querySelector("#brace-status");
 const contactOverlayInput = document.querySelector("#contact-overlay");
 const contactOverlaySummary = document.querySelector("#contact-overlay-summary");
+const motionOverlayInput = document.querySelector("#motion-overlay");
+const motionOverlaySummary = document.querySelector("#motion-overlay-summary");
 const residentProfileFeedback = document.querySelector("#resident-profile-feedback");
 const interventionTimeline = document.querySelector("#intervention-timeline");
 const recipeTextarea = document.querySelector("#starting-scene-json");
@@ -1045,31 +1047,36 @@ function render() {
   const selectedEntity = snapshot.entities.find((entity) => entity.id === observedMotorId);
   const selectedCausality = observedMotorId ?
     world.lastCausalObservations.get(observedMotorId) : null;
-  if (selectedEntity && selectedCausality) {
-    const anchor = worldToScreen(selectedEntity.position);
+  const activeVectorSubjects = motionOverlayInput.checked ?
+    snapshot.entities.filter(e => world.lastCausalObservations.has(e.id)) :
+    (selectedEntity && selectedCausality ? [selectedEntity] : []);
+  let visibleVectorCount = 0;
+  for (const e of activeVectorSubjects) {
+    const obs = world.lastCausalObservations.get(e.id);
+    if (!obs) continue;
+    const origin = worldToScreen(e.position);
     for (const arrow of [
-      { velocity: selectedCausality.intendedVelocity, color: "#73b7ff" },
-      { velocity: selectedCausality.measuredVelocity, color: "#efca73" }
+      { velocity: obs.intendedVelocity, color: "#73b7ff" },
+      { velocity: obs.measuredVelocity, color: "#efca73" }
     ]) {
-      const vx = arrow.velocity.x;
-      const vy = arrow.velocity.y;
-      const length = Math.hypot(vx, vy);
-      if (length < 0.02) continue;
-      const shown = Math.min(length, 3.2) * camera.zoom * 0.28;
-      const ex = anchor.x + vx / length * shown;
-      const ey = anchor.y + vy / length * shown;
-      ctx.beginPath();
-      ctx.moveTo(anchor.x, anchor.y);
-      ctx.lineTo(ex, ey);
-      ctx.strokeStyle = arrow.color;
-      ctx.lineWidth = 3;
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.arc(ex, ey, 3, 0, Math.PI * 2);
-      ctx.fillStyle = arrow.color;
-      ctx.fill();
+      const vx=arrow.velocity.x, vy=arrow.velocity.y;
+      const speed=Math.hypot(vx,vy);
+      if (!Number.isFinite(speed) || speed<.02) continue;
+      const shown=Math.min(speed,3.2)*camera.zoom*.28;
+      const ex=origin.x+vx/speed*shown, ey=origin.y+vy/speed*shown;
+      ctx.beginPath();ctx.moveTo(origin.x,origin.y);ctx.lineTo(ex,ey);
+      ctx.strokeStyle=arrow.color;ctx.lineWidth=3;ctx.stroke();
+      ctx.beginPath();ctx.arc(ex,ey,3,0,Math.PI*2);
+      ctx.fillStyle=arrow.color;ctx.fill();
+      visibleVectorCount++;
     }
   }
+  document.body.dataset.motionVectorSubjects=String(activeVectorSubjects.length);
+  document.body.dataset.motionVectorArrows=String(visibleVectorCount);
+  motionOverlaySummary.textContent = motionOverlayInput.checked ?
+    activeVectorSubjects.length+" physically driven bodies · "+visibleVectorCount+
+      " nonzero intent/realization arrows" :
+    "Selected driven body only ("+activeVectorSubjects.length+" observed).";
 
   if (input.reposition) {
     const moved = input.reposition;
