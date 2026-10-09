@@ -123,16 +123,18 @@ export class OrganismField {
   }
   // A real dynamic gate rotates around a static world pivot. The pivot
   // is not a script that chooses whether the actor may pass.
-  addGate({x,y,length=3,mass=80},authored=true){
+  addGate({x,y,length=3,mass=80,angle=0},authored=true){
     const px=Number(x),py=Number(y),len=num(length,"gate length",true),
       m=num(mass,"gate mass",true);
-    if(!Number.isFinite(px)||!Number.isFinite(py)||len<.20)
+    if(!Number.isFinite(px)||!Number.isFinite(py)||
+      !Number.isFinite(angle)||!Number.isFinite(Math.fround(angle))||len<.20)
       throw new RangeError("invalid physical gate");
     const half=len/2, id="gate-"+ ++this.nextId;
     const pivot=this.world.createRigidBody(
       RAPIER.RigidBodyDesc.fixed().setTranslation(px,py));
     const body=this.world.createRigidBody(RAPIER.RigidBodyDesc.dynamic()
-      .setTranslation(px+half,py).setLinearDamping(.4)
+      .setTranslation(px+half*Math.cos(angle),py+half*Math.sin(angle))
+      .setRotation(angle).setLinearDamping(.4)
       .setAngularDamping(1.7).setCcdEnabled(true));
     const collider=this.world.createCollider(
       RAPIER.ColliderDesc.cuboid(half,.18)
@@ -502,6 +504,34 @@ export class OrganismField {
     const chosen = items.map(e => ({ ...e, d: Math.hypot(e.position.x - p.x,
       e.position.y - p.y) })).sort((a, b) => a.d - b.d)[0];
     return chosen && chosen.d < 1.6 ? chosen.id : null;
+  }
+  // Saved scene = explicit starting poses, not running solver/cognition replay.
+  exportScene(){
+    return validateScene({
+      format:"combat-lab.initial-scene.v1",
+      actors:this.actors.map(actorRecipe),
+      walls:this.walls.slice(9).map(w=>({
+        x:w.x,y:w.y,hx:w.hx,hy:w.hy
+      })),
+      matter:this.matter.filter(m=>m.kind!=="gate").map(m=>{
+        const p=m.body.translation();
+        return {x:p.x,y:p.y,hx:m.hx,hy:m.hy,
+          mass:m.mass,angle:m.body.rotation()};
+      }),
+      gates:this.gates.map(g=>({
+        x:g.pivotPoint.x,y:g.pivotPoint.y,length:g.hx*2,
+        mass:g.mass,angle:g.body.rotation()
+      }))
+    });
+  }
+  importScene(input){
+    // Reject all malformed content before resetting live physical history.
+    const validated=validateScene(input);
+    this.sceneRecipe=validated;
+    this.authored=[];
+    this.reset();
+    return {actors:this.actors.length,matter:this.matter.length,
+      walls:this.walls.length,gates:this.gates.length};
   }
   clearEdits() { this.authored = []; this.reset(); }
   snapshot() {
