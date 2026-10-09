@@ -9,7 +9,7 @@ const initial = () => ({
 const sample = (overrides = {}) => ({
   touch: false, forwardTouch: false,
   motorEffort: 1, progressAlongIntent: 0,
-  deltaX: 0, ...overrides
+  deltaX: 0, deltaY: 0, ...overrides
 });
 const step = (state, mode, sense, direction = 1) =>
   stepLocalShuttle({
@@ -61,7 +61,7 @@ test("the same forward signal causes a finite-duration recovery without World la
   assert.equal(state.state, "backoff");
   assert.ok(state.recoveryTicks > 0 && state.recoveryTicks < 58);
   assert.deepEqual(Object.keys(forward).sort(),
-    ["deltaX", "forwardTouch", "motorEffort", "progressAlongIntent", "touch"]);
+    ["deltaX", "deltaY", "forwardTouch", "motorEffort", "progressAlongIntent", "touch"]);
 });
 
 test("invalid local policy is explicitly rejected", () => {
