@@ -94,3 +94,49 @@ test("return to the lane depends on private deltaY rather than absolute map y", 
   assert.equal(out.state.state, "lane-return");
   assert.equal(state.estimatedY, -2.4);
 });
+
+test("adaptive detour reverses side only after measured failed attempt", () => {
+  let state = initial(), direction = 1, firstSide = null;
+  const forward = sample({ touch: true, forwardTouch: true, deltaX: 0 });
+  for (let i = 0; i < 12 + 155; i++) {
+    const result = step(state, "adaptive-skirt", forward, direction);
+    state = result.state;
+    direction = result.direction;
+    if (result.state.skirtTicks === 154 && firstSide === null)
+      firstSide = result.intendedVelocity.y;
+  }
+  assert.ok(firstSide < 0);
+  assert.equal(state.skirts, 1);
+  assert.equal(state.failedDetours, 1);
+  assert.equal(state.lastDetourOutcome, "insufficient-progress");
+  assert.equal(state.adaptiveSign, 1);
+  assert.equal(direction, 1);
+  let secondSide = null;
+  for (let i = 0; i < 15; i++) {
+    const result = step(state, "adaptive-skirt", forward, direction);
+    state = result.state;
+    direction = result.direction;
+    if (state.skirts === 2) { secondSide = result.intendedVelocity.y; break; }
+  }
+  assert.ok(secondSide > 0);
+  assert.equal(state.skirts, 2);
+});
+
+test("adaptive detour retains the first side when actual forward progress succeeds", () => {
+  let state = initial(), direction = 1;
+  const blocked = sample({ touch: true, forwardTouch: true, deltaX: 0 });
+  for (let i = 0; i < 12; i++) {
+    const out = step(state,"adaptive-skirt",blocked,direction);
+    state=out.state;direction=out.direction;
+  }
+  assert.equal(state.skirts,1);
+  for(let i=0;i<155;i++){
+    const out=step(state,"adaptive-skirt",
+      sample({ deltaX: 0.025, forwardTouch: false, touch: false,
+        progressAlongIntent: 1 }),direction);
+    state=out.state;direction=out.direction;
+  }
+  assert.equal(state.adaptiveSign,-1);
+  assert.equal(state.failedDetours,0);
+  assert.equal(state.lastDetourOutcome,"forward-progress");
+});
