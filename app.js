@@ -510,6 +510,11 @@ async function start(){
     const {disturbedWorldCampaign}=await import("./src/disturbed-world-campaign.js");
     document.body.dataset.worldCampaign=JSON.stringify(disturbedWorldCampaign(EffectorField));
   }
+  if(new URLSearchParams(location.search).has("loopProbe")){
+    paused=true;
+    const {closedMaterialLoopPreflight}=await import("./src/x0-closed-loop-probe.js");
+    document.body.dataset.loopEvidence=JSON.stringify(closedMaterialLoopPreflight(EffectorField));
+  }
   requestAnimationFrame(frame);
 }
 start().catch(error=>{
