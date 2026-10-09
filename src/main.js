@@ -9,6 +9,7 @@ const profileFeedback = document.querySelector("#profile-feedback");
 const worldEditFeedback = document.querySelector("#world-edit-feedback");
 const boxMassInput = document.querySelector("#author-mass");
 const residentModeSelect = document.querySelector("#resident-mode");
+const residentDetourSide = document.querySelector("#resident-detour-side");
 const residentStatus = document.querySelector("#resident-status");
 const peerStatus = document.querySelector("#peer-status");
 const togglePeer = document.querySelector("#toggle-peer");
@@ -296,6 +297,10 @@ residentModeSelect.value = world.residentMode;
 residentModeSelect.addEventListener("change", () => {
   world.setResidentMode(residentModeSelect.value);
 });
+residentDetourSide.value = String(world.residentSkirtSign);
+residentDetourSide.addEventListener("change", () => {
+  world.setResidentDetourSide(Number(residentDetourSide.value));
+});
 document.querySelector("#focus-resident").addEventListener("click", () => {
   camera.follow = true;
   camera.followTarget = "resident";
@@ -429,6 +434,7 @@ function loadFixture(kind) {
     throw new Error("unrecognized experiment fixture");
   }
   residentModeSelect.value = world.residentMode;
+  residentDetourSide.value = String(world.residentSkirtSign);
   peerModeSelect.value = world.peerMode;
   syncResidentProfileFields(world.residentProfile);
   peerMassField.value = String(world.peerMass);
