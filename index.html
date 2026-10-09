@@ -22,6 +22,8 @@
 </section><section><h2>Selected entity</h2><div id="entity">No selection</div>
 <div class="field"><label>Actuator / claw torque (N·m)</label><input id="torque" type="number" min="0" value="780" step="80"></div>
 <button id="apply-torque">Apply actual joint torque</button>
+<div class="field"><label>Actual forward reach of each jaw (m)</label><input id="reach" type="number" min=".86" step=".1" value="1.53"></div>
+<button id="apply-reach">Rebuild real jaw geometry</button>
 <div class="field"><label>Object mass (kg)</label><input id="matter-mass" type="number" min=".01" value="35" step="10"></div>
 <button id="apply-mass">Apply physical object mass</button>
 </section><section><h2>Author matter</h2><div class="field"><label>New crate mass (kg)</label>
