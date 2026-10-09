@@ -2978,6 +2978,48 @@ await observation("wrong-side-manual-opposite-route-vs-adaptive-transition-trace
     "; samples ["+adaptive.last.join("; ")+"]";
 });
 
+await observation("same-wrong-side-barrier-feasibility-grid-vary-short-wall-height", world => {
+  const cases = [];
+  for (const height of [0.35, 0.5, 0.7, 1.0]) {
+    const scenarios = [
+      ["fixed+Y", "lateral-maneuver", 1],
+      ["manual-Y", "lateral-maneuver", -1],
+      ["adaptive+Y", "adaptive-lateral", 1]
+    ];
+    for (const [label, mode, side] of scenarios) {
+      world.clearAuthored();
+      world.clearBodyStartOverrides();
+      world.setPeerEnabled(false);
+      world.setBraceEnabled(false);
+      world.setResidentProfile(DEFAULT_RESIDENT_PROFILE);
+      world.setResidentMode(mode);
+      world.setActorSidePreference("resident", side);
+      world.reset();
+      world.authorRect({kind:"wall",cx:16.8,cy:11.4,width:.6,height,mass:0});
+      world.authorRect({kind:"wall",cx:16.8,cy:12.2,width:5,height:.4,mass:0});
+      let pass=null,highest=-Infinity,lowestY=Infinity,highestY=-Infinity,firstTouch=null;
+      for (let tick=1; tick<=450; tick++) {
+        world.step(still);
+        const p=at(world,"resident").position;
+        if(pass===null && p.x>17.5) pass=tick;
+        highest=Math.max(highest,p.x);
+        lowestY=Math.min(lowestY,p.y);
+        highestY=Math.max(highestY,p.y);
+        if(firstTouch===null && world.residentSense.forwardTouch)firstTouch=tick;
+      }
+      finite(world,"side-route feasibility grid");
+      const ctl=world.residentControl;
+      cases.push("h="+height.toFixed(2)+" "+label+
+        ": pass="+String(pass)+", xMax="+highest.toFixed(2)+
+        ", yMin="+lowestY.toFixed(2)+
+        ", yMax="+highestY.toFixed(2)+", touch="+String(firstTouch)+
+        ", attempts="+ctl.lateralAttempts+", flips="+ctl.lateralFlips);
+    }
+  }
+  return cases.join("; ") +
+    "; this is a geometry-feasibility survey, not behavioral PASS";
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
