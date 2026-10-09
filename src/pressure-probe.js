@@ -2836,6 +2836,66 @@ try{
     detail:String(error?.message??error).slice(0,300)});
 }
 
+await trial("ab-identical-scenes-have-no-false-physical-or-motor-divergence", async world => {
+  const {captureStartingScene,compareStartingScenes} =
+    await import("./starting-scene.js");
+  world.setPeerEnabled(true);
+  world.setBraceEnabled(true);
+  world.setBraceForm("beam");
+  world.setBraceAngle(15);
+  world.setResidentMode("lateral-maneuver");
+  world.authorRect({kind:"wall",cx:16.8,cy:11.4,width:.6,height:.8,mass:0});
+  const a=captureStartingScene(world);
+  const result=await compareStartingScenes(a,JSON.parse(JSON.stringify(a)),
+    {subject:"resident",steps:240});
+  assert(result.firstPositionDifference===null &&
+    result.firstMotorDifference===null &&
+    result.maxPositionGap===0 &&
+    result.referenceContactTicks===result.candidateContactTicks &&
+    result.traces.a.length===result.traces.b.length &&
+    result.traces.a.every((p,i)=>p.x===result.traces.b[i].x),
+    "same scene reported invented motor/physical divergence");
+  return "identical authored scenes yielded zero false difference across 240 steps; plot traces match";
+});
+
+await trial("ab-initial-body-placement-difference-is-explicitly-t0-not-motor-inference", async world => {
+  const {captureStartingScene,compareStartingScenes} =
+    await import("./starting-scene.js");
+  const a=captureStartingScene(world);
+  world.repositionBody("resident",{x:17,y:11.4});
+  const b=captureStartingScene(world);
+  const result=await compareStartingScenes(a,b,
+    {subject:"resident",steps:55});
+  assert(result.firstPositionDifference===0 && result.initialStateDiffers &&
+    result.maxPositionGap>0.1,
+    "different authored initial positions masqueraded as later actor response");
+  return "authored start changed 15→17m; provenance-first physical divergence is explicitly t0";
+});
+
+await trial("dormant-actor-start-survives-portable-serialization", async world => {
+  const {captureStartingScene,stageStartingScene} =
+    await import("./starting-scene.js");
+  world.setPeerEnabled(true);
+  world.repositionBody("peer",{x:22.3,y:12.4});
+  world.setPeerEnabled(false);
+  assert(world.bodyStarts.has("peer")&&!world.entities.has("peer"),
+    "dormant actor cannot retain authored starting point");
+  const recipe=captureStartingScene(world);
+  assert(recipe.starts.some(s=>s.key==="peer")&&!recipe.peer.enabled,
+    "export erased explicitly authored start of disabled actor");
+  const restored=await stageStartingScene(recipe);
+  try{
+    assert(!restored.entities.has("peer")&&
+      Math.abs(restored.bodyStarts.get("peer").x-22.3)<1e-4,
+      "fresh World incorrectly enabled dormant peer or dropped its start");
+    restored.setPeerEnabled(true);
+    assert(Math.abs(at(restored,"peer").position.x-22.3)<1e-4 &&
+      Math.abs(at(restored,"peer").position.y-12.4)<1e-4,
+      "newly enabled peer did not enter at serialized authored start");
+    return "dormant peer absent until enabled; imported start reconstructs (22.3,12.4)m";
+  } finally{restored.world.free();}
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
