@@ -1,10 +1,35 @@
 <!doctype html>
-<meta charset="utf-8">
-<title>Combat Lab — Clean Substrate</title>
-<link rel="stylesheet" href="./style.css">
-<main class="shell">
-<header><div><p class="eyebrow">Combat Lab · clean neutral substrate</p><h1 id="experiment-title">Loading…</h1><p id="experiment-purpose" class="purpose"></p></div><div class="controls"><button id="pause">Pause</button><button id="reset">Reset</button><button id="debug">Debug</button></div></header>
-<section class="viewport"><canvas id="lab" aria-label="Combat Lab neutral experiment surface"></canvas></section>
-<footer><div><strong>Controls</strong><span id="controls-text">—</span></div><div class="status"><span id="run-state">RUNNING</span><span id="sim-time">0.00 s</span><span id="build-id">source: local</span></div></footer>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Combat Lab — Embodied Effectors / independent field</title><link rel="stylesheet" href="./style.css"></head>
+<body><div class="layout">
+<main class="stage">
+<header><div><span class="eyebrow">Combat Lab · independent material-possibility experiment</span>
+<h1>What can a body do?</h1><p>Real colliding appendages, finite forces, editable matter. No goals, route script, or magic inventory.</p>
+</div><span id="health" class="health">Loading real physics…</span></header>
+<nav class="tools" aria-label="Physical experiment controls">
+<button id="pause">Pause</button><button id="step">One step</button><button id="reset">Reset world</button>
+<button id="spawn-pincer">Add pincer</button><button id="spawn-ram">Add ram</button>
+<button id="add-box">Place crate</button><button id="undo">Undo added matter</button>
+</nav>
+<div class="canvas-wrap"><canvas id="lab" aria-label="Editable material world with real physical effector bodies"></canvas>
+<div class="hud"><strong id="subject">Live embodied field</strong><span id="readout">Waiting for solver</span></div></div>
+<footer><span>WASD move · mouse points body · <strong>E close</strong> / <strong>Q open</strong> real jaws · click select body/object</span>
+<span>Mouse wheel zoom · middle drag pan · paused Ctrl-drag reposition · Shift drag draw wall</span></footer>
 </main>
-<script type="module" src="./app.js"></script>
+<aside><section class="lead"><h2>Physical body</h2><p>Two contrasting forms, not classes. One has jointed jaws; the other is an unarticulated material pusher. Switch by clicking their real colliders.</p>
+<p><strong>Watch what the body can actually change</strong>, not just where it travels. Drag an object or construct new space during pause; then resume.</p>
+</section><section><h2>Selected entity</h2><div id="entity">No selection</div>
+<div class="field"><label>Actuator / claw torque (N·m)</label><input id="torque" type="number" min="0" value="780" step="80"></div>
+<button id="apply-torque">Apply actual joint torque</button>
+<div class="field"><label>Object mass (kg)</label><input id="matter-mass" type="number" min=".01" value="35" step="10"></div>
+<button id="apply-mass">Apply physical object mass</button>
+</section><section><h2>Author matter</h2><div class="field"><label>New crate mass (kg)</label>
+<input id="crate-mass" type="number" min=".01" value="35" step="10"></div>
+<div class="field"><label>Crate width (m)</label>
+<input id="crate-width" type="number" min=".08" value=".9" step=".1"></div>
+<p>Place crate then click canvas. Shift-drag adds a **real fixed wall**. Paused Ctrl-drag repositions jointed bodies as wholes; every other body retains its physical history.</p>
+</section><details><summary>Research boundaries & diagnostics</summary>
+<p>No foot-ground Rapier contact: root movement is a bounded external 2D support force, not biological gait. Arm movement is independently constrained by two real reciprocal revolute joints. An object can only move through contact or manually authored pause intervention; there is no body-to-object grip joint.</p>
+<p id="metrics">No measurements yet</p><p id="notice">Test any unreasonable assembly. If physics breaks, preserve the failure rather than hiding it.</p>
+</details></aside></div>
+<script type="module" src="./app.js"></script></body></html>
