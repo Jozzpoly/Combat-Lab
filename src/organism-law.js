@@ -3,17 +3,17 @@
 export const MORPHS = Object.freeze({
   dart: { name: "Dart / compact", mass: 18, speed: 5.2, acceleration: 26,
     braking: 32, turnRate: 3.8, turnTorque: 95, width: 0.42, length: 1.05,
-    contactYield: .90, gripReach: 1.8, gripForce: 120, color: "#75c6e8" },
+    contactYield: .90, braceForce: 90, gripReach: 1.8, gripForce: 120, color: "#75c6e8" },
   crawler: { name: "Crawler / hinged", mass: 88, speed: 2.75, acceleration: 12,
     braking: 14, turnRate: 1.65, turnTorque: 280, rearDrive: 0.55, width: 0.74, length: 2.65,
-    contactYield: .52, gripReach: 2.3, gripForce: 330, color: "#d9b17b" },
+    contactYield: .52, braceForce: 520, gripReach: 2.3, gripForce: 330, color: "#d9b17b" },
   broad: { name: "Broad / pusher", mass: 245, speed: 2.0, acceleration: 7.5,
     braking: 10, turnRate: 0.9, turnTorque: 540, width: 2.3, length: 1.7,
-    contactYield: .12, gripReach: 2.6, gripForce: 750, color: "#a99ae3" },
+    contactYield: .12, braceForce: 2800, gripReach: 2.6, gripForce: 750, color: "#a99ae3" },
   worm: { name: "Inchworm / alternating support", mass: 84, speed: 2.0,
     acceleration: 9, braking: 9, turnRate: 1.1, turnTorque: 260,
     width: .62, length: 2.05, muscleForce: 850, supportForce: 900,
-    contactYield: .76, gripReach: 1.7, gripForce: 150, color: "#97cf9c" }
+    contactYield: .76, braceForce: 640, gripReach: 1.7, gripForce: 150, color: "#97cf9c" }
 });
 export const KINDS = Object.freeze(Object.keys(MORPHS));
 export const DT = 1 / 60;
@@ -54,6 +54,12 @@ export function localResponse(state, sensed, profile = null) {
   // Partial steering away from contact is bounded, not path planning.
   const wander=Math.sin(next.age*.012)*.12;
   const sideAvoid=clamp(-side*.28*yieldFactor,-.25,.25);
+  // A low-yielding organism can briefly anchor itself in response to
+  // *observed* lateral/rear pressure. It cannot hold against arbitrary force:
+  // the body motor must supply finite ground-coupled brace impulse.
+  if(sensed.touch && front<.25 && yieldFactor<.25 &&
+      (sensed.load||0)>1 && sensed.progress<.7)
+    return {state:next,steer:0,throttle:0,mode:"brace"};
   return {state:next,steer:clamp(wander+sideAvoid,-1,1),
     throttle:.85,mode:frontalStall?"press":"cruise"};
 }
@@ -96,4 +102,19 @@ export function finiteGrip({ playerMass, objectMass, anchorVelocity,
   const limit = maxForce*dt;
   const factor = requested > 1e-8 ? Math.min(1,limit/requested) : 0;
   return {x:raw.x*factor,y:raw.y*factor};
+}
+
+
+// External ground reaction that resists a moving body, never a position lock.
+// It can be defeated by stronger material contact or absent ground traction.
+export function finiteBrace({mass, velocity, force, traction, dt=DT}) {
+  for(const q of [mass,velocity.x,velocity.y,force,traction,dt])
+    if(!Number.isFinite(q))throw new RangeError("nonfinite brace input");
+  if(mass<=0||force<0||dt<=0||traction<0)
+    throw new RangeError("invalid brace mass/force/traction");
+  const raw={x:-mass*velocity.x,y:-mass*velocity.y};
+  const length=Math.hypot(raw.x,raw.y);
+  const limit=force*clamp(traction,0,1)*dt;
+  const scale=length>0?Math.min(1,limit/length):0;
+  return {x:raw.x*scale,y:raw.y*scale};
 }
