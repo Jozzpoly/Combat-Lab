@@ -1,4 +1,5 @@
 import { OrganismField, FIELD } from "./src/organism-field.js";
+import { createInchwormProbe } from "./src/inchworm-probe.js";
 import { MORPHS, DT, clamp } from "./src/organism-law.js";
 
 const $ = selector => document.querySelector(selector);
@@ -231,6 +232,47 @@ async function pressureProbe() {
       "physical impulse failed to move matter");
     assert(field.tractionAt({x:15,y:11})<field.tractionAt({x:5,y:11}),
       "ground proxy not spatially material");
+    // Probe an entirely different source of translation: internal reciprocal
+    // extension/retraction plus alternating finite world support.
+    function crawlTrial({groundForce,muscleForce,tractionAt=()=>1}){
+      const probe=createInchwormProbe({groundForce,muscleForce,tractionAt});
+      try{
+        let last,maxSpan=0,minSpan=Infinity,maxDeviation=0;
+        for(let i=0;i<450;i++){
+          last=probe.step();
+          assert(last.jointValid,"prismatic body joint was lost");
+          assert(Number.isFinite(last.deltaX+last.span+last.com.y),
+            "inchworm simulation generated nonfinite state");
+          maxSpan=Math.max(maxSpan,last.span);
+          minSpan=Math.min(minSpan,last.span);
+          maxDeviation=Math.max(maxDeviation,Math.abs(last.com.y-8));
+        }
+        return {progress:last.deltaX,maxSpan,minSpan,maxDeviation,
+          headX:last.head.x,rearX:last.rear.x};
+      }finally{probe.free();}
+    }
+    const noGround=crawlTrial({groundForce:0,muscleForce:850});
+    const normal=crawlTrial({groundForce:900,muscleForce:850});
+    const noMuscle=crawlTrial({groundForce:900,muscleForce:0});
+    const weak=crawlTrial({groundForce:35,muscleForce:850});
+    assert(Math.abs(noGround.progress)<.03,
+      "reciprocal internal stroke incorrectly creates free-space net propulsion");
+    assert(Math.abs(noMuscle.progress)<.03,
+      "ground attachment without internal actuator creates phantom travel");
+    assert(normal.progress>.25,
+      "alternating world anchoring failed to turn reciprocal stroke into locomotion");
+    assert(normal.maxSpan-normal.minSpan>.25,
+      "physical prismatic muscle does not change body length");
+    assert(normal.progress>weak.progress+.12,
+      "world-support authority does not change physical locomotion");
+    document.body.dataset.inchwormEvidence=[
+      "noGround="+noGround.progress.toFixed(3),
+      "noMuscle="+noMuscle.progress.toFixed(3),
+      "weak="+weak.progress.toFixed(3),
+      "supported="+normal.progress.toFixed(3),
+      "lengthSweep="+(normal.maxSpan-normal.minSpan).toFixed(3),
+      "sideDrift="+normal.maxDeviation.toFixed(4)
+    ].join(";");
     // Author the actual organ's finite grip; establish two independent
     // zero-vs-finite Worlds rather than interpreting a static icon as grip.
     function gripTrial(force,mass=28,offset=0){
