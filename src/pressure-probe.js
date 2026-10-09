@@ -1763,6 +1763,69 @@ await trial("lateral-policy-divergence-reaches-peer-only-through-later-contact",
     "m; no generalized crowd classification";
 });
 
+await observation("finite-post-lateral-detour-versus-forward-reversal", world => {
+  const post = world.authorRect({ kind: "wall", cx: 16.8, cy: 11.4,
+    width: 0.7, height: 1.4 });
+  const run = mode => {
+    world.reset();
+    world.setResidentMode(mode);
+    const samples = [];
+    let firstContact = null, firstDetour = null;
+    for (let tick = 1; tick <= 440; tick++) {
+      world.step(still);
+      const actor = at(world, "resident");
+      const obs = world.lastCausalObservations.get("resident");
+      const ctl = world.residentControl;
+      if (firstContact === null && obs.contacts.includes(post)) firstContact = tick;
+      if (firstDetour === null && ctl.skirts > 0) firstDetour = tick;
+      samples.push({
+        tick, x: actor.position.x, y: actor.position.y,
+        state: ctl.state, skirts: ctl.skirts,
+        contacts: obs.contacts.includes(post)
+      });
+    }
+    finite(world, "lateral post " + mode);
+    return {
+      firstContact, firstDetour, final: samples.at(-1),
+      maxX: Math.max(...samples.map(x=>x.x)),
+      minY: Math.min(...samples.map(x=>x.y)),
+      maxY: Math.max(...samples.map(x=>x.y)),
+      strips: samples.filter(x=>x.state==="lateral-attempt").length
+    };
+  };
+  const reverse = run("directional-recovery");
+  const detour = run("skirt-recovery");
+  assert(reverse.firstContact && detour.firstContact &&
+    detour.firstDetour && detour.strips > 0, "fixture never produced a real lateral attempt");
+  return "reversal max x=" + reverse.maxX.toFixed(3) +
+    "m; detour max x=" + detour.maxX.toFixed(3) +
+    "m; detour y min=" + detour.minY.toFixed(3) +
+    ", max=" + detour.maxY.toFixed(3) +
+    "; first solved contact=" + detour.firstContact +
+    "; first lateral attempt=" + detour.firstDetour +
+    "; total detour ticks=" + detour.strips +
+    "; no useful-clearance verdict until falsified";
+});
+
+await observation("untraversable-full-height-wall-lateral-pressure-null", world => {
+  world.authorRect({ kind: "wall", cx: 16.8, cy: 7,
+    width: 0.7, height: 13 });
+  world.setResidentMode("skirt-recovery");
+  let maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  for(let t=0;t<440;t++){
+    world.step(still);
+    const p=at(world,"resident").position;
+    maxX=Math.max(maxX,p.x);
+    minY=Math.min(minY,p.y);
+    maxY=Math.max(maxY,p.y);
+  }
+  finite(world,"lateral wall null");
+  return "full-height obstruction; actor max x="+maxX.toFixed(3)+
+    "m, y-range "+minY.toFixed(3)+".."+maxY.toFixed(3)+
+    ", detours="+world.residentControl.skirts+
+    "; no route oracle or guaranteed success";
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
