@@ -16,7 +16,8 @@ export function observePlaygrounds(Field){
         const p=item.body.translation();
         return {x:p.x,y:p.y,angle:item.body.rotation()};
       });
-      let peakContactIncidences=0,touchedTicks=0,maxMotorModes=0;
+      let peakContactIncidences=0,touchedTicks=0,bracingTicks=0;
+      let peakRearLoad=0,peakSideLoad=0;
       const observedModes=new Set();
       for(let tick=0;tick<330;tick++){
         world.step(null);
@@ -26,6 +27,9 @@ export function observePlaygrounds(Field){
         if(snapshot.activeContacts>0)touchedTicks++;
         for(const actor of world.actors){
           observedModes.add(actor.control.mode);
+          if(actor.control.mode==="brace")bracingTicks++;
+          peakRearLoad=Math.max(peakRearLoad,actor.sense.rearLoad||0);
+          peakSideLoad=Math.max(peakSideLoad,actor.sense.sideLoad||0);
           for(const p of actor.parts){
             const t=p.body.translation();
             assert(Number.isFinite(t.x+t.y+p.body.rotation()),
@@ -45,7 +49,8 @@ export function observePlaygrounds(Field){
           rotation:Math.abs(item.body.rotation()-start.angle)};
       });
       result[id]={actors,matter,joints,steps:330,
-        touchedTicks,peakContactIncidences,
+        touchedTicks,peakContactIncidences,bracingTicks,
+        peakRearLoad,peakSideLoad,
         movedMaterial:after.filter(p=>p.translation>.12||p.rotation>.10).length,
         maxMaterialDisplacement:Math.max(0,...after.map(p=>p.translation)),
         maxGateRotation:Math.max(0,...after.filter(p=>p.kind==="gate")
