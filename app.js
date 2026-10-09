@@ -284,6 +284,7 @@ function selectAt(i){
 async function start() {
   field=await OrganismField.create();
   targetId=field.activeActor;
+  currentSituation="yard";
   syncBodyForm();
   document.body.dataset.labReady="true";
   window.combatOrganismField=field; // internal experiment readback, not private NPC data
