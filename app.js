@@ -70,8 +70,10 @@ function drawWorld() {
   }
   for (const box of field.matter) {
     const p = box.body.translation();
-    physicalBox(p.x, p.y, box.hx, box.hy, box.body.rotation(), "#b3a077",
+    physicalBox(p.x, p.y, box.hx, box.hy, box.body.rotation(),
+      box.kind==="gate" ? "#d7aa5d" : "#b3a077",
       targetId === box.id ? "#ffdfa0" : "#665e49");
+    if(box.kind==="gate")circle(box.pivotPoint.x,box.pivotPoint.y,.20,"#e6ead7");
   }
   for (const actor of field.actors) {
     const selected = actor.id === field.activeActor;
@@ -445,6 +447,10 @@ async function start() {
     announce("Finite off-centre impulse applied to "+id);
   });
   $("#add-box").onclick=()=>guarded(cursorBox);
+  $("#add-gate").onclick=()=>guarded(()=>{
+    const gate=field.addGate({x:mouse.x,y:mouse.y,length:3.1,mass:Number($("#mass").value)});
+    targetId=gate.id;announce("Real hinged gate added: its pivot is fixed, its arm reacts physically.");
+  });
   $("#spawn").onclick=()=>guarded(()=>{
     const actor=field.spawn($("#kind").value,{...mouse});
     field.select(actor.id);targetId=actor.id;syncBodyForm();
