@@ -106,9 +106,9 @@ Measured interaction: the change in the front/rear difference due to mixed suppo
 - The specimen now combines different real envelopes/masses, an articulated body, finite local control, distributed traction, editable material world, physical gate, reciprocal manipulation, direct selection, impulse intervention, simple roaming, and a bounded pressure fixture. This is an integrated candidate, not an accepted ecosystem.
 - Baseline remains old R0/L0 / crossing-ball qualitative failure, **not** the previous iteration of this branch.
 - Multiple local numeric tests passing cannot establish whether the selected human can spontaneously discover diverse useful actions rather than staged obstacles.
-- A constrained 21-actor / short physical pressure sample was not a performance/scalability qualification.
-- Current in-world authoring persists added matter/gates across reset. Arbitrary live actor profile/spawn edits currently do NOT constitute a portable starting-scene contract; this is a real experimental repeatability gap, not a hidden success.
-- The physical motor and split-traction proxy are *external ground reaction*, not anatomy-generated locomotion. Broad multi-limb movement remains outside the current specimen; articulation is currently two rigid segments only.
+- Earlier 21-body pressure was extended: the current bounded fixture has 76 mixed physical organisms for 130 steps. It is NOT an FPS, throughput or scale qualification.
+- Portable initial-scene JSON now captures posed actors/profiles, moved matter, rotated gates and additional walls. Strict validation precedes load. This is NOT a solver snapshot, velocity/stateful brain replay or automatic autosave.
+- Rigid dart/broad and hinged crawler use finite external ground-reaction proxies. A fourth prismatic Inchworm has reciprocal internal stroke and alternating finite external support, causing actual ground-dependent translation. It is NOT validated animal gait, multi-leg ground contact or soft-body locomotion.
 - No independent direct visual/Owner feel test has occurred. Do not promote to public rehearsal/current until the remaining human question would actually be worth asking.
 
 **Next judgment:** does this changed *whole* offer enough legible, naturally discoverable experiments to merit Owner time? If not, prioritize whole-organism/body/interaction richness and authoring of a reproducible situation over additional narrow green tests. Reject the specimen if it remains a collection of motorized geometric props. 
