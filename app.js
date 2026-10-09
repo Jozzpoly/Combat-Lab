@@ -6,7 +6,7 @@ const canvas = $("#scene"), ctx = canvas.getContext("2d");
 const keys = new Set();
 const camera = { x: FIELD.width / 2, y: FIELD.height / 2, zoom: 1.0 };
 let field, paused = false, manual = true, mouse = { x: 17, y: 11 };
-let last = performance.now(), debt = 0, pan = null, drawWall = null, targetId = null;
+let last = performance.now(), debt = 0, pan = null, drawWall = null, dragPose = null, targetId = null;
 let issuedSteps = 0;
 function announce(message) { $("#interaction-status").textContent = message; }
 function worldScale() {
@@ -345,6 +345,25 @@ async function start() {
       else announce("Finite reciprocal grip engaged — drag cursor, then release.");
       e.preventDefault();
     }
+    else if(e.button===0 && e.ctrlKey){
+      if(!paused){
+        announce("Pause the simulation before using Ctrl+drag to reposition real bodies.");
+      }else{
+        const id=field.pick(mouse), obj=field.matter.find(m=>m.id===id);
+        if(obj?.kind==="gate"){
+          announce("Hinged gate remains pinned: use force or grip to rotate it.");
+        }else if(id){
+          const a=field.actor(id);
+          const b=a?.root||obj?.body;
+          const p=b.translation();
+          dragPose={id,delta:{x:p.x-mouse.x,y:p.y-mouse.y}};
+          targetId=id;
+          if(a){field.select(id);syncBodyForm();}
+          announce("Editing paused physical pose; only moved body's momentum resets.");
+        }else announce("No actual collider under cursor.");
+      }
+      e.preventDefault();
+    }
     else if(e.button===1){pan={x:e.clientX,y:e.clientY,cx:camera.x,cy:camera.y};e.preventDefault();}
     else if(e.shiftKey){drawWall={...mouse};}
     else if(e.altKey){guarded(cursorBox);}
@@ -363,6 +382,11 @@ async function start() {
       camera.y=pan.cy-(e.clientY-pan.y)*sy/scale;
     }
     mouse=worldPoint(e);
+    if(dragPose && paused){
+      const id=dragPose.id,p={x:mouse.x+dragPose.delta.x,
+        y:mouse.y+dragPose.delta.y};
+      guarded(()=>field.reposition(id,p));
+    }
     if(field.grip)field.setGripTarget(mouse);
   });
   canvas.addEventListener("pointerup",e=>{
@@ -375,9 +399,9 @@ async function start() {
         announce("Authored physical wall added to live world.");
       });
     }
-    pan=null;
+    pan=null;dragPose=null;
   });
-  canvas.addEventListener("pointercancel",()=>{pan=null;drawWall=null;field.releaseGrip();});
+  canvas.addEventListener("pointercancel",()=>{pan=null;drawWall=null;dragPose=null;field.releaseGrip();});
   document.addEventListener("keydown",e=>{
     if(e.target?.closest?.("input,textarea,select,[contenteditable]"))return;
     const key=e.key.toLowerCase();
