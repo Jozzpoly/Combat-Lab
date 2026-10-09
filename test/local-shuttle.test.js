@@ -67,3 +67,30 @@ test("the same forward signal causes a finite-duration recovery without World la
 test("invalid local policy is explicitly rejected", () => {
   assert.throws(() => step(initial(), "oracle", sample()), RangeError);
 });
+
+test("forward obstruction permits bounded lateral action without reversing heading", () => {
+  let state = initial(), direction = 1, witnessed = null;
+  const sampleForward = sample({ touch: true, forwardTouch: true });
+  for (let i = 0; i < 18; i++) {
+    const out = step(state, "skirt-recovery", sampleForward, direction);
+    state = out.state; direction = out.direction;
+    if (out.transition) witnessed = { ...out };
+  }
+  assert.ok(witnessed);
+  assert.equal(direction, 1);
+  assert.equal(state.skirts, 1);
+  assert.equal(state.recoveries, 0);
+  assert.ok(witnessed.intendedVelocity.y < -1);
+  assert.ok(witnessed.intendedVelocity.x > 0);
+  assert.equal(witnessed.transition.kind, "lateral-attempt");
+});
+
+test("return to the lane depends on private deltaY rather than absolute map y", () => {
+  let state = { ...initial(), skirtTicks: 0, estimatedY: -2.4 };
+  const out = step(state, "skirt-recovery", sample({ deltaY: 0.15 }));
+  assert.equal(out.state.estimatedY, -2.25);
+  assert.ok(out.intendedVelocity.y > 0);
+  assert.ok(out.intendedVelocity.x > 0);
+  assert.equal(out.state.state, "lane-return");
+  assert.equal(state.estimatedY, -2.4);
+});
