@@ -223,13 +223,19 @@ function syncBodyForm(){
     $(selector).value=String(a.spec[k]);
 }
 function switchSituation(key){
-  const selected=PLAYGROUNDS[key];
-  if(!selected)throw RangeError("unknown material field");
-  const recipe=playgroundRecipe(key);
+  if(key!=="yard" && !Object.hasOwn(PLAYGROUNDS,key))
+    throw RangeError("unknown material field");
+  const selected=PLAYGROUNDS[key]||null;
+  const recipe=selected?playgroundRecipe(key):null;
   // Explicit authoring action: replace the starting scene, not magically
   // transfer material afterstate between incompatible worlds.
   field.releaseGrip();
-  field.importScene(recipe);
+  if(recipe)field.importScene(recipe);
+  else{
+    field.sceneRecipe=null;
+    field.authored=[];
+    field.reset();
+  }
   keys.clear();dragPose=null;drawWall=null;pan=null;
   targetId=field.activeActor;
   syncBodyForm();
@@ -238,8 +244,9 @@ function switchSituation(key){
   document.querySelectorAll("[data-situation]").forEach(button=>{
     button.classList.toggle("active",button.dataset.situation===key);
   });
-  $("#situation-caption").textContent=selected.caption;
-  announce("New physical starting arrangement: "+selected.label+
+  $("#situation-caption").textContent=selected?.caption||
+    "Original open material yard. No task; rebuild anything.";
+  announce("New physical starting arrangement: "+(selected?.label||"Original yard")+
     ". Everything now moves by the same shared world physics; intervene freely.");
 }
 function selectAt(i){
@@ -350,6 +357,10 @@ async function start() {
       if(file.size>3_000_000)throw Error("scene JSON exceeds 3MB safety limit");
       const parsed=JSON.parse(await file.text());
       field.importScene(parsed);
+      currentSituation=null;
+      document.querySelectorAll("[data-situation]").forEach(button=>
+        button.classList.remove("active"));
+      $("#situation-caption").textContent="Your imported physical starting scene";
       paused=true;debt=0;targetId=field.activeActor;syncBodyForm();
       announce("Loaded validated starting arrangement; simulation paused.");
     }catch(err){
@@ -475,7 +486,7 @@ async function start() {
       "physical worm selected readout does not expose its own actuation");
     // A visible situation must be a real importable material world, not a
     // cosmetic button or a separate scripted AI per scenario.
-    for(const key of PLAYGROUND_IDS){
+    for(const key of ["yard",...PLAYGROUND_IDS]){
       const button=document.querySelector('[data-situation="'+key+'"]');
       assert(Boolean(button),"unreachable physical world "+key);
       button.click();
@@ -491,7 +502,7 @@ async function start() {
         return Number.isFinite(p.x+p.y);
       }),"physical world broke immediately "+key);
     }
-    document.body.dataset.situationUi="all four material situations loaded and simulated";
+    document.body.dataset.situationUi="original yard + four physical situations loaded and simulated";
     document.body.dataset.uiProbe="pass";
     document.body.dataset.uiEvidence="4 morphology selections and 90 shared-world worm steps";
   }
