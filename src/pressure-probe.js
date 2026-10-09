@@ -2515,6 +2515,84 @@ try{
   cases.push({name:"live-ui-offaxis-actor-rotates-real-beam",status:"FAIL",
     detail:String(error?.message??error).slice(0,300)});
 }
+await trial("combined-world-interventions-stay-finite-and-deterministic-800x2", world => {
+  const run = () => {
+    world.clearAuthored();
+    world.clearBodyStartOverrides();
+    world.setPeerEnabled(true);
+    world.setBraceEnabled(true);
+    world.setPeerMass(30);
+    world.setBraceForm("beam");
+    world.setBraceAngle(25);
+    world.setBraceProfile({mass:120,braking:30});
+    world.setResidentProfile(DEFAULT_RESIDENT_PROFILE);
+    world.setResidentMode("lateral-maneuver");
+    world.setPeerMode("directional-recovery");
+    world.setActorSidePreference("resident",1);
+    world.setActorSidePreference("peer",-1);
+    world.reset();
+    world.authorRect({kind:"wall",cx:16.8,cy:11.4,width:0.6,height:1});
+    world.repositionBody("peer",{x:19,y:12});
+    world.repositionBody("resident",{x:15,y:11.4});
+    for(let tick=1;tick<=800;tick++){
+      if(tick===60)world.applyBodyImpulse("brace",
+        {x:0,y:55},{atPoint:{x:18.1,y:11.4}});
+      if(tick===100)world.authorRect({kind:"object",cx:16.2,cy:12.5,
+        width:.7,height:.6,mass:45});
+      if(tick===130)world.setBraceForm("round");
+      if(tick===170){world.setBraceForm("beam");world.setBraceAngle(45);}
+      if(tick===210)world.setBraceProfile({mass:340,braking:0});
+      if(tick===270)world.setBraceAngle(-65);
+      if(tick===300)world.setPeerEnabled(false);
+      if(tick===330)world.setPeerEnabled(true);
+      if(tick===375)world.repositionBody("resident",{x:15,y:12.9});
+      if(tick===430)world.setResidentMode("directional-recovery");
+      if(tick===500)world.setResidentMode("lateral-maneuver");
+      if(tick===540)assert(world.undoAuthored(),"failed to remove live authored object");
+      if(tick===600)assert(world.undoAuthored(),"failed to remove authored obstruction");
+      if(tick===620)world.applyBodyImpulse("brace",
+        {x:40,y:-90},{atPoint:{x:17.8,y:12}});
+      if(tick===700)world.setBraceForm("round");
+      world.step(still);
+      if(tick%25===0){
+        finite(world,"compound intervention tick="+tick);
+        assert(world.interventionEvents.length<=24,
+          "research event history unexpectedly unbounded");
+        for(const sensor of [world.residentSense,world.peerSense]){
+          assert(sensor && Object.keys(sensor).sort().join(",")===
+            "deltaX,deltaY,forwardTouch,motorEffort,progressAlongIntent,touch",
+            "compound exercise contaminated an actor's local sensor boundary");
+        }
+      }
+    }
+    assert(world.physicsTick===800 && world.authoredShapes.length===0 &&
+      world.snapshot().entities.length===7 && world.braceForm==="round" &&
+      world.braceMass===340,
+      "compound sequence lost actors, authored state, or physical body intent");
+    return world.snapshot().entities.map(entity=>({
+      id:entity.id,
+      s:[entity.position.x,entity.position.y,
+        entity.velocity.x,entity.velocity.y,entity.rotation]
+    }));
+  };
+  const first=run(),second=run();
+  assert(first.length===second.length,
+    "compound physical replay lost an entity");
+  let worst=0;
+  for(let i=0;i<first.length;i++){
+    assert(first[i].id===second[i].id,
+      "compound physical replay changed entity identity/order");
+    for(let j=0;j<5;j++){
+      worst=Math.max(worst,Math.abs(first[i].s[j]-second[i].s[j]));
+    }
+  }
+  assert(worst<1e-6,
+    "compound multi-role/morphology afterstate is not replayable: "+worst);
+  return "800 steps×2; side maneuver, authored placements, real off-center impulses,"+
+    " beam/round transitions, 3 bodies, live removals; max final difference="+
+    worst.toExponential(1);
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
