@@ -7,13 +7,22 @@
 <div class="layout">
   <main class="play">
     <div class="topline"><strong>COMBAT LAB / ORGANISM FIELD</strong><span id="run-summary">Initializing physical world…</span></div>
+    <div class="situation-strip" aria-label="Physical starting situations">
+      <div class="situation-heading"><span>OPEN EXPERIMENTS</span><span id="situation-caption">Existing free field — intervene anywhere.</span></div>
+      <div class="situation-buttons">
+        <button data-situation="relay">Push &amp; jam</button>
+        <button data-situation="crush">Bodies under pressure</button>
+        <button data-situation="hinge">Living doorway</button>
+        <button data-situation="footing">Mixed footing</button>
+      </div>
+    </div>
     <canvas id="scene" aria-label="Experimental material world"></canvas>
     <div class="controlstrip">WASD / arrows: direct selected body · hold B: finite brace · 1/2/3/4: select · mouse wheel: zoom · middle-drag: pan · click: select · Shift+drag: obstacle · Alt+click: movable matter · right-hold: physical grip on a nearby crate · PAUSED Ctrl+drag: author new physical poses</div>
   </main>
   <aside class="lab">
     <header><small>ISOLATED RESEARCH · NOT OWNER QUALIFIED</small>
       <h1>Different bodies, same physical world</h1>
-      <p>There is no right route. Disturb the situation and see which capabilities survive. These are substrate-driven physical prototypes, not simulated animal gaits.</p>
+      <p>Switch physical starting arrangements above the world, then disturb freely. Switching discards the current afterstate unless you capture its JSON first. No goals, scripted routes or forced win conditions. These are substrate-driven physical prototypes, not simulated animal gaits.</p>
     </header>
     <section><h2>Observe / intervene</h2>
       <div class="buttons"><button id="pause">Pause</button><button id="step">Single step</button><button id="reset">Reset scene</button></div>
