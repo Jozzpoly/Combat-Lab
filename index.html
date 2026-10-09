@@ -10,6 +10,7 @@
 <button id="pause">Pause</button><button id="step">One step</button><button id="reset">Reset world</button>
 <button id="spawn-pincer">Add pincer</button><button id="spawn-ram">Add ram</button>
 <button id="add-box">Place crate</button><button id="undo">Undo added matter</button>
+<button id="capture">Capture physical setup</button>
 </nav>
 <div class="canvas-wrap"><canvas id="lab" aria-label="Editable material world with real physical effector bodies"></canvas>
 <div class="hud"><strong id="subject">Live embodied field</strong><span id="readout">Waiting for solver</span></div></div>
@@ -28,7 +29,11 @@
 <div class="field"><label>Crate width (m)</label>
 <input id="crate-width" type="number" min=".08" value=".9" step=".1"></div>
 <p>Place crate then click canvas. Shift-drag adds a **real fixed wall**. Paused Ctrl-drag repositions jointed bodies as wholes; every other body retains its physical history.</p>
-</section><details><summary>Research boundaries & diagnostics</summary>
+</section><details id="scene-details"><summary>Portable authored starting scene · JSON</summary>
+<p>Capture exact posed starting bodies, physical arm angles, masses and walls. This is <strong>not a running solver snapshot</strong>: velocities, active contacts and learned histories are intentionally not preserved. Reset returns to the captured starting condition until another setup replaces it.</p>
+<textarea id="scene-json" rows="7" spellcheck="false" placeholder="Capture or paste scene JSON here"></textarea>
+<button id="load-scene">Validate and load scene</button>
+</details><details><summary>Research boundaries & diagnostics</summary>
 <p>No foot-ground Rapier contact: root movement is a bounded external 2D support force, not biological gait. Arm movement is independently constrained by two real reciprocal revolute joints. An object can only move through contact or manually authored pause intervention; there is no body-to-object grip joint.</p>
 <p id="metrics">No measurements yet</p><p id="notice">Test any unreasonable assembly. If physics breaks, preserve the failure rather than hiding it.</p>
 </details></aside></div>
