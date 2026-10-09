@@ -387,6 +387,38 @@ export class OrganismField {
     // coupling approximation, NOT contact with a 3D ground plane.
     return pos.x > 13 && pos.x < 22 && pos.y > 9.3 && pos.y < 14.4 ? 0.26 : 1;
   }
+  #wormMotor(actor,throttle){
+    const head=actor.root,tail=actor.tail,spec=actor.spec;
+    if(Math.abs(throttle)<.001)return {x:0,y:0};
+    const forward=v(Math.cos(head.rotation()),Math.sin(head.rotation()));
+    const phase=actor.strokeTick%100/100;
+    const extending=phase<.5;
+    const h=head.translation(),r=tail.translation();
+    const hv=head.linvel(),rv=tail.linvel();
+    const span=(h.x-r.x)*forward.x+(h.y-r.y)*forward.y;
+    const rel=(hv.x-rv.x)*forward.x+(hv.y-rv.y)*forward.y;
+    const target=(extending?1.64:.88)*actor.shapeScale.length;
+    const force=clamp((target-span)*180-rel*42,
+      -spec.muscleForce,spec.muscleForce)*Math.abs(throttle);
+    // Reciprocal muscle impulses; cannot propel an isolated two-body system.
+    const stroke=v(forward.x*force*DT,forward.y*force*DT);
+    head.applyImpulse(stroke,true);
+    tail.applyImpulse(v(-stroke.x,-stroke.y),true);
+    // The physical location chosen as stance point controls external ground
+    // reaction. More grip is not assumed to yield more forward travel.
+    const anchor=(throttle>=0)===(extending)?tail:head;
+    const vel=anchor.linvel(),mass=anchor.mass();
+    const raw=v(-vel.x*mass,-vel.y*mass);
+    const magJ=mag(raw),maxJ=spec.supportForce*DT*
+      this.tractionAt(anchor.translation());
+    const ratio=magJ>1e-8?Math.min(1,maxJ/magJ):0;
+    const support=v(raw.x*ratio,raw.y*ratio);
+    anchor.applyImpulse(support,true);
+    actor.strokeTick+=Math.min(3,Math.abs(throttle)*spec.speed/2);
+    actor.controlStroke={phase:extending?"extend":"retract",
+      support:mag(support),stroke:mag(stroke)};
+    return support;
+  }
   #motor(actor, manual) {
     const body = actor.root, spec = actor.spec;
     const selected = actor.id === this.activeActor;
@@ -409,7 +441,9 @@ export class OrganismField {
     const rearTraction = actor.tail ?
       this.tractionAt(actor.tail.translation()) : null;
     let impulse;
-    if(actor.tail){
+    if(actor.kind==="worm"){
+      impulse=this.#wormMotor(actor,throttle);
+    }else if(actor.tail){
       // Distinct supporting segment positions create independent *external*
       // traction limits. The drive split is authored; internal bend torque
       // remains reciprocal and is not claimed as ground-generated gait.
@@ -440,7 +474,7 @@ export class OrganismField {
     const torque = clamp((desiredOmega - body.angvel()) * inertiaEstimate,
       -spec.turnTorque * traction * DT, spec.turnTorque * traction * DT);
     body.applyTorqueImpulse(torque, true);
-    if (actor.tail) {
+    if (actor.kind==="crawler") {
       // Internal articulated movement is real and reciprocal, but only the
       // explicit substrate drive creates net free-space propulsion.
       const bend = wrap(actor.tail.rotation() - body.rotation());
