@@ -3,7 +3,7 @@
 // material continuation; we never pre-label obstacles, routes, or NPC roles.
 export function somaticProbe(Field){
  const assert=(v,m)=>{if(!v)throw Error("somatic: "+m);};
- function attempt(yieldFactor, obstacles="wall"){
+ function attempt(yieldFactor, obstacles="wall",mass=220,steps=240){
    const world=new Field();
    try{
      for(const a of [...world.actors])world.remove(a.id);
@@ -12,10 +12,10 @@ export function somaticProbe(Field){
      world.setActorProfile(a.id,{contactYield:yieldFactor,turnRate:0,
        turnTorque:0});
      const crate=obstacles==="matter" ?
-       world.addBox({x:7.25,y:4,hx:.26,hy:.9,mass:220},false):null;
+       world.addBox({x:7.25,y:4,hx:.26,hy:.9,mass},false):null;
      if(!crate)world.addWall({x:7.25,y:4,hx:.26,hy:.9},false);
      let firstTouch=-1,firstGive=-1,maxFront=0,maxLoad=0,backwardFrames=0;
-     for(let tick=1;tick<=240;tick++){
+     for(let tick=1;tick<=steps;tick++){
        world.step(null);
        if(a.sense.touch && firstTouch<0) firstTouch=tick;
        if(a.control.mode==="give-way" && firstGive<0)firstGive=tick;
@@ -43,6 +43,9 @@ export function somaticProbe(Field){
  assert(persistent.firstGive-compliant.firstGive>=20,
    "distinct tactile yielding did not emerge under same physics");
  const heavyCompliant=attempt(1,"matter"),heavyPersistent=attempt(0,"matter");
+ const light=attempt(1,"matter",12,100);
+ const heavy100=attempt(1,"matter",220,100);
  return {wall:{compliant,persistent},
-   heavy:{compliant:heavyCompliant,persistent:heavyPersistent}};
+   heavy:{compliant:heavyCompliant,persistent:heavyPersistent},
+   materialAffordance:{light,heavy:heavy100}};
 }
