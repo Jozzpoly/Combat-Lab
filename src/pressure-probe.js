@@ -2929,6 +2929,55 @@ await observation("wrong-side-pressure-local-reversal-mechanical-survey", world 
     ", attempts="+adaptive.attempts;
 });
 
+await observation("wrong-side-manual-opposite-route-vs-adaptive-transition-trace", world => {
+  const run=(mode,side)=>{
+    world.clearAuthored();
+    world.setPeerEnabled(false);
+    world.setBraceEnabled(false);
+    world.setResidentProfile(DEFAULT_RESIDENT_PROFILE);
+    world.setResidentMode(mode);
+    world.setActorSidePreference("resident",side);
+    world.reset();
+    world.authorRect({kind:"wall",cx:16.8,cy:11.4,width:.6,height:1,mass:0});
+    world.authorRect({kind:"wall",cx:16.8,cy:12.2,width:5,height:.4,mass:0});
+    let firstPass=null,bestX=-Infinity, minY=Infinity,maxY=-Infinity;
+    const transitions=[],last=[];
+    let previousFlips=0,previousAttempts=0;
+    for(let tick=1;tick<=400;tick++){
+      world.step(still);
+      const p=at(world,"resident").position;
+      const ctl=world.residentControl;
+      const sense=world.residentSense;
+      if(tick%40===0)
+        last.push("t"+tick+"=("+p.x.toFixed(2)+","+p.y.toFixed(2)+
+          ",dirSide="+ctl.lateralSide+",latRemain="+ctl.lateralTicks+")");
+      if(ctl.lateralFlips!==previousFlips ||
+         ctl.lateralAttempts!==previousAttempts){
+        transitions.push("t"+tick+" position=("+p.x.toFixed(2)+","+
+          p.y.toFixed(2)+") tries="+ctl.lateralAttempts+
+          " flips="+ctl.lateralFlips+" forward="+sense.forwardTouch);
+        previousFlips=ctl.lateralFlips;
+        previousAttempts=ctl.lateralAttempts;
+      }
+      if(firstPass===null&&p.x>17.5)firstPass=tick;
+      bestX=Math.max(bestX,p.x);
+      minY=Math.min(minY,p.y);maxY=Math.max(maxY,p.y);
+    }
+    finite(world,"wrong-side navigation diagnostics");
+    return {mode,side,firstPass,bestX,minY,maxY,transitions,last};
+  };
+  const opposite=run("lateral-maneuver",-1);
+  const adaptive=run("adaptive-lateral",1);
+  return "manual -Y pass t="+String(opposite.firstPass)+
+    ", xMax="+opposite.bestX.toFixed(2)+
+    ", yMin="+opposite.minY.toFixed(2)+
+    "; adaptive +Y pass="+String(adaptive.firstPass)+
+    ", xMax="+adaptive.bestX.toFixed(2)+
+    ", yRange="+adaptive.minY.toFixed(2)+".."+adaptive.maxY.toFixed(2)+
+    "; transitions ["+adaptive.transitions.join("; ")+"]"+
+    "; samples ["+adaptive.last.join("; ")+"]";
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
