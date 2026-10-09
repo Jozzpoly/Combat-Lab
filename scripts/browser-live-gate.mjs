@@ -25,3 +25,16 @@ if(!sweep)throw Error("missing independent physical affordance sweep");
 const contrast=JSON.parse(sweep.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
 console.log("ARTICULATED TRANSPORT MATERIAL EDGE-CASES: "+JSON.stringify(contrast));
 
+
+
+// TEMPORARY real-pixel visual audit. Delete this block after inspecting frame.
+if(process.env.CI){
+  const {readFileSync}=await import("node:fs");
+  const file="/tmp/combat-independent-effector.png";
+  execFileSync(chrome,["--headless=new","--no-sandbox","--disable-gpu",
+    "--disable-dev-shm-usage","--window-size=1440,900",
+    "--force-device-scale-factor=1","--virtual-time-budget=6000",
+    "--screenshot="+file,url],{timeout:75000,encoding:"utf8",
+     maxBuffer:6*1024*1024});
+  console.log("EMBODIED_VISUAL_AUDIT:"+readFileSync(file).toString("base64"));
+}
