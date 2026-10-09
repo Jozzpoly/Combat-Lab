@@ -137,9 +137,16 @@ function ui(){
       " m/s · real contacts "+actor.contactCount+
       " · load "+actor.contactImpulse.toFixed(1)+" N·s"+
       (actor.kind==="pincer"?
-        " · jaw command "+Math.round((1-actor.targetAperture)*100)+"% closed":"");
-    $("#torque").value=actor.spec.clawTorque;
-    $("#reach").value=actor.spec.clawReach;
+        " · upper "+Math.round(actor.targetApertures[0]*100)+"% open"+
+        " / lower "+Math.round(actor.targetApertures[1]*100)+"% open":"");
+    // Do not overwrite numeric fields while Owner is typing.
+    if(document.activeElement!==$("#torque"))$("#torque").value=actor.spec.clawTorque;
+    if(document.activeElement!==$("#reach"))$("#reach").value=actor.spec.clawReach;
+    for(const [index,id,label] of [[0,"#upper-jaw","#upper-percent"],[1,"#lower-jaw","#lower-percent"]]){
+      const input=$(id),value=actor.targetApertures[index];
+      if(document.activeElement!==input)input.value=value;
+      $(label).textContent=Math.round(value*100)+"%";
+    }
   }else{
     const vel=chosen.body.linvel();
     $("#entity").textContent=chosen.type==="gate"?
@@ -150,7 +157,7 @@ function ui(){
     $("#readout").textContent="Material speed "+
       Math.hypot(vel.x,vel.y).toFixed(2)+" m/s · spin "+
       chosen.body.angvel().toFixed(2)+" rad/s";
-    $("#matter-mass").value=chosen.mass;
+    if(document.activeElement!==$("#matter-mass"))$("#matter-mass").value=chosen.mass;
   }
 }
 function reset(){
@@ -230,6 +237,14 @@ async function start(){
     info("Validated and loaded physical initial scene. Paused for inspection.");
   });
 
+  for(const [index,id] of [[0,"#upper-jaw"],[1,"#lower-jaw"]]){
+    $(id).oninput=()=>guard(()=>{
+      if(!field.setArmAperture(selectedTarget,index,Number($(id).value)))
+        throw Error("Select a pincer to drive its actual arm");
+      $("#"+(index===0?"upper-percent":"lower-percent")).textContent=
+        Math.round(Number($(id).value)*100)+"%";
+    });
+  }
   $("#apply-torque").onclick=()=>guard(()=>{
     if(!field.setClawTorque(selectedTarget,Number($("#torque").value)))
       throw Error("Select an articulated pincer");
@@ -253,6 +268,10 @@ async function start(){
     if(event.code==="Space")$("#pause").click();
     if(event.code==="KeyE"||event.code==="KeyQ")field.setAperture(
       selectedTarget,event.code==="KeyE"?0:1);
+    if(event.code==="KeyZ"||event.code==="KeyX")
+      field.setArmAperture(selectedTarget,0,event.code==="KeyZ"?0:1);
+    if(event.code==="KeyC"||event.code==="KeyV")
+      field.setArmAperture(selectedTarget,1,event.code==="KeyC"?0:1);
   });
   addEventListener("keyup",event=>keys.delete(event.code));
   addEventListener("blur",()=>keys.clear());
