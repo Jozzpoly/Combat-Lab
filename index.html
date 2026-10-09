@@ -9,13 +9,13 @@
 <nav class="tools" aria-label="Physical experiment controls">
 <button id="pause">Pause</button><button id="step">One step</button><button id="reset">Reset world</button>
 <button id="spawn-pincer">Add pincer</button><button id="spawn-ram">Add ram</button>
-<button id="add-box">Place crate</button><button id="undo">Undo added matter</button>
+<button id="add-box">Place crate</button><button id="poke">Impulse probe</button><button id="undo">Undo added matter</button>
 <button id="capture">Capture physical setup</button>
 </nav>
 <div class="canvas-wrap"><canvas id="lab" aria-label="Editable material world with real physical effector bodies"></canvas>
 <div class="hud"><strong id="subject">Live embodied field</strong><span id="readout">Waiting for solver</span></div></div>
 <footer><span>WASD move · mouse aims · E/Q closes/opens both jaws · Z/X upper · C/V lower · click selects physical body/object</span>
-<span>Mouse wheel zoom · middle drag pan · paused Ctrl-drag reposition · Shift drag draw wall</span></footer>
+<span>Mouse wheel zoom · middle drag pan · paused Ctrl-drag reposition · Shift drag draw wall · Impulse probe to disturb actual bodies</span></footer>
 </main>
 <aside><section class="lead"><h2>Physical body</h2><p>Two contrasting forms, not classes. One has jointed jaws; the other is an unarticulated material pusher. Switch by clicking their real colliders.</p>
 <p><strong>Watch what the body can actually change</strong>, not just where it travels. Drag an object or construct new space during pause; then resume.</p>
@@ -27,7 +27,7 @@
 <button id="apply-reach">Rebuild real jaw geometry</button>
 <div class="field"><label>Object mass (kg)</label><input id="matter-mass" type="number" min=".01" value="35" step="10"></div>
 <button id="apply-mass">Apply physical object mass</button>
-</section><section><h2>Author matter</h2><div class="field"><label>New crate mass (kg)</label>
+</section><section><h2>Experimenter interventions</h2><div class="field"><label>Impulse strength (N·s)</label><input id="poke-strength" type="number" value="250" min="0" step="50"></div><p>Choose Impulse probe, then drag an arrow from a real body, jaw, gate or crate. Release to apply a **one-time external point impulse**. Not an organism action. Drag length sets direction; input sets magnitude. Works paused or running, and can spin objects through off-centre impact.</p></section><section><h2>Author matter</h2><div class="field"><label>New crate mass (kg)</label>
 <input id="crate-mass" type="number" min=".01" value="35" step="10"></div>
 <div class="field"><label>Crate width (m)</label>
 <input id="crate-width" type="number" min=".08" value=".9" step=".1"></div>
