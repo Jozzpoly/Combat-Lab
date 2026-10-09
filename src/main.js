@@ -183,6 +183,10 @@ function renderPhysicalSpatialComparison(result) {
   ctx.fillText("X →",w-38,h-12);
   ctx.fillText("Y ↓",12,h-12);
   canvas.dataset.drawnWorldRects=String(drawnRectCount);
+  canvas.dataset.aOnlyRects=String(near.filter(r=>
+    aKeys.has(commonKey(r))&&!bKeys.has(commonKey(r))).length);
+  canvas.dataset.bOnlyRects=String(near.filter(r=>
+    bKeys.has(commonKey(r))&&!aKeys.has(commonKey(r))).length);
   canvas.dataset.tracedPoints=String(samples.length);
   canvas.dataset.measuredYSpan=String(Math.max(...samples.map(p=>p.y)) -
     Math.min(...samples.map(p=>p.y)));
