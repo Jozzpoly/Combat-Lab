@@ -93,7 +93,23 @@ If the whole still looks like rigid traffic and box pushing after a substantial 
 - **Pause for higher-level Owner review** at a real qualitative crossroads. Public rehearsal remains separate; a green draft never becomes the deployed experience without explicit deliberate action and suitable readiness.
 - **Avoid permanent meta-infrastructure:** no obligatory ontology of verbs, MAP-Elites engine, scorecard, generated "richness %" or compulsory weekly report. A little causal tracing may distinguish actor-generated effects from externally imposed ones, but the live experiment is the product.
 
-## 7. Snapshot and source boundaries
+## 7. Important new substrate fork — physical joints and *claimed* grounding
+
+**Joint integrity:** the current PR #2 uses `World.createImpulseJoint` for its two hinged arms. Its same-seed dense pressure study observed up to ~9.3cm separation between expected body-anchor points, and doubling solver iterations did not consistently reduce error. Rapier's official constraint documentation identifies a *structural* alternative: `World.createMultibodyJoint` (reduced-coordinates multibody), whose internal topology enforces the restricted degrees of freedom rather than approximating them by iterative constraint impulses. The tradeoffs are material: multibody relations are **tree-only**, often slower to add/remove, cannot alone form closed loops, and do not expose the same per-joint constraint forces. Impulse joints are more general and fast to edit, but may show solver-dependent constraint drift. Rapier supports combining the approaches to close loops, with complications. Source: https://rapier.rs/docs/user_guides/templates/joint_constraints/
+
+**Do not immediately rewrite PR #2.** Before a serious modular-body architecture, run a genuinely matched miniature physical comparison on the *currently pinned JavaScript deterministic version* and consider:
+- fixed joint geometry and inertia, equal contact perturbations;
+- measure anchor drift, whole-object afterstate, stability at different densities, authoring changes, and practical wall-clock throughput (not virtual Chrome time);
+- whether dynamic topology editing and closed loops materially require impulse joints, multibody, or a hybrid;
+- whether exact physics result is comparable after the representation change (it may not be), and whether joint-force observability is lost.
+
+This is a **technical decision gate**, not an Owner experience verdict and not a command to optimize constraints before we even choose the next body. Note that the latest online docs may describe a newer Rapier release than the exact 0.21.0 JS package in experimental branches. Actual API behavior must be verified from that package/runtime.
+
+**Grounding/terrain mismatch:** in a zero-gravity **top-down 2D** physical plane, there is no separately simulated vertical floor, normal load, true foot-ground stance, slope contact or 3D terrain support. The current prototypes add external planar motor impulses / authored traction and anchoring *proxies*. These can answer questions about material push, leverage, relative motion and lateral collision, but cannot be honestly presented as biomechanical gait or physically generated footing. For a next specimen whose core phenomenon actually depends on load-bearing feet, slipping, shifting support or terrain displacement, deliberately reconsider dimensional representation or define and expose the approximation. Do not create a simulated-looking "foot" visualization and infer true contact physics.
+
+**Design relevance:** how joints and floor support are represented can determine which behaviors are even physically possible. That decision belongs to the **chosen phenomenon**, not to defaults inherited from either draft.
+
+## 8. Snapshot and source boundaries
 
 At this research pass, public `rehearsal/current` remained its neutral source, while [PR #1](https://github.com/Jozzpoly/Combat-Lab/pull/1) and [PR #2](https://github.com/Jozzpoly/Combat-Lab/pull/2) were separately open, unmerged drafts. Their concrete physical mechanisms, tests and qualitative limitations were inspected from live code, not inferred only from names. This is dated provenance, not a live status mechanism.
 
