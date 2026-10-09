@@ -41,3 +41,4 @@ console.log("PHYSICAL SOMATIC CONTACT A/B: "+(probe.grab("somatic-evidence")||"n
 console.log("FINITE GROUNDED BRACING A/B: "+(probe.grab("brace-evidence")||"not exposed").replaceAll("&quot;",'"'));
 console.log("PAUSED WORLD REPOSITION A/B: "+(probe.grab("pose-evidence")||"not exposed").replaceAll("&quot;",'"'));
 console.log("OPEN MATERIAL FIELD OBSERVATION: "+(probe.grab("playground-evidence")||"not exposed").replaceAll("&quot;",'"'));
+console.log("AUTONOMOUS BODY BRACE A/B: "+(probe.grab("spontaneous-brace")||"not exposed").replaceAll("&quot;",'"'));
