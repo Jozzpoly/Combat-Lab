@@ -442,7 +442,7 @@ async function start() {
   });
   $("#kick").onclick=()=>guarded(()=>{
     const id=targetId||field.activeActor;
-    if(!field.kick(id,mouse,Number($("#impulse").value)))
+    if(!field.kick(id,mouse,Number($("#impulse").value),$("#impulse-mode").value))
       throw Error("Select a dynamic body or object.");
     announce("Finite off-centre impulse applied to "+id);
   });
