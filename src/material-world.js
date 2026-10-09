@@ -82,6 +82,7 @@ export class MaterialWorld {
     // This switch adds a second embodied participant to the *same* World.
     this.peerEnabled = false;
     this.peerMass = 210;
+    this.peerShape = "circle";
     this.residentSkirtSign = -1;
     this.peerSkirtSign = 1;
     // Optional third physical role: a finite-braking dynamic buffer.
@@ -292,15 +293,21 @@ export class MaterialWorld {
       RAPIER.RigidBodyDesc.dynamic().setTranslation(19.0, 11.4)
         .setLinearDamping(0.4).setAngularDamping(1.5).setCcdEnabled(true)
     );
+    const bar = { x: 1.02, y: 0.38 };
+    const isBar = this.peerShape === "bar";
     const collider = this.world.createCollider(
-      RAPIER.ColliderDesc.ball(profile.radius)
+      (isBar ? RAPIER.ColliderDesc.cuboid(bar.x, bar.y) :
+        RAPIER.ColliderDesc.ball(profile.radius))
         .setMass(profile.mass).setFriction(0.55).setRestitution(0), body
     );
     const entity = {
-      id: "peer", label: "counter-moving heavy body", kind: "peer",
-      shape: "circle", ...profile, body, collider,
-      color: "#c2a8dc", grabbable: false,
-      pickRadius: profile.radius + 0.16
+      id: "peer", label: "counter-moving material body", kind: "peer",
+      shape: isBar ? "box" : "circle",
+      half: isBar ? { ...bar } : null,
+      ...profile, radius: isBar ? null : profile.radius,
+      body, collider, color: "#c2a8dc", grabbable: false,
+      pickRadius: isBar ? Math.hypot(bar.x,bar.y) + 0.16 :
+        profile.radius + 0.16
     };
     this.entities.set(entity.id, entity);
     this.colliderLabels.set(collider.handle, entity.id);
@@ -373,6 +380,33 @@ export class MaterialWorld {
       "finite-force holder mass=" + m + "kg, braking=" + b + "m/s²");
   }
 
+  setPeerShape(shape) {
+    if (shape !== "circle" && shape !== "bar") {
+      throw new RangeError("peer shape must be circle or bar");
+    }
+    if (this.peerShape === shape) return;
+    this.peerShape = shape;
+    const peer = this.entities.get("peer");
+    if (peer) {
+      const bar = { x: 1.02, y: 0.38 };
+      this.colliderLabels.delete(peer.collider.handle);
+      this.world.removeCollider(peer.collider, true);
+      peer.collider = this.world.createCollider(
+        (shape === "bar" ? RAPIER.ColliderDesc.cuboid(bar.x, bar.y) :
+          RAPIER.ColliderDesc.ball(0.71))
+          .setMass(this.peerMass).setFriction(0.55).setRestitution(0),
+        peer.body
+      );
+      this.colliderLabels.set(peer.collider.handle, peer.id);
+      peer.shape = shape === "bar" ? "box" : "circle";
+      peer.half = shape === "bar" ? { ...bar } : null;
+      peer.radius = shape === "bar" ? null : 0.71;
+      peer.pickRadius = shape === "bar" ? Math.hypot(bar.x,bar.y) + 0.16 : 0.87;
+      peer.body.wakeUp();
+    }
+    this.#recordEvent("actor.peerShape", "peer collider geometry=" + shape);
+  }
+
   setPeerMass(value) {
     const next = authoredNumber(value, "peer mass", true);
     if (next === this.peerMass) return;
@@ -381,7 +415,9 @@ export class MaterialWorld {
       this.colliderLabels.delete(peer.collider.handle);
       this.world.removeCollider(peer.collider, true);
       peer.collider = this.world.createCollider(
-        RAPIER.ColliderDesc.ball(peer.radius)
+        (peer.shape === "box" ?
+          RAPIER.ColliderDesc.cuboid(peer.half.x, peer.half.y) :
+          RAPIER.ColliderDesc.ball(peer.radius))
           .setMass(next).setFriction(0.55).setRestitution(0),
         peer.body
       );
@@ -993,6 +1029,7 @@ export class MaterialWorld {
       residentControl: { mode: this.residentMode, ...this.residentControl },
       peerEnabled: this.peerEnabled,
       peerMass: this.peerMass,
+      peerShape: this.peerShape,
       braceEnabled: this.braceEnabled,
       braceMass: this.braceMass,
       braceBraking: this.braceBraking,
