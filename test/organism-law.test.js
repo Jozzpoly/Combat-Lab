@@ -161,3 +161,32 @@ test("rear/lateral grounded pressure only braces low-yield material body",()=>{
  assert.equal(stiff.throttle,0);
  assert.notEqual(soft.mode,"brace");
 });
+
+
+test("simultaneous front blockage and rear physical pressure still allow bracing",()=>{
+ let state={age:0,pressure:0,recover:0,turnSide:1,recoveries:0};
+ const profile={contactYield:.12};
+ let result=localResponse(state,{touch:true,progress:.35,front:1,
+    rearLoad:25,sideLoad:0,frontLoad:17,load:42},profile);
+ assert.equal(result.mode,"brace");
+ state=result.state;
+ for(let tick=0;tick<20;tick++){
+   result=localResponse(state,{touch:true,progress:1,front:1,
+     rearLoad:25,sideLoad:0,frontLoad:17,load:42},profile);
+   state=result.state;
+   assert.equal(result.mode,"brace",
+     "zero motor intent must not erase real tactile stance during pressure");
+ }
+ for(let tick=0;tick<10;tick++){
+   result=localResponse(state,{touch:false,progress:1,front:0,
+     rearLoad:0,sideLoad:0,frontLoad:0,load:0},profile);
+   state=result.state;
+ }
+ assert.equal(result.mode,"cruise");
+});
+test("front-only pressure remains pressing, not rear bracing",()=>{
+ const state={age:0,pressure:0,recover:0,turnSide:1,recoveries:0};
+ const actual=localResponse(state,{touch:true,progress:0,front:1,
+    frontLoad:22,rearLoad:0,sideLoad:0,load:22},{contactYield:.12});
+ assert.equal(actual.mode,"press");
+});
