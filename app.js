@@ -1,98 +1,303 @@
-const canvas=document.querySelector("#lab");
-const ctx=canvas.getContext("2d");
-const title=document.querySelector("#experiment-title");
-const purpose=document.querySelector("#experiment-purpose");
-const controlsText=document.querySelector("#controls-text");
-const runState=document.querySelector("#run-state");
-const simTime=document.querySelector("#sim-time");
-const buildId=document.querySelector("#build-id");
-const pauseButton=document.querySelector("#pause");
-const resetButton=document.querySelector("#reset");
-const debugButton=document.querySelector("#debug");
+import {EffectorField,DT,V,clamp} from "./src/effector-world.js";
 
-title.textContent="Neutral smoke surface";
-purpose.textContent="Raw input, stepping, reset and rendering only. No combat or organism semantics.";
-controlsText.textContent="WASD / arrows move the probe · Reset returns to center";
-buildId.textContent="clean-room substrate";
-
-const state={x:0,y:0,time:0,paused:false,debug:false};
+const $=selector=>document.querySelector(selector);
+const canvas=$("#lab"),ctx=canvas.getContext("2d");
 const keys=new Set();
-let last=performance.now();
+let field=null,paused=false,armedBox=false;
+let selectedTarget=null,mouse=V(10,11),camera={x:18,y:12,zoom:1};
+let pan=null,dragPose=null,wallDraft=null;
+let debt=0,last=performance.now(),lastReport=0;
 
-addEventListener("keydown",event=>keys.add(event.code));
-addEventListener("keyup",event=>keys.delete(event.code));
-addEventListener("blur",()=>keys.clear());
-
-pauseButton.addEventListener("click",()=>{
-  state.paused=!state.paused;
-  pauseButton.textContent=state.paused ? "Resume" : "Pause";
-  runState.textContent=state.paused ? "PAUSED" : "RUNNING";
-  last=performance.now();
-});
-
-resetButton.addEventListener("click",()=>{
-  state.x=0;
-  state.y=0;
-  state.time=0;
-  last=performance.now();
-});
-
-debugButton.addEventListener("click",()=>{
-  state.debug=!state.debug;
-  debugButton.textContent=state.debug ? "Debug on" : "Debug";
-});
-
-function resize(){
-  const dpr=Math.max(1,devicePixelRatio||1);
-  const rect=canvas.getBoundingClientRect();
-  const width=Math.max(1,Math.round(rect.width));
-  const height=Math.max(1,Math.round(rect.height));
-  const pixelWidth=Math.round(width*dpr);
-  const pixelHeight=Math.round(height*dpr);
-  if(canvas.width!==pixelWidth||canvas.height!==pixelHeight){
-    canvas.width=pixelWidth;
-    canvas.height=pixelHeight;
-  }
-  ctx.setTransform(dpr,0,0,dpr,0,0);
-  return {width,height};
+function info(message){$("#notice").textContent=message;}
+function selected(){
+  return field?.actor(selectedTarget) ||
+    field?.matter.find(m=>m.id===selectedTarget)||null;
 }
-
+function resize(){
+  const rect=canvas.getBoundingClientRect(),dpr=devicePixelRatio||1;
+  const w=Math.max(1,Math.round(rect.width*dpr)),
+    h=Math.max(1,Math.round(rect.height*dpr));
+  if(w!==canvas.width||h!==canvas.height){canvas.width=w;canvas.height=h;}
+  return {w,h};
+}
+function cameraScale(){
+  return Math.min(canvas.width/36,canvas.height/24)*camera.zoom;
+}
+function worldPoint(event){
+  const rect=canvas.getBoundingClientRect(),s=cameraScale();
+  const px=(event.clientX-rect.left)*canvas.width/rect.width,
+    py=(event.clientY-rect.top)*canvas.height/rect.height;
+  return V(camera.x+(px-canvas.width/2)/s,
+    camera.y+(py-canvas.height/2)/s);
+}
+function roundedBox(x,y,hx,hy,a,fill,outline="#182938"){
+  ctx.save();ctx.translate(x,y);ctx.rotate(a);
+  ctx.beginPath();ctx.rect(-hx,-hy,hx*2,hy*2);
+  ctx.fillStyle=fill;ctx.fill();
+  ctx.strokeStyle=outline;ctx.lineWidth=.048;ctx.stroke();
+  ctx.restore();
+}
+function disk(x,y,r,fill){
+  ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);
+  ctx.fillStyle=fill;ctx.fill();
+}
+function draw(){
+  const {w,h}=resize(),s=cameraScale();
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.fillStyle="#15222d";ctx.fillRect(0,0,w,h);
+  ctx.setTransform(s,0,0,s,w/2-camera.x*s,h/2-camera.y*s);
+  ctx.fillStyle="#293a43";ctx.fillRect(0,0,36,24);
+  ctx.strokeStyle="#334952";ctx.lineWidth=.025;
+  for(let i=0;i<=36;i+=2){
+    ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,24);ctx.stroke();
+  }
+  for(let i=0;i<=24;i+=2){
+    ctx.beginPath();ctx.moveTo(0,i);ctx.lineTo(36,i);ctx.stroke();
+  }
+  // No shaded box is a gameplay obstacle unless Rapier owns its collider.
+  for(const wall of field.walls)
+    roundedBox(wall.x,wall.y,wall.hx,wall.hy,0,"#778995");
+  for(const item of field.matter){
+    const p=item.body.translation(),a=item.body.rotation();
+    const color=item.type==="gate"?"#d3a765":"#a8aa89";
+    roundedBox(p.x,p.y,item.type==="gate"?item.length/2:item.hx,
+      item.type==="gate"?.14:item.hy,a,color,
+      selectedTarget===item.id?"#fcdea3":"#374047");
+    if(item.type==="gate")disk(item.pivot.x,item.pivot.y,.19,"#d7eceb");
+    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(a);
+    ctx.textAlign="center";ctx.textBaseline="middle";
+    ctx.fillStyle="#1d303a";
+    ctx.font="bold .28px system-ui";
+    ctx.fillText(item.mass+"kg",0,0,item.type==="gate"?item.length*.78:item.hx*1.8);
+    ctx.restore();
+  }
+  for(const actor of field.actors){
+    const p=actor.root.translation(),a=actor.root.rotation();
+    if(actor.kind==="ram"){
+      roundedBox(p.x,p.y,1.04,.80,a,"#d6a882");
+      const n=V(Math.cos(a),Math.sin(a));
+      const prow=V(p.x+n.x*.94,p.y+n.y*.94);
+      roundedBox(prow.x,prow.y,.48,.28,a,"#e1bb89");
+    }else{
+      for(const arm of actor.arms){
+        const t=arm.body.translation(),r=arm.body.rotation();
+        roundedBox(t.x,t.y,.81,.13,r,"#84cfb7");
+        const hx=t.x+.70*Math.cos(r)+arm.sign*.20*Math.sin(r);
+        const hy=t.y+.70*Math.sin(r)-arm.sign*.20*Math.cos(r);
+        roundedBox(hx,hy,.115,.26,r,"#b5ecd1");
+        const shoulder=V(p.x+.39*Math.cos(a)-arm.sign*.72*Math.sin(a),
+          p.y+.39*Math.sin(a)+arm.sign*.72*Math.cos(a));
+        disk(shoulder.x,shoulder.y,.17,"#f5d39a");
+      }
+      roundedBox(p.x,p.y,.64,.48,a,"#6fbab3");
+    }
+    const forward=V(Math.cos(a),Math.sin(a));
+    ctx.strokeStyle="#e1f4fa";ctx.lineWidth=.05;
+    ctx.beginPath();ctx.moveTo(p.x,p.y);
+    ctx.lineTo(p.x+forward.x*.66,p.y+forward.y*.66);ctx.stroke();
+    if(selectedTarget===actor.id){
+      ctx.strokeStyle="#efcd89";ctx.lineWidth=.06;
+      ctx.beginPath();ctx.arc(p.x,p.y,actor.kind==="ram"?1.35:1.12,
+        0,Math.PI*2);ctx.stroke();
+      if(actor.contactCount){
+        ctx.strokeStyle="#ff847b";
+        ctx.beginPath();ctx.arc(p.x,p.y,1.5,0,Math.PI*2);ctx.stroke();
+      }
+    }
+  }
+  if(wallDraft){
+    const x=(wallDraft.x+mouse.x)/2,y=(wallDraft.y+mouse.y)/2;
+    roundedBox(x,y,Math.max(.04,Math.abs(wallDraft.x-mouse.x)/2),
+      Math.max(.04,Math.abs(wallDraft.y-mouse.y)/2),
+      0,"rgba(226,198,143,.45)");
+  }
+  if(armedBox)disk(mouse.x,mouse.y,.12,"#e3d6a5");
+}
+function ui(){
+  const chosen=selected(),actor=field.actor(selectedTarget);
+  $("#health").textContent=(paused?"PAUSED · ":"RUNNING · ")+
+    field.actors.length+" bodies · "+field.ticks+" steps";
+  $("#metrics").textContent=field.contactReadout.count+
+    " actor contact incidences · impulse "+
+    field.contactReadout.impulse.toFixed(1)+" N·s";
+  if(!chosen){
+    $("#subject").textContent="No selected physical body";
+    $("#readout").textContent="Click a collider; create any physical encounter.";
+    $("#entity").textContent="Nothing selected";
+    return;
+  }
+  if(actor){
+    $("#entity").textContent=actor.kind==="pincer"?
+      "Pincer: one dynamic trunk + two separately jointed arms and real solid inward hooks.":
+      "Ram: wide rigid material pusher; no independent manipulators.";
+    $("#subject").textContent=actor.kind.toUpperCase()+" · "+actor.id;
+    $("#readout").textContent="Speed "+
+      Math.hypot(actor.root.linvel().x,actor.root.linvel().y).toFixed(2)+
+      " m/s · real contacts "+actor.contactCount+
+      " · load "+actor.contactImpulse.toFixed(1)+" N·s"+
+      (actor.kind==="pincer"?
+        " · jaw command "+Math.round((1-actor.targetAperture)*100)+"% closed":"");
+    $("#torque").value=actor.spec.clawTorque;
+  }else{
+    const vel=chosen.body.linvel();
+    $("#entity").textContent=chosen.type==="gate"?
+      "World-pinned swinging barrier — no invented position lock beyond the real joint.":
+      "Free dynamic crate; movement, mass and torque belong to Rapier.";
+    $("#subject").textContent=chosen.type.toUpperCase()+
+      " · "+chosen.mass+" kg";
+    $("#readout").textContent="Material speed "+
+      Math.hypot(vel.x,vel.y).toFixed(2)+" m/s · spin "+
+      chosen.body.angvel().toFixed(2)+" rad/s";
+    $("#matter-mass").value=chosen.mass;
+  }
+}
+function reset(){
+  field?.dispose();
+  field=new EffectorField();
+  selectedTarget=field.selected;
+  paused=false;debt=0;last=performance.now();
+  $("#pause").textContent="Pause";
+  ui();info("Fresh physical initial arrangement; earlier material afterstate cleared.");
+}
+function guard(callback){
+  try{callback();}catch(error){info(error.message);console.error(error);}
+}
+function updateKeys(){
+  if(!field||paused)return;
+  const x=(keys.has("KeyD")||keys.has("ArrowRight")?1:0)-
+    (keys.has("KeyA")||keys.has("ArrowLeft")?1:0);
+  const y=(keys.has("KeyS")||keys.has("ArrowDown")?1:0)-
+    (keys.has("KeyW")||keys.has("ArrowUp")?1:0);
+  field.step({move:V(x,y),aim:mouse});
+}
 function frame(now){
-  const dt=Math.min(0.05,Math.max(0,(now-last)/1000));
+  if(!field)return;
+  const dt=Math.min(.04,Math.max(0,(now-last)/1000));
   last=now;
-
-  if(!state.paused){
-    const dx=(keys.has("KeyD")||keys.has("ArrowRight")?1:0)-(keys.has("KeyA")||keys.has("ArrowLeft")?1:0);
-    const dy=(keys.has("KeyS")||keys.has("ArrowDown")?1:0)-(keys.has("KeyW")||keys.has("ArrowUp")?1:0);
-    const length=Math.hypot(dx,dy)||1;
-    const speed=180;
-    state.x+=dx/length*speed*dt;
-    state.y+=dy/length*speed*dt;
-    state.time+=dt;
+  if(!paused){
+    debt=Math.min(.16,debt+dt);
+    for(let i=0;i<9&&debt>=DT;i++){
+      updateKeys();debt-=DT;
+    }
   }
-
-  const view=resize();
-  ctx.clearRect(0,0,view.width,view.height);
-  ctx.fillStyle="#12161b";
-  ctx.fillRect(0,0,view.width,view.height);
-
-  const cx=view.width/2+state.x;
-  const cy=view.height/2+state.y;
-  ctx.fillStyle="#88c7ff";
-  ctx.beginPath();
-  ctx.arc(cx,cy,10,0,Math.PI*2);
-  ctx.fill();
-
-  if(state.debug){
-    ctx.fillStyle="#d9e0e8";
-    ctx.font="12px ui-monospace, monospace";
-    ctx.fillText(`probe=(${state.x.toFixed(1)}, ${state.y.toFixed(1)})`,16,24);
-    ctx.fillText(`t=${state.time.toFixed(2)}`,16,42);
-  }
-
-  simTime.textContent=`${state.time.toFixed(2)} s`;
-  window.__combatLabCleanRoom={...state};
+  draw();
+  if(now-lastReport>160){ui();lastReport=now;}
   requestAnimationFrame(frame);
 }
-
-requestAnimationFrame(frame);
+async function start(){
+  field=await EffectorField.create();
+  selectedTarget=field.selected;
+  window.__effectorResearch=field; // research-only, no secret Actor cognition
+  $("#health").textContent="Live Rapier 2D material world";
+  $("#pause").onclick=()=>{paused=!paused;debt=0;
+    $("#pause").textContent=paused?"Resume":"Pause";};
+  $("#step").onclick=()=>guard(()=>{if(!paused)throw Error("Pause first");
+    field.step({move:V(),aim:mouse});draw();ui();});
+  $("#reset").onclick=()=>reset();
+  $("#spawn-pincer").onclick=()=>guard(()=>{
+    const a=field.spawn("pincer",mouse);field.select(a.id);selectedTarget=a.id;ui();
+  });
+  $("#spawn-ram").onclick=()=>guard(()=>{
+    const a=field.spawn("ram",mouse);field.select(a.id);selectedTarget=a.id;ui();
+  });
+  $("#add-box").onclick=()=>{armedBox=!armedBox;
+    info(armedBox?"Click in the material world to add a real movable crate.":
+      "Crate placement cancelled.");};
+  $("#undo").onclick=()=>guard(()=>{
+    if(!field.undo())throw Error("No user-authored matter to undo");
+    ui();
+  });
+  $("#apply-torque").onclick=()=>guard(()=>{
+    if(!field.setClawTorque(selectedTarget,Number($("#torque").value)))
+      throw Error("Select an articulated pincer");
+    info("Real reciprocal joint torque authority changed.");
+  });
+  $("#apply-mass").onclick=()=>guard(()=>{
+    if(!field.setObjectMass(selectedTarget,Number($("#matter-mass").value)))
+      throw Error("Select a movable crate");
+    info("Actual collider mass and inertia changed.");
+  });
+  addEventListener("keydown",event=>{
+    if(["INPUT","TEXTAREA"].includes(document.activeElement?.tagName))return;
+    keys.add(event.code);
+    if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight","Space"].includes(event.code))
+      event.preventDefault();
+    if(event.code==="Space")$("#pause").click();
+    if(event.code==="KeyE"||event.code==="KeyQ")field.setAperture(
+      selectedTarget,event.code==="KeyE"?0:1);
+  });
+  addEventListener("keyup",event=>keys.delete(event.code));
+  addEventListener("blur",()=>keys.clear());
+  canvas.addEventListener("contextmenu",event=>event.preventDefault());
+  canvas.addEventListener("wheel",event=>{
+    event.preventDefault();
+    camera.zoom=clamp(camera.zoom*Math.exp(-event.deltaY*.0012),.32,4.0);
+  },{passive:false});
+  canvas.addEventListener("pointerdown",event=>guard(()=>{
+    mouse=worldPoint(event);
+    if(event.button===1){pan={x:event.clientX,y:event.clientY,
+      cx:camera.x,cy:camera.y};canvas.setPointerCapture(event.pointerId);
+      return;}
+    if(event.button!==0)return;
+    if(event.shiftKey){
+      if(!paused)throw Error("Pause before drawing a fixed wall.");
+      wallDraft={...mouse};canvas.setPointerCapture(event.pointerId);return;
+    }
+    if(event.ctrlKey){
+      if(!paused)throw Error("Pause before authoring a new body pose.");
+      const id=field.pick(mouse),entity=field.actor(id)||
+        field.matter.find(x=>x.id===id);
+      if(!entity)return;
+      const target=entity.root||entity.body;
+      const p=target.translation();
+      dragPose={id,dx:p.x-mouse.x,dy:p.y-mouse.y};
+      canvas.setPointerCapture(event.pointerId);return;
+    }
+    if(armedBox){
+      const mass=Number($("#crate-mass").value),width=Number($("#crate-width").value);
+      const b=field.addBox({x:mouse.x,y:mouse.y,mass,hx:width/2,hy:width/2});
+      selectedTarget=b.id;armedBox=false;ui();return;
+    }
+    const id=field.pick(mouse);
+    if(id){
+      selectedTarget=id;
+      if(field.actor(id))field.select(id);
+      ui();
+    }
+  }));
+  canvas.addEventListener("pointermove",event=>guard(()=>{
+    mouse=worldPoint(event);
+    if(pan){
+      const scale=cameraScale(),rect=canvas.getBoundingClientRect();
+      camera.x=pan.cx-(event.clientX-pan.x)*(canvas.width/rect.width)/scale;
+      camera.y=pan.cy-(event.clientY-pan.y)*(canvas.height/rect.height)/scale;
+    }
+    if(dragPose && paused)
+      field.reposition(dragPose.id,V(mouse.x+dragPose.dx,mouse.y+dragPose.dy));
+  }));
+  canvas.addEventListener("pointerup",event=>guard(()=>{
+    if(wallDraft&&paused){
+      const p=wallDraft;
+      field.addWall({x:(p.x+mouse.x)/2,y:(p.y+mouse.y)/2,
+        hx:Math.max(.06,Math.abs(mouse.x-p.x)/2),
+        hy:Math.max(.06,Math.abs(mouse.y-p.y)/2)});
+    }
+    pan=null;wallDraft=null;dragPose=null;
+    if(canvas.hasPointerCapture(event.pointerId))
+      canvas.releasePointerCapture(event.pointerId);
+  }));
+  canvas.addEventListener("pointercancel",()=>{pan=null;dragPose=null;wallDraft=null;});
+  ui();
+  document.body.dataset.live="yes";
+  if(new URLSearchParams(location.search).has("probe")){
+    paused=true;
+    const {physicalProbe}=await import("./src/physical-probe.js");
+    document.body.dataset.probeResult=JSON.stringify(physicalProbe(EffectorField));
+  }
+  requestAnimationFrame(frame);
+}
+start().catch(error=>{
+  $("#health").textContent="PHYSICS BOOT ERROR";
+  document.body.dataset.liveError=String(error.stack||error);
+  info(String(error));console.error(error);
+});
