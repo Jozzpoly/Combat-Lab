@@ -37,3 +37,14 @@ const impulse=probe.get("impulse-evidence");
 if(!impulse)throw Error("missing physically observed point impact evidence");
 console.log("EXPERIMENTER POINT IMPULSE: "+JSON.stringify(
  JSON.parse(impulse.replaceAll("&quot;",'"').replaceAll("&amp;","&"))));
+
+
+// A bounded, randomized-by-seed whole-world material pressure run.
+// It runs ONLY when requested, and is separate from narrow actuation fixtures.
+// No measured frame time or human experience quality is inferred from this.
+const trial=visit(url+(url.includes("?")?"&":"?")+"campaign=1",22000);
+const report=trial.get("world-campaign");
+if(!report)throw Error("material pressure campaign did not produce evidence");
+const output=JSON.parse(report.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+if(output.results?.length!==4)throw Error("partial campaign data");
+console.log("FREE-WORLD MATERIAL PRESSURE: "+JSON.stringify(output));
