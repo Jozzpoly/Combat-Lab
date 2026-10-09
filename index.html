@@ -111,8 +111,15 @@
             </select>
           </label>
           <button id="compare-scenes">Compare A ↔ current B</button>
-          <p class="muted">A <span style="color:#d9c89a">—</span> starting recipe &nbsp; B <span style="color:#74dbed">—</span> current scene · physical X over fixed steps</p>
-          <canvas id="compare-plot" width="600" height="165" aria-label="Comparison of physical X over time"></canvas>
+          <label>Physical trajectory view
+            <select id="compare-view">
+              <option value="xy">Top-down XY trajectories (true metric proportions)</option>
+              <option value="x">X position over physical time</option>
+              <option value="y">Y position over physical time</option>
+            </select>
+          </label>
+          <p class="muted">A <span style="color:#d9c89a">—</span> saved authored start &nbsp; B <span style="color:#74dbed">—</span> current authored start · real measured positions, not simulated intention. XY is body path only; obstacles are not drawn in this plot.</p>
+          <canvas id="compare-plot" width="600" height="240" aria-label="Physical A/B body trajectories in top-down XY, X or Y"></canvas>
           <pre id="compare-report">No A/B comparison yet.</pre>
         </details>
       </section>

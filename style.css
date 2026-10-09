@@ -58,5 +58,6 @@ details > summary:hover { color: #ffffff; }
 details .fields { margin-top: 10px; }
 
 input[type="checkbox"] { width: auto; margin: 0 7px 0 0; vertical-align: middle; accent-color: #73b7ff; }
+#compare-plot { display: block; width: 100%; height: auto; background: #101820; border: 1px solid #34414d; border-radius: 7px; }
 
 #compare-plot { width:100%; height:auto; display:block; background:#101820; border:1px solid #334351; border-radius:7px; margin:4px 0 10px; }

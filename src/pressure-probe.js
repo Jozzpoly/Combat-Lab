@@ -3099,6 +3099,70 @@ try {
     detail:String(error?.message??error).slice(0,300)});
 }
 
+await trial("same-wrong-side-alternative-is-visible-as-physical-xy-not-only-x", async world => {
+  const {captureStartingScene,compareStartingScenes}=
+    await import("./starting-scene.js");
+  world.clearAuthored();
+  world.setResidentProfile(DEFAULT_RESIDENT_PROFILE);
+  world.setResidentMode("lateral-maneuver");
+  world.setActorSidePreference("resident",1);
+  world.reset();
+  world.authorRect({kind:"wall",cx:16.8,cy:11.4,width:.6,height:.35,mass:0});
+  world.authorRect({kind:"wall",cx:16.8,cy:12.2,width:5,height:.4,mass:0});
+  const a=captureStartingScene(world);
+  world.setResidentMode("adaptive-lateral");
+  const b=captureStartingScene(world);
+  const result=await compareStartingScenes(a,b,{subject:"resident",steps:240});
+  assert(result.traces.a.length>20 &&
+    result.traces.a.every(p=>Number.isFinite(p.x)&&Number.isFinite(p.y)) &&
+    result.traces.b.every(p=>Number.isFinite(p.x)&&Number.isFinite(p.y)),
+    "comparison discarded real lateral physical path coordinates");
+  const maxLateralDiff=Math.max(...result.traces.a.map((p,i)=>
+    Math.abs(p.y-result.traces.b[i].y)));
+  assert(result.firstPositionDifference!==null &&
+    result.firstMotorDifference!==null &&
+    maxLateralDiff>0.4 &&
+    result.candidateFinal.x>17.5 &&
+    result.referenceFinal.x<16.1,
+    "XY comparison failed to expose adaptive route versus blocked fixed-side control");
+  return "real XY; max lateral A/B separation="+maxLateralDiff.toFixed(2)+
+    "m; final X blocked/adaptive="+result.referenceFinal.x.toFixed(2)+
+    "/"+result.candidateFinal.x.toFixed(2)+"m";
+});
+
+try {
+  const exportButton=document.querySelector("#recipe-export");
+  const compareButton=document.querySelector("#compare-scenes");
+  const view=document.querySelector("#compare-view");
+  const plot=document.querySelector("#compare-plot");
+  const report=document.querySelector("#compare-report");
+  assert(exportButton&&compareButton&&view&&plot&&report,
+    "multiaxis browser comparison controls missing");
+  document.querySelector("#fixture-wrong-side").click();
+  exportButton.click();
+  const mode=document.querySelector("#resident-mode");
+  mode.value="lateral-maneuver";
+  mode.dispatchEvent(new Event("change",{bubbles:true}));
+  compareButton.click();
+  await new Promise(resolve=>setTimeout(resolve,0));
+  assert(report.textContent.includes("A / B — resident") &&
+    plot.dataset.comparisonView==="xy" && Number(plot.dataset.tracedPoints)>80,
+    "physical top-down XY comparison not rendered");
+  view.value="y";view.dispatchEvent(new Event("change",{bubbles:true}));
+  assert(plot.dataset.comparisonView==="y",
+    "Y-only physical trajectory chart cannot be selected");
+  view.value="x";view.dispatchEvent(new Event("change",{bubbles:true}));
+  assert(plot.dataset.comparisonView==="x",
+    "X-only physical trajectory chart cannot be selected");
+  view.value="xy";view.dispatchEvent(new Event("change",{bubbles:true}));
+  document.querySelector("#pause-simulation").click();
+  cases.push({name:"live-ui-physical-xy-and-both-axis-ab-views",status:"PASS",
+    detail:"one A/B replay, live XY/Y/X plots update without re-running or mutating World"});
+}catch(error){
+  cases.push({name:"live-ui-physical-xy-and-both-axis-ab-views",status:"FAIL",
+    detail:String(error?.message??error).slice(0,300)});
+}
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);

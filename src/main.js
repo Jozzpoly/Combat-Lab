@@ -40,46 +40,93 @@ const compareSubjectSelect = document.querySelector("#compare-subject");
 const compareScenesButton = document.querySelector("#compare-scenes");
 const compareReport = document.querySelector("#compare-report");
 const comparePlot = document.querySelector("#compare-plot");
+const compareViewSelect = document.querySelector("#compare-view");
+let lastComparisonResult = null;
 
 function renderPhysicalComparison(result) {
   const ctx = comparePlot.getContext("2d");
-  const w = comparePlot.width, h = comparePlot.height;
-  ctx.clearRect(0, 0, w, h);
-  ctx.fillStyle = "#101820"; ctx.fillRect(0, 0, w, h);
-  const values = [...result.traces.a, ...result.traces.b].map(p => p.x);
-  let low = Math.min(...values), high = Math.max(...values);
-  if (Math.abs(high-low) < 0.01) {low -= 0.5; high += 0.5;}
-  const margin = { left: 50, right: 13, top: 16, bottom: 22 };
-  const x = tick => margin.left +
-    tick / result.steps * (w-margin.left-margin.right);
-  const y = value => margin.top +
-    (high-value)/(high-low)*(h-margin.top-margin.bottom);
-  ctx.font = "12px system-ui";
-  ctx.fillStyle = "#98a7b2";
-  for (let i=0;i<=4;i++) {
-    const val = low+(high-low)*i/4;
-    const yy=y(val);
-    ctx.strokeStyle = "rgba(255,255,255,.08)";
-    ctx.beginPath();ctx.moveTo(margin.left,yy);ctx.lineTo(w-margin.right,yy);ctx.stroke();
-    ctx.fillText(val.toFixed(1),5,yy+4);
+  const w=comparePlot.width, h=comparePlot.height;
+  const view=compareViewSelect.value;
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle="#101820";
+  ctx.fillRect(0,0,w,h);
+  ctx.font="12px system-ui";
+  ctx.lineJoin="round";
+  const plots=[
+    [result.traces.a,"#d9c89a"],
+    [result.traces.b,"#74dbed"]
+  ];
+  if(view==="xy") {
+    // Preserve equal meter scale on both axes so apparent clearance
+    // and sideways distance cannot be distorted by chart dimensions.
+    const points=[...result.traces.a,...result.traces.b];
+    const minX=Math.min(...points.map(p=>p.x));
+    const maxX=Math.max(...points.map(p=>p.x));
+    const minY=Math.min(...points.map(p=>p.y));
+    const maxY=Math.max(...points.map(p=>p.y));
+    const margin={left:42,right:15,top:24,bottom:27};
+    const availableW=w-margin.left-margin.right;
+    const availableH=h-margin.top-margin.bottom;
+    const dx=Math.max(1.0,maxX-minX),dy=Math.max(1.0,maxY-minY);
+    const scale=Math.min(availableW/dx,availableH/dy)*.91;
+    const cx=(minX+maxX)/2,cy=(minY+maxY)/2;
+    const sx=value=>margin.left+availableW/2+(value-cx)*scale;
+    const sy=value=>margin.top+availableH/2+(value-cy)*scale;
+    ctx.strokeStyle="rgba(255,255,255,.08)";
+    for(const path of plots) {
+      for(const point of [path[0][0],path[0][path[0].length-1]]) {
+        ctx.beginPath();
+        ctx.moveTo(sx(point.x),margin.top);
+        ctx.lineTo(sx(point.x),h-margin.bottom);
+        ctx.stroke();
+      }
+    }
+    for(const [path,color] of plots){
+      ctx.strokeStyle=color;
+      ctx.lineWidth=2.5;
+      ctx.beginPath();
+      path.forEach((p,i)=>i===0 ? ctx.moveTo(sx(p.x),sy(p.y)) :
+        ctx.lineTo(sx(p.x),sy(p.y)));
+      ctx.stroke();
+      ctx.fillStyle=color;
+      const start=path[0],end=path[path.length-1];
+      ctx.beginPath();ctx.arc(sx(start.x),sy(start.y),3.5,0,Math.PI*2);ctx.fill();
+      ctx.fillRect(sx(end.x)-3.5,sy(end.y)-3.5,7,7);
+    }
+    ctx.fillStyle="#a9b7c3";
+    ctx.fillText("Top-down physical path (X→ right, Y↓ down, equal meters)",10,14);
+    ctx.fillText("start ○     final ■",10,h-7);
+  } else {
+    const values=[...result.traces.a,...result.traces.b].map(p=>p[view]);
+    let low=Math.min(...values),high=Math.max(...values);
+    if(Math.abs(high-low)<.01){low-=.5;high+=.5;}
+    const m={left:55,right:15,top:27,bottom:26};
+    const x=tick=>m.left+tick/result.steps*(w-m.left-m.right);
+    const y=value=>m.top+(high-value)/(high-low)*(h-m.top-m.bottom);
+    for(let i=0;i<=4;i++){
+      const value=low+(high-low)*i/4,yy=y(value);
+      ctx.strokeStyle="rgba(255,255,255,.08)";
+      ctx.beginPath();ctx.moveTo(m.left,yy);ctx.lineTo(w-m.right,yy);ctx.stroke();
+      ctx.fillStyle="#a9b7c3";ctx.fillText(value.toFixed(2),4,yy+4);
+    }
+    for(const [path,color]of plots){
+      ctx.beginPath();
+      path.forEach((p,i)=>i===0?ctx.moveTo(x(p.tick),y(p[view])):
+        ctx.lineTo(x(p.tick),y(p[view])));
+      ctx.lineWidth=2.5;ctx.strokeStyle=color;ctx.stroke();
+    }
+    ctx.fillStyle="#a9b7c3";
+    ctx.fillText(view.toUpperCase()+" (m) by physical step",12,15);
+    ctx.fillText("0",m.left-3,h-8);
+    ctx.fillText(result.steps+" steps",w-90,h-8);
   }
-  for (const [path,color] of [
-    [result.traces.a,"#d9c89a"], [result.traces.b,"#74dbed"]
-  ]) {
-    ctx.beginPath();
-    path.forEach((p,i) => {
-      if(i===0)ctx.moveTo(x(p.tick),y(p.x));
-      else ctx.lineTo(x(p.tick),y(p.x));
-    });
-    ctx.lineWidth=2.3;
-    ctx.strokeStyle=color;ctx.stroke();
-  }
-  ctx.fillStyle="#98a7b2";
-  ctx.fillText("0",margin.left-4,h-5);
-  ctx.fillText(String(result.steps)+" steps",w-90,h-5);
+  comparePlot.dataset.comparisonView=view;
   comparePlot.dataset.tracedPoints=String(
     result.traces.a.length+result.traces.b.length);
 }
+compareViewSelect.addEventListener("change",()=>{
+  if(lastComparisonResult) renderPhysicalComparison(lastComparisonResult);
+});
 const placeBodyButton = document.querySelector("#place-selected-at-cursor");
 const restoreBodyStartsButton = document.querySelector("#restore-body-positions");
 const bodyPositionFeedback = document.querySelector("#body-position-feedback");
@@ -671,6 +718,7 @@ compareScenesButton.addEventListener("click", async () => {
     const result = await compareStartingScenes(reference, candidate, {
       subject: compareSubjectSelect.value, steps: 240
     });
+    lastComparisonResult = result;
     renderPhysicalComparison(result);
     const tick = value => value === null ? "none" : String(value);
     const position = point => "(" + point.x.toFixed(2) + ", " +
@@ -690,6 +738,7 @@ compareScenesButton.addEventListener("click", async () => {
         " / t" + tick(result.candidateFirstContact) + "\n" +
       "No live World was modified. This is physical measurement, not NPC quality.";
   } catch (error) {
+    lastComparisonResult = null;
     comparePlot.dataset.tracedPoints = "0";
     const ctx = comparePlot.getContext("2d");
     ctx.clearRect(0,0,comparePlot.width,comparePlot.height);
