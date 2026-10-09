@@ -2718,6 +2718,63 @@ try{
     detail:String(error?.message??error).slice(0,300)});
 }
 
+await trial("portable-start-replays-same-material-outcome-on-a-fresh-world", async world => {
+  const { captureStartingScene, stageStartingScene } =
+    await import("./starting-scene.js");
+  world.setPeerEnabled(true);
+  world.setPeerMass(70);
+  world.setPeerMode("lateral-maneuver");
+  world.setBraceEnabled(true);
+  world.setBraceForm("beam");
+  world.setBraceAngle(20);
+  world.setBraceProfile({mass:140,braking:8});
+  world.setResidentMode("lateral-maneuver");
+  world.setActorSidePreference("resident",1);
+  world.setActorSidePreference("peer",-1);
+  const dynamicId=world.authorRect({kind:"object",cx:8,cy:9,
+    width:0.8,height:0.6,mass:25});
+  world.authorRect({kind:"wall",cx:16.8,cy:11.4,width:0.5,height:0.8,mass:0});
+  world.repositionBody(dynamicId,{x:15.1,y:12});
+  world.repositionBody("peer",{x:19,y:12});
+  const recipe=captureStartingScene(world);
+  const run=active=>{
+    active.reset();
+    for(let i=0;i<320;i++){
+      if(i===180){
+        active.applyBodyImpulse("brace",{x:24,y:35},
+          {atPoint:{x:17.9,y:11.7}});
+      }
+      active.step(still);
+    }
+    finite(active,"portable replay");
+    return active.snapshot().entities.map(e=>({
+      kind:e.kind,position:e.position,velocity:e.velocity,rotation:e.rotation
+    }));
+  };
+  const original=run(world);
+  const fresh=await stageStartingScene(recipe);
+  try {
+    const reconstructed=run(fresh);
+    assert(original.length===reconstructed.length,
+      "portable reload changed quantity of material bodies");
+    let divergence=0;
+    for(let i=0;i<original.length;i++){
+      const a=original[i],b=reconstructed[i];
+      assert(a.kind===b.kind,"portable reload changed body ordering/type");
+      for(const key of ["x","y"]){
+        divergence=Math.max(divergence,Math.abs(a.position[key]-b.position[key]));
+        divergence=Math.max(divergence,Math.abs(a.velocity[key]-b.velocity[key]));
+      }
+      divergence=Math.max(divergence,Math.abs(a.rotation-b.rotation));
+    }
+    assert(divergence<1e-6,
+      "same portable starting situation and impulses yielded different outcome: "+
+      divergence);
+    return "fresh independent Rapier World; 320×2 steps with off-center impulse; worst delta="+
+      divergence.toExponential(1);
+  } finally {fresh.world.free();}
+});
+
 const failed = cases.filter((c) => c.status === "FAIL");
 document.body.dataset.pressureProbe = failed.length ? "fail" : "pass";
 document.body.dataset.pressureCaseCount = String(cases.length);
