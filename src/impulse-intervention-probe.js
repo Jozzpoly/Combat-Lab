@@ -22,14 +22,14 @@ export function impulseInterventionProbe(Field){
  const world=new Field({empty:true});
  try{
    const a=world.spawn("pincer",{x:10,y:12},0),initialTicks=world.ticks;
-   const child=a.arms[0].hook,tip=child.translation();
-   const before=child.body.linvel(),beforeRoot=a.root.linvel();
+   const arm=a.arms[0],tip=arm.hook.translation();
+   const before=arm.body.linvel(),beforeRoot=a.root.linvel();
    const received=world.pokeAt({x:tip.x,y:tip.y},
      {x:0,y:240});
    check(received?.owner===a.id,"articulated body not reachable");
    check(received.part==="hook"||received.part==="upper",
      "wrong physical child received force");
-   const after=child.body.linvel();
+   const after=arm.body.linvel();
    check(Math.hypot(after.x-before.x,after.y-before.y)>.01,
      "impulse was applied to virtual parent rather than actual limb");
    check(world.ticks===initialTicks,"poke secretly stepped world");
@@ -38,7 +38,7 @@ export function impulseInterventionProbe(Field){
    check(!world.pokeAt({x:12,y:12},{x:0,y:0}),
      "zero impulse cannot fabricate material response");
    for(let i=0;i<100;i++)world.step();
-   const p=a.root.translation(),q=child.body.translation();
+   const p=a.root.translation(),q=arm.body.translation();
    check(Number.isFinite(p.x+p.y+q.x+q.y),"jointed body became nonfinite");
    return {center,offcenter,
      limb:{owner:received.owner,physicalPart:received.part,
