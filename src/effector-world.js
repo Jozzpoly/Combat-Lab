@@ -35,7 +35,7 @@ export class EffectorField {
         const root=a.root.translation(),angle=a.root.rotation();
         return {kind:a.kind,x:root.x,y:root.y,angle,
           clawTorque:a.spec.clawTorque,reach:a.spec.clawReach,
-          aperture:a.targetAperture,
+          aperture:a.targetAperture,armApertures:[...a.targetApertures],
           armAngles:a.arms.map(arm=>wrap(arm.body.rotation()-angle))};
       }),
       matter:this.matter.filter(x=>x.type==="box").map(m=>{
@@ -71,7 +71,10 @@ export class EffectorField {
         const created=field.spawn(a.kind,V(a.x,a.y),a.angle);
         created.spec.clawTorque=a.clawTorque;
         created.targetAperture=a.aperture;
-        if(a.kind==="pincer")field.setClawReach(created.id,a.reach);
+        if(a.kind==="pincer"){
+          created.targetApertures=[...a.armApertures];
+          field.setClawReach(created.id,a.reach);
+        }
         if(a.kind==="pincer"){
           for(let i=0;i<created.arms.length;i++){
             const arm=created.arms[i],relative=a.armAngles[i];
@@ -131,7 +134,7 @@ export class EffectorField {
         speed:kind==="ram"?2.0:2.5,clawTorque:kind==="pincer"?780:0,
         bodyMass:kind==="ram"?220:85,
         clawReach:kind==="pincer"?1.53:0},
-      targetAperture:1, contactCount:0, contactImpulse:0};
+      targetAperture:1, targetApertures:[1,1], contactCount:0, contactImpulse:0};
     const bodyCollider=this.makeBox(root,kind==="ram"?1.04:.64,
       kind==="ram"?.80:.48,actor.spec.bodyMass);
     actor.parts.push({body:root,collider:bodyCollider,tag:"body"});
@@ -156,7 +159,7 @@ export class EffectorField {
           localShoulder,V(-.72,0)),root,arm,true);
         actor.parts.push({body:arm,collider:bar,tag:sign<0?"upper":"lower"});
         actor.parts.push({body:arm,collider:hook,tag:"hook"});
-        actor.arms.push({body:arm,joint,sign,bar,hook});
+        actor.arms.push({body:arm,joint,sign,bar,hook,index:actor.arms.length});
         actor.joints.push(joint);
         this.register(id,bar);this.register(id,hook);
       }
@@ -237,7 +240,18 @@ export class EffectorField {
   setAperture(id,value){
     const a=this.actor(id);
     if(!a||a.kind!=="pincer")return false;
-    a.targetAperture=clamp(safe(value,"aperture"),0,1);return true;
+    const aperture=clamp(safe(value,"aperture"),0,1);
+    a.targetAperture=aperture;
+    a.targetApertures=[aperture,aperture];return true;
+  }
+  setArmAperture(id,index,value){
+    const a=this.actor(id);
+    if(!a || a.kind!=="pincer")return false;
+    if(index!==0 && index!==1)throw RangeError("Arm is 0 (upper) or 1 (lower)");
+    const aperture=clamp(safe(value,"independent arm aperture"),0,1);
+    a.targetApertures[index]=aperture;
+    a.targetAperture=(a.targetApertures[0]+a.targetApertures[1])/2;
+    return true;
   }
   setClawTorque(id,value){
     const a=this.actor(id);
@@ -336,8 +350,8 @@ export class EffectorField {
       for(const arm of a.arms){
         const openAngle=arm.sign*.52;
         const closeAngle=-arm.sign*.28;
-        const target=openAngle*a.targetAperture+
-          closeAngle*(1-a.targetAperture);
+        const individual=a.targetApertures[arm.index];
+        const target=openAngle*individual+closeAngle*(1-individual);
         const relative=wrap(arm.body.rotation()-root.rotation());
         const relativeVelocity=arm.body.angvel()-root.angvel();
         const j=clamp((target-relative)*210-relativeVelocity*29,
@@ -380,7 +394,9 @@ export class EffectorField {
       actors:this.actors.map(a=>({id:a.id,kind:a.kind,
         x:a.root.translation().x,y:a.root.translation().y,
         angle:a.root.rotation(),parts:a.parts.length,
-        aperture:a.targetAperture,contacts:a.contactCount,
+        aperture:a.targetAperture,
+        upperAperture:a.targetApertures[0],lowerAperture:a.targetApertures[1],
+        contacts:a.contactCount,
         impulse:a.contactImpulse}))};
   }
 }
