@@ -14,3 +14,13 @@ label input[type=number],label select{display:block;width:100%;margin-top:4px}.d
 pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#101923;padding:10px;border-radius:6px;border:1px solid #344150;font-size:12px;line-height:1.55}
 #evidence{color:#b7d9ce;font-size:12px;line-height:1.4}
 @media(max-width:800px){.layout{display:block}.play{height:65vh;min-height:350px;position:relative}.lab{max-height:none;padding:14px}.controlstrip{font-size:11px}}
+
+/* Situation selection belongs with the WORLD, not buried in an endless form. */
+.situation-strip{padding:10px 16px 12px;background:#1c2b37;border-bottom:1px solid #435260;flex-shrink:0}
+.situation-heading{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:9px;font-size:11px;color:#bfcddd}
+.situation-heading span:first-child{letter-spacing:.12em;color:#efcb8a;white-space:nowrap;font-weight:700}
+#situation-caption{font-size:11px;color:#b3c6d2;line-height:1.35;text-align:right}
+.situation-buttons{display:flex;gap:7px;flex-wrap:wrap}
+.situation-buttons button{padding:7px 10px;background:#243746;white-space:nowrap}
+.situation-buttons button.active{background:#544632;color:#f7dda4;border-color:#e4b977}
+@media(max-width:960px){.situation-heading{display:block}#situation-caption{display:block;text-align:left;margin-top:5px}.situation-buttons{flex-wrap:nowrap;overflow-x:auto;padding-bottom:2px}}
