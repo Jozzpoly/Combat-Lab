@@ -7,13 +7,13 @@ const diff=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 const finite=p=>Number.isFinite(p.x+p.y);
 const round=n=>+n.toFixed(4);
 function localExternalContact(world,actor){
-  const loads=[0,0],counts=[0,0];
+  const loads=[0,0],counts=[0,0],rapier=world.world;
   for(const arm of actor.arms){
     const i=arm.index;
     for(const collider of [arm.bar,arm.hook]){
-      world.contactPairsWith(collider,other=>{
+      rapier.contactPairsWith(collider,other=>{
         if(world.colliderOwner.get(other.handle)===actor.id)return;
-        world.contactPair(collider,other,manifold=>{
+        rapier.contactPair(collider,other,manifold=>{
           for(let j=0;j<manifold.numSolverContacts();j++){
             loads[i]+=Math.abs(manifold.contactImpulse(j)||0);
             counts[i]++;
