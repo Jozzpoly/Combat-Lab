@@ -20,3 +20,8 @@ if(!json)throw Error("PHYSICAL FIELD PROBE MISSING (maybe WASM failure)");
 const parsed=JSON.parse(json.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
 console.log("REAL EFFECTOR BODY / MATERIAL CAUSAL OBSERVATION: "+
   JSON.stringify(parsed));
+const sweep=probe.get("affordance-sweep");
+if(!sweep)throw Error("missing independent physical affordance sweep");
+const contrast=JSON.parse(sweep.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+console.log("ARTICULATED TRANSPORT MATERIAL EDGE-CASES: "+JSON.stringify(contrast));
+
