@@ -34,7 +34,7 @@ export function stepLocalShuttle({
         // Intentionally bounded search-free lateral motion. A body may
         // discover clearance through physics; no global target or shape
         // geometry is available to this local law.
-        next.skirtTicks = 106;
+        next.skirtTicks = 155;
         next.skirts += 1;
         next.blockedTicks = 0;
         transition = {
