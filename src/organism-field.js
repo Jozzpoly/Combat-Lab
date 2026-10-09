@@ -405,7 +405,10 @@ export class OrganismField {
   }
   #wormMotor(actor,throttle){
     const head=actor.root,tail=actor.tail,spec=actor.spec;
-    if(Math.abs(throttle)<.001)return {x:0,y:0};
+    if(Math.abs(throttle)<.001){
+      actor.controlStroke={phase:"idle",supportPart:null,support:0,stroke:0};
+      return v(0,0);
+    }
     const forward=v(Math.cos(head.rotation()),Math.sin(head.rotation()));
     const phase=actor.strokeTick%100/100;
     const extending=phase<.5;
