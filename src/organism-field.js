@@ -621,15 +621,53 @@ export class OrganismField {
     body.applyImpulseAtPoint(direction,p,true);
     return true;
   }
-  pick(p) {
-    const items = [
-      ...this.actors.flatMap(a => a.parts.map(part =>
-        ({ id: a.id, position: part.collider.translation() }))),
-      ...this.matter.map(m => ({ id: m.id, position: m.body.translation() }))
+  // Explicit paused authoring intervention. No body becomes kinematic during
+  // play; affected body velocity resets, but EVERY other afterstate survives.
+  // Articulated bodies translate together so their real joints are preserved.
+  reposition(id,target) {
+    if(!Number.isFinite(target.x)||!Number.isFinite(target.y)||
+      !Number.isFinite(Math.fround(target.x))||
+      !Number.isFinite(Math.fround(target.y)))
+      throw new RangeError("invalid authoring position");
+    const actor=this.actor(id), object=this.matter.find(o=>o.id===id);
+    if(object?.kind==="gate")
+      throw new RangeError("hinged gate pivot cannot be teleported; use physical impulse/grip");
+    const root=actor?.root||object?.body;
+    if(!root)return false;
+    if(this.grip?.actorId===id||this.grip?.objectId===id)
+      this.releaseGrip();
+    const initial=root.translation(),shift=v(target.x-initial.x,target.y-initial.y);
+    const bodies=actor?.tail?[actor.root,actor.tail]:[root];
+    for(const body of bodies){
+      const old=body.translation();
+      body.setTranslation(v(old.x+shift.x,old.y+shift.y),true);
+      body.setLinvel(v(0,0),true);
+      body.setAngvel(0,true);
+    }
+    if(actor){
+      actor.sense={touch:false,progress:1,front:0,side:0,load:0};
+      actor.state={age:0,pressure:0,recover:0,turnSide:1,recoveries:0};
+    }
+    return true;
+  }
+  pick(p){
+    if(!Number.isFinite(p.x)||!Number.isFinite(p.y))return null;
+    const candidates=[
+      ...this.actors.flatMap(a=>a.parts.map(part=>({id:a.id,
+        collider:part.collider}))),
+      ...this.matter.map(m=>({id:m.id,collider:m.collider}))
     ];
-    const chosen = items.map(e => ({ ...e, d: Math.hypot(e.position.x - p.x,
-      e.position.y - p.y) })).sort((a, b) => a.d - b.d)[0];
-    return chosen && chosen.d < 1.6 ? chosen.id : null;
+    const hits=[];
+    for(const item of candidates){
+      const exact=item.collider.containsPoint(p);
+      const point=exact?p:item.collider.projectPoint(p,true).point;
+      const d=Math.hypot(point.x-p.x,point.y-p.y);
+      if(exact||d<.13)hits.push({id:item.id,
+        distance:d,depth:Math.hypot(item.collider.translation().x-p.x,
+          item.collider.translation().y-p.y)});
+    }
+    hits.sort((a,b)=>a.distance-b.distance||a.depth-b.depth);
+    return hits[0]?.id||null;
   }
   // Saved scene = explicit starting poses, not running solver/cognition replay.
   exportScene(){
