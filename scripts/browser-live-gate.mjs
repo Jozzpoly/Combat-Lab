@@ -46,5 +46,5 @@ const trial=visit(url+(url.includes("?")?"&":"?")+"campaign=1",22000);
 const report=trial.get("world-campaign");
 if(!report)throw Error("material pressure campaign did not produce evidence");
 const output=JSON.parse(report.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
-if(output.results?.length!==4)throw Error("partial campaign data");
+if(output.results?.length!==6)throw Error("partial campaign data");
 console.log("FREE-WORLD MATERIAL PRESSURE: "+JSON.stringify(output));
