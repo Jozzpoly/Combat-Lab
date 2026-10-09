@@ -21,6 +21,7 @@ const ui=visit(url+(url.includes("?")?"&":"?")+"uiProbe=1",4500);
 if(ui.grab("ui-probe")!=="pass")
   throw Error("Selected morphology UI FAIL: "+ui.grab("lab-error"));
 console.log("SELECTABLE ORGANISM UI: "+ui.grab("ui-evidence"));
+console.log("AUTONOMY/POSSESSION UI: "+(ui.grab("possession-ui")||"not exposed"));
 const probe=visit(url+(url.includes("?")?"&":"?")+"pressureProbe=1",9000);
 if(probe.grab("pressure-probe")!=="pass")
   throw Error("Physical pressure FAIL: "+probe.grab("pressure-probe")+
