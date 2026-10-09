@@ -519,7 +519,7 @@ export class OrganismField {
       body.applyTorqueImpulse(-effort, true);
     }
     actor.control = {
-      mode: selected && manual ? "manual" : somaticMode,
+      mode: bracing ? "brace" : selected && manual ? "manual" : somaticMode,
       throttle, steering: desiredOmega, traction, rearTraction,
       braceImpulse, bracing,
       intended: v(Math.cos(body.rotation()) * spec.speed * throttle,
