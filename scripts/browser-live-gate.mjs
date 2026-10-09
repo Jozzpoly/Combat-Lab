@@ -31,4 +31,11 @@ const arms=probe.get("independent-arms");
 if(!arms)throw Error("missing independent physical arm outcomes");
 const independent=JSON.parse(arms.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
 console.log("INDEPENDENT PHYSICAL ARM OUTCOMES: "+JSON.stringify(independent));
+if(probe.get("poke-ui")!=="finite impulse delivered via actual pointer drag")
+  throw Error("physical research impulse pointer UI did not apply");
+const impulse=probe.get("impulse-evidence");
+if(!impulse)throw Error("missing physically observed point impact evidence");
+console.log("EXPERIMENTER POINT IMPULSE: "+JSON.stringify(
+ JSON.parse(impulse.replaceAll("&quot;",'"').replaceAll("&amp;","&"))));
+
 
