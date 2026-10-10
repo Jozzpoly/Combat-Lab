@@ -58,6 +58,24 @@
     <option value="bulk">Broad heavy hull</option></select></label>
   <div class="two"><label>Quantity <input id="count" type="number" min="1" max="100" value="1"></label>
   <button id="spawn">Spawn around cursor</button></div>
+  <details id="morph-controls"><summary>Physical shape for the next body · edit</summary>
+   <div class="two"><label>Hull length half-size (m)
+     <input id="new-hx" type="number" min=".12" step=".1" value=".52"></label>
+    <label>Hull width half-size (m)
+     <input id="new-hy" type="number" min=".12" step=".1" value=".47"></label></div>
+   <div class="two"><label>Number of articulated arms
+     <select id="new-arms"><option value="0">0 · rigid</option>
+     <option value="1">1 · lever</option><option value="2" selected>2 · independent</option></select></label>
+    <label>Each physical arm length (m)
+     <input id="new-arm-length" type="number" min=".8" step=".2" value="1.55"></label></div>
+   <div class="two"><label>Root body mass (kg)
+     <input id="new-mass" type="number" min=".1" step="10" value="80"></label>
+    <label>Finite movement force (N)
+     <input id="new-motor" type="number" min="0" step="100" value="900"></label></div>
+   <p class="micro">These values build actual rigid bodies, collider sizes and revolute
+     arm joints. Presets are starting points, not fixed species. Edit the shape
+     *before* spawn; post-spawn geometric rebuild is not yet supported.</p>
+  </details>
   <label>Material <select id="material-type"><option value="block">Free block</option>
     <option value="beam">Free rigid beam</option>
     <option value="hinge">Pinned hinged beam</option>
