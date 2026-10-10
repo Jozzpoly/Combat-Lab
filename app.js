@@ -527,6 +527,13 @@ async function start(){
    document.body.dataset.uiProbe=JSON.stringify(uiCheck());
 
  }
+ if(new URLSearchParams(location.search).has("visualreverse")){
+   field.select(null);selected=null;
+   const pivot=field.matter.find(m=>m.kind==="hinge");
+   field.setHingeDrive(pivot.id,-1.1,900);
+   for(let k=0;k<100;k++)field.step();
+   paused=true;render();
+ }
  if(new URLSearchParams(location.search).has("energy")){
    const {activeMaterialCommonsPressure}=await import("./src/x0-energy-probe.js");
    document.body.dataset.energy=JSON.stringify(activeMaterialCommonsPressure(CommonsWorld));
