@@ -46,7 +46,7 @@ function run(World,{power=true,bodyIndex,targetId,deltaY=0,hold=true,move=true})
  }finally{w.dispose();}
 }
 export function testRelationalRivals(World){
- const offsets=[-.25,0,.25];
+ const offsets=[-1,-.5,0,.5,1];
  const free=offsets.map(deltaY=>{
    const common={bodyIndex:2,targetId:"matter-16",deltaY};
    const held=run(World,{...common,hold:true,move:true});
@@ -69,7 +69,7 @@ export function testRelationalRivals(World){
  };
  hinge.noGripActorAngle=+
    (hinge.unheld.targetAngle-hinge.unheldIdle.targetAngle).toFixed(4);
- return {scope:"Exploratory Y1 follow-up: 3 predeclared offsets for body-3 free matter; body-2 bulk attempts anchored hinge. 360 physical setup ticks, world power OFF before 100 manual-action ticks. Manual input and idle/no-hold controls.",
+ return {scope:"Exploratory Y1 follow-up: 5 predeclared wider offsets for body-3 free matter; body-2 bulk attempts anchored hinge. 360 physical setup ticks, world power OFF before 100 manual-action ticks. Manual input and idle/no-hold controls.",
    free,hinge,
    limitation:"No-grip mechanical response isolates ordinary physical contact from powered adhesive hold. Actor input is operated by a researcher, not chosen by NPC."};
 }
