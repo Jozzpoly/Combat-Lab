@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Combat Lab — Embodied Effectors / independent field</title><link rel="stylesheet" href="./style.css"></head>
+<title>Combat Lab — Commons W1 / niezależna próba całości</title><link rel="stylesheet" href="./style.css"></head>
 <body><div class="layout">
 <main class="stage">
-<header><div><span class="eyebrow">Combat Lab · independent material-possibility experiment</span>
-<h1>What can a body do?</h1><p>Real colliding appendages, finite forces, editable matter. No goals, route script, or magic inventory.</p>
+<header><div><span class="eyebrow">Combat Lab · W1 / spójne pole eksperymentalne, NIE gotowa gra</span>
+<h1>Co naprawdę potrafią te ciała?</h1><p>Wspólna materia, fizyczne ramiona, ciężkie kadłuby i edycja świata. Brak autonomicznego AI. Niewybrane ciała są bierne, nie udają życia.</p>
 </div><span id="health" class="health">Loading real physics…</span></header>
 <nav class="tools" aria-label="Physical experiment controls">
 <button id="pause">Pause</button><button id="step">One step</button><button id="reset">Reset world</button>
@@ -17,7 +17,7 @@
 <footer><span>WASD move · mouse aims · E/Q closes/opens both jaws · Z/X upper · C/V lower · click selects physical body/object</span>
 <span>Mouse wheel zoom · middle drag pan · paused Ctrl-drag reposition / Alt-drag rotate · Shift drag draw wall · Impulse probe to disturb actual bodies</span></footer>
 </main>
-<aside><section class="lead"><h2>Physical experiment</h2><p>Click a real collider to select it. Drive the body, move each arm, rebuild its geometry or disturb matter. No scripted outcomes.</p></section><section><h2>Selected entity</h2><div id="entity">No selection</div>
+<aside><section class="lead"><h2>Eksperyment fizyczny</h2><p>Kliknij rzeczywiste ciało albo przedmiot, przejmij sterowanie i testuj nacisk, kończyny oraz przeszkody. To nie jest gotowy combat ani dowód życia organizmów.</p></section><section><h2>Selected entity</h2><div id="entity">No selection</div>
 <div class="jaw-control" aria-label="Independent physical appendages"><label>Upper jaw opening <output id="upper-percent">100%</output><input id="upper-jaw" type="range" min="0" max="1" step=".01" value="1"></label><label>Lower jaw opening <output id="lower-percent">100%</output><input id="lower-jaw" type="range" min="0" max="1" step=".01" value="1"></label><p>0 = close, 100% = open. Each arm applies its own finite reciprocal joint torque. E/Q still operate both together.</p></div>
 <div class="field"><label>Actuator / claw torque (N·m)</label><input id="torque" type="number" min="0" value="780" step="80"></div>
 <button id="apply-torque">Apply actual joint torque</button>
