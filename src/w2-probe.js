@@ -117,12 +117,46 @@ function initialOverlaps(w,a){
  }
  return hits; // Query-pipeline inspection, not a signed penetration depth.
 }
+
+function exactStartPairIntersections(w,selected){
+ // Shape-vs-shape narrowphase is evaluated immediately from current pose.
+ // Unlike world.intersectionsWithShape it does NOT rely on an updated
+ // broadphase query pipeline after changing initial actor positions.
+ const shape=(s)=>s.type==="ball"?new RAPIER.Ball(s.r):new RAPIER.Cuboid(s.hx,s.hy);
+ const all=[
+  ...w.actors.flatMap(actor=>actor.parts.map(part=>({
+    owner:actor.id,body:part.body,part,shape:shape(part.shape)}))),
+  ...w.objects.map((obj,j)=>({
+    owner:"material-"+j,body:obj.body,part:obj,
+    shape:new RAPIER.Cuboid(obj.hx,obj.hy)}))
+ ];
+ const visited=new Set(), pairs=[];
+ for(const actor of selected)for(const p of actor.parts){
+  const candidate=all.find(x=>x.part===p&&x.owner===actor.id);
+  if(!candidate)throw Error("Missing selected part in narrowphase scene");
+  for(const other of all){
+   if(other.owner===actor.id)continue;
+   const ids=[candidate.body.handle,other.body.handle].sort((a,b)=>a-b);
+   const key=ids.join("/");
+   if(visited.has(key))continue;
+   visited.add(key);
+   if(candidate.shape.intersectsShape(candidate.body.translation(),
+      candidate.body.rotation(),other.shape,other.body.translation(),
+      other.body.rotation()))
+    pairs.push({a:actor.id,b:other.owner});
+  }
+ }
+ return {count:pairs.length,byOwner:pairs.reduce((o,p)=>{
+  o[p.a+"->"+p.b]=(o[p.a+"->"+p.b]||0)+1;return o;
+ },{})};
+}
+
 function pressureCommon(label,locations,policy,actuator=3){
  const w=new MaterialCommons();
  const a=w.actors.filter(x=>x.morphology==="folding");
  if(a.length!==2)throw Error("Missing foldables");
  for(let i=0;i<2;i++){w.poseActor(a[i].id,V(...locations[i]));w.setBodyPolicy(a[i].id,policy);w.setActuatorCap(a[i].id,actuator);}
- const before=w.getTrace(),origins=a.map(x=>({...x.root.translation()})),initialOverlapHits=initialOverlaps(w,a);
+ const before=w.getTrace(),origins=a.map(x=>({...x.root.translation()})),initialOverlapHits=initialOverlaps(w,a),initialShapePairs=exactStartPairIntersections(w,a);
  let summedPressure=0,peakPressure=0,activeFolds=0,compactSamples=0,firstCommand=null,nonfinite=0;
  try{
   for(let i=0;i<420;i++){
@@ -134,7 +168,7 @@ function pressureCommon(label,locations,policy,actuator=3){
    }
   }
   const after=w.getTrace();
-  return {label,policy,actuator,initialOverlapHits,actorCount:w.actors.length,
+  return {label,policy,actuator,initialOverlapHits,initialShapePairs,actorCount:w.actors.length,
    foldables:a.map((body,j)=>({
     id:body.id,from:origins[j],to:{...body.root.translation()},
     spanY:w.extent(body).spanY,hingeImpulse:n(body.anatomyImpulse),
