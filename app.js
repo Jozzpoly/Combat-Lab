@@ -452,6 +452,39 @@ async function start(){
      verify(field.matter.some(m=>m.form==="beam"),
        "free beam shape identity lost on portable scene reload");
      const g=field.matter.find(x=>x.kind==="hinge"),angle=g.body.rotation();
+     verify(g.driveSpeed===1.1&&g.driveTorque===900,
+       "initial powered hinge properties lost on scene restore");
+     const initialAngle=g.body.rotation();
+     const hingeCenter=g.body.translation();
+     pointer("pointerdown",hingeCenter);
+     verify(selected===g.id,"selecting real driven hinge body failed");
+     el("selected-mass").value=String(g.mass);
+     el("selected-drive-speed").value="0";
+     el("selected-drive-torque").value="0";
+     el("apply-selected").click();
+     verify(g.driveSpeed===0&&g.driveTorque===0,
+       "operator could not switch off physical material drive in current world");
+     el("selected-drive-speed").value="1.4";
+     el("selected-drive-torque").value="1300";
+     el("apply-selected").click();
+     verify(g.driveSpeed===1.4&&g.driveTorque===1300,
+       "operator could not retune powered hinge without rebuilding world");
+     const holdRecipe=capture(field),holdReload=restore(holdRecipe);
+     verify(holdReload.matter.some(x=>x.kind==="hinge"&&x.driveSpeed===1.4&&x.driveTorque===1300),
+       "versioned initial scene lost powered hinge authored drive");
+     holdReload.dispose();
+     const matterBeforePowered=field.matter.length;
+     el("material-type").value="hinge-drive";
+     el("material-mass").value="68";el("span").value="2.7";
+     el("new-drive-speed").value="-1.2";el("new-drive-torque").value="650";
+     el("add-material").click();pointer("pointerdown",V(36.5,7.5));
+     verify(field.matter.length===matterBeforePowered+1 &&
+       field.matter.at(-1).driveSpeed===-1.2 &&
+       field.matter.at(-1).driveTorque===650,
+       "operator could not freely author reverse powered hinge");
+     el("undo").click();
+     verify(field.matter.length===matterBeforePowered,
+       "undo authored powered matter failed");
      const gp=g.body.translation();
      pointer("pointerdown",gp,{altKey:true});
      pointer("pointermove",V(gp.x-.3,gp.y+.85),{altKey:true});
