@@ -11,13 +11,15 @@ const len=n=>Math.hypot(n.x,n.y);
 const kinds=["folding","rigid-wide","rigid-small"];
 export class EnvelopeField extends M0Field{
  constructor({kind="folding",withGate=true,withMatter=true,holdHeading=true,
-   stiffness=2.7,torqueCap=.5,drive=860,selfContact=true}={}){
+   stiffness=2.7,torqueCap=.5,drive=860,selfContact=true,hingeMount="center"}={}){
   super({empty:true,reflex:false,iterations:16});
   if(!kinds.includes(kind))throw RangeError("kind");
   if(!Number.isFinite(torqueCap)||torqueCap<0||torqueCap>4)throw RangeError("torque");
   this.kind=kind;this.withGate=withGate;this.holdHeading=holdHeading;
   this.stiffness=stiffness;this.torqueCap=torqueCap;this.drive=drive;
   this.selfContact=selfContact;
+  if(!["center","front"].includes(hingeMount))throw RangeError("mount");
+  this.hingeMount=hingeMount;
   this.foldTarget=1;this.jointImpulseTotal=0;this.hingeError=0;
   this.operatorImpulse=0;this.headingImpulse=0;this.gateContacts=0;
   this.externalBodyContacts=0;
@@ -44,11 +46,12 @@ export class EnvelopeField extends M0Field{
    collider.setMass(85);
    for(const sign of [-1,1]){
     const shape={type:"box",hx:.80,hy:.12};
-    const pose=V(10,13.5+sign*1.13);
+    const mountX=hingeMount==="front"?.65:0;
+    const pose=V(10+mountX,13.5+sign*1.13);
     const body=this.makeBody(pose,sign*Math.PI/2,.7);
     const child=this.makeCollider(body,shape,20);
     const joint=this.world.createImpulseJoint(RAPIER.JointData.revolute(
-      V(0,sign*.33),V(-.80,0)),root,body,true);
+      V(mountX,sign*.33),V(-.80,0)),root,body,true);
     // Fourth createImpulseJoint arg is wakeUp, not collideConnected.
     // Exclude connected body self-contact ONLY when explicitly requested.
     joint.setContactsEnabled(selfContact);
@@ -164,6 +167,7 @@ export class EnvelopeField extends M0Field{
    x:round(x.body.translation().x),y:round(x.body.translation().y),
    rotation:round(x.body.rotation())}));
   return {kind:this.kind,selfContact:this.selfContact,
+   hingeMount:this.hingeMount,
    jointContacts:this.actor.wings.map(w=>w.joint.contactsEnabled()),
    ticks:this.ticks,foldTarget:this.foldTarget,
    chassis:{x:round(p.x),y:round(p.y),rotation:round(a.root.rotation()),
