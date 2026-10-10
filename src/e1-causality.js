@@ -87,6 +87,45 @@ function moveCue(){
    note:"This editor intervention moves a REAL matter collider, not purely an abstract scent signal. Physical-object position and local cue may BOTH explain downstream divergence."};
  }finally{original.dispose();edited.dispose();}
 }
+function signalOnly(){
+ const original=new EncounterField(),changed=new EncounterField();
+ try{
+  let prefixDifference=null,first=null;
+  for(let tick=0;tick<320;tick++){
+   if(tick===160){
+    const d=distance(original,changed);
+    if(d>1e-8)prefixDifference={tick,d};
+    // Change only an authored LOCAL ODOR SIGNATURE. No body/collider mass,
+    // transform, material state, joint, force or engine condition changes.
+    changed.cues[0].signature="cyan";
+    if(changed.cues[0].body.translation().x!==
+       original.cues[0].body.translation().x)
+     throw Error("Signal-only edit contaminated physics");
+   }
+   const pre=distance(original,changed);
+   original.step();changed.step();
+   if(tick>=160&&!first){
+    const actor=original.actors.find((a,i)=>len(V(
+      a.motive.direction.x-changed.actors[i].motive.direction.x,
+      a.motive.direction.y-changed.actors[i].motive.direction.y))>1e-5);
+    if(actor){
+     const i=original.actors.indexOf(actor),another=changed.actors[i];
+     first={tick,actor:actor.id,role:actor.role,
+      preStepBodyDisparity:round(pre),
+      originalSensed:actor.motive.chosenCue,
+      changedSensed:another.motive.chosenCue,
+      originalState:actor.motive.status,
+      changedState:another.motive.status,
+      originalSource0:original.cues[0].signature,
+      changedSource0:changed.cues[0].signature};
+    }
+   }
+  }
+  return {prefixDifference,firstSignalCommandDifference:first,
+   postSignalWorldDivergence:round(distance(original,changed)),
+   note:"Unlike moving a material source, this comparison changes only one local signal descriptor on the same physical free collider. First decision divergence must follow a later local sensor refresh; no immediate physical collider change is allowed."};
+ }finally{original.dispose();changed.dispose();}
+}
 function stress(){
  const w=new EncounterField();
  try{
@@ -97,7 +136,7 @@ function stress(){
     V(7.3+(i%4)*2.6,4.8+Math.floor(i/4)*1.8),roles[(i+1)%3]);
   w.select(null);
   let maxPressure=0,maxColliders=0,nonfinite=0,peakRootSpeed=0;
-  const start=performance.now();
+  // Headless Chromium virtual time is not wall time. Do NOT claim FPS here.
   for(let i=0;i<500;i++){
    w.step();
    maxColliders=Math.max(maxColliders,w.contactPairs);
@@ -108,10 +147,10 @@ function stress(){
     peakRootSpeed=Math.max(peakRootSpeed,len(v));
    }
   }
-  const elapsed=performance.now()-start;
+
   const state=w.getTrace();
   return {actors:w.actors.length,bodyCount:w.actors.reduce((n,a)=>n+a.parts.length,0),
-   simulationTicks:500,realChromiumWallMilliseconds:round(elapsed),
+   simulationTicks:500,timing:"UNMEASURED (Chromium virtual time)",
    maxContactIncidencesPerTick:maxColliders,
    maxImpulseSeen:round(maxPressure),maxRootSpeed:round(peakRootSpeed),
    nonfinite,autonomousTicks:state.actors.reduce((n,a)=>n+a.autonomousTicks,0),
@@ -121,6 +160,6 @@ function stress(){
 }
 export function runE1Causality(batch="C"){
  if(!["C","D"].includes(batch))throw RangeError("Batch");
- return batch==="C"?{batch,pressure:lockstepPressure(),edit:moveCue()}:
+ return batch==="C"?{batch,pressure:lockstepPressure(),edit:moveCue(),signalOnly:signalOnly()}:
    {batch,stress:stress()};
 }
