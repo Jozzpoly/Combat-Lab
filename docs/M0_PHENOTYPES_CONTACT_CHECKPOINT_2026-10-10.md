@@ -35,13 +35,24 @@ Shared editable 44×27m field starts with eight organisms, two small material ob
   - **Off-axis ±0.8m under sustained drive:** compliant moves second body ~3.04m versus solid ~4.91m; a strong counterexample to a blanket compliant advantage.
 - **Reflex concern:** in the original 3-offset operator-driven matrix, the chain's sum of second-body ΔX changes only ~+0.111m across three offsets with reflex ON versus OFF (mean ~0.037m); compliant changes ~−0.027m total (mean ~−0.009m). Recorded contact-reflex events do **NOT** yet correspond to a new bodily action/reaction that would interest the Owner. Don't tune to get a green count.
 
+## True, inspected, lasting visual evidence
+
+The frames below were extracted from ONE actual Chromium/Rapier physical world, at tick 0 and tick 240, under fixed-step forward input to one chain-root for 200 ticks followed by 40 no-command ticks. They are not independently reset worlds, illustrations or edited images.
+
+- [Actual raw t0 PNG](media/m0-actual-t0.png) — physically differentiated geometry, but visibly sparse and crude.
+- [Actual raw t240 PNG](media/m0-actual-t240.png) — jointed chain physically contacts/displaces a compliant organism toward a heavy rigid body. There is no emergent locomotion or individually chosen behavior, just externally driven input and solver dynamics.
+- [One-world timeline execution](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38088072780) — tick 0/80/160/240 positions and rendered data from the same runtime.
+- [Owner-style actual browser UI qualification](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38088221703) — source code path not just helper simulation; no Owner subjective feedback.
+
+The unretouched images **fail to demonstrate** the qualitatively serious organism experience. Do not redesign the screenshots and call it progress. Investigate missing anatomical movement/control and real self-sourced effort *before* claiming any serious next whole.
+
 ## Adversarial interpretation
 
 These demonstrations show **distinct physical contact dynamics**, not distinct purposeful actions or self-locomotion. Multiple colliders extend solver contact persistence and allow internal deformation but do not prove they create an observable worthwhile organism behavior.
 
 Actual M0 first and 240-tick images reveal a material field with rectangles, segmented bars and spring-ring beads. The one-lane push only touched nearby bodies; most of the scene was inactive. This STILL threatens to repeat historical L0/W1's failure: polishing good physics until presentation is called an organism. A new controller/AI system is not automatically the answer either. We need a genuine source of intentional/physically sourced action that creates varied encounters.
 
-**Important limitations:** 2D planar root traction is not real ground support; the chain's hinge bend during straight-drive tests was very small; collider graph is not a watertight membrane; rigid substitutes are not fully matched in geometry/rotational inertia; contact ticks may reflect multiple and persistent solver manifolds; all actor movement in trials is operator input or laboratory impulse; no large-crowd performance, chaos/failure campaign or Owner free-play test. The browser UI still needs separate qualification after this source run.
+**Important limitations:** 2D planar root traction is not real ground support; the chain's hinge bend during straight-drive tests was very small; collider graph is not a watertight membrane; rigid substitutes are not fully matched in geometry/rotational inertia; contact ticks may reflect multiple and persistent solver manifolds; all actor movement in trials is operator input or laboratory impulse; no large-crowd performance, chaos/failure campaign or Owner free-play test. The actual UI was subsequently qualified through emitted Chromium: pointer selection, real finite WASD motor, pause/one solver step, physical spring-body creation, paused complete-assembly pose edit, impulse drag, reflex toggle and reset all passed ([CI 38088221703](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38088221703)). This is a plumbing check, NOT Owner experience acceptance.
 
 ## Provisional decision
 
