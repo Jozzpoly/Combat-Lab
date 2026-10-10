@@ -99,6 +99,71 @@ export class CommonsWorld{
     this.world.propagateModifiedBodyPositionsToColliders();
     return a;
   }
+  // Editor-only physical rebuild of one resident body. Called while the UI
+  // is paused: other bodies, matter, positions, velocities and world clock
+  // stay in the SAME solver. The rebuilt actor preserves its id and root
+  // kinematics; new parts are assembled into a new physical topology.
+  rebuildActor(id,edits){
+    const old=this.actor(id);
+    if(!old)return false;
+    if(!edits || typeof edits!=="object")throw TypeError("Missing body rebuild edits");
+    const next={...old.spec};
+    for(const key of ["hx","hy","arms","armLength"]){
+      if(edits[key]!==undefined)next[key]=safe(edits[key],"rebuild "+key);
+    }
+    if(next.hx<=.10||next.hy<=.10||
+      !Number.isInteger(next.arms)||next.arms<0||next.arms>2||
+      (next.arms>0&&next.armLength<.8))
+      throw RangeError("Unsupported physical body re-rig");
+    const beforeIndex=this.actors.indexOf(old);
+    const root=old.root,p=root.translation(),angle=root.rotation();
+    const velocity=root.linvel(),spin=root.angvel();
+    const selectedBefore=this.selected;
+    let replacement=null;
+    try{
+      replacement=this.addActor(old.form,V(p.x,p.y),angle,next);
+      replacement.target=[...old.target];
+      replacement.control=old.control;
+      replacement.armReflexEnabled=old.armReflexEnabled;
+      // Existing arm indices keep their physical angle where possible.
+      // Added limbs start at the actual builder rest pose.
+      for(let i=0;i<Math.min(old.arms.length,replacement.arms.length);i++){
+        const prev=old.arms[i],nextArm=replacement.arms[i];
+        const relative=wrap(prev.body.rotation()-angle);
+        const shoulder=rot(nextArm.shoulder,angle);
+        const child=rot(V(nextArm.half,0),angle+relative);
+        nextArm.body.setTranslation(V(p.x+shoulder.x+child.x,
+          p.y+shoulder.y+child.y),true);
+        nextArm.body.setRotation(angle+relative,true);
+      }
+      replacement.root.setLinvel(V(velocity.x,velocity.y),true);
+      replacement.root.setAngvel(spin,true);
+    }catch(error){
+      if(replacement){
+        this.actors=this.actors.filter(a=>a!==replacement);
+        this.removeActorBodies(replacement);
+      }
+      this.selected=selectedBefore;
+      throw error;
+    }
+    // Every possible validation/build failure occurred before touching old.
+    // An ongoing body-hold cannot safely retain stale limb handles.
+    if(this.hold?.actorId===id)this.endHold();
+    this.removeActorBodies(old);
+    this.actors=this.actors.filter(a=>a!==replacement&&a!==old);
+    replacement.id=id;
+    for(const part of replacement.parts)
+      this.colliderOwner.set(part.collider.handle,id);
+    this.actors.splice(beforeIndex,0,replacement);
+    this.selected=selectedBefore;
+    this.world.propagateModifiedBodyPositionsToColliders();
+    return replacement;
+  }
+  removeActorBodies(actor){
+    for(const part of actor.parts)this.colliderOwner.delete(part.collider.handle);
+    for(const body of new Set(actor.parts.map(part=>part.body)))
+      this.world.removeRigidBody(body);
+  }
   addMatter(pos,opts={}){
     const {hx=.50,hy=.42,mass=45,angle=0,form="block",created=true}=opts;
     safe(mass,"matter mass");if(mass<=0)throw RangeError("Material mass must be positive");
