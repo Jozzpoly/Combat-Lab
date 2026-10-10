@@ -89,6 +89,13 @@ function render(){
      ctx.stroke();
    }
  }
+ if(field.hold){
+   const link=field.holdPoints();
+   ctx.strokeStyle="#7cf0cb";ctx.lineWidth=.075;
+   ctx.beginPath();ctx.moveTo(link.actor.x,link.actor.y);
+   ctx.lineTo(link.object.x,link.object.y);ctx.stroke();
+   disk(link.actor,.10,"#a6ffe0");disk(link.object,.10,"#a6ffe0");
+ }
  if(wall){
    ctx.fillStyle="rgba(222,195,138,.20)";ctx.strokeStyle="#efd89d";
    const x=Math.min(wall.x,mouse.x),y=Math.min(wall.y,mouse.y);
@@ -109,7 +116,8 @@ function render(){
  el("time").textContent=(field.ticks*DT).toFixed(1)+" s";
  el("counts").textContent=field.actors.length+" bodies · "+field.matter.length+" matter";
  el("activity").textContent=field.counts.contacts+" contacts · "+
-    field.counts.reflex+" local responses";
+    field.counts.reflex+" local responses"+
+    (field.hold?" · body-contact hold ACTIVE":"");
  const a=field.actor(selected),m=field.item(selected);
  el("selection").textContent=a?
    a.form+" | "+a.arms.length+" actual limb(s) | local load "+a.observed.load.toFixed(2):
@@ -118,6 +126,7 @@ function render(){
  if(a){
    if(document.activeElement!==el("selected-mass"))el("selected-mass").value=a.spec.mass;
    if(document.activeElement!==el("selected-motor"))el("selected-motor").value=a.spec.motor;
+   if(document.activeElement!==el("selected-hold"))el("selected-hold").value=a.spec.holdForce;
    if(document.activeElement!==el("upper"))el("upper").value=a.target[0];
    if(document.activeElement!==el("lower"))el("lower").value=a.target[1];
    el("local-response").checked=a.control==="sense";
@@ -162,6 +171,7 @@ function activate(){
    const m=safe(Number(el("selected-mass").value),"mass");
    const actor=field.actor(selected),obj=field.item(selected);
    if(actor){
+     field.setSpec(selected,"holdForce",safe(Number(el("selected-hold").value),"hold force"));
      field.setSpec(selected,"mass",m);
      field.setSpec(selected,"motor",safe(Number(el("selected-motor").value)));
    }else if(obj)field.setMaterialMass(selected,m);
@@ -175,7 +185,7 @@ function activate(){
    const p=BODY_PRESETS[el("body-type").value];
    for(const [key,value] of [["new-hx",p.hx],["new-hy",p.hy],
       ["new-arms",p.arms],["new-arm-length",p.armLength],
-      ["new-mass",p.mass],["new-motor",p.motor]])
+      ["new-mass",p.mass],["new-motor",p.motor],["new-hold",p.holdForce]])
      el(key).value=String(value);
  };
  el("body-type").onchange=fillBodyPreset;
@@ -189,7 +199,8 @@ function activate(){
      arms:safe(Number(el("new-arms").value),"real appendage count"),
      armLength:safe(Number(el("new-arm-length").value),"real arm length"),
      mass:safe(Number(el("new-mass").value),"root physical mass"),
-     motor:safe(Number(el("new-motor").value),"finite root drive")};
+     motor:safe(Number(el("new-motor").value),"finite root drive"),
+     holdForce:safe(Number(el("new-hold").value),"finite contact hold authority")};
    for(let i=0;i<count;i++){
      const angle=i*2.39996,r=.50*Math.sqrt(i);
      field.addActor(form,V(mouse.x+r*Math.cos(angle),mouse.y+r*Math.sin(angle)),angle,shape);
@@ -217,8 +228,21 @@ function activate(){
    paused=true;el("pause").textContent="Resume";
    message("Validated & loaded. Paused for physical inspection; all contacts reset.");
  });
+ canvas.addEventListener("contextmenu",event=>event.preventDefault());
  canvas.addEventListener("pointerdown",event=>fail(()=>{
    mouse=worldPoint(event);
+   if(event.button===2){
+     event.preventDefault();
+     if(field.hold){
+       field.endHold();message("Released body-held material; solver motion continues.");
+     }else if(!field.beginHold(mouse)){
+       message("Contact hold unavailable: touch material with the selected organism hull/limb first.");
+     }else{
+       message("Body-contact hold: finite reciprocal force on "+
+         field.hold.actorPart+". Right click again to release.");
+     }
+     return;
+   }
    if(event.button===1){pan={screen:V(event.clientX,event.clientY),
      camera:V(camera.x,camera.y)};return;}
    if(event.button!==0)return;
@@ -309,13 +333,14 @@ function activate(){
       event.target instanceof HTMLSelectElement)return;
    keys.add(event.code);
    if(event.code==="Space"){event.preventDefault();el("pause").click();}
+   if(event.code==="Escape"){field.endHold();mode=null;}
    if(event.code==="KeyE"||event.code==="KeyQ"){
      field.setActiveArm(selected,0,event.code==="KeyE"?0:1);
      field.setActiveArm(selected,1,event.code==="KeyE"?0:1);
    }
  });
  addEventListener("keyup",event=>keys.delete(event.code));
- addEventListener("blur",()=>keys.clear());
+ addEventListener("blur",()=>{keys.clear();field?.endHold();});
 }
 async function start(){
  replaceWorld(new CommonsWorld());
