@@ -23,7 +23,7 @@ function trial(config){
       mode==="fold-then-open"?tick>=500?0:tick>=100?1:0:0;
     w.step({forward:1,fold});
     for(const s of side)for(const p of w.actor.parts){
-     w.world.contactPair(s.collider?.()??w.objects.find(o=>o.body===s)?.collider,p.collider,m=>{
+     w.world.contactPair(w.objects.find(o=>o.body===s)?.collider,p.collider,m=>{
       for(let k=0;k<m.numSolverContacts();k++)
        if(Math.abs(m.contactImpulse(k))>1e-5)contactSteps++;
      });
