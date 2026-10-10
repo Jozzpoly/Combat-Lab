@@ -3,7 +3,7 @@
 **Last explicit Owner-first correction:** 2026-10-10  
 **Status:** BODY↔WORLD DISCOVERY FRONTIER OPEN · X0 ISOLATED DONOR / NOT OWNER-QUALIFIED · NO DEPLOYMENT
 
-**Conversation navigation convention:** [PROGRESS_COMPASS_CONVENTION.md](PROGRESS_COMPASS_CONVENTION.md) defines a compact four-anchor *presentation* for occasional Owner-facing checkpoints (past / current frontier / next evidence threshold / larger goal). It persists across chats but does **not** freeze any actual project status or control what to implement.
+**Agent-only longer-run recovery cursor:** [AGENT_RUN_CURSOR.md](AGENT_RUN_CURSOR.md). It is a dated operational pointer, not independent authority; newer Owner truth and live repo state override it.\n\n**Conversation navigation convention:** [PROGRESS_COMPASS_CONVENTION.md](PROGRESS_COMPASS_CONVENTION.md) defines a compact four-anchor *presentation* for occasional Owner-facing checkpoints (past / current frontier / next evidence threshold / larger goal). It persists across chats but does **not** freeze any actual project status or control what to implement.
 
 No new research specimen has been accepted by the Owner. Candidate implementation work occurs on separate experimental refs; it does not become canonical by existing or passing a machine test. Check live branch heads and their latest CI before claiming a runnable candidate.
 
