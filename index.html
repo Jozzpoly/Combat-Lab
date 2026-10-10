@@ -1,24 +1,20 @@
-<!doctype html><html lang="pl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Combat Lab · M0 Anatomia/nacisk/reakcja</title><link rel="stylesheet" href="./m0.css"></head><body>
-<div class="shell"><header class="top"><div><p class="eyebrow">Combat Lab / niezależny eksperyment M0</p>
-<h1>Organizm to więcej niż collider</h1><p class="lead">Rzeczywisty nacisk pomiędzy sztywnymi, członowanymi i sprężystymi ciałami. Przerywaj, przemieszczaj, wywieraj siłę i porównuj.</p></div>
-<div class="status"><strong id="run-status">Uruchamianie…</strong><span>Badanie · NIE gotowa gra ani NPC</span></div></header>
-<div class="notice"><b>Granica modelu:</b> człony i sprężyny są fizyczne, ale nie symulujemy mięśni, nóg ani przyczepności podłoża. WASD stosuje jawny <b>zewnętrzny napęd płaski</b> wyłącznie do wybranego ciała. Odruch kontaktowy nie jest decyzją NPC.</div>
-<div class="columns"><main><div class="toolbar">
-<button id="pause">Pauza</button><button id="step">+1 krok</button><button id="reset">Reset sceny</button><button id="poke">Impuls badacza</button>
-<button id="add-rigid">+ zwarty</button><button id="add-chain">+ członowany</button><button id="add-compliant">+ podatny</button><button id="add-matter">+ materia</button></div>
-<div class="arena"><canvas id="lab" aria-label="Rzeczywiste ciała w fizycznym świecie"></canvas></div>
-<div class="readout"><span id="time">0 s</span><span id="count">—</span><span id="contacts">—</span><span id="energy">—</span></div>
-<p class="help">Kliknij, by wybrać ciało. <b>WASD</b> — ograniczony napęd · <b>scroll</b> — zoom · <b>środkowy przycisk</b> — kamera · <b>pauza + Ctrl-przeciąganie</b> — przenieś ciało · <b>Impuls badacza</b> — strzałka siły. Nowe ciała i materię można dodawać w dowolnym miejscu.</p></main>
-<aside><h2>Co badamy?</h2><p>Czy budowa rzeczywiście zmienia negocjację przestrzeni, nacisk i reakcję, czy jedynie rysunek?</p>
-<div class="key"><i class="dot amber"></i><span><b>Zwarty</b> — jedna sztywna bryła</span></div>
-<div class="key"><i class="dot blue"></i><span><b>Członowany</b> — trzy masy i dwa przeguby</span></div>
-<div class="key"><i class="dot green"></i><span><b>Podatny</b> — osiem mas i fizyczne sprężyny, nie ciągła tkanka</span></div>
-<hr><label class="switch"><input id="reflex" type="checkbox" checked> Lokalny odruch na realny kontakt</label>
-<p class="small">Odruch zmienia postawę / napięcie wewnętrzne po nacisku. Bez niego bierne sprężyny nadal działają.</p>
-<label>Impuls eksperymentatora (N·s)<input id="impulse" type="range" min="20" max="1400" step="20" value="380"><output id="impulse-value">380</output></label>
-<h3>Wybrane ciało</h3><div id="selection">—</div><div id="selected-state" class="small"></div>
-<hr><h3>Granice dowodu</h3><p class="small">Obrys sprężystej istoty jest wizualizacją, nie niewidzialną kolizją. Kontakty nie są decyzjami. Brak losowego krążenia, tras i globalnego celu.</p>
-<p id="message" class="message">Ładowanie fizyki…</p></aside></div>
-<footer>Izolowany prototyp badawczy · przed oceną Ownera · bez publikacji.</footer></div>
-<script type="module" src="./m0-app.js"></script></body></html>
+<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Combat Lab B1 · fizyczna sylwetka</title><style>
+*{box-sizing:border-box}body{margin:0;background:#101c25;color:#e5edf1;font:14px/1.5 system-ui}header{padding:15px 24px;background:#1b303c;border-bottom:1px solid #3b5861}
+main{max-width:1400px;margin:0 auto;padding:15px 20px}h1{font-size:1.7em;margin:0}h3{margin:.1em 0 .7em}p{margin:.4em 0;color:#bbced4}
+.shell{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:14px}.arena{height:min(72vh,720px);min-height:380px;background:#142732;border:1px solid #37525d;border-radius:10px;overflow:hidden}canvas{width:100%;height:100%;display:block}
+aside{padding:16px;background:#213744;border:1px solid #405e6e;border-radius:10px}.tools{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}button,select,input{font:inherit}button,select{background:#2a4657;color:#e6eff2;padding:8px 11px;border:1px solid #597582;border-radius:6px}button{cursor:pointer}button:hover{background:#456071}label{display:block;margin:13px 0 5px}select,input[type=range]{width:100%}output{font-variant-numeric:tabular-nums}strong{color:#fff}.note{padding:9px;border-left:3px solid #cda568;background:#273b44}.readout{display:grid;gap:6px;padding-top:10px}small{color:#a3bac6}a{color:#a6d9e7}
+@media(max-width:850px){.shell{grid-template-columns:1fr}.arena{height:54vh}main{padding:8px}}
+</style></head><body><header><div style="max-width:1380px;margin:auto"><small>Combat Lab / B1 · izolowany eksperyment, nie stworzenie i nie gra</small><h1>Rozłożone czy złożone ciało?</h1><p>Czy fizyczne stawy pozwalają jednemu organizmowi zajmować dużą przestrzeń albo przecisnąć się przez materialną szczelinę?</p></div></header>
+<main><p class="note"><strong>Granica modelu:</strong> skrzydła są rzeczywistymi masami na przegubach z parą przeciwnych momentów; pozostały ruch daje jawna zewnętrzna siła na kadłubie. Nie symulujemy nóg, świadomego organizmu ani mięśni. Sztywne odpowiedniki sprawdzają, czy koszt ruchomych członów ma sens.</p>
+<div class="shell"><section>
+<div class="tools"><button id="pause">Pauza</button><button id="step">+1 krok</button><button id="reset">Reset</button><button id="open">Rozłóż skrzydła (E)</button><button id="fold">Złóż skrzydła (Q)</button><button id="remove">Usuń fizyczną bramkę</button></div>
+<div class="arena"><canvas id="lab" aria-label="Rzeczywisty fizyczny tunel i ciała"></canvas></div>
+<p><strong>W / strzałka w górę</strong> — ograniczony napęd w prawo · <strong>S / strzałka w dół</strong> — w lewo · <strong>Q</strong> — składanie · <strong>E</strong> — rozkładanie · scroll — zoom. Gdy jest pauza, przeciągnij korpus do innego miejsca. Szerokość tunelu zmieniasz fizycznie suwakiem. Możesz próbować utknąć, przewrócić lub przecisnąć konstrukcję.</p></section>
+<aside><h3>Fizyczny wariant</h3><select id="kind"><option value="folding">2 ruchome skrzydła na prawdziwych zawiasach</option><option value="rigid-wide">Prosta sztywna szeroka bryła</option><option value="rigid-small">Prosta sztywna wąska bryła</option></select>
+<label for="width">Rzeczywista szerokość szczeliny</label><input type="range" id="width" min=".7" max="4.2" step=".05" value="1.25"><output id="width-val">1.25 m</output>
+<label><input type="checkbox" id="heading" checked> Jawne wspomaganie utrzymania kierunku korpusu</label>
+<label for="torque">Maksymalny impuls na zawias (N·m·s/krok)</label><select id="torque"><option value=".5">0.5 · napęd</option><option value=".15">0.15 · słaby napęd</option><option value="0">0 · bez napędu przegubów</option></select>
+<hr><h3>Stan prawdziwej fizyki</h3><div class="readout" id="readout">Ładowanie solvera…</div>
+<hr><small>Wszystkie trzy konstrukcje mają masę całkowitą 125 kg, wspólną siłę ograniczającą ruch oraz ten sam fizyczny świat. Różnią się strukturą i rozkładem mas. Węższa bryła jest silnym tanim konkurentem — jej istnienie może unieważnić potrzebę skomplikowanej anatomii.</small>
+<p id="message">Nie wybieramy 2D ani nowego organizmu na podstawie tej próby.</p></aside></div></main>
+<script type="module" src="./b1-app.js"></script></body></html>
