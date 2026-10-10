@@ -293,6 +293,13 @@ if(new URLSearchParams(location.search).has("e1ownercheck")){
   const destination=V(old.x+1.4,old.y+1.8);
   const point=V(old.x,old.y);
   canvas.dispatchEvent(new PointerEvent("pointerdown",{
+   ...toClient(point),button:0,bubbles:true,pointerId:109}));
+  check(activeCue===src,"click exact physical scent source");
+  $("cue-signature").value="cyan";
+  $("cue-signature").dispatchEvent(new Event("change",{bubbles:true}));
+  check(src.signature==="cyan"&&src.body.translation().x===old.x,
+    "signal-only edit keeps real physical collider pose");
+  canvas.dispatchEvent(new PointerEvent("pointerdown",{
    ...toClient(point),button:0,bubbles:true,pointerId:112,ctrlKey:true}));
   canvas.dispatchEvent(new PointerEvent("pointermove",{
    ...toClient(destination),button:0,bubbles:true,pointerId:112,ctrlKey:true}));
@@ -307,7 +314,7 @@ if(new URLSearchParams(location.search).has("e1ownercheck")){
   document.body.dataset.e1Ownercheck=JSON.stringify({
    pass:true,actualColliderClick:true,manualMotor:true,roleEdit:true,
    controlledAutonomyOff:true,liveSourcePose:true,
-   exactPhysicalIdentity:true,reset:true,notOwnerFeel:true});
+   exactPhysicalIdentity:true,signalOnlyEdit:true,reset:true,notOwnerFeel:true});
  }catch(error){document.body.dataset.liveError=String(error.stack||error);console.error(error);}
 }
 
