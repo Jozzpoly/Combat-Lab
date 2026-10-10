@@ -64,3 +64,12 @@ console.log("B1 DUAL ACTION EVIDENCE "+JSON.stringify(dual.scenarios.map(x=>({
  stem:x.stages.map(y=>({tick:y.tick,root:y.rootX,width:y.width,
     props:y.sideX}))}))));
 console.log("B1 DUAL FULL "+JSON.stringify(dual));
+
+for(const batch of ["A","B"]){
+ const raw=open("b1cheap="+batch,55000)("b1-cheap");
+ if(!raw)throw Error("B1 cheap surrogate challenge missing "+batch);
+ const d=decode(raw);
+ if(d.batch!==batch||d.scenarios.length!==3||
+   d.scenarios.some(x=>x.nonfinite))throw Error("B1 cheap rival source invalid");
+ console.log("B1 CHEAP MORPH RIVAL "+JSON.stringify(d));
+}
