@@ -28,3 +28,15 @@ console.log("M0 PHYSICAL TRIAL "+JSON.stringify(values));
 // never claim screenshot content was inspected merely because bytes exist.
 console.log("M0 FIRST REAL FRAME PNG base64 bytes="+generated.length);
 console.log("M0 FRAME-DATA "+generated);
+
+const movie=execFileSync(chrome,["--headless=new","--no-sandbox","--disable-gpu","--disable-dev-shm-usage",
+ "--virtual-time-budget=3500","--dump-dom",
+ url+(url.includes("?")?"&":"?")+"frames=1"],
+ {encoding:"utf8",timeout:75000,maxBuffer:16*1024*1024});
+const frameRaw=movie.match(/data-m0-frames="([^"]*)"/)?.[1];
+if(!frameRaw||movie.includes("data-live-error="))throw Error("M0 live same-world temporal capture failed");
+const series=JSON.parse(frameRaw.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+if(series.length!==4||series[0].tick!==0||series[3].tick!==240)throw Error("M0 time-series source not valid");
+console.log("M0 FRAMES REAL TICKS "+JSON.stringify(series.map(p=>({tick:p.tick,
+ actorPositions:p.actors.map(a=>({kind:a.kind,x:a.x,y:a.y})),bytes:p.frame.length}))));
+console.log("M0 FRAME-240 "+series[3].frame);
