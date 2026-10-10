@@ -21,9 +21,13 @@
 <p class="small">Zachowania to trzy jawne prawa: badanie bliskich źródeł, reagowanie na sąsiadów, podtrzymanie zainteresowania przez chwilę. Po wyłączeniu inicjatywy nikt nie dostaje napędu bez operatora. Kontroler nie zna mapy, trasy ani globalnego celu.</p>
 <label>Impuls eksperymentatora (N·s)<input id="impulse" type="range" min="20" max="1400" step="20" value="380"><output id="impulse-value">380</output></label>
 <h3>Wybrane ciało</h3><div id="selection">—</div><div id="selected-state" class="small"></div>
+<h3>Fizyczne źródło zapachu</h3>
+<p class="small">Kliknij barwny przedmiot. Zmiana zapachu nie zmienia jego bryły; Ctrl-przeciągnij w pauzie, żeby przesunąć bryłę i bodziec razem.</p>
+<label for="cue-signature">Sygnał zaznaczonego źródła / nowych źródeł</label>
+<select id="cue-signature"><option value="amber">Bursztynowy</option><option value="cyan">Turkusowy</option></select>
 <label for="role">Lokalna skłonność (nie rodzaj ciała)</label>
 <select id="role"><option value="seeker">Odkrywca bodźców</option><option value="wary">Ostrożny — ustępuje</option><option value="holder">Uparty — utrzymuje pozycję (proxy)</option></select>
-<hr><h3>Granice dowodu</h3><p class="small">Obrys sprężystej istoty nie jest ciągłym colliderem. Zapach jest prostym sygnałem dostępnym tylko lokalnie, ruchome źródła są prawdziwymi bryłami. Impulsy napędu są limitowane, ale nie pochodzą z nóg. Nie ma walki, pathfindingu, samouczącego mózgu ani prawdziwych potrzeb.</p>
+<hr><h3>Granice dowodu</h3><p class="small">Przyciemnione kręgi przy zapachu są wizualną orientacją, nie dokładnym zakresem każdej istoty ani colliderem. Obrys sprężystej istoty nie jest ciągłym colliderem. Zapach jest prostym sygnałem dostępnym tylko lokalnie, ruchome źródła są prawdziwymi bryłami. Impulsy napędu są limitowane, ale nie pochodzą z nóg. Nie ma walki, pathfindingu, samouczącego mózgu ani prawdziwych potrzeb.</p>
 <p id="message" class="message">Ładowanie fizyki…</p></aside></div>
 <footer>Izolowany prototyp badawczy · przed oceną Ownera · bez publikacji.</footer></div>
 <script type="module" src="./m0-app.js"></script></body></html>
