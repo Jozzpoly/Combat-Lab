@@ -21,6 +21,8 @@ W sprawdzonym modelu ruchoma sylwetka ma szerokość **3.86m rozłożona / 0.90m
 
 [Start — rozłożony](docs/media/b1-source-t0.png) → [Złożony, t180](docs/media/b1-folded-t180.png) → [Rozłożony po przejściu, t580](docs/media/b1-redeployed-t580.png) → [Rezultat, t780](docs/media/b1-post-physical-contact-t780.png).
 
+**Krytyczna kontrola taniego zamiennika:** osobno zbadano jeden sztywny collider zmieniający obrys natychmiast lub w 60 krokach. W normalnym przebiegu zrobił to samo, co prawdziwe ramiona, a nawet mocniej odpychał przedmioty. Jednak podczas rozkładania *wewnątrz tunelu* geometria collidera wcinała się w fizyczne ściany, generując impulsy kontaktowe rzędu **21 tys.–156 tys. N·s**, zamiast **23 N·s** w modelu przegubowym. **To nie skreśla wszystkich uproszczonych modeli** — uczciwy tani konkurent musiałby ograniczać zmianę kształtu zgodnie z aktualną materią świata. Szczegóły: [badanie 38093607072](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38093607072).
+
 **Nieudane próby zachowane jako wiedza:** oryginalne centralnie mocowane zawiasy nie mogły złożyć skrzydeł przez własne kontakty; błędnie interpretowane `createImpulseJoint(..., false)` NIE wyłącza kolizji. Takie wyłączenie umożliwiało nawet bierne przejście — bez potrzebnego aktuatora. Dopiero przednie fizyczne mocowanie przy pozostawionej kolizji własnej i odpowiednio ograniczonym momencie dało mechanicznie uzasadniony wynik. Dowody, konkurencyjne kontrole i dokładne ograniczenia są w raporcie.
 
 **Uruchomienie prywatne:** `npm install`, `npm test`, `npm run build`, serwowanie `dist/` przez HTTP. Repo ma bramkę rzeczywistego Chromium w Actions. Nie udostępniono jeszcze hostowanego linku; istniejące `rehearsal/current` pozostaje nietknięte. **Ocena Ownera: UNKNOWN.**
