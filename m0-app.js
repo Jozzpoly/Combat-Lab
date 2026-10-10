@@ -5,6 +5,7 @@ const keys=new Set();
 let field=new EncounterField(),paused=false,mode="",drag=null,activeCue=null;
 let camera={x:22,y:13.5,zoom:1.0},last=performance.now(),acc=0;
 let pointer=V(22,13.5),lastDraw=0;
+let stepCpuSamples=0,stepCpuSum=0;
 const color={rigid:"#e7b574",chain:"#8bd1ed",compliant:"#b3e9a2"};
 const names={rigid:"Zwarty",chain:"Członowany",compliant:"Podatny"};
 function report(s){$("message").textContent=s;}
@@ -12,6 +13,7 @@ function reset(){
  field.dispose();field=new EncounterField({reflex:$("reflex").checked,
   initiative:$("initiative").checked,pressureResponse:$("response").checked});
  paused=false;mode="";drag=null;activeCue=null;acc=0;last=performance.now();
+ stepCpuSamples=0;stepCpuSum=0;
  $("pause").textContent="Pauza";report("Nowy wspólny świat. Przesuwaj fizyczne źródła, obserwuj i zmieniaj reakcje.");
 }
 function resize(){
@@ -109,6 +111,7 @@ function draw(){
  $("count").textContent=field.actors.length+" istot · "+field.cues.length+" ruchome źródła · "+field.objects.filter(o=>o.kind==="free"&&!o.isScent).length+" pozostałe bryły";
  $("contacts").textContent=field.contactPairs+" incidencji kontaktu · "+field.lastContactImpulse.toFixed(1)+" N·s";
  $("energy").textContent=field.episodes.contactReactions+" reakcji ruchu · "+field.episodes.steering+" zmian trybu · "+field.externalImpulse.toFixed(0)+" N·s z zewnątrz";
+ $("profile").textContent=stepCpuSamples>0?"CPU fizyka: "+(stepCpuSum/stepCpuSamples).toFixed(2)+" ms/krok (lokalnie)":"CPU fizyka: —";
  const a=field.selectedActor;
  $("selection").textContent=a?names[a.kind]+" · "+a.parts.length+" dynamicznych części":activeCue?"Fizyczne źródło · "+activeCue.signature:"Brak zaznaczenia";
  $("selected-state").textContent=a?
@@ -128,7 +131,14 @@ function frame(t){
  const dt=Math.max(0,Math.min(.05,(t-last)/1000));last=t;
  if(!paused){
   acc+=dt;let steps=0;
-  while(acc>=DT&&steps<4){field.step(controls());acc-=DT;steps++;}
+  while(acc>=DT&&steps<4){
+    const before=performance.now();
+    field.step(controls());
+    const measured=performance.now()-before;
+    if(Number.isFinite(measured)&&measured>=0){stepCpuSum+=measured;stepCpuSamples++;}
+    if(stepCpuSamples>300){stepCpuSum*=.5;stepCpuSamples=Math.floor(stepCpuSamples*.5);}
+    acc-=DT;steps++;
+   }
   if(steps===4)acc=Math.min(acc,DT*2);
  }
  if(t-lastDraw>70){draw();lastDraw=t;}
@@ -160,6 +170,7 @@ $("poke").onclick=()=>tool("poke");
 for(const kind of ["rigid","chain","compliant"])$("add-"+kind).onclick=()=>tool("add-"+kind);
 $("add-matter").onclick=()=>tool("add-matter");
 $("add-scent").onclick=()=>tool("add-scent");
+$("spawn-group").onclick=()=>tool("spawn-group");
 $("reflex").onchange=()=>{field.reflex=$("reflex").checked;report("Wewnętrzne odruchy "+(field.reflex?"ON":"OFF")+"; bierne sprężyny pozostają.");};
 $("impulse").oninput=()=>$("impulse-value").textContent=$("impulse").value;
 window.addEventListener("keydown",e=>{
@@ -176,6 +187,17 @@ canvas.addEventListener("pointerdown",e=>{
  if(e.button===1){drag={kind:"pan",clientX:e.clientX,clientY:e.clientY};(e.isTrusted&&canvas.setPointerCapture(e.pointerId));return;}
  if(e.button!==0)return;
  if(mode==="poke"){drag={kind:"poke",origin:p,current:p};(e.isTrusted&&canvas.setPointerCapture(e.pointerId));return;}
+ if(mode==="spawn-group"){
+  // Explicit group creation by Owner at a location of choice. No invisible
+  // movement to this point afterwards, no path goals. Keeps all bodies real.
+  if(field.actors.length>140){report("Wstrzymano dodawanie: skrajne obciążenie solvera. Zachowaj scenę lub zresetuj.");return;}
+  const forms=["rigid","chain","compliant"],roles=["holder","seeker","wary"];
+  for(let i=0;i<12;i++){
+   const offset=V((i%4-1.5)*1.65,(Math.floor(i/4)-1)*1.85);
+   field.addCreature(forms[i%3],V(p.x+offset.x,p.y+offset.y),roles[(i+1)%3]);
+  }
+  field.select(null);activeCue=null;tool(mode);mode="";draw();return;
+ }
  if(mode.startsWith("add-")){
   if(mode==="add-matter")field.addFree(p.x,p.y,.53,.47,55);
   else if(mode==="add-scent")field.addScent(p,$("cue-signature").value);
