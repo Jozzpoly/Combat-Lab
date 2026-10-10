@@ -1,65 +1,13 @@
-# Combat Lab
+# Combat Lab — Relational Possibilities Y1
 
-Combat Lab is a research laboratory for discovering embodied combat, movement and world-interaction possibilities.
+**Independent composition-first alternative. NOT Owner-qualified, NOT main, NOT public rehearsal, NOT an approved architecture.**
 
-## Current state — neutral main, independently evolving research
+Hypothesis: the X0 world's *sparse composition* is an important bottleneck. Change physical relationships and first-run encounter geometry **without adding a new organism brain or physics feature**, to see whether the same embodied mechanisms become capable of richer shared-world situations.
 
-`main` contains a neutral smoke surface, repository/deployment infrastructure and canonical research documentation. It is **not** an accepted combat, crowd, movement or organism implementation.
+This branch starts from neutral main and deliberately **donates** the tested X0 Rapier 2D physical core, body rigs, editable scene contract and operator UI. It does not inherit X0's research status, its roadmap, or Owner approval. Differences are *one connected starting field of six physical bodies, free plates/loads, anchored hinges and a constrained slider* with more overlapping material relationships; there are no targets, scripted interactions, role assignments, hidden switches or rewards. Authoring remains completely permissive within solver safety.
 
-For the current selected research question and its evidence boundary, enter [docs/RESEARCH_STATE.md](docs/RESEARCH_STATE.md). For *what is being built or published now*, also verify live experiment branches, their exact CI results and the separate `rehearsal/current` pointer. A static README must not duplicate or override that changing operational state.
+**Research boundary:** matching on/off world-power checks verify a source and afterstate, not increased action richness. Must later use a fair rigid surrogate and show an actual **second organism's changed possible action**, with identical second-stage input and idle/momentum controls. Otherwise *kill this composition hypothesis* and retain only donor evidence. Screenshots and CI can disclose empty/deceptive scenes; only Owner can evaluate human feel.
 
-The previous implementation line is absent from the active tree. Its Git history remains reachable only for deliberate forensic recovery.
+Controls: WASD select/move, E/Q and R/F actuate each real limb separately; right-click near material can temporarily hold with finite reciprocal effort; Pause + Ctrl/Alt/Shift drag to move/rotate/place physical bodies and solids; edit/re-rig selected body, save/reload an authored initial condition. This is planar Rapier with finite external traction proxy, **not true grounded gait**.
 
-## What survives the failure
-
-The project keeps:
-
-- Owner evidence and corrections;
-- observed phenomena;
-- falsifiers and causal findings;
-- provenance;
-- protocol lessons;
-- the ability to recover old commits when a concrete future question needs them.
-
-It does **not** grant automatic authority to:
-
-- old branch ancestry;
-- green mechanism tests;
-- previous "foundation" labels;
-- the last canonical `NEXT`;
-- code merely because it already exists.
-
-## Current operating model
-
-The repaired experiment protocol distinguishes:
-
-- **discovery** — find valuable whole phenomena first;
-- **diagnosis / attribution** — explain a phenomenon without letting the diagnostic fixture own the roadmap;
-- **serious construction** — build a coherent qualitative step when evidence or Owner direction calls for one;
-- **Lab infrastructure** — neutral capabilities that expand experimentation without encoding the answer.
-
-A diagnostic PASS is a finding, not an automatic parent implementation.
-
-A local improvement against the previous branch version is not enough; relevant progress must be judged against the actual Owner baseline and project goal.
-
-## Repository contract
-
-- `main` is the neutral current Lab state and durable research truth.
-- `rehearsal/current` is an exact deployment pointer only.
-- `archive/forensic-pre-cleanroom-2026-10-06` is forensic reachability only.
-- CI may prove runtime/mechanical/repository facts but may not assert research-roadmap semantics.
-- Public rehearsal occurs only from an explicitly selected exact source.
-
-Repository administration is the agent's responsibility. The Owner should not need to manage branches, SHAs, CI or deployment in normal work.
-
-## Current authority
-
-Read:
-
-1. `docs/RESEARCH_STATE.md`
-2. `docs/EXPERIMENT_PROTOCOL.md`
-3. `docs/FAILURE_SCAR_2026-10-06.md`
-
-The protocol is explicitly provisional and may be changed when evidence shows a better way to run the Lab.
-
-> **Discover valuable phenomena first; diagnose them when needed; build serious wholes from knowledge rather than from the accidental ancestry of diagnostic fixtures.**
+Work-in-progress investigation only. See [main research truth](https://github.com/Jozzpoly/Combat-Lab/blob/main/docs/RESEARCH_STATE.md).
