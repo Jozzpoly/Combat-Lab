@@ -338,6 +338,20 @@ async function start(){
        }));
      const initial=field.snapshot();
      el("pause").click();verify(paused,"pause button did not pause");
+     const driven=field.actor(field.selected),beforeDriven=V(
+       driven.root.translation().x,driven.root.translation().y);
+     dispatchEvent(new KeyboardEvent("keydown",{code:"KeyE",bubbles:true}));
+     verify(driven.target.every(x=>x===0),
+       "E did not command actual physical appendages");
+     dispatchEvent(new KeyboardEvent("keydown",{code:"KeyQ",bubbles:true}));
+     verify(driven.target.every(x=>x===1),
+       "Q did not reopen actual physical appendages");
+     dispatchEvent(new KeyboardEvent("keydown",{code:"KeyD",bubbles:true}));
+     for(let i=0;i<45;i++)el("step").click();
+     dispatchEvent(new KeyboardEvent("keyup",{code:"KeyD",bubbles:true}));
+     const moved=norm(V(driven.root.translation().x-beforeDriven.x,
+       driven.root.translation().y-beforeDriven.y));
+     verify(moved>.20,"WASD motor did not move actual physical selected body");
      el("local-response").checked=false;
      el("local-response").dispatchEvent(new Event("change",{bubbles:true}));
      verify(field.actor(field.selected).control==="quiet",
@@ -396,7 +410,8 @@ async function start(){
      verify(norm(V(free.body.translation().x-prev.x,
        free.body.translation().y-prev.y))>.20,
        "Ctrl-drag failed to move physical crate without reset");
-     return {pause:true,materialAuthoring:true,bodySpawn:5,
+     return {pause:true,directMotorTravel:+moved.toFixed(3),
+       materialAuthoring:true,bodySpawn:5,
        toggle:true,pointImpulse:true,hingeRotation:true,
        bodyReposition:true,portablePose:true};
    };
