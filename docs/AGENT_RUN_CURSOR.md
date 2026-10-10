@@ -42,8 +42,8 @@ Historical R0/R1/L0 product FAIL is still FAIL. The highest-quality old positive
 - Engineering process learned here: original X0 used per-file Contents commits and push+PR duplicate checks; independent Y1 used atomically batched Git trees and a single branch-push CI per coherent commit, with no PR until evidence warrants one. A local scratch clone was explored (Node and Chromium exist), but direct GitHub access in the execution container was blocked by DNS; do not claim a functioning local clone or waste Owner time retrying it without new capability.
 - Resume policy: the dated historical snapshot above remains a provenance note. This section is newer; live repo + Owner correction outrank both. If the current research step ends in a null result, preserve it and choose the next whole-level question, not another cursor rewrite.
 
-## Immediate frontier at this checkpoint
+## Historical opening frontier (superseded by Y1 delta above)
 
 Do **not** build another X0 add-on. Use competing whole candidates and source-tested physical donors to make a **serious alternative body–material situation**, not a pincer+shuttle remix. Before a heavy implementation choose plausible different *kinds* of actor action in the same world and fair material/rigid controls. If that cannot be convincingly specified, investigate the physical representation itself, including whether zero-gravity 2D is hiding the relevant affordance.
 
-Next agent action: verify latest refs, choose and critically pressure one coherent candidate, then implement a serious independent branch if the phenomenon is plausible. The experiment may fail; preserve the reason. Do not ask the Owner to write a new roadmap.
+Historical next step was to create a distinct whole — Y1 now exists and has been falsified under wider perturbations. The **current** next uncertainty is stated in the Y1 continuity delta above. Recheck live evidence and Owner corrections before choosing a subsequent different whole. Do not ask the Owner to reconstruct the handoff.
