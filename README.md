@@ -1,3 +1,9 @@
+# W2 — conditional research branch
+
+This branch contains an isolated W2 multi-organism/material experiment, **NOT** the accepted Combat Lab and **NOT** a published rehearsal. Run local `w2.html` to inspect the W2 candidate; `index.html` retains the unmodified E1 donor page for regression. Exact source image evidence and adversarial limitations: [W2 report](docs/W2_INTEGRATED_MATERIAL_COMMONS.md). `main` and `rehearsal/current` are unaffected. Mechanical Chrome PASS does not replace Owner judgement.
+
+---
+
 # Combat Lab — E1: lokalne działanie w jednym świecie
 
 **Izolowany kandydat badawczy, nie zaakceptowany organizm, silnik ani publiczny build.** [Pełny wynik + kontrprzykłady](docs/E1_WHOLE_LOCAL_ENCOUNTER_CHECKPOINT_2026-10-10.md) · [PR #9 (Draft)](https://github.com/Jozzpoly/Combat-Lab/pull/9).
