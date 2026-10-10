@@ -63,7 +63,7 @@ if(true){
   const target="/tmp/x0-viewport.png";
   execFileSync(chrome,["--headless=new","--no-sandbox","--disable-gpu",
     "--disable-dev-shm-usage","--hide-scrollbars","--window-size=1440,900",
-    "--virtual-time-budget=4000","--screenshot="+target,url],
+    "--virtual-time-budget=4000","--screenshot="+target,url+"?viewafter=1"],
     {timeout:95000,maxBuffer:5*1024*1024});
   const data=readFileSync(target).toString("base64");
   console.log("X0_SNAPSHOT_START");
