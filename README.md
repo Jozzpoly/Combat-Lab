@@ -1,65 +1,35 @@
-# Combat Lab
+# Combat Lab — Material Commons X0 (independent research candidate)
 
-Combat Lab is a research laboratory for discovering embodied combat, movement and world-interaction possibilities.
+**EXPERIMENT BRANCH ONLY. NOT `main`, NOT PUBLIC `rehearsal/current`, NOT OWNER-QUALIFIED.** The application is an entirely new physical/interaction runtime built on a fresh branch from neutral main. PR #1 and PR #2 supplied *questions and donor research*, not its code ancestry or authority.
 
-## Current state — neutral main, independently evolving research
+## Purpose
 
-`main` contains a neutral smoke surface, repository/deployment infrastructure and canonical research documentation. It is **not** an accepted combat, crowd, movement or organism implementation.
+To examine whether genuinely heterogeneous physical bodies, local tactile sensor→actuator reactions, constrained matter and free user intervention can coexist and produce different *materially consequential interactions*, rather than just faster motion, AI traffic or one successful claw puzzle.
 
-For the current selected research question and its evidence boundary, enter [docs/RESEARCH_STATE.md](docs/RESEARCH_STATE.md). For *what is being built or published now*, also verify live experiment branches, their exact CI results and the separate `rehearsal/current` pointer. A static README must not duplicate or override that changing operational state.
+This is an incomplete first serious *whole*, not a completed answer. Source-bound scope, negative findings and the next stop boundary are in [X0 first whole checkpoint](docs/X0_FIRST_WHOLE_CHECKPOINT_2026-10-10.md). The foundational research and intended falsifiers remain on neutral main in [Material Commons X0 gate](https://github.com/Jozzpoly/Combat-Lab/blob/main/docs/MATERIAL_COMMONS_X0_RESEARCH_GATE_2026-10-10.md).
 
-The previous implementation line is absent from the active tree. Its Git history remains reachable only for deliberate forensic recovery.
+## Real workbench
 
-## What survives the failure
+A persistent, editable Rapier 2D world with independent bodies assembled from **zero, one or two real revolute appendages**, independently adjustable body envelope, mass, arm length and finite drive on **newly spawned** bodies. The default starting world has four varied specimens, six free loads, a real world-pinned hinge and a constrained sliding beam. Spawned bodies are variations, not mandatory game classes. There are no routes, goals, locks, tasks, achievements, or crowd-navigation policies.
 
-The project keeps:
+Click a real collider to inspect/possess it. WASD drives a finite planar-force body, cursor controls aim; E/Q command the first actual limb and R/F command the second independently. Non-possessed actors remain quiet until their own collision observations authorize finite brace/appendage responses. Current response is an extremely small tactile servo law, **not an NPC brain**.
 
-- Owner evidence and corrections;
-- observed phenomena;
-- falsifiers and causal findings;
-- provenance;
-- protocol lessons;
-- the ability to recover old commits when a concrete future question needs them.
+During **Pause**, Ctrl-drag actual free bodies to reposition; Alt-drag rotates them and rotates hinged matter about its actual world pin; Shift-drag authors a fixed barrier. Change a selected actor's actual mass and drive, or a physical load's mass. Add free blocks, beams, hinges, sliding matter, and batches of new bodies; run, observe, disturb, edit and continue. Use the one-time point impulse tool to perturb actual limbs and material — explicitly an **external research intervention**, not autonomous behavior. Capture/load posed *starting condition* JSON with real joints and masses, but **not** transient velocities, pressures, solver contacts or trajectory replay.
 
-It does **not** grant automatic authority to:
+**New bounded live morphology experiment:** while paused, select an existing organism and physically rebuild its root dimensions, **0/1/2 actual articulated arms** and arm length **in the same running world's solver**. The actor retains its ID, root kinematics and surviving controls; other current actors and matter are not reinitialized. A hold attached to removed limbs is released. This is an *instantaneous paused-body replacement*, not continuous soft-body morphing, arbitrary joint graphs or conservation-exact re-rigging. [Scoped comparison and negative boundaries](docs/X0_LIVE_MORPHOLOGY_AND_ARM_ACTION_2026-10-10.md).
 
-- old branch ancestry;
-- green mechanism tests;
-- previous "foundation" labels;
-- the last canonical `NEXT`;
-- code merely because it already exists.
+## Additional bounded contact action
 
-## Current operating model
+Right-click touching/near-touching matter to start or release a temporary physically reciprocal hold from an actual selected body collider. Holding has finite editable motor force and breaks under excessive stretch; the 0.18 m acquisition tolerance is geometric, not a measured solver-active touch signal. It is an operator action, not autonomous NPC behavior. [Experiment and controls](docs/X0_BODY_CONTACT_ACTION_CHECKPOINT_2026-10-10.md).
 
-The repaired experiment protocol distinguishes:
+## New bounded material-energy experiment
 
-- **discovery** — find valuable whole phenomena first;
-- **diagnosis / attribution** — explain a phenomenon without letting the diagnostic fixture own the roadmap;
-- **serious construction** — build a coherent qualitative step when evidence or Owner direction calls for one;
-- **Lab infrastructure** — neutral capabilities that expand experimentation without encoding the answer.
+The existing world-pinned hinge may be powered with a **finite configurable physical torque and reversible angular target**, or turned completely off. The motor is an explicit **world energy source, not autonomous organism behavior**. A real obstruction can stall the drive instead of letting it move kinematically through matter. Its initial authored direction is now chosen to show physical contact earlier; authoring, reversing, disable, capture/reload and undo remain accessible. [Paired active/passive and obstruction evidence](docs/X0_POWERED_MATTER_CHECKPOINT_2026-10-10.md).
 
-A diagnostic PASS is a finding, not an automatic parent implementation.
+**Do not mistake contact counts for a new action repertoire.** Initial imagery still shows a sparse workshop, and no new second-actor affordance has been proven.
 
-A local improvement against the previous branch version is not enough; relevant progress must be judged against the actual Owner baseline and project goal.
+## Evidence boundaries
 
-## Repository contract
+The emitted browser CI verifies narrow physics/runtime mechanisms and real UI operations only; actual Owner feels/quality are **unknown**. No genuine foot-ground contact exists: top-down 2D has externally powered planar motor/bracing proxies and can model physical joint/contact force transfers but not grounded gait/terrain load by itself. There is no qualified real FPS/population performance; virtual Chromium time is **not** a wall-clock performance measurement. More than a dozen physically distinct parts in an open arena are not an ecology just because a test finds nonzero contact. Both older Owner-level product FAILs and potential new experience FAIL remain meaningful.
 
-- `main` is the neutral current Lab state and durable research truth.
-- `rehearsal/current` is an exact deployment pointer only.
-- `archive/forensic-pre-cleanroom-2026-10-06` is forensic reachability only.
-- CI may prove runtime/mechanical/repository facts but may not assert research-roadmap semantics.
-- Public rehearsal occurs only from an explicitly selected exact source.
-
-Repository administration is the agent's responsibility. The Owner should not need to manage branches, SHAs, CI or deployment in normal work.
-
-## Current authority
-
-Read:
-
-1. `docs/RESEARCH_STATE.md`
-2. `docs/EXPERIMENT_PROTOCOL.md`
-3. `docs/FAILURE_SCAR_2026-10-06.md`
-
-The protocol is explicitly provisional and may be changed when evidence shows a better way to run the Lab.
-
-> **Discover valuable phenomena first; diagnose them when needed; build serious wholes from knowledge rather than from the accidental ancestry of diagnostic fixtures.**
+No merge or release by green CI. Evaluate the coherent whole only after broader non-staged consequences become visible and a properly qualified first-run interaction is ready for Owner evaluation.
