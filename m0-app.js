@@ -330,13 +330,22 @@ if(new URLSearchParams(location.search).has("e1ownercheck")){
   check(Math.hypot(src.body.translation().x-old.x,src.body.translation().y-old.y)>1,
     "live editor moves actual source physics collider");
   check(field.objects[idx]===src,"source keeps material identity");
+  $("spawn-group").click();
+  canvas.dispatchEvent(new PointerEvent("pointerdown",{
+   ...toClient(V(21,13.6)),button:0,bubbles:true,pointerId:114}));
+  check(field.actors.length===30&&field.selected===null,
+   "true in-place 12 organism crowd construction without selected actor");
+  for(let i=0;i<8;i++)field.step();
+  check(field.actors.every(a=>{
+   const p=a.root.translation();return Number.isFinite(p.x)&&Number.isFinite(p.y);
+  }),"mixed crowded world stays finite after manual intervention");
   $("reset").click();
   check(field.actors.length===18&&field.cues.length===4&&field.ticks===0,
     "whole scene fresh reset");
   document.body.dataset.e1Ownercheck=JSON.stringify({
    pass:true,actualColliderClick:true,manualMotor:true,roleEdit:true,
    controlledAutonomyOff:true,liveSourcePose:true,
-   exactPhysicalIdentity:true,signalOnlyEdit:true,reset:true,notOwnerFeel:true});
+   exactPhysicalIdentity:true,signalOnlyEdit:true,groupSpawn:true,reset:true,notOwnerFeel:true});
  }catch(error){document.body.dataset.liveError=String(error.stack||error);console.error(error);}
 }
 
