@@ -26,4 +26,5 @@ console.log("M0 BROWSER PHYSICAL SOURCE CHECK: PASS; contact cases="+contacts+
 console.log("M0 PHYSICAL TRIAL "+JSON.stringify(values));
 // No Owner-level feel/creature-life PASS. PNG data stays in browser DOM;
 // never claim screenshot content was inspected merely because bytes exist.
-console.log("M0 FIRST REAL FRAME PNG base64 bytes="+generated.length);\nconsole.log("M0 FRAME-DATA "+generated);
+console.log("M0 FIRST REAL FRAME PNG base64 bytes="+generated.length);
+console.log("M0 FRAME-DATA "+generated);
