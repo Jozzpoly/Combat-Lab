@@ -35,6 +35,10 @@ Wybierać świadomie **discovery / diagnosis / serious construction / lab infras
 - Ciężki, przyczynowo odrębny wynik może zmienić plan *w środku runu*. Nie trzeba Ownera do odwracalnej zmiany zakresu badań.
 - CI komitować w większych spójnych pakietach (atomowe Git trees, gdy konektor na to pozwala). Nie tworzyć dziesiątek pushy tylko po to, by zasilić narrację postępu.
 
+### Gdy obraz pomaga bardziej niż licznik
+
+Przy złożonych zjawiskach ruchowych **opcjonalnie** dołączyć prawdziwy pierwszy screenshot i krótki, stałokrokowy zestaw klatek z istotnych chwil, z jawnym czasem, inputem i faktycznym kontaktem. Nie wymagać tego dla każdego testu i nie mylić diagnostycznego rasteryzowania z percepcją organizmu. Nota [Visual Truth / Perception](VISUAL_TRUTH_PERCEPTION_EXPLORATION_2026-10-10.md) jest odłożoną inspiracją; nie uruchamia samoczynnie prac nad atlasem, agent brainem ani sterowaniem tłumem.
+
 ## Faza D: red team + odbiór całości
 
 Przed uznaniem wyniku:

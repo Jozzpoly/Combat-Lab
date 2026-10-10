@@ -18,6 +18,12 @@
 - **Pierwszy ruch następnego runu:** sprawdzić live refs, nowszy Owner feedback i jakość dokładnej wersji preview. Jeśli Owner zatwierdzi publiczne czasowe wdrożenie, użyć mechanizmu `rehearsal/current` z zachowaniem starego SHA i przetestować opublikowane UI. Jeżeli nie zatwierdzi, nie implementować nowego systemu; wypracować wygodny rzeczywiście przetestowany alternatywny dostęp.
 - Owner może uznać pokaz za FAIL. Jego feedback powinien kierować następnym światem, a nie kończyć się listą koniecznych poprawek na tym samym Z1.
 
+## Zakończony boczny research — bez przejęcia roadmapy
+
+- 2026-10-10 Owner zaproponował: PNG jako kotwica, potem własny/standardowy format, wieloskalowe POV, historię aktora oraz pola przepływu wielkich tłumów. Jawnie polecił **zbadać → skonsolidować → zapisać → wrócić do Combat Lab**.
+- [Skonsolidowany rezultat](VISUAL_TRUTH_PERCEPTION_EXPLORATION_2026-10-10.md): silny kierunek **raw frame + fixed-step temporal evidence + source-of-action event trace** jako opcjonalny dodatek do prawdziwego testu. Flow obserwowany ≠ flow narzucony, globalne fakty ≠ percepcja, aktualnie żaden organizm Z1 nie ma autonomicznego planu. Nie wybrano multi-scale formatu/brain/3D ani nowego sterownika tłumu.
+- **Wróć do aktywnego zadania:** uczciwy Owner First Look / prawdziwy body↔world feedback, bez automatycznego budowania sensory stack. Dojrzałe pomysły odkładaj do ewentualnych przyszłych testów.
+
 ## STAŁE ŹRÓDŁA I PIERWSZY RUCH
 
 1. [VISION_ADAPTIVE_ROADMAP](VISION_ADAPTIVE_ROADMAP.md) — cel i alternatywy, nie kolejka.

@@ -41,6 +41,10 @@ Kandydat na poważne laboratorium powinien umożliwiać kilka **jakościowo ró�
 
 Owner poprosił 2026-10-10 o dążenie do **szczerego pokazania tego, co już istnieje**. Dlatego [pierwszy przegląd Ownera](OWNER_FIRST_LOOK.md) staje się bezpośrednim celem operacyjnym następnej kampanii — **nie po osiągnięciu produktowego PASS, lecz po uzyskaniu realnie uruchamialnego i uczciwie opisanego preview**. Nie budować nowej mechaniki, by poprawić pierwsze wrażenie, zanim sprawdzimy istniejące. Wczesny Owner FAIL/feedback jest pełnowartościowym dowodem, nie porażką ceremonii pokazowej. Publiczne wdrożenie nadal wymaga odrębnej świadomej decyzji.
 
+## Odłożona inspiracja: wieloskalowa obserwacja, ruch tłumu i formaty danych
+
+Po Ownerowej eksploracji reprezentacji PNG/RGBA, własnych formatów, różnych skal lokalnej percepcji i pól przepływu tłumu, wybraliśmy **konsolidację bez zmiany głównego celu**: [Visual Truth / Perception / Crowd Fields — nota badawcza](VISUAL_TRUTH_PERCEPTION_EXPLORATION_2026-10-10.md). Na teraz przydatne są surowe klatki i krótkie historie zdarzeń z istniejącego rzeczywistego eksperymentu. Nie wybrano formatu, sieci percepcji ani kontrolera flow. **Wczesny uczciwy pokaz Ownerowi nadal jest priorytetem**.
+
 ## 4. Roadmapa jako mapa decyzji — nie kolejka feature'ów
 
 **Równolegle obowiązują dwa wymiary:** rośnie jakość *całościowego doświadczenia* i rośnie jakość *naszej wiedzy o mechanizmie*. Drugi bez pierwszego może uzasadniać donor, ale nie awans produktu. Poniższe kampanie to **warunkowy portfel**, nie obowiązkowa kolejność od góry.
