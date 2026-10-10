@@ -16,6 +16,12 @@ Długoterminowym horyzontem jest świat z fizycznie i funkcjonalnie różnymi is
 - **Synteza robocza agenta:** prawdopodobnym ograniczeniem jest *gęstość wartościowych możliwości i interakcji* w całym świecie, a nie brak kolejnego mechanicznego testu. To wyjaśnienie, **nie opinia potwierdzona przez Ownera**.
 - **Otwarte:** docelowy wymiar świata, rodzaj fizyki, anatomia, locomotion/stance, inteligencja istot, zakres walki, skalowanie i estetyka. Żaden z S2/K1/Z1/Y1/X0 nie rozstrzyga ich sam.
 
+### Korekta M0: ruch i konstrukcja organizmu nie mogą być dodatkiem do szczypiec
+
+**Owner-confirmed horizon odzyskany z historii (2026-10-10):** znacznie szersza różnorodność zwierzęcych, humanoidalnych, wieloczłonowych, wielkich/małych i podatnych ciał; ruch w tłumie, kompresja, fizyczne negocjowanie przestrzeni, obserwacja zachowania w absurdalnych sytuacjach. Walka, bronie, ranged i magia pozostają przyszłymi możliwościami, nie aktualnym zobowiązaniem.
+
+**Hipoteza agenta — NOT SELECTED ARCHITECTURE:** wspólne projektowanie **body × source of effort/locomotion × local control/reaction × material world** może mieć większą wartość niż osobne ulepszanie manipulacji obiektami, solvera i percepcji. W M0 mechanicznie odróżniono sztywne, przegubowe i sprężyste fenotypy, lecz zachowano sztuczny zewnętrzny root motor — nie dostarczono rzeczywistej samoistnej lokomocji, żywego celu ani Owner-worthy whole. Zobacz [wyniki i obrazy](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/m0-physical-phenotypes/docs/M0_PHENOTYPES_CONTACT_CHECKPOINT_2026-10-10.md). Test M0 nie oznacza wyboru soft-body, 2D, ewolucji ani żadnej linii M1. **Nie pozwolić, by laboratorium ciał stało się kolejnym showroomem mechanicznych brył.**
+
 ## 2. Produktowe kryterium wartości — zanim powstanie następna podstawa
 
 Kandydat na poważne laboratorium powinien umożliwiać kilka **jakościowo różnych, samodzielnie odkrywalnych działań lub pytań** w **jednym modyfikowalnym świecie**. Nie wymaga konkretnej liczby „czasowników”. Przykłady: jedno ciało zatrzymuje/przepuszcza inne z materialnego powodu; ktoś inaczej operuje przedmiotem lub strukturą zależnie od anatomii; przestawienie rzeczy zmienia możliwości kolejnej istoty; różne masy i opory tworzą odmienne decyzje; zbiorowy nacisk wywołuje inne odpowiedzi niż pojedyncza kolizja.
