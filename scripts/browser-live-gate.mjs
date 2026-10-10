@@ -58,15 +58,3 @@ if(!chain)throw Error("Second actor opportunity counterfactual not executed");
 console.log("X0 TWO-ACTOR OPPORTUNITY OBSERVATION: "+
   JSON.stringify(JSON.parse(chain.replaceAll("&quot;",'"').replaceAll("&amp;","&"))));
 
-if(true){
-  const {readFileSync}=await import("node:fs");
-  const target="/tmp/x0-viewport.png";
-  execFileSync(chrome,["--headless=new","--no-sandbox","--disable-gpu",
-    "--disable-dev-shm-usage","--hide-scrollbars","--window-size=1440,900",
-    "--virtual-time-budget=4000","--screenshot="+target,url+"?viewafter=1"],
-    {timeout:95000,maxBuffer:5*1024*1024});
-  const data=readFileSync(target).toString("base64");
-  console.log("X0_SNAPSHOT_START");
-  for(let i=0;i<data.length;i+=1600)console.log("X0_SNAPSHOT_CHUNK:"+data.slice(i,i+1600));
-  console.log("X0_SNAPSHOT_END");
-}
