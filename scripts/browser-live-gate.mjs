@@ -110,6 +110,6 @@ for(const batch of ["A","B","C"]){
   throw Error("W2 heterogeneous local world corrupted");
  console.log("W2 PHYSICAL "+JSON.stringify(data));
 }
-const uiRaw=visitW2("w2ownercheck=1",28000)("w2-ownercheck");
-if(!uiRaw||!decode(uiRaw).pass)throw Error("W2 actual UI gate missing");
-console.log("W2 TRUE BROWSER UI "+JSON.stringify(decode(uiRaw)));
+const w2UiRaw=visitW2("w2ownercheck=1",28000)("w2-ownercheck");
+if(!w2UiRaw||!decode(w2UiRaw).pass)throw Error("W2 actual UI gate missing");
+console.log("W2 TRUE BROWSER UI "+JSON.stringify(decode(w2UiRaw)));
