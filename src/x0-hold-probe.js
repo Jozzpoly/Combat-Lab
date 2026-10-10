@@ -62,6 +62,12 @@ export function holdMaterialProbe(World){
   if(light.nonfinite||unheld.nonfinite||heavy.nonfinite)
     throw Error("Non-finite contact hold mechanics");
   if(light.holdImpulse<=.01)throw Error("Body-origin finite hold never delivered physical impulse");
+  if(light.crateX>=unheld.crateX-1)
+    throw Error("Physical hold did not create a different object action in this fixture");
+  if(Math.abs(light.crateX)<=Math.abs(heavy.crateX)+.5)
+    throw Error("Heavy matter no longer resists finite hold distinctly");
+  if(noDrive.centerDrift>.02)
+    throw Error("Unpowered reciprocal hold generated spurious system travel");
   return {scope:"touch-qualified finite reciprocal body/matter hold; no actor agency/Owner feel",
     contactPosition,light,unheld,rigid,unpowered,heavy,noDrive,
     contrastX:+Math.abs(light.crateX-unheld.crateX).toFixed(4)};
