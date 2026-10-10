@@ -22,6 +22,12 @@ During **Pause**, Ctrl-drag actual free bodies to reposition; Alt-drag rotates t
 
 Right-click touching/near-touching matter to start or release a temporary physically reciprocal hold from an actual selected body collider. Holding has finite editable motor force and breaks under excessive stretch; the 0.18 m acquisition tolerance is geometric, not a measured solver-active touch signal. It is an operator action, not autonomous NPC behavior. [Experiment and controls](docs/X0_BODY_CONTACT_ACTION_CHECKPOINT_2026-10-10.md).
 
+## New bounded material-energy experiment
+
+The existing world-pinned hinge may be powered with a **finite configurable physical torque and reversible angular target**, or turned completely off. The motor is an explicit **world energy source, not autonomous organism behavior**. A real obstruction can stall the drive instead of letting it move kinematically through matter. Its initial authored direction is now chosen to show physical contact earlier; authoring, reversing, disable, capture/reload and undo remain accessible. [Paired active/passive and obstruction evidence](docs/X0_POWERED_MATTER_CHECKPOINT_2026-10-10.md).
+
+**Do not mistake contact counts for a new action repertoire.** Initial imagery still shows a sparse workshop, and no new second-actor affordance has been proven.
+
 ## Evidence boundaries
 
 The emitted browser CI verifies narrow physics/runtime mechanisms and real UI operations only; actual Owner feels/quality are **unknown**. No genuine foot-ground contact exists: top-down 2D has externally powered planar motor/bracing proxies and can model physical joint/contact force transfers but not grounded gait/terrain load by itself. There is no qualified real FPS/population performance; virtual Chromium time is **not** a wall-clock performance measurement. More than a dozen physically distinct parts in an open arena are not an ecology just because a test finds nonzero contact. Both older Owner-level product FAILs and potential new experience FAIL remain meaningful.
