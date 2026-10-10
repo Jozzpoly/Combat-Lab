@@ -63,6 +63,23 @@
    <label>Upper / first arm <input id="upper" type="range" min="0" max="1" step=".02" value=".82"></label>
    <label>Lower / second arm <input id="lower" type="range" min="0" max="1" step=".02" value=".82"></label>
   </div><p class="micro">0 = contracted, 1 = extended. Manual controls override local reflex on the selected body.</p>
+  <div id="rebuild-panel" hidden>
+    <details id="rebuild-details">
+      <summary>Rebuild this body's actual shape · paused</summary>
+      <p class="micro">Replaces physical colliders and joints on this organism only. The same world, other actors and material motion remain; limb history and ongoing holds are reset.</p>
+      <div class="two">
+        <label>Body half-length (m)<input id="rebuild-hx" type="number" min=".11" step=".1"></label>
+        <label>Body half-width (m)<input id="rebuild-hy" type="number" min=".11" step=".1"></label>
+      </div>
+      <div class="two">
+        <label>Actual arms<select id="rebuild-arms">
+          <option value="0">0 · rigid</option><option value="1">1 · articulated</option>
+          <option value="2">2 · independently articulated</option></select></label>
+        <label>Actual arm length (m)<input id="rebuild-length" type="number" min=".8" step=".15"></label>
+      </div>
+      <button id="rebuild-actor">Rebuild selected body in this world</button>
+    </details>
+  </div>
  </section>
  <section><h2>Build in the same world</h2>
   <label>New body <select id="body-type"><option value="reach">Two-arm articulated body</option>
