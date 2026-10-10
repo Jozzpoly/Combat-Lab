@@ -87,7 +87,7 @@ try{
  }
  if(new URLSearchParams(location.search).has("g0probe")){
   const {groundSourceProbe}=await import("./src/g0-probe.js");
-  document.body.dataset.g0Probe=JSON.stringify(groundSourceProbe());
+  document.body.dataset.g0Probe=JSON.stringify(groundSourceProbe(new URLSearchParams(location.search).get("g0probe")||"all"));
  }
  if(new URLSearchParams(location.search).has("g0frames")){
   paused=true;
