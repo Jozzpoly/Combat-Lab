@@ -14,9 +14,11 @@ const cases=[
  {tag:"driven-no-obstacle",mu:1,motor:380,mode:"wheels",obstacle:false},
  {tag:"passive-no-obstacle",mu:1,motor:0,mode:"passive",obstacle:false}
 ];
-export function groundSourceProbe(){
+export function groundSourceProbe(part="all"){
+ if(!["A","B","all"].includes(part))throw RangeError("G0 probe batch");
+ const selected=part==="A"?cases.slice(0,5):part==="B"?cases.slice(5):cases;
  const results=[];
- for(const preset of cases){
+ for(const preset of selected){
   const w=new GroundDriveWorld(preset);
   try{
    let sourceRoot=0,phase=[];
@@ -32,6 +34,6 @@ export function groundSourceProbe(){
    results.push({tag:preset.tag,...state,phase});
   }finally{w.dispose();}
  }
- return {scope:"Rapier 3D with vertical gravity, 4 real wheel bodies/axle joints, real ground collider and Multiply friction. Same physical vehicle under 10 fixed interventions × 420 solver ticks; motorized wheel joint effort ONLY except the explicitly labeled root-drive rival. No animal gait, navigation, RL, autonomy, or anthropomorphic claims.",
+ return {part,scope:"Rapier 3D with vertical gravity, 4 real wheel bodies/axle joints, real ground collider and Multiply friction. Same physical vehicle under 10 fixed interventions × 420 solver ticks; motorized wheel joint effort ONLY except the explicitly labeled root-drive rival. No animal gait, navigation, RL, autonomy, or anthropomorphic claims.",
   results,warning:"Motorized wheels are a calibration of ground-reaction causality, NOT evidence for paws, feet, leg-gait or gameplay; wheel vs root drive intentionally differs in motor force-transmission semantics."};
 }
