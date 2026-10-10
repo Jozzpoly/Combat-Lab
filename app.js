@@ -400,6 +400,14 @@ async function start(){
      el("pause").click();verify(paused,"pause button did not pause");
      const driven=field.actor(field.selected),beforeDriven=V(
        driven.root.translation().x,driven.root.translation().y);
+     const startingMass=driven.spec.mass,startingMotor=driven.spec.motor;
+     el("selected-mass").value=String(startingMass+30);
+     el("selected-motor").value="-10";
+     el("apply-selected").click();
+     verify(driven.spec.mass===startingMass&&driven.spec.motor===startingMotor,
+       "invalid multi-parameter actor input partially changed actual physics");
+     el("selected-mass").value=String(startingMass);
+     el("selected-motor").value=String(startingMotor);
      dispatchEvent(new KeyboardEvent("keydown",{code:"KeyE",bubbles:true}));
      verify(driven.target.every(x=>x===0),
        "E did not command actual physical appendages");
@@ -480,6 +488,14 @@ async function start(){
      el("apply-selected").click();
      verify(g.driveSpeed===1.4&&g.driveTorque===1300,
        "operator could not retune powered hinge without rebuilding world");
+     const priorMaterialMass=g.mass;
+     el("selected-mass").value=String(priorMaterialMass+25);
+     el("selected-drive-torque").value="-3";
+     el("apply-selected").click();
+     verify(g.mass===priorMaterialMass&&g.driveTorque===1300,
+       "invalid material drive partially changed physical mass");
+     el("selected-mass").value=String(priorMaterialMass);
+     el("selected-drive-torque").value="1300";
      const holdRecipe=capture(field),holdReload=restore(holdRecipe);
      verify(holdReload.matter.some(x=>x.kind==="hinge"&&x.driveSpeed===1.4&&x.driveTorque===1300),
        "versioned initial scene lost powered hinge authored drive");
