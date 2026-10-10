@@ -1,19 +1,28 @@
-# Combat Lab — M0 / mechaniczne fenotypy (kandydat badawczy)
+# Combat Lab · B1 — ruchoma fizyczna sylwetka
 
-**To jest izolowana gałąź eksperymentalna, NIE `main`, NIE publikacja i NIE zaakceptowany organizm.** [Raport dowodów i ograniczeń](docs/M0_PHENOTYPES_CONTACT_CHECKPOINT_2026-10-10.md) · [PR #7](https://github.com/Jozzpoly/Combat-Lab/pull/7).
+**Izolowany eksperyment badawczy. Nie jest zaakceptowanym organizmem, częścią E1, wyborem silnika, gotową grą ani publicznym buildem.**
 
-M0 używa Rapier 2D do rzeczywistych kontaktów między konstrukcjami: pojedyncze sztywne ciało, trzy człony na przegubach, sprężysty zestaw ośmiu mas. Świat zawiera osiem organizmów, trochę materii, kontrolę WASD, pauzę/edycję, dodawanie nowych ciał i pojedyncze impulsy. Niewybrane organizmy nie dostają globalnego celu ani automatycznej trasy; wybrany porusza się przez **jawny zewnętrzny proxy-napęd płaski**, a nie naturalny chód. Lokalne kontaktowe odruchy są słabe i **nie oznaczają inteligencji**. Obramowanie sprężystego organizmu nie jest niewidzialną fizyczną membraną.
+[B1 — pełny raport i krytyczne wyniki](docs/B1_PHYSICAL_ENVELOPE_DUAL_AFFORDANCE_2026-10-10.md) · [PR #10 (Draft)](https://github.com/Jozzpoly/Combat-Lab/pull/10) · [Chromium z działającymi kontrolkami oraz prawdziwymi kontaktami](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38093244735)
 
-**Wykonane sprawdzenia:**
-- [Chromium physics](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38087927814) i [kontrola z przybliżonym sztywnym odpowiednikiem](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38088121316);
-- [prawdziwa seria czasowa w jednym solverze](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38088072780);
-- [test rzeczywistych kontrolek](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38088221703);
-- [surowy pierwszy ekran świata](docs/media/m0-actual-t0.png) i [obraz po 240 krokach](docs/media/m0-actual-t240.png).
+**Eksperyment:** jeden 125-kilogramowy korpus z dwoma naprawdę ruchomymi 20-kilogramowymi skrzydłami. Ramiona obracają się na fizycznych zawiasach przez ograniczone przeciwne impulsy momentu na nich i na korpusie. Warianty tanie: tak samo ciężki sztywny szeroki i sztywny wąski. Wszystkie mają ograniczony, ale **zewnętrzny napęd kadłuba** — nie prawdziwą przyczepność stóp, chód ani autonomiczne AI.
 
-**Jakościowy werdykt:** mechanicznie badalna podatność i kontakt; jeszcze NIE jest to interesujący żywy świat ani pełnowartościowy organizm. Nie przedłużać automatycznie do M1 i nie traktować wyniku jako wyboru architektury. Nowe decyzje zaczynają się od `main/docs/RESEARCH_STATE.md` i bieżącego Owner feedbacku.
+## Jak badać w przeglądarce
 
-Historyczne R0/R1/L0 Owner FAIL pozostają FAIL. `rehearsal/current` nie został zmieniony. Żadnego Owner testu M0 nie wykonano.
+- **W** — jedź w prawo przez prawdziwą szczelinę; **S** — cofnij się.
+- **Q** — fizycznie składaj skrzydła przed szczeliną; **E** — rozkładaj je po przejściu i próbuj dosięgnąć bocznych przedmiotów.
+- Przełącz sztywną małą/dużą konstrukcję przy **tej samej masie całkowitej** i porównaj, co potrafi zrobić.
+- **Pauza → przeciągnij korpus** albo suwakiem zmień fizyczną szerokość przejścia; możesz także naprawdę usunąć ciała ścian.
+- „Odtwórz boczne przedmioty” przywraca dwa realne 40kg obiekty bez resetowania pozostałego świata.
+- „Moment zawiasu 0” oznacza brak aktuatora, a nie „zero akcji wciąż skonfigurowanego serwa”.
 
-### Reprodukcja badania
+W sprawdzonym modelu ruchoma sylwetka ma szerokość **3.86m rozłożona / 0.90m złożona**. Wystarczy naprawdę złożyć człony, żeby przejść przez szczelinę **1.24m**, a potem rozłożyć i materialnie przesunąć boczne przedmioty. Tania trwale wąska bryła przechodzi bez kosztu przegubów, ale nie dosięga obu bocznych przedmiotów podczas tego samego przejazdu. Nie wyprowadzaj z tego wniosku, że animowany/przeskalowany collider nie mógłby kiedyś stanowić tańszej alternatywy.
 
-W środowisku z Node.js i przeglądarką Chromium: `npm install`, `npm test`, `npm run build`. Wygenerowany `dist/` służy do prywatnego podglądu. `?probe=1`, `?frames=1`, `?fairm0=1`, `?ownercheck=1` to wyłącznie uruchamiane na żądanie diagnostyczne ścieżki, nie tryby gameplay.
+**Prawdziwa historia jednego świata — nie ilustracje AI:**
+
+[Start — rozłożony](docs/media/b1-source-t0.png) → [Złożony, t180](docs/media/b1-folded-t180.png) → [Rozłożony po przejściu, t580](docs/media/b1-redeployed-t580.png) → [Rezultat, t780](docs/media/b1-post-physical-contact-t780.png).
+
+**Nieudane próby zachowane jako wiedza:** oryginalne centralnie mocowane zawiasy nie mogły złożyć skrzydeł przez własne kontakty; błędnie interpretowane `createImpulseJoint(..., false)` NIE wyłącza kolizji. Takie wyłączenie umożliwiało nawet bierne przejście — bez potrzebnego aktuatora. Dopiero przednie fizyczne mocowanie przy pozostawionej kolizji własnej i odpowiednio ograniczonym momencie dało mechanicznie uzasadniony wynik. Dowody, konkurencyjne kontrole i dokładne ograniczenia są w raporcie.
+
+**Uruchomienie prywatne:** `npm install`, `npm test`, `npm run build`, serwowanie `dist/` przez HTTP. Repo ma bramkę rzeczywistego Chromium w Actions. Nie udostępniono jeszcze hostowanego linku; istniejące `rehearsal/current` pozostaje nietknięte. **Ocena Ownera: UNKNOWN.**
+
+Następny sensowny problem to nie tuning siły ramion. To zbadanie, czy takie możliwości fizyczne dają ciekawe decyzje w pełnym świecie organizmów i czy są warte kosztu względem prostszego uczciwego modelu.
