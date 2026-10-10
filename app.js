@@ -413,6 +413,10 @@ async function start(){
    const {contactOnlyWholeTest}=await import("./src/z1-contact-probe.js");
    document.body.dataset.contactz1=JSON.stringify(contactOnlyWholeTest(CommonsWorld));
  }
+ if(new URLSearchParams(location.search).has("anatomyt0")){
+   const {anatomyNullT0}=await import("./src/z1-anatomy-null-t0.js");
+   document.body.dataset.anatomyt0=JSON.stringify(anatomyNullT0(CommonsWorld));
+ }
  if(new URLSearchParams(location.search).has("ownercheck")){
    const verify=(p,m)=>{if(!p)throw Error("Owner preview "+m)};
    const count=field.actors.length,matter=field.matter.length,tick=field.ticks;
