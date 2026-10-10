@@ -50,6 +50,15 @@ export function runX0Probe(Field,capture,restore){
     gp.y-hinge.y-Math.sin(an)*hinge.length/2));
   check(hingeDrift<.015,"hinged joint pose not about fixed real pivot");
   const recipe=capture(w);
+  const legacyRecipe=JSON.parse(JSON.stringify(recipe));
+  for(const m of legacyRecipe.matter){
+    delete m.driveSpeed;delete m.driveTorque;
+  }
+  const oldScene=restore(legacyRecipe);
+  try{
+    check(oldScene.matter.filter(m=>m.kind==="hinge").every(m=>m.driveSpeed===0&&m.driveTorque===0),
+      "older authored starting-scene recipe accidentally gained powered motor");
+  }finally{oldScene.dispose();}
   const reconstructed=restore(recipe);
   try{
    check(reconstructed.actors.length===w.actors.length &&
