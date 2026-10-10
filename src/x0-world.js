@@ -165,7 +165,7 @@ export class CommonsWorld{
       [34.0,14.9,1.40,.16,165,"beam"]
     ])this.addMatter(V(x,y),{hx,hy,mass,form,created:false});
     this.addHinge(V(16.8,13.25),{length:3.7,mass:112,angle:-.68,
-      driveSpeed:1.1,driveTorque:900,created:false});
+      driveSpeed:-1.1,driveTorque:900,created:false});
     this.addRail(V(21.6,6.7),{length:2.8,mass:75,created:false});
   }
   actor(id){return this.actors.find(a=>a.id===id)||null;}
