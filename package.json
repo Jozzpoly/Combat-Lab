@@ -1,9 +1,9 @@
 {
-  "name": "combat-lab-m0-physical-phenotypes",
+  "name": "combat-lab-e1-local-encounter-whole",
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --check m0-app.js && node --check src/m0-world.js && node --check src/m0-probe.js && node --check src/m0-fair-pressure.js",
+    "test": "node --check m0-app.js && node --check src/m0-world.js && node --check src/e1-encounter.js && node --check src/e1-probe.js && node --check src/e1-causality.js",
     "build": "vite build --base=./"
   },
   "dependencies": {

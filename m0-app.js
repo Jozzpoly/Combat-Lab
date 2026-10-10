@@ -1,16 +1,20 @@
-import {M0Field,V,DT} from "./src/m0-world.js";
+import {V,DT} from "./src/m0-world.js";
+import {EncounterField} from "./src/e1-encounter.js";
 const $=id=>document.getElementById(id),canvas=$("lab"),ctx=canvas.getContext("2d");
 const keys=new Set();
-let field=new M0Field(),paused=false,mode="",drag=null;
+let field=new EncounterField(),paused=false,mode="",drag=null,activeCue=null;
 let camera={x:22,y:13.5,zoom:1.0},last=performance.now(),acc=0;
 let pointer=V(22,13.5),lastDraw=0;
+let stepCpuSamples=0,stepCpuSum=0;
 const color={rigid:"#e7b574",chain:"#8bd1ed",compliant:"#b3e9a2"};
 const names={rigid:"Zwarty",chain:"Członowany",compliant:"Podatny"};
 function report(s){$("message").textContent=s;}
 function reset(){
- field.dispose();field=new M0Field({reflex:$("reflex").checked});
- paused=false;mode="";drag=null;acc=0;last=performance.now();
- $("pause").textContent="Pauza";report("Nowe materialne ciała. Kliknij jedno i spróbuj wywrzeć nacisk na inne.");
+ field.dispose();field=new EncounterField({reflex:$("reflex").checked,
+  initiative:$("initiative").checked,pressureResponse:$("response").checked});
+ paused=false;mode="";drag=null;activeCue=null;acc=0;last=performance.now();
+ stepCpuSamples=0;stepCpuSum=0;
+ $("pause").textContent="Pauza";report("Nowy wspólny świat. Przesuwaj fizyczne źródła, obserwuj i zmieniaj reakcje.");
 }
 function resize(){
  const r=canvas.getBoundingClientRect(),dpr=Math.min(2,devicePixelRatio||1);
@@ -48,7 +52,18 @@ function draw(){
  for(let y=Math.floor(miny/2)*2;y<=maxy;y+=2){ctx.beginPath();ctx.moveTo(minx,y);ctx.lineTo(maxx,y);ctx.stroke();}
  for(const o of field.objects){
   const p=o.body.translation();
-  bodyRect(p,o.body.rotation(),o.hx,o.hy,o.kind==="fixed"?"#516675":"#a2ae9d");
+  if(o.isScent){
+   // The ring is ONLY visual annotation; physical collider is the small box.
+   ctx.fillStyle=o.signature==="amber"?"rgba(247,191,96,.07)":"rgba(109,213,226,.07)";
+   ctx.beginPath();ctx.arc(p.x,p.y,7.4,0,Math.PI*2);ctx.fill();
+  }
+  bodyRect(p,o.body.rotation(),o.hx,o.hy,
+    o.kind==="fixed"?"#516675":o.isScent?
+      (o.signature==="amber"?"#edbf75":"#7ed8e1"):"#a2ae9d");
+  if(o.isScent){
+   ctx.strokeStyle=o.signature==="amber"?"#eab061":"#70d8df";
+   ctx.lineWidth=.035;ctx.beginPath();ctx.arc(p.x,p.y,.55,0,Math.PI*2);ctx.stroke();
+  }
  }
  for(const a of field.actors){
   const base=color[a.kind],highlight=a.id===field.selected;
@@ -71,6 +86,16 @@ function draw(){
    else bodyRect(p,part.body.rotation(),part.shape.hx,part.shape.hy,base,stroke);
   });
   const p=a.root.translation(),theta=a.root.rotation();
+  if(a.motive){
+   const dest=V(p.x+Math.cos(a.motive.heading)*.75,p.y+Math.sin(a.motive.heading)*.75);
+   line(p,dest,a.role==="holder"?"#ecb274":a.role==="wary"?"#d8a9b5":"#b1def1",.045);
+   if($("show-senses").checked&&a.id===field.selected){
+    ctx.strokeStyle="#a9d9ba";ctx.lineWidth=.035;ctx.setLineDash([.12,.14]);
+    ctx.beginPath();ctx.arc(p.x,p.y,a.role==="holder"?7.2:a.role==="wary"?8.4:9.5,0,Math.PI*2);ctx.stroke();
+    ctx.setLineDash([]);
+    if(a.motive.attention)line(p,a.motive.attention,"#ffeda8",.050);
+   }
+  }
   circ(V(p.x+Math.cos(theta)*.34,p.y+Math.sin(theta)*.34),.095,"#163442","#163442");
   if(highlight){ctx.strokeStyle="#ffec9f";ctx.lineWidth=.045;ctx.beginPath();ctx.arc(p.x,p.y,1.24,0,Math.PI*2);ctx.stroke();}
   if(a.pressure>0.1){ctx.strokeStyle="#ff8a6b";ctx.lineWidth=Math.min(.15,.02+a.pressure*.00015);
@@ -83,15 +108,19 @@ function draw(){
  if(mode.startsWith("add-"))circ(pointer,.2,"#f4e0a3");
  ctx.restore();
  $("time").textContent=(field.ticks*DT).toFixed(1)+" s";
- $("count").textContent=field.actors.length+" organizmów · "+field.objects.filter(o=>o.kind==="free").length+" swobodnych przedmiotów";
+ $("count").textContent=field.actors.length+" istot · "+field.cues.length+" ruchome źródła · "+field.objects.filter(o=>o.kind==="free"&&!o.isScent).length+" pozostałe bryły";
  $("contacts").textContent=field.contactPairs+" incidencji kontaktu · "+field.lastContactImpulse.toFixed(1)+" N·s";
- $("energy").textContent=field.reflexEvents+" reakcji · "+field.externalImpulse.toFixed(0)+" N·s impulsy badacza";
+ $("energy").textContent=field.episodes.contactReactions+" reakcji ruchu · "+field.episodes.steering+" zmian trybu · "+field.externalImpulse.toFixed(0)+" N·s z zewnątrz";
+ $("profile").textContent=stepCpuSamples>0?"CPU fizyka: "+(stepCpuSum/stepCpuSamples).toFixed(2)+" ms/krok (lokalnie)":"CPU fizyka: —";
  const a=field.selectedActor;
- $("selection").textContent=a?names[a.kind]+" · "+a.parts.length+" dynamicznych części":"Brak zaznaczenia";
+ $("selection").textContent=a?names[a.kind]+" · "+a.parts.length+" dynamicznych części":activeCue?"Fizyczne źródło · "+activeCue.signature:"Brak zaznaczenia";
  $("selected-state").textContent=a?
-   "Nacisk "+a.pressure.toFixed(2)+" N·s · odruchy "+a.responseEvents+
-   " · wejścia napędu "+a.motorTicks+" · prędkość "+Math.hypot(a.root.linvel().x,a.root.linvel().y).toFixed(2)+" m/s":"Kliknij organizm.";
- $("run-status").textContent=paused?"PAUZA / edycja":"FIZYKA DZIAŁA / jakość NIEOCENIONA";
+   "Stan: "+(a.motive?.status??"—")+" · reakcji "+(a.motive?.reactEvents??0)+
+   " · lokalnych obserwacji "+(a.motive?.senseEvents??0)+" · napęd proxy "+a.motorTicks+
+   " · nacisk "+a.pressure.toFixed(1)+" N·s":activeCue?"6 kg ruchomej materii · sygnał zmienisz poniżej":"Kliknij ciało lub źródło bodźca.";
+ if(a&&document.activeElement!==$("role"))$("role").value=a.role;
+ if(activeCue&&document.activeElement!==$("cue-signature"))$("cue-signature").value=activeCue.signature;
+ $("run-status").textContent=paused?"PAUZA / edycja":field.initiative?"LOKALNE DZIAŁANIE · NIE NPC AI":"INICJATYWA OFF · fizyka działa";
 }
 function controls(){
  const x=+(keys.has("KeyD")||keys.has("ArrowRight"))-+(keys.has("KeyA")||keys.has("ArrowLeft"));
@@ -102,7 +131,14 @@ function frame(t){
  const dt=Math.max(0,Math.min(.05,(t-last)/1000));last=t;
  if(!paused){
   acc+=dt;let steps=0;
-  while(acc>=DT&&steps<4){field.step(controls());acc-=DT;steps++;}
+  while(acc>=DT&&steps<4){
+    const before=performance.now();
+    field.step(controls());
+    const measured=performance.now()-before;
+    if(Number.isFinite(measured)&&measured>=0){stepCpuSum+=measured;stepCpuSamples++;}
+    if(stepCpuSamples>300){stepCpuSum*=.5;stepCpuSamples=Math.floor(stepCpuSamples*.5);}
+    acc-=DT;steps++;
+   }
   if(steps===4)acc=Math.min(acc,DT*2);
  }
  if(t-lastDraw>70){draw();lastDraw=t;}
@@ -122,9 +158,19 @@ $("step").onclick=()=>{
  field.step(controls());draw();
 };
 $("reset").onclick=reset;
+$("initiative").onchange=()=>{field.initiative=$("initiative").checked;report("Inicjatywa "+(field.initiative?"ON":"OFF"));};
+$("response").onchange=()=>{field.pressureResponse=$("response").checked;report("Zmiana decyzji po nacisku "+(field.pressureResponse?"ON":"OFF"));};
+$("release").onclick=()=>{field.select(null);activeCue=null;report("Oddano ciało: ma znów własne lokalne pobudki.");};
+$("role").onchange=()=>{if(field.selected)field.setRole(field.selected,$("role").value);};
+$("cue-signature").onchange=()=>{if(activeCue){activeCue.signature=$("cue-signature").value;
+ report("Zmieniono tylko sygnał fizycznego źródła, bez przesuwania collidera.");}};
+$("show-senses").onchange=draw;
+
 $("poke").onclick=()=>tool("poke");
 for(const kind of ["rigid","chain","compliant"])$("add-"+kind).onclick=()=>tool("add-"+kind);
 $("add-matter").onclick=()=>tool("add-matter");
+$("add-scent").onclick=()=>tool("add-scent");
+$("spawn-group").onclick=()=>tool("spawn-group");
 $("reflex").onchange=()=>{field.reflex=$("reflex").checked;report("Wewnętrzne odruchy "+(field.reflex?"ON":"OFF")+"; bierne sprężyny pozostają.");};
 $("impulse").oninput=()=>$("impulse-value").textContent=$("impulse").value;
 window.addEventListener("keydown",e=>{
@@ -141,13 +187,29 @@ canvas.addEventListener("pointerdown",e=>{
  if(e.button===1){drag={kind:"pan",clientX:e.clientX,clientY:e.clientY};(e.isTrusted&&canvas.setPointerCapture(e.pointerId));return;}
  if(e.button!==0)return;
  if(mode==="poke"){drag={kind:"poke",origin:p,current:p};(e.isTrusted&&canvas.setPointerCapture(e.pointerId));return;}
+ if(mode==="spawn-group"){
+  // Explicit group creation by Owner at a location of choice. No invisible
+  // movement to this point afterwards, no path goals. Keeps all bodies real.
+  if(field.actors.length>140){report("Wstrzymano dodawanie: skrajne obciążenie solvera. Zachowaj scenę lub zresetuj.");return;}
+  const forms=["rigid","chain","compliant"],roles=["holder","seeker","wary"];
+  for(let i=0;i<12;i++){
+   const offset=V((i%4-1.5)*1.65,(Math.floor(i/4)-1)*1.85);
+   field.addCreature(forms[i%3],V(p.x+offset.x,p.y+offset.y),roles[(i+1)%3]);
+  }
+  field.select(null);activeCue=null;tool(mode);mode="";draw();return;
+ }
  if(mode.startsWith("add-")){
   if(mode==="add-matter")field.addFree(p.x,p.y,.53,.47,55);
-  else{let a=field.addActor(mode.slice(4),p);field.select(a.id);}
+  else if(mode==="add-scent")field.addScent(p,$("cue-signature").value);
+  else{let a=field.addCreature(mode.slice(4),p,$("role").value);field.select(a.id);}
   tool(mode);mode="";draw();return;
  }
  const found=field.pick(p);
- if(found?.kind==="actor")field.select(found.id);
+ if(found?.kind==="actor"){activeCue=null;field.select(found.id);}
+ if(found?.kind==="object"&&field.objects[found.index]?.isScent){
+  activeCue=field.objects[found.index];field.select(null);
+  $("cue-signature").value=activeCue.signature;
+ }
  if(paused&&e.ctrlKey&&found){
   drag={kind:"move",found,origin:p};
   (e.isTrusted&&canvas.setPointerCapture(e.pointerId));
@@ -187,93 +249,111 @@ canvas.addEventListener("pointerup",e=>{
 canvas.addEventListener("pointercancel",()=>{drag=null;draw();});
 draw();requestAnimationFrame(frame);
 document.body.dataset.live="yes";
-if(new URLSearchParams(location.search).has("probe")){
+
+
+if(new URLSearchParams(location.search).has("e1probe")){
  try{
-  const {runM0Probe}=await import("./src/m0-probe.js");
-  document.body.dataset.m0Probe=JSON.stringify(runM0Probe());
-  // Diagram of a real, unretouched world frame for agent visual audit.
-  draw();document.body.dataset.m0Frame=canvas.toDataURL("image/png");
- }catch(error){
-  document.body.dataset.liveError=String(error.stack||error);
-  $("run-status").textContent="PROBE FAILED";report(String(error));console.error(error);
- }
+  paused=true;
+  const {runE1Probe}=await import("./src/e1-probe.js");
+  const batch=new URLSearchParams(location.search).get("e1probe");
+  document.body.dataset.e1Probe=JSON.stringify(runE1Probe(batch));
+ }catch(error){document.body.dataset.liveError=String(error.stack||error);console.error(error);}
 }
-if(new URLSearchParams(location.search).has("frames")){
+if(new URLSearchParams(location.search).has("e1frames")){
  try{
-  // ONE real world and ONE continuous fixed-step timeline. Not 3 separately
-  // initialized screenshots disguised as temporal evolution.
-  field.select(field.actors[0].id);
-  const stages=[{tick:0,actors:field.sample().actors,frame:canvas.toDataURL("image/png")}];
-  for(let i=1;i<=240;i++){
-   field.step({direction:i<=200?V(1,0):V()});
-   if(i===80||i===160||i===240){
+  paused=true;field.select(null);
+  const stages=[];
+  for(let i=0;i<=480;i++){
+   if(i>0)field.step();
+   if([0,120,240,360,480].includes(i)){
     draw();
-    stages.push({tick:i,actors:field.sample().actors,frame:canvas.toDataURL("image/png")});
+    const state=field.getTrace();
+    stages.push({tick:i,actors:state.actors.map(a=>({
+     kind:a.kind,role:a.role,x:a.x,y:a.y,state:a.state})),
+      contactEvents:state.episodes.contactReactions,
+      actionTicks:state.actors.reduce((z,a)=>z+a.autonomousTicks,0),
+      frame:canvas.toDataURL("image/png")});
    }
   }
-  document.body.dataset.m0Frames=JSON.stringify(stages);
- }catch(error){document.body.dataset.liveError=String(error.stack||error);}
+  document.body.dataset.e1Frames=JSON.stringify(stages);
+ }catch(error){document.body.dataset.liveError=String(error.stack||error);console.error(error);}
 }
-
-if(new URLSearchParams(location.search).has("fairm0")){
+if(new URLSearchParams(location.search).has("e1ownercheck")){
  try{
-  const {fairM0}=await import("./src/m0-fair-pressure.js");
-  document.body.dataset.m0Fair=JSON.stringify(fairM0());
- }catch(error){document.body.dataset.liveError=String(error.stack||error);}
-}
-
-if(new URLSearchParams(location.search).has("ownercheck")){
- try{
-  const check=(x,why)=>{if(!x)throw Error("M0 actual UI "+why);};
+  paused=true;field.select(null);
+  const check=(value,label)=>{if(!value)throw Error("E1 UI "+label);};
   const toClient=p=>{
    const d=resize();
    return {clientX:d.r.left+(d.w/2+(p.x-camera.x)*d.scale)*d.r.width/d.w,
-     clientY:d.r.top+(d.h/2+(p.y-camera.y)*d.scale)*d.r.height/d.h};
+    clientY:d.r.top+(d.h/2+(p.y-camera.y)*d.scale)*d.r.height/d.h};
   };
-  $("pause").click();check(paused,"pause");
-  const beforeTick=field.ticks;$("step").click();
-  check(field.ticks===beforeTick+1,"one real solver step");
-  // Actual pointer-select on a real collider, not direct field.select.
-  const candidate=field.actors.find(a=>a.kind==="rigid");
-  const p0=candidate.root.translation();
+  check(field.actors.length===18&&field.cues.length===4,"composed same scene");
+  const p=field.actors.find(a=>a.kind==="rigid").root.translation();
   canvas.dispatchEvent(new PointerEvent("pointerdown",{
-   ...toClient(p0),button:0,bubbles:true,pointerId:110}));
-  check(field.selected===candidate.id,"collider pointer selection");
+   ...toClient(p),button:0,bubbles:true,pointerId:111}));
+  check(field.selectedActor?.kind==="rigid","real collider selection");
+  const selected=field.selectedActor;
+  $("role").value="wary";$("role").dispatchEvent(new Event("change",{bubbles:true}));
+  check(selected.role==="wary","independent role edit");
+  const x=selected.root.translation().x;
   window.dispatchEvent(new KeyboardEvent("keydown",{code:"KeyD",bubbles:true}));
-  for(let k=0;k<48;k++)field.step(controls());
+  for(let i=0;i<65;i++)field.step(controls());
   window.dispatchEvent(new KeyboardEvent("keyup",{code:"KeyD",bubbles:true}));
-  check(candidate.root.translation().x-p0.x>.10,"keyboard motor physically moves selected collider");
-  const count=field.actors.length;
-  $("add-compliant").click();
+  check(selected.root.translation().x-x>.15,"real manual root control");
+  $("release").click();
+  check(field.selected===null,"agent release");
+  const prior=field.actors.reduce((s,a)=>s+a.autoMotorTicks,0);
+  for(let i=0;i<55;i++)field.step();
+  check(field.actors.reduce((s,a)=>s+a.autoMotorTicks,0)>prior,"local initiative resumes");
+  $("initiative").click();check(!field.initiative,"global initiative switch OFF");
+  const before=field.actors.reduce((s,a)=>s+a.autoMotorTicks,0);
+  for(let i=0;i<30;i++)field.step();
+  check(field.actors.reduce((s,a)=>s+a.autoMotorTicks,0)===before,"no invisible auto motor");
+  $("initiative").click();
+  $("response").click();check(!field.pressureResponse,"contact-conditioned decisions OFF");
+  const src=field.cues[0],old=src.body.translation(),idx=field.objects.indexOf(src);
+  const destination=V(old.x+1.4,old.y+1.8);
+  const point=V(old.x,old.y);
   canvas.dispatchEvent(new PointerEvent("pointerdown",{
-   ...toClient(V(38,20)),button:0,bubbles:true,pointerId:111}));
-  check(field.actors.length===count+1&&field.selectedActor.kind==="compliant","new actual spring construction");
-  const add=field.selectedActor,initial=add.root.translation();
+   ...toClient(point),button:0,bubbles:true,pointerId:109}));
+  check(activeCue===src,"click exact physical scent source");
+  $("cue-signature").value="cyan";
+  $("cue-signature").dispatchEvent(new Event("change",{bubbles:true}));
+  check(src.signature==="cyan"&&src.body.translation().x===old.x,
+    "signal-only edit keeps real physical collider pose");
   canvas.dispatchEvent(new PointerEvent("pointerdown",{
-   ...toClient(initial),button:0,bubbles:true,pointerId:112,ctrlKey:true}));
+   ...toClient(point),button:0,bubbles:true,pointerId:112,ctrlKey:true}));
   canvas.dispatchEvent(new PointerEvent("pointermove",{
-   ...toClient(V(initial.x-1.2,initial.y-.7)),button:0,bubbles:true,pointerId:112,ctrlKey:true}));
+   ...toClient(destination),button:0,bubbles:true,pointerId:112,ctrlKey:true}));
   canvas.dispatchEvent(new PointerEvent("pointerup",{
-   ...toClient(V(initial.x-1.2,initial.y-.7)),button:0,bubbles:true,pointerId:112}));
-  check(Math.abs(add.root.translation().x-initial.x)>1,"paused whole-body physical pose edit");
-  const center=add.root.translation();
-  $("impulse").value="400";
-  $("poke").click();
+   ...toClient(destination),button:0,bubbles:true,pointerId:112}));
+  check(Math.hypot(src.body.translation().x-old.x,src.body.translation().y-old.y)>1,
+    "live editor moves actual source physics collider");
+  check(field.objects[idx]===src,"source keeps material identity");
+  $("spawn-group").click();
   canvas.dispatchEvent(new PointerEvent("pointerdown",{
-   ...toClient(center),button:0,bubbles:true,pointerId:113}));
-  canvas.dispatchEvent(new PointerEvent("pointermove",{
-   ...toClient(V(center.x+1.1,center.y+.2)),button:0,bubbles:true,pointerId:113}));
-  canvas.dispatchEvent(new PointerEvent("pointerup",{
-   ...toClient(V(center.x+1.1,center.y+.2)),button:0,bubbles:true,pointerId:113}));
-  check(field.externalImpulse>350,"real canvas-directed external impulse");
-  $("reflex").click();check(!field.reflex,"reflex off switch");
-  $("reset").click();check(field.actors.length===8&&field.ticks===0,"reset");
-  document.body.dataset.m0Ownercheck=JSON.stringify({pass:true,
-   realStep:true,realPointerSelection:true,keyboardFiniteMotor:true,
-   physicalMorphologySpawn:true,pausedPose:true,externalPointImpulse:true,
-   reflexToggle:true,reset:true,notOwnerFeel:true});
- }catch(error){
-  document.body.dataset.liveError=String(error.stack||error);
-  $("run-status").textContent="UI TEST FAILED";console.error(error);
- }
+   ...toClient(V(21,13.6)),button:0,bubbles:true,pointerId:114}));
+  check(field.actors.length===30&&field.selected===null,
+   "true in-place 12 organism crowd construction without selected actor");
+  for(let i=0;i<8;i++)field.step();
+  check(field.actors.every(a=>{
+   const p=a.root.translation();return Number.isFinite(p.x)&&Number.isFinite(p.y);
+  }),"mixed crowded world stays finite after manual intervention");
+  $("reset").click();
+  check(field.actors.length===18&&field.cues.length===4&&field.ticks===0,
+    "whole scene fresh reset");
+  document.body.dataset.e1Ownercheck=JSON.stringify({
+   pass:true,actualColliderClick:true,manualMotor:true,roleEdit:true,
+   controlledAutonomyOff:true,liveSourcePose:true,
+   exactPhysicalIdentity:true,signalOnlyEdit:true,groupSpawn:true,reset:true,notOwnerFeel:true});
+ }catch(error){document.body.dataset.liveError=String(error.stack||error);console.error(error);}
+}
+
+if(new URLSearchParams(location.search).has("e1causal")){
+ try{
+  paused=true;
+  const {runE1Causality}=await import("./src/e1-causality.js");
+  const mode=new URLSearchParams(location.search).get("e1causal");
+  document.body.dataset.e1Causal=JSON.stringify(runE1Causality(mode));
+ }catch(error){document.body.dataset.liveError=String(error.stack||error);console.error(error);}
 }

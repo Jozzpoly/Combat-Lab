@@ -1,62 +1,81 @@
+// E1 real browser/WASM acceptance of a WHOLE source state, not creature quality.
 import {execFileSync} from "node:child_process";
 const chrome=process.env.CHROME_BIN,url=process.argv[2];
-if(!chrome||!url)throw Error("M0 requires Chrome & a real built local URL");
-const href=url+(url.includes("?")?"&":"?")+"probe=1";
-const html=execFileSync(chrome,["--headless=new","--no-sandbox","--disable-gpu",
- "--disable-dev-shm-usage","--virtual-time-budget=45000","--dump-dom",href],
- {encoding:"utf8",timeout:130000,maxBuffer:16*1024*1024});
-const get=name=>html.match(new RegExp('data-'+name+'="([^"]*)"'))?.[1];
-if(get("live")!=="yes"||get("live-error"))
- throw Error("M0 emitted Chromium/WASM runtime FAIL: "+get("live-error")+" live="+get("live"));
-const data=get("m0-probe");
-if(!data)throw Error("M0 physical probe not executed in browser");
-const values=JSON.parse(data.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
-if(values.cases.length!==18||values.passive.length!==3||values.poke.length!==3)
- throw Error("M0 incomplete morphology × offset × control matrix");
-if(values.cases.some(x=>!x.numericFinite))throw Error("Nonfinite physics result");
-if(values.passive.some(x=>x.rootMotorTicks||x.externalImpulse||x.responseEvents))
- throw Error("Passive-body contamination");
-const contacts=values.cases.filter(x=>x.contactTicks>0).length;
-const pokeContacts=values.poke.filter(x=>x.contactTicks>0).length;
-const generated=get("m0-frame");
-if(!generated||!generated.startsWith("data:image/png;base64,"))
- throw Error("M0 actual unretouched canvas frame missing");
-console.log("M0 BROWSER PHYSICAL SOURCE CHECK: PASS; contact cases="+contacts+
- " of 18; external impulse contacts="+pokeContacts+" of 3");
-console.log("M0 PHYSICAL TRIAL "+JSON.stringify(values));
-// No Owner-level feel/creature-life PASS. PNG data stays in browser DOM;
-// never claim screenshot content was inspected merely because bytes exist.
-console.log("M0 FIRST REAL FRAME PNG base64 bytes="+generated.length);
-console.log("M0 FRAME-DATA "+generated);
+if(!chrome||!url)throw Error("Missing actual Chromium binary and served build");
+const visit=(query,budget=18000)=>{
+ const href=url+(url.includes("?")?"&":"?")+query;
+ const dom=execFileSync(chrome,["--headless=new","--no-sandbox","--disable-gpu",
+  "--disable-dev-shm-usage","--virtual-time-budget="+budget,"--dump-dom",href],
+  {encoding:"utf8",timeout:115000,maxBuffer:24*1024*1024});
+ const val=n=>dom.match(new RegExp('data-'+n+'="([^"]*)"'))?.[1];
+ const raw=val("live-error");
+ if(val("live")!=="yes"||raw)throw Error("E1 browser execution FAIL: live="+val("live")+
+  " error="+raw+" dump="+dom.slice(-200));
+ return {val,dom};
+};
+const decode=s=>JSON.parse(s.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+const sections=[];
+for(const batch of ["A","B"]){
+ const v=visit("e1probe="+batch,60000).val("e1-probe");
+ if(!v)throw Error("Missing E1 full-scene physical matrix batch "+batch);
+ const j=decode(v);
+ if(j.part!==batch||(batch==="A"&&j.cases.length!==3)||
+   (batch==="B"&&j.cases.length!==2))
+  throw Error("E1 physical matrix incomplete "+batch);
+ sections.push(...j.cases);
+}
+for(const c of sections){
+ if(!c.numericOK||c.actors!==18||c.sample.length!==6)
+  throw Error("E1 nonfinite/partial physical scene "+c.kind);
+}
+const map=Object.fromEntries(sections.map(c=>[c.kind,c]));
+if(map.passive.autonomousTicks!==0||map.passive.autoImpulse!==0)
+ throw Error("Passive E1 source got an invisible motor");
+if(map.full.autonomousTicks<100||
+ map.full.autoImpulse<=0||map.full.avgTravel<=.25)
+ throw Error("E1 local decision system generated no actual body action");
+if(map["no-odor"].cues!==0||map["shifted-odor"].stagedEditCount!==1)
+ throw Error("E1 local sensation / editor intervention not actually changed");
+console.log("E1 FULL WORLD ADVERSES "+JSON.stringify(sections.map(c=>({
+ kind:c.kind,physicalActorCount:c.actors,physicalContacts:c.frameContacts,
+ meanMotion:c.avgTravel,localRootTicks:c.autonomousTicks,
+ contactDecisionCount:c.reactiveChanges,selectedCueCount:c.attended,
+ edited:c.stagedEditCount}))));
+console.log("E1 MATRIX RAW "+JSON.stringify(sections));
+const framesRaw=visit("e1frames=1",16000).val("e1-frames");
+if(!framesRaw)throw Error("Real same-world visual evidence absent");
+const frames=decode(framesRaw);
+if(frames.length!==5||frames[0].tick!==0||frames[4].tick!==480)
+ throw Error("E1 broken consecutive real physics timeline");
+console.log("E1 ONE-WORLD HISTORY "+JSON.stringify(frames.map(a=>({
+ tick:a.tick,states:a.actors.map(x=>({kind:x.kind,role:x.role,x:x.x,y:x.y,
+    status:x.state})),contactEvents:a.contactEvents,actions:a.actionTicks}))));
+console.log("E1 TRUE FRAME-T0 "+frames[0].frame);
+console.log("E1 TRUE FRAME-T480 "+frames[4].frame);
+const uiRaw=visit("e1ownercheck=1",7500).val("e1-ownercheck");
+if(!uiRaw)throw Error("Real browser E1 editor/controls smoke missing");
+const ui=decode(uiRaw);
+if(!ui.pass)throw Error("Source editor/controls not operating in actual page");
+console.log("E1 REAL UI "+JSON.stringify(ui));
 
-const movie=execFileSync(chrome,["--headless=new","--no-sandbox","--disable-gpu","--disable-dev-shm-usage",
- "--virtual-time-budget=3500","--dump-dom",
- url+(url.includes("?")?"&":"?")+"frames=1"],
- {encoding:"utf8",timeout:75000,maxBuffer:16*1024*1024});
-const frameRaw=movie.match(/data-m0-frames="([^"]*)"/)?.[1];
-if(!frameRaw||movie.includes("data-live-error="))throw Error("M0 live same-world temporal capture failed");
-const series=JSON.parse(frameRaw.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
-if(series.length!==4||series[0].tick!==0||series[3].tick!==240)throw Error("M0 time-series source not valid");
-console.log("M0 FRAMES REAL TICKS "+JSON.stringify(series.map(p=>({tick:p.tick,
- actorPositions:p.actors.map(a=>({kind:a.kind,x:a.x,y:a.y})),bytes:p.frame.length}))));
-console.log("M0 FRAME-240 "+series[3].frame);
+for(const batch of ["C","D"]){
+ const raw=visit("e1causal="+batch,35000).val("e1-causal");
+ if(!raw)throw Error("E1 source-exact causal/density batch "+batch+" missing");
+ const result=decode(raw);
+ if(result.batch!==batch)throw Error("E1 causal batch mismatch");
+ if(batch==="C"){
+  if(result.pressure.sourceMotorTicksOn!==result.pressure.sourceMotorTicksOff||
+    !result.pressure.first)
+   throw Error("E1 does not causally distinguish pressure steering");
+  if(result.edit.initialMismatch||!result.edit.firstChangedDecision)
+   throw Error("E1 physical cue intervention did not change later decisions");
+  if(result.signalOnly.prefixDifference||
+    !result.signalOnly.firstSignalCommandDifference||
+    result.signalOnly.firstSignalCommandDifference.preStepBodyDisparity>1e-5||
+    result.signalOnly.firstSignalCommandDifference.tick<=160)
+   throw Error("E1 local signal did not causally change action after sensing");
 
-const fairDom=execFileSync(chrome,["--headless=new","--no-sandbox","--disable-gpu","--disable-dev-shm-usage",
- "--virtual-time-budget=30000","--dump-dom",
- url+(url.includes("?")?"&":"?")+"fairm0=1"],
- {encoding:"utf8",timeout:100000,maxBuffer:16*1024*1024});
-const fairRaw=fairDom.match(/data-m0-fair="([^"]*)"/)?.[1];
-if(!fairRaw||fairDom.includes("data-live-error="))throw Error("M0 matched-mass rigid control failed");
-const fair=JSON.parse(fairRaw.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
-if(fair.cases.length!==12)throw Error("M0 incomplete matched-envelope control");
-console.log("M0 RIGID SURROGATE "+JSON.stringify(fair));
-
-const ownerDom=execFileSync(chrome,["--headless=new","--no-sandbox","--disable-gpu",
- "--disable-dev-shm-usage","--virtual-time-budget=2400","--dump-dom",
- url+(url.includes("?")?"&":"?")+"ownercheck=1"],
- {encoding:"utf8",timeout:65000,maxBuffer:12*1024*1024});
-const ownerRaw=ownerDom.match(/data-m0-ownercheck="([^"]*)"/)?.[1];
-if(!ownerRaw||ownerDom.includes("data-live-error="))throw Error("M0 actual UI click/keyboard/repose smoke FAILED");
-const owner=JSON.parse(ownerRaw.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
-if(!owner.pass)throw Error("M0 UI not fully verified");
-console.log("M0 REAL OWNER-STYLE UI "+JSON.stringify(owner));
+ }else if(result.stress.actors!==30||result.stress.nonfinite!==0)
+  throw Error("E1 dense mixed-body world numerically unstable or incomplete");
+ console.log("E1 SOURCE CAUSAL "+JSON.stringify(result));
+}
