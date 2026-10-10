@@ -122,6 +122,10 @@ Exact tick capture solves **temporal aliasing in screenshot scheduling**, not ph
 
 **Keep one practical idea now:** with the next legitimate Z1/S2 or whole-world observation, opportunistically render a fixed-step **raw first frame + short causal contact strip + input/contact trace**, if doing so clarifies something the existing screenshot could not. Compare it to an even cheaper baseline (two stills and a few event lines). **Do not build a proprietary `brain format`, adaptive vision engine or flow-steered crowd controller until a real gameplay/analysis pressure demonstrates a specific deficit.** The lab's long-term vision includes heterogeneous, compound and potentially deformable/animal-like organisms — another rectangle traffic test would be moving backwards, however sophisticated its vector field.
 
+## Destination-specific handoff to ReflexBrain
+
+A deeper source-checked review of the current **ReflexBrain** host/learned-organ split, G5-D0 lawful-occlusion result and visual representation alternatives is in [REFLEXBRAIN_VISUAL_PERCEPTION_BRIDGE_2026-10-10](REFLEXBRAIN_VISUAL_PERCEPTION_BRIDGE_2026-10-10.md). This is explicitly a **research handoff only**: ReflexBrain decides its own current frontier, and Combat Lab returns to the existing Owner First Look / real body-world goals without adopting a perception architecture.
+
 ## Disposition — return to the actual fight
 
 **Keep now:** (1) honest raw image plus few key times, (2) explicit event and provenance trace, (3) option to overlay actual contact/velocity and show simple nearby occupancy, (4) distinguish world truth / agent access / diagnostic inference, (5) flow maps as a **research diagnostic** for future crowd tests.
