@@ -18,6 +18,8 @@
 
 **Granica źródła:** `main` = neutralny kod i dokumentacja, `rehearsal/current` = tylko wskaźnik opublikowanego pokazu (nie zmieniony), E1/B1 = osobne eksperymenty Draft bez merge ani publikacji. Sprawdzaj *live* HEAD/CI i najnowsze Owner corrections. Nie ma uczciwego pomiaru końcowego FPS, autonomicznej decyzji B1 o złożeniu, prawdziwego chodu ani Owner PASS.
 
+**W2 source correction (CI 38095936923):** world query falsely reported 0 initial overlaps in two crowded placements, while independent direct shape-pair checks found 1 real initial intersecting pair in each. Those crowded placement results are **confounded**. Chosen default clean positions have 0 direct initial pairs, and zero-actuator causal contrast survives. [W2 red-team evidence](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/w2-embodied-material-commons/docs/W2_INTEGRATED_MATERIAL_COMMONS.md). Do not infer general collision-safety or Owner fit from a clean initial scene.
+
 **Nowe źródłowe negatywne W2:** predeclared placement/actuator-null tests distinguish active commanded folding from passive compression; when joint torque=0, pressure-policy vs manual gives identical world outcomes. First W2 20-actor experience remained visually geometric/attractor-like and does not qualify a new game. Do not answer by another dozen odor/pressure parameter tweaks or auto merge.
 
 **Najbliższe pytanie, nie rozkaz:** jak połączyć *samodzielną lokalną inicjatywę* z *materialnie różnymi umiejętnościami ciała* w jednym naturalnie testowalnym i niszczalnym świecie — jeśli jest to lepsze niż inne świadomie wybrane doświadczenie — zachowując równorzędne tanie modele i pierwszeństwo odczucia Ownera. Bez obowiązkowego łączenia gałęzi, nowych „fundamentów” i presji na publikację.
