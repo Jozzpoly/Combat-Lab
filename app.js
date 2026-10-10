@@ -409,6 +409,10 @@ async function start(){
  message("Live Rapier world. Alter bodies or materials; local responses are not goal agents.");
  el("health").textContent="PHYSICS LIVE · Owner quality unverified";
  document.body.dataset.live="yes";
+ if(new URLSearchParams(location.search).has("sweep")){
+   const {unilateralArmSweep}=await import("./src/x0-effector-sweep.js");
+   document.body.dataset.sweep=JSON.stringify(unilateralArmSweep(CommonsWorld));
+ }
  if(new URLSearchParams(location.search).has("rerig")){
    const {probeLiveRerig,probeMorphologyAffordance}=
      await import("./src/x0-rerig-probe.js");
