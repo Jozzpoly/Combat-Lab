@@ -1,4 +1,7 @@
 import {EffectorField,DT,V,clamp} from "./src/effector-world.js";
+import {CommonsField} from "./src/commons-field.js";
+const historicalProbe=/[?&](probe|campaign)(=|&|$)/.test(location.search);
+const RuntimeWorld=historicalProbe?EffectorField:CommonsField;
 
 const $=selector=>document.querySelector(selector);
 const canvas=$("#lab"),ctx=canvas.getContext("2d");
@@ -179,7 +182,7 @@ function ui(){
   }
 }
 function reset(){
-  const replacement=savedScene?EffectorField.fromScene(savedScene):new EffectorField();
+  const replacement=savedScene?RuntimeWorld.fromScene(savedScene):new RuntimeWorld();
   field?.dispose();
   field=replacement;
   window.__effectorResearch=field;
@@ -215,10 +218,10 @@ function frame(now){
   requestAnimationFrame(frame);
 }
 async function start(){
-  field=await EffectorField.create();
+  field=await RuntimeWorld.create();
   selectedTarget=field.selected;
   window.__effectorResearch=field; // research-only, no secret Actor cognition
-  $("#health").textContent="Live Rapier 2D material world";
+  $("#health").textContent=historicalProbe?"Legacy donor diagnostics":"W1: Rapier contacts · passive unselected bodies · no NPC AI";
   $("#pause").onclick=()=>{paused=!paused;debt=0;
     $("#pause").textContent=paused?"Resume":"Pause";};
   $("#step").onclick=()=>guard(()=>{if(!paused)throw Error("Pause first");
@@ -253,7 +256,7 @@ async function start(){
   });
   $("#load-scene").onclick=()=>guard(()=>{
     const recipe=JSON.parse($("#scene-json").value);
-    const staged=EffectorField.fromScene(recipe);
+    const staged=RuntimeWorld.fromScene(recipe);
     const canonical=staged.exportScene();
     field.dispose();field=staged;savedScene=canonical;
     window.__effectorResearch=field;
@@ -504,6 +507,11 @@ async function start(){
     document.body.dataset.affordanceSweep=JSON.stringify(affordanceSweep(EffectorField));
     const {independentArmsProbe}=await import("./src/independent-arms-probe.js");
     document.body.dataset.independentArms=JSON.stringify(independentArmsProbe(EffectorField));
+  }
+  if(new URLSearchParams(location.search).has("commonsw1")){
+    paused=true;
+    const {commonsWholeProbe}=await import("./src/commons-world-probe.js");
+    document.body.dataset.commonsW1=JSON.stringify(commonsWholeProbe(CommonsField));
   }
   if(new URLSearchParams(location.search).has("campaign")){
     paused=true;
