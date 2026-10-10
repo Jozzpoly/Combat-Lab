@@ -49,7 +49,7 @@ function render(){
     if(e.kind==="hinged"&&e.panel){
       const a=e.body.translation(),b=e.panel.body.translation();
       ctx.strokeStyle="#b5fbde";ctx.lineWidth=.05;ctx.beginPath();
-      ctx.moveTo(a.x+.54,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
+      ctx.moveTo(a.x-.54,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
     }
   }
   if(drag?.kind==="shot"){
@@ -122,8 +122,16 @@ canvas.addEventListener("pointerup",e=>{
   if(!drag)return;
   const d=drag;drag=null;
   if(d.kind==="shot"){
-    const shot=field.shoot(d.start,at(e),Number.isFinite(+20)?20:20);
-    report(shot?"Wystrzelono materialny pocisk z fizycznym CCD.":"Zbyt krótki kierunek.");
+    const end=at(e),distance=Math.hypot(end.x-d.start.x,end.y-d.start.y);
+    if(distance<.22){
+      const pick=field.pick(d.start);
+      if(pick&&["hinged","rigid","bare"].includes(pick.kind)){
+        field.guard=pick;report("Wybrano fizyczny organizm: "+pick.kind);
+      }else report("Kliknięcie. Przeciągnij, aby wystrzelić.");
+    }else{
+      const shot=field.shoot(d.start,end,20);
+      report(shot?"Wystrzelono materialny pocisk z fizycznym CCD.":"Błędny kierunek.");
+    }
   }render();
 });
 canvas.addEventListener("pointercancel",()=>{drag=null;render();});
