@@ -1,6 +1,6 @@
 # K1 — posture changes available contact (2026-10-10)
 
-**State:** independent limited physical experiment. Not an accepted Combat Lab architecture, product PASS, merge candidate, public rehearsal or proof of grounded posture. Historical Owner R0/R1/L0 FAILs stand. Branch `experiment/posture-contact-k1` from neutral main; source-donated Z1 collision/workbench core.
+**State: major negative support-ablation result.** Independent limited physics experiment; contact/posture actuation exists, but effective space denial in these cases is largely **support-proxy-dependent**. Not an accepted architecture, product PASS, merge candidate, public rehearsal or proof of grounded defensive stance. Historical Owner R0/R1/L0 FAILs stand. Branch `experiment/posture-contact-k1` from neutral main; source-donated Z1 collision/workbench core.
 
 ## Research question
 
@@ -33,9 +33,25 @@ The original five-offset comparison `y = -0.9,-0.45,0,+0.45,+0.9 m` showed postu
 
 [Emitted Chromium and UI evidence 38017315937](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38017315937): actual E/R keyboard commands independently targeted both real arms to folded state. After switching selected body to the challenger, unselected defender limbs still physically changed angle by **0.5451 rad** within 100 solver ticks, no adhesive contact events. The operator can therefore issue the postural action without resetting the shared world. Agent-inspected before/after 1440×900 frames confirm the real arm transformation and shared corridor, but expose a sparse, largely static stylized mechanical study with substantial sidebar UI, not an Owner-engaging experience. Temporary screenshot instrumentation was removed after inspection; compact deterministic UI and physics gate remains.
 
+## Critical falsification: remove nonphysical root bracing
+
+[Actual same-browser support-control run 38017518528](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38017518528) repeated the same **open vs folded** selected postures at the three central lateral placements, changing only `brace` on the defender from 2600 to **0**. Same manual challenger input, actual colliders and finite joint torque in both worlds; no adhesive hold or motorized material.
+
+| Challenger lateral offset | Fold-minus-open challenger X with support proxy | With proxy completely OFF |
+| --- | ---: | ---: |
+| −0.45 m | −2.6425 m | **−0.1246 m** |
+| 0 m | −1.8438 m | **−0.0405 m** |
+| +0.45 m | −4.8976 m | **−0.1223 m** |
+
+Without the automatic body-bracing counterimpulse the guardian was physically displaced to approximately **x=20–22.6 m**, instead of remaining near x≈17–17.5 m in the decisive supported cases. It no longer functioned as an effective passive anchor. Both arm-posture variants still produced actual contacts, but **the formerly decisive gameplay-style space-denial contrast largely disappeared**.
+
+This is a **major falsifier** of any claim that K1 has demonstrated independently useful grounded stance. It has *not* falsified physical arm reconfiguration (which also passed the live keyboard and angle test), only the idea that the current unsupported model can sustain a convincing defensive position. A finite external force proxy is a source of reaction work, not a legitimate substitute for modeled foot-ground/contact support. Any further K1 tuning that retains this proxy must say so explicitly.
+
+Next serious work should compare plausible, appropriately scoped support substrates *against simple honest baseline*, with evaluation of **real movement/stance choices, readability, cost, robustness and inter-body contacts**. Candidates might include explicit 2D foot/contact friction, surface-constrained 3D support, or even a deliberately authored cheaper approximation where deep physics adds no Owner value. These are research alternatives, not an architectural mandate for 3D.
+
 ## Synthesis / actual frontier
 
-- **Demonstrated:** genuinely articulated, timed configuration change on an existing organism can modify physical access/pressure outcomes in another body without scripted collision exceptions or a magic grip.
+- **Demonstrated (conditional):** genuine timed articulation changes contact geometry and, **when an explicit ungrounded bracing proxy is ON**, can change a challenger's pressure outcome. Removing that proxy nearly eliminated the measured space-denial effect in three decisive cases. No valid grounded stance or standalone defensive combat action has been demonstrated.
 - **Not proven:** physical dominance over a simpler rigid structure; sustained ground-reacted defensive stance; natural gait; new NPC choice/initiative; robust ecology; full open-world material/topological interaction; or **Owner-level feel**.
 - **Next question:** does a more expressive **force/support/contact representation** (possibly stance-dependent resistance or constrained 3D, not prematurely mandated) actually buy distinctive, readable player actions compared with simpler planar rigid-body control? Evaluate multiple interactions in a coherent world, not another set of increasingly tuned corridor offsets.
 - **STOP rule:** don't continue adjusting K1 position, brace, mass or torque merely to obtain prettier contact counts. Preserve K1 as source-scoped donor and evaluate the wider whole-level bottleneck.

@@ -13,3 +13,5 @@ Latest project truth: [RESEARCH_STATE](https://github.com/Jozzpoly/Combat-Lab/bl
 ## Latest K1 discrimination
 
 [Measured positive **and** rigid-surrogate / sustained-torque negative controls](docs/K1_POSTURE_CONTACT_CHECKPOINT_2026-10-10.md). Physically changing joint targets in the current solver changes an opponent's later available contact/forward advance in some authored configurations; a rigid surrogate blocks more reliably and only one sampled placement required continued joint torque to maintain its difference. **No product approval or accepted physical architecture.**
+
+**IMPORTANT falsifier:** [brace-off K1 controls](docs/K1_POSTURE_CONTACT_CHECKPOINT_2026-10-10.md#critical-falsification-remove-nonphysical-root-bracing) nearly eliminated the posture-dependent blocking effect. Do not claim useful grounded defense; original K1 apparent solidity came largely from an artificial root-braking source. Retain articulation as a donor but re-evaluate actual support/stance representation before continuation.
