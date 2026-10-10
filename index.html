@@ -123,16 +123,15 @@
  <details class="review-section"><summary>Zewnętrzny impuls (narzędzie badawcze)</summary>
   <label>Impuls (N·s) <input id="poke-magnitude" type="number" min="0" value="230" step="25"></label>
   <button id="poke">Przeciągnij impuls od obiektu</button>
-  <p class="micro">Outside research impulse: a diagnostic intervention, never credited to an organism.</p>
+  <p class="micro">Impuls eksperymentatora, nie autonomiczne działanie ciała.</p>
  </details>
  <details><summary>Zapis / wczytanie układu początkowego</summary>
-  <p class="micro">Portable JSON retains masses, articulated poses, constrained matter and walls.
-    NOT velocities, exact contacts or a running solver replay. Invalid input does not replace the live world.</p>
+  <p class="micro">Zachowuje układ, masy i kształty, ale nie prędkości ani całej historii kolizji. Błędny plik nie zmienia żywego świata.</p>
   <textarea id="recipe" rows="7" spellcheck="false"></textarea>
   <div class="two"><button id="capture">Zapisz stan początkowy</button><button id="load">Sprawdź i wczytaj</button></div>
  </details>
  <details><summary>Granice dowodów</summary><p class="micro">To eksperyment, nie zaakceptowany produkt. Podparcie to uproszczona siła w 2D, nie fizyka nóg. Odruchy nie są inteligencją. Techniczny test nie zastępuje Twojej oceny.</p></details>
- <p id="message" role="status">Awaiting physical world.</p>
+ <p id="message" role="status">Uruchamianie fizyki…</p>
 </aside></div>
 <footer><span>NIEZATWIERDZONA PRÓBA · BEZ AUTOMATYCZNEGO DEPLOYU</span><span id="build">Z1 · badawczy kod fizyczny, bez zmian</span></footer>
 </div><script type="module" src="./app.js"></script></body></html>

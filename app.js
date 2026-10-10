@@ -116,7 +116,7 @@ function render(){
  }
  if(mode==="matter")disk(mouse,.14,"#fff4b9");
  ctx.restore();
- el("state").textContent=paused?"PAUSED":"RUNNING";
+ el("state").textContent=paused?"PAUZA":"DZIAŁA";
  el("time").textContent=(field.ticks*DT).toFixed(1)+" s";
  el("counts").textContent=field.actors.length+" ciał · "+field.matter.length+" obiektów";
  el("activity").textContent=field.counts.contacts+" kontaktów · "+
@@ -136,7 +136,7 @@ function render(){
  el("lower").disabled=!a||a.arms.length<2;
  el("hinge-controls").hidden=m?.kind!=="hinge";
  el("selection").textContent=a?
-   a.form+" | "+a.arms.length+" actual limb(s) | local load "+a.observed.load.toFixed(2):
+   ({bulk:"ciężki kadłub",reach:"dwa ramiona",lever:"jednostronne ramię"}[a.form]||a.form)+" | "+a.arms.length+" ramion | obciążenie "+a.observed.load.toFixed(2):
    m?(m.kind==="hinge"?"pinned hinge · "+m.driveSpeed.toFixed(2)+" rad/s":m.kind)+
    " | "+m.mass.toFixed(1)+" kg | material collider":
    "Click any actual collider.";
@@ -178,7 +178,7 @@ function replaceWorld(next){
  rebuildSelection=null;window.__Z1=field;render();
 }
 function activate(){
- el("pause").onclick=()=>{paused=!paused;el("pause").textContent=paused?"Resume":"Pause";
+ el("pause").onclick=()=>{paused=!paused;el("pause").textContent=paused?"Wznów":"Pauza";
    acc=0;last=performance.now();};
  el("step").onclick=()=>fail(()=>{if(!paused)throw Error("Pause before single-stepping");
    stepOne();render();});
@@ -281,7 +281,7 @@ function activate(){
  el("load").onclick=()=>fail(()=>{
    const data=JSON.parse(el("recipe").value),candidate=restore(data);
    const canonical=capture(candidate);replaceWorld(candidate);saved=canonical;
-   paused=true;el("pause").textContent="Resume";
+   paused=true;el("pause").textContent="Wznów";
    message("Validated & loaded. Paused for physical inspection; all contacts reset.");
  });
  canvas.addEventListener("contextmenu",event=>event.preventDefault());
@@ -414,20 +414,41 @@ async function start(){
    document.body.dataset.contactz1=JSON.stringify(contactOnlyWholeTest(CommonsWorld));
  }
  if(new URLSearchParams(location.search).has("ownercheck")){
-   const assert=(x,s)=>{if(!x)throw Error("Owner review "+s)};
-   const n=field.actors.length,k=field.matter.length,t=field.ticks;
-   assert(n>=4&&k>=7,"scene incomplete");
-   el("pause").click();assert(paused,"pause");
-   el("step").click();assert(field.ticks===t+1,"step");
-   el("reset").click();assert(field.ticks===0&&field.actors.length===n,"reset");
-   el("body-type").value="bulk";el("count").value="1";el("spawn").click();
-   assert(field.actors.length===n+1,"spawn");
-   selected=field.actors[0].id;field.select(selected);render();
+   const verify=(p,m)=>{if(!p)throw Error("Owner preview "+m)};
+   const count=field.actors.length,matter=field.matter.length,tick=field.ticks;
+   verify(count>=4&&matter>=7,"initial scene");
+   el("pause").click();verify(paused,"pause");
+   el("step").click();verify(field.ticks===tick+1,"step");
+   el("reset").click();verify(field.ticks===0&&field.actors.length===count,"reset");
+   el("body-type").value="bulk";
+   el("body-type").dispatchEvent(new Event("change",{bubbles:true}));
+   el("count").value="1";el("spawn").click();
+   verify(field.actors.length===count+1&&field.actors.at(-1).arms.length===0,"spawn preset");
+   const pointerSelect=actor=>{
+     const xy=project(actor.root.translation()),rect=canvas.getBoundingClientRect();
+     canvas.dispatchEvent(new PointerEvent("pointerdown",{button:0,bubbles:true,
+       clientX:rect.left+xy.x,clientY:rect.top+xy.y}));
+     verify(selected===actor.id,"canvas pointer selection");
+   };
+   const bulk=field.actors[0];pointerSelect(bulk);
+   document.activeElement?.blur?.();
+   const before=bulk.root.translation().x;
+   dispatchEvent(new KeyboardEvent("keydown",{code:"KeyD",bubbles:true}));
+   for(let i=0;i<46;i++)stepOne();
+   dispatchEvent(new KeyboardEvent("keyup",{code:"KeyD",bubbles:true}));
+   verify(bulk.root.translation().x-before>.05,"WASD real body movement");
+   const jointed=field.actors.find(a=>a.arms.length===2);
+   verify(jointed,"jointed specimen");
+   pointerSelect(jointed);render();
+   const oldClock=field.ticks,oldCount=field.actors.length;
    el("rebuild-arms").value="0";el("rebuild-actor").click();
-   assert(field.actor(selected).arms.length===0&&field.actors.length===n+1,"live body rebuild");
+   verify(field.actor(selected).arms.length===0&&field.ticks===oldClock&&field.actors.length===oldCount,
+     "physical 2-arm -> 0-arm edit without resetting world");
    el("capture").click();
-   assert(JSON.parse(el("recipe").value).format,"save world");
-   document.body.dataset.ownercheck=JSON.stringify({pass:true,pause:true,step:true,reset:true,spawn:true,rebuild:true,save:true});
+   verify(JSON.parse(el("recipe").value).format,"scene capture");
+   document.body.dataset.ownercheck=JSON.stringify({pass:true,pause:true,step:true,
+     reset:true,spawn:true,canvasPointer:true,keyboardDrive:true,
+     beforeArms:2,afterArms:0,preserveClock:true,save:true});
  }
  requestAnimationFrame(frame);
 }

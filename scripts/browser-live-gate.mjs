@@ -31,17 +31,3 @@ if(!rawOwner)throw Error("Owner review UI flow did not emit results");
 const owner=JSON.parse(rawOwner.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
 if(!owner.pass)throw Error("Owner review UI flow FAILED");
 console.log("OWNER REVIEW ACTUAL UI CHECK "+JSON.stringify(owner));
-
-const {readFileSync}=await import("node:fs");
-for(const [name,viewport,query] of [["first","1440,900",""],["edited","1440,900","?ownercheck=1"]]){
-  const path="/tmp/owner-review-"+name+".png";
-  execFileSync(chrome,["--headless=new","--no-sandbox","--disable-gpu",
-    "--disable-dev-shm-usage","--hide-scrollbars","--window-size="+viewport,
-    "--virtual-time-budget=4500","--screenshot="+path,url+query],
-    {timeout:95000,maxBuffer:6000000});
-  const encoded=readFileSync(path).toString("base64");
-  console.log("OWNER_FRAME_"+name+"_BEGIN");
-  for(let i=0;i<encoded.length;i+=1800)
-    console.log("OWNER_FRAME_"+name+"_CHUNK:"+encoded.slice(i,i+1800));
-  console.log("OWNER_FRAME_"+name+"_END");
-}
