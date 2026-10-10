@@ -43,8 +43,10 @@ export function testRelationalRivals(World){
    const held=run(World,{...common,hold:true,move:true});
    const unheld=run(World,{...common,hold:false,move:true});
    const idle=run(World,{...common,hold:true,move:false});
+   const unheldIdle=run(World,{...common,hold:false,move:false});
    const passive=run(World,{...common,power:false,hold:true,move:true});
-   return {deltaY,held,unheld,idle,passive,
+   return {deltaY,held,unheld,idle,unheldIdle,passive,
+     noGripActorActionX:+(unheld.targetX-unheldIdle.targetX).toFixed(4),
      gripIncrementX:+(held.targetX-unheld.targetX).toFixed(4),
      motionIncrementX:+(held.targetX-idle.targetX).toFixed(4)};
  });
@@ -53,9 +55,12 @@ export function testRelationalRivals(World){
    held:run(World,{...hingeCommon,hold:true,move:true}),
    unheld:run(World,{...hingeCommon,hold:false,move:true}),
    idle:run(World,{...hingeCommon,hold:true,move:false}),
+   unheldIdle:run(World,{...hingeCommon,hold:false,move:false}),
    passive:run(World,{...hingeCommon,power:false,hold:true,move:true})
  };
+ hinge.noGripActorAngle=+
+   (hinge.unheld.targetAngle-hinge.unheldIdle.targetAngle).toFixed(4);
  return {scope:"Exploratory Y1 follow-up: 3 predeclared offsets for body-3 free matter; body-2 bulk attempts anchored hinge. 360 physical setup ticks, world power OFF before 100 manual-action ticks. Manual input and idle/no-hold controls.",
    free,hinge,
-   limitation:"Only a physically enabled human-operated action, not autonomously chosen movement or Owner experience"};
+   limitation:"No-grip mechanical response isolates ordinary physical contact from powered adhesive hold. Actor input is operated by a researcher, not chosen by NPC."};
 }
