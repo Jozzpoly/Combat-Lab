@@ -450,6 +450,10 @@ async function start(){
    document.body.dataset.uiProbe=JSON.stringify(uiCheck());
 
  }
+ if(new URLSearchParams(location.search).has("holdprobe")){
+   const {holdMaterialProbe}=await import("./src/x0-hold-probe.js");
+   document.body.dataset.holdProbe=JSON.stringify(holdMaterialProbe(CommonsWorld));
+ }
  if(new URLSearchParams(location.search).has("pressure")){
    const {sharedMaterialPressure}=await import("./src/x0-field-pressure.js");
    document.body.dataset.pressure=JSON.stringify(sharedMaterialPressure(CommonsWorld));
