@@ -20,13 +20,23 @@ export function holdMaterialProbe(World){
       const a=w.addActor("reach",V(10,12),0,{arms,holdForce});
       w.select(a.id);
       const crate=w.addMatter(contactPosition,{mass,hx:.23,hy:.22,created:false});
+      const systemBodies=[a.root,...a.arms.map(part=>part.body),crate.body];
+      const centerOfMass=()=>{
+        let mass=0,x=0,y=0;
+        for(const part of systemBodies){
+          const m=part.mass(),p=part.translation();
+          mass+=m;x+=m*p.x;y+=m*p.y;
+        }
+        return V(x/mass,y/mass);
+      };
+      const centerBefore=centerOfMass();
       const initial=V(crate.body.translation().x,crate.body.translation().y);
       const acquired=hold ? w.beginHold(initial):false;
       const mount=w.hold?.actorPart||null;
       let errors=0;
       for(let i=0;i<105;i++){
         w.step({manual:{move:drive?V(-1,0):V(),aim:null}});
-        for(const b of [crate.body,a.root]){
+        for(const b of systemBodies){
           const p=b.translation();
           if(!Number.isFinite(p.x+p.y+b.rotation()))errors++;
         }
@@ -37,6 +47,7 @@ export function holdMaterialProbe(World){
         crateDistance:+near(end,initial).toFixed(4),
         rootX:+(root.x-10).toFixed(4),
         holdImpulse:+w.holdImpulse.toFixed(3),
+        centerDrift:+near(centerOfMass(),centerBefore).toFixed(4),
         nonfinite:errors};
       w.endHold();
       return result;
