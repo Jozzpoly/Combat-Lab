@@ -52,6 +52,12 @@ if(!materialPower)throw Error("X0 material energy pair not produced");
 console.log("X0 ACTIVE-MATTER WHOLE COUNTERFACTUAL: "+
   JSON.stringify(JSON.parse(materialPower.replaceAll("&quot;",'"').replaceAll("&amp;","&"))));
 
+const articulated=visit(url+(url.includes("?")?"&":"?")+"sweep=1",18000);
+const armResult=articulated.get("sweep");
+if(!armResult)throw Error("Self-actuated arm counterfactual did not emit evidence");
+console.log("X0 PHYSICAL ARM-ACTION DIFFERENTIAL: "+
+  JSON.stringify(JSON.parse(armResult.replaceAll("&quot;",'"').replaceAll("&amp;","&"))));
+
 const reconfigured=visit(url+(url.includes("?")?"&":"?")+"rerig=1",22000);
 const rr=reconfigured.get("rerig");
 if(!rr)throw Error("X0 live body rebuild test did not emit evidence");
