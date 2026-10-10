@@ -68,7 +68,13 @@ for(const batch of ["C","D"]){
     !result.pressure.first)
    throw Error("E1 does not causally distinguish pressure steering");
   if(result.edit.initialMismatch||!result.edit.firstChangedDecision)
-   throw Error("E1 local cue physical intervention did not change later decisions");
+   throw Error("E1 physical cue intervention did not change later decisions");
+  if(result.signalOnly.prefixDifference||
+    !result.signalOnly.firstSignalCommandDifference||
+    result.signalOnly.firstSignalCommandDifference.preStepBodyDisparity>1e-5||
+    result.signalOnly.firstSignalCommandDifference.tick<=160)
+   throw Error("E1 local signal did not causally change action after sensing");
+
  }else if(result.stress.actors!==30||result.stress.nonfinite!==0)
   throw Error("E1 dense mixed-body world numerically unstable or incomplete");
  console.log("E1 SOURCE CAUSAL "+JSON.stringify(result));
