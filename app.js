@@ -451,6 +451,15 @@ async function start(){
      const hLoad=field.addMatter(hTip,{mass:18,hx:.23,hy:.22});
      pointer("pointerdown",hTip,{button:2});
      verify(field.hold?.objectId===hLoad.id,"RMB contact acquisition failed");
+     const uiHoldStart=V(hLoad.body.translation().x,hLoad.body.translation().y);
+     dispatchEvent(new KeyboardEvent("keydown",{code:"KeyA",bubbles:true}));
+     for(let i=0;i<55;i++)el("step").click();
+     dispatchEvent(new KeyboardEvent("keyup",{code:"KeyA",bubbles:true}));
+     const uiHoldEnd=hLoad.body.translation();
+     verify(norm(V(uiHoldEnd.x-uiHoldStart.x,uiHoldEnd.y-uiHoldStart.y))>.15,
+       "real keyboard motor did not move body-held material");
+     verify(field.hold?.objectId===hLoad.id,
+       "operator real-time aim/motor immediately lost light material connection");
      pointer("pointerdown",hTip,{button:2});
      verify(!field.hold,"RMB material release failed");
      return {pause:true,directMotorTravel:+moved.toFixed(3),
