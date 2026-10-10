@@ -25,6 +25,7 @@ const FORMS={
   bulk:{mass:260,hx:1.05,hy:.84,motor:1050,turn:510,speed:1.7,
     torque:0,armLength:0,arms:0,reach:0,brace:2200}
 };
+export const BODY_PRESETS=Object.freeze(FORMS);
 export class CommonsWorld{
   constructor({empty=false,solverIterations=12}={}){
     if(!Number.isInteger(solverIterations)||solverIterations<4||solverIterations>40)
@@ -58,10 +59,12 @@ export class CommonsWorld{
     if(!FORMS[form])throw RangeError("Unknown initial reference shape");
     const base=FORMS[form],id="actor-"+(++this.next);
     const spec={...base,...specOverrides};
-    for(const key of ["mass","motor","speed","armLength","torque","brace"])
+    for(const key of ["mass","motor","speed","armLength","torque","brace","hx","hy","arms"])
       if(spec[key]!==undefined)safe(spec[key],key);
     if(spec.mass<=0||spec.motor<0||spec.speed<0||spec.torque<0||
-      spec.brace<0||(spec.arms>0&&spec.armLength<.8))
+      spec.brace<0||spec.hx<=.10||spec.hy<=.10||
+      !Number.isInteger(spec.arms)||spec.arms<0||spec.arms>2||
+      (spec.arms>0&&spec.armLength<.8))
       throw RangeError("Invalid body force/geometry");
     const root=this.newBody(pos.x,pos.y,angle);
     const a={id,form,spec,root,parts:[],arms:[],target:[.82,.82],
