@@ -229,7 +229,9 @@ function activate(){
    const edit={
      hx:safe(Number(el("rebuild-hx").value),"hull half-length"),
      hy:safe(Number(el("rebuild-hy").value),"hull half-width"),
-     arms:safe(Number(el("rebuild-arms").value),"arm count"),
+     arms:(()=>{const value=el("rebuild-arms").value;
+       if(!["0","1","2"].includes(value))throw RangeError("Invalid arm selection");
+       return safe(Number(value),"arm count");})(),
      armLength:safe(Number(el("rebuild-length").value),"arm length")
    };
    const result=field.rebuildActor(selected,edit);
