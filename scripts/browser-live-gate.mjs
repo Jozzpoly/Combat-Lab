@@ -52,6 +52,15 @@ if(!materialPower)throw Error("X0 material energy pair not produced");
 console.log("X0 ACTIVE-MATTER WHOLE COUNTERFACTUAL: "+
   JSON.stringify(JSON.parse(materialPower.replaceAll("&quot;",'"').replaceAll("&amp;","&"))));
 
+const reconfigured=visit(url+(url.includes("?")?"&":"?")+"rerig=1",22000);
+const rr=reconfigured.get("rerig");
+if(!rr)throw Error("X0 live body rebuild test did not emit evidence");
+const changed=JSON.parse(rr.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+if(!changed.continuity?.otherWorldPreserved ||
+   !changed.ability?.rerigged?.acquired)
+  throw Error("Live body morphology didn't preserve world or change physical action");
+console.log("X0 LIVE-BODY RECONFIGURATION: "+JSON.stringify(changed));
+
 const relay=visit(url+(url.includes("?")?"&":"?")+"cascade=1",11000);
 const chain=relay.get("cascade");
 if(!chain)throw Error("Second actor opportunity counterfactual not executed");
