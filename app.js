@@ -452,7 +452,7 @@ async function start(){
      verify(field.matter.some(m=>m.form==="beam"),
        "free beam shape identity lost on portable scene reload");
      const g=field.matter.find(x=>x.kind==="hinge"),angle=g.body.rotation();
-     verify(g.driveSpeed===1.1&&g.driveTorque===900,
+     verify(g.driveSpeed===-1.1&&g.driveTorque===900,
        "initial powered hinge properties lost on scene restore");
      const initialAngle=g.body.rotation();
      const hingeCenter=g.body.translation();
