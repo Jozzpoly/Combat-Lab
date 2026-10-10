@@ -45,9 +45,7 @@ function render(){
  ctx.lineWidth=.018;ctx.strokeStyle="#25404c";
  for(let x=0;x<=42;x+=2){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,26);ctx.stroke();}
  for(let y=0;y<=26;y+=2){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(42,y);ctx.stroke();}
- ctx.fillStyle="#203c47";ctx.fillRect(5,4,7,4);
- ctx.fillStyle="#20323e";ctx.fillRect(29,16,8,5);
- ctx.fillStyle="#1b343f";ctx.fillRect(18,4,8,5);
+ // The grid is the only nonphysical background; every solid belongs to Rapier.
  for(const w of field.walls)rectangle(w.body,w.hx,w.hy,"#586978");
  for(const m of field.matter){
    const selectedItem=selected===m.id;
@@ -412,6 +410,10 @@ async function start(){
  message("Z1 is contact-only; finite body forces interact with true free, hinged and sliding material.");
  el("health").textContent="PHYSICS LIVE · Owner quality unverified";
  document.body.dataset.live="yes";
+ if(new URLSearchParams(location.search).has("stabilityz1")){
+   const {exploreContactNeighborhood}=await import("./src/z1-neighborhood.js");
+   document.body.dataset.stabilityz1=JSON.stringify(exploreContactNeighborhood(CommonsWorld));
+ }
  if(new URLSearchParams(location.search).has("contactz1")){
    const {contactOnlyWholeTest}=await import("./src/z1-contact-probe.js");
    document.body.dataset.contactz1=JSON.stringify(contactOnlyWholeTest(CommonsWorld));

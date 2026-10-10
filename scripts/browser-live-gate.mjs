@@ -15,3 +15,8 @@ const raw=read(url+(url.includes("?")?"&":"?")+"contactz1=1",23000)("contactz1")
 if(!raw)throw Error("Z1 contact-only observation missing");
 const result=JSON.parse(raw.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
 console.log("Z1 CONTACT-ONLY WHOLE TEST "+JSON.stringify(result));
+
+const neighborhoodRaw=read(url+(url.includes("?")?"&":"?")+"stabilityz1=1",26000)("stabilityz1");
+if(!neighborhoodRaw)throw Error("Z1 cross-position counterfactual not emitted");
+const neighborhood=JSON.parse(neighborhoodRaw.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+console.log("Z1 ROBUST CONTACT NEIGHBORHOOD "+JSON.stringify(neighborhood));
