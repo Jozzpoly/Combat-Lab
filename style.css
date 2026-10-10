@@ -17,7 +17,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .work{min-width:0;border:1px solid #304955;border-radius:11px;overflow:hidden;background:#10232d}
 .legend{display:flex;gap:15px;flex-wrap:wrap;font-size:11px;color:#b9cbd4;padding:9px 12px;background:#142631}
 .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
-.green{background:#9fe3be}.amber{background:#e8c58a}.lavender{background:#aab8ef}.gray{background:#aab5bb}
+.green{background:#9fe3be}.amber{background:#e8c58a}.lavender{background:#aab8ef}.gray{background:#aab5bb}.drive{background:#68f1d2}
 canvas{display:block;width:100%;height:clamp(520px,75vh,900px);touch-action:none;cursor:crosshair}
 .toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;background:#142631;border-top:1px solid #2b4551;padding:9px 12px;font:11px ui-monospace,monospace;color:#acc4d0}
 #state{color:#f1d996}
