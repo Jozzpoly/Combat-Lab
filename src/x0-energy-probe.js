@@ -40,10 +40,48 @@ function trial(World,powered){
       matter:w.matter.map(m=>({kind:m.kind,position:m.body.translation()}))};
   }finally{w.dispose();}
 }
+function obstructionTrial(World,blocked){
+  const w=new World({empty:true});
+  try{
+    const pivot=w.addHinge(V(10,10),{length:3.5,mass:64,angle:0,
+      driveSpeed:1.25,driveTorque:320,created:false});
+    const wall=blocked?w.addWall(V(12.35,10.75),{hx:.45,hy:.32,created:false}):null;
+    let activeHingeWallContacts=0,totalContactImpulse=0,maxJointDrift=0;
+    let totalTravel=0,prevAngle=pivot.body.rotation(),maxDriveImpulse=0;
+    for(let i=0;i<240;i++){
+      w.step();
+      const angle=pivot.body.rotation();
+      totalTravel+=Math.atan2(Math.sin(angle-prevAngle),Math.cos(angle-prevAngle));
+      prevAngle=angle;
+      maxDriveImpulse=Math.max(maxDriveImpulse,pivot.lastDriveImpulse);
+      const p=pivot.body.translation();
+      maxJointDrift=Math.max(maxJointDrift,
+        difference(p,V(pivot.x+Math.cos(angle)*pivot.length/2,
+          pivot.y+Math.sin(angle)*pivot.length/2)));
+      if(wall)w.world.contactPair(pivot.collider,wall.collider,manifold=>{
+        let impulse=0;
+        for(let k=0;k<manifold.numSolverContacts();k++)
+          impulse+=Math.abs(manifold.contactImpulse(k));
+        if(impulse>0){activeHingeWallContacts++;totalContactImpulse+=impulse;}
+      });
+    }
+    return {blocked,
+      angularTravel:+totalTravel.toFixed(4),
+      contactSteps:activeHingeWallContacts,
+      contactImpulse:+totalContactImpulse.toFixed(3),
+      maxDriveImpulse:+maxDriveImpulse.toFixed(4),
+      jointDrift:+maxJointDrift.toFixed(5)};
+  }finally{w.dispose();}
+}
 export function activeMaterialCommonsPressure(World){
   const on=trial(World,true),off=trial(World,false);
   const diffs={actors:on.actors.map((a,i)=>difference(a.position,off.actors[i].position)),
     matter:on.matter.map((m,i)=>difference(m.position,off.matter[i].position))};
+  const freeHinge=obstructionTrial(World,false),blockedHinge=obstructionTrial(World,true);
+  if(blockedHinge.maxDriveImpulse>320/60+.001)
+    throw Error("Drive overrode finite authored force cap");
+  if(freeHinge.jointDrift>.1||blockedHinge.jointDrift>.1)
+    throw Error("Physical hinge anchor broken under contact stress");
   if(off.driveTicks!==0||on.driveTicks<1)throw Error("Material power origin incorrectly attributed");
   if(off.peakSpeed>1e-4)throw Error("Unpowered hinge spun without input in this zero-energy start");
   if(on.peakSpeed<=.05)throw Error("Finite powered hinge did not move against inertial load");
@@ -53,6 +91,7 @@ export function activeMaterialCommonsPressure(World){
     off:{...off,actors:undefined,matter:undefined},
     maxActorContrast:+Math.max(...diffs.actors).toFixed(4),
     maxMatterContrast:+Math.max(...diffs.matter).toFixed(4),
+    freeHinge,blockedHinge,
     actorContrasts:diffs.actors.map(x=>+x.toFixed(4)),
     matterContrasts:diffs.matter.map(x=>+x.toFixed(4))};
 }
