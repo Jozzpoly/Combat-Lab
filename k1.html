@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Combat Lab · K1 kinetic shelter scout</title>
+<link rel="stylesheet" href="./k1.css"></head><body>
+<main>
+<header><div><small>COMBAT LAB · IZOlOWANY EKSPERYMENT K1</small><h1>Materia przechwytuje uderzenia</h1><p>Fizyczne pociski i osłony. To badanie, nie nowa wersja gry ani dowód przewagi anatomii.</p></div>
+<div class="actions"><button id="pause">Pauza</button><button id="step">1 krok</button><button id="reset">Reset</button></div></header>
+<section class="tools">
+<button id="shoot" class="chosen">Strzał: przeciągnij</button>
+<button id="add-hinged">Dodaj osłonę na zawiasie</button>
+<button id="add-rigid">Dodaj sztywną osłonę</button>
+<button id="add-bare">Dodaj korpus</button>
+<button id="add-load">Dodaj bryłę</button>
+<button id="add-witness">Dodaj cel materialny</button>
+<button id="release">Zakończ dodawanie</button>
+</section>
+<section class="playfield"><canvas id="world" aria-label="Prawdziwy Rapier2D: scena K1"></canvas></section>
+<footer>
+<div><strong>Sterowanie:</strong> myszą przeciągnij pocisk · kliknij organizm, aby nim sterować · WASD ruch · Q/E obrót zawiasu · na pauzie Ctrl+przeciągnij ciało · scroll przybliżanie · środkowy przycisk przesuwanie</div>
+<div id="status">Inicjalizacja fizyki…</div><div id="trace"></div>
+<div><strong>Granica:</strong> ruch korpusu to skończony napęd proxy; brak stóp, AI, obrażeń, ukrytych flag ochrony i Owner PASS.</div>
+</footer>
+</main><script type="module" src="./k1-app.js"></script></body></html>
