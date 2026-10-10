@@ -15,3 +15,17 @@ const r=read(url+(url.includes("?")?"&":"?")+"relational=1",15000).get("relation
 if(!r)throw Error("Y1 physical observation not emitted");
 const x=JSON.parse(r.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
 console.log("Y1 WHOLE-COMPOSITION OBSERVATION "+JSON.stringify(x));
+
+const {readFileSync}=await import("node:fs");
+for(const [name,suffix] of [["start",""],["t180","?vis180=1"]]){
+ const dest="/tmp/y1-"+name+".png";
+ execFileSync(chrome,["--headless=new","--no-sandbox","--disable-gpu",
+   "--disable-dev-shm-usage","--hide-scrollbars","--window-size=1440,900",
+   "--virtual-time-budget=4500","--screenshot="+dest,url+suffix],
+   {timeout:95000,maxBuffer:3*1024*1024});
+ const encoded=readFileSync(dest).toString("base64");
+ console.log("Y1_SCREEN_"+name+"_BEGIN");
+ for(let i=0;i<encoded.length;i+=1500)
+   console.log("Y1_SCREEN_"+name+"_CHUNK:"+encoded.slice(i,i+1500));
+ console.log("Y1_SCREEN_"+name+"_END");
+}

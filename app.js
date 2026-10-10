@@ -171,6 +171,11 @@ function frame(t){
    if(n>=4)acc=Math.min(acc,DT*2);
  }
  render();
+ if(new URLSearchParams(location.search).has("vis180")){
+   field.select(null);selected=null;
+   for(let tick=0;tick<180;tick++)field.step();
+   paused=true;render();
+ }
  requestAnimationFrame(frame);
 }
 function replaceWorld(next){
