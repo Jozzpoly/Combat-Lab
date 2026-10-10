@@ -1,65 +1,11 @@
-# Combat Lab
+# Combat Lab — K1 posture/contact discriminator
 
-Combat Lab is a research laboratory for discovering embodied combat, movement and world-interaction possibilities.
+**Independent replaceable experiment; NO Owner qualification, no approved world architecture, no merge, no public rehearsal.**
 
-## Current state — neutral main, independently evolving research
+Question: with the physically validated but simplified Z1 contact solver, can an actual articulated body's *chosen configuration* change the result of a second body's attempted passage or access to material — beyond an equivalent large rigid envelope? No grip, no powered material, no scripted chase or NPC goal.
 
-`main` contains a neutral smoke surface, repository/deployment infrastructure and canonical research documentation. It is **not** an accepted combat, crowd, movement or organism implementation.
+The physical scene uses a narrow walled shared corridor with a two-arm defender, a moving-body challenger that **must be manually commanded**, and a free load beyond them. All 2D top-down bracing still depends on externally authored friction/traction proxies. Source mechanics are borrowed from Z1 with one isolated change allowing a quiet, unpiloted body's explicit limb targets to hold their positions. The browser workbench retains actual physical editing; no outcome is scripted. Automated counterfactuals compare two joint targets with a long rigid hull alternative at five predeclared lateral offsets and an idle challenger.
 
-For the current selected research question and its evidence boundary, enter [docs/RESEARCH_STATE.md](docs/RESEARCH_STATE.md). For *what is being built or published now*, also verify live experiment branches, their exact CI results and the separate `rehearsal/current` pointer. A static README must not duplicate or override that changing operational state.
+Success means a **mechanically distinguishable new operator-selectable limb configuration** survives fair controls, not merely a bigger collider, a complex animation or dramatic displacement. If rigid hulls match/exceed it, explicitly record the negative and resist premature body topology commitments.
 
-The previous implementation line is absent from the active tree. Its Git history remains reachable only for deliberate forensic recovery.
-
-## What survives the failure
-
-The project keeps:
-
-- Owner evidence and corrections;
-- observed phenomena;
-- falsifiers and causal findings;
-- provenance;
-- protocol lessons;
-- the ability to recover old commits when a concrete future question needs them.
-
-It does **not** grant automatic authority to:
-
-- old branch ancestry;
-- green mechanism tests;
-- previous "foundation" labels;
-- the last canonical `NEXT`;
-- code merely because it already exists.
-
-## Current operating model
-
-The repaired experiment protocol distinguishes:
-
-- **discovery** — find valuable whole phenomena first;
-- **diagnosis / attribution** — explain a phenomenon without letting the diagnostic fixture own the roadmap;
-- **serious construction** — build a coherent qualitative step when evidence or Owner direction calls for one;
-- **Lab infrastructure** — neutral capabilities that expand experimentation without encoding the answer.
-
-A diagnostic PASS is a finding, not an automatic parent implementation.
-
-A local improvement against the previous branch version is not enough; relevant progress must be judged against the actual Owner baseline and project goal.
-
-## Repository contract
-
-- `main` is the neutral current Lab state and durable research truth.
-- `rehearsal/current` is an exact deployment pointer only.
-- `archive/forensic-pre-cleanroom-2026-10-06` is forensic reachability only.
-- CI may prove runtime/mechanical/repository facts but may not assert research-roadmap semantics.
-- Public rehearsal occurs only from an explicitly selected exact source.
-
-Repository administration is the agent's responsibility. The Owner should not need to manage branches, SHAs, CI or deployment in normal work.
-
-## Current authority
-
-Read:
-
-1. `docs/RESEARCH_STATE.md`
-2. `docs/EXPERIMENT_PROTOCOL.md`
-3. `docs/FAILURE_SCAR_2026-10-06.md`
-
-The protocol is explicitly provisional and may be changed when evidence shows a better way to run the Lab.
-
-> **Discover valuable phenomena first; diagnose them when needed; build serious wholes from knowledge rather than from the accidental ancestry of diagnostic fixtures.**
+Latest project truth: [RESEARCH_STATE](https://github.com/Jozzpoly/Combat-Lab/blob/main/docs/RESEARCH_STATE.md).
