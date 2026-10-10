@@ -138,9 +138,9 @@ canvas.addEventListener("contextmenu",e=>e.preventDefault());
 canvas.addEventListener("wheel",e=>{e.preventDefault();camera.zoom=Math.max(.36,Math.min(4.5,camera.zoom*Math.exp(-e.deltaY*.0012)));draw();},{passive:false});
 canvas.addEventListener("pointerdown",e=>{
  const p=worldPoint(e);pointer=p;
- if(e.button===1){drag={kind:"pan",clientX:e.clientX,clientY:e.clientY};canvas.setPointerCapture(e.pointerId);return;}
+ if(e.button===1){drag={kind:"pan",clientX:e.clientX,clientY:e.clientY};(e.isTrusted&&canvas.setPointerCapture(e.pointerId));return;}
  if(e.button!==0)return;
- if(mode==="poke"){drag={kind:"poke",origin:p,current:p};canvas.setPointerCapture(e.pointerId);return;}
+ if(mode==="poke"){drag={kind:"poke",origin:p,current:p};(e.isTrusted&&canvas.setPointerCapture(e.pointerId));return;}
  if(mode.startsWith("add-")){
   if(mode==="add-matter")field.addFree(p.x,p.y,.53,.47,55);
   else{let a=field.addActor(mode.slice(4),p);field.select(a.id);}
@@ -150,7 +150,7 @@ canvas.addEventListener("pointerdown",e=>{
  if(found?.kind==="actor")field.select(found.id);
  if(paused&&e.ctrlKey&&found){
   drag={kind:"move",found,origin:p};
-  canvas.setPointerCapture(e.pointerId);
+  (e.isTrusted&&canvas.setPointerCapture(e.pointerId));
  }
  draw();
 });
@@ -220,4 +220,60 @@ if(new URLSearchParams(location.search).has("fairm0")){
   const {fairM0}=await import("./src/m0-fair-pressure.js");
   document.body.dataset.m0Fair=JSON.stringify(fairM0());
  }catch(error){document.body.dataset.liveError=String(error.stack||error);}
+}
+
+if(new URLSearchParams(location.search).has("ownercheck")){
+ try{
+  const check=(x,why)=>{if(!x)throw Error("M0 actual UI "+why);};
+  const toClient=p=>{
+   const d=resize();
+   return {clientX:d.r.left+(d.w/2+(p.x-camera.x)*d.scale)*d.r.width/d.w,
+     clientY:d.r.top+(d.h/2+(p.y-camera.y)*d.scale)*d.r.height/d.h};
+  };
+  $("pause").click();check(paused,"pause");
+  const beforeTick=field.ticks;$("step").click();
+  check(field.ticks===beforeTick+1,"one real solver step");
+  // Actual pointer-select on a real collider, not direct field.select.
+  const candidate=field.actors.find(a=>a.kind==="rigid");
+  const p0=candidate.root.translation();
+  canvas.dispatchEvent(new PointerEvent("pointerdown",{
+   ...toClient(p0),button:0,bubbles:true,pointerId:110}));
+  check(field.selected===candidate.id,"collider pointer selection");
+  window.dispatchEvent(new KeyboardEvent("keydown",{code:"KeyD",bubbles:true}));
+  for(let k=0;k<48;k++)field.step(controls());
+  window.dispatchEvent(new KeyboardEvent("keyup",{code:"KeyD",bubbles:true}));
+  check(candidate.root.translation().x-p0.x>.10,"keyboard motor physically moves selected collider");
+  const count=field.actors.length;
+  $("add-compliant").click();
+  canvas.dispatchEvent(new PointerEvent("pointerdown",{
+   ...toClient(V(38,20)),button:0,bubbles:true,pointerId:111}));
+  check(field.actors.length===count+1&&field.selectedActor.kind==="compliant","new actual spring construction");
+  const add=field.selectedActor,initial=add.root.translation();
+  canvas.dispatchEvent(new PointerEvent("pointerdown",{
+   ...toClient(initial),button:0,bubbles:true,pointerId:112,ctrlKey:true}));
+  canvas.dispatchEvent(new PointerEvent("pointermove",{
+   ...toClient(V(initial.x-1.2,initial.y-.7)),button:0,bubbles:true,pointerId:112,ctrlKey:true}));
+  canvas.dispatchEvent(new PointerEvent("pointerup",{
+   ...toClient(V(initial.x-1.2,initial.y-.7)),button:0,bubbles:true,pointerId:112}));
+  check(Math.abs(add.root.translation().x-initial.x)>1,"paused whole-body physical pose edit");
+  const center=add.root.translation();
+  $("impulse").value="400";
+  $("poke").click();
+  canvas.dispatchEvent(new PointerEvent("pointerdown",{
+   ...toClient(center),button:0,bubbles:true,pointerId:113}));
+  canvas.dispatchEvent(new PointerEvent("pointermove",{
+   ...toClient(V(center.x+1.1,center.y+.2)),button:0,bubbles:true,pointerId:113}));
+  canvas.dispatchEvent(new PointerEvent("pointerup",{
+   ...toClient(V(center.x+1.1,center.y+.2)),button:0,bubbles:true,pointerId:113}));
+  check(field.externalImpulse>350,"real canvas-directed external impulse");
+  $("reflex").click();check(!field.reflex,"reflex off switch");
+  $("reset").click();check(field.actors.length===8&&field.ticks===0,"reset");
+  document.body.dataset.m0Ownercheck=JSON.stringify({pass:true,
+   realStep:true,realPointerSelection:true,keyboardFiniteMotor:true,
+   physicalMorphologySpawn:true,pausedPose:true,externalPointImpulse:true,
+   reflexToggle:true,reset:true,notOwnerFeel:true});
+ }catch(error){
+  document.body.dataset.liveError=String(error.stack||error);
+  $("run-status").textContent="UI TEST FAILED";console.error(error);
+ }
 }
