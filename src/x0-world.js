@@ -36,7 +36,7 @@ export class CommonsWorld{
     this.actors=[];this.matter=[];this.walls=[];
     this.colliderOwner=new Map();this.created=[];
     this.next=0;this.ticks=0;this.selected=null;
-    this.hold=null;this.holdEvents=0;this.holdImpulse=0;
+    this.hold=null;this.holdEvents=0;this.holdBreaks=0;this.holdImpulse=0;
     this.counts={contacts:0,load:0,reflex:0,braces:0};
     this.lastSource="none";
     if(!empty)this.defaultScene();
@@ -329,6 +329,11 @@ export class CommonsWorld{
     const h=this.hold,actor=this.actor(h.actorId);
     if(!actor||actor.spec.holdForce<=0){this.endHold();return;}
     const {actor:p,object:q}=this.holdPoints();
+    // Body-attached short contact hold, never an indefinitely stretching tether.
+    // Losing material proximity releases the force rather than remote towing.
+    if(norm(V(p.x-q.x,p.y-q.y))>.72){
+      this.holdBreaks++;this.endHold();return;
+    }
     const atVelocity=(body,at)=>{
       const v=body.linvel(),o=body.translation(),a=body.angvel();
       return V(v.x-a*(at.y-o.y),v.y+a*(at.x-o.x));
@@ -420,7 +425,8 @@ export class CommonsWorld{
     return {ticks:this.ticks,actors:this.actors.length,matter:this.matter.length,
       contacts:this.counts.contacts,reflexEvents:this.counts.reflex,
       braceEvents:this.counts.braces,selected:this.selected,
-      holding:this.hold?.objectId||null,holdEvents:this.holdEvents};
+      holding:this.hold?.objectId||null,holdEvents:this.holdEvents,
+      holdBreaks:this.holdBreaks};
   }
   dispose(){this.endHold();this.world.free();}
 }
