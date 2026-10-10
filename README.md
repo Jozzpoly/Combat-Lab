@@ -6,7 +6,7 @@ Combat Lab is a research laboratory for discovering embodied combat, movement an
 
 `main` contains a neutral smoke surface, repository/deployment infrastructure and canonical research documentation. It is **not** an accepted combat, crowd, movement or organism implementation.
 
-For the current selected research question and its evidence boundary, enter [docs/RESEARCH_STATE.md](docs/RESEARCH_STATE.md). For *what is being built or published now*, also verify live experiment branches, their exact CI results and the separate `rehearsal/current` pointer. A static README must not duplicate or override that changing operational state.
+Start with [the current Research State](docs/RESEARCH_STATE.md) and [the compact agent run cursor](docs/AGENT_RUN_CURSOR.md). [The 2026-10-11 E1/B1 campaign consolidation](docs/COMBAT_LAB_CAMPAIGN_CONSOLIDATION_2026-10-11.md) preserves source-level results, counterexamples, Owner constraints and the cross-chat frontier. The 23 older overlays are [preserved separately](docs/history/RESEARCH_STATE_OVERLAYS_THROUGH_2026-10-10.md) rather than stacked ahead of live truth. For *what is being built or published now*, verify live experiment branches, their exact CI results and the separate `rehearsal/current` pointer. A static README cannot override changing source or Owner evidence.
 
 The previous implementation line is absent from the active tree. Its Git history remains reachable only for deliberate forensic recovery.
 
