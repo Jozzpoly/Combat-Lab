@@ -527,6 +527,11 @@ async function start(){
    document.body.dataset.uiProbe=JSON.stringify(uiCheck());
 
  }
+ if(new URLSearchParams(location.search).has("viewafter")){
+   field.select(null);selected=null;
+   for(let k=0;k<360;k++)field.step();
+   paused=true;render();
+ }
  if(new URLSearchParams(location.search).has("energy")){
    const {activeMaterialCommonsPressure}=await import("./src/x0-energy-probe.js");
    document.body.dataset.energy=JSON.stringify(activeMaterialCommonsPressure(CommonsWorld));
