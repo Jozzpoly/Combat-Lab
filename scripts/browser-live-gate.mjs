@@ -20,3 +20,8 @@ const stageTwo=read(url+(url.includes("?")?"&":"?")+"secondaction=1",27000).get(
 if(!stageTwo)throw Error("Y1 second-actor action follow-up not emitted");
 const parsed=JSON.parse(stageTwo.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
 console.log("Y1 FOLLOW-UP SECOND-ACTOR ACTION "+JSON.stringify(parsed));
+
+const rivalRaw=read(url+(url.includes("?")?"&":"?")+"rivals=1",35000).get("rivals");
+if(!rivalRaw)throw Error("Y1 rival physical actions did not execute");
+const rivals=JSON.parse(rivalRaw.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+console.log("Y1 RIVAL MATERIAL ACTIONS "+JSON.stringify(rivals));
