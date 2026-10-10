@@ -1,71 +1,45 @@
-:root {
-  color-scheme: dark;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  min-height: 100vh;
-  background: #0d0f12;
-  color: #f2f4f8;
-}
-button {
-  font: inherit;
-  color: inherit;
-  background: #191d23;
-  border: 1px solid #303640;
-  border-radius: 8px;
-  padding: 8px 12px;
-  cursor: pointer;
-}
-button:hover { background: #222831; }
-.shell {
-  width: min(1180px, calc(100vw - 32px));
-  margin: 24px auto;
-  display: grid;
-  gap: 14px;
-}
-header, footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-}
-header h1 { margin: 2px 0 0; font-size: clamp(24px, 4vw, 42px); }
-.eyebrow {
-  margin: 0;
-  color: #8e98a8;
-  text-transform: uppercase;
-  letter-spacing: .12em;
-  font-size: 12px;
-}
-.purpose { margin: 7px 0 0; color: #aeb7c4; }
-.controls, .status { display: flex; gap: 8px; flex-wrap: wrap; }
-.viewport {
-  min-height: 620px;
-  border: 1px solid #2a3039;
-  border-radius: 14px;
-  overflow: hidden;
-  background: #12161b;
-}
-canvas {
-  width: 100%;
-  height: 70vh;
-  min-height: 620px;
-  display: block;
-  touch-action: none;
-}
-footer {
-  color: #9ca6b4;
-  font-size: 13px;
-}
-footer strong { color: #e7ebf0; margin-right: 8px; }
-.status span {
-  padding: 5px 8px;
-  border: 1px solid #2b3139;
-  border-radius: 999px;
-}
-@media (max-width: 760px) {
-  header, footer { align-items: flex-start; flex-direction: column; }
-  .viewport, canvas { min-height: 520px; }
-}
+:root{color-scheme:dark;font-family:system-ui,sans-serif;background:#101722;color:#e6ecf4}
+*{box-sizing:border-box}body{margin:0}.layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;min-height:100vh}
+.play{position:sticky;top:0;height:100vh;min-height:560px;display:flex;flex-direction:column;background:#172330}
+.topline{padding:12px 16px;display:flex;justify-content:space-between;gap:16px;font-size:13px;border-bottom:1px solid #40505c}
+.topline strong{letter-spacing:.13em;color:#f0d8aa}.topline span{font-variant-numeric:tabular-nums;color:#b5c9d6}
+canvas{touch-action:none;width:100%;flex:1;display:block;min-height:0;cursor:crosshair}
+.controlstrip{font-size:12px;padding:10px 15px;line-height:1.4;color:#b2c1d2;border-top:1px solid #40505c}
+.lab{padding:20px;overflow:auto;max-height:100vh;background:#141d29}h1{font-size:21px;line-height:1.2;margin:7px 0}h2{font-size:15px;margin:0 0 10px}p{font-size:13px;line-height:1.5;margin:8px 0}
+header small{letter-spacing:.12em;color:#e4b978;font-size:11px}section{padding:18px 0;border-bottom:1px solid #344150}.buttons{display:flex;flex-wrap:wrap;gap:6px;margin:7px 0 12px}
+button,select,input[type=number]{background:#283544;color:#f1f3f8;border:1px solid #526474;border-radius:6px;padding:8px;font:inherit;font-size:12px}
+button{cursor:pointer}button:hover{background:#3b5365}button:disabled{opacity:.45;cursor:default}
+button.active{border-color:#f2cc7f;color:#f2cc7f}label{display:block;font-size:13px;color:#ccd5df;margin:9px 0}
+label input[type=number],label select{display:block;width:100%;margin-top:4px}.dim{color:#9cabb8;font-size:12px}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#101923;padding:10px;border-radius:6px;border:1px solid #344150;font-size:12px;line-height:1.55}
+#evidence{color:#b7d9ce;font-size:12px;line-height:1.4}
+@media(max-width:800px){.layout{display:block}.play{height:65vh;min-height:350px;position:relative}.lab{max-height:none;padding:14px}.controlstrip{font-size:11px}}
+
+/* Situation selection belongs with the WORLD, not buried in an endless form. */
+.situation-strip{padding:10px 16px 12px;background:#1c2b37;border-bottom:1px solid #435260;flex-shrink:0}
+.situation-heading{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:9px;font-size:11px;color:#bfcddd}
+.situation-heading span:first-child{letter-spacing:.12em;color:#efcb8a;white-space:nowrap;font-weight:700}
+#situation-caption{font-size:11px;color:#b3c6d2;line-height:1.35;text-align:right}
+.situation-buttons{display:flex;gap:7px;flex-wrap:wrap}
+.situation-buttons button{padding:7px 10px;background:#243746;white-space:nowrap}
+.situation-buttons button.active{background:#544632;color:#f7dda4;border-color:#e4b977}
+@media(max-width:960px){.situation-heading{display:block}#situation-caption{display:block;text-align:left;margin-top:5px}.situation-buttons{flex-wrap:nowrap;overflow-x:auto;padding-bottom:2px}}
+
+
+/* Live observer is subordinate to the physics view and never intercepts input. */
+.play{position:sticky}
+.live-inspect{position:absolute;left:14px;bottom:66px;z-index:2;
+ pointer-events:none;max-width:min(485px,calc(100% - 28px));
+ padding:9px 13px;border:1px solid #496173;border-radius:9px;
+ background:rgba(13,25,36,.88);box-shadow:0 4px 20px rgba(0,0,0,.2);
+ color:#e4eef6;font-size:12px;line-height:1.42;font-variant-numeric:tabular-nums;
+ white-space:normal;backdrop-filter:blur(4px)}
+.live-inspect strong{color:#f1d8a6;font-size:12px;letter-spacing:.05em}
+.live-inspect .live-secondary{color:#aec7d3;font-size:11px;display:block;margin-top:3px}
+.lab-details{border-bottom:1px solid #344150}
+.lab-details>summary{padding:15px 2px;cursor:pointer;color:#d8e5ef;
+ list-style-position:inside;font-size:13px;font-weight:600}
+.lab-details>summary:hover{color:#f4d49b}
+.lab-details>section{padding-top:3px;border:0}
+@media(max-width:800px){.live-inspect{bottom:54px;left:8px;
+ max-width:calc(100% - 16px);font-size:11px;padding:7px 9px}}
