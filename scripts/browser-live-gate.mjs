@@ -46,6 +46,12 @@ if(!hold)throw Error("X0 physical body-contact hold test was not emitted");
 const holdTrial=JSON.parse(hold.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
 console.log("X0 CONTACT-HOLD COUNTERFACTUAL: "+JSON.stringify(holdTrial));
 
+const kinetic=visit(url+(url.includes("?")?"&":"?")+"energy=1",21000);
+const materialPower=kinetic.get("energy");
+if(!materialPower)throw Error("X0 material energy pair not produced");
+console.log("X0 ACTIVE-MATTER WHOLE COUNTERFACTUAL: "+
+  JSON.stringify(JSON.parse(materialPower.replaceAll("&quot;",'"').replaceAll("&amp;","&"))));
+
 const relay=visit(url+(url.includes("?")?"&":"?")+"cascade=1",11000);
 const chain=relay.get("cascade");
 if(!chain)throw Error("Second actor opportunity counterfactual not executed");
