@@ -86,6 +86,42 @@ Stop early if the baseline provides the same understanding. **Do not make all vi
 
 These sources support **what each technique can express**, not that its adoption would improve Combat Lab, throughput or gameplay. No encoding benchmark or new gameplay prototype has been executed in this research detour.
 
+## Additional critical cross-check — what the research still did NOT resolve
+
+**2026-10-10 follow-up against primary research and wider original Combat Lab Owner intent.** This section preserves the *newly clarified boundaries*, not a new workstream.
+
+### Ownership/semantics of separate spatial channels
+
+Terrain/support, motion collision, line-of-sight blocking, ownership/social meanings and perceptual knowledge need **not** be the same map or derivation. The author may deliberately define a non-collidable sight blocker, unusual collision for a visual bush, or special material friction; that is an explicit **scoped authored rule**, not bad world truth merely because another solver would behave differently. An organism's **belief** about that terrain is a separate time-indexed inference, and an analyst's accessibility estimate a third. A single RGBA packing does not make the four channels semantically commensurate.
+
+Do not hardcode `red = terrain, green = collision, blue = vision, alpha = pressure` into a source-of-truth API. Declare channels independently, with authority, scope, type, unit, coordinate transform and observation/availability provenance. An **unknown** pixel must remain distinguishable from a known empty pixel; see [OctoMap's occupied/free/unknown distinctions](https://octomap.github.io/octomap/doc/).
+
+There are also at least **two very different 'agents'** who may consume images:
+- **External research assistant** (us): may justifiably inspect full world truth, debug overlays, actual inputs and counterfactual traces.
+- **In-world controller/NPC:** may receive only sensor-available samples and legitimate memory. Providing an atlas of exact hidden obstacles/world intentions as its supposed POV **silently destroys the embodied-research question**. Neither consumer requires a PNG file if a numeric array or sparse contact event is more direct.
+
+### Resolution and interpretation cannot be picked by pixel count alone
+
+A `24×24` sampling field over a `3×3 m` area means **12.5 cm/cell**; over `12×12 m` it means **50 cm/cell**. Even visually compelling `64×64` and `24×24` tiles are not comparable unless we know body size, physical FOV, coverage, range, sampling policy and transform. Narrow limbs, small passages and fast impacts can vanish between spatial/temporal samples. **Never infer 'no object/contact' from its absence in a coarse downsample**. Preserve exact contact events separately and consider conservative occupancy aggregation or sparse geometry for safety-critical probes.
+
+Candidate foveated/log-polar maps naturally prioritize direction/range differently, but distort uniform area and complicate motion comparison. There is relevant prior art in [Traver & Bernardino's log-polar robotics review](https://www.sciencedirect.com/science/article/pii/S0921889009001687), **not evidence that adaptive multi-scale already improves Combat Lab**.
+
+### A flow field can erase the phenomenon we want to discover
+
+**High-density counterflow trap:** if two equally sized populations locally move east and west, the *mean* observed velocity may be approximately ZERO, exactly as in a motionless jam. A vector-arrow image alone falsely equates those radically different physical situations. Observed flow analysis must preserve at least **sample count/density**, vector variance (or two directional modes) and actor-contact data where relevant. If only one extra diagnostic is affordable, a contact/event trace usually beats a prettier vector rendering for causal attribution.
+
+[Continuum Crowds (2006)](https://grail.cs.washington.edu/projects/crowd-flows/continuum-crowds.pdf) explicitly uses crowd density and density-weighted mean velocity to construct a group-level goal-directed field. **The group's goal and discomfort inputs are exogenous**, and compressing an organism's opportunities into that group objective can wipe out the body diversity Owner wants. [Patil et al. (2010)](https://ics-websites.science.uu.nl/docs/vakken/mcrws/papers_new/Patil%20et%20al%20-%202010%20-%20Directing%20crowd%20simulations%20using%20navigation%20fields.pdf) goes further in explicitly authoring goals/guidance fields to direct crowds, which is valuable for directing spectacle **but not an answer to endogenous purpose, contact-based group behavior or perception**. [RVO2/ORCA](https://gamma-web.iacs.umd.edu/RVO2/documentation/2.0/whatsnew.html) requires preferred velocities from the application and addresses avoidance, not which world action a creature wishes to perform. None should be imported as an automatic behavior default.
+
+Physical **pressure** likewise requires well-defined force/stress/contact aggregation, not merely a heatmap of population density; there is dedicated work estimating crowd contact forces and pressure from micro- and macro-scale models: [Jebrane et al., 2019](https://www.sciencedirect.com/science/article/pii/S0307904X19302793).
+
+### Replay/capture: what is evidence vs convenience
+
+Exact tick capture solves **temporal aliasing in screenshot scheduling**, not physical determinism by itself. Store the initial authored scene, action commands and actor identifiers, source/solver version, sampling times, and a minimal hash/state check at critical ticks. Run an identical case twice before claiming replay equivalence; cross-hardware floating-point effects can make bit-exact simulation impossible without engine-specific constraints (see [Isaac Lab reproducibility guidance](https://isaac-sim.github.io/IsaacLab/main/source/features/reproducibility.html)). Owner-facing frames remain **raw, unretouched truth of the actual app**; low-res/B&W/motion-ghost channels must be visibly labeled **derived analytical views**.
+
+### Final decision rule for this detour
+
+**Keep one practical idea now:** with the next legitimate Z1/S2 or whole-world observation, opportunistically render a fixed-step **raw first frame + short causal contact strip + input/contact trace**, if doing so clarifies something the existing screenshot could not. Compare it to an even cheaper baseline (two stills and a few event lines). **Do not build a proprietary `brain format`, adaptive vision engine or flow-steered crowd controller until a real gameplay/analysis pressure demonstrates a specific deficit.** The lab's long-term vision includes heterogeneous, compound and potentially deformable/animal-like organisms — another rectangle traffic test would be moving backwards, however sophisticated its vector field.
+
 ## Disposition — return to the actual fight
 
 **Keep now:** (1) honest raw image plus few key times, (2) explicit event and provenance trace, (3) option to overlay actual contact/velocity and show simple nearby occupancy, (4) distinguish world truth / agent access / diagnostic inference, (5) flow maps as a **research diagnostic** for future crowd tests.
