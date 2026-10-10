@@ -169,12 +169,6 @@ function frame(t){
    if(n>=4)acc=Math.min(acc,DT*2);
  }
  render();
- if(new URLSearchParams(location.search).has("reviewz1")){
-   const actor=field.actors[0];
-   field.select(actor.id);selected=actor.id;
-   for(let i=0;i<160;i++)field.step({manual:{move:V(1,0),aim:null}});
-   field.select(null);selected=null;paused=true;render();
- }
  requestAnimationFrame(frame);
 }
 function replaceWorld(next){

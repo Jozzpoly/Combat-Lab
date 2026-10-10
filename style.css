@@ -41,3 +41,6 @@ textarea{resize:vertical;min-height:94px;font:10px ui-monospace,monospace}
 footer{display:flex;justify-content:space-between;gap:12px;padding:12px 8px;font-size:10px;color:#8399a6}
 @media(max-width:1100px){.layout{grid-template-columns:minmax(0,1fr) 278px}}
 @media(max-width:770px){header{flex-direction:column;align-items:flex-start}.layout{grid-template-columns:1fr}aside{max-height:none;min-height:0}canvas{height:63vh;min-height:480px}footer{flex-direction:column}}
+
+/* Explicit experiment boundary: inert inherited grip controls remain in DOM only for schema wiring. */
+label[hidden]{display:none!important}

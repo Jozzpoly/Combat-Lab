@@ -9,3 +9,7 @@ The field contains five bodies, five freely movable objects, one *passive* real 
 Stop rule: if contact-only actions cannot convincingly modify multiple types of material, or show only configured fixtures, acknowledge the limited 2D traction-proxy representation. Do not reintroduce adhesive hold under another name to force a passing score.
 
 Main truth: [Research State](https://github.com/Jozzpoly/Combat-Lab/blob/main/docs/RESEARCH_STATE.md). 
+
+## Current bounded result
+
+[Z1 contact-only checkpoint](docs/Z1_CONTACT_ONLY_CHECKPOINT_2026-10-10.md) documents actual free-load pushing, pinned-beam impulse rotation, rail sliding and a controlled second-body contact continuation **without adhesive grip or autonomous actors**. All three materials respond differently, but the organism still mostly executes one action: **moving into matter**. The first frame is sparse and not Owner-qualified. Do not promote this branch or keep tuning coordinates for another machine PASS.
