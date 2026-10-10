@@ -55,3 +55,12 @@ if(!report)throw Error("material pressure campaign did not produce evidence");
 const output=JSON.parse(report.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
 if(output.results?.length!==6)throw Error("partial campaign data");
 console.log("FREE-WORLD MATERIAL PRESSURE: "+JSON.stringify(output));
+
+// W1 whole-world discovery pressure is distinct from the inherited PR2 tests.
+const commons=visit(url+(url.includes("?")?"&":"?")+"commonsw1=1",26000);
+const rawW1=commons.get("commons-w1");
+if(!rawW1)throw Error("W1 composed commons did not emit real browser probe");
+const W1=JSON.parse(rawW1.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+if(W1.cases?.length!==5||!W1.continuity?.sameCount||!W1.continuity?.retainedType)
+ throw Error("W1 whole run incomplete / saved scene source changed");
+console.log("W1 COMPOSED COMMONS WHOLE "+JSON.stringify(W1));
