@@ -9,7 +9,7 @@ const positions=[
 ];
 const variants=["jointed","rigid-root","rigid-envelope"];
 const rd=n=>+n.toFixed(4);
-function trial(World,pos,variant,firstMoves,secondMoves){
+function trial(World,pos,variant,firstMoves,secondMoves,passiveSecond=false){
  const w=new World();
  try{
   const firstId=w.actors[0].id,secondId=w.actors[3].id;
@@ -36,6 +36,14 @@ function trial(World,pos,variant,firstMoves,secondMoves){
   if(w.ticks!==clock||Math.hypot(before.x-afterEdit.x,before.y-afterEdit.y)>1e-8)
    throw Error("Morphology edit altered unrelated matter/clock before stepping");
   w.select(secondId);
+  // Root-input IDLE in the original Z1 still keeps joint servos active.
+  // Here an additional truly unpowered second-body control is explicit.
+  if(passiveSecond){
+   w.setSpec(secondId,"motor",0);
+   w.setSpec(secondId,"torque",0);
+   w.setSpec(secondId,"brace",0);
+   w.actor(secondId).control="quiet";
+  }
   const second=w.actor(secondId);
   let contactSteps=0,contactImpulse=0,firstTouch=null;
   let firstStepImpulse=0;
@@ -51,7 +59,7 @@ function trial(World,pos,variant,firstMoves,secondMoves){
   }
   const end=object.body.translation(),r=second.root.translation();
   if(w.holdEvents||w.counts.driveTicks)throw Error("Z1 no-hold/world-power invariant violated");
-  return {firstMoves,secondMoves,variant,stage1X:rd(stage1.x),stage1Y:rd(stage1.y),
+  return {firstMoves,secondMoves,passiveSecond,variant,stage1X:rd(stage1.x),stage1Y:rd(stage1.y),
    contactSteps,contactImpulse:rd(contactImpulse),firstTouch,
    firstStepImpulse:rd(firstStepImpulse),
    afterObjectDX:rd(end.x-stage1.x),afterObjectDY:rd(end.y-stage1.y),
@@ -69,12 +77,18 @@ export function anatomyNullT0(World){
    const changedIdle=trial(World,pos,variant,true,false);
    const unchangedMove=trial(World,pos,variant,false,true);
    const unchangedIdle=trial(World,pos,variant,false,false);
+   const changedPassive=trial(World,pos,variant,true,false,true);
+   const unchangedPassive=trial(World,pos,variant,false,false,true);
    const extraChanged=rd(changedMove.afterObjectDX-changedIdle.afterObjectDX);
    const extraUnchanged=rd(unchangedMove.afterObjectDX-unchangedIdle.afterObjectDX);
    variantsData.push({variant,
     stage1X:changedMove.stage1X,unchangedStage1X:unchangedMove.stage1X,
     contactsChanged:changedMove.contactSteps,contactsUnchanged:unchangedMove.contactSteps,
-    contactsChangedIdle:changedIdle.contactSteps,firstStepImpulse:changedMove.firstStepImpulse,
+    contactsChangedIdle:changedIdle.contactSteps,
+    contactsChangedPassive:changedPassive.contactSteps,
+    contactsUnchangedPassive:unchangedPassive.contactSteps,
+    servoVsPassiveAfterDX:rd(changedIdle.afterObjectDX-changedPassive.afterObjectDX),
+    firstStepImpulse:changedMove.firstStepImpulse,
     extraChanged,extraUnchanged,
     narrowOpportunity:changedMove.contactSteps>0&&unchangedMove.contactSteps===0&&Math.abs(extraChanged)>.1});
   }
@@ -84,7 +98,7 @@ export function anatomyNullT0(World){
    throw Error("Stage-one world changed between anatomical variants");
   cases.push({pos,variants:variantsData});
  }
- return {scope:"5 prespecified positions, 3 morphology variants, 2 first inputs x 2 second inputs. Exact Z1 physical world, 340 ticks/trial; phase-2 actual collider re-rig, same stage-1 state. No hold, no world motor.",
+ return {scope:"5 prespecified positions, 3 morphology variants, 2 first inputs x 2 second root commands + motor/torque/brace-OFF additional passive baselines. Identical Z1 source scene and 340 ticks/trial; phase-2 same-solver re-rig, stage-1 state held equal within morph comparison. No hold, no world power.",
   comparison:"Jointed vs arm-free mass-matched original root vs arm-free generously large envelope. The large rigid body is NOT a mass-distribution/contact-shape twin and may have immediate passive overlap.",
   cases,
   warning:"A material-contact opportunity under researcher motor commands is not organism cognition, a new body action, supported stance, natural locomotion, a fair calibrated morphology ranking or Owner product PASS."};
