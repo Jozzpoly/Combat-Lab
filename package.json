@@ -1,9 +1,9 @@
 {
-  "name": "combat-lab-e1-local-encounter-whole",
+  "name": "combat-lab-w2-embodied-material-commons",
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --check m0-app.js && node --check src/m0-world.js && node --check src/e1-encounter.js && node --check src/e1-probe.js && node --check src/e1-causality.js",
+    "test": "node --check m0-app.js && node --check src/m0-world.js && node --check src/e1-encounter.js && node --check src/e1-probe.js && node --check src/e1-causality.js && node --check w2-app.js && node --check src/w2-world.js && node --check src/w2-probe.js",
     "build": "vite build --base=./"
   },
   "dependencies": {

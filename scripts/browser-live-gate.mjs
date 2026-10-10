@@ -79,3 +79,37 @@ for(const batch of ["C","D"]){
   throw Error("E1 dense mixed-body world numerically unstable or incomplete");
  console.log("E1 SOURCE CAUSAL "+JSON.stringify(result));
 }
+
+
+// W2 isolated branch; exact emitted Chrome source alongside E1 regression.
+function visitW2(query,budget=55000){
+ const href=url+"w2.html?"+query;
+ const dom=execFileSync(chrome,["--headless=new","--no-sandbox","--disable-gpu",
+  "--disable-dev-shm-usage","--virtual-time-budget="+budget,
+  "--dump-dom",href],{encoding:"utf8",timeout:115000,maxBuffer:20*1024*1024});
+ const val=n=>dom.match(new RegExp('data-'+n+'="([^"]*)"'))?.[1];
+ if(val("live")!=="yes"||val("live-error"))
+  throw Error("W2 emitted browser FAIL "+query+": "+val("live-error")+" "+dom.slice(-700));
+ return val;
+}
+for(const batch of ["A","B","C"]){
+ const raw=visitW2("w2probe="+batch)("w2-probe");
+ if(!raw)throw Error("W2 missing live physical probe batch "+batch);
+ const data=decode(raw);
+ if(data.batch!==batch)throw Error("W2 wrong physical probe batch");
+ if(batch==="A"){
+  if(data.cases.length!==5||data.cases.some(c=>!c.numericOK)||
+    data.cases[0].connectedContacts.some(x=>!x)||
+    data.cases[0].realJoints!==2)
+   throw Error("W2 real anatomy and rivals incomplete");
+ } else if(batch==="B"){
+  if(!data.result.numericOK||data.result.widthAt300>=1.5||
+   data.result.connectedContacts.some(x=>!x))
+   throw Error("W2 real connected body cannot fold inside material gate");
+ } else if(data.result.initialActors!==20||data.result.nonfinite!==0)
+  throw Error("W2 heterogeneous local world corrupted");
+ console.log("W2 PHYSICAL "+JSON.stringify(data));
+}
+const uiRaw=visitW2("w2ownercheck=1",28000)("w2-ownercheck");
+if(!uiRaw||!decode(uiRaw).pass)throw Error("W2 actual UI gate missing");
+console.log("W2 TRUE BROWSER UI "+JSON.stringify(decode(uiRaw)));

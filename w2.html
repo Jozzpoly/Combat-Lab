@@ -1,0 +1,33 @@
+<!doctype html><html lang="pl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Combat Lab · W2 wspólny świat i materialne możliwości</title><link rel="stylesheet" href="./m0.css"></head><body>
+<div class="shell"><header class="top"><div><p class="eyebrow">Combat Lab / W2 · eksperyment kandydacki</p>
+<h1>Co zmienia rzeczywista budowa ciała w jednym świecie?</h1><p class="lead">Kontynuacja eksperymentalna E1: dwie fizyczne istoty składają kończyny obok innych, lokalnie poruszających się ciał. Swobodnie buduj presję i psuj sytuacje.</p></div>
+<div class="status"><strong id="run-status">Uruchamianie…</strong><span>Prawdziwy kontakt · uproszczony lokalny kontroler, NIE inteligencja NPC</span></div></header>
+<div class="notice"><b>Co jest prawdziwe?</b> Przeguby, masy, sprężyny, dynamiczne przedmioty i nacisk. <b>Co jest uproszczeniem?</b> Każda poruszająca się istota dostaje ograniczony, jawny napęd kadłuba 2D, NIE siłę z nóg. Bodźce to <b>lokalny zapach ruchomych przedmiotów</b>, nie wizja ani rozumna decyzja.</div>
+<div class="columns"><main><div class="toolbar">
+<button id="pause">Pauza</button><button id="step">+1 krok</button><button id="reset">Reset sceny</button><button id="poke">Impuls badacza</button>
+<button id="add-rigid">+ zwarty</button><button id="add-chain">+ członowany</button><button id="add-compliant">+ podatny</button><button id="add-folding">+ składany</button><button id="add-rival-narrow">+ tani wąski</button><button id="add-rival-wide">+ tani szeroki</button><button id="add-matter">+ materia</button><button id="add-scent">+ zapach</button><button id="spawn-group">+ 12 istot w miejscu kliknięcia</button><button id="fold">Złóż Q</button><button id="unfold">Rozłóż E</button><button id="fold-policy">Lokalna reakcja obrysu ON/OFF</button><button id="release">Oddaj kontrolę istocie</button></div>
+<div class="arena"><canvas id="lab" aria-label="Rzeczywiste ciała w fizycznym świecie"></canvas></div>
+<div class="readout"><span id="time">0 s</span><span id="count">—</span><span id="contacts">—</span><span id="energy">—</span><span id="profile">CPU: —</span></div>
+<p class="help">Kliknij, by wybrać ciało. <b>WASD</b> — przejmujesz ciało (inne działają lokalnie) · <b>scroll</b> — zoom · <b>środkowy przycisk</b> — kamera · <b>pauza + Ctrl-przeciąganie</b> — przenieś ciało · <b>Impuls badacza</b> — strzałka siły. Q/E składa i rozkłada zaznaczone ciało dwoma fizycznymi zawiasami; można włączyć uproszczoną reakcję obrysu na poprzedni nacisk. Dodawaj materiały, organizmy i grupy w dowolnej części świata. Aby przenieść źródło zapachu, zatrzymaj świat i użyj Ctrl-przeciągania.</p></main>
+<aside><h2>Co badamy?</h2><p>Czy zmiana prawdziwego obrysu organizmu tworzy nowe możliwości w tym samym materialnym świecie, czy tylko więcej brył i powrót do ruchu za bodźcem?</p>
+<div class="key"><i class="dot amber"></i><span><b>Zwarty</b> — jedna sztywna bryła</span></div>
+<div class="key"><i class="dot blue"></i><span><b>Członowany</b> — trzy masy i dwa przeguby</span></div>
+<div class="key"><i class="dot green"></i><span><b>Podatny</b> — osiem mas i fizyczne sprężyny, nie ciągła tkanka</span></div>
+<div class="key"><i class="dot blue"></i><span><b>Składany</b> — 125 kg trzech dynamicznych brył, dwa zawiasy z kontaktem własnym, zewnętrzny napęd kadłuba</span></div><div class="key"><i class="dot amber"></i><span><b>Tanie sztywne odpowiedniki</b> — jeden collider o stałym wąskim albo szerokim obrysie</span></div><hr><label class="switch"><input id="initiative" type="checkbox" checked> Lokalna inicjatywa mieszkańców</label>
+<label class="switch"><input id="response" type="checkbox" checked> Reakcja decyzji na fizyczny nacisk</label>
+<label class="switch"><input id="show-senses" type="checkbox" checked> Pokaż lokalną uwagę wybranego ciała</label>
+<label class="switch"><input id="reflex" type="checkbox" checked> Mechaniczny odruch przegubów</label>
+<p class="small">Zachowania to trzy jawne prawa: badanie bliskich źródeł, reagowanie na sąsiadów, podtrzymanie zainteresowania przez chwilę. Po wyłączeniu inicjatywy nikt nie dostaje napędu bez operatora. Kontroler nie zna mapy, trasy ani globalnego celu.</p>
+<label>Impuls eksperymentatora (N·s)<input id="impulse" type="range" min="20" max="1400" step="20" value="380"><output id="impulse-value">380</output></label>
+<h3>Wybrane ciało</h3><div id="selection">—</div><div id="selected-state" class="small"></div>
+<h3>Fizyczne źródło zapachu</h3>
+<p class="small">Kliknij barwny przedmiot. Zmiana zapachu nie zmienia jego bryły; Ctrl-przeciągnij w pauzie, żeby przesunąć bryłę i bodziec razem.</p>
+<label for="cue-signature">Sygnał zaznaczonego źródła / nowych źródeł</label>
+<select id="cue-signature"><option value="amber">Bursztynowy</option><option value="cyan">Turkusowy</option></select>
+<label for="role">Lokalna skłonność (nie rodzaj ciała)</label>
+<select id="role"><option value="seeker">Odkrywca bodźców</option><option value="wary">Ostrożny — ustępuje</option><option value="holder">Uparty — utrzymuje pozycję (proxy)</option></select>
+<hr><h3>Granice dowodu</h3><p class="small">Przyciemnione kręgi przy zapachu są wizualną orientacją, nie dokładnym zakresem każdej istoty ani colliderem. Obrys sprężystej istoty nie jest ciągłym colliderem. Zapach jest prostym sygnałem dostępnym tylko lokalnie, ruchome źródła są prawdziwymi bryłami. Impulsy napędu są limitowane, ale nie pochodzą z nóg. Nie ma walki, pathfindingu, samouczącego mózgu ani prawdziwych potrzeb. Lokomocja nadal pochodzi z płaskiego napędu-proxy. Ten kandydat nie został oceniony przez Ownera.</p>
+<p id="message" class="message">Ładowanie fizyki…</p></aside></div>
+<footer>Izolowany prototyp badawczy · przed oceną Ownera · bez publikacji.</footer></div>
+<script type="module" src="./w2-app.js"></script></body></html>
