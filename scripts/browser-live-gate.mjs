@@ -32,14 +32,10 @@ if(!value.portedStartScene||!value.invalidSceneRejected)
 if(value.defaultActors<3||value.defaultMatter<5)
   throw Error("X0 is only a staged object fixture, not a material commons");
 
-
-// TEMPORARY real-pixel preview for field/layout audit. Removed after inspection.
-if(process.env.CI){
- const {readFileSync}=await import("node:fs");
- const file="/tmp/material-commons-x0-initial.png";
- execFileSync(chrome,["--headless=new","--no-sandbox","--disable-gpu",
-   "--disable-dev-shm-usage","--window-size=1500,900",
-   "--force-device-scale-factor=1","--virtual-time-budget=5300",
-   "--screenshot="+file,url],{timeout:75000,encoding:"utf8",maxBuffer:1e7});
- console.log("X0_VISUAL_REVIEW:"+readFileSync(file).toString("base64"));
-}
+// True multiple-body material stress. Does not infer agentic ecology or FPS.
+const broad=visit(url+(url.includes("?")?"&":"?")+"pressure=1",26000);
+const rawPressure=broad.get("pressure");
+if(!rawPressure)throw Error("X0 whole-field pressure absent");
+const fieldTrial=JSON.parse(rawPressure.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+if(fieldTrial.trials?.length!==3)throw Error("Incomplete three-seed heterogeneous world observation");
+console.log("X0 MULTI-BODY MATERIAL PRESSURE: "+JSON.stringify(fieldTrial));
