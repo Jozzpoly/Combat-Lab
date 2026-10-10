@@ -67,6 +67,20 @@ export class GroundDriveWorld{
   for(let i=0;i<90;i++)this.world.step();
   this.origin=this.chassis.translation().x;
   this.initialObstacle=this.obstacle?.body.translation().x??null;
+  this.originCOM=this.centerOfMass().x;
+ }
+ centerOfMass(){
+  // Include every dynamic body in the system. Individual body movement is NOT
+  // evidence of COM locomotion: internal motors may rearrange members.
+  const bodies=[this.chassis,...this.wheels.map(x=>x.body),
+    ...(this.obstacle?[this.obstacle.body]:[])];
+  let m=0,x=0,y=0,z=0;
+  for(const b of bodies){
+   const mass=b.mass(),p=b.translation();
+   if(!finite(mass,p.x,p.y,p.z)||mass<=0)throw Error("Bad body mass or position");
+   m+=mass;x+=mass*p.x;y+=mass*p.y;z+=mass*p.z;
+  }
+  return {x:x/m,y:y/m,z:z/m,mass:m};
  }
  contact(c1,c2){
   if(!c1||!c2)return 0;
@@ -102,7 +116,9 @@ export class GroundDriveWorld{
   this.lastWheelGround=0;
   for(const wheel of this.wheels) this.lastWheelGround+=this.contact(wheel.collider,this.ground);
   if(this.lastWheelGround>1e-7){this.wheelContacts++;this.wheelContactImpulse+=this.lastWheelGround;}
-  const contact=this.contact(this.chassisCollider,this.obstacle?.collider);
+  let contact=this.contact(this.chassisCollider,this.obstacle?.collider);
+  if(this.obstacle)for(const wheel of this.wheels)
+    contact+=this.contact(wheel.collider,this.obstacle.collider);
   if(contact>0){this.obstacleContact++;this.obstacleImpulse+=contact;}
   for(const w of this.wheels){
    const angleRate=w.body.angvel();
@@ -114,6 +130,7 @@ export class GroundDriveWorld{
  }
  read(){
   const p=this.chassis.translation(),v=this.chassis.linvel();
+  const COM=this.centerOfMass();
   const wheels=this.wheels.map(w=>({
    x:round(w.body.translation().x),y:round(w.body.translation().y),
    z:round(w.body.translation().z),spin:round(w.body.angvel().z)
@@ -128,6 +145,8 @@ export class GroundDriveWorld{
    obstacleDX:this.obstacle?round(this.obstacle.body.translation().x-this.initialObstacle):null,
    obstacleTicks:this.obstacleContact,obstacleImpulse:round(this.obstacleImpulse),
    rootImpulseSum:round(this.rootImpulseSum),
+   systemCOMx:round(COM.x),systemCOMdx:round(COM.x-this.originCOM),
+   systemMass:round(COM.mass),
    actuatorActivityProxy:round(this.motorEnergyProxy)};
  }
  dispose(){this.world.free();}
