@@ -4,7 +4,7 @@ const el=id=>document.querySelector("#"+id);
 const canvas=el("lab"),ctx=canvas.getContext("2d");
 const keys=new Set();
 let field=null,paused=false,last=performance.now(),acc=0;
-let selected=null,mode=null,saved=null;
+let selected=null,mode=null,saved=null,rebuildSelection=null;
 let mouse=V(16,12),pan=null,author=null,arrow=null,wall=null;
 const camera={x:21,y:13,zoom:1.30},SIZE={w:1,h:1,scale:1};
 function message(text){el("message").textContent=text;}
@@ -126,6 +126,16 @@ function render(){
     field.counts.driveTicks+" powered steps"+
     (field.hold?" · body-contact hold ACTIVE":"");
  const a=field.actor(selected),m=field.item(selected);
+ el("rebuild-panel").hidden=!a;
+ if(a&&rebuildSelection!==a.id){
+   el("rebuild-hx").value=a.spec.hx;
+   el("rebuild-hy").value=a.spec.hy;
+   el("rebuild-arms").value=String(a.arms.length);
+   el("rebuild-length").value=a.spec.armLength;
+   rebuildSelection=a.id;
+ }else if(!a)rebuildSelection=null;
+ el("upper").disabled=!a||a.arms.length<1;
+ el("lower").disabled=!a||a.arms.length<2;
  el("hinge-controls").hidden=m?.kind!=="hinge";
  el("selection").textContent=a?
    a.form+" | "+a.arms.length+" actual limb(s) | local load "+a.observed.load.toFixed(2):
@@ -167,7 +177,7 @@ function replaceWorld(next){
  const old=field;field=next;old?.dispose();
  selected=field.selected;mode=null;pan=null;author=null;arrow=null;wall=null;
  acc=0;last=performance.now();
- window.__X0=field;render();
+ rebuildSelection=null;window.__X0=field;render();
 }
 function activate(){
  el("pause").onclick=()=>{paused=!paused;el("pause").textContent=paused?"Resume":"Pause";
@@ -213,6 +223,20 @@ function activate(){
  for(const [index,input] of [[0,"upper"],[1,"lower"]])
    el(input).oninput=()=>fail(()=>{if(!field.setActiveArm(selected,index,Number(el(input).value)))
       throw Error("Select a body with this physical arm");});
+ el("rebuild-actor").onclick=()=>fail(()=>{
+   if(!paused)throw Error("Pause before changing an existing physical body");
+   if(!field.actor(selected))throw Error("Select an organism to rebuild");
+   const edit={
+     hx:safe(Number(el("rebuild-hx").value),"hull half-length"),
+     hy:safe(Number(el("rebuild-hy").value),"hull half-width"),
+     arms:safe(Number(el("rebuild-arms").value),"arm count"),
+     armLength:safe(Number(el("rebuild-length").value),"arm length")
+   };
+   const result=field.rebuildActor(selected,edit);
+   if(!result)throw Error("Could not re-rig selected physical body");
+   message("Rebuilt "+result.id+": "+result.arms.length+
+     " actual limb(s). Rest of material world and clock preserved.");
+ });
  const fillBodyPreset=()=>{
    const p=BODY_PRESETS[el("body-type").value];
    for(const [key,value] of [["new-hx",p.hx],["new-hy",p.hy],
