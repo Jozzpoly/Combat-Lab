@@ -1,6 +1,6 @@
 # Combat Lab — M0 physical phenotypes / contact-focused recovery (2026-10-10)
 
-**STATUS: isolated exploratory MECHANICAL trial, NOT an accepted organism, not a selected 2D/3D architecture, no Owner experience PASS, no public deploy.** Source in `experiment/m0-physical-phenotypes`, draft [PR #7](https://github.com/Jozzpoly/Combat-Lab/pull/7) against neutral `main`. Historical R0/R1/L0 human product FAIL remains. This document is a bounded run record, not a new roadmap.
+**STATUS: isolated exploratory MECHANICAL trial, NOT an accepted organism, not a selected 2D/3D architecture, no Owner experience PASS, no public deploy.** Source in `experiment/m0-physical-phenotypes`, [PR #7 CLOSED without merge](https://github.com/Jozzpoly/Combat-Lab/pull/7) against neutral `main`. Historical R0/R1/L0 human product FAIL remains. This document is a bounded run record, not a new roadmap.
 
 ## What recovered Owner intent changed
 
