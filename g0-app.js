@@ -64,6 +64,27 @@ try{
  await initGroundPhysics();
  reset();$("ready").textContent="Rapier 3D · rzeczywisty kontakt";
  draw();document.body.dataset.live="yes";
+ if(new URLSearchParams(location.search).has("g0ownercheck")){
+  const check=(x,label)=>{if(!x)throw Error("G0 real UI "+label);};
+  $("start").click();check(paused,"pause click");
+  const t0=simulation.ticks;$("single").click();
+  check(simulation.ticks===t0+1,"single physical step");
+  window.dispatchEvent(new KeyboardEvent("keydown",{code:"KeyW",bubbles:true}));
+  check(cmd()===1,"actual keyboard input");
+  for(let k=0;k<170;k++)simulation.step(cmd());
+  window.dispatchEvent(new KeyboardEvent("keyup",{code:"KeyW",bubbles:true}));
+  check(cmd()===0&&simulation.read().chassis.dx>.25,"finite joint motor from keyboard");
+  $("remove").click();check(!simulation.ground,"actual floor collider removal");
+  const y=simulation.chassis.translation().y;
+  for(let k=0;k<55;k++)simulation.step(0);
+  check(simulation.chassis.translation().y<y-.1,"floor removal gravity consequence");
+  $("mode").value="passive";
+  $("mode").dispatchEvent(new Event("change",{bubbles:true}));
+  check(simulation.settings.mode==="passive"&&simulation.ticks===0,"live mode rebuild");
+  document.body.dataset.g0Ownercheck=JSON.stringify({pass:true,
+   pointer:false,keyboard:true,pause:true,step:true,physicalFloorRemoval:true,
+   actualGravityFall:true,changedMode:true,notOwnerFeel:true});
+ }
  if(new URLSearchParams(location.search).has("g0probe")){
   const {groundSourceProbe}=await import("./src/g0-probe.js");
   document.body.dataset.g0Probe=JSON.stringify(groundSourceProbe());
