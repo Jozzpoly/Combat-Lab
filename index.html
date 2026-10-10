@@ -1,10 +1,34 @@
-<!doctype html>
-<meta charset="utf-8">
-<title>Combat Lab — Clean Substrate</title>
-<link rel="stylesheet" href="./style.css">
-<main class="shell">
-<header><div><p class="eyebrow">Combat Lab · clean neutral substrate</p><h1 id="experiment-title">Loading…</h1><p id="experiment-purpose" class="purpose"></p></div><div class="controls"><button id="pause">Pause</button><button id="reset">Reset</button><button id="debug">Debug</button></div></header>
-<section class="viewport"><canvas id="lab" aria-label="Combat Lab neutral experiment surface"></canvas></section>
-<footer><div><strong>Controls</strong><span id="controls-text">—</span></div><div class="status"><span id="run-state">RUNNING</span><span id="sim-time">0.00 s</span><span id="build-id">source: local</span></div></footer>
-</main>
-<script type="module" src="./app.js"></script>
+<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Combat Lab · G0 fizyczne źródło ruchu</title>
+<style>
+:root{font:14px/1.5 system-ui;color:#d7e5e8;background:#0e151b}*{box-sizing:border-box}body{margin:0}
+main{max-width:1380px;padding:20px;margin:0 auto}h1{font-size:1.7rem;margin:.2rem 0}p{color:#a8bdc8}
+header{display:flex;gap:24px;justify-content:space-between;align-items:center}
+.brow{font-size:.8rem;color:#85c5c1;text-transform:uppercase;letter-spacing:.14em}
+.alert{background:#25333a;padding:11px 15px;border-left:3px solid #b6bda2}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;margin-top:16px}
+.canvas{height:min(75vh,720px);min-height:400px;background:#14262e;border-radius:9px;border:1px solid #385461;overflow:hidden}
+canvas{width:100%;height:100%;display:block}.tools{display:flex;gap:7px;margin:10px 0;flex-wrap:wrap}
+button,select{background:#233947;color:#e5eff6;border:1px solid #486376;padding:8px 11px;border-radius:6px;font:inherit}
+button{cursor:pointer}aside{background:#1d303b;padding:15px;border:1px solid #35515c;border-radius:9px}
+label{display:block;margin:12px 0 5px}select{width:100%}code{background:#35434b;padding:1px 4px}
+.status{font-variant-numeric:tabular-nums;display:grid;gap:10px}small{color:#aac0c9}footer{margin-top:16px;border-top:1px solid #35515c;color:#93a9b7;padding-top:12px}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.canvas{height:65vh}}
+</style></head><body><main>
+<header><div><div class="brow">Combat Lab · izolowana kalibracja G0</div><h1>Skąd ciało bierze siłę do ruchu?</h1>
+<p>Model kołowy służy wyłącznie do weryfikacji źródła siły. Nie udaje nóg, zwierzęcia ani gotowej lokomocji.</p></div>
+<div id="ready">Ładowanie prawdziwej fizyki…</div></header>
+<div class="alert">W trybie kół jedyny napęd to silniki <strong>rzeczywistych przegubów kół</strong>. Aby pojechać, koła muszą naciskać i trzeć o prawdziwe podłoże 3D. W trybie alternatywnym siła jest przykładana bezpośrednio do kadłuba — to nasz dotychczasowy, jawnie sztuczny punkt odniesienia.</div>
+<div class="layout"><section><div class="tools">
+<button id="start">Pauza</button><button id="single">+1 krok</button><button id="reset">Odtwórz</button><button id="remove">Usuń fizyczną podłogę</button>
+</div><div class="canvas"><canvas id="lab"></canvas></div>
+<p><b>W lub strzałka w górę</b> — do przodu; <b>S / strzałka w dół</b> — wstecz · <b>kółko myszy</b> — zoom. Pasywny przeciwnik po prawej jest prawdziwym ciężkim ciałem. Brak autonomicznych intencji.</p>
+</section><aside><h3>Kontrprzykłady</h3>
+<label>Źródło siły</label><select id="mode"><option value="wheels">Silniki osi + kontakt kół z podłożem</option>
+<option value="root-proxy">Sztuczna siła na kadłubie</option><option value="passive">Wszystko bez napędu</option></select>
+<label>Tarcie podłoża</label><select id="mu"><option value="1">1.0 — przyczepne</option><option value="0.25">0.25 — śliskie</option><option value="0">0 — zero tarcia (Multiply)</option></select>
+<label>Moment silnika</label><select id="motor"><option value="380">380 N·m (test)</option><option value="60">60 N·m</option><option value="0">0 N·m</option></select>
+<div class="status" id="readout">—</div>
+<h3>Granice</h3><small>Koła są uproszczonym robotycznym kalibratorem. Stabilność, realne osiowe constraints, tarcie, ślizganie i efekty kontaktu mierzymy w Rapier3D. Nie mamy jeszcze mięśni, nóg, kontroli ciała ani gameplayu.</small></aside></div>
+<footer>Niepubliczna gałąź badawcza · mechaniczny wynik nie jest Owner PASS ani wyborem silnika.</footer>
+</main><script type="module" src="./g0-app.js"></script></body></html>
