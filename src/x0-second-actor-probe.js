@@ -3,7 +3,7 @@
 // opportunity for a subsequently commanded physical action in one world?
 import {V,rot,norm} from "./x0-world.js";
 export function secondActorOpportunityProbe(World){
-  const run=enabled=>{
+  const run=(enabled,secondInput=true)=>{
     const w=new World({empty:true});
     try{
       const first=w.addActor("reach",V(10,12),0);
@@ -23,10 +23,10 @@ export function secondActorOpportunityProbe(World){
       const secondCanAcquire=w.beginHold(afterFirst);
       const afterSelection=w.hold?.actorPart||null;
       for(let i=0;i<50;i++)
-        w.step({manual:{move:V(-1,0),aim:null}});
+        w.step({manual:{move:secondInput?V(-1,0):V(),aim:null}});
       const end=obj.body.translation();
       const materialShift=norm(V(end.x-afterFirst.x,end.y-afterFirst.y));
-      return {enabled,firstHasHold,firstContactLost,
+      return {enabled,secondInput,firstHasHold,firstContactLost,
         afterFirst:{x:+afterFirst.x.toFixed(3),y:+afterFirst.y.toFixed(3)},
         secondCanAcquire,secondMount:afterSelection,
         secondActor:w.actor(second.id).form,secondActionShift:+materialShift.toFixed(3),
@@ -35,5 +35,6 @@ export function secondActorOpportunityProbe(World){
     }finally{w.dispose();}
   };
   return {scope:"two distinct physical actors in one authored field; manual two-stage action; NOT emergence",
-    withFirstHold:run(true),withoutFirstHold:run(false)};
+    withFirstHold:run(true),withFirstHoldSecondIdle:run(true,false),
+    withoutFirstHold:run(false),withoutFirstHoldSecondIdle:run(false,false)};
 }
