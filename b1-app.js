@@ -144,6 +144,11 @@ try{
   const {dualB1}=await import("./src/b1-dual.js");
   document.body.dataset.b1Dual=JSON.stringify(dualB1());
  }
+ if(params.has("b1cheap")){
+  paused=true;
+  const {cheapB1}=await import("./src/b1-cheap-test.js");
+  document.body.dataset.b1Cheap=JSON.stringify(cheapB1(params.get("b1cheap")));
+ }
  if(params.has("b1frames")){
   paused=true;world.dispose();
   world=new EnvelopeField({kind:"folding",hingeMount:"front",torqueCap:3,withMatter:false});
