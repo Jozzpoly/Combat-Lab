@@ -64,7 +64,15 @@ export class GroundDriveWorld{
   }
   this.world.propagateModifiedBodyPositionsToColliders();
   // Allow actual bodies to settle into contact without motor action.
-  for(let i=0;i<90;i++)this.world.step();
+  for(let i=0;i<600;i++)this.world.step();
+  // Prescribed initial rest condition: remaining impulse-joint settling cannot
+  // masquerade as internally sourced locomotion in passive tests.
+  this.preRestVel=this.chassis.linvel();
+  for(const b of [this.chassis,...this.wheels.map(w=>w.body),
+    ...(this.obstacle?[this.obstacle.body]:[])]){
+    b.setLinvel(V3(),true);
+    b.setAngvel(V3(),true);
+  }
   this.origin=this.chassis.translation().x;
   this.initialObstacle=this.obstacle?.body.translation().x??null;
   this.originCOM=this.centerOfMass().x;
@@ -145,6 +153,7 @@ export class GroundDriveWorld{
    obstacleDX:this.obstacle?round(this.obstacle.body.translation().x-this.initialObstacle):null,
    obstacleTicks:this.obstacleContact,obstacleImpulse:round(this.obstacleImpulse),
    rootImpulseSum:round(this.rootImpulseSum),
+   preRestVx:round(this.preRestVel.x),
    systemCOMx:round(COM.x),systemCOMdx:round(COM.x-this.originCOM),
    systemMass:round(COM.mass),
    actuatorActivityProxy:round(this.motorEnergyProxy)};
