@@ -20,3 +20,8 @@ const neighborhoodRaw=read(url+(url.includes("?")?"&":"?")+"stabilityz1=1",26000
 if(!neighborhoodRaw)throw Error("Z1 cross-position counterfactual not emitted");
 const neighborhood=JSON.parse(neighborhoodRaw.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
 console.log("Z1 ROBUST CONTACT NEIGHBORHOOD "+JSON.stringify(neighborhood));
+
+const chainRaw=read(url+(url.includes("?")?"&":"?")+"chainz1=1",37000)("chainz1");
+if(!chainRaw)throw Error("Z1 continuous two-body contact chain not emitted");
+const chain=JSON.parse(chainRaw.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+console.log("Z1 TWO-BODY CONTACT-ONLY CONTINUATION "+JSON.stringify(chain));

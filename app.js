@@ -410,6 +410,10 @@ async function start(){
  message("Z1 is contact-only; finite body forces interact with true free, hinged and sliding material.");
  el("health").textContent="PHYSICS LIVE · Owner quality unverified";
  document.body.dataset.live="yes";
+ if(new URLSearchParams(location.search).has("chainz1")){
+   const {contactOnlySecondBodyContinuation}=await import("./src/z1-second-body-chain.js");
+   document.body.dataset.chainz1=JSON.stringify(contactOnlySecondBodyContinuation(CommonsWorld));
+ }
  if(new URLSearchParams(location.search).has("stabilityz1")){
    const {exploreContactNeighborhood}=await import("./src/z1-neighborhood.js");
    document.body.dataset.stabilityz1=JSON.stringify(exploreContactNeighborhood(CommonsWorld));
