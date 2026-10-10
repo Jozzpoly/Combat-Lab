@@ -395,6 +395,13 @@ async function start(){
      el("load").click();
      verify(paused&&field.ticks===0&&field.matter.length===captured.matter.length,
        "UI load did not atomically restore initial material condition");
+     const restoredCustom=field.actors.at(-1);
+     verify(restoredCustom.arms.length===1 &&
+       Math.abs(restoredCustom.arms[0].half-1.075)<.001 &&
+       Math.abs(restoredCustom.spec.hx-.68)<.001,
+       "custom actual body topology not preserved on scene reload");
+     verify(field.matter.some(m=>m.form==="beam"),
+       "free beam shape identity lost on portable scene reload");
      const g=field.matter.find(x=>x.kind==="hinge"),angle=g.body.rotation();
      const gp=g.body.translation();
      pointer("pointerdown",gp,{altKey:true});
