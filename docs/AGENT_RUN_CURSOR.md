@@ -2,6 +2,14 @@
 
 **Purpose:** low-attention, resilient continuation across longer runs and chat boundaries. **Agent-only operational index; not source of project truth, not a feature roadmap, not an extra CI gate.** Recover owner-observed behavior, `docs/RESEARCH_STATE.md`, relevant history and live Git refs *before* trusting this dated snapshot. A newer explicit Owner correction supersedes it.
 
+## Latest execution cursor — Z1 conclusion (2026-10-10)
+
+The current live candidate is `experiment/contact-only-relations-z1`, report-time head `f2d71e63277bfe77aa299c5d5b153143e82217ac`, independently derived from neutral main. Check its actual branch/CI before continuing; latest exact-head CI `38016427539` passed. [Z1 report](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/contact-only-relations-z1/docs/Z1_CONTACT_ONLY_CHECKPOINT_2026-10-10.md).
+
+Z1 falsified the suspicion that every useful shared-world effect requires Y1's artificial contact hold: three distinct material constraints genuinely respond to body contact, and one deliberately authored sequence lets a first body's push create later *direct* material contact for a distinct second body, with matched later idle and first-body-idle checks. But **these are not three different organism actions**. The input verb is still mostly 'push the body into another collider'; the visible whole is a sparse mechanical test yard. Narrow mass/offset data do not establish feel or realistic grounding. Mechanically qualified subset only; no Owner-qualified product.
+
+**Next unresolved question:** what fundamentally different controllable physical possibilities emerge when changing body force-bearing configuration, material support/topology and spatial situations? Avoid another Z1 placement/motor tune, another renamed pincer/shuttle, an overnight summary task, or prematurely canonicalizing planar Rapier. Prefer one coherent discriminating whole with an honest rigid/morphology/contact control, or openly test whether an actually grounded/constrained-3D representation earns its complexity. Do not make speculative roadmap features or claim Owner PASS. Main/public remain separate.
+
 ## Durable why
 
 This is a hands-on R&D sandbox for discovering **materially different actions, movement, collective interactions and combat possibilities** across varied physical bodies and a shared manipulable world. The wider dream is an adaptable material laboratory, not a claw showcase, a crates puzzle, a traffic simulator or a human-to-agent dashboard. Owner wants to spontaneously build, challenge, observe, break and understand diverse situations. Product/feel claims belong to the Owner; CI qualifies narrower physical and technical facts only.
@@ -34,7 +42,7 @@ Historical R0/R1/L0 product FAIL is still FAIL. The highest-quality old positive
 - Tools currently actually available: connected GitHub code/PR/Actions; use precise Git data/atomic commit calls for engineering continuity. Browser-through-tools may be useful for real-world visual evaluation, but never fabricate human experience, unobserved video or unattended future execution.
 - This chat is not an autonomous scheduler: a run can be long while a turn is actively executing; it does **not** continue after the answer ends unless a separate authorized scheduled/Work execution exists.
 
-## Current continuity delta — Y1 investigation after this cursor
+## Historical Y1 continuation (superseded by later Z1)
 
 - Independent `experiment/relational-possibilities-y1` now exists from neutral main. Last report-time Y1 commit: `7898953d035dd84e21f516ecaba71cf6e53e6e97`; verify live head/CI.
 - [Y1 detailed checkpoint](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/relational-possibilities-y1/docs/Y1_RELATIONAL_COMPOSITION_CHECKPOINT_2026-10-10.md): real material-power-induced change of later operator-accessible contact-hold for two organisms, followed by a controlled real object action. The effect did not generalize cleanly to ±0.5–1.0m placements. Most dramatic differences depend on the same short adhesive tether. A non-hold free-object contact impulse was verified; **no contact-only hinged-material actuation** by the tested broad actor.
