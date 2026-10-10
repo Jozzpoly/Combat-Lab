@@ -183,21 +183,32 @@ function activate(){
      " on selected organism; only affects it when not piloted.");
  });
  el("apply-selected").onclick=()=>fail(()=>{
-   const m=safe(Number(el("selected-mass").value),"mass");
    const actor=field.actor(selected),obj=field.item(selected);
+   if(!actor&&!obj)throw Error("Select an actor or physical material");
+   // Validate the complete requested edit before touching any physics state.
+   // On rejection the on-screen NOT APPLIED message must be literally true.
+   const m=safe(Number(el("selected-mass").value),"mass");
+   if(m<=0||m>(actor?1e7:1e8))throw RangeError("Unsupported material mass");
    if(actor){
-     field.setSpec(selected,"holdForce",safe(Number(el("selected-hold").value),"hold force"));
+     const hold=safe(Number(el("selected-hold").value),"hold force");
+     const drive=safe(Number(el("selected-motor").value),"motor force");
+     if(hold<0||drive<0||hold>1e7||drive>1e7)
+       throw RangeError("Unsupported finite actor force");
+     field.setSpec(selected,"holdForce",hold);
      field.setSpec(selected,"mass",m);
-     field.setSpec(selected,"motor",safe(Number(el("selected-motor").value)));
-   }else if(obj){
+     field.setSpec(selected,"motor",drive);
+   }else{
+     let speed=0,torque=0;
+     if(obj.kind==="hinge"){
+       speed=safe(Number(el("selected-drive-speed").value),"hinge speed");
+       torque=safe(Number(el("selected-drive-torque").value),"hinge torque");
+       if(Math.abs(speed)>20||torque<0||torque>1e7)
+         throw RangeError("Unsupported finite material drive");
+     }
      field.setMaterialMass(selected,m);
-     if(obj.kind==="hinge")
-       field.setHingeDrive(selected,
-         safe(Number(el("selected-drive-speed").value),"hinge angular speed"),
-         safe(Number(el("selected-drive-torque").value),"finite hinge torque"));
+     if(obj.kind==="hinge")field.setHingeDrive(selected,speed,torque);
    }
-   else throw Error("Select an actor or dynamic material");
-   message("Physical mass/finite drive updated without resetting material state.");
+   message("Requested physical parameters applied in the existing world.");
  });
  for(const [index,input] of [[0,"upper"],[1,"lower"]])
    el(input).oninput=()=>fail(()=>{if(!field.setActiveArm(selected,index,Number(el(input).value)))
