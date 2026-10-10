@@ -42,7 +42,18 @@ function run(World,{dx,dy},responsive,onlyFirst=false){
           material:w.matter.map(m=>vec(m.body)),
           arms:w.actors.flatMap(actor=>actor.arms.map(x=>vec(x.body)))});
     }
-    return {first,contactTicks,peakContacts,reflex:w.counts.reflex,
+    // At the end of the SAME unsteered world, assess the second organism's
+    // *materially available* operator-action: can its own real physical part
+    // establish a finite near-touch hold on any resident movable material?
+    // No objects/actors are teleported into place and no action is executed.
+    w.select(w.actors[1].id);
+    const eligible=[];
+    for(const m of w.matter){
+      const p=m.body.translation();
+      if(w.beginHold(V(p.x,p.y)))eligible.push(m.id);
+      w.endHold();
+    }
+    return {eligible,first,contactTicks,peakContacts,reflex:w.counts.reflex,
       brace:w.counts.braces,positions,
       actorEvents:w.actors.map(a=>a.response.events),actorFirstReflex,
       finalActors:w.actors.map(a=>vec(a.root)),
@@ -102,6 +113,8 @@ export function falsifyInterActorReflexRelay(World){
     const materialContrasts=contrast(activated.finalMaterial,firstQuiet.finalMaterial);
     const secondChanged=activated.actorEvents[1]!==firstQuiet.actorEvents[1] ||
       activated.actorFirstReflex[1]!==firstQuiet.actorFirstReflex[1];
+    const newEligible=activated.eligible.filter(id=>!firstQuiet.eligible.includes(id));
+    const lostEligible=firstQuiet.eligible.filter(id=>!activated.eligible.includes(id));
     const timeline=activated.positions.map((p,i)=>{
       const q=firstQuiet.positions[i];
       return {tick:p.tick,
@@ -117,11 +130,15 @@ export function falsifyInterActorReflexRelay(World){
       secondActiveEvents:activated.actorEvents[1],
       secondControlEvents:firstQuiet.actorEvents[1],
       secondResponseChanged:secondChanged,
+      secondCanContactHold:{on:activated.eligible,off:firstQuiet.eligible,
+        newEligible,lostEligible},
       actorFinalContrast:round(Math.max(...actorContrasts)),
       materialFinalContrast:round(Math.max(...materialContrasts)),
       timeline});
   }
   return {scope:"9 matched world initial states: ONLY the first organism's own tactile arm reflex differs; all other organism-local policies stay live in both worlds",
     cases,secondResponseDifferences:cases.filter(x=>x.secondResponseChanged).length,
+    newOrLostSecondActorHoldCases:cases.filter(c=>
+      c.secondCanContactHold.newEligible.length+c.secondCanContactHold.lostEligible.length>0).length,
     stillUnproven:"A downstream response is not proof of a newly available action or full organism autonomy"};
 }
