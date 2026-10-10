@@ -52,6 +52,12 @@ if(!materialPower)throw Error("X0 material energy pair not produced");
 console.log("X0 ACTIVE-MATTER WHOLE COUNTERFACTUAL: "+
   JSON.stringify(JSON.parse(materialPower.replaceAll("&quot;",'"').replaceAll("&amp;","&"))));
 
+const f2page=visit(url+(url.includes("?")?"&":"?")+"f2=1",27000);
+const f2data=f2page.get("f2");
+if(!f2data)throw Error("F2 reflex ON/OFF shared-world counterfactual absent");
+const f2=JSON.parse(f2data.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+console.log("X0 LOCAL-RESPONSE GENERALIZATION: "+JSON.stringify(f2));
+
 const articulated=visit(url+(url.includes("?")?"&":"?")+"sweep=1",18000);
 const armResult=articulated.get("sweep");
 if(!armResult)throw Error("Self-actuated arm counterfactual did not emit evidence");
