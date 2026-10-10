@@ -1,62 +1,49 @@
 import {execFileSync} from "node:child_process";
-const chrome=process.env.CHROME_BIN,url=process.argv[2];
-if(!chrome||!url)throw Error("M0 requires Chrome & a real built local URL");
-const href=url+(url.includes("?")?"&":"?")+"probe=1";
-const html=execFileSync(chrome,["--headless=new","--no-sandbox","--disable-gpu",
- "--disable-dev-shm-usage","--virtual-time-budget=45000","--dump-dom",href],
- {encoding:"utf8",timeout:130000,maxBuffer:16*1024*1024});
-const get=name=>html.match(new RegExp('data-'+name+'="([^"]*)"'))?.[1];
-if(get("live")!=="yes"||get("live-error"))
- throw Error("M0 emitted Chromium/WASM runtime FAIL: "+get("live-error")+" live="+get("live"));
-const data=get("m0-probe");
-if(!data)throw Error("M0 physical probe not executed in browser");
-const values=JSON.parse(data.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
-if(values.cases.length!==18||values.passive.length!==3||values.poke.length!==3)
- throw Error("M0 incomplete morphology × offset × control matrix");
-if(values.cases.some(x=>!x.numericFinite))throw Error("Nonfinite physics result");
-if(values.passive.some(x=>x.rootMotorTicks||x.externalImpulse||x.responseEvents))
- throw Error("Passive-body contamination");
-const contacts=values.cases.filter(x=>x.contactTicks>0).length;
-const pokeContacts=values.poke.filter(x=>x.contactTicks>0).length;
-const generated=get("m0-frame");
-if(!generated||!generated.startsWith("data:image/png;base64,"))
- throw Error("M0 actual unretouched canvas frame missing");
-console.log("M0 BROWSER PHYSICAL SOURCE CHECK: PASS; contact cases="+contacts+
- " of 18; external impulse contacts="+pokeContacts+" of 3");
-console.log("M0 PHYSICAL TRIAL "+JSON.stringify(values));
-// No Owner-level feel/creature-life PASS. PNG data stays in browser DOM;
-// never claim screenshot content was inspected merely because bytes exist.
-console.log("M0 FIRST REAL FRAME PNG base64 bytes="+generated.length);
-console.log("M0 FRAME-DATA "+generated);
-
-const movie=execFileSync(chrome,["--headless=new","--no-sandbox","--disable-gpu","--disable-dev-shm-usage",
- "--virtual-time-budget=3500","--dump-dom",
- url+(url.includes("?")?"&":"?")+"frames=1"],
- {encoding:"utf8",timeout:75000,maxBuffer:16*1024*1024});
-const frameRaw=movie.match(/data-m0-frames="([^"]*)"/)?.[1];
-if(!frameRaw||movie.includes("data-live-error="))throw Error("M0 live same-world temporal capture failed");
-const series=JSON.parse(frameRaw.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
-if(series.length!==4||series[0].tick!==0||series[3].tick!==240)throw Error("M0 time-series source not valid");
-console.log("M0 FRAMES REAL TICKS "+JSON.stringify(series.map(p=>({tick:p.tick,
- actorPositions:p.actors.map(a=>({kind:a.kind,x:a.x,y:a.y})),bytes:p.frame.length}))));
-console.log("M0 FRAME-240 "+series[3].frame);
-
-const fairDom=execFileSync(chrome,["--headless=new","--no-sandbox","--disable-gpu","--disable-dev-shm-usage",
- "--virtual-time-budget=30000","--dump-dom",
- url+(url.includes("?")?"&":"?")+"fairm0=1"],
- {encoding:"utf8",timeout:100000,maxBuffer:16*1024*1024});
-const fairRaw=fairDom.match(/data-m0-fair="([^"]*)"/)?.[1];
-if(!fairRaw||fairDom.includes("data-live-error="))throw Error("M0 matched-mass rigid control failed");
-const fair=JSON.parse(fairRaw.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
-if(fair.cases.length!==12)throw Error("M0 incomplete matched-envelope control");
-console.log("M0 RIGID SURROGATE "+JSON.stringify(fair));
-
-const ownerDom=execFileSync(chrome,["--headless=new","--no-sandbox","--disable-gpu",
- "--disable-dev-shm-usage","--virtual-time-budget=2400","--dump-dom",
- url+(url.includes("?")?"&":"?")+"ownercheck=1"],
- {encoding:"utf8",timeout:65000,maxBuffer:12*1024*1024});
-const ownerRaw=ownerDom.match(/data-m0-ownercheck="([^"]*)"/)?.[1];
-if(!ownerRaw||ownerDom.includes("data-live-error="))throw Error("M0 actual UI click/keyboard/repose smoke FAILED");
-const owner=JSON.parse(ownerRaw.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
-if(!owner.pass)throw Error("M0 UI not fully verified");
-console.log("M0 REAL OWNER-STYLE UI "+JSON.stringify(owner));
+const bin=process.env.CHROME_BIN,url=process.argv[2];
+if(!bin||!url)throw Error("Need actual Chromium and locally served built app");
+function open(flag,budget=18000){
+ const dom=execFileSync(bin,["--headless=new","--no-sandbox","--disable-gpu",
+  "--disable-dev-shm-usage","--virtual-time-budget="+budget,"--dump-dom",
+  url+(url.includes("?")?"&":"?")+flag],{encoding:"utf8",timeout:110000,maxBuffer:20*1024*1024});
+ const fetch=n=>dom.match(new RegExp('data-'+n+'="([^"]*)"'))?.[1];
+ if(fetch("live")!=="yes"||fetch("live-error"))
+  throw Error("B1 real-browser source failed: live="+fetch("live")+" error="+fetch("live-error"));
+ return fetch;
+}
+const decode=s=>JSON.parse(s.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+const combined=[];
+for(const batch of ["A","B","C"]){
+ const data=open("b1probe="+batch,45000)("b1-probe");
+ if(!data)throw Error("B1 batch "+batch+" not emitted");
+ const result=decode(data);
+ if(result.part!==batch||result.scenes.length!==3)
+  throw Error("B1 incomplete physical source matrix "+batch);
+ combined.push(...result.scenes);
+}
+if(combined.some(x=>x.nonfinite||x.samples?.length!==6))
+ throw Error("B1 incomplete physical time trace");
+const by=Object.fromEntries(combined.map(c=>[c.name,c]));
+if(by["hinges-no-actuators"].hingeTorque!==0||
+ by["cheap-rigid-wide"].hingeTorque!==0||by["cheap-rigid-small"].hingeTorque!==0)
+ throw Error("B1 null controller generated internal torques");
+console.log("B1 FULL CAUSAL MATRIX "+JSON.stringify(combined.map(x=>({
+ name:x.name,gate:x.withGate,crossed:x.crossedGate,when:x.firstPassageTick,
+ x:x.rootDX,y:x.rootFinalY,gateContacts:x.wallContactSteps,
+ hingeTorque:x.hingeTorque,headingTorque:x.headingTorque,
+ impulse:x.outsideRootImpulse,hingeError:x.hingeError,objectDX:x.movedMatter}))));
+console.log("B1 FULL RAW "+JSON.stringify(combined));
+const timelineRaw=open("b1frames=1",10000)("b1-frames");
+if(!timelineRaw)throw Error("B1 actual same-world frames missing");
+const f=decode(timelineRaw);
+if(f.length!==5||f[0].tick!==0||f[4].tick!==720)
+ throw Error("B1 timeline incorrect");
+console.log("B1 SOURCE TIMELINE "+JSON.stringify(f.map(x=>({
+ tick:x.tick,root:x.source.chassis,extent:x.source.physicalExtent,
+ hingeError:x.source.hingeError,wall:x.source.gateContacts}))));
+console.log("B1 RAW FRAME-0 "+f[0].png);
+console.log("B1 RAW FRAME-720 "+f[4].png);
+const ui=open("b1ownercheck=1",5000)("b1-ownercheck");
+if(!ui)throw Error("B1 UI actual events failed");
+const u=decode(ui);
+if(!u.pass)throw Error("B1 UI not qualified");
+console.log("B1 CHROMIUM ACTUAL UI "+JSON.stringify(u));
