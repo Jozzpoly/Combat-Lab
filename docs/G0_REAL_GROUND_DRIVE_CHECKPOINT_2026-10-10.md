@@ -47,7 +47,7 @@ Corrected null: create the actual wheel revolute joint but **never enable/config
 
 - [Unretouched source-world frame t0](media/g0-physical-t0.png) and [same-world t240 frame](media/g0-physical-t240.png) from the actual emitted Chromium page, [measured same-world timeline](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38089508879).
 - The cheap robot reaches the passive block, wheels bunch against it and the hull partially collapses/reorients after impact. In the full obstacle-included 420-step test the hull's Y fell to ~0.22m; **not a reliable walking robot or robust collision-handling organism**. The world remains a rudimentary mechanical calibration, not an Owner-worthy body/crowd lab.
-- Actual source UI tested in Chromium: click Pause, click +1 step, send real keyboard W key events, motorized response, delete physical floor with corresponding gravity-induced falling, change mode to a new simulation ([same CI](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38089508879)). Pointer ergonomics and free human use NOT assessed. Not public.
+- Actual source UI tested in Chromium: click Pause, click +1 step, dispatch synthetic KeyboardEvent(W) through actual Chromium page handlers, motorized response, delete physical floor with corresponding gravity-induced falling, change mode to a new simulation ([same CI](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38089508879)). Pointer ergonomics and free human use NOT assessed. Not public.
 
 ## Decision
 
