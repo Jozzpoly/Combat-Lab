@@ -30,6 +30,7 @@
   </div>
   <p class="directions"><strong>WASD</strong> move selected body · cursor aims ·
     <strong>E/Q</strong> close/open physical appendages · click to select ·
+    <strong>right click touching matter</strong> to latch/release finite body-contact hold ·
     wheel zoom · middle drag pan · <strong>pause + Ctrl-drag</strong> move bodies ·
     <strong>pause + Alt-drag</strong> rotate bodies/hinges ·
     <strong>pause + Shift-drag</strong> author solid wall</p>
@@ -45,6 +46,7 @@
    <label>Body or crate mass <input id="selected-mass" type="number" min=".1" value="80" step="5"></label>
    <label>Body motor authority <input id="selected-motor" type="number" min="0" value="900" step="100"></label>
   </div>
+  <label>Contact hold force (N) <input id="selected-hold" type="number" min="0" max="10000000" step="100" value="680"></label>
   <button id="apply-selected">Apply material parameters</button>
   <label class="reflex"><input id="local-response" type="checkbox" checked> Local contact response when not directly controlled</label>
   <div class="two">
@@ -68,7 +70,8 @@
      <option value="1">1 · lever</option><option value="2" selected>2 · independent</option></select></label>
     <label>Each physical arm length (m)
      <input id="new-arm-length" type="number" min=".8" step=".2" value="1.55"></label></div>
-   <div class="two"><label>Root body mass (kg)
+   <label>Contact hold force (N) <input id="new-hold" type="number" min="0" max="10000000" step="100" value="680"></label>
+  <div class="two"><label>Root body mass (kg)
      <input id="new-mass" type="number" min=".1" step="10" value="80"></label>
     <label>Finite movement force (N)
      <input id="new-motor" type="number" min="0" step="100" value="900"></label></div>
@@ -88,7 +91,7 @@
  <section><h2>Apply actual outside force</h2>
   <label>Point impulse magnitude (N·s) <input id="poke-magnitude" type="number" min="0" value="230" step="25"></label>
   <button id="poke">Impulse probe: drag from any collider</button>
-  <p class="micro">A one-time research intervention — never credited as an organism ability.</p>
+  <p class="micro">One-time external research intervention; unlike right-click contact hold this is NOT an organism action.</p>
  </section>
  <details><summary>Save / load a posed *starting* world</summary>
   <p class="micro">Portable JSON retains masses, articulated poses, constrained matter and walls.
