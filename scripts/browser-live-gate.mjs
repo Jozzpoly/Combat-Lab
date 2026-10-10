@@ -47,3 +47,10 @@ console.log("G0 ONE-WORLD TIMELINE "+JSON.stringify(frames.map(x=>({
  obstacleDX:x.source.obstacleDX}))));
 console.log("G0 TRUE FRAME-0 "+frames[0].png);
 console.log("G0 TRUE FRAME-240 "+frames[3].png);
+
+const ui=run("g0ownercheck=1",6000);
+const rawUi=ui.get("g0-ownercheck");
+if(!rawUi)throw Error("G0 actual browser UI/source change not checked");
+const eventReport=JSON.parse(rawUi.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+if(!eventReport.pass)throw Error("G0 interactive edit/run controls FAIL");
+console.log("G0 ACTUAL CHROMIUM CONTROL EVENTS "+JSON.stringify(eventReport));
