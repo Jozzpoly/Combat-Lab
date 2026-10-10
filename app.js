@@ -442,6 +442,17 @@ async function start(){
      verify(norm(V(free.body.translation().x-prev.x,
        free.body.translation().y-prev.y))>.20,
        "Ctrl-drag failed to move physical crate without reset");
+     replaceWorld(new CommonsWorld({empty:true}));
+     const hActor=field.addActor("reach",V(10,12),0);
+     selected=hActor.id;field.select(hActor.id);
+     const hLimb=hActor.arms[0],hRot=hLimb.body.rotation(),hPos=hLimb.body.translation();
+     const hTip=V(hPos.x+Math.cos(hRot)*(hLimb.half-.18)-Math.sin(hRot)*(-hLimb.sign*.13)+.16*Math.cos(hRot),
+       hPos.y+Math.sin(hRot)*(hLimb.half-.18)+Math.cos(hRot)*(-hLimb.sign*.13)+.16*Math.sin(hRot));
+     const hLoad=field.addMatter(hTip,{mass:18,hx:.23,hy:.22});
+     pointer("pointerdown",hTip,{button:2});
+     verify(field.hold?.objectId===hLoad.id,"RMB contact acquisition failed");
+     pointer("pointerdown",hTip,{button:2});
+     verify(!field.hold,"RMB material release failed");
      return {pause:true,directMotorTravel:+moved.toFixed(3),
        materialAuthoring:true,bodySpawn:5,
        toggle:true,pointImpulse:true,hingeRotation:true,
