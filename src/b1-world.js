@@ -24,8 +24,9 @@ export class EnvelopeField extends M0Field{
   // 5m-long, 1.24m-high material aperture. No scripted passage sensing.
   if(withGate){
    this.addFixed(21,6.19,2.5,6.69); // upper edge y=12.88
-   this.addFixed(21,20.56,2.5,6.44); // lower edge y=14.12 => 1.24m gap 
-  }
+   this.addFixed(21,20.56,2.5,6.44); // lower edge y=14.12 => 1.24m gap
+   this.gateWalls=this.objects.slice(-2);
+  }else this.gateWalls=[];
   this.wallColliders=this.objects.filter(x=>x.kind==="fixed").map(x=>x.collider);
   this.thing=null;
   if(withMatter){
