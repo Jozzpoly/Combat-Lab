@@ -30,6 +30,14 @@ At [same-commit browser CI 38010573098](https://github.com/Jozzpoly/Combat-Lab/a
 
 The data support one new narrow body-origin material capability, not an Owner-quality verdict. The strongest light-load effect requires a researcher-controlled actor, an authored encounter geometry, and a manual directional motor input. It is not a demonstrated organism choosing an action, nor a second organism gaining a new opportunity.
 
+## Subsequent attempted two-actor crossing — NEGATIVE, not hidden
+
+[Chromium source run 38010822752](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38010822752) used one continuously simulated *authored* field with two different bodies. In phase 1, the first articulated actor pulled light matter; in the counterpart its finite contact hold was disabled. In phase 2, a distinct broad body was selected and manually commanded with identical control input. **In neither case could that second actor acquire the load.** After first-actor holding, the load subsequently moved another **1.252 m**, compared with **0.129 m** without the first hold. That would look like a second-actor consequence if we ignored provenance.
+
+A fourth counterfactual held the second actor entirely idle in each phase-1 world: the subsequent load displacements remained **exactly 1.252 m and 0.129 m**, respectively. Thus the apparent second-stage material effect is **inherited residual motion, not action by the second organism**. The physically meaningful second-actor affordance crossing remains unproved in this setup. Do not change the fixture until green and then advertise "cross-actor agency"; this is a useful counterexample to that very method.
+
+[Same-head later Chromium CI 38010883745](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38010883745) also exercised the right-click contact hold while issuing real keyboard directional input and single-stepping the browser UI. The real UI transfer continued without immediately breaking the light-material hold. This tests input wiring, not human control feel.
+
 ## Open limitations and stop boundary
 
 1. The present test does **not** establish the valuable whole-world crossing: one actor materially changes a *different* organism's possible subsequent action in a freely rearranged shared world.
