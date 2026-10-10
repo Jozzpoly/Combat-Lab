@@ -39,3 +39,9 @@ if(!rawPressure)throw Error("X0 whole-field pressure absent");
 const fieldTrial=JSON.parse(rawPressure.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
 if(fieldTrial.trials?.length!==3)throw Error("Incomplete three-seed heterogeneous world observation");
 console.log("X0 MULTI-BODY MATERIAL PRESSURE: "+JSON.stringify(fieldTrial));
+
+const grip=visit(url+(url.includes("?")?"&":"?")+"holdprobe=1",14000);
+const hold=grip.get("hold-probe");
+if(!hold)throw Error("X0 physical body-contact hold test was not emitted");
+const holdTrial=JSON.parse(hold.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+console.log("X0 CONTACT-HOLD COUNTERFACTUAL: "+JSON.stringify(holdTrial));
