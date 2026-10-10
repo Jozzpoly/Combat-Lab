@@ -115,6 +115,11 @@ try{
   const {b1Trial}=await import("./src/b1-probe.js");
   document.body.dataset.b1Probe=JSON.stringify(b1Trial(params.get("b1probe")));
  }
+ if(params.has("b1dual")){
+  paused=true;
+  const {dualB1}=await import("./src/b1-dual.js");
+  document.body.dataset.b1Dual=JSON.stringify(dualB1());
+ }
  if(params.has("b1frames")){
   paused=true;world.dispose();world=new EnvelopeField({kind:"folding"});
   world.setAperture(1.25);const frames=[];
