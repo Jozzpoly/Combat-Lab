@@ -410,6 +410,10 @@ async function start(){
  message("K1: test open or folded force-bearing limbs against a comparable rigid body. All contacts are physical.");
  el("health").textContent="PHYSICS LIVE · Owner quality unverified";
  document.body.dataset.live="yes";
+ if(new URLSearchParams(location.search).has("switchk1")){
+   const {switchedPosturePressure}=await import("./src/k1-switch-probe.js");
+   document.body.dataset.switchk1=JSON.stringify(switchedPosturePressure(CommonsWorld));
+ }
  if(new URLSearchParams(location.search).has("posturek1")){
    const {postureSpaceTrial}=await import("./src/k1-posture-probe.js");
    document.body.dataset.posturek1=JSON.stringify(postureSpaceTrial(CommonsWorld));

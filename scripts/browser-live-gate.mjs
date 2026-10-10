@@ -15,3 +15,8 @@ const raw=read(url+(url.includes("?")?"&":"?")+"posturek1=1",36000)("posturek1")
 if(!raw)throw Error("K1 actual solver control missing");
 const data=JSON.parse(raw.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
 console.log("K1 POSTURE AND RIGID SURROGATE "+JSON.stringify(data));
+
+const switchRaw=read(url+(url.includes("?")?"&":"?")+"switchk1=1",60000)("switchk1");
+if(!switchRaw)throw Error("K1 live posture switch was not observed");
+const switchCase=JSON.parse(switchRaw.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+console.log("K1 TIMED POSTURE CONTROLS "+JSON.stringify(switchCase));
