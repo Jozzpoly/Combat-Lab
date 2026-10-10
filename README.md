@@ -15,3 +15,7 @@ Current main source of truth: [Combat Lab research state](https://github.com/Joz
 ## Rival baseline: 2D abstract friction
 
 `src/s2-planar-proxy.js` explicitly applies a bounded horizontal impulse derived from `mu × mass × gravity`. It has **no actual floor or normal reaction**; the comparison asks whether a cheaper *authored* law might be sufficient for the particular sliding-vs-gripping behavior. It does not certify equal feel, fidelity, performance or simulation cost. This is a fair conceptual competitor, not a covert rename of 3D grounding.
+
+## Correction: floor-friction source truth (2026-10-10)
+
+Rapier's default collider combine rule is **Average**, so the original floor coefficient 0 was NOT truly frictionless: guard friction 0.9 meant effective contact friction 0.45. Earlier ice/payload comparisons used the wrong physical interpretation and are **superseded**. Ground collider now explicitly uses `CoefficientCombineRule.Multiply`, and the honest planar rival uses the same authored coefficient product. Re-run all claims against the updated exact-head code. No architecture promotion is authorized.

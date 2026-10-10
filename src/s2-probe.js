@@ -77,6 +77,8 @@ export function compareGroundSources(){
  if(grip.grounded<50||ice.grounded<50)throw Error("S2 didn't form sustained real ground contacts");
  if(float.grounded>0)throw Error("Zero-gravity control received fictitious floor support");
  if(ice.guardDX<grip.guardDX+.3)throw Error("S2 ground friction does not mediate resistance");
+ if(Math.abs(ice.guardDX-float.guardDX)>10)
+    throw Error("S2 zero-friction floor unexpectedly resists motion much more than unsupported control");
  if(Math.abs(idle.guardDX)>.1||idle.contacts>0)
    throw Error("S2 passive control applied force or created false contact");
  if(ice.guardY<.75||grip.guardY<.75||ice.guardY>1.1||grip.guardY>1.1)

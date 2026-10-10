@@ -24,8 +24,8 @@ function run({mu,g=9.81,push=720}){
  try{
   for(let t=0;t<420;t++){
    if(push)ram.body.applyImpulse(V(push*DT,0),true);
-   supportEffort+=friction(guard.body,guard.m,g,Math.sqrt(mu*.9));
-   friction(ram.body,ram.m,g,Math.sqrt(mu*.015));
+   supportEffort+=friction(guard.body,guard.m,g,mu*.9);
+   friction(ram.body,ram.m,g,mu*.015);
    w.step();
    w.contactPair(guard.col,ram.col,man=>{
     let p=0;

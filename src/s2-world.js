@@ -35,7 +35,8 @@ export class GroundCase{
     this.ground=this.world.createCollider(
       // Wide enough for the full prescribed 7-second friction-zero control:
       // the original 11m floor edge caused a misleading free-fall.
-      RAPIER.ColliderDesc.cuboid(120,.25,9).setFriction(surface).setRestitution(0),groundBody);
+      RAPIER.ColliderDesc.cuboid(120,.25,9).setFriction(surface).setFrictionCombineRule(RAPIER.CoefficientCombineRule.Multiply)
+        .setRestitution(0),groundBody);
     const make=(x,z,mass,halfX,halfY,halfZ,friction)=>{
       // Surface locomotion: 3D vertical normal reaction, horizontal XZ movement;
       // only yaw rotation, no arbitrarily frozen horizontal translation.
