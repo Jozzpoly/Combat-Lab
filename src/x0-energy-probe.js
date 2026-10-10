@@ -77,7 +77,7 @@ function obstructionTrial(World,blocked){
 }
 export function activeMaterialCommonsPressure(World){
   const on=trial(World,true),off=trial(World,false),
-    reverse=trial(World,true,{speed:-1.1}),weak=trial(World,true,{torque:50});
+    alternateDirection=trial(World,true,{speed:1.1}),weak=trial(World,true,{torque:50});
   const diffs={actors:on.actors.map((a,i)=>difference(a.position,off.actors[i].position)),
     matter:on.matter.map((m,i)=>difference(m.position,off.matter[i].position))};
   const freeHinge=obstructionTrial(World,false),blockedHinge=obstructionTrial(World,true);
@@ -95,9 +95,9 @@ export function activeMaterialCommonsPressure(World){
     maxActorContrast:+Math.max(...diffs.actors).toFixed(4),
     maxMatterContrast:+Math.max(...diffs.matter).toFixed(4),
     freeHinge,blockedHinge,
-    reverse:{peakSpeed:reverse.peakSpeed,contactSteps:reverse.contactSteps,
-      reflexEvents:reverse.reflexEvents,firstContact:reverse.firstContact,
-      maxActorContrast:+Math.max(...reverse.actors.map((a,i)=>difference(a.position,off.actors[i].position))).toFixed(4)},
+    alternateDirection:{peakSpeed:alternateDirection.peakSpeed,contactSteps:alternateDirection.contactSteps,
+      reflexEvents:alternateDirection.reflexEvents,firstContact:alternateDirection.firstContact,
+      maxActorContrast:+Math.max(...alternateDirection.actors.map((a,i)=>difference(a.position,off.actors[i].position))).toFixed(4)},
     weak:{peakSpeed:weak.peakSpeed,contactSteps:weak.contactSteps,
       reflexEvents:weak.reflexEvents,firstContact:weak.firstContact,
       maxActorContrast:+Math.max(...weak.actors.map((a,i)=>difference(a.position,off.actors[i].position))).toFixed(4)},
