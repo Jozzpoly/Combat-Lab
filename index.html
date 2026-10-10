@@ -19,7 +19,7 @@
     <span><i class="dot green"></i>Two-arm reach</span>
     <span><i class="dot amber"></i>Single lever</span>
     <span><i class="dot lavender"></i>Heavy hull</span>
-    <span><i class="dot gray"></i>Actual movable/hinged matter</span>
+    <span><i class="dot gray"></i>Actual movable/hinged matter</span><span><i class="dot drive"></i>Finite powered matter</span>
   </div>
   <canvas id="lab" aria-label="Actual shared material world; click physics colliders"></canvas>
   <div class="toolbar">
@@ -47,6 +47,16 @@
    <label>Body motor authority <input id="selected-motor" type="number" min="0" value="900" step="100"></label>
   </div>
   <label>Contact hold force (N) <input id="selected-hold" type="number" min="0" max="10000000" step="100" value="680"></label>
+  <div id="hinge-controls" hidden>
+   <div class="two">
+    <label>Anchored hinge speed (rad/s)
+      <input id="selected-drive-speed" type="number" step=".1" value="0"></label>
+    <label>Finite hinge torque (N·m)
+      <input id="selected-drive-torque" type="number" min="0" step="100" value="0"></label>
+   </div>
+   <p class="micro">Physical energy source fixed to the world, not an organism motor.
+      Speed 0 or torque 0 disables it. Mass and collisions still resist motion.</p>
+  </div>
   <button id="apply-selected">Apply material parameters</button>
   <label class="reflex"><input id="local-response" type="checkbox" checked> Local contact response when not directly controlled</label>
   <div class="two">
@@ -81,10 +91,14 @@
   </details>
   <label>Material <select id="material-type"><option value="block">Free block</option>
     <option value="beam">Free rigid beam</option>
-    <option value="hinge">Pinned hinged beam</option>
+    <option value="hinge">Free pinned hinge</option><option value="hinge-drive">Powered pinned hinge</option>
     <option value="rail">Horizontally constrained slider</option></select></label>
   <div class="two"><label>Mass (kg) <input id="material-mass" type="number" min=".1" value="45"></label>
   <label>Span (m) <input id="span" type="number" min=".2" value="2.5" step=".25"></label></div>
+  <div class="two">
+    <label>Hinge motor speed (rad/s) <input id="new-drive-speed" type="number" value="1.1" step=".1"></label>
+    <label>Hinge motor torque (N·m) <input id="new-drive-torque" type="number" min="0" value="900" step="100"></label>
+  </div>
   <div class="two"><button id="add-material">Place material</button>
   <button id="undo">Undo last authored</button></div>
  </section>
