@@ -31,3 +31,9 @@ if(!rawOwner)throw Error("Owner review UI flow did not emit results");
 const owner=JSON.parse(rawOwner.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
 if(!owner.pass)throw Error("Owner review UI flow FAILED");
 console.log("OWNER REVIEW ACTUAL UI CHECK "+JSON.stringify(owner));
+
+// T0 is an adversarial diagnostic, not a product gate for organism quality.
+const nullRaw=read(url+(url.includes("?")?"&":"?")+"anatomyt0=1",60000)("anatomyt0");
+if(!nullRaw)throw Error("Z1 anatomy null T0 did not execute");
+const nullResult=JSON.parse(nullRaw.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+console.log("Z1 ANATOMY NULL T0 "+JSON.stringify(nullResult));
