@@ -311,6 +311,75 @@ async function start(){
  if(new URLSearchParams(location.search).has("probe")){
    const {runX0Probe}=await import("./src/x0-probe.js");
    document.body.dataset.probe=JSON.stringify(runX0Probe(CommonsWorld,capture,restore));
+   const uiCheck=()=>{
+     const verify=(ok,msg)=>{if(!ok)throw Error("X0 actual UI: "+msg);};
+     const loc=p=>{
+       dimensions();const v=project(p),r=canvas.getBoundingClientRect();
+       return {clientX:r.left+v.x,clientY:r.top+v.y};
+     };
+     const pointer=(type,pos,extra={})=>
+       canvas.dispatchEvent(new PointerEvent(type,{
+         ...loc(pos),bubbles:true,button:0,pointerId:71,...extra
+       }));
+     const initial=field.snapshot();
+     el("pause").click();verify(paused,"pause button did not pause");
+     el("local-response").checked=false;
+     el("local-response").dispatchEvent(new Event("change",{bubbles:true}));
+     verify(field.actor(field.selected).control==="quiet",
+       "UI did not disable organism-local response");
+     el("local-response").checked=true;
+     el("local-response").dispatchEvent(new Event("change",{bubbles:true}));
+     verify(field.actor(field.selected).control==="sense",
+       "UI did not restore material response");
+     const lever=field.actors.find(a=>a.form==="lever");
+     pointer("pointerdown",lever.root.translation());
+     verify(selected===lever.id,"click did not select physical second body");
+     el("count").value="5";el("body-type").value="bulk";
+     el("spawn").click();
+     verify(field.actors.length===initial.actors+5,
+       "batch spawn did not add real bodies");
+     const initialMatter=field.matter.length;
+     el("material-type").value="beam";el("material-mass").value="95";
+     el("span").value="3.2";el("add-material").click();
+     pointer("pointerdown",V(37,8));
+     verify(field.matter.length===initialMatter+1&&mode===null,
+       "direct material authoring failed");
+     el("capture").click();
+     const captured=JSON.parse(el("recipe").value);
+     verify(captured.actors.length===field.actors.length,
+       "UI capture omitted new physical actors");
+     const m=field.matter.find(x=>x.kind==="free"),body=m.body;
+     const before=V(body.linvel().x,body.linvel().y);
+     el("poke-magnitude").value="330";el("poke").click();
+     const p=body.translation();
+     pointer("pointerdown",p);pointer("pointermove",V(p.x+1,p.y+.45));
+     pointer("pointerup",V(p.x+1,p.y+.45));
+     verify(norm(V(body.linvel().x-before.x,body.linvel().y-before.y))>.1,
+       "actual arrow drag did not add external impulse to matter");
+     el("load").click();
+     verify(paused&&field.ticks===0&&field.matter.length===captured.matter.length,
+       "UI load did not atomically restore initial material condition");
+     const g=field.matter.find(x=>x.kind==="hinge"),angle=g.body.rotation();
+     const gp=g.body.translation();
+     pointer("pointerdown",gp,{altKey:true});
+     pointer("pointermove",V(gp.x-.3,gp.y+.85),{altKey:true});
+     pointer("pointerup",V(gp.x-.3,gp.y+.85),{altKey:true});
+     verify(Math.abs(g.body.rotation()-angle)>.03,
+       "Alt-drag failed to rotate actual pinned hinge");
+     const free=field.matter.find(x=>x.kind==="free"),origin=free.body.translation();
+     const prev=V(origin.x,origin.y);
+     pointer("pointerdown",prev,{ctrlKey:true});
+     pointer("pointermove",V(prev.x+.7,prev.y+.65),{ctrlKey:true});
+     pointer("pointerup",V(prev.x+.7,prev.y+.65),{ctrlKey:true});
+     verify(norm(V(free.body.translation().x-prev.x,
+       free.body.translation().y-prev.y))>.20,
+       "Ctrl-drag failed to move physical crate without reset");
+     return {pause:true,materialAuthoring:true,bodySpawn:5,
+       toggle:true,pointImpulse:true,hingeRotation:true,
+       bodyReposition:true,portablePose:true};
+   };
+   document.body.dataset.uiProbe=JSON.stringify(uiCheck());
+
  }
  requestAnimationFrame(frame);
 }
