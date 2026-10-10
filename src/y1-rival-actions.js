@@ -22,10 +22,18 @@ function run(World,{power=true,bodyIndex,targetId,deltaY=0,hold=true,move=true})
    const eligible=w.beginHold(position);
    if(!hold)w.endHold();
    const startRoot=actor.root.translation(),initialRoot=V(startRoot.x,startRoot.y);
-   let delivered=0;
+   let delivered=0,directContactTicks=0,directContactImpulse=0;
    for(let t=0;t<100;t++){
      w.step({manual:{move:move?V(-1,0):V(),aim:null}});
      if(w.hold)delivered+=w.hold.deliveredImpulse||0;
+     let directThisTick=0;
+     for(const part of actor.parts){
+       w.world.contactPair(part.collider,target.collider,manifold=>{
+         for(let k=0;k<manifold.numSolverContacts();k++)
+           directThisTick+=Math.abs(manifold.contactImpulse(k));
+       });
+     }
+     if(directThisTick>0){directContactTicks++;directContactImpulse+=directThisTick;}
    }
    const after=target.body.translation(),currentRoot=w.actor(actor.id).root.translation();
    return {eligible,actuallyHeld:eligible&&hold,remainingHold:Boolean(w.hold),
@@ -33,7 +41,8 @@ function run(World,{power=true,bodyIndex,targetId,deltaY=0,hold=true,move=true})
      targetY:+(after.y-position.y).toFixed(4),
      targetAngle:+angleDelta(target.body.rotation(),angle).toFixed(4),
      rootX:+(currentRoot.x-initialRoot.x).toFixed(4),
-     holdImpulse:+delivered.toFixed(4),slipped:w.holdBreaks};
+     holdImpulse:+delivered.toFixed(4),slipped:w.holdBreaks,
+     directContactTicks,directContactImpulse:+directContactImpulse.toFixed(4)};
  }finally{w.dispose();}
 }
 export function testRelationalRivals(World){
