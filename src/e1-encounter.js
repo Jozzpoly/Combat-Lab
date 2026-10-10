@@ -165,7 +165,7 @@ export class EncounterField extends M0Field{
   let status="szuka lokalnego bodźca";
   if(odor){
    targetAngle=Math.atan2(odor.y,odor.x);
-   effort=distance<prof.near?.9:.88;
+   effort=distance<prof.near ? .09 : .88;
    status=distance<prof.near?"bada źródło":"zbliża się";
   }
   // Pressure responses cause *a change of command*, never contact forces
