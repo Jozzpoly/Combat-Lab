@@ -220,3 +220,86 @@ canvas.addEventListener("pointerup",e=>{
 canvas.addEventListener("pointercancel",()=>{drag=null;draw();});
 draw();requestAnimationFrame(frame);
 document.body.dataset.live="yes";
+
+
+if(new URLSearchParams(location.search).has("e1probe")){
+ try{
+  paused=true;
+  const {runE1Probe}=await import("./src/e1-probe.js");
+  const batch=new URLSearchParams(location.search).get("e1probe");
+  document.body.dataset.e1Probe=JSON.stringify(runE1Probe(batch));
+ }catch(error){document.body.dataset.liveError=String(error.stack||error);console.error(error);}
+}
+if(new URLSearchParams(location.search).has("e1frames")){
+ try{
+  paused=true;field.select(null);
+  const stages=[];
+  for(let i=0;i<=480;i++){
+   if(i>0)field.step();
+   if([0,120,240,360,480].includes(i)){
+    draw();
+    const state=field.getTrace();
+    stages.push({tick:i,actors:state.actors.map(a=>({
+     kind:a.kind,role:a.role,x:a.x,y:a.y,state:a.state})),
+      contactEvents:state.episodes.contactReactions,
+      actionTicks:state.actors.reduce((z,a)=>z+a.autonomousTicks,0),
+      frame:canvas.toDataURL("image/png")});
+   }
+  }
+  document.body.dataset.e1Frames=JSON.stringify(stages);
+ }catch(error){document.body.dataset.liveError=String(error.stack||error);console.error(error);}
+}
+if(new URLSearchParams(location.search).has("e1ownercheck")){
+ try{
+  paused=true;field.select(null);
+  const check=(value,label)=>{if(!value)throw Error("E1 UI "+label);};
+  const toClient=p=>{
+   const d=resize();
+   return {clientX:d.r.left+(d.w/2+(p.x-camera.x)*d.scale)*d.r.width/d.w,
+    clientY:d.r.top+(d.h/2+(p.y-camera.y)*d.scale)*d.r.height/d.h};
+  };
+  check(field.actors.length===18&&field.cues.length===4,"composed same scene");
+  const p=field.actors.find(a=>a.kind==="rigid").root.translation();
+  canvas.dispatchEvent(new PointerEvent("pointerdown",{
+   ...toClient(p),button:0,bubbles:true,pointerId:111}));
+  check(field.selectedActor?.kind==="rigid","real collider selection");
+  const selected=field.selectedActor;
+  $("role").value="wary";$("role").dispatchEvent(new Event("change",{bubbles:true}));
+  check(selected.role==="wary","independent role edit");
+  const x=selected.root.translation().x;
+  window.dispatchEvent(new KeyboardEvent("keydown",{code:"KeyD",bubbles:true}));
+  for(let i=0;i<65;i++)field.step(controls());
+  window.dispatchEvent(new KeyboardEvent("keyup",{code:"KeyD",bubbles:true}));
+  check(selected.root.translation().x-x>.15,"real manual root control");
+  $("release").click();
+  check(field.selected===null,"agent release");
+  const prior=field.actors.reduce((s,a)=>s+a.autoMotorTicks,0);
+  for(let i=0;i<55;i++)field.step();
+  check(field.actors.reduce((s,a)=>s+a.autoMotorTicks,0)>prior,"local initiative resumes");
+  $("initiative").click();check(!field.initiative,"global initiative switch OFF");
+  const before=field.actors.reduce((s,a)=>s+a.autoMotorTicks,0);
+  for(let i=0;i<30;i++)field.step();
+  check(field.actors.reduce((s,a)=>s+a.autoMotorTicks,0)===before,"no invisible auto motor");
+  $("initiative").click();
+  $("response").click();check(!field.pressureResponse,"contact-conditioned decisions OFF");
+  const src=field.cues[0],old=src.body.translation(),idx=field.objects.indexOf(src);
+  const destination=V(old.x+1.4,old.y+1.8);
+  const point=V(old.x,old.y);
+  canvas.dispatchEvent(new PointerEvent("pointerdown",{
+   ...toClient(point),button:0,bubbles:true,pointerId:112,ctrlKey:true}));
+  canvas.dispatchEvent(new PointerEvent("pointermove",{
+   ...toClient(destination),button:0,bubbles:true,pointerId:112,ctrlKey:true}));
+  canvas.dispatchEvent(new PointerEvent("pointerup",{
+   ...toClient(destination),button:0,bubbles:true,pointerId:112}));
+  check(Math.hypot(src.body.translation().x-old.x,src.body.translation().y-old.y)>1,
+    "live editor moves actual source physics collider");
+  check(field.objects[idx]===src,"source keeps material identity");
+  $("reset").click();
+  check(field.actors.length===18&&field.cues.length===4&&field.ticks===0,
+    "whole scene fresh reset");
+  document.body.dataset.e1Ownercheck=JSON.stringify({
+   pass:true,actualColliderClick:true,manualMotor:true,roleEdit:true,
+   controlledAutonomyOff:true,liveSourcePose:true,
+   exactPhysicalIdentity:true,reset:true,notOwnerFeel:true});
+ }catch(error){document.body.dataset.liveError=String(error.stack||error);console.error(error);}
+}
