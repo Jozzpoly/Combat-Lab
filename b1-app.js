@@ -2,11 +2,30 @@ import {EnvelopeField} from "./src/b1-world.js";
 import {DT,V} from "./src/m0-world.js";
 const $=id=>document.getElementById(id),canvas=$("lab"),ctx=canvas.getContext("2d"),keys=new Set();
 let world=null,paused=false,last=performance.now(),acc=0,zoom=1,drag=false,ms=0,n=0;
+let sideThings=[];
+function installSideBodies(){
+ for(const t of sideThings){
+  if(world.objects.includes(t.item)){
+   world.world.removeRigidBody(t.item.body);
+   world.objects.splice(world.objects.indexOf(t.item),1);
+  }
+ }
+ sideThings=[];
+ for(const y of [11.95,15.05]){
+  world.addFree(30.5,y,.42,.32,40);
+  const item=world.objects[world.objects.length-1];
+  sideThings.push({item,x:30.5,y});
+ }
+ world.world.propagateModifiedBodyPositionsToColliders();
+ }
 function status(s){$("message").textContent=s;}
 function setup(){
- world?.dispose();world=new EnvelopeField({kind:$("kind").value,
-  holdHeading:$("heading").checked,torqueCap:Number($("torque").value)});
- world.setAperture(Number($("width").value));
+ world?.dispose();sideThings=[];
+ world=new EnvelopeField({kind:$("kind").value,
+  holdHeading:$("heading").checked,torqueCap:Number($("torque").value),
+  hingeMount:"front",selfContact:true,withMatter:false});
+ world.setFold(0);world.setAperture(Number($("width").value));
+ installSideBodies();
  paused=false;drag=false;acc=0;last=performance.now();ms=0;n=0;
  $("pause").textContent="Pauza";
  status("Ten świat jest fizyczny. Przeprowadź obrys przez szczelinę lub zniszcz założenie testu.");
@@ -51,6 +70,8 @@ function draw(){
  ctx.moveTo(p.x,p.y);ctx.lineTo(p.x+Math.cos(rot)*.75,p.y+Math.sin(rot)*.75);ctx.stroke();
  ctx.restore();
  const state=world.output();
+ const sideDX=sideThings.map(x=>x.item.body.translation().x-x.x);
+ const sideDY=sideThings.map(x=>x.item.body.translation().y-x.y);
  $("width-val").textContent=Number($("width").value).toFixed(2)+" m";
  $("readout").innerHTML="<div><b>"+(paused?"PAUZA / EDYCJA":"FIZYKA DZIAŁA")+"</b></div>"+
  "<div>Pozycja korpusu x: "+state.chassis.x.toFixed(2)+" m</div>"+
@@ -58,7 +79,9 @@ function draw(){
  "<div>Użyty impuls kadłuba: "+state.operatorImpulse.toFixed(1)+" N·s</div>"+
  "<div>Praca osi (suma |impulsów momentu|): "+state.hingeTorqueImpulse.toFixed(1)+" N·m·s</div>"+
  "<div>Kontakty z bramką (próbki): "+state.gateContacts+"</div>"+
- "<div>Przesunięcie luźnego obiektu: "+(state.movedMatter??0).toFixed(2)+" m</div>"+
+ "<div>Realny obrys pionowy: "+(state.physicalExtent.maxY-state.physicalExtent.minY).toFixed(2)+" m</div>"+
+ "<div>Przedmioty po bokach ΔX: "+sideDX.map(x=>x.toFixed(2)).join(" / ")+" m</div>"+
+ "<div>Przedmioty po bokach ΔY: "+sideDY.map(x=>x.toFixed(2)).join(" / ")+" m</div>"+
  "<div>CPU solwera lokalnie: "+(n?ms/n:0).toFixed(2)+" ms/krok, bez rysowania</div>";
 }
 const command=()=>Number(keys.has("KeyW")||keys.has("ArrowUp"))-
@@ -105,6 +128,7 @@ $("reset").onclick=setup;
 $("open").onclick=()=>{world.setFold(0);status("Rozkładanie przez rzeczywiste momenty dwóch zawiasów.");};
 $("fold").onclick=()=>{world.setFold(1);status("Składanie przez rzeczywiste momenty dwóch zawiasów.");};
 $("remove").onclick=()=>{world.removeGate();status("Usunięto fizyczne ciała ścian tunelu.");draw();};
+$("add-side").onclick=()=>{installSideBodies();status("Odtworzono dwie rzeczywiste boczne bryły w żywym świecie.");draw();};
 $("kind").onchange=setup;$("heading").onchange=setup;$("torque").onchange=setup;
 $("width").oninput=()=>{world.setAperture(Number($("width").value));draw();};
 try{
@@ -121,11 +145,13 @@ try{
   document.body.dataset.b1Dual=JSON.stringify(dualB1());
  }
  if(params.has("b1frames")){
-  paused=true;world.dispose();world=new EnvelopeField({kind:"folding"});
-  world.setAperture(1.25);const frames=[];
-  for(let tick=0;tick<=720;tick++){
-   if(tick>0)world.step({forward:1,fold:tick>=100?1:0});
-   if([0,90,180,360,720].includes(tick)){
+  paused=true;world.dispose();
+  world=new EnvelopeField({kind:"folding",hingeMount:"front",torqueCap:3,withMatter:false});
+  sideThings=[];world.setAperture(1.25);world.setFold(0);installSideBodies();
+  const frames=[];
+  for(let tick=0;tick<=780;tick++){
+   if(tick>0)world.step({forward:1,fold:tick<100?0:tick<500?1:0});
+   if([0,90,180,360,480,580,720,780].includes(tick)){
     draw();
     frames.push({tick,source:world.output(),png:canvas.toDataURL("image/png")});
    }
@@ -133,10 +159,18 @@ try{
   document.body.dataset.b1Frames=JSON.stringify(frames);
  }
  if(params.has("b1ownercheck")){
-  paused=true;world.dispose();world=new EnvelopeField({kind:"folding"});
+  paused=true;world.dispose();
+  world=new EnvelopeField({kind:"folding",hingeMount:"front",torqueCap:3,withMatter:false});
+  sideThings=[];world.setFold(0);installSideBodies();
   const check=(v,s)=>{if(!v)throw Error("B1 UI "+s);};
   $("fold").click();check(world.foldTarget===1,"actual fold button");
+  for(let i=0;i<140;i++)world.step({forward:0});
+  check(world.footprint().maxY-world.footprint().minY<1.25,
+    "real mass-bearing wings fully fold under reciprocal joint torque");
   $("open").click();check(world.foldTarget===0,"actual open button");
+  for(let i=0;i<140;i++)world.step({forward:0});
+  check(world.footprint().maxY-world.footprint().minY>3.2,
+    "real wings mechanically redeploy");
   $("width").value="2.5";$("width").dispatchEvent(new Event("input",{bubbles:true}));
   check(world.gateWalls.length===2&&
    Math.abs(world.gateWalls[0].body.translation().y-(13.5-1.25-6.69))<1e-3,
@@ -150,10 +184,12 @@ try{
   $("remove").click();check(!world.withGate&&world.gateWalls.length===0,"actual physical wall removal");
   $("kind").value="rigid-small";$("kind").dispatchEvent(new Event("change",{bubbles:true}));
   check(world.kind==="rigid-small","real body rebuild");
-  $("reset").click();check(world.ticks===0,"reset");
+  $("add-side").click();check(sideThings.length===2,"live scene side material is recoverable");
+  $("reset").click();check(world.ticks===0&&sideThings.length===2,"reset");
   document.body.dataset.b1Ownercheck=JSON.stringify({pass:true,
    realWingJointControls:true,actualApertureGeometry:true,finiteWASD:true,
-   truePhysicalWallDeletion:true,bodyChoice:true,notOwnerFeel:true});
+   truePhysicalWallDeletion:true,bodyChoice:true,liveMatterRestore:true,
+   actualWingCompressionAndRedeployment:true,notOwnerFeel:true});
  }
  requestAnimationFrame(loop);
 }catch(error){
