@@ -12,7 +12,7 @@ function open(flag,budget=18000){
 }
 const decode=s=>JSON.parse(s.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
 const combined=[];
-for(const batch of ["A","B","C"]){
+for(const batch of ["A","B","C","D"]){
  const data=open("b1probe="+batch,45000)("b1-probe");
  if(!data)throw Error("B1 batch "+batch+" not emitted");
  const result=decode(data);
