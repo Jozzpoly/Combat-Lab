@@ -24,9 +24,8 @@ export class EnvelopeField extends M0Field{
   // 5m-long, 1.24m-high material aperture. No scripted passage sensing.
   if(withGate){
    this.addFixed(21,6.19,2.5,6.69); // upper edge y=12.88
-   this.addFixed(21,20.56,2.5,6.88); // lower edge y=13.68 => aperture .80 ! 
+   this.addFixed(21,20.56,2.5,6.44); // lower edge y=14.12 => 1.24m gap 
   }
-  // Correct corridor edges are revised explicitly below before build.
   this.wallColliders=this.objects.filter(x=>x.kind==="fixed").map(x=>x.collider);
   this.thing=null;
   if(withMatter){
@@ -34,9 +33,9 @@ export class EnvelopeField extends M0Field{
    this.thing=this.objects[this.objects.length-1];
   }
   const root=this.makeBody(V(10,13.5),0,.7),parts=[],joints=[],wings=[];
-  const rootShape={type:"box",hx:kind==="rigid-wide"?1.05:
-    kind==="rigid-small"?1.48:.51,hy:kind==="rigid-wide"?1.86:
-    kind==="rigid-small"?.42:.32};
+  const rootShape={type:"box",hx:kind==="rigid-wide"?.55:
+    kind==="rigid-small"?1.07:.51,hy:kind==="rigid-wide"?1.90:
+    kind==="rigid-small"?.46:.32};
   const collider=this.makeCollider(root,rootShape,125);
   parts.push({body:root,collider,shape:rootShape});
   if(kind==="folding"){
