@@ -1,10 +1,138 @@
 <!doctype html>
-<meta charset="utf-8">
-<title>Combat Lab — Clean Substrate</title>
-<link rel="stylesheet" href="./style.css">
-<main class="shell">
-<header><div><p class="eyebrow">Combat Lab · clean neutral substrate</p><h1 id="experiment-title">Loading…</h1><p id="experiment-purpose" class="purpose"></p></div><div class="controls"><button id="pause">Pause</button><button id="reset">Reset</button><button id="debug">Debug</button></div></header>
-<section class="viewport"><canvas id="lab" aria-label="Combat Lab neutral experiment surface"></canvas></section>
-<footer><div><strong>Controls</strong><span id="controls-text">—</span></div><div class="status"><span id="run-state">RUNNING</span><span id="sim-time">0.00 s</span><span id="build-id">source: local</span></div></footer>
-</main>
-<script type="module" src="./app.js"></script>
+<html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Combat Lab · Pierwszy przegląd Ownera · Z1</title>
+<link rel="stylesheet" href="./style.css"></head>
+<body><div class="shell">
+<header>
+  <div><p class="eyebrow">COMBAT LAB / UCZCIWY PODGLĄD BADAWCZY</p>
+    <h1>Co naprawdę mamy <span>Z1</span></h1>
+    <p class="lead">Jeden edytowalny świat z rzeczywistymi kolizjami i materią. To surowy eksperyment, nie gotowa walka ani żywe AI.</p></div>
+  <div class="top">
+    <button id="pause">Pauza</button><button id="step">+1 step</button>
+    <button id="reset">Reset</button><span id="health">Inicjalizacja fizyki</span>
+  </div>
+</header>
+<div class="review-disclosure"><strong>Jest:</strong> fizyczny kontakt, przedmioty, zawias i szyna, niezależne ramiona, przebudowa ciała.
+ <strong>Nie ma:</strong> autonomicznych istot podejmujących sensowne decyzje, prawdziwych nóg i chodu, ukończonej walki.
+ <span>Możesz swobodnie testować i psuć ten świat. Nie ma zadania ani wyniku do zaliczenia.</span></div>
+<div class="layout"><div class="work">
+  <div class="legend">
+    <span><i class="dot green"></i>Dwa ramiona</span>
+    <span><i class="dot amber"></i>Jednostronne ramię</span>
+    <span><i class="dot lavender"></i>Ciężki kadłub</span>
+    <span><i class="dot gray"></i>Fizyczna materia</span>
+  </div>
+  <canvas id="lab" aria-label="Actual shared material world; click physics colliders"></canvas>
+  <div class="toolbar">
+    <span id="state">RUNNING</span>
+    <span id="time">0.0 s</span>
+    <span id="counts">0 actors · 0 objects</span>
+    <span id="activity">0 contact incidences</span>
+  </div>
+  <p class="directions"><strong>WASD</strong> ruch zaznaczonego ciała ·
+    <strong>E/Q</strong> złóż/rozłóż ramię 1 · <strong>R/F</strong> złóż/rozłóż ramię 2 · kliknij, by zaznaczyć ·
+    <strong>brak sztucznego chwytu</strong> ·
+    kółko: zbliżenie · środkowy przycisk: kamera · <strong>pauza + Ctrl-przeciąganie</strong> przesuń ·
+    <strong>pauza + Alt-przeciąganie</strong> obrót ·
+    <strong>pauza + Shift-przeciąganie</strong> dodaj ścianę</p>
+</div>
+<aside>
+ <section class="intro"><h2>Na początek</h2>
+<p><strong>1.</strong> Kliknij fioletowe ciało i użyj WASD, aby przepchnąć przedmiot.</p>
+<p><strong>2.</strong> Zatrzymaj świat, przesuń przedmiot przez Ctrl-przeciągnięcie, wznów.</p>
+<p><strong>3.</strong> Kliknij zieloną istotę, użyj E/Q i R/F, aby poruszać dwoma ramionami.</p>
+<p>To sugestie, nie scenariusz. Eksperymentuj po swojemu.</p></section>
+ <section><h2>Wybrane ciało / materia</h2><div id="selection">Kliknij ciało lub przedmiot.</div>
+  <div class="two">
+   <label>Masa <input id="selected-mass" type="number" min=".1" value="80" step="5"></label>
+   <label>Siła ruchu <input id="selected-motor" type="number" min="0" value="900" step="100"></label>
+  </div>
+  <label hidden>Wyłączony chwyt <input id="selected-hold" type="number" min="0" max="10000000" step="100" value="680"></label>
+  <div id="hinge-controls" hidden>
+   <div class="two">
+    <label>Anchored hinge speed (rad/s)
+      <input id="selected-drive-speed" type="number" step=".1" value="0"></label>
+    <label>Finite hinge torque (N·m)
+      <input id="selected-drive-torque" type="number" min="0" step="100" value="0"></label>
+   </div>
+   <p class="micro">Physical energy source fixed to the world, not an organism motor.
+      Speed 0 or torque 0 disables it. Mass and collisions still resist motion.</p>
+  </div>
+  <button id="apply-selected">Zastosuj zmianę</button>
+  <label class="reflex"><input id="local-response" type="checkbox" checked> Odruch kontaktowy bez ręcznego sterowania</label>
+  <div class="two">
+   <label>Ramię pierwsze <input id="upper" type="range" min="0" max="1" step=".02" value=".82"></label>
+   <label>Ramię drugie <input id="lower" type="range" min="0" max="1" step=".02" value=".82"></label>
+  </div><p class="micro">0 = złożone, 1 = rozłożone. Klawisze E/Q i R/F sterują rzeczywistymi stawami.</p>
+  <div id="rebuild-panel" hidden>
+    <details id="rebuild-details">
+      <summary>Przebuduj ciało podczas pauzy</summary>
+      <p class="micro">Zmienia fizyczne elementy wybranego ciała. Pozostały świat trwa dalej.</p>
+      <div class="two">
+        <label>Połowa długości kadłuba (m)<input id="rebuild-hx" type="number" min=".11" step=".1"></label>
+        <label>Połowa szerokości kadłuba (m)<input id="rebuild-hy" type="number" min=".11" step=".1"></label>
+      </div>
+      <div class="two">
+        <label>Ruchome ramiona<select id="rebuild-arms">
+          <option value="0">0 · rigid</option><option value="1">1 · articulated</option>
+          <option value="2">2 · independently articulated</option></select></label>
+        <label>Długość ramienia (m)<input id="rebuild-length" type="number" min=".8" step=".15"></label>
+      </div>
+      <button id="rebuild-actor">Przebuduj w tym świecie</button>
+    </details>
+  </div>
+ </section>
+ <details class="review-section"><summary>Budowanie i materia — więcej opcji</summary>
+  <label>Nowa istota <select id="body-type"><option value="reach">Ciało z dwoma ramionami</option>
+    <option value="lever">Ciało z jednym ramieniem</option>
+    <option value="bulk">Duży sztywny kadłub</option></select></label>
+  <div class="two"><label>Liczba <input id="count" type="number" min="1" max="100" value="1"></label>
+  <button id="spawn">Dodaj przy kursorze</button></div>
+  <details id="morph-controls"><summary>Physical shape for the next body · edit</summary>
+   <div class="two"><label>Połowa długości kadłuba (m)
+     <input id="new-hx" type="number" min=".12" step=".1" value=".52"></label>
+    <label>Połowa szerokości kadłuba (m)
+     <input id="new-hy" type="number" min=".12" step=".1" value=".47"></label></div>
+   <div class="two"><label>Ruchome ramiona
+     <select id="new-arms"><option value="0">0 · rigid</option>
+     <option value="1">1 · lever</option><option value="2" selected>2 · independent</option></select></label>
+    <label>Długość ramienia (m)
+     <input id="new-arm-length" type="number" min=".8" step=".2" value="1.55"></label></div>
+   <label hidden>Wyłączony chwyt <input id="new-hold" type="number" min="0" max="10000000" step="100" value="680"></label>
+  <div class="two"><label>Masa ciała (kg)
+     <input id="new-mass" type="number" min=".1" step="10" value="80"></label>
+    <label>Siła ruchu (N)
+     <input id="new-motor" type="number" min="0" step="100" value="900"></label></div>
+   <p class="micro">These values build actual rigid bodies, collider sizes and revolute
+     arm joints. Presets are starting points, not fixed species. You can also rebuild an existing body while paused; solver state of other objects remains.</p>
+  </details>
+  <label>Materia <select id="material-type"><option value="block">Swobodna skrzynka</option>
+    <option value="beam">Swobodna belka</option>
+    <option value="hinge">Belka na zawiasie</option><option value="hinge-drive">Zawias napędzany</option>
+    <option value="rail">Element na szynie</option></select></label>
+  <div class="two"><label>Masa (kg) <input id="material-mass" type="number" min=".1" value="45"></label>
+  <label>Rozpiętość (m) <input id="span" type="number" min=".2" value="2.5" step=".25"></label></div>
+  <div class="two">
+    <label>Prędkość zawiasu (rad/s) <input id="new-drive-speed" type="number" value="1.1" step=".1"></label>
+    <label>Moment napędu zawiasu (N·m) <input id="new-drive-torque" type="number" min="0" value="900" step="100"></label>
+  </div>
+  <div class="two"><button id="add-material">Dodaj materię</button>
+  <button id="undo">Cofnij dodanie</button></div>
+ </details>
+ <details class="review-section"><summary>Zewnętrzny impuls (narzędzie badawcze)</summary>
+  <label>Impuls (N·s) <input id="poke-magnitude" type="number" min="0" value="230" step="25"></label>
+  <button id="poke">Przeciągnij impuls od obiektu</button>
+  <p class="micro">Outside research impulse: a diagnostic intervention, never credited to an organism.</p>
+ </details>
+ <details><summary>Zapis / wczytanie układu początkowego</summary>
+  <p class="micro">Portable JSON retains masses, articulated poses, constrained matter and walls.
+    NOT velocities, exact contacts or a running solver replay. Invalid input does not replace the live world.</p>
+  <textarea id="recipe" rows="7" spellcheck="false"></textarea>
+  <div class="two"><button id="capture">Zapisz stan początkowy</button><button id="load">Sprawdź i wczytaj</button></div>
+ </details>
+ <details><summary>Granice dowodów</summary><p class="micro">To eksperyment, nie zaakceptowany produkt. Podparcie to uproszczona siła w 2D, nie fizyka nóg. Odruchy nie są inteligencją. Techniczny test nie zastępuje Twojej oceny.</p></details>
+ <p id="message" role="status">Awaiting physical world.</p>
+</aside></div>
+<footer><span>NIEZATWIERDZONA PRÓBA · BEZ AUTOMATYCZNEGO DEPLOYU</span><span id="build">Z1 · badawczy kod fizyczny, bez zmian</span></footer>
+</div><script type="module" src="./app.js"></script></body></html>
