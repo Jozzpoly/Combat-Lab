@@ -47,6 +47,7 @@ export function holdMaterialProbe(World){
         crateDistance:+near(end,initial).toFixed(4),
         rootX:+(root.x-10).toFixed(4),
         holdImpulse:+w.holdImpulse.toFixed(3),
+        holdBreaks:w.holdBreaks,stillHeld:Boolean(w.hold),
         centerDrift:+near(centerOfMass(),centerBefore).toFixed(4),
         nonfinite:errors};
       w.endHold();
@@ -62,6 +63,8 @@ export function holdMaterialProbe(World){
   if(light.nonfinite||unheld.nonfinite||heavy.nonfinite)
     throw Error("Non-finite contact hold mechanics");
   if(light.holdImpulse<=.01)throw Error("Body-origin finite hold never delivered physical impulse");
+  if(light.holdBreaks!==0 || heavy.holdBreaks<1)
+    throw Error("Physical load hold and overload release no longer separate");
   if(light.crateX>=unheld.crateX-1)
     throw Error("Physical hold did not create a different object action in this fixture");
   if(Math.abs(light.crateX)<=Math.abs(heavy.crateX)+.5)
