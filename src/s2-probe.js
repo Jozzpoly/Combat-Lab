@@ -28,8 +28,11 @@ export function compareGroundSources(){
  const ice=find("ice"),grip=find("grippy"),float=find("floating"),idle=find("idle");
  if(grip.grounded<50||ice.grounded<50)throw Error("S2 didn't form sustained real ground contacts");
  if(float.grounded>0)throw Error("Zero-gravity control received fictitious floor support");
+ if(ice.guardDX<grip.guardDX+.3)throw Error("S2 ground friction does not mediate resistance");
  if(Math.abs(idle.guardDX)>.1||idle.contacts>0)
    throw Error("S2 passive control applied force or created false contact");
+ if(ice.guardY<.75||grip.guardY<.75||ice.guardY>1.1||grip.guardY>1.1)
+   throw Error("S2 contact control departed the real floor; boundary artifact");
  if(ice.contacts<5||grip.contacts<5)
    throw Error("S2 ram didn't physically contact both material regimes");
  return {scope:"single grounded Rapier3D model; fixed ground collider and dynamic yaw-only bodies, 420 ticks of IDENTICAL external laboratory force; gravity/friction controls + idle/offset",

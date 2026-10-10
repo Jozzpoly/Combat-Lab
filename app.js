@@ -30,7 +30,9 @@ function draw(){
  const W=r.width,H=r.height;
  ctx.fillStyle="#12242d";ctx.fillRect(0,0,W,H);
  const scale=Math.min(W/12,H/8),x0=W/2+W*.04,z0=H/2;
- const trans=(x,z)=>({x:x0+x*scale,y:z0-z*scale});
+ const center=(state.sim.defender.body.translation().x+
+      state.sim.ram.body.translation().x)/2;
+ const trans=(x,z)=>({x:x0+(x-center)*scale,y:z0-z*scale});
  ctx.lineWidth=1;ctx.strokeStyle="#28414a";
  for(let x=-9;x<10;x++){let p=trans(x,-5);ctx.beginPath();ctx.moveTo(p.x,0);ctx.lineTo(p.x,H);ctx.stroke();}
  for(let z=-4;z<=4;z++){let p=trans(-6,z);ctx.beginPath();ctx.moveTo(0,p.y);ctx.lineTo(W,p.y);ctx.stroke();}
