@@ -214,3 +214,10 @@ if(new URLSearchParams(location.search).has("frames")){
   document.body.dataset.m0Frames=JSON.stringify(stages);
  }catch(error){document.body.dataset.liveError=String(error.stack||error);}
 }
+
+if(new URLSearchParams(location.search).has("fairm0")){
+ try{
+  const {fairM0}=await import("./src/m0-fair-pressure.js");
+  document.body.dataset.m0Fair=JSON.stringify(fairM0());
+ }catch(error){document.body.dataset.liveError=String(error.stack||error);}
+}
