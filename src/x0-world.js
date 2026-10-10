@@ -19,11 +19,11 @@ const wrap=x=>Math.atan2(Math.sin(x),Math.cos(x));
 const PALETTE={reach:"#9fe3be",lever:"#e8c58a",bulk:"#aab8ef"};
 const FORMS={
   reach:{mass:80,hx:.52,hy:.47,motor:900,turn:340,speed:2.4,
-    torque:620,armLength:1.55,arms:2,reach:.25,brace:80},
+    torque:620,armLength:1.55,arms:2,reach:.25,brace:80,holdForce:680},
   lever:{mass:49,hx:.47,hy:.35,motor:600,turn:270,speed:3.0,
-    torque:470,armLength:2.30,arms:1,reach:.18,brace:55},
+    torque:470,armLength:2.30,arms:1,reach:.18,brace:55,holdForce:420},
   bulk:{mass:260,hx:1.05,hy:.84,motor:1050,turn:510,speed:1.7,
-    torque:0,armLength:0,arms:0,reach:0,brace:2200}
+    torque:0,armLength:0,arms:0,reach:0,brace:2200,holdForce:1100}
 };
 export const BODY_PRESETS=Object.freeze(FORMS);
 export class CommonsWorld{
@@ -36,6 +36,7 @@ export class CommonsWorld{
     this.actors=[];this.matter=[];this.walls=[];
     this.colliderOwner=new Map();this.created=[];
     this.next=0;this.ticks=0;this.selected=null;
+    this.hold=null;this.holdEvents=0;this.holdImpulse=0;
     this.counts={contacts:0,load:0,reflex:0,braces:0};
     this.lastSource="none";
     if(!empty)this.defaultScene();
@@ -59,10 +60,10 @@ export class CommonsWorld{
     if(!FORMS[form])throw RangeError("Unknown initial reference shape");
     const base=FORMS[form],id="actor-"+(++this.next);
     const spec={...base,...specOverrides};
-    for(const key of ["mass","motor","speed","armLength","torque","brace","hx","hy","arms"])
+    for(const key of ["mass","motor","speed","armLength","torque","brace","holdForce","hx","hy","arms"])
       if(spec[key]!==undefined)safe(spec[key],key);
     if(spec.mass<=0||spec.motor<0||spec.speed<0||spec.torque<0||
-      spec.brace<0||spec.hx<=.10||spec.hy<=.10||
+      spec.brace<0||spec.holdForce<0||spec.hx<=.10||spec.hy<=.10||
       !Number.isInteger(spec.arms)||spec.arms<0||spec.arms>2||
       (spec.arms>0&&spec.armLength<.8))
       throw RangeError("Invalid body force/geometry");
@@ -165,7 +166,9 @@ export class CommonsWorld{
   }
   actor(id){return this.actors.find(a=>a.id===id)||null;}
   item(id){return this.matter.find(m=>m.id===id)||null;}
-  select(id){this.selected=this.actor(id)?.id||null;return this.selected;}
+  select(id){const next=this.actor(id)?.id||null;
+    if(this.hold && this.hold.actorId!==next)this.endHold();
+    this.selected=next;return this.selected;}
   setArmReflex(id,enabled){
     const a=this.actor(id);if(!a)return false;
     a.armReflexEnabled=Boolean(enabled);
@@ -184,7 +187,7 @@ export class CommonsWorld{
     return true;
   }
   setSpec(id,key,value){
-    const a=this.actor(id);if(!a||!["motor","speed","brace","torque","mass"].includes(key))return false;
+    const a=this.actor(id);if(!a||!["motor","speed","brace","torque","mass","holdForce"].includes(key))return false;
     const n=safe(value,key);
     if(n<0 ||(key==="mass"&&n<=0)||n>1e7)throw RangeError("Outside experimental physical range");
     a.spec[key]=n;
@@ -271,8 +274,80 @@ export class CommonsWorld{
       root.applyTorqueImpulse(-torque,true);
     }
   }
+
+  // Intentionally a BODY-ORIGIN action, not the researcher's free-space impulse.
+  // A physical collider on the selected actor must already touch the material.
+  // The finite actuator acts at a point on an actual root or articulated limb.
+  beginHold(point){
+    safe(point.x);safe(point.y);this.endHold();
+    const actor=this.actor(this.selected);
+    if(!actor||actor.spec.holdForce<=0)return false;
+    const targets=this.matter.filter(m=>m.collider.containsPoint(point)||
+      norm(V(point.x-m.collider.projectPoint(point,true).point.x,
+        point.y-m.collider.projectPoint(point,true).point.y))<.12);
+    let best=null;
+    for(const m of targets){
+      for(const part of actor.parts){
+        // Approximate the closest exterior surfaces of two convex colliders.
+        // Starting a hold never permits remote acquisition based on cursor range.
+        let onMatter=m.collider.projectPoint(part.body.translation(),false).point;
+        let onActor=part.collider.projectPoint(onMatter,false).point;
+        onMatter=m.collider.projectPoint(onActor,false).point;
+        onActor=part.collider.projectPoint(onMatter,false).point;
+        const gap=norm(V(onMatter.x-onActor.x,onMatter.y-onActor.y));
+        if(gap<=.18&&(!best||gap<best.gap))
+          best={m,part,onMatter,onActor,gap};
+      }
+    }
+    if(!best)return false;
+    const {m,part,onMatter,onActor}=best;
+    const toLocal=(body,p)=>{
+      const q=body.translation();
+      return rot(V(p.x-q.x,p.y-q.y),-body.rotation());
+    };
+    this.hold={actorId:actor.id,objectId:m.id,actorBody:part.body,
+      objectBody:m.body,actorPart:part.tag,
+      actorAnchor:toLocal(part.body,onActor),
+      objectAnchor:toLocal(m.body,onMatter),
+      deliveredImpulse:0};
+    this.holdEvents++;
+    return true;
+  }
+  endHold(){this.hold=null;}
+  holdPoints(){
+    if(!this.hold)return null;
+    const h=this.hold;
+    const worldPoint=(body,local)=>{
+      const p=body.translation(),r=rot(local,body.rotation());
+      return V(p.x+r.x,p.y+r.y);
+    };
+    return {actor:worldPoint(h.actorBody,h.actorAnchor),
+      object:worldPoint(h.objectBody,h.objectAnchor)};
+  }
+  stepHold(){
+    if(!this.hold)return;
+    const h=this.hold,actor=this.actor(h.actorId);
+    if(!actor||actor.spec.holdForce<=0){this.endHold();return;}
+    const {actor:p,object:q}=this.holdPoints();
+    const atVelocity=(body,at)=>{
+      const v=body.linvel(),o=body.translation(),a=body.angvel();
+      return V(v.x-a*(at.y-o.y),v.y+a*(at.x-o.x));
+    };
+    const vp=atVelocity(h.actorBody,p),vq=atVelocity(h.objectBody,q);
+    const strength=1050,damper=135;
+    const impulse=V(((p.x-q.x)*strength+(vp.x-vq.x)*damper)*DT,
+      ((p.y-q.y)*strength+(vp.y-vq.y)*damper)*DT);
+    const magnitude=norm(impulse),cap=actor.spec.holdForce*DT;
+    const factor=magnitude>cap?cap/magnitude:1;
+    const ix=impulse.x*factor,iy=impulse.y*factor;
+    if(!Number.isFinite(ix+iy))throw RangeError("Contact hold unstable");
+    h.objectBody.applyImpulseAtPoint(V(ix,iy),q,true);
+    h.actorBody.applyImpulseAtPoint(V(-ix,-iy),p,true);
+    h.deliveredImpulse=norm(V(ix,iy));this.holdImpulse+=h.deliveredImpulse;
+  }
   step({manual=null}={}){
     for(const a of this.actors)this.motor(a,a.id===this.selected?manual:null);
+    this.stepHold();
     this.world.step();this.ticks++;this.observe();return this.snapshot();
   }
   poke(point,impulse){
@@ -296,6 +371,7 @@ export class CommonsWorld{
     return {id:found.id,part:found.tag,impulse:m};
   }
   pose(id,pos,angle=null){
+    if(this.hold && (this.hold.actorId===id||this.hold.objectId===id))this.endHold();
     const a=this.actor(id),o=this.item(id);
     if(!a&&!o)return false;
     if(o?.kind==="rail")throw RangeError("Rail base position is fixed");
@@ -333,7 +409,8 @@ export class CommonsWorld{
     const w=this.walls.find(o=>o.id===id),m=this.item(id);
     if(w){this.colliderOwner.delete(w.collider.handle);this.world.removeRigidBody(w.body);
       this.walls=this.walls.filter(x=>x!==w);return true;}
-    if(m){this.colliderOwner.delete(m.collider.handle);
+    if(m){if(this.hold?.objectId===m.id)this.endHold();
+      this.colliderOwner.delete(m.collider.handle);
       this.world.removeRigidBody(m.body);
       if(m.pivot)this.world.removeRigidBody(m.pivot);
       this.matter=this.matter.filter(x=>x!==m);return true;}
@@ -342,7 +419,8 @@ export class CommonsWorld{
   snapshot(){
     return {ticks:this.ticks,actors:this.actors.length,matter:this.matter.length,
       contacts:this.counts.contacts,reflexEvents:this.counts.reflex,
-      braceEvents:this.counts.braces,selected:this.selected};
+      braceEvents:this.counts.braces,selected:this.selected,
+      holding:this.hold?.objectId||null,holdEvents:this.holdEvents};
   }
-  dispose(){this.world.free();}
+  dispose(){this.endHold();this.world.free();}
 }
