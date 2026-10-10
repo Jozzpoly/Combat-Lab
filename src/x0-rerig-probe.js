@@ -37,8 +37,12 @@ export function probeLiveRerig(World,capture,restore){
     assert(same(position(mate.root),otherActorPos) && same(velocity(mate.root),otherActorVel) &&
       same(position(matter.body),otherMatterPos) && same(velocity(matter.body),otherMatterVel),
       "other resident/matter changed on body-only edit");
-    for(const handle of originalParts)
+    for(const handle of originalParts){
       assert(!w.colliderOwner.has(handle),"stale collider ownership survived re-rig");
+      if(typeof w.world.getCollider==="function")
+        assert(w.world.getCollider(handle)===null,
+          "obsolete physical collider still exists in the solver after re-rig");
+    }
     let maxPartCount=0;
     for(let i=0;i<24;i++){
       const arms=i%3;
@@ -91,7 +95,13 @@ function trial(World,edit){
     const initial=V(from.x,from.y);
     for(let t=0;t<105;t++)w.step({manual:{move:V(-1,0),aim:null}});
     const after=obj.body.translation();
-    return {acquired,travelX:+(after.x-initial.x).toFixed(4),
+    const wasHeld=Boolean(w.hold),beforeRebuildClock=w.ticks;
+    if(edit){
+      w.rebuildActor(a.id,{arms:0});
+      assert(!w.hold&&w.ticks===beforeRebuildClock,
+        "morphological change failed to release stale physical hold without resetting time");
+    }
+    return {acquired,wasHeld,holdReleasedAfterRerig:edit?!w.hold:null,travelX:+(after.x-initial.x).toFixed(4),
       holdReleases:w.holdBreaks,remainingArms:w.actor(a.id).arms.length,
       source:acquired?"body-origin finite hold":"only collision"};
   }finally{w.dispose();}
