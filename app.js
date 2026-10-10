@@ -410,6 +410,10 @@ async function start(){
  message("Live Rapier world. Alter bodies or materials; local responses are not goal agents.");
  el("health").textContent="PHYSICS LIVE · Owner quality unverified";
  document.body.dataset.live="yes";
+ if(new URLSearchParams(location.search).has("relayf2")){
+   const {falsifyInterActorReflexRelay}=await import("./src/x0-local-response-falsifier.js");
+   document.body.dataset.relayf2=JSON.stringify(falsifyInterActorReflexRelay(CommonsWorld));
+ }
  if(new URLSearchParams(location.search).has("f2")){
    const {falsifyLocalResponse}=await import("./src/x0-local-response-falsifier.js");
    document.body.dataset.f2=JSON.stringify(falsifyLocalResponse(CommonsWorld));
