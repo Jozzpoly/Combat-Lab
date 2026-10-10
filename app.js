@@ -116,7 +116,7 @@ function render(){
  el("time").textContent=(field.ticks*DT).toFixed(1)+" s";
  el("counts").textContent=field.actors.length+" bodies · "+field.matter.length+" matter";
  el("activity").textContent=field.counts.contacts+" contacts · "+
-    field.counts.reflex+" local responses"+
+    field.counts.reflex+" local responses · "+field.holdBreaks+" contact holds slipped"+
     (field.hold?" · body-contact hold ACTIVE":"");
  const a=field.actor(selected),m=field.item(selected);
  el("selection").textContent=a?
