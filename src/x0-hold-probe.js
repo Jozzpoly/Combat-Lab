@@ -54,6 +54,27 @@ export function holdMaterialProbe(World){
       return result;
     }finally{w.dispose();}
   };
+  // A separate material relation: a world-pinned bar must rotate by actual
+  // reciprocal contact/torque, not by a scripted 'open gate' transition.
+  const hingeRun=held=>{
+    const w=new World({empty:true});
+    try{
+      const a=w.addActor("reach",V(10,12),0);
+      w.select(a.id);
+      const hinge=w.addHinge(V(contactPosition.x+1.75,contactPosition.y),
+        {length:1.9,mass:52,angle:Math.PI,created:false});
+      const click=V(contactPosition.x-.10,contactPosition.y);
+      const acquired=held&&w.beginHold(click);
+      const initial=hinge.body.rotation();
+      for(let i=0;i<95;i++)
+        w.step({manual:{move:V(0,-1),aim:null}});
+      return {acquired,angleChange:+Math.atan2(
+        Math.sin(hinge.body.rotation()-initial),
+        Math.cos(hinge.body.rotation()-initial)).toFixed(4),
+        released:w.holdBreaks};
+    }finally{w.dispose();}
+  };
+  const hingeWithHold=hingeRun(true),hingeControl=hingeRun(false);
   const light=run({}),unheld=run({hold:false}),
     rigid=run({arms:0}),unpowered=run({holdForce:0}),
     heavy=run({mass:400}),noDrive=run({drive:false});
@@ -73,5 +94,6 @@ export function holdMaterialProbe(World){
     throw Error("Unpowered reciprocal hold generated spurious system travel");
   return {scope:"touch-qualified finite reciprocal body/matter hold; no actor agency/Owner feel",
     contactPosition,light,unheld,rigid,unpowered,heavy,noDrive,
+    hingeWithHold,hingeControl,
     contrastX:+Math.abs(light.crateX-unheld.crateX).toFixed(4)};
 }
