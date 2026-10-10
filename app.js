@@ -99,6 +99,7 @@ async function main(){
    const result=compareGroundSources();
    el("feedback").textContent="Measured ice–grippy guard difference: "+Q(result.iceMinusGripDX)+" m. Grounded comparison only; does not certify stance or game quality.";
  });
+ document.body.dataset.live="yes"; // Initialization complete before expensive probe.
  if(new URLSearchParams(location.search).has("uiprobe")){
    el("mu").value=".2";el("mu").dispatchEvent(new Event("input",{bubbles:true}));
    if(Math.abs(state.sim.settings.surface-.2)>1e-8)throw Error("UI friction control inert");
@@ -129,7 +130,6 @@ async function main(){
      physicalFloorRemoved:true,fallenY:fallen,
      groundSurfaceChangedBeforeReset:true});
  }
- document.body.dataset.live="yes";
  if(new URLSearchParams(location.search).has("visual")){
    state.driveTicks=310;
    for(let i=0;i<310;i++){state.sim.step(state.driveTicks>0?force():0);state.driveTicks--;}
