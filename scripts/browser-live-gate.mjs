@@ -25,3 +25,15 @@ const chainRaw=read(url+(url.includes("?")?"&":"?")+"chainz1=1",37000)("chainz1"
 if(!chainRaw)throw Error("Z1 continuous two-body contact chain not emitted");
 const chain=JSON.parse(chainRaw.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
 console.log("Z1 TWO-BODY CONTACT-ONLY CONTINUATION "+JSON.stringify(chain));
+
+const {readFileSync}=await import("node:fs");
+for(const [label,suffix] of [["initial",""],["pushed","?reviewz1=1"]]){
+ const file="/tmp/z1-"+label+".png";
+ execFileSync(chrome,["--headless=new","--no-sandbox","--disable-gpu",
+   "--disable-dev-shm-usage","--hide-scrollbars","--window-size=1440,900",
+   "--virtual-time-budget=3500","--screenshot="+file,url+suffix],
+   {timeout:95000,maxBuffer:5*1024*1024});
+ const png=readFileSync(file).toString("base64");
+ for(let i=0;i<png.length;i+=1700)
+   console.log("Z1_FRAME_"+label+"_CHUNK:"+png.slice(i,i+1700));
+}

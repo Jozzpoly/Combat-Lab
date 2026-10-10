@@ -377,41 +377,7 @@ export class CommonsWorld{
     // Researcher must exert force through actual solver contact surfaces.
     return false;
   }
-  legacyHoldDisabled(point){
-    safe(point.x);safe(point.y);this.endHold();
-    const actor=this.actor(this.selected);
-    if(!actor||actor.spec.holdForce<=0)return false;
-    const targets=this.matter.filter(m=>m.collider.containsPoint(point)||
-      norm(V(point.x-m.collider.projectPoint(point,true).point.x,
-        point.y-m.collider.projectPoint(point,true).point.y))<.12);
-    let best=null;
-    for(const m of targets){
-      for(const part of actor.parts){
-        // Approximate the closest exterior surfaces of two convex colliders.
-        // Starting a hold never permits remote acquisition based on cursor range.
-        let onMatter=m.collider.projectPoint(part.body.translation(),false).point;
-        let onActor=part.collider.projectPoint(onMatter,false).point;
-        onMatter=m.collider.projectPoint(onActor,false).point;
-        onActor=part.collider.projectPoint(onMatter,false).point;
-        const gap=norm(V(onMatter.x-onActor.x,onMatter.y-onActor.y));
-        if(gap<=.18&&(!best||gap<best.gap))
-          best={m,part,onMatter,onActor,gap};
-      }
-    }
-    if(!best)return false;
-    const {m,part,onMatter,onActor}=best;
-    const toLocal=(body,p)=>{
-      const q=body.translation();
-      return rot(V(p.x-q.x,p.y-q.y),-body.rotation());
-    };
-    this.hold={actorId:actor.id,objectId:m.id,actorBody:part.body,
-      objectBody:m.body,actorPart:part.tag,
-      actorAnchor:toLocal(part.body,onActor),
-      objectAnchor:toLocal(m.body,onMatter),
-      deliveredImpulse:0};
-    this.holdEvents++;
-    return true;
-  }
+
   endHold(){this.hold=null;}
   holdPoints(){
     if(!this.hold)return null;
