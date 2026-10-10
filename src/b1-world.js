@@ -60,6 +60,24 @@ export class EnvelopeField extends M0Field{
   this.startX=root.translation().x;
   this.startMatter=this.thing?.body.translation().x??null;
  }
+ setAperture(width){
+  if(!Number.isFinite(width)||width<.65||width>4.5)
+   throw RangeError("Invalid physical tunnel width");
+  if(this.gateWalls.length!==2)return false;
+  const top=this.gateWalls[0],bottom=this.gateWalls[1];
+  top.body.setTranslation(V(21,13.5-width*.5-top.hy),true);
+  bottom.body.setTranslation(V(21,13.5+width*.5+bottom.hy),true);
+  this.world.propagateModifiedBodyPositionsToColliders();
+  return true;
+ }
+ removeGate(){
+  for(const item of this.gateWalls){
+   this.world.removeRigidBody(item.body);
+   const idx=this.objects.indexOf(item);
+   if(idx>=0)this.objects.splice(idx,1);
+  }
+  this.gateWalls=[];this.withGate=false;
+ }
  setFold(value){
   if(!Number.isFinite(value))throw RangeError("fold");
   this.foldTarget=clamp(value,0,1);
