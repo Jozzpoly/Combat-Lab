@@ -38,6 +38,10 @@ export function validate(data){
       throw TypeError("Unsupported free material identity");
     const base={kind:m.kind,form,...shape(m,["x","y","angle","mass","length","hx","hy"])};
     if(base.mass<=0||base.hx<=0||base.hy<=0||base.length<0)throw RangeError("Invalid matter");
+    if(m.kind==="hinge"){
+      base.driveSpeed=m.driveSpeed===undefined?0:num(m,"driveSpeed",{min:-20,max:20});
+      base.driveTorque=m.driveTorque===undefined?0:num(m,"driveTorque",{min:0,max:1e7});
+    }
     return base;
   });
   const walls=array(data.walls,"walls").map(w=>{
@@ -62,6 +66,7 @@ export function capture(world){
       return {kind:m.kind,form:m.form||m.kind,
         x:m.pivot?m.x:t.x,y:m.pivot?m.y:t.y,
         angle:m.body.rotation(),mass:m.mass,
+        ...(m.kind==="hinge"?{driveSpeed:m.driveSpeed,driveTorque:m.driveTorque}:{}),
         length:m.length||0,
         hx:m.kind==="free"?m.hx:m.length/2,
         hy:m.kind==="free"?m.hy:.2};
@@ -81,7 +86,8 @@ export function restore(input){
       if(m.kind==="free")w.addMatter(V(m.x,m.y),
         {hx:m.hx,hy:m.hy,mass:m.mass,angle:m.angle,form:m.form,created:false});
       else if(m.kind==="hinge")w.addHinge(V(m.x,m.y),
-        {length:m.length,mass:m.mass,angle:m.angle,created:false});
+        {length:m.length,mass:m.mass,angle:m.angle,
+          driveSpeed:m.driveSpeed,driveTorque:m.driveTorque,created:false});
       else if(m.kind==="rail")w.addRail(V(m.x,m.y),
         {length:m.length,mass:m.mass,angle:m.angle,created:false});
     }
