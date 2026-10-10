@@ -19,11 +19,12 @@ const contactImpulse=(world,c1,c2)=>{
   return out;
 };
 export class GroundCase{
-  constructor({surface=.8,gravity=9.81,drive=720,offset=0}={}){
-    if(![surface,gravity,drive,offset].every(Number.isFinite)||
+  constructor({surface=.8,gravity=9.81,drive=720,offset=0,payloadMass=0}={}){
+    if(![surface,gravity,drive,offset,payloadMass].every(Number.isFinite)||
+       payloadMass<0||payloadMass>200||
        surface<0||surface>3||gravity<0||gravity>30||
        drive<0||drive>3000||Math.abs(offset)>1.5)throw RangeError("S2 physical experiment parameter");
-    this.settings={surface,gravity,drive,offset};
+    this.settings={surface,gravity,drive,offset,payloadMass};
     this.world=new RAPIER.World(V3(0,-gravity,0));
     this.world.timestep=DT;
     this.world.integrationParameters.numSolverIterations=12;
@@ -48,12 +49,24 @@ export class GroundCase{
     };
     this.defender=make(0,0,120,.63,.90,.75,.9);
     this.ram=make(-1.43,offset,90,.65,.85,.55,.015);
+    this.payload=null;
+    if(payloadMass>0){
+      const body=this.world.createRigidBody(RAPIER.RigidBodyDesc.dynamic()
+        .setTranslation(0,2.13,0).enabledRotations(false,true,false)
+        .setLinearDamping(.03).setAngularDamping(.5));
+      const collider=this.world.createCollider(
+        RAPIER.ColliderDesc.cuboid(.39,.28,.38)
+          .setMass(payloadMass).setFriction(.9).setRestitution(0),body);
+      this.payload={body,collider,mass:payloadMass,
+        halfX:.39,halfY:.28,halfZ:.38};
+    }
     this.initialGuardX=this.defender.body.translation().x;
     this.initialRamX=this.ram.body.translation().x;
     this.history=[];
     this.totalGroundImpulse=0;
     this.totalBodyImpulse=0;
-    this.supportTicks=0;this.bodyContactTicks=0;this.ticks=0;
+    this.supportTicks=0;this.bodyContactTicks=0;this.payloadContactTicks=0;
+    this.payloadImpulse=0;this.ticks=0;
     this.totalAppliedDrive=0;
     this.settle(110);
     this.originGuardX=this.defender.body.translation().x;
@@ -62,7 +75,8 @@ export class GroundCase{
   }
   clearCounters(){
     this.supportTicks=0;this.bodyContactTicks=0;
-    this.totalGroundImpulse=0;this.totalBodyImpulse=0;this.totalAppliedDrive=0;this.ticks=0;
+    this.totalGroundImpulse=0;this.totalBodyImpulse=0;this.totalAppliedDrive=0;
+    this.payloadContactTicks=0;this.payloadImpulse=0;this.ticks=0;
     this.history=[];
   }
   settle(count){
@@ -90,6 +104,9 @@ export class GroundCase{
     const grounded=this.ground?
       contactImpulse(this.world,this.ground,this.defender.collider):0;
     const pressure=contactImpulse(this.world,this.ram.collider,this.defender.collider);
+    const payloadPressure=this.payload?
+      contactImpulse(this.world,this.payload.collider,this.defender.collider):0;
+    if(payloadPressure>1e-6){this.payloadContactTicks++;this.payloadImpulse+=payloadPressure;}
     if(grounded>1e-6){this.supportTicks++;this.totalGroundImpulse+=grounded;}
     if(pressure>1e-6){this.bodyContactTicks++;this.totalBodyImpulse+=pressure;}
     if(this.ticks%30===0)this.history.push({tick:this.ticks,
@@ -97,7 +114,7 @@ export class GroundCase{
       ramX:this.ram.body.translation().x,
       defenderY:this.defender.body.translation().y,
       contactPressure:pressure,groundNormal:grounded});
-    for(const body of [this.ram.body,this.defender.body]){
+    for(const body of [this.ram.body,this.defender.body,...(this.payload?[this.payload.body]:[])]){
       const p=body.translation(),v=body.linvel();
       if(![p.x,p.y,p.z,v.x,v.y,v.z].every(Number.isFinite))
         throw Error("S2 nonfinite physical state");
@@ -115,6 +132,11 @@ export class GroundCase{
       totalGroundImpulse:this.totalGroundImpulse,
       totalActorImpulse:this.totalBodyImpulse,
       externalRamImpulse:this.totalAppliedDrive,
+      payloadMass:this.settings.payloadMass,
+      payloadContactTicks:this.payloadContactTicks,
+      payloadImpulse:this.payloadImpulse,
+      payloadX:this.payload?.body.translation().x??null,
+      payloadY:this.payload?.body.translation().y??null,
       floorExists:!!this.ground};
   }
   dispose(){this.world.free();}

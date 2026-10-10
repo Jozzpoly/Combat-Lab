@@ -46,6 +46,31 @@ function removeGroundControl(){
   return {scope:"same physical 3D body/identical settled world, zero operator drive; actual floor collider retained vs removed; no gameplay fall flag",
     cases};
 }
+function loadBearingControl(){
+ const setups=[
+  {mu:0,load:0},{mu:0,load:80},
+  {mu:.25,load:0},{mu:.25,load:80},
+  {mu:.7,load:0},{mu:.7,load:80},
+  {mu:.7,load:80,drive:0}
+ ];
+ const cases=setups.map(x=>{
+  const world=new GroundCase({surface:x.mu,gravity:9.81,drive:x.drive??720,payloadMass:x.load});
+  try{
+   for(let i=0;i<420;i++)world.step(x.drive??720);
+   const s=world.snapshot();
+   return {friction:x.mu,cargoKg:x.load,ramN:x.drive??720,
+     guardDX:r(s.guardDX),groundImpulse:r(s.totalGroundImpulse),
+     cargoOnGuardTicks:s.payloadContactTicks,
+     cargoImpulse:r(s.payloadImpulse),cargoEndHeight:s.payloadY===null?null:r(s.payloadY),
+     cargoEndX:s.payloadX===null?null:r(s.payloadX),
+     actorContacts:s.actorContactSteps};
+  }finally{world.dispose();}
+ });
+ if(cases.find(x=>x.ramN===0).guardDX!==0)
+   throw Error("Loaded idle control unexpectedly drifted horizontally");
+ return {scope:"additional real dynamic 80kg object allowed to settle on actual guard, then identical external ram push; 0/.25/.7 floor friction and no-push control. Material load is not an assigned stance buff.",
+  cases,warning:"Any added resistance must be separated from added inertia; payload can slide off, and yaw-only bodies cannot tip."};
+}
 export function compareGroundSources(){
  const cases=presets.map(run),find=id=>cases.find(c=>c.id===id);
  const ice=find("ice"),grip=find("grippy"),float=find("floating"),idle=find("idle");
@@ -60,7 +85,8 @@ export function compareGroundSources(){
    throw Error("S2 ram didn't physically contact both material regimes");
  const cheaper=comparePlanarProxy();
  const supportLoss=removeGroundControl();
- return {cheaper,supportLoss,scope:"single grounded Rapier3D model; fixed ground collider and dynamic yaw-only bodies, 420 ticks of IDENTICAL external laboratory force; gravity/friction controls + idle/offset",
+ const payload=loadBearingControl();
+ return {cheaper,supportLoss,payload,scope:"single grounded Rapier3D model; fixed ground collider and dynamic yaw-only bodies, 420 ticks of IDENTICAL external laboratory force; gravity/friction controls + idle/offset",
   cases,iceMinusGripDX:r(ice.guardDX-grip.guardDX),
   conclusionRule:"A different grounded friction outcome proves substrate-level support transmission only; no feet, gait, sustained defensive technique, product feel or 2D cost advantage."};
 }

@@ -7,9 +7,10 @@ const Q=(x)=>Number.isFinite(x)?x.toFixed(2):"—";
 const surface=()=>Number(el("mu").value);
 const gravity=()=>el("gravity").checked?9.81:0;
 const force=()=>Number(el("force").value);
+const cargo=()=>el("cargo").checked?80:0;
 function newWorld(){
   state.sim?.dispose();
-  state.sim=new GroundCase({surface:surface(),gravity:gravity(),drive:force()});
+  state.sim=new GroundCase({surface:surface(),gravity:gravity(),drive:force(),payloadMass:cargo()});
   state.driveTicks=0;state.acc=0;state.paused=false;
   el("pause").textContent="Pause";
   el("push").textContent="Push for 7 seconds";
@@ -45,9 +46,10 @@ function draw(){
    ctx.fillRect(scr.x-b.halfX*scale,scr.y-b.halfZ*scale,2*b.halfX*scale,2*b.halfZ*scale);
    ctx.strokeRect(scr.x-b.halfX*scale,scr.y-b.halfZ*scale,2*b.halfX*scale,2*b.halfZ*scale);
    ctx.fillStyle="#e8eff1";ctx.font="12px system-ui";
-   ctx.textAlign="center";ctx.fillText(caption,scr.x,scr.y-1.15*b.halfZ*scale-16);
+   if(caption){ctx.textAlign="center";ctx.fillText(caption,scr.x,scr.y-1.15*b.halfZ*scale-16);}
  }
  body(state.sim.defender,"#90d8b8","GUARD (120 kg)");
+ if(state.sim.payload)body(state.sim.payload,"#d8b776","");
  body(state.sim.ram,"#e2b680","EXTERNAL RAM (90 kg)");
  const s=state.sim.snapshot();
  ctx.fillStyle="#d3e0e3";ctx.textAlign="left";ctx.font="12px ui-monospace,monospace";
@@ -77,6 +79,7 @@ async function main(){
  el("mu").addEventListener("input",()=>{update();state.sim.setSurface(surface());});
  el("force").addEventListener("input",update);
  el("gravity").addEventListener("change",newWorld);
+ el("cargo").addEventListener("change",newWorld);
  el("reset").addEventListener("click",newWorld);
  el("push").addEventListener("click",()=>{
    state.driveTicks=420;
