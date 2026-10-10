@@ -15,8 +15,10 @@ export class MaterialCommons extends EncounterField {
   this.w2Events={foldCommands:0,pressurePolicySwitches:0,jointImpulse:0};
   if(populated){
    super.populate(); // 18 real independent actors, real objects and cues from E1
-   this.addCreature("folding",V(7.2,23.7),"seeker");
-   this.addCreature("folding",V(37.0,22.6),"wary");
+   const left=this.addCreature("folding",V(10,13.5),"seeker");
+   const right=this.addCreature("folding",V(28,15),"wary");
+   this.setBodyPolicy(left.id,"pressure");
+   this.setBodyPolicy(right.id,"pressure");
    // Distributed movable matter, not a task trigger or teleporting objective.
    this.addFree(19.2,13.4,.56,.40,55);
    this.addFree(24.6,13.8,.58,.44,60);

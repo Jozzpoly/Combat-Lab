@@ -117,3 +117,23 @@ for(const batch of ["A","B","C","D","E"]){
 const w2UiRaw=visitW2("w2ownercheck=1",28000)("w2-ownercheck");
 if(!w2UiRaw||!decode(w2UiRaw).pass)throw Error("W2 actual UI gate missing");
 console.log("W2 TRUE BROWSER UI "+JSON.stringify(decode(w2UiRaw)));
+
+// True raw canvas pixels at exact solver ticks from ONE persistent W2 world.
+// Large images are chunked in CI log strictly to allow post-CI source inspection.
+const frameRaw=visitW2("w2frames=1",60000)("w2-frames");
+if(!frameRaw)throw Error("W2 one-world visual capture missing");
+const w2Frames=decode(frameRaw);
+if(w2Frames.length!==3||w2Frames[0].tick!==0||
+ w2Frames[2].tick!==420||w2Frames.some(x=>x.source.actorCount!==20))
+ throw Error("W2 screenshot timeline is not the expected true physical world");
+for(const frame of w2Frames){
+ console.log("W2 FRAME PROVENANCE "+JSON.stringify({
+  tick:frame.tick,actorCount:frame.source.actorCount,
+  foldables:frame.source.foldables.map(x=>({id:x.id,
+   spanY:x.actualExtent.spanY,foldTarget:x.foldTarget,policy:x.policy,
+   root:x.root})),events:frame.source.pressurePolicySwitches}));
+ if(frame.tick===180)continue; // intermediate measured but no need to save pixels
+ const base64=frame.png.replace(/^data:image\/png;base64,/,"");
+ for(let i=0;i<base64.length;i+=16000)
+  console.log("W2PNG:"+frame.tick+":"+(i/16000)+":"+base64.slice(i,i+16000));
+}

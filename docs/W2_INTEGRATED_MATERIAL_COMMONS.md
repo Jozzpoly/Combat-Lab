@@ -20,3 +20,13 @@ E1 shows local cue/contact-driven initiative with 18 heterogeneous bodies but no
 - UI remains a solver demonstration rather than a world in which Owner spontaneously experiments.
 
 Machine PASS applies only to the exact source test; Owner product verdict remains UNKNOWN. A failed W2 preserves scoped donor findings, not a foundation.
+
+
+## Later causal red team and opportunity correction — 2026-10-11
+One first W2 420-step world showed **real initiative and material movement but the new foldable organisms themselves hardly moved** (~0.63m and 0.68m). This was not evidence of a compelling combined world. A prespecified matched-placement sweep compared the original distant spawn, near-source spawn, and central-pressure spawn, manual target vs simple local policy. A separate clean approach (10,13.5) and (28,15) made the foldables traverse several metres and experience measurable material contacts; this is now the default *trial composition*, not an accepted scene.
+
+**Crucial independent actuator-null:** same clean arrangement (two organisms, shared twenty-actor world, 420 genuine steps) produced identical world outcomes for policy MANUAL versus PRESSURE when both wing torque actuators were completely disabled. With cap=0 passive wings often compressed, despite no requested fold. With bounded actuators active, commanded changes produced different world afterstates under local pressure. This supports a narrow *actuator-to-physical consequence* dependency, not an autonomous decision advantage, natural muscle, or fun. For clean positions and actuator cap 3: manual vs pressure yielded foldable paths ~7.84/5.67m vs 4.65/4.98m, but no metric here says which is better. Repeated contacts are solver samples.
+
+The initial intersection query returned 0 for sampled start configurations. **Caveat:** Rapier world scene queries may use a broad-phase snapshot that has not been updated after author repositioning; 0 is not asserted as a rigorous penetration-free start. A first policy command at tick 1 for some crowded settings warrants extra suspicion. Do not select those high-pressure settings just for bigger numbers. The new default clean setting's first automatic requested fold was tick 54, not tick 1, making it a more interpretable candidate. More exact geometry/first-contact validation still desirable.
+
+New live source screenshot workflow samples exact ticks 0 / 180 / 420 from one emitted Chromium W2 solver with explicit causality/provenance, not a generated illustration and not a user feel test. Any visual impression is evidence with its own limits.

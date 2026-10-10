@@ -321,3 +321,22 @@ if(new URLSearchParams(location.search).has("w2ownercheck")){
    ownerFeel:"UNKNOWN",rootTraction:"external planar proxy"});
  }catch(error){document.body.dataset.liveError=String(error.stack||error);console.error(error);}
 }
+
+if(new URLSearchParams(location.search).has("w2frames")){
+ try{
+  paused=true;field.select(null);
+  const frames=[];
+  for(let i=0;i<=420;i++){
+   if(i>0)field.step();
+   if([0,180,420].includes(i)){
+    draw();
+    const trace=field.morphologyTrace();
+    frames.push({tick:i,
+     source:{actorCount:trace.physicalActorCount,foldables:trace.foldables,
+      pressurePolicySwitches:trace.pressurePolicySwitches},
+     png:canvas.toDataURL("image/png")});
+   }
+  }
+  document.body.dataset.w2Frames=JSON.stringify(frames);
+ }catch(error){document.body.dataset.liveError=String(error.stack||error);console.error(error);}
+}
