@@ -15,7 +15,10 @@ const SCENES=[
  {name:"fold-high-torque-at-gate",kind:"folding",action:"fold",torqueCap:3},
  {name:"fold-no-self-contact",kind:"folding",action:"fold",selfContact:false},
  {name:"deployed-no-self-contact",kind:"folding",action:"open",selfContact:false},
- {name:"fold-no-self-contact-no-gate",kind:"folding",action:"fold",selfContact:false,withGate:false}
+ {name:"fold-no-self-contact-no-gate",kind:"folding",action:"fold",selfContact:false,withGate:false},
+ {name:"front-hinge-fold-self-contact",kind:"folding",hingeMount:"front",action:"fold"},
+ {name:"front-hinge-deployed-self-contact",kind:"folding",hingeMount:"front",action:"open"},
+ {name:"front-hinge-passive-self-contact",kind:"folding",hingeMount:"front",action:"fold",torqueCap:0}
 ];
 function one(config){
  const {name,action,dy=0,...opts}=config;
@@ -37,7 +40,7 @@ function one(config){
   }
   const after=w.output();
   return {name,kind:w.kind,withGate:w.withGate,holdHeading:w.holdHeading,
-   selfContact:w.selfContact,contactsEnabled:after.jointContacts,
+   selfContact:w.selfContact,hingeMount:w.hingeMount,contactsEnabled:after.jointContacts,
    source:"operator finite root-traction proxy; reciprocal joint torques if enabled",
    rootDX:after.chassis.dx,rootFinalY:after.chassis.y,
    crossedGate:crossed!==null,firstPassageTick:crossed,
@@ -49,8 +52,8 @@ function one(config){
  }finally{w.dispose();}
 }
 export function b1Trial(part="A"){
- if(!["A","B","C","D","E"].includes(part))throw RangeError("B1 batch");
- const slices={A:SCENES.slice(0,3),B:SCENES.slice(3,6),C:SCENES.slice(6,9),D:SCENES.slice(9,12),E:SCENES.slice(12,15)};
+ if(!["A","B","C","D","E","F"].includes(part))throw RangeError("B1 batch");
+ const slices={A:SCENES.slice(0,3),B:SCENES.slice(3,6),C:SCENES.slice(6,9),D:SCENES.slice(9,12),E:SCENES.slice(12,15),F:SCENES.slice(15,18)};
  const cases=slices[part].map(one);
  if(cases.some(x=>x.nonfinite||x.samples.length!==6))throw Error("Invalid physical test");
  return {part,scenes:cases,source:"same Rapier2D, same root motor force, one 1.24m *real material tunnel*, no collision resize/teleport; every physical body source tracked. 720 solver steps per scene",caution:"This is not intelligent passage planning or physically grounded gait. Comparing unlike collider distributions or holding heading with external torque does not isolate biomechanical value."};
