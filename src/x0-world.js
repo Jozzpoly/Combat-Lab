@@ -218,7 +218,7 @@ export class CommonsWorld{
     const shield=this.addActor("reach",V(17,13),Math.PI,{
       mass:130,motor:0,brace:2600,torque:650,hx:.62,hy:.60,
       arms:2,armLength:2.4});
-    shield.control="quiet";shield.target=[1,1];
+    shield.control="sense";shield.armReflexEnabled=false;shield.target=[1,1];
     this.addActor("bulk",V(10,13),0,{mass:96,motor:1450,speed:2.2,hx:.62,hy:.45,brace:0});
     this.addActor("lever",V(27,12.8),Math.PI*.95,{motor:0});
     this.addMatter(V(20.3,13),{mass:45,hx:.42,hy:.38,created:false});

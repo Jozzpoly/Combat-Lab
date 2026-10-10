@@ -21,13 +21,14 @@ function run(World,{offset,posture,actuator=true}){
   w.select(null);
   for(let t=0;t<85;t++)w.step();
   const firstAngles=guard.arms.map(a=>wrap(a.body.rotation()-guard.root.rotation()));
-  if(posture==="folded"||posture==="zero-torque"){
+  if(["folded","zero-torque","relaxed"].includes(posture)){
     guard.target=[0,0];
     if(posture==="zero-torque")w.setSpec(guard.id,"torque",0);
   }
   for(let t=0;t<95;t++)w.step();
   const secondAngles=guard.arms.map(a=>wrap(a.body.rotation()-guard.root.rotation()));
   const meaningfulAngleMovement=Math.max(0,...firstAngles.map((a,i)=>Math.abs(wrap(secondAngles[i]-a))));
+  if(posture==="relaxed")w.setSpec(guard.id,"torque",0);
   const initial=challenger.root.translation(),initialLoad=load.body.translation();
   w.select(challenger.id);
   let guardContacts=0,firstContact=null,totalImpulse=0,armOnly=0;
@@ -45,10 +46,12 @@ function run(World,{offset,posture,actuator=true}){
    if(limbs>0)armOnly++;
   }
   const at=challenger.root.translation(),postLoad=load.body.translation();
+  const afterContactAngles=guard.arms.map(a=>wrap(a.body.rotation()-guard.root.rotation()));
   if(w.holdEvents!==0||w.counts.driveTicks!==0)
    throw Error("K1 scenario acquired forbidden external material actuator");
   return {offset,posture,actuator,firstAngles:firstAngles.map(rnd),
-   secondAngles:secondAngles.map(rnd),limbReposition:rnd(meaningfulAngleMovement),
+   secondAngles:secondAngles.map(rnd),afterContactAngles:afterContactAngles.map(rnd),
+   limbReposition:rnd(meaningfulAngleMovement),
    contactSteps:guardContacts,armContactSteps:armOnly,
    totalImpulse:rnd(totalImpulse),firstContact,
    challengerEndX:rnd(at.x),challengerTravelX:rnd(at.x-initial.x),
@@ -60,13 +63,16 @@ export function switchedPosturePressure(World){
   const open=run(World,{offset,posture:"open"});
   const folded=run(World,{offset,posture:"folded"});
   const zeroTorque=run(World,{offset,posture:"zero-torque",actuator:false});
+  const relaxed=run(World,{offset,posture:"relaxed",actuator:false});
   const rigid=run(World,{offset,posture:"rigid"});
-  return {offset,open,folded,zeroTorque,rigid,
+  return {offset,open,folded,zeroTorque,relaxed,rigid,
    foldVsOpen:rnd(folded.challengerEndX-open.challengerEndX),
    foldVsNoTorque:rnd(folded.challengerEndX-zeroTorque.challengerEndX),
+   foldVsRelaxed:rnd(folded.challengerEndX-relaxed.challengerEndX),
    foldedVsRigid:rnd(folded.challengerEndX-rigid.challengerEndX)};
  });
  return {scope:"one actual continuous physical world per sample; guardian physically settles OPEN then operator changes limb target to FOLDED, or leaves OPEN, or commands FOLDED with zero torque, against mass/envelope-matched rigid surrogate. Same second body later drives forward, no hold, no world energy, five prespecified offsets.",
    samples,changedByActuatedPosture:samples.filter(s=>Math.abs(s.foldVsNoTorque)>.25).length,
+   activeHoldPressureCases:samples.filter(s=>Math.abs(s.foldVsRelaxed)>.25).length,
    limitation:"Timed operator intervention with finite joint effort, not autonomously selected defensive posture or grounded support. Rigid baseline is approximate."};
 }
