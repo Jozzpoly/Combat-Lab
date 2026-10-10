@@ -1,19 +1,26 @@
-# Combat Lab — M0 / mechaniczne fenotypy (kandydat badawczy)
+# Combat Lab — E1: lokalne działanie w jednym świecie
 
-**To jest izolowana gałąź eksperymentalna, NIE `main`, NIE publikacja i NIE zaakceptowany organizm.** [Raport dowodów i ograniczeń](docs/M0_PHENOTYPES_CONTACT_CHECKPOINT_2026-10-10.md) · [PR #7](https://github.com/Jozzpoly/Combat-Lab/pull/7).
+**Izolowany kandydat badawczy, nie zaakceptowany organizm, silnik ani publiczny build.** [Pełny wynik + kontrprzykłady](docs/E1_WHOLE_LOCAL_ENCOUNTER_CHECKPOINT_2026-10-10.md) · [PR #9 (Draft)](https://github.com/Jozzpoly/Combat-Lab/pull/9).
 
-M0 używa Rapier 2D do rzeczywistych kontaktów między konstrukcjami: pojedyncze sztywne ciało, trzy człony na przegubach, sprężysty zestaw ośmiu mas. Świat zawiera osiem organizmów, trochę materii, kontrolę WASD, pauzę/edycję, dodawanie nowych ciał i pojedyncze impulsy. Niewybrane organizmy nie dostają globalnego celu ani automatycznej trasy; wybrany porusza się przez **jawny zewnętrzny proxy-napęd płaski**, a nie naturalny chód. Lokalne kontaktowe odruchy są słabe i **nie oznaczają inteligencji**. Obramowanie sprężystego organizmu nie jest niewidzialną fizyczną membraną.
+E1 wykorzystuje **zastępowalną** fizykę M0/Rapier2D: 18 ciał w trzech konstrukcjach (sztywne, trzyczłonowe, sprężyste). Mają lokalne pobudki do działania, ale wszystkie napędzane są ograniczoną, **zewnętrzną siłą na kadłubie**, a nie prawdziwymi nogami. Źródła zapachu są realnymi ruchomymi przedmiotami, nie niewidzialnymi waypointami. Reakcje na nacisk wykorzystują kontakty ostatniego kroku solvera, nie globalny AI planner. Nie ma walki, inteligencji NPC ani poznawania mapy.
 
-**Wykonane sprawdzenia:**
-- [Chromium physics](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38087927814) i [kontrola z przybliżonym sztywnym odpowiednikiem](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38088121316);
-- [prawdziwa seria czasowa w jednym solverze](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38088072780);
-- [test rzeczywistych kontrolek](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38088221703);
-- [surowy pierwszy ekran świata](docs/media/m0-actual-t0.png) i [obraz po 240 krokach](docs/media/m0-actual-t240.png).
+## Eksperymentuj
 
-**Jakościowy werdykt:** mechanicznie badalna podatność i kontakt; jeszcze NIE jest to interesujący żywy świat ani pełnowartościowy organizm. Nie przedłużać automatycznie do M1 i nie traktować wyniku jako wyboru architektury. Nowe decyzje zaczynają się od `main/docs/RESEARCH_STATE.md` i bieżącego Owner feedbacku.
+- **Obserwuj** reakcje istot, przesuwanie brył i zmiany skupień przy lokalnych źródłach.
+- **Przejmij ciało** kliknięciem; WASD steruje nim, a przycisk „Oddaj kontrolę” przywraca samodzielną lokalną motywację.
+- **Pauza + Ctrl-przeciąganie** przemieszcza rzeczywiste ciała i przedmioty.
+- **Kliknij barwne źródło zapachu**, zmień tylko jego sygnał, albo fizycznie przenieś cały przedmiot. Obie interwencje mają osobne skutki.
+- Wyłącz wszystkie lokalne napędy, odłącz reakcje decyzji na nacisk lub wyłącz wewnętrzne mechaniczne odruchy, aby porównać zachowanie tego samego świata.
+- Dodawaj organizmy, źródła i zwykłą materię. Kółko — zoom, środkowy przycisk — kamera.
 
-Historyczne R0/R1/L0 Owner FAIL pozostają FAIL. `rehearsal/current` nie został zmieniony. Żadnego Owner testu M0 nie wykonano.
+Wizualne kręgi są jedynie pomocniczymi oznaczeniami sygnału, nie colliderami ani dokładną geometrią zmysłu. Bryła sprężysta ma osobne masy; graficzny obrys **nie jest szczelną fizyczną membraną**.
 
-### Reprodukcja badania
+**[Prawdziwy kadr początkowy](docs/media/e1-actual-t0.png) → [ten sam świat po 480 krokach](docs/media/e1-actual-t480.png).** [Chromium/WASM i interakcje 38091308778](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38091308778) PASS; to dowód działania technicznego, **NIE** jakości Ownera. 30-istotowy krótki stress bez NaN, bez wiarygodnego pomiaru FPS.
 
-W środowisku z Node.js i przeglądarką Chromium: `npm install`, `npm test`, `npm run build`. Wygenerowany `dist/` służy do prywatnego podglądu. `?probe=1`, `?frames=1`, `?fairm0=1`, `?ownercheck=1` to wyłącznie uruchamiane na żądanie diagnostyczne ścieżki, nie tryby gameplay.
+E1 może nadal przypominać tłok prostokątów i nie dowodzi wartościowo odmiennych możliwości ciał. Nie wolno uznać go za nowy fundament ani masowo tuningować „AI”, żeby zwiększać liczniki.
+
+### Uruchomienie prywatnej kopii źródła
+
+W Node.js: npm install, npm run build; serwuj wygenerowany katalog dist/ przez HTTP. Automatyczne testy: npm test, potem prawdziwa przeglądarka Chromium przez repozytoryjny workflow. Flagi e1probe=A/B, e1causal=C/D, e1frames=1, e1ownercheck=1 są wyłącznie diagnostyczne. Żaden nowy publiczny link do gry nie został wdrożony.
+
+Aktualny punkt wznowienia projektu: [RESEARCH_STATE](https://github.com/Jozzpoly/Combat-Lab/blob/main/docs/RESEARCH_STATE.md) i [AGENT_RUN_CURSOR](https://github.com/Jozzpoly/Combat-Lab/blob/main/docs/AGENT_RUN_CURSOR.md).
