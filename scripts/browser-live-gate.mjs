@@ -35,13 +35,15 @@ console.log("B1 FULL RAW "+JSON.stringify(combined));
 const timelineRaw=open("b1frames=1",10000)("b1-frames");
 if(!timelineRaw)throw Error("B1 actual same-world frames missing");
 const f=decode(timelineRaw);
-if(f.length!==5||f[0].tick!==0||f[4].tick!==720)
+if(f.length!==8||f[0].tick!==0||f[7].tick!==780)
  throw Error("B1 timeline incorrect");
 console.log("B1 SOURCE TIMELINE "+JSON.stringify(f.map(x=>({
  tick:x.tick,root:x.source.chassis,extent:x.source.physicalExtent,
  hingeError:x.source.hingeError,wall:x.source.gateContacts}))));
 console.log("B1 RAW FRAME-0 "+f[0].png);
-console.log("B1 RAW FRAME-720 "+f[4].png);
+console.log("B1 RAW FRAME-180 "+f[2].png);
+console.log("B1 RAW FRAME-580 "+f[5].png);
+console.log("B1 RAW FRAME-780 "+f[7].png);
 const ui=open("b1ownercheck=1",5000)("b1-ownercheck");
 if(!ui)throw Error("B1 UI actual events failed");
 const u=decode(ui);
