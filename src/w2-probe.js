@@ -102,6 +102,53 @@ function commons(){
    nonfinite:accidental,stepCount:w.ticks};
  }finally{w.dispose();}
 }
+
+function pressureCommon(label,locations,policy){
+ const w=new MaterialCommons();
+ const a=w.actors.filter(x=>x.morphology==="folding");
+ if(a.length!==2)throw Error("Missing foldables");
+ for(let i=0;i<2;i++){w.poseActor(a[i].id,V(...locations[i]));w.setBodyPolicy(a[i].id,policy);}
+ const before=w.getTrace(),origins=a.map(x=>({...x.root.translation()}));
+ let summedPressure=0,peakPressure=0,activeFolds=0,compactSamples=0,firstCommand=null,nonfinite=0;
+ try{
+  for(let i=0;i<420;i++){
+   w.step();if(!finite(w))nonfinite++;
+   for(const body of a){
+    summedPressure+=body.pressure;peakPressure=Math.max(peakPressure,body.pressure);
+    if(body.foldTarget>.5){activeFolds++;if(firstCommand===null)firstCommand=i;}
+    if(w.extent(body).spanY<2.5)compactSamples++;
+   }
+  }
+  const after=w.getTrace();
+  return {label,policy,actorCount:w.actors.length,
+   foldables:a.map((body,j)=>({
+    id:body.id,from:origins[j],to:{...body.root.translation()},
+    spanY:w.extent(body).spanY,hingeImpulse:n(body.anatomyImpulse),
+    motion:n(Math.hypot(body.root.translation().x-origins[j].x,
+      body.root.translation().y-origins[j].y))})),
+   summedPressure:n(summedPressure),peakPressure:n(peakPressure),
+   activeFolds,compactSamples,firstCommand,
+   sourceDelta:after.cues.map((c,j)=>({dx:n(c.x-before.cues[j].x),
+    dy:n(c.y-before.cues[j].y)})),pressureSwitches:w.w2Events.pressurePolicySwitches,
+   actualSolverIncidences:after.totalContactPairs,nonfinite};
+ }finally{w.dispose();}
+}
+function localOpportunityMatrix(){
+ const chosen=[
+  {name:"distant-original",xy:[[7.2,23.7],[37,22.6]]},
+  {name:"near-physical-cues",xy:[[11,11],[28.3,16.3]]},
+  {name:"mixed-central-pressure",xy:[[14.5,15],[31,16.1]]}
+ ];
+ const results=[];
+ for(const v of chosen){
+  results.push(pressureCommon(v.name,v.xy,"manual"));
+  results.push(pressureCommon(v.name,v.xy,"pressure"));
+ }
+ if(results.some(x=>x.nonfinite||x.actorCount!==20))
+  throw Error("Whole-world opportunity matrix numerics failed");
+ return {batch:"D",results,warning:"Prespecified A/B locations are not discovered paths. Policy triggers by neighbor density OR previous contact; no grounded locomotion or Owner feel."};
+}
+
 export function runW2Probe(batch){
  if(batch==="A"){
   const cases=[
@@ -127,5 +174,6 @@ export function runW2Probe(batch){
    throw Error("W2 shared-world 20-actor run incomplete");
   return {batch,result,warning:"420 ticks and population do not establish natural crowd feel or Owner acceptance."};
  }
+ if(batch==="D")return localOpportunityMatrix();
  throw Error("Unknown W2 batch");
 }
