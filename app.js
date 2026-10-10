@@ -59,6 +59,12 @@ function render(){
        m.kind==="rail"?"#cba6b1":"#dbad78",
        {line:selectedItem?"#fff2a0":"#515260"});
      disk(V(m.x,m.y),.18,"#f1d193");
+     if(m.kind==="hinge"&&m.driveTorque>0&&m.driveSpeed!==0){
+       ctx.strokeStyle="#6cf1cc";ctx.lineWidth=.075;
+       ctx.beginPath();
+       const end=m.driveSpeed>0?1.7:-1.7;
+       ctx.arc(m.x,m.y,.37,0,end,m.driveSpeed<0);ctx.stroke();
+     }
      if(m.kind==="rail"){
        ctx.strokeStyle="#b5a0a4";ctx.lineWidth=.07;
        ctx.beginPath();ctx.moveTo(m.x-3,m.y);ctx.lineTo(m.x+3,m.y);ctx.stroke();
@@ -116,12 +122,15 @@ function render(){
  el("time").textContent=(field.ticks*DT).toFixed(1)+" s";
  el("counts").textContent=field.actors.length+" bodies · "+field.matter.length+" matter";
  el("activity").textContent=field.counts.contacts+" contacts · "+
-    field.counts.reflex+" local responses · "+field.holdBreaks+" contact holds slipped"+
+    field.counts.reflex+" local responses · "+field.holdBreaks+" contact holds slipped · "+
+    field.counts.driveTicks+" powered steps"+
     (field.hold?" · body-contact hold ACTIVE":"");
  const a=field.actor(selected),m=field.item(selected);
+ el("hinge-controls").hidden=m?.kind!=="hinge";
  el("selection").textContent=a?
    a.form+" | "+a.arms.length+" actual limb(s) | local load "+a.observed.load.toFixed(2):
-   m?m.kind+" | "+m.mass.toFixed(1)+" kg | physically movable":
+   m?(m.kind==="hinge"?"pinned hinge · "+m.driveSpeed.toFixed(2)+" rad/s":m.kind)+
+   " | "+m.mass.toFixed(1)+" kg | material collider":
    "Click any actual collider.";
  if(a){
    if(document.activeElement!==el("selected-mass"))el("selected-mass").value=a.spec.mass;
@@ -130,7 +139,13 @@ function render(){
    if(document.activeElement!==el("upper"))el("upper").value=a.target[0];
    if(document.activeElement!==el("lower"))el("lower").value=a.target[1];
    el("local-response").checked=a.control==="sense";
- }else if(m && document.activeElement!==el("selected-mass"))el("selected-mass").value=m.mass;
+ }else if(m){
+   if(document.activeElement!==el("selected-mass"))el("selected-mass").value=m.mass;
+   if(m.kind==="hinge"){
+     if(document.activeElement!==el("selected-drive-speed"))el("selected-drive-speed").value=m.driveSpeed;
+     if(document.activeElement!==el("selected-drive-torque"))el("selected-drive-torque").value=m.driveTorque;
+   }
+ }
 }
 function controller(){
  const dx=+keys.has("KeyD")-+keys.has("KeyA"),
@@ -174,9 +189,15 @@ function activate(){
      field.setSpec(selected,"holdForce",safe(Number(el("selected-hold").value),"hold force"));
      field.setSpec(selected,"mass",m);
      field.setSpec(selected,"motor",safe(Number(el("selected-motor").value)));
-   }else if(obj)field.setMaterialMass(selected,m);
+   }else if(obj){
+     field.setMaterialMass(selected,m);
+     if(obj.kind==="hinge")
+       field.setHingeDrive(selected,
+         safe(Number(el("selected-drive-speed").value),"hinge angular speed"),
+         safe(Number(el("selected-drive-torque").value),"finite hinge torque"));
+   }
    else throw Error("Select an actor or dynamic material");
-   message("Physical mass/finite motor updated without resetting other matter.");
+   message("Physical mass/finite drive updated without resetting material state.");
  });
  for(const [index,input] of [[0,"upper"],[1,"lower"]])
    el(input).oninput=()=>fail(()=>{if(!field.setActiveArm(selected,index,Number(el(input).value)))
@@ -253,7 +274,10 @@ function activate(){
        span=safe(Number(el("span").value));
      if(kind==="block")field.addMatter(mouse,{mass,hx:Math.max(.15,span/5),hy:.42});
      else if(kind==="beam")field.addMatter(mouse,{mass,hx:span/2,hy:.18,form:"beam"});
-     else if(kind==="hinge")field.addHinge(mouse,{mass,length:span});
+     else if(kind==="hinge"||kind==="hinge-drive")
+       field.addHinge(mouse,{mass,length:span,
+         driveSpeed:kind==="hinge"?0:safe(Number(el("new-drive-speed").value),"motor speed"),
+         driveTorque:kind==="hinge"?0:safe(Number(el("new-drive-torque").value),"motor torque")});
      else if(kind==="rail")field.addRail(mouse,{mass,length:span});
      else throw Error("Unknown material");
      mode=null;message("Real material authored; resume or disturb with an external force.");
