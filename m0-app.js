@@ -303,3 +303,12 @@ if(new URLSearchParams(location.search).has("e1ownercheck")){
    exactPhysicalIdentity:true,reset:true,notOwnerFeel:true});
  }catch(error){document.body.dataset.liveError=String(error.stack||error);console.error(error);}
 }
+
+if(new URLSearchParams(location.search).has("e1causal")){
+ try{
+  paused=true;
+  const {runE1Causality}=await import("./src/e1-causality.js");
+  const mode=new URLSearchParams(location.search).get("e1causal");
+  document.body.dataset.e1Causal=JSON.stringify(runE1Causality(mode));
+ }catch(error){document.body.dataset.liveError=String(error.stack||error);console.error(error);}
+}
