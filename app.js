@@ -430,14 +430,6 @@ async function start(){
      changedRadians:+changed.toFixed(4),ticks:field.ticks,
      contactHoldEvents:field.holdEvents});
  }
- if(new URLSearchParams(location.search).has("visualk1")){
-   selected=field.actors[0].id;field.select(selected);
-   field.setActiveArm(selected,0,0);field.setActiveArm(selected,1,0);
-   for(let i=0;i<125;i++)field.step();
-   selected=field.actors[1].id;field.select(selected);
-   for(let i=0;i<180;i++)field.step({manual:{move:V(1,0),aim:null}});
-   paused=true;render();
- }
  if(new URLSearchParams(location.search).has("switchk1")){
    const {switchedPosturePressure}=await import("./src/k1-switch-probe.js");
    document.body.dataset.switchk1=JSON.stringify(switchedPosturePressure(CommonsWorld));

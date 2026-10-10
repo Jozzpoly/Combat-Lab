@@ -9,3 +9,7 @@ The physical scene uses a narrow walled shared corridor with a two-arm defender,
 Success means a **mechanically distinguishable new operator-selectable limb configuration** survives fair controls, not merely a bigger collider, a complex animation or dramatic displacement. If rigid hulls match/exceed it, explicitly record the negative and resist premature body topology commitments.
 
 Latest project truth: [RESEARCH_STATE](https://github.com/Jozzpoly/Combat-Lab/blob/main/docs/RESEARCH_STATE.md).
+
+## Latest K1 discrimination
+
+[Measured positive **and** rigid-surrogate / sustained-torque negative controls](docs/K1_POSTURE_CONTACT_CHECKPOINT_2026-10-10.md). Physically changing joint targets in the current solver changes an opponent's later available contact/forward advance in some authored configurations; a rigid surrogate blocks more reliably and only one sampled placement required continued joint torque to maintain its difference. **No product approval or accepted physical architecture.**
