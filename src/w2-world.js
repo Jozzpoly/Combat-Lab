@@ -36,7 +36,7 @@ export class MaterialCommons extends EncounterField {
   part.collider.setHalfExtents(V(.51,.32));
   part.collider.setMass(85);
   actor.form={...actor.form,speed:2.15,motor:860};
-  actor.morphology="folding";actor.foldTarget=0;actor.foldPolicy="manual";
+  actor.morphology="folding";actor.foldTarget=0;actor.foldPolicy="manual";actor.anatomyCap=3;
   actor.foldUntil=0;actor.wings=[];actor.anatomyImpulse=0;actor.headingImpulse=0;
   for(const sign of [-1,1]){
    const shape={type:"box",hx:.80,hy:.12};
@@ -66,6 +66,11 @@ export class MaterialCommons extends EncounterField {
   actor.form={...actor.form,speed:2.15,motor:860};
   this.world.propagateModifiedBodyPositionsToColliders();
   return actor;
+ }
+ setActuatorCap(id,value){
+  const a=this.actors.find(x=>x.id===id&&x.morphology==="folding");
+  if(!a||!Number.isFinite(value)||value<0||value>3)return false;
+  a.anatomyCap=value;return true;
  }
  setFold(id,value){
   const a=this.actors.find(x=>x.id===id&&x.morphology==="folding");
@@ -109,7 +114,7 @@ export class MaterialCommons extends EncounterField {
     const angle=wrap(wing.body.rotation()-a.root.rotation());
     const target=wing.sign*Math.PI/2*(1-a.foldTarget);
     const relative=wing.body.angvel()-a.root.angvel();
-    const impulse=clamp(wrap(target-angle)*2.7-relative*.5,-3,3);
+    const impulse=clamp(wrap(target-angle)*2.7-relative*.5,-a.anatomyCap,a.anatomyCap);
     wing.body.applyTorqueImpulse(impulse,true);
     a.root.applyTorqueImpulse(-impulse,true);
     a.anatomyImpulse+=Math.abs(impulse);

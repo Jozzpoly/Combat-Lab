@@ -92,7 +92,7 @@ function visitW2(query,budget=55000){
   throw Error("W2 emitted browser FAIL "+query+": "+val("live-error")+" "+dom.slice(-700));
  return val;
 }
-for(const batch of ["A","B","C","D"]){
+for(const batch of ["A","B","C","D","E"]){
  const raw=visitW2("w2probe="+batch)("w2-probe");
  if(!raw)throw Error("W2 missing live physical probe batch "+batch);
  const data=decode(raw);
@@ -108,8 +108,10 @@ for(const batch of ["A","B","C","D"]){
    throw Error("W2 real connected body cannot fold inside material gate");
  } else if(batch==="C"){
   if(data.result.initialActors!==20||data.result.nonfinite!==0)throw Error("W2 heterogeneous local world corrupted");
- }else if(data.results.length!==6||data.results.some(x=>x.nonfinite))
-  throw Error("W2 missing six matched physical opportunity cases");
+ }else if(batch==="D"){
+  if(data.results.length!==8||data.results.some(x=>x.nonfinite))throw Error("W2 missing eight opportunity cases");
+ }else if(data.results.length!==4||data.results.some(x=>x.nonfinite))
+  throw Error("W2 missing four matched actuation-null cases");
  console.log("W2 PHYSICAL "+JSON.stringify(data));
 }
 const w2UiRaw=visitW2("w2ownercheck=1",28000)("w2-ownercheck");

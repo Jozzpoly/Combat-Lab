@@ -1,5 +1,6 @@
 // W2 real-source tests: "body ability inside a commons" vs rigid controls.
 // Mechanical diagnostics only. NOT a qualitative Owner/organism PASS.
+import RAPIER from "@dimforge/rapier2d-deterministic";
 import {MaterialCommons} from "./w2-world.js";
 import {V} from "./m0-world.js";
 const n=x=>Math.round(x*1e4)/1e4;
@@ -103,12 +104,25 @@ function commons(){
  }finally{w.dispose();}
 }
 
-function pressureCommon(label,locations,policy){
+function initialOverlaps(w,a){
+ w.world.propagateModifiedBodyPositionsToColliders();
+ let hits=0;
+ for(const creature of a)for(const part of creature.parts){
+  const s=part.shape,p=part.body.translation(),rot=part.body.rotation();
+  const shape=s.type==="ball"?new RAPIER.Ball(s.r):new RAPIER.Cuboid(s.hx,s.hy);
+  w.world.intersectionsWithShape(p,rot,shape,collider=>{
+   if(!creature.parts.some(q=>q.collider.handle===collider.handle))hits++;
+   return true;
+  });
+ }
+ return hits; // Query-pipeline inspection, not a signed penetration depth.
+}
+function pressureCommon(label,locations,policy,actuator=3){
  const w=new MaterialCommons();
  const a=w.actors.filter(x=>x.morphology==="folding");
  if(a.length!==2)throw Error("Missing foldables");
- for(let i=0;i<2;i++){w.poseActor(a[i].id,V(...locations[i]));w.setBodyPolicy(a[i].id,policy);}
- const before=w.getTrace(),origins=a.map(x=>({...x.root.translation()}));
+ for(let i=0;i<2;i++){w.poseActor(a[i].id,V(...locations[i]));w.setBodyPolicy(a[i].id,policy);w.setActuatorCap(a[i].id,actuator);}
+ const before=w.getTrace(),origins=a.map(x=>({...x.root.translation()})),initialOverlapHits=initialOverlaps(w,a);
  let summedPressure=0,peakPressure=0,activeFolds=0,compactSamples=0,firstCommand=null,nonfinite=0;
  try{
   for(let i=0;i<420;i++){
@@ -120,7 +134,7 @@ function pressureCommon(label,locations,policy){
    }
   }
   const after=w.getTrace();
-  return {label,policy,actorCount:w.actors.length,
+  return {label,policy,actuator,initialOverlapHits,actorCount:w.actors.length,
    foldables:a.map((body,j)=>({
     id:body.id,from:origins[j],to:{...body.root.translation()},
     spanY:w.extent(body).spanY,hingeImpulse:n(body.anatomyImpulse),
@@ -137,7 +151,8 @@ function localOpportunityMatrix(){
  const chosen=[
   {name:"distant-original",xy:[[7.2,23.7],[37,22.6]]},
   {name:"near-physical-cues",xy:[[11,11],[28.3,16.3]]},
-  {name:"mixed-central-pressure",xy:[[14.5,15],[31,16.1]]}
+  {name:"mixed-central-pressure",xy:[[14.5,15],[31,16.1]]},
+  {name:"clean-cue-approach",xy:[[10,13.5],[28,15]]}
  ];
  const results=[];
  for(const v of chosen){
@@ -147,6 +162,16 @@ function localOpportunityMatrix(){
  if(results.some(x=>x.nonfinite||x.actorCount!==20))
   throw Error("Whole-world opportunity matrix numerics failed");
  return {batch:"D",results,warning:"Prespecified A/B locations are not discovered paths. Policy triggers by neighbor density OR previous contact; no grounded locomotion or Owner feel."};
+}
+
+
+function actuationAblation(){
+ const places=[[10,13.5],[28,15]],results=[];
+ for(const cap of [3,0])for(const policy of ["manual","pressure"])
+  results.push(pressureCommon("clean-cue-approach",places,policy,cap));
+ if(results.some(x=>x.nonfinite))throw Error("W2 actuation ablation nonfinite");
+ return {batch:"E",results,
+  warning:"Zero torque tests physical passive joint compliance, NOT a rigid shape; initial geometric overlap counts must be checked before any causal interpretation."};
 }
 
 export function runW2Probe(batch){
@@ -175,5 +200,6 @@ export function runW2Probe(batch){
   return {batch,result,warning:"420 ticks and population do not establish natural crowd feel or Owner acceptance."};
  }
  if(batch==="D")return localOpportunityMatrix();
+ if(batch==="E")return actuationAblation();
  throw Error("Unknown W2 batch");
 }
