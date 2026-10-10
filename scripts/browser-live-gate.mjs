@@ -47,3 +47,18 @@ if(!ui)throw Error("B1 UI actual events failed");
 const u=decode(ui);
 if(!u.pass)throw Error("B1 UI not qualified");
 console.log("B1 CHROMIUM ACTUAL UI "+JSON.stringify(u));
+
+const dualRaw=open("b1dual=1",60000)("b1-dual");
+if(!dualRaw)throw Error("B1 dual-action real browser pressure scenes absent");
+const dual=decode(dualRaw);
+if(dual.scenarios.length!==4||dual.scenarios.some(x=>!x.stages||x.stages.length!==7))
+ throw Error("B1 dual-action matrix incomplete");
+console.log("B1 DUAL ACTION EVIDENCE "+JSON.stringify(dual.scenarios.map(x=>({
+ name:x.name,crossedRoot:x.crossedRoot,
+ fullBodyBeyond:x.fullBodyBeyond,firstFullExit:x.firstFullExit,
+ sideContacts:x.contactStepsWithLateralMatter,
+ sidePropDisplacements:x.props,
+ hinge:x.final.hingeTorqueImpulse,
+ stem:x.stages.map(y=>({tick:y.tick,root:y.rootX,width:y.width,
+    props:y.sideX}))}))));
+console.log("B1 DUAL FULL "+JSON.stringify(dual));
