@@ -18,7 +18,10 @@ const SCENES=[
  {name:"fold-no-self-contact-no-gate",kind:"folding",action:"fold",selfContact:false,withGate:false},
  {name:"front-hinge-fold-self-contact",kind:"folding",hingeMount:"front",action:"fold"},
  {name:"front-hinge-deployed-self-contact",kind:"folding",hingeMount:"front",action:"open"},
- {name:"front-hinge-passive-self-contact",kind:"folding",hingeMount:"front",action:"fold",torqueCap:0}
+ {name:"front-hinge-passive-self-contact",kind:"folding",hingeMount:"front",action:"fold",torqueCap:0},
+ {name:"front-strong-fold-contact",kind:"folding",hingeMount:"front",action:"fold",torqueCap:3},
+ {name:"front-strong-open-contact",kind:"folding",hingeMount:"front",action:"open",torqueCap:3},
+ {name:"front-strong-fold-no-gate",kind:"folding",hingeMount:"front",action:"fold",torqueCap:3,withGate:false}
 ];
 function one(config){
  const {name,action,dy=0,...opts}=config;
@@ -52,8 +55,8 @@ function one(config){
  }finally{w.dispose();}
 }
 export function b1Trial(part="A"){
- if(!["A","B","C","D","E","F"].includes(part))throw RangeError("B1 batch");
- const slices={A:SCENES.slice(0,3),B:SCENES.slice(3,6),C:SCENES.slice(6,9),D:SCENES.slice(9,12),E:SCENES.slice(12,15),F:SCENES.slice(15,18)};
+ if(!["A","B","C","D","E","F","G"].includes(part))throw RangeError("B1 batch");
+ const slices={A:SCENES.slice(0,3),B:SCENES.slice(3,6),C:SCENES.slice(6,9),D:SCENES.slice(9,12),E:SCENES.slice(12,15),F:SCENES.slice(15,18),G:SCENES.slice(18,21)};
  const cases=slices[part].map(one);
  if(cases.some(x=>x.nonfinite||x.samples.length!==6))throw Error("Invalid physical test");
  return {part,scenes:cases,source:"same Rapier2D, same root motor force, one 1.24m *real material tunnel*, no collision resize/teleport; every physical body source tracked. 720 solver steps per scene",caution:"This is not intelligent passage planning or physically grounded gait. Comparing unlike collider distributions or holding heading with external torque does not isolate biomechanical value."};
