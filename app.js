@@ -25,8 +25,8 @@ function draw(){
  if(!state.sim)return;
  const r=canvas.getBoundingClientRect();
  const ratio=Math.min(2,window.devicePixelRatio||1);
- canvas.width=Math.max(300,Math.round(r.width*ratio));
- canvas.height=Math.max(260,Math.round(r.height*ratio));
+ const cw=Math.max(300,Math.round(r.width*ratio)),ch=Math.max(260,Math.round(r.height*ratio));
+ if(canvas.width!==cw||canvas.height!==ch){canvas.width=cw;canvas.height=ch;}
  ctx.setTransform(ratio,0,0,ratio,0,0);
  const W=r.width,H=r.height;
  ctx.fillStyle="#12242d";ctx.fillRect(0,0,W,H);
@@ -42,11 +42,16 @@ function draw(){
  ctx.fillRect(4,4,W-8,H-8);ctx.globalAlpha=1;
  function body(b,color,caption){
    const p=b.body.translation(),scr=trans(p.x,p.z);
+   ctx.save();ctx.globalAlpha=p.y<-.5?.18:p.y<0?.45:1;
    ctx.fillStyle=color;ctx.strokeStyle="#e8eff1";ctx.lineWidth=2;
    ctx.fillRect(scr.x-b.halfX*scale,scr.y-b.halfZ*scale,2*b.halfX*scale,2*b.halfZ*scale);
    ctx.strokeRect(scr.x-b.halfX*scale,scr.y-b.halfZ*scale,2*b.halfX*scale,2*b.halfZ*scale);
    ctx.fillStyle="#e8eff1";ctx.font="12px system-ui";
-   if(caption){ctx.textAlign="center";ctx.fillText(caption,scr.x,scr.y-1.15*b.halfZ*scale-16);}
+   if(caption){
+     ctx.textAlign="center";
+     ctx.fillText(caption+" · height "+Q(p.y)+" m",scr.x,scr.y-1.15*b.halfZ*scale-16);
+   }
+   ctx.restore();
  }
  body(state.sim.defender,"#90d8b8","GUARD (120 kg)");
  if(state.sim.payload)body(state.sim.payload,"#d8b776","");
@@ -132,11 +137,6 @@ async function main(){
      appliedRamImpulse:moved.externalRamImpulse,
      physicalFloorRemoved:true,fallenY:fallen,
      groundSurfaceChangedBeforeReset:true});
- }
- if(new URLSearchParams(location.search).has("visual")){
-   state.driveTicks=310;
-   for(let i=0;i<310;i++){state.sim.step(state.driveTicks>0?force():0);state.driveTicks--;}
-   state.paused=true;draw();
  }
  if(new URLSearchParams(location.search).has("probe")){
    document.body.dataset.support=JSON.stringify(compareGroundSources());

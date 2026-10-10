@@ -19,3 +19,7 @@ Current main source of truth: [Combat Lab research state](https://github.com/Joz
 ## Correction: floor-friction source truth (2026-10-10)
 
 Rapier's default collider combine rule is **Average**, so the original floor coefficient 0 was NOT truly frictionless: guard friction 0.9 meant effective contact friction 0.45. Earlier ice/payload comparisons used the wrong physical interpretation and are **superseded**. Ground collider now explicitly uses `CoefficientCombineRule.Multiply`, and the honest planar rival uses the same authored coefficient product. Re-run all claims against the updated exact-head code. No architecture promotion is authorized.
+
+## Latest S2 scope and important correction
+
+[Ground Contact S2 checkpoint](docs/S2_GROUND_CONTACT_CHECKPOINT_2026-10-10.md) supersedes earlier numeric interpretations. It preserves the default-Average friction-combine mistake, corrected ground/2D comparisons, cargo inertia-versus-friction controls, actual floor-removal continuity and first-frame visual limitations. This branch is **not** a selected 3D architecture or Owner-qualified lab. The physical ground really exists; the body's legs, balance, locomotion and real combat do not.
