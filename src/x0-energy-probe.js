@@ -2,13 +2,15 @@
 // A world-powered joint is an explicit outside energy source, not resident AI.
 import {V,norm} from "./x0-world.js";
 const difference=(a,b)=>norm(V(a.x-b.x,a.y-b.y));
-function trial(World,powered){
+function trial(World,powered,{speed=null,torque=null}={}){
   const w=new World();
   try{
     w.select(null);
     const hinge=w.matter.find(x=>x.kind==="hinge");
     if(!hinge)throw Error("No physical world-pinned hinge");
     if(!powered)w.setHingeDrive(hinge.id,0,0);
+    else if(speed!==null||torque!==null)
+      w.setHingeDrive(hinge.id,speed??hinge.driveSpeed,torque??hinge.driveTorque);
     const start=hinge.body.rotation();
     let peakSpeed=0,peakContacts=0,contactSteps=0,firstContact=null;
     let maxJointDrift=0;
@@ -74,7 +76,8 @@ function obstructionTrial(World,blocked){
   }finally{w.dispose();}
 }
 export function activeMaterialCommonsPressure(World){
-  const on=trial(World,true),off=trial(World,false);
+  const on=trial(World,true),off=trial(World,false),
+    reverse=trial(World,true,{speed:-1.1}),weak=trial(World,true,{torque:50});
   const diffs={actors:on.actors.map((a,i)=>difference(a.position,off.actors[i].position)),
     matter:on.matter.map((m,i)=>difference(m.position,off.matter[i].position))};
   const freeHinge=obstructionTrial(World,false),blockedHinge=obstructionTrial(World,true);
@@ -92,6 +95,12 @@ export function activeMaterialCommonsPressure(World){
     maxActorContrast:+Math.max(...diffs.actors).toFixed(4),
     maxMatterContrast:+Math.max(...diffs.matter).toFixed(4),
     freeHinge,blockedHinge,
+    reverse:{peakSpeed:reverse.peakSpeed,contactSteps:reverse.contactSteps,
+      reflexEvents:reverse.reflexEvents,firstContact:reverse.firstContact,
+      maxActorContrast:+Math.max(...reverse.actors.map((a,i)=>difference(a.position,off.actors[i].position))).toFixed(4)},
+    weak:{peakSpeed:weak.peakSpeed,contactSteps:weak.contactSteps,
+      reflexEvents:weak.reflexEvents,firstContact:weak.firstContact,
+      maxActorContrast:+Math.max(...weak.actors.map((a,i)=>difference(a.position,off.actors[i].position))).toFixed(4)},
     actorContrasts:diffs.actors.map(x=>+x.toFixed(4)),
     matterContrasts:diffs.matter.map(x=>+x.toFixed(4))};
 }
