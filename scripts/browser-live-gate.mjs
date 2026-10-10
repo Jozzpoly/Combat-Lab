@@ -20,6 +20,13 @@ const raw=probe.get("probe");
 if(!raw)throw Error("X0 whole-world Rapier control probe missing");
 const value=JSON.parse(raw.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
 console.log("X0 WHOLE WORLD CAUSAL EVIDENCE: "+JSON.stringify(value));
+const UI=probe.get("ui-probe");
+if(!UI)throw Error("X0 actual operator UI validation missing");
+const ui=JSON.parse(UI.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+if(!ui.materialAuthoring||!ui.bodyReposition||!ui.pointImpulse||!ui.hingeRotation)
+  throw Error("X0 UI pathways failed");
+console.log("X0 ACTUAL BROWSER OWNER WORKBENCH INPUT: "+JSON.stringify(ui));
+
 if(!value.portedStartScene||!value.invalidSceneRejected)
   throw Error("X0 initial-world authoring claim failed");
 if(value.defaultActors<3||value.defaultMatter<5)
