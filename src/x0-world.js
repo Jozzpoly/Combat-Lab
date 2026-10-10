@@ -37,7 +37,7 @@ export class CommonsWorld{
     this.colliderOwner=new Map();this.created=[];
     this.next=0;this.ticks=0;this.selected=null;
     this.hold=null;this.holdEvents=0;this.holdBreaks=0;this.holdImpulse=0;
-    this.counts={contacts:0,load:0,reflex:0,braces:0};
+    this.counts={contacts:0,load:0,reflex:0,braces:0,driveTicks:0,driveImpulse:0};
     this.lastSource="none";
     if(!empty)this.defaultScene();
   }
@@ -114,9 +114,12 @@ export class CommonsWorld{
     this.walls.push(o);if(created)this.created.push(id);
     return o;
   }
-  addHinge(pos,{length=2.8,mass=85,angle=.2,created=true}={}){
+  addHinge(pos,{length=2.8,mass=85,angle=.2,driveSpeed=0,driveTorque=0,created=true}={}){
     const id="hinge-"+(++this.next);
     if(length<=.5||mass<=0)throw RangeError("Invalid physical hinge");
+    safe(driveSpeed,"hinge speed");safe(driveTorque,"hinge torque");
+    if(Math.abs(driveSpeed)>20||driveTorque<0||driveTorque>1e7)
+      throw RangeError("Unsupported finite hinge drive");
     const pivot=this.newBody(pos.x,pos.y,0,"fixed");
     const offset=rot(V(length/2,0),angle);
     const body=this.newBody(pos.x+offset.x,pos.y+offset.y,angle);
@@ -124,7 +127,7 @@ export class CommonsWorld{
     const joint=this.world.createImpulseJoint(
       RAPIER.JointData.revolute(V(),V(-length/2,0)),pivot,body,true);
     const o={id,kind:"hinge",body,pivot,joint,collider,length,mass,
-      x:pos.x,y:pos.y};
+      driveSpeed,driveTorque,lastDriveImpulse:0,x:pos.x,y:pos.y};
     this.matter.push(o);if(created)this.created.push(id);
     return o;
   }
@@ -161,7 +164,8 @@ export class CommonsWorld{
       [11.7,17.0,.40,.38,17,"block"],
       [34.0,14.9,1.40,.16,165,"beam"]
     ])this.addMatter(V(x,y),{hx,hy,mass,form,created:false});
-    this.addHinge(V(21,17),{length:4.0,mass:112,angle:-.18,created:false});
+    this.addHinge(V(16.8,13.25),{length:3.7,mass:112,angle:-.68,
+      driveSpeed:1.1,driveTorque:900,created:false});
     this.addRail(V(21.6,6.7),{length:2.8,mass:75,created:false});
   }
   actor(id){return this.actors.find(a=>a.id===id)||null;}
@@ -198,6 +202,31 @@ export class CommonsWorld{
     const m=this.item(id);if(!m)return false;
     const n=safe(mass,"material mass");if(n<=0||n>1e8)throw RangeError("Unsupported physical mass");
     m.mass=n;m.collider.setMass(n);return true;
+  }
+  setHingeDrive(id,speed,torque){
+    const m=this.item(id);if(!m||m.kind!=="hinge")return false;
+    const s=safe(speed,"hinge drive speed"),t=safe(torque,"hinge motor torque");
+    if(Math.abs(s)>20||t<0||t>1e7)throw RangeError("Invalid hinge drive");
+    m.driveSpeed=s;m.driveTorque=t;return true;
+  }
+  stepMaterialDrives(){
+    for(const m of this.matter){
+      if(m.kind!=="hinge")continue;
+      m.lastDriveImpulse=0;
+      if(m.driveTorque===0 || m.driveSpeed===0)continue;
+      // Explicit world-anchored finite energy input, NOT autonomous actor action.
+      // A loaded or blocked hinge can slow/stall; never overwrite angular velocity.
+      const inertia=Math.max(1,m.mass*m.length*m.length/12);
+      const request=(m.driveSpeed-m.body.angvel())*inertia*.75;
+      const cap=m.driveTorque*DT;
+      const delivered=clamp(request,-cap,cap);
+      m.body.applyTorqueImpulse(delivered,true);
+      m.lastDriveImpulse=Math.abs(delivered);
+      if(m.lastDriveImpulse>0){
+        this.counts.driveTicks++;
+        this.counts.driveImpulse+=m.lastDriveImpulse;
+      }
+    }
   }
   observe(){
     let total=0,allLoad=0;
@@ -353,6 +382,7 @@ export class CommonsWorld{
   step({manual=null}={}){
     for(const a of this.actors)this.motor(a,a.id===this.selected?manual:null);
     this.stepHold();
+    this.stepMaterialDrives();
     this.world.step();this.ticks++;this.observe();return this.snapshot();
   }
   poke(point,impulse){
@@ -426,7 +456,7 @@ export class CommonsWorld{
       contacts:this.counts.contacts,reflexEvents:this.counts.reflex,
       braceEvents:this.counts.braces,selected:this.selected,
       holding:this.hold?.objectId||null,holdEvents:this.holdEvents,
-      holdBreaks:this.holdBreaks};
+      holdBreaks:this.holdBreaks,driveTicks:this.counts.driveTicks};
   }
   dispose(){this.endHold();this.world.free();}
 }
