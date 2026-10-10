@@ -40,3 +40,13 @@ if(series.length!==4||series[0].tick!==0||series[3].tick!==240)throw Error("M0 t
 console.log("M0 FRAMES REAL TICKS "+JSON.stringify(series.map(p=>({tick:p.tick,
  actorPositions:p.actors.map(a=>({kind:a.kind,x:a.x,y:a.y})),bytes:p.frame.length}))));
 console.log("M0 FRAME-240 "+series[3].frame);
+
+const fairDom=execFileSync(chrome,["--headless=new","--no-sandbox","--disable-gpu","--disable-dev-shm-usage",
+ "--virtual-time-budget=30000","--dump-dom",
+ url+(url.includes("?")?"&":"?")+"fairm0=1"],
+ {encoding:"utf8",timeout:100000,maxBuffer:16*1024*1024});
+const fairRaw=fairDom.match(/data-m0-fair="([^"]*)"/)?.[1];
+if(!fairRaw||fairDom.includes("data-live-error="))throw Error("M0 matched-mass rigid control failed");
+const fair=JSON.parse(fairRaw.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+if(fair.cases.length!==12)throw Error("M0 incomplete matched-envelope control");
+console.log("M0 RIGID SURROGATE "+JSON.stringify(fair));
