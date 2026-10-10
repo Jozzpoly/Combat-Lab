@@ -1,7 +1,5 @@
 // Isolated K1 manual workshop. Not the public rehearsal, no scripted victories.
-import RAPIER from "@dimforge/rapier2d-deterministic";
 import {KineticField,DT,runK1Counterfactual} from "./src/k1-world.js";
-await RAPIER.init();
 const $=id=>document.getElementById(id);
 const canvas=$("world"),ctx=canvas.getContext("2d",{alpha:false});
 let field=new KineticField(),paused=false,mode="shoot",drag=null;
