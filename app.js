@@ -410,6 +410,34 @@ async function start(){
  message("K1: test open or folded force-bearing limbs against a comparable rigid body. All contacts are physical.");
  el("health").textContent="PHYSICS LIVE · Owner quality unverified";
  document.body.dataset.live="yes";
+ if(new URLSearchParams(location.search).has("keyk1")){
+   const guard=field.actors[0],attacker=field.actors[1];
+   if(!guard||!attacker||guard.arms.length!==2)throw Error("K1 UI scene topology changed");
+   selected=guard.id;field.select(selected);
+   dispatchEvent(new KeyboardEvent("keydown",{code:"KeyE",bubbles:true}));
+   dispatchEvent(new KeyboardEvent("keydown",{code:"KeyR",bubbles:true}));
+   if(guard.target[0]!==0||guard.target[1]!==0)
+     throw Error("K1 independent limb keys failed in actual browser");
+   const before=guard.arms.map(a=>a.body.rotation()-guard.root.rotation());
+   selected=attacker.id;field.select(selected);
+   for(let i=0;i<100;i++)field.step({manual:{move:V(),aim:null}});
+   const after=guard.arms.map(a=>a.body.rotation()-guard.root.rotation());
+   const changed=Math.max(...before.map((x,i)=>
+     Math.abs(Math.atan2(Math.sin(after[i]-x),Math.cos(after[i]-x)))));
+   if(changed<.3)throw Error("K1 unselected guard didn't physically attain commanded posture");
+   document.body.dataset.keyk1=JSON.stringify({
+     keyboardCommands:[...guard.target],selected:field.selected,
+     changedRadians:+changed.toFixed(4),ticks:field.ticks,
+     contactHoldEvents:field.holdEvents});
+ }
+ if(new URLSearchParams(location.search).has("visualk1")){
+   selected=field.actors[0].id;field.select(selected);
+   field.setActiveArm(selected,0,0);field.setActiveArm(selected,1,0);
+   for(let i=0;i<125;i++)field.step();
+   selected=field.actors[1].id;field.select(selected);
+   for(let i=0;i<180;i++)field.step({manual:{move:V(1,0),aim:null}});
+   paused=true;render();
+ }
  if(new URLSearchParams(location.search).has("switchk1")){
    const {switchedPosturePressure}=await import("./src/k1-switch-probe.js");
    document.body.dataset.switchk1=JSON.stringify(switchedPosturePressure(CommonsWorld));

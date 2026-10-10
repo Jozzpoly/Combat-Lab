@@ -20,3 +20,19 @@ const switchRaw=read(url+(url.includes("?")?"&":"?")+"switchk1=1",60000)("switch
 if(!switchRaw)throw Error("K1 live posture switch was not observed");
 const switchCase=JSON.parse(switchRaw.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
 console.log("K1 TIMED POSTURE CONTROLS "+JSON.stringify(switchCase));
+
+const keyRaw=read(url+(url.includes("?")?"&":"?")+"keyk1=1",8000)("keyk1");
+if(!keyRaw)throw Error("K1 browser keyboard handoff missing");
+console.log("K1 REAL UI POSTURE CONTROL "+JSON.stringify(
+  JSON.parse(keyRaw.replaceAll("&quot;",'"').replaceAll("&amp;","&"))));
+const {readFileSync}=await import("node:fs");
+for(const [label,ending] of [["start",""],["after","?visualk1=1"]]){
+ const p="/tmp/k1-"+label+".png";
+ execFileSync(chrome,["--headless=new","--no-sandbox","--disable-gpu",
+  "--disable-dev-shm-usage","--hide-scrollbars","--window-size=1440,900",
+  "--virtual-time-budget=4500","--screenshot="+p,url+ending],
+  {timeout:95000,maxBuffer:5*1024*1024});
+ const b=readFileSync(p).toString("base64");
+ for(let i=0;i<b.length;i+=1800)
+  console.log("K1_IMAGE_"+label+"_CHUNK:"+b.slice(i,i+1800));
+}
