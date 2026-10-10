@@ -494,6 +494,10 @@ async function start(){
    document.body.dataset.uiProbe=JSON.stringify(uiCheck());
 
  }
+ if(new URLSearchParams(location.search).has("energy")){
+   const {activeMaterialCommonsPressure}=await import("./src/x0-energy-probe.js");
+   document.body.dataset.energy=JSON.stringify(activeMaterialCommonsPressure(CommonsWorld));
+ }
  if(new URLSearchParams(location.search).has("cascade")){
    const {secondActorOpportunityProbe}=await import("./src/x0-second-actor-probe.js");
    document.body.dataset.cascade=JSON.stringify(secondActorOpportunityProbe(CommonsWorld));
