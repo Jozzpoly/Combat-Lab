@@ -198,3 +198,19 @@ if(new URLSearchParams(location.search).has("probe")){
   $("run-status").textContent="PROBE FAILED";report(String(error));console.error(error);
  }
 }
+if(new URLSearchParams(location.search).has("frames")){
+ try{
+  // ONE real world and ONE continuous fixed-step timeline. Not 3 separately
+  // initialized screenshots disguised as temporal evolution.
+  field.select(field.actors[0].id);
+  const stages=[{tick:0,actors:field.sample().actors,frame:canvas.toDataURL("image/png")}];
+  for(let i=1;i<=240;i++){
+   field.step({direction:i<=200?V(1,0):V()});
+   if(i===80||i===160||i===240){
+    draw();
+    stages.push({tick:i,actors:field.sample().actors,frame:canvas.toDataURL("image/png")});
+   }
+  }
+  document.body.dataset.m0Frames=JSON.stringify(stages);
+ }catch(error){document.body.dataset.liveError=String(error.stack||error);}
+}
