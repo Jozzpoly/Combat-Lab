@@ -381,6 +381,10 @@ async function start(){
    document.body.dataset.uiProbe=JSON.stringify(uiCheck());
 
  }
+ if(new URLSearchParams(location.search).has("pressure")){
+   const {sharedMaterialPressure}=await import("./src/x0-field-pressure.js");
+   document.body.dataset.pressure=JSON.stringify(sharedMaterialPressure(CommonsWorld));
+ }
  requestAnimationFrame(frame);
 }
 start().catch(error=>{
