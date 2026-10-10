@@ -29,7 +29,7 @@
     <span id="activity">0 contact incidences</span>
   </div>
   <p class="directions"><strong>WASD</strong> move selected body · cursor aims ·
-    <strong>E/Q</strong> close/open physical appendages · click to select ·
+    <strong>E/Q</strong> contract/extend arm 1 · <strong>R/F</strong> contract/extend arm 2 · click to select ·
     <strong>right click touching matter</strong> to latch/release finite body-contact hold ·
     wheel zoom · middle drag pan · <strong>pause + Ctrl-drag</strong> move bodies ·
     <strong>pause + Alt-drag</strong> rotate bodies/hinges ·
@@ -62,7 +62,7 @@
   <div class="two">
    <label>Upper / first arm <input id="upper" type="range" min="0" max="1" step=".02" value=".82"></label>
    <label>Lower / second arm <input id="lower" type="range" min="0" max="1" step=".02" value=".82"></label>
-  </div><p class="micro">0 = contracted, 1 = extended. Manual controls override local reflex on the selected body.</p>
+  </div><p class="micro">0 = contracted, 1 = extended. E/Q and R/F independently operate the first and second real limbs; manual commands override the selected body’s local reflex.</p>
   <div id="rebuild-panel" hidden>
     <details id="rebuild-details">
       <summary>Rebuild this body's actual shape · paused</summary>
