@@ -52,6 +52,12 @@ if(!materialPower)throw Error("X0 material energy pair not produced");
 console.log("X0 ACTIVE-MATTER WHOLE COUNTERFACTUAL: "+
   JSON.stringify(JSON.parse(materialPower.replaceAll("&quot;",'"').replaceAll("&amp;","&"))));
 
+const relayF2page=visit(url+(url.includes("?")?"&":"?")+"relayf2=1",28000);
+const rawRelayF2=relayF2page.get("relayf2");
+if(!rawRelayF2)throw Error("Selective inter-actor tactile relay observation absent");
+console.log("X0 SELECTIVE ACTOR-TO-ACTOR REFLEX ABLATION: "+
+  JSON.stringify(JSON.parse(rawRelayF2.replaceAll("&quot;",'"').replaceAll("&amp;","&"))));
+
 const f2page=visit(url+(url.includes("?")?"&":"?")+"f2=1",27000);
 const f2data=f2page.get("f2");
 if(!f2data)throw Error("F2 reflex ON/OFF shared-world counterfactual absent");
