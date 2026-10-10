@@ -19,6 +19,22 @@ if(j.results?.length!==10)throw Error("Incomplete G0 predeclared matrix");
 if(j.results.some(x=>!Number.isFinite(x.chassis.dx)))throw Error("Nonfinite result");
 if(j.results.filter(x=>x.mode==="wheels").some(x=>x.rootImpulseSum!==0))
  throw Error("wheel branch contains illicit root force");
+const byTag=Object.fromEntries(j.results.map(x=>[x.tag,x]));
+const near=(k,max)=>Math.abs(byTag[k].systemCOMdx)<max;
+if(!near("completely-passive",.025)||!near("passive-no-obstacle",.025)||
+   !near("friction-zero",.025)||!near("no-floor",.05))
+ throw Error("G0 physical null control had unexplained whole-system COM movement");
+if(byTag["driven-no-obstacle"].systemCOMdx<5||
+   byTag["driven-grounded"].systemCOMdx<1)
+ throw Error("G0 grounded wheel motors did not create material motion");
+if(byTag["root-proxy-on-ice"].systemCOMdx<5)
+ throw Error("Forced root was not distinguishable from grounded-wheel traction");
+if(byTag["driven-grounded"].obstacleTicks===0||
+   byTag["driven-grounded"].obstacleDX<.05)
+ throw Error("Pushing opponent failed actual wheel/hull physical contact");
+for(const key of ["friction-zero","no-floor","driven-grounded","driven-no-obstacle"])
+ if(byTag[key].rootImpulseSum!==0)throw Error("Wheel mode used illicit root impulse");
+console.log("G0 PREDECLARED PHYSICAL CAUSAL GATES PASS");
 console.log("G0 CONTACT-SOURCED DRIVE PHYSICAL MATRIX "+JSON.stringify(j));
 const raw=run("g0frames=1",8000),st=raw.get("g0-frames");
 if(!st)throw Error("No real Chromium timeline");
