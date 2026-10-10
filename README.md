@@ -1,72 +1,15 @@
-# Combat Lab
+# Combat Lab — G0 / real-world traction source calibration
 
-Combat Lab is a research laboratory for discovering embodied combat, movement and world-interaction possibilities.
+**STATUS: CLOSED RESEARCH, NOT AN ORGANISM OR APPROVED ARCHITECTURE.** This branch contains one independent test of where **horizontal locomotor force actually comes from**. It is not a new animal, foot model, crowd system, gait controller, or replacement for `main`.
 
-## Current state — neutral main, independently evolving research
+[Full source-level physical evidence, known failures and interpretation](docs/G0_REAL_GROUND_DRIVE_CHECKPOINT_2026-10-10.md) · [PR #8](https://github.com/Jozzpoly/Combat-Lab/pull/8) · [real Chromium contact control matrix](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38089508879).
 
-`main` contains a neutral smoke surface, repository/deployment infrastructure and canonical research documentation. It is **not** an accepted combat, crowd, movement or organism implementation.
+A **wheeled robot** is used deliberately as a simpler source-of-force *calibrator*, not as a species candidate. Rapier3D handles real gravity, wheel/floor normal contact and friction, and four motorized revolute joints. Unlike the M0 body root proxy, the wheel mode has **zero direct horizontal chassis impulse**.
 
-For the current selected research question and its evidence boundary, enter [docs/RESEARCH_STATE.md](docs/RESEARCH_STATE.md). For *what is being built or published now*, also verify live experiment branches, their exact CI results and the separate `rehearsal/current` pointer. A static README must not duplicate or override that changing operational state.
+**Strong bounded fact:** physical wheeled propulsion causes whole-body center-of-mass motion with ground friction and stops doing so on frictionless or removed ground. The explicit fake root-force comparison still travels on frictionless ground. A genuine never-motorized hinge stays physically passive; a previously tested 'motor configured then max-force=0' hinge did not, so the test source was corrected. All claims use the **whole dynamic-system mass-weighted center of mass**, not the chassis coordinate alone.
 
-The previous implementation line is absent from the active tree. Its Git history remains reachable only for deliberate forensic recovery.
+[Unedited initial Chromium frame](docs/media/g0-physical-t0.png) / [240-step later frame in the same solver](docs/media/g0-physical-t240.png). The robot physically presses a passive block but partly loses chassis height under impact; this has **NOT** qualified even wheeled robustness, let alone animal movement.
 
-## What survives the failure
+**No public deployment, no merge, no human Owner play/feel verdict, no accepted 3D host.** All previous product FAILs remain. G0 is now a scoped historical donor to a future conscious body×ground support×movement×contact research choice.
 
-The project keeps:
-
-- Owner evidence and corrections;
-- observed phenomena;
-- falsifiers and causal findings;
-- provenance;
-- protocol lessons;
-- the ability to recover old commits when a concrete future question needs them.
-
-It does **not** grant automatic authority to:
-
-- old branch ancestry;
-- green mechanism tests;
-- previous "foundation" labels;
-- the last canonical `NEXT`;
-- code merely because it already exists.
-
-## Current operating model
-
-The repaired experiment protocol distinguishes:
-
-- **discovery** — find valuable whole phenomena first;
-- **diagnosis / attribution** — explain a phenomenon without letting the diagnostic fixture own the roadmap;
-- **serious construction** — build a coherent qualitative step when evidence or Owner direction calls for one;
-- **Lab infrastructure** — neutral capabilities that expand experimentation without encoding the answer.
-
-A diagnostic PASS is a finding, not an automatic parent implementation.
-
-A local improvement against the previous branch version is not enough; relevant progress must be judged against the actual Owner baseline and project goal.
-
-## Repository contract
-
-- `main` is the neutral current Lab state and durable research truth.
-- `rehearsal/current` is an exact deployment pointer only.
-- `archive/forensic-pre-cleanroom-2026-10-06` is forensic reachability only.
-- CI may prove runtime/mechanical/repository facts but may not assert research-roadmap semantics.
-- Public rehearsal occurs only from an explicitly selected exact source.
-
-Repository administration is the agent's responsibility. The Owner should not need to manage branches, SHAs, CI or deployment in normal work.
-
-## Long-run research navigation
-
-- [Pierwszy uczciwy przegląd dla Ownera](docs/OWNER_FIRST_LOOK.md) — aktualny priorytet: umożliwić osobiste uruchomienie realnych, niedojrzałych eksperymentów bez promocji ich do gotowego produktu.
-- [Wizja i adaptacyjna roadmapa](docs/VISION_ADAPTIVE_ROADMAP.md) — dlaczego badamy i kiedy zmieniać kierunek, bez sztywnego feature backlogu.
-- [Playbook długich kampanii](docs/CAMPAIGN_RUNBOOK.md) — **na początku każdego runu** odzyskanie Owner intent/live state, krytyczna ocena i realny test istniejącego kandydata; później wykonanie i falsyfikacja.
-- [Bieżący kursor agenta](docs/AGENT_RUN_CURSOR.md) — jeden mały punkt wznowienia; `RESEARCH_STATE` nadal jest authority.
-
-## Current authority
-
-Read:
-
-1. `docs/RESEARCH_STATE.md`
-2. `docs/EXPERIMENT_PROTOCOL.md`
-3. `docs/FAILURE_SCAR_2026-10-06.md`
-
-The protocol is explicitly provisional and may be changed when evidence shows a better way to run the Lab.
-
-> **Discover valuable phenomena first; diagnose them when needed; build serious wholes from knowledge rather than from the accidental ancestry of diagnostic fixtures.**
+For internal reproduction: `npm install && npm test && npm run build`, then serve `dist` in a browser with Rapier WASM. The query flags `g0probe=A`, `g0probe=B`, `g0frames=1`, `g0ownercheck=1` are diagnostics, not product modes. Live source experiments should verify exact branch HEAD / CI. Current canonical research truth is on `main/docs/RESEARCH_STATE.md`.
