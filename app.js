@@ -407,6 +407,14 @@ async function start(){
  message("Live Rapier world. Alter bodies or materials; local responses are not goal agents.");
  el("health").textContent="PHYSICS LIVE · Owner quality unverified";
  document.body.dataset.live="yes";
+ if(new URLSearchParams(location.search).has("rerig")){
+   const {probeLiveRerig,probeMorphologyAffordance}=
+     await import("./src/x0-rerig-probe.js");
+   document.body.dataset.rerig=JSON.stringify({
+     continuity:probeLiveRerig(CommonsWorld,capture,restore),
+     ability:probeMorphologyAffordance(CommonsWorld)
+   });
+ }
  if(new URLSearchParams(location.search).has("probe")){
    const {runX0Probe}=await import("./src/x0-probe.js");
    document.body.dataset.probe=JSON.stringify(runX0Probe(CommonsWorld,capture,restore));
@@ -444,6 +452,31 @@ async function start(){
      const moved=norm(V(driven.root.translation().x-beforeDriven.x,
        driven.root.translation().y-beforeDriven.y));
      verify(moved>.20,"WASD motor did not move actual physical selected body");
+     const editableId=field.selected,other=field.actors.at(1);
+     const otherPosition=V(other.root.translation().x,other.root.translation().y);
+     const currentClock=field.ticks,oldHandles=field.actor(editableId).parts.map(p=>p.collider.handle);
+     el("rebuild-hx").value=".72";el("rebuild-hy").value=".49";
+     el("rebuild-arms").value="0";el("rebuild-length").value="1.55";
+     el("rebuild-actor").click();
+     const rigidEdited=field.actor(editableId);
+     verify(rigidEdited&&rigidEdited.arms.length===0&&rigidEdited.spec.hx===.72,
+       "UI body physical re-rig to rigid shape failed");
+     verify(field.ticks===currentClock&&field.selected===editableId &&
+       norm(V(other.root.translation().x-otherPosition.x,
+         other.root.translation().y-otherPosition.y))<.00001,
+       "re-rig reset the shared simulation or displaced another resident");
+     verify(oldHandles.every(h=>!field.colliderOwner.has(h)),
+       "UI re-rig retained stale collider ownership");
+     el("rebuild-arms").value="2";el("rebuild-length").value="2.05";
+     el("rebuild-actor").click();
+     const rebuilt=field.actor(editableId);
+     verify(rebuilt.arms.length===2&&Math.abs(rebuilt.arms[0].half-1.025)<.00001,
+       "UI second physical re-rig failed to create real articulated arms");
+     el("rebuild-arms").value="3";el("rebuild-actor").click();
+     verify(field.actor(editableId)===rebuilt,
+       "invalid UI re-rig partially changed resident physical anatomy");
+     el("rebuild-arms").value="2";
+
      el("local-response").checked=false;
      el("local-response").dispatchEvent(new Event("change",{bubbles:true}));
      verify(field.actor(field.selected).control==="quiet",
