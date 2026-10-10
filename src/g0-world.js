@@ -49,8 +49,12 @@ export class GroundDriveWorld{
     .setRestitution(0),wheel);
    const joint=this.world.createImpulseJoint(RAPIER.JointData.revolute(
     V3(x,offsetY,z),V3(),V3(0,0,1)),this.chassis,wheel,true);
-   joint.configureMotorVelocity(0,15);
-   joint.setMotorMaxForce(motor);
+   // A zero actuator is not an enabled velocity servo with a zero cap:
+   // construct the joint with NO motor at all in every null control.
+   if(mode==="wheels"&&motor>0){
+    joint.configureMotorVelocity(0,15);
+    joint.setMotorMaxForce(motor);
+   }
    this.wheels.push({body:wheel,collider,joint,offset:V3(x,offsetY,z)});
   }
   this.obstacle=null;
@@ -109,11 +113,13 @@ export class GroundDriveWorld{
   if(!Number.isFinite(command)||Math.abs(command)>1)throw RangeError("command");
   const {mode,motor}=this.settings;
   const desired=-command*8; // bottom wheel surface sweeps -X for +X travel
-  for(const w of this.wheels){
-   if(mode==="wheels"){
+  // For passive, root-proxy and literal motor=0 worlds, the joint has
+  // never acquired an actuator. This tests *physical* null, not servo-idle.
+  if(mode==="wheels"&&motor>0){
+   for(const w of this.wheels){
     w.joint.configureMotorVelocity(desired,15);
     w.joint.setMotorMaxForce(motor);
-   }else{w.joint.configureMotorVelocity(0,0);w.joint.setMotorMaxForce(0);}
+   }
   }
   if(mode==="root-proxy"&&command){
    const force=command*motor;
