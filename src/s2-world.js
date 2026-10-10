@@ -30,6 +30,7 @@ export class GroundCase{
     this.world.integrationParameters.numInternalPgsIterations=4;
     const groundBody=this.world.createRigidBody(RAPIER.RigidBodyDesc.fixed()
       .setTranslation(0,-.25,0));
+    this.groundBody=groundBody;
     this.ground=this.world.createCollider(
       // Wide enough for the full prescribed 7-second friction-zero control:
       // the original 11m floor edge caused a misleading free-fall.
@@ -70,7 +71,14 @@ export class GroundCase{
   setSurface(value){
     if(!Number.isFinite(value)||value<0||value>3)throw RangeError("Invalid surface friction");
     this.settings.surface=value;
-    this.ground.setFriction(value);
+    this.ground?.setFriction(value);
+  }
+  removeSupport(){
+    if(!this.ground)return false;
+    // Remove the ACTUAL floor rigid body/collider. No state toggle on the actor.
+    this.world.removeRigidBody(this.groundBody);
+    this.ground=null;this.groundBody=null;
+    return true;
   }
   step(externalForce=0){
     const force=clamp(F(externalForce),0,3000);
@@ -79,7 +87,8 @@ export class GroundCase{
       this.totalAppliedDrive+=force*DT;
     }
     this.world.step();this.ticks++;
-    const grounded=contactImpulse(this.world,this.ground,this.defender.collider);
+    const grounded=this.ground?
+      contactImpulse(this.world,this.ground,this.defender.collider):0;
     const pressure=contactImpulse(this.world,this.ram.collider,this.defender.collider);
     if(grounded>1e-6){this.supportTicks++;this.totalGroundImpulse+=grounded;}
     if(pressure>1e-6){this.bodyContactTicks++;this.totalBodyImpulse+=pressure;}
@@ -105,7 +114,8 @@ export class GroundCase{
       actorContactSteps:this.bodyContactTicks,
       totalGroundImpulse:this.totalGroundImpulse,
       totalActorImpulse:this.totalBodyImpulse,
-      externalRamImpulse:this.totalAppliedDrive};
+      externalRamImpulse:this.totalAppliedDrive,
+      floorExists:!!this.ground};
   }
   dispose(){this.world.free();}
 }

@@ -24,6 +24,27 @@ function run(spec){
       actorImpulse:r(x.totalActorImpulse),driveImpulse:r(x.externalRamImpulse)};
   }finally{test.dispose();}
 }
+function removeGroundControl(){
+  const cases=[{name:"supported",remove:false},{name:"removed",remove:true}]
+    .map(mode=>{
+      const run=new GroundCase({surface:1.2,gravity:9.81,drive:0});
+      try{
+        for(let i=0;i<60;i++)run.step();
+        const yBefore=run.defender.body.translation().y;
+        if(mode.remove&&!run.removeSupport())throw Error("S2 floor removal failed");
+        for(let i=0;i<150;i++)run.step();
+        const s=run.snapshot();
+        return {name:mode.name,initialHeight:+yBefore.toFixed(4),
+          finalHeight:+s.guardY.toFixed(4),floorExists:s.floorExists,
+          heightChange:+(s.guardY-yBefore).toFixed(4),
+          groundContactsAfterChange:s.groundContactSteps};
+      }finally{run.dispose();}
+    });
+  if(cases[0].finalHeight<.8||cases[1].finalHeight>-.5)
+    throw Error("S2 missing meaningful vertical physical support-loss contrast");
+  return {scope:"same physical 3D body/identical settled world, zero operator drive; actual floor collider retained vs removed; no gameplay fall flag",
+    cases};
+}
 export function compareGroundSources(){
  const cases=presets.map(run),find=id=>cases.find(c=>c.id===id);
  const ice=find("ice"),grip=find("grippy"),float=find("floating"),idle=find("idle");
@@ -37,7 +58,8 @@ export function compareGroundSources(){
  if(ice.contacts<5||grip.contacts<5)
    throw Error("S2 ram didn't physically contact both material regimes");
  const cheaper=comparePlanarProxy();
- return {cheaper,scope:"single grounded Rapier3D model; fixed ground collider and dynamic yaw-only bodies, 420 ticks of IDENTICAL external laboratory force; gravity/friction controls + idle/offset",
+ const supportLoss=removeGroundControl();
+ return {cheaper,supportLoss,scope:"single grounded Rapier3D model; fixed ground collider and dynamic yaw-only bodies, 420 ticks of IDENTICAL external laboratory force; gravity/friction controls + idle/offset",
   cases,iceMinusGripDX:r(ice.guardDX-grip.guardDX),
   conclusionRule:"A different grounded friction outcome proves substrate-level support transmission only; no feet, gait, sustained defensive technique, product feel or 2D cost advantage."};
 }

@@ -36,7 +36,8 @@ function draw(){
  ctx.lineWidth=1;ctx.strokeStyle="#28414a";
  for(let x=-9;x<10;x++){let p=trans(x,-5);ctx.beginPath();ctx.moveTo(p.x,0);ctx.lineTo(p.x,H);ctx.stroke();}
  for(let z=-4;z<=4;z++){let p=trans(-6,z);ctx.beginPath();ctx.moveTo(0,p.y);ctx.lineTo(W,p.y);ctx.stroke();}
- ctx.fillStyle="#608b72";ctx.globalAlpha=Math.min(.55,.08+surface()*.18);
+ ctx.fillStyle=state.sim.ground?"#608b72":"#884b44";
+ ctx.globalAlpha=state.sim.ground?Math.min(.55,.08+surface()*.18):.22;
  ctx.fillRect(4,4,W-8,H-8);ctx.globalAlpha=1;
  function body(b,color,caption){
    const p=b.body.translation(),scr=trans(p.x,p.z);
@@ -55,7 +56,8 @@ function draw(){
  el("normal").textContent=Q(s.totalGroundImpulse)+" N·s";
  el("contacts").textContent=s.actorContactSteps+" ticks";
  el("elapsed").textContent=Q(s.ticks/60)+" s";
- el("status").textContent=state.driveTicks>0?"EXTERNAL FORCE ACTIVE":state.paused?"PAUSED":"SOLVER LIVE";
+ el("status").textContent=!state.sim.ground?"GROUND COLLIDER REMOVED":
+   state.driveTicks>0?"EXTERNAL FORCE ACTIVE":state.paused?"PAUSED":"SOLVER LIVE";
 }
 function frame(t){
  const dt=Math.max(0,Math.min(.05,(t-state.last)/1000));state.last=t;
@@ -81,6 +83,10 @@ async function main(){
    state.paused=false;el("pause").textContent="Pause";
    el("feedback").textContent="External ram supplies known work. Guard response arises from real contact and ground friction.";
  });
+ el("removeFloor").addEventListener("click",()=>{
+   if(state.sim.removeSupport())
+     el("feedback").textContent="The actual ground rigid-body/collider was removed. Watch both dynamic bodies lose normal force and fall under gravity. Reset restores the floor.";
+ });
  el("pause").addEventListener("click",()=>{
    state.paused=!state.paused;el("pause").textContent=state.paused?"Resume":"Pause";
  });
@@ -93,7 +99,42 @@ async function main(){
    const result=compareGroundSources();
    el("feedback").textContent="Measured ice–grippy guard difference: "+Q(result.iceMinusGripDX)+" m. Grounded comparison only; does not certify stance or game quality.";
  });
+ if(new URLSearchParams(location.search).has("uiprobe")){
+   el("mu").value=".2";el("mu").dispatchEvent(new Event("input",{bubbles:true}));
+   if(Math.abs(state.sim.settings.surface-.2)>1e-8)throw Error("UI friction control inert");
+   el("force").value="900";el("force").dispatchEvent(new Event("input",{bubbles:true}));
+   el("push").click();
+   if(state.driveTicks!==420)throw Error("UI ram command inert");
+   for(let i=0;i<240;i++){
+     state.sim.step(state.driveTicks>0?force():0);
+     if(state.driveTicks>0)state.driveTicks--;
+   }
+   const moved=state.sim.snapshot();
+   if(moved.externalRamImpulse<=0||moved.actorContactSteps<5)
+     throw Error("UI ram did not physically act on defender");
+   el("pause").click();
+   if(!state.paused)throw Error("UI pause inert");
+   el("gravity").checked=false;el("gravity").dispatchEvent(new Event("change",{bubbles:true}));
+   if(state.sim.settings.gravity!==0||state.sim.snapshot().guardDX!==0)
+      throw Error("UI gravity control didn't reset physical world");
+   el("gravity").checked=true;el("gravity").dispatchEvent(new Event("change",{bubbles:true}));
+   el("removeFloor").click();
+   if(state.sim.ground!==null)throw Error("UI did not remove physical floor collider");
+   for(let i=0;i<120;i++)state.sim.step();
+   const fallen=state.sim.defender.body.translation().y;
+   if(fallen>-.5)throw Error("Floor removal didn't produce real falling");
+   document.body.dataset.uiprobe=JSON.stringify({
+     movedX:moved.guardDX,contactTicks:moved.actorContactSteps,
+     appliedRamImpulse:moved.externalRamImpulse,
+     physicalFloorRemoved:true,fallenY:fallen,
+     groundSurfaceChangedBeforeReset:true});
+ }
  document.body.dataset.live="yes";
+ if(new URLSearchParams(location.search).has("visual")){
+   state.driveTicks=310;
+   for(let i=0;i<310;i++){state.sim.step(state.driveTicks>0?force():0);state.driveTicks--;}
+   state.paused=true;draw();
+ }
  if(new URLSearchParams(location.search).has("probe")){
    document.body.dataset.support=JSON.stringify(compareGroundSources());
  }

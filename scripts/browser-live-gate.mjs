@@ -15,3 +15,8 @@ const raw=read(url+(url.includes("?")?"&":"?")+"probe=1")("support");
 if(!raw)throw Error("S2 comparative friction/normal-force probes missing");
 const result=JSON.parse(raw.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
 console.log("S2 GROUNDED SUPPORT ABLA­TION "+JSON.stringify(result));
+
+const ui=read(url+(url.includes("?")?"&":"?")+"uiprobe=1",7500)("uiprobe");
+if(!ui)throw Error("S2 UI physical controls missing");
+console.log("S2 REAL UI CHECK "+JSON.stringify(
+  JSON.parse(ui.replaceAll("&quot;",'"').replaceAll("&amp;","&"))));
