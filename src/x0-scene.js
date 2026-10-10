@@ -31,7 +31,10 @@ export function validate(data){
   });
   const matter=array(data.matter,"matter").map(m=>{
     if(!["free","hinge","rail"].includes(m?.kind))throw TypeError("Unknown material constraint");
-    const base={kind:m.kind,...shape(m,["x","y","angle","mass","length","hx","hy"])};
+    const form=m.kind==="free"?(m.form||"block"):m.kind;
+    if(m.kind==="free"&&!["block","beam"].includes(form))
+      throw TypeError("Unsupported free material identity");
+    const base={kind:m.kind,form,...shape(m,["x","y","angle","mass","length","hx","hy"])};
     if(base.mass<=0||base.hx<=0||base.hy<=0||base.length<0)throw RangeError("Invalid matter");
     return base;
   });
@@ -54,7 +57,7 @@ export function capture(world){
     }),
     matter:world.matter.map(m=>{
       const t=m.body.translation();
-      return {kind:m.kind,
+      return {kind:m.kind,form:m.form||m.kind,
         x:m.pivot?m.x:t.x,y:m.pivot?m.y:t.y,
         angle:m.body.rotation(),mass:m.mass,
         length:m.length||0,
@@ -74,7 +77,7 @@ export function restore(input){
       w.addWall(V(wall.x,wall.y),{hx:wall.hx,hy:wall.hy,created:false});
     for(const m of scene.matter){
       if(m.kind==="free")w.addMatter(V(m.x,m.y),
-        {hx:m.hx,hy:m.hy,mass:m.mass,angle:m.angle,created:false});
+        {hx:m.hx,hy:m.hy,mass:m.mass,angle:m.angle,form:m.form,created:false});
       else if(m.kind==="hinge")w.addHinge(V(m.x,m.y),
         {length:m.length,mass:m.mass,angle:m.angle,created:false});
       else if(m.kind==="rail")w.addRail(V(m.x,m.y),
