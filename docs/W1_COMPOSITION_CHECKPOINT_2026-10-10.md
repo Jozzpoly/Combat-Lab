@@ -33,6 +33,10 @@ The contact number is *actor/material pair incidences accumulated across frames*
 
 **Whole-level verdict: negative for this attempt.** The default authored scene is again mechanically separated: one operator-driven body moves objects as it goes, and the other bodies have no lawful reasons to initiate anything. This does not offer a novel independent local-response ecology or several naturally discoverable actions. It makes a better-composed *picture of an experimental yard*, not the Owner's organism/crowd/feel goal. No human experience was measured, so product-level W1 outcome is UNQUALIFIED, **not Owner FAIL**.
 
+## Methodological self-critique — IMPORTANT
+
+**W1 was a weak falsifier of composition-first as a GENERAL idea.** By making every nonselected body completely passive and placing default material beyond effective stationary jaw reach, the test made both a dead idle field and a jaw-only null foreseeable. The conditions were still worth executing to expose how the actual UI/source behaves, but **zero contact here cannot rank action languages, infer the need for cognition or reject materially richer scenes in general**. We did not A/B compare against an independently plausible contact-capable whole, did not test varied free interventions or ask the Owner to use it. We merely reject the specific W1 implementation as unpromising under tested operator commands. Its narrow root-drive contact effects do not merit prolonged coordinate tuning. This correction must travel with every downstream reference to the W1 result.
+
 ## Critical alternative explanations / limits
 
 - World composition was changed, but the available *action grammar* remained finite root drive plus opening/closing pincer jaws. A different physical arrangement might generate a jaw-only contact, but manually tuning this W1 to prove such a known PR #2 donor would not answer the whole-system deficit.
