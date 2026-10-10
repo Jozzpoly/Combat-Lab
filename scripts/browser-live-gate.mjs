@@ -57,3 +57,19 @@ if(!uiRaw)throw Error("Real browser E1 editor/controls smoke missing");
 const ui=decode(uiRaw);
 if(!ui.pass)throw Error("Source editor/controls not operating in actual page");
 console.log("E1 REAL UI "+JSON.stringify(ui));
+
+for(const batch of ["C","D"]){
+ const raw=visit("e1causal="+batch,35000).val("e1-causal");
+ if(!raw)throw Error("E1 source-exact causal/density batch "+batch+" missing");
+ const result=decode(raw);
+ if(result.batch!==batch)throw Error("E1 causal batch mismatch");
+ if(batch==="C"){
+  if(result.pressure.sourceMotorTicksOn!==result.pressure.sourceMotorTicksOff||
+    !result.pressure.first)
+   throw Error("E1 does not causally distinguish pressure steering");
+  if(result.edit.initialMismatch||!result.edit.firstChangedDecision)
+   throw Error("E1 local cue physical intervention did not change later decisions");
+ }else if(result.stress.actors!==30||result.stress.nonfinite!==0)
+  throw Error("E1 dense mixed-body world numerically unstable or incomplete");
+ console.log("E1 SOURCE CAUSAL "+JSON.stringify(result));
+}
