@@ -395,10 +395,11 @@ function activate(){
    keys.add(event.code);
    if(event.code==="Space"){event.preventDefault();el("pause").click();}
    if(event.code==="Escape"){field.endHold();mode=null;}
-   if(event.code==="KeyE"||event.code==="KeyQ"){
-     field.setActiveArm(selected,0,event.code==="KeyE"?0:1);
-     field.setActiveArm(selected,1,event.code==="KeyE"?0:1);
-   }
+   // Independent limb authority: no implicit mirror command. This is
+   // researcher input to real torque-limited joints, not an NPC policy.
+   const commands={KeyE:[0,0],KeyQ:[0,1],KeyR:[1,0],KeyF:[1,1]};
+   const action=commands[event.code];
+   if(action)field.setActiveArm(selected,action[0],action[1]);
  });
  addEventListener("keyup",event=>keys.delete(event.code));
  addEventListener("blur",()=>{keys.clear();field?.endHold();});
@@ -447,11 +448,17 @@ async function start(){
      el("selected-mass").value=String(startingMass);
      el("selected-motor").value=String(startingMotor);
      dispatchEvent(new KeyboardEvent("keydown",{code:"KeyE",bubbles:true}));
-     verify(driven.target.every(x=>x===0),
-       "E did not command actual physical appendages");
+     verify(driven.target[0]===0&&driven.target[1]===.82,
+       "E must actuate arm0 without changing independent arm1");
      dispatchEvent(new KeyboardEvent("keydown",{code:"KeyQ",bubbles:true}));
-     verify(driven.target.every(x=>x===1),
-       "Q did not reopen actual physical appendages");
+     verify(driven.target[0]===1&&driven.target[1]===.82,
+       "Q must reopen arm0 without silently changing arm1");
+     dispatchEvent(new KeyboardEvent("keydown",{code:"KeyR",bubbles:true}));
+     verify(driven.target[0]===1&&driven.target[1]===0,
+       "R must actuate arm1 without affecting arm0");
+     dispatchEvent(new KeyboardEvent("keydown",{code:"KeyF",bubbles:true}));
+     verify(driven.target[0]===1&&driven.target[1]===1,
+       "F must reopen arm1 without affecting arm0");
      dispatchEvent(new KeyboardEvent("keydown",{code:"KeyD",bubbles:true}));
      for(let i=0;i<45;i++)el("step").click();
      dispatchEvent(new KeyboardEvent("keyup",{code:"KeyD",bubbles:true}));
