@@ -1,6 +1,6 @@
 // Portable authored starting condition, NOT a full running-state Rapier replay.
 // Never deserialize arbitrary behavior or mutate the live world on parse failure.
-import {CommonsWorld,V,safe} from "./x0-world.js";
+import {CommonsWorld,BODY_PRESETS,V,safe} from "./x0-world.js";
 export const FORMAT="combatlab.material-commons.initial.v0";
 function num(o,k,{min=-1e6,max=1e6}={}){
   const n=safe(o?.[k],k);if(n<min||n>max)throw RangeError("Scene "+k+" out of range");
@@ -19,8 +19,10 @@ export function validate(data){
   const actors=array(data.actors,"actors").map(a=>{
     if(!["reach","lever","bulk"].includes(a?.form))throw TypeError("Unknown reference body");
     const parsed={form:a.form,...shape(a,["x","y","angle"]),
-      spec:shape(a.spec,["mass","motor","turn","speed","torque","brace","armLength",
-        "hx","hy","arms","reach"]),target:array(a.target,"target").map(x=>safe(x)),
+      spec:{...shape(a.spec,["mass","motor","turn","speed","torque","brace","armLength",
+        "hx","hy","arms","reach"]),
+        holdForce:a.spec?.holdForce===undefined?BODY_PRESETS[a.form].holdForce:
+          num(a.spec,"holdForce",{min:0,max:1e7})},target:array(a.target,"target").map(x=>safe(x)),
       relative:array(a.relative,"relative").map(x=>safe(x))};
     if(parsed.spec.mass<=0||parsed.spec.motor<0||parsed.spec.brace<0||
       parsed.spec.torque<0||parsed.spec.armLength<0||
