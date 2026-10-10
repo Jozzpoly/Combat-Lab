@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test test/*.test.mjs",
+    "test": "node --check src/commons-field.js && node --check src/commons-world-probe.js && node --test test/*.test.mjs",
     "build": "vite build --base=./"
   },
   "dependencies": {
