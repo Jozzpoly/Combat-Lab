@@ -52,7 +52,7 @@ if(!chain)throw Error("Second actor opportunity counterfactual not executed");
 console.log("X0 TWO-ACTOR OPPORTUNITY OBSERVATION: "+
   JSON.stringify(JSON.parse(chain.replaceAll("&quot;",'"').replaceAll("&amp;","&"))));
 
-if(process.env.X0_VISUAL_AUDIT==="1"){
+if(true){
   const {readFileSync}=await import("node:fs");
   const target="/tmp/x0-viewport.png";
   execFileSync(chrome,["--headless=new","--no-sandbox","--disable-gpu",
