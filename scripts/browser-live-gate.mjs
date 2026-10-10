@@ -45,3 +45,9 @@ const hold=grip.get("hold-probe");
 if(!hold)throw Error("X0 physical body-contact hold test was not emitted");
 const holdTrial=JSON.parse(hold.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
 console.log("X0 CONTACT-HOLD COUNTERFACTUAL: "+JSON.stringify(holdTrial));
+
+const relay=visit(url+(url.includes("?")?"&":"?")+"cascade=1",11000);
+const chain=relay.get("cascade");
+if(!chain)throw Error("Second actor opportunity counterfactual not executed");
+console.log("X0 TWO-ACTOR OPPORTUNITY OBSERVATION: "+
+  JSON.stringify(JSON.parse(chain.replaceAll("&quot;",'"').replaceAll("&amp;","&"))));
