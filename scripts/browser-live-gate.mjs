@@ -15,3 +15,8 @@ const r=read(url+(url.includes("?")?"&":"?")+"relational=1",15000).get("relation
 if(!r)throw Error("Y1 physical observation not emitted");
 const x=JSON.parse(r.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
 console.log("Y1 WHOLE-COMPOSITION OBSERVATION "+JSON.stringify(x));
+
+const stageTwo=read(url+(url.includes("?")?"&":"?")+"secondaction=1",27000).get("secondaction");
+if(!stageTwo)throw Error("Y1 second-actor action follow-up not emitted");
+const parsed=JSON.parse(stageTwo.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+console.log("Y1 FOLLOW-UP SECOND-ACTOR ACTION "+JSON.stringify(parsed));

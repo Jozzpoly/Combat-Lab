@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --check app.js && node --check src/x0-world.js && node --check src/x0-scene.js && node --check src/y1-observation.js",
+    "test": "node --check app.js && node --check src/x0-world.js && node --check src/x0-scene.js && node --check src/y1-observation.js && node --check src/y1-second-action.js",
     "build": "vite build --base=./"
   },
   "dependencies": {

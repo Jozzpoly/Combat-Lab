@@ -408,6 +408,10 @@ async function start(){
  message("Y1 composition experiment: intervene, rebuild, and challenge physical relations. No authored win condition.");
  el("health").textContent="PHYSICS LIVE · Owner quality unverified";
  document.body.dataset.live="yes";
+ if(new URLSearchParams(location.search).has("secondaction")){
+   const {secondActorRealAction}=await import("./src/y1-second-action.js");
+   document.body.dataset.secondaction=JSON.stringify(secondActorRealAction(CommonsWorld));
+ }
  if(new URLSearchParams(location.search).has("relational")){
    const {runRelationalObservation}=await import("./src/y1-observation.js");
    document.body.dataset.relational=JSON.stringify(runRelationalObservation(CommonsWorld));
