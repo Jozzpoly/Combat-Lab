@@ -12,6 +12,16 @@
 
 These observations are *reasons to confront a different whole*, not votes from a numeric feature scoreboard. They do not establish that X0 is impossible or intrinsically bad; they establish insufficient evidence to keep promoting its architecture.
 
+## Donor-forensic cross-check before another implementation
+
+The historical experimental refs still have real code despite some stale, neutral-smoke READMEs. Treat **source + experiment notes**, not those headers alone, as scoped evidence:
+
+- `experiment/embodied-effectors-v0` / draft PR #2 already built independently actuated *real jointed* jaws with direct operator controls and solver contact/carry-like collisions. In its [recorded trial](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/embodied-effectors-v0/docs/EMBODIED_EFFECTOR_TRIAL_2026-10-09.md), one-sided jaw commands changed free-matter afterstates without a scripted grip. Therefore **independent-arm physical effect is not a newly discovered whole-world capability of X0**. X0's live body re-rig and world-powered contact studies are additional bounded donors; more jaws alone would repeat prior work.
+- `experiment/material-agency-yard-v0` has a physical rigid-body/material world and finite grip force, but its starter actor is circular/simple. The donor value is quantitative reciprocal force under constrained support, not an accepted organism.
+- `experiment/live-body-intervention-workbench-v0` and `experiment/material-choice-integration-v0` contain `local-shuttle.js`, including continual bounded X-direction movement with contact-induced reversal/side-maneuver. They are *explicitly not general cognition* and risk reinstating the Owner-rejected locomotion/traffic tunnel. Recover only a specific proven local sensing or UI insight when it changes the newly justified whole.
+
+**Implication:** a meaningful next whole must transcend both "better pincer" and "smarter shuttle", not combine them and rename the result life. This audit does NOT authorize merging those refs or selecting Rapier forever.
+
 ## The next independent working bet
 
 **Body↔material possibility density, not more reflex complexity.** Explore a coherent single editable place where *qualitatively different bodily actions* are possible because physical members, constraints and material relationships overlap meaningfully. Examples of research pressure, NOT mandated gameplay verbs or one designed solution: resist/brace a member, displace a free load, manipulate a fixed pivot, be prevented from acting by a physical envelope, and have another body subsequently exploit or fail to exploit the resulting changed world. Physics must adjudicate outcomes, not hidden quest flags.
