@@ -37,7 +37,7 @@ Wybierać świadomie **discovery / diagnosis / serious construction / lab infras
 
 ### Gdy obraz pomaga bardziej niż licznik
 
-Przy złożonych zjawiskach ruchowych **opcjonalnie** dołączyć prawdziwy pierwszy screenshot i krótki, stałokrokowy zestaw klatek z istotnych chwil, z jawnym czasem, inputem i faktycznym kontaktem. Nie wymagać tego dla każdego testu i nie mylić diagnostycznego rasteryzowania z percepcją organizmu. Nota [Visual Truth / Perception](VISUAL_TRUTH_PERCEPTION_EXPLORATION_2026-10-10.md) jest odłożoną inspiracją; nie uruchamia samoczynnie prac nad atlasem, agent brainem ani sterowaniem tłumem.
+Przy złożonych zjawiskach ruchowych **opcjonalnie** dołączyć prawdziwy pierwszy screenshot i krótki, stałokrokowy zestaw klatek z istotnych chwil, z jawnym czasem, inputem i faktycznym kontaktem. **Ostrzeżenie potwierdzone odczytem Z1 `app.js`:** zwykła pętla `requestAnimationFrame` ogranicza `dt` do 50 ms i maksymalnie cztery kroki w jednym renderze; sama sztuczna zmiana wallclock / `--virtual-time-budget` nie kwalifikuje czasu symulacji. Dla prawdziwego `t0 → t1 → ...` stosować **jeden solver/world w jednym uruchomieniu**, jawne `N` stałych kroków między zrzutami, zsynchronizowane wejścia i ślad rzeczywistych kontaktów. Osobne uruchomienia Chromium to reset świata, chyba że celowo odtwarzają kompletny identyczny zapis wejść/sceny i replay został empirycznie zweryfikowany. Nie wymagać tego dla każdego testu i nie mylić diagnostycznego rasteryzowania z percepcją organizmu. Nota [Visual Truth / Perception](VISUAL_TRUTH_PERCEPTION_EXPLORATION_2026-10-10.md) jest odłożoną inspiracją; nie uruchamia samoczynnie prac nad atlasem, agent brainem ani sterowaniem tłumem.
 
 ## Faza D: red team + odbiór całości
 
