@@ -349,8 +349,9 @@ export class CommonsWorld{
     }
     if(a.response.latch>0)a.response.latch--;
     for(const arm of a.arms){
-      const touchedCommand=(command || a.control==="quiet") ? a.target[arm.index] :
-        ((a.response.latch>0 && arm.index===a.response.arm) ? .20 : .82);
+      const touchedCommand=(!command && a.control==="sense" &&
+        a.response.latch>0 && arm.index===a.response.arm) ?
+        .20 : a.target[arm.index];
       const open=arm.sign*.50,close=-arm.sign*.36;
       const target=open*touchedCommand+close*(1-touchedCommand);
       const delta=wrap(arm.body.rotation()-root.rotation());

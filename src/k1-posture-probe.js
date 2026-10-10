@@ -14,7 +14,7 @@ function scenario(World,{kind="open",offset=0,powered=true}={}){
   const defender=w.addActor("reach",V(17,13),Math.PI,{
     mass:rigid?180:130,hx:rigid?2.55:.62,hy:rigid?.88:.60,
     motor:0,brace:2600,torque:650,arms:rigid?0:2,armLength:2.4});
-  defender.control="quiet";
+  defender.control="sense";defender.armReflexEnabled=false;
   defender.target=kind==="folded"?[0,0]:[1,1];
   const challenger=w.addActor("bulk",V(9.5,13+offset),0,{
     mass:96,motor:powered?1450:0,speed:2.2,hx:.62,hy:.45,brace:0});
@@ -27,10 +27,11 @@ function scenario(World,{kind="open",offset=0,powered=true}={}){
   for(let tick=0;tick<270;tick++){
    w.step({manual:{move:powered?V(1,0):V(),aim:null}});
    let at=0;
-   for(const part of defender.parts)w.world.contactPair(part.collider,
-     challenger.parts[0].collider,m=>{
-     for(let j=0;j<m.numSolverContacts();j++)at+=Math.abs(m.contactImpulse(j));
-   });
+   for(const part of defender.parts)for(const other of challenger.parts)
+     w.world.contactPair(part.collider,other.collider,m=>{
+       for(let j=0;j<m.numSolverContacts();j++)
+         at+=Math.abs(m.contactImpulse(j));
+     });
    if(at>0){shieldContacts++;impulse+=at;if(first===null)first=tick;}
    let limb=false,root=false;
    for(const part of defender.parts){
