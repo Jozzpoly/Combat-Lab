@@ -20,4 +20,7 @@
 <div id="status">Inicjalizacja fizyki…</div><div id="trace"></div>
 <div><strong>Granica:</strong> ruch korpusu to skończony napęd proxy; brak stóp, AI, obrażeń, ukrytych flag ochrony i Owner PASS.</div>
 </footer>
-</main><script type="module" src="./k1-app.js"></script></body></html>
+</main><script type="module" src="./k1-app.js"></script><script>
+addEventListener("error",e=>{document.body.dataset.k1BootError=String(e.message||e.error||"script error");});
+addEventListener("unhandledrejection",e=>{document.body.dataset.k1BootError=String(e.reason?.stack||e.reason||"rejection");});
+</script></body></html>
