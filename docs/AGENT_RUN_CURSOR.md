@@ -1,36 +1,24 @@
-# Combat Lab — AKTUALNY kursor runu
+# Combat Lab — bieżący kursor wznowienia
 
-**Agent-only operacyjny wskaźnik (2026-10-10). Nie jest drugim RESEARCH_STATE, roadmapą ani Owner judgement.** Aktualizować **zastępując** sekcję TERAZ, wyłącznie po istotnej zmianie. Nie dopisywać historii dawnych NEXT. Stare wersje w Git.
+**2026-10-10 · Wskazówka operacyjna, nie nowa architektura.** Wznowienie zaczyna się od najnowszego Owner feedbacku, historii tej konwersacji, live kodu, refs i CI, a nie od wpisanego tu planu. Istotne authority: [RESEARCH_STATE](RESEARCH_STATE.md), [VISION_ADAPTIVE_ROADMAP](VISION_ADAPTIVE_ROADMAP.md), [CAMPAIGN_RUNBOOK](CAMPAIGN_RUNBOOK.md), [EXPERIMENT_PROTOCOL](EXPERIMENT_PROTOCOL.md).
 
-## TERAZ — stan referencyjny (sprawdź live HEAD)
+## TERAZ — rzeczywisty cel i najważniejsze ograniczenia
 
-- Neutralne `main` przed tym checkpointem: `981f2bb9f672ca73f6ce84393701dcf8deeb4bd9`. Aktualny HEAD po commicie dokumentacyjnym będzie inny; sprawdź repo.
-- Ostatnia ważna badana linia: `experiment/ground-contact-s2` — `ec237bfc1c45cf7d3ccd0f88f0720e9a10c95332`; real-Chromium CI PASS (zob. [raport S2](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/ground-contact-s2/docs/S2_GROUND_CONTACT_CHECKPOINT_2026-10-10.md)). K1, Z1, Y1, X0 pozostają unmerged donor-only.
-- Publiczny `rehearsal/current`: `cb4b44d417db612f3333fe515e6f6afffa3e56d8`, nie zmieniać odruchowo.
-- **S2 ustalił:** realne contact-ground support, falling przy usunięciu podłoża i material load. **S2 nie ustalił:** że 3D wygrywa z odpowiednio świadomym tanim 2D, że mamy chód/postawę/żywy tłum ani że Owner zaakceptował prototyp.
-- **Najważniejszy próg:** nowa jakość działań i eksperymentowania w **jednym wiarygodnym świecie**; wybór fizycznej reprezentacji ma być konsekwencją tego wymagania. Historyczne Owner R0/R1/L0 FAIL nie zostały odwrócone.
-- **Najbliższy run — faza A OBOWIĄZKOWA:** odzyskaj aktualny Owner intent, live refs, świeże testy; obejrzyj/przetestuj adekwatną istniejącą wersję i sprawdź zgodność z wizją. Następnie rozstrzygnij, czy dalszy „support” wymaga całościowego nowego specimen, czy najpierw trzeba obalić konkretne 2D/3D założenie. **Nie wdrażaj S3 ani 3D automatycznie.**
+**Owner chce swobodnego laboratorium fizycznie odmiennych organizmów, ich działań, ruchu, tłumu, reakcji, materii i możliwej walki — w jednym świecie, który można przebudowywać, uruchamiać i próbować złamać.** Gameplay/readability/agency/experiment value mają veto nad elegancją solvera. Nie robić kolejnego traffic demo, statycznej mechanicznej stacji ani pięknego mikroskopu udającego żywe organizmy. Historyczne R0/R1/L0 Owner FAIL pozostają FAIL.
 
-## AKTUALNY PRIORYTET — gotowy do udostępnienia Owner First Look Z1
+**Czego naprawdę się nauczyliśmy:** X0 mechaniczny body re-rig i stawy; Y1 nienaturalny chwyt i ograniczona relacyjna dostępność; Z1 rzeczywiste pchanie materii bez chwytu, ale głównie ten sam ruch ciała; K1 rzeczywista zmiana obrysu ramion, lecz apparent stance podtrzymywana sztucznym `brace`; S2 prawdziwe 3D podparcie / fizyczna utrata podłogi, ale uczciwe 2D wystarcza dla części tarcia. **Wszystkie te wyniki są mechaniczne/donorowe; nie ma nowego Owner-qualified whole ani wybranego podłoża 2D/3D.**
 
-- [Review branch](https://github.com/Jozzpoly/Combat-Lab/tree/review/owner-first-look-z1) `73a0945d6c660851a877dc7b095c511badd9b2a9`. Exact-head [CI PASS 38078641528](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38078641528) obejmuje realne kliknięcia przycisków, pointer canvas, WASD, przebudowę 2→0 fizycznych ramion, zapis świata oraz fizykę Z1. Jest [screenshot pierwszego ekranu](https://github.com/Jozzpoly/Combat-Lab/blob/review/owner-first-look-z1/docs/media/owner-first-look-z1-first-frame.png).
-- **Nie ma hostowanego linku do gry.** Ostatnia niezastąpiona publiczna wersja `rehearsal/current@cb4b44d4` pozostaje neutralnym smoke. Strona GitHub Pages wymaga osobnej zgody na publiczne zastąpienie. Nie twierdzić, że sama gałąź jest działającą stroną. [Szczegóły zgody i rollback](OWNER_FIRST_LOOK.md).
-- **Najnowsza korekta Ownera:** realny screen już ujawnia ubóstwo ciał i świata; **krótki visual-truth packet może zastąpić pośpieszny deploy**. Następny run zaczyna się od aktualnego feedbacku/live refs i testu realnej sceny, następnie opcjonalnie generuje skromny surowy contact strip + input/contact events na istniejącym `review/owner-first-look-z1`. Nie tworzyć nowego percepcyjnego engine ani formatu archiwum i **nie wracać do pytania o publikację**, dopóki osobisty interaktywny test naprawdę nie wymaga tego wyboru. `rehearsal/current` pozostaje bez zmian.
-- Owner może uznać pokaz za FAIL. Jego feedback powinien kierować następnym światem, a nie kończyć się listą koniecznych poprawek na tym samym Z1.
+**Późniejsza korekta Ownera:** uczciwy screenshot [First Look Z1](OWNER_FIRST_LOOK.md) ujawnił proste prostokąty/ubogi świat, często szybciej niż długie raporty. Techniczny review `review/owner-first-look-z1@73a0945d6c660851a877dc7b095c511badd9b2a9` ma [exact-head CI PASS](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38078641528) i [pierwszy ekran](https://github.com/Jozzpoly/Combat-Lab/blob/review/owner-first-look-z1/docs/media/owner-first-look-z1-first-frame.png), lecz Owner verdict jest UNKNOWN. Tani raw screenshot / przydatna krótka sekwencja może wyprzedzać interaktywny deploy. **Nie wracać automatycznie do prośby o Pages.**
 
-## Zakończony boczny research — bez przejęcia roadmapy
+**Badawczy detour zamknięty:** [Visual Truth / multi-scale / flow](VISUAL_TRUTH_PERCEPTION_EXPLORATION_2026-10-10.md) i [most do ReflexBrain](REFLEXBRAIN_VISUAL_PERCEPTION_BRIDGE_2026-10-10.md) zachowują hipotezy percepcji i formatów. Nie implementować tutaj sensory engine, własnego formatu ani crowd-flow automatu z rozpędu.
 
-- 2026-10-10 Owner zaproponował: PNG jako kotwica, potem własny/standardowy format, wieloskalowe POV, historię aktora oraz pola przepływu wielkich tłumów. Jawnie polecił **zbadać → skonsolidować → zapisać → wrócić do Combat Lab**.
-- [Skonsolidowany rezultat](VISUAL_TRUTH_PERCEPTION_EXPLORATION_2026-10-10.md): silny kierunek **raw frame + fixed-step temporal evidence + source-of-action event trace** jako opcjonalny dodatek do prawdziwego testu. Flow obserwowany ≠ flow narzucony, globalne fakty ≠ percepcja, aktualnie żaden organizm Z1 nie ma autonomicznego planu. Nie wybrano multi-scale formatu/brain/3D ani nowego sterownika tłumu.
-- **Most do ReflexBrain (oddzielna rozmowa, research only):** [REFLEXBRAIN_VISUAL_PERCEPTION_BRIDGE_2026-10-10](REFLEXBRAIN_VISUAL_PERCEPTION_BRIDGE_2026-10-10.md). Wskazuje faktyczny ReflexBrain charter/P0/P02/H01/C01/G5-D0 i rywali obraz vs sparse vs multi-scale, granice lawful sight oraz rozróżnienie host perception vs learned appraisal. ReflexBrain ma własny live frontier i nie dziedziczy architektury Combat Lab. **Po przeniesieniu koncepcji tutaj wracamy do Owner First Look / realnych działań w świecie**, bez implementacji sensor stack.
-- **Wróć do aktywnego zadania:** uczciwy Owner First Look / prawdziwy body↔world feedback, bez automatycznego budowania sensory stack. Dojrzałe pomysły odkładaj do ewentualnych przyszłych testów.
+**Snapshot refs przy sprawdzeniu:** `rehearsal/current@cb4b44d417db612f3333fe515e6f6afffa3e56d8` (nietknięty); S2 `experiment/ground-contact-s2@ec237bfc1c45cf7d3ccd0f88f0720e9a10c95332`; Z1 `experiment/contact-only-relations-z1@f2d71e63277bfe77aa299c5d5b153143e82217ac`; K1 `experiment/posture-contact-k1@6a8c2e0a0a0ff4047c37821b047658cea75a9aad`. **Sprawdzić live przed działaniem.**
 
-## STAŁE ŹRÓDŁA I PIERWSZY RUCH
+## NASTĘPNY DŁUGI RUN — rozpoznanie → wybór → wykonanie → krytyka
 
-1. [VISION_ADAPTIVE_ROADMAP](VISION_ADAPTIVE_ROADMAP.md) — cel i alternatywy, nie kolejka.
-2. [CAMPAIGN_RUNBOOK](CAMPAIGN_RUNBOOK.md) — faza A–E każdego długiego runu.
-3. [RESEARCH_STATE](RESEARCH_STATE.md) i [EXPERIMENT_PROTOCOL](EXPERIMENT_PROTOCOL.md) — authority, dowody i ograniczenia.
-4. Live branch HEAD/CI, aktualny source/real browser; świeży Owner feedback przed jakimkolwiek kodem.
-5. Raporty eksperymentalne: [S2](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/ground-contact-s2/docs/S2_GROUND_CONTACT_CHECKPOINT_2026-10-10.md), [K1](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/posture-contact-k1/docs/K1_POSTURE_CONTACT_CHECKPOINT_2026-10-10.md), [Z1](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/contact-only-relations-z1/docs/Z1_CONTACT_ONLY_CHECKPOINT_2026-10-10.md). Historię pozostałych znajdziesz w git i `RESEARCH_STATE`.
+1. **Odzyskaj Owner intent i realnie przetestuj istniejące.** Zbierz nowsze korekty/historię, HEAD/PR/CI; uruchom adekwatny kod i obejrzyj prawdziwe zachowanie + kontrolę, nie tylko odziedziczony PASS. Porównaj z Owner-rejected baseline i z obecnym marzeniem o różnorodnych możliwościach.
+2. **Wyselekcjonuj najwyższej wartości problem.** Czy największy brak jest w samych możliwościach/anatomii, jakości całej sytuacji, ruchu/sterowaniu, podparciu, niezależnej reakcji czy obserwowalności? Zaproponuj uczciwy prostszy rywal i falsyfikator; nie wybieraj S3/K2 lub kolejnych obrazków automatycznie.
+3. **Prowadź autonomicznie długie spójne cykle** `zmiana → live test → obraz / zdarzenia → negatywna kontrola → korekta`, przez tyle lokalnych kroków, ile uzasadnia wartość. Kiedy nowa implementacja nie jest uzasadniona, pracuj nad wyborem, nie produkuj mechanik dla samej aktywności.
+4. **Domknij prawdę, nie narrację:** exact SHA/CI, najistotniejsze co działa i co zawiodło, co jest **NOT TESTED THIS RUN**, Owner product UNKNOWN, dość handoffu do wznowienia. Oszczędny raport Ownerowi. Bez publikacji/merge bez właściwej decyzji.
 
-**W przypadku zerwania:** sprawdź dokładne SHA, dokonane zapisy i CI przed ponowieniem wywołania. Jeżeli blocker wymaga Ownera, wskaż go wprost. Żadnego nieuzasadnionego merge, deploy ani product PASS.
+**Po zerwaniu:** sprawdź wykonane zapisy i bieżące refs, wznów od faktów. Zwykły turn nie pracuje dalej w tle.

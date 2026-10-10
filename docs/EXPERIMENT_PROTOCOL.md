@@ -197,18 +197,14 @@ Machine evidence cannot qualify:
 
 Those require Owner judgement when the question is actually experiential.
 
-## 9. Owner attention is scarce research evidence
+## 9. Owner attention is scarce research evidence — but early truth matters
 
-Do not use the Owner as a debugger for a question the agent can answer itself.
+Do not use Owner attention to debug machine-answerable faults. However, **do not hide an honest view of a crude experiment until it earns a product PASS**. Two different thresholds apply:
 
-Before requesting Owner rehearsal:
+- **Early truth, low-cost feedback:** a raw screenshot, short causally attributed frame sequence or runnable limited preview may be worth showing precisely because its crudeness falsifies our agent expectations. Before this, ensure the evidence is genuine and limitations visible; **no qualitative novelty gate**.
+- **Owner experiential qualification of a supposedly improved whole:** finish avoidable runtime faults, test the precise playable build, compare against the previously rejected/outgrown baseline, and ask the Owner only the judgment that machine tests or images cannot supply.
 
-- finish machine-answerable checks yourself;
-- ensure obvious runtime defects will not dominate;
-- ensure the specimen is genuinely different at the phenomenon level from the relevant rejected/outgrown baseline;
-- ensure the remaining question actually needs human experiential judgement.
-
-A diagnostic mechanism becoming easier to inspect is not, by itself, a reason for Owner rehearsal.
+A machine PASS cannot overrule an Owner FAIL, and a prettier diagnostic is not a product gain. In light of the later 2026-10-10 Owner correction, do not push public deployment when an honest inexpensive image can answer the question. Public deployment remains a separate explicit authority boundary.
 
 ## 10. Lab freedom is part of the apparatus
 
