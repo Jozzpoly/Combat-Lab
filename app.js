@@ -461,6 +461,10 @@ async function start(){
    document.body.dataset.uiProbe=JSON.stringify(uiCheck());
 
  }
+ if(new URLSearchParams(location.search).has("cascade")){
+   const {secondActorOpportunityProbe}=await import("./src/x0-second-actor-probe.js");
+   document.body.dataset.cascade=JSON.stringify(secondActorOpportunityProbe(CommonsWorld));
+ }
  if(new URLSearchParams(location.search).has("holdprobe")){
    const {holdMaterialProbe}=await import("./src/x0-hold-probe.js");
    document.body.dataset.holdProbe=JSON.stringify(holdMaterialProbe(CommonsWorld));
