@@ -11,7 +11,7 @@ const variants=[
   {dx:-.6,dy:-.7},{dx:.6,dy:.7},
   {dx:-1.2,dy:0},{dx:1.2,dy:0}
 ];
-function run(World,{dx,dy},responsive){
+function run(World,{dx,dy},responsive,onlyFirst=false){
   const w=new World();
   try{
     w.select(null);
@@ -21,14 +21,19 @@ function run(World,{dx,dy},responsive){
     const ap=a.root.translation(),bp=b.root.translation();
     w.pose(a.id,V(ap.x+dx,ap.y+dy));
     w.pose(b.id,V(bp.x,bp.y+dy*.35));
-    for(const actor of w.actors)w.setArmReflex(actor.id,responsive);
+    for(let i=0;i<w.actors.length;i++)
+      w.setArmReflex(w.actors[i].id,onlyFirst?(i===0?responsive:true):responsive);
     let first=null,peakContacts=0,contactTicks=0;
+    const actorFirstReflex=w.actors.map(()=>null);
     const positions=[];
     for(let i=0;i<360;i++){
       w.step();
       if(w.counts.contacts>0)contactTicks++;
       peakContacts=Math.max(peakContacts,w.counts.contacts);
       if(first===null&&w.counts.reflex>0)first=i;
+      for(let k=0;k<w.actors.length;k++)
+        if(actorFirstReflex[k]===null&&w.actors[k].response.events>0)
+          actorFirstReflex[k]=i;
       // Sensor changes may affect root or a real limb collider, so retain
       // part positions for causal checks without exposing enormous logs.
       if(i===0||i===29||i===79||i===179||i===359)
@@ -39,7 +44,7 @@ function run(World,{dx,dy},responsive){
     }
     return {first,contactTicks,peakContacts,reflex:w.counts.reflex,
       brace:w.counts.braces,positions,
-      actorEvents:w.actors.map(a=>a.response.events),
+      actorEvents:w.actors.map(a=>a.response.events),actorFirstReflex,
       finalActors:w.actors.map(a=>vec(a.root)),
       finalMaterial:w.matter.map(m=>vec(m.body)),
       finalArms:w.actors.flatMap(a=>a.arms.map(x=>vec(x.body)))};
@@ -84,4 +89,39 @@ export function falsifyLocalResponse(World){
     downstreamMatterCases:cases.filter(c=>c.finalMatterContrast>.1).length,
     actorAlteredCases:cases.filter(c=>c.finalActorContrast>.1).length,
     warning:"Afterstate differences are not a newly available second actor action or an Owner-quality PASS"};
+}
+
+export function falsifyInterActorReflexRelay(World){
+  const cases=[];
+  for(const geometry of variants){
+    const activated=run(World,geometry,true,true);
+    const firstQuiet=run(World,geometry,false,true);
+    if(firstQuiet.actorEvents[0]!==0)
+      throw Error("F2 control actor 0 reacted despite specific reflex ablation");
+    const actorContrasts=contrast(activated.finalActors,firstQuiet.finalActors);
+    const materialContrasts=contrast(activated.finalMaterial,firstQuiet.finalMaterial);
+    const secondChanged=activated.actorEvents[1]!==firstQuiet.actorEvents[1] ||
+      activated.actorFirstReflex[1]!==firstQuiet.actorFirstReflex[1];
+    const timeline=activated.positions.map((p,i)=>{
+      const q=firstQuiet.positions[i];
+      return {tick:p.tick,
+        actor:round(Math.max(...contrast(p.actors,q.actors))),
+        material:round(Math.max(...contrast(p.material,q.material)))};
+    });
+    if(activated.actorFirstReflex[0]===null&&
+      timeline.some(t=>Math.max(t.actor,t.material)>.0001))
+      throw Error("F2 relay diverged without actor 0 active reflex");
+    cases.push({geometry,firstActiveAt:activated.actorFirstReflex[0],
+      secondActiveAt:activated.actorFirstReflex[1],
+      secondControlAt:firstQuiet.actorFirstReflex[1],
+      secondActiveEvents:activated.actorEvents[1],
+      secondControlEvents:firstQuiet.actorEvents[1],
+      secondResponseChanged:secondChanged,
+      actorFinalContrast:round(Math.max(...actorContrasts)),
+      materialFinalContrast:round(Math.max(...materialContrasts)),
+      timeline});
+  }
+  return {scope:"9 matched world initial states: ONLY the first organism's own tactile arm reflex differs; all other organism-local policies stay live in both worlds",
+    cases,secondResponseDifferences:cases.filter(x=>x.secondResponseChanged).length,
+    stillUnproven:"A downstream response is not proof of a newly available action or full organism autonomy"};
 }
