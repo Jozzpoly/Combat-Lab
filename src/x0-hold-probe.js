@@ -44,7 +44,7 @@ export function holdMaterialProbe(World){
   };
   const light=run({}),unheld=run({hold:false}),
     rigid=run({arms:0}),unpowered=run({holdForce:0}),
-    heavy=run({mass:400});
+    heavy=run({mass:400}),noDrive=run({drive:false});
   if(!light.acquired)throw Error("Actual arm did not make touch-qualified hold");
   if(rigid.acquired)throw Error("Rigid hull reached the same remote material without touching");
   if(unpowered.acquired)throw Error("Zero-strength body could hold material");
@@ -52,6 +52,6 @@ export function holdMaterialProbe(World){
     throw Error("Non-finite contact hold mechanics");
   if(light.holdImpulse<=.01)throw Error("Body-origin finite hold never delivered physical impulse");
   return {scope:"touch-qualified finite reciprocal body/matter hold; no actor agency/Owner feel",
-    contactPosition,light,unheld,rigid,unpowered,heavy,
+    contactPosition,light,unheld,rigid,unpowered,heavy,noDrive,
     contrastX:+Math.abs(light.crateX-unheld.crateX).toFixed(4)};
 }
