@@ -3,11 +3,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --check app.js && node --check src/s2-world.js && node --check src/s2-probe.js",
+    "test": "node --check app.js && node --check src/s2-world.js && node --check src/s2-probe.js && node --check src/s2-planar-proxy.js",
     "build": "vite build --base=./"
   },
   "dependencies": {
-    "@dimforge/rapier3d-compat": "0.21.0"
+    "@dimforge/rapier3d-compat": "0.21.0",
+    "@dimforge/rapier2d-deterministic": "0.21.0"
   },
   "devDependencies": {
     "vite": "8.2.2"

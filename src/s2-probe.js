@@ -1,6 +1,7 @@
 // S2 physical support falsifier: ground contact must be the SOURCE of resistance.
 // Explicit external laboratory ram; no actor locomotion/feet/AI claims.
 import {GroundCase} from "./s2-world.js";
+import {comparePlanarProxy} from "./s2-planar-proxy.js";
 const r=n=>+n.toFixed(4);
 const presets=[
  {id:"floating",gravity:0,surface:1.2,drive:720,offset:0},
@@ -35,7 +36,8 @@ export function compareGroundSources(){
    throw Error("S2 contact control departed the real floor; boundary artifact");
  if(ice.contacts<5||grip.contacts<5)
    throw Error("S2 ram didn't physically contact both material regimes");
- return {scope:"single grounded Rapier3D model; fixed ground collider and dynamic yaw-only bodies, 420 ticks of IDENTICAL external laboratory force; gravity/friction controls + idle/offset",
+ const cheaper=comparePlanarProxy();
+ return {cheaper,scope:"single grounded Rapier3D model; fixed ground collider and dynamic yaw-only bodies, 420 ticks of IDENTICAL external laboratory force; gravity/friction controls + idle/offset",
   cases,iceMinusGripDX:r(ice.guardDX-grip.guardDX),
   conclusionRule:"A different grounded friction outcome proves substrate-level support transmission only; no feet, gait, sustained defensive technique, product feel or 2D cost advantage."};
 }
