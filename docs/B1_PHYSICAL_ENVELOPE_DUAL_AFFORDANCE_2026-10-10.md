@@ -68,10 +68,36 @@ Fold/unfold physically drives open projected Y extent ~3.86m → ~0.90m → ~3.8
 
 The real frames are still simple bars, rectangles and tiny objects, with no creature art, biologically plausible posture or locomotion. Their sole value is genuine geometry/contact at exact solver moments; do not replace visual truth with an image-generation illustration. [Actual UI e2e gate CI 38093244735](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38093244735) validates actual click fold/unfold **and achieved hinge geometry**, 1.25→2.5m physical gate-slider movement, direct W motor, deletion of true wall bodies, variant rebuild, physical side-target reset and scene reset. These are synthetic Chrome page events, not Owner feeling/joy.
 
+## Adversarial cheaper collider-profile baseline (POST dual-action result)
+
+[Actual emitted Chromium/WASM same-source comparisons CI 38093607072](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38093607072) · modules: `src/b1-profile.js`, `src/b1-cheap-test.js`.
+
+Compared real front-hinged 125kg body to a single 125kg rigid-body whose collider profile is **authored externally** to alternate between broad (hy1.90) and narrow (hy0.46). One candidate changes geometry instantly at the command tick; the other changes it over **60 steps** with actual updated collider geometry each frame, but with **NO modeled muscle effort, material-volume conservation or joint reactions**. Both are explicitly approximations and cannot be called soft/multi-body physics. The same 1.24m physical corridor, 40kg material targets and fixed fold/unfold input sequence were used.
+
+| Source model | Entire body crossed real tunnel? | Two off-axis material objects ΔX |
+| --- | --- | --- |
+| Real two-wing finite actuation | YES, first tick 402 | +0.9245m / +0.8765m |
+| Cheaper 60-step collider-profile morph | YES, tick 417 | +7.8936m / +7.9121m |
+| Cheaper instant collider swap | YES, tick 417 | +7.8647m / +7.8646m |
+
+**Key NEGATIVE for physical fidelity exclusivity:** a cheap one-body mode-switch can indeed reproduce passage plus broad material displacement in an unobstructed author-scripted sequence, and may even push more strongly because its rigid broad surface maintains contact. Morphology complexity is not established as gameplay-necessary by the two-action success alone.
+
+**Critical pressure falsifier**: after physically entering the tunnel folded, each candidate was ordered to expand at solver tick 330 *while its body remained surrounded by fixed material walls*. All retained finite coordinates (no catastrophic NaN); however attempts to inject an oversized one-piece collider into the walls produced extreme contact solver impulses.
+
+| Model | Maximum sampled contact impulse per step |
+| --- | ---: |
+| Actual hinged body (wings physically constrained by contact) | **23.2969 N·s** |
+| 60-step externally edited collider | **21,438.2041 N·s** |
+| Instant externally edited collider | **156,010.418 N·s** |
+
+The articulated body expanded only as much as real contact allowed; its span at step 480 was ~1.61m under contact pressure, with solver tolerance/overlap and 142 accumulated wall contacts (NOT a perfect hard no-penetration guarantee). The gradual collider grew to ~3.8m **while still inside the tunnel**, producing hundreds of accumulated contact samples and abnormal solver forces; the instant profile jumped to 3.8m in one step and similarly penetrated/conflicted with material walls. This is evidence against **these exact naive geometry edits**, NOT proof all low-cost authored approximations must fail.
+
+**A fair future cheap rival** would first assess available space and progressively limit deformation through explicit material constraints, while preserving a low-cost body model and diagnosable behavior. But such authored collision-aware morphing has design/debug cost, can be more dependent on special cases, and is NOT currently implemented or verified. Compare it if a real player-experience question justifies this additional cost. The positive hinge result does not select multi-body physics as the foundation of Combat Lab.
+
 ## Boundary and next research
 
 **Disposition: KEEP B1 as an isolated conditional physical donor; unmerged, no public Pages promotion.** Unlike E1's simple attraction/role shifts, B1 supplies one real bodily action whose effect depends on morphology. However it does not yet belong automatically inside E1; merging would harden its 2D body+force-source implementation and risk losing sight of the intended broad organism and crowd vision.
 
-Next conscious comparison should focus on **the practical value of this dual affordance versus a cheap collider-profile/shape-mode approximation in an editable *crowd* and real Owner free play**, rather than further hinge tuning. Another unexplored ability could be protecting/holding space under real pressure; B1 does not prove support-ground bracing. Body-specific action, local behavior and world must eventually meet in a common serious organism, but that is a separate decision requiring actual human feedback. Do not start a reflex/perception project in this repo or call a diagnostic mechanical PASS 'Owner PASS'.
+Next conscious comparison should focus on **the practical value of joint-constrained anatomy versus a collision-aware (NOT naive) cheap shape-mode approximation in an editable *crowd* and real Owner free play**, rather than further hinge tuning. Another unexplored ability could be protecting/holding space under real pressure; B1 does not prove support-ground bracing. Body-specific action, local behavior and world must eventually meet in a common serious organism, but that is a separate decision requiring actual human feedback. Do not start a reflex/perception project in this repo or call a diagnostic mechanical PASS 'Owner PASS'.
 
 When resuming: live GitHub branch/source and latest exact-head CI override this dated report; main/docs/RESEARCH_STATE.md and main/docs/AGENT_RUN_CURSOR.md route the current objective. Rehearsal/current must remain unchanged absent Owner consent.
