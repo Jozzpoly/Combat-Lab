@@ -1,65 +1,13 @@
-# Combat Lab
+# Combat Lab — S2: actual ground contact as a rival support substrate
 
-Combat Lab is a research laboratory for discovering embodied combat, movement and world-interaction possibilities.
+**Independent bounded physical comparison. Do not merge, deploy or select architecture. Not Owner-qualified.**
 
-## Current state — neutral main, independently evolving research
+## Why this substrate is materially different
 
-`main` contains a neutral smoke surface, repository/deployment infrastructure and canonical research documentation. It is **not** an accepted combat, crowd, movement or organism implementation.
+K1 showed that contact-only arm configuration had substantial measured blocking only with an unphysical world-relative root-velocity brake. Removing that proxy collapsed the significant K1 contrasts. S2 uses a **new independent** Rapier 3D physical world with vertical gravity, dynamic body mass, a fixed actual floor collider and ordinary normal-contact friction. It renders an accessible top-down view; vertical physics is real but hidden by projection. Both bodies remain dynamic and are constrained to yaw rotation only; this is a _constrained-3D surface-body substrate_, not a full humanoid.
 
-For the current selected research question and its evidence boundary, enter [docs/RESEARCH_STATE.md](docs/RESEARCH_STATE.md). For *what is being built or published now*, also verify live experiment branches, their exact CI results and the separate `rehearsal/current` pointer. A static README must not duplicate or override that changing operational state.
+The pressure source is a precisely bounded, **external laboratory ram impulse** applied to another dynamic body. This is NOT a locomotion brain, foot-driven sprint or self-powered organism. Compare a defender resting on ice/grip, an identical zero-gravity/zero-normal test and identical no-force test. No body grip, pivot, magical bracing or anchored defender is available. Outcomes must be explained by genuine solver contacts and floor friction, not invisible world locking.
 
-The previous implementation line is absent from the active tree. Its Git history remains reachable only for deliberate forensic recovery.
+The physical friction experiment is the *falsifier/entry point*: if changing friction with otherwise identical pressure and dynamic mass does not make a useful difference, don't grow the support system from its numerical novelty. If it does, ask next whether direct footing, actor-posture choices, crowd movement and independent world consequences become more understandable or useful **with acceptable performance**. Mere friction plausibility does not license a 3D migration or claim actual humanoid stance.
 
-## What survives the failure
-
-The project keeps:
-
-- Owner evidence and corrections;
-- observed phenomena;
-- falsifiers and causal findings;
-- provenance;
-- protocol lessons;
-- the ability to recover old commits when a concrete future question needs them.
-
-It does **not** grant automatic authority to:
-
-- old branch ancestry;
-- green mechanism tests;
-- previous "foundation" labels;
-- the last canonical `NEXT`;
-- code merely because it already exists.
-
-## Current operating model
-
-The repaired experiment protocol distinguishes:
-
-- **discovery** — find valuable whole phenomena first;
-- **diagnosis / attribution** — explain a phenomenon without letting the diagnostic fixture own the roadmap;
-- **serious construction** — build a coherent qualitative step when evidence or Owner direction calls for one;
-- **Lab infrastructure** — neutral capabilities that expand experimentation without encoding the answer.
-
-A diagnostic PASS is a finding, not an automatic parent implementation.
-
-A local improvement against the previous branch version is not enough; relevant progress must be judged against the actual Owner baseline and project goal.
-
-## Repository contract
-
-- `main` is the neutral current Lab state and durable research truth.
-- `rehearsal/current` is an exact deployment pointer only.
-- `archive/forensic-pre-cleanroom-2026-10-06` is forensic reachability only.
-- CI may prove runtime/mechanical/repository facts but may not assert research-roadmap semantics.
-- Public rehearsal occurs only from an explicitly selected exact source.
-
-Repository administration is the agent's responsibility. The Owner should not need to manage branches, SHAs, CI or deployment in normal work.
-
-## Current authority
-
-Read:
-
-1. `docs/RESEARCH_STATE.md`
-2. `docs/EXPERIMENT_PROTOCOL.md`
-3. `docs/FAILURE_SCAR_2026-10-06.md`
-
-The protocol is explicitly provisional and may be changed when evidence shows a better way to run the Lab.
-
-> **Discover valuable phenomena first; diagnose them when needed; build serious wholes from knowledge rather than from the accidental ancestry of diagnostic fixtures.**
+Current main source of truth: [Combat Lab research state](https://github.com/Jozzpoly/Combat-Lab/blob/main/docs/RESEARCH_STATE.md). Public `rehearsal/current` is untouched.

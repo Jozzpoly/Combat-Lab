@@ -1,10 +1,26 @@
-<!doctype html>
-<meta charset="utf-8">
-<title>Combat Lab — Clean Substrate</title>
-<link rel="stylesheet" href="./style.css">
-<main class="shell">
-<header><div><p class="eyebrow">Combat Lab · clean neutral substrate</p><h1 id="experiment-title">Loading…</h1><p id="experiment-purpose" class="purpose"></p></div><div class="controls"><button id="pause">Pause</button><button id="reset">Reset</button><button id="debug">Debug</button></div></header>
-<section class="viewport"><canvas id="lab" aria-label="Combat Lab neutral experiment surface"></canvas></section>
-<footer><div><strong>Controls</strong><span id="controls-text">—</span></div><div class="status"><span id="run-state">RUNNING</span><span id="sim-time">0.00 s</span><span id="build-id">source: local</span></div></footer>
-</main>
-<script type="module" src="./app.js"></script>
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Combat Lab — S2 physical ground contact</title>
+<link rel="stylesheet" href="./style.css"></head>
+<body><main class="shell">
+<header><div><p class="eyebrow">COMBAT LAB / ISOLATED SUPPORT-SUBSTRATE EXPERIMENT</p>
+<h1>Ground contact <span>S2</span></h1>
+<p class="lead">Same top-down control surface, but the bodies have real height, gravity and friction from a real ground collider. No magical root brace, artificial grip or NPC goal.</p></div><p class="label">Research candidate · Not Owner-qualified</p></header>
+<div class="content"><section class="main"><canvas id="view" aria-label="Top-down projection of physically grounded 3D collision bodies"></canvas>
+<div class="status"><span id="status">Initializing physical solver</span><span>Elapsed <b id="elapsed">0</b></span></div>
+<p class="hint">Both bodies are fully dynamic. The selected force comes from an explicit external laboratory ram — <strong>not</strong> a creature's locomotion. The ground is a real 3D contact surface.</p>
+</section><aside>
+<section><h2>Surface friction</h2><div class="control"><label for="mu">Ground friction coefficient</label><output id="muLabel">0.80</output></div>
+<input id="mu" type="range" min="0" max="2.5" step=".05" value=".8">
+<p class="hint">Ice (0) ↔ strong grip (2.5). Changing this modifies the actual Rapier floor collider.</p></section>
+<section><h2>Outside force</h2><div class="control"><label for="force">Ram force</label><output id="forceLabel">720 N</output></div>
+<input id="force" type="range" min="0" max="1500" step="30" value="720">
+<label class="toggle"><input type="checkbox" id="gravity" checked> Gravity and normal load enabled</label></section>
+<section><h2>Operate</h2><div class="buttons"><button id="push">Push for 7 seconds</button><button id="pause">Pause</button><button id="step">+1 step</button><button id="reset">Reset</button><button id="compare">Run controls</button></div></section>
+<section><h2>Measured physical outcome</h2><div class="metrics">
+<div><small>Defender displacement</small><strong id="displacement">—</strong></div>
+<div><small>Ground normal impulse</small><strong id="normal">—</strong></div>
+<div><small>Body-body contact</small><strong id="contacts">—</strong></div>
+</div><p id="feedback" class="hint" role="status">Starting the physics experiment…</p></section>
+</aside></div><footer>Scope: dynamic ground contact with 3D physics, but still only cuboids and yaw-limited rotation. Not feet, gait, stance AI, a combat system, or a plan to migrate Combat Lab.</footer></main>
+<script type="module" src="./app.js"></script></body></html>
