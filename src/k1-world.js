@@ -41,7 +41,7 @@ export class KineticField {
     if(!["hinged","rigid","bare"].includes(kind))throw Error("Unknown morphology");
     const root=this.add(kind,x,y,
       [{hx:.54,hy:.48,mass:65},...(kind==="rigid"?[{hx:.20,hy:1.50,mass:25,dx:-.74}]:[])]);
-    root.panel=null;root.joint=null;root.target=0;root.maxImpulse=.28;
+    root.panel=null;root.joint=null;root.target=0;root.maxImpulse=.28;root.panelControl=false;
     if(kind==="hinged"){
       const arm=this.add("hinge-panel",x-.74,y,[{hx:.20,hy:1.50,mass:25}]);
       // The two physical shapes just meet at the joint. Connected contact ON.
@@ -76,10 +76,10 @@ export class KineticField {
     this.shots.push(shot);this.externalShots++;
     return shot;
   }
-  aimPanel(value){if(!Number.isFinite(value))return;this.guard.target=clamp(value,-1.3,1.3);}
+  aimPanel(value){if(!Number.isFinite(value))return;this.guard.target=clamp(value,-1.3,1.3);this.guard.panelControl=true;}
   // Purely bounded motor impulses, not collision teleports or inverse kinematics.
   panelStep(guard=this.guard){
-    if(guard?.kind!=="hinged")return;
+    if(guard?.kind!=="hinged"||!guard.panelControl)return;
     const panel=guard.panel.body,root=guard.body;
     const relative=wrap(panel.rotation()-root.rotation());
     const angular=panel.angvel()-root.angvel();
@@ -131,6 +131,7 @@ export class KineticField {
       witnessTravel:digits(Math.hypot(wp.x-this.witness.initial.x,wp.y-this.witness.initial.y)),
       guardPosition:V(digits(gp.x),digits(gp.y)),guardAngle:digits(this.guard.body.rotation()),
       panelAngle:this.guard.panel?digits(wrap(this.guard.panel.body.rotation()-this.guard.body.rotation())):null,
+      panelControl:this.guard.panelControl,
       panelsContactEnabled:this.guard.joint?this.guard.joint.contactsEnabled():null,
       shotStates:this.shots.map(s=>{const p=s.body.translation(),v=s.body.linvel();
         return {p:V(digits(p.x),digits(p.y)),v:V(digits(v.x),digits(v.y))};}),
@@ -149,7 +150,7 @@ export function runK1Counterfactual(){
         field.reposition(field.witness,V(24.4,interceptY));
         const before=field.trace();
         field.shoot(V(3,interceptY),V(27,interceptY),20);
-        for(let i=0;i<100;i++)field.step();
+        for(let i=0;i<50;i++)field.step();
         const after=field.trace();
         if(!after.finite||after.externalShots!==1||after.driveImpulse!==0)
           throw Error("Invalid K1 physics or source attribution "+kind+" "+interceptY);
@@ -159,6 +160,6 @@ export function runK1Counterfactual(){
   }
   // This is a measurement, NOT a required anatomy victory; the rigid control
   // might be equally protective, or the witness may be missed by off-axis shots.
-  return {source:"Rapier2D deterministic, identical shots, passive actuator",cases,
+  return {source:"Rapier2D deterministic, identical shots, true zero-torque passive actuator",cases,
     caveat:"Projectile paths differ; witnessTravel is NOT automatically proof of hit or protection."};
 }
