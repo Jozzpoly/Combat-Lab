@@ -31,6 +31,7 @@ function removeGroundControl(){
       try{
         for(let i=0;i<60;i++)run.step();
         const yBefore=run.defender.body.translation().y;
+        run.clearCounters(); // only the AFTER-change contact evidence
         if(mode.remove&&!run.removeSupport())throw Error("S2 floor removal failed");
         for(let i=0;i<150;i++)run.step();
         const s=run.snapshot();
