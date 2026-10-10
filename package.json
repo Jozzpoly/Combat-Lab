@@ -1,9 +1,9 @@
 {
-  "name": "combat-lab-m0-physical-phenotypes",
+  "name": "combat-lab-b1-material-envelope-experiment",
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --check m0-app.js && node --check src/m0-world.js && node --check src/m0-probe.js && node --check src/m0-fair-pressure.js",
+    "test": "node --check b1-app.js && node --check src/m0-world.js && node --check src/b1-world.js && node --check src/b1-probe.js && node --check src/b1-dual.js && node --check src/b1-profile.js && node --check src/b1-cheap-test.js",
     "build": "vite build --base=./"
   },
   "dependencies": {
