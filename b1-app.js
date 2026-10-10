@@ -77,7 +77,7 @@ function draw(){
  "<div>Pozycja korpusu x: "+state.chassis.x.toFixed(2)+" m</div>"+
  "<div>Pozycja korpusu y: "+state.chassis.y.toFixed(2)+" m</div>"+
  "<div>Użyty impuls kadłuba: "+state.operatorImpulse.toFixed(1)+" N·s</div>"+
- "<div>Praca osi (suma |impulsów momentu|): "+state.hingeTorqueImpulse.toFixed(1)+" N·m·s</div>"+
+ "<div>Aktywność zawiasów (suma |impulsów momentu|, NIE energia): "+state.hingeTorqueImpulse.toFixed(1)+" N·m·s</div>"+
  "<div>Kontakty z bramką (próbki): "+state.gateContacts+"</div>"+
  "<div>Realny obrys pionowy: "+(state.physicalExtent.maxY-state.physicalExtent.minY).toFixed(2)+" m</div>"+
  "<div>Przedmioty po bokach ΔX: "+sideDX.map(x=>x.toFixed(2)).join(" / ")+" m</div>"+
