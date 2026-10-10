@@ -66,7 +66,7 @@ export function runE1Probe(part="A"){
  const cases=(part==="A"?["full","passive","no-pressure"]:
    ["no-odor","shifted-odor"]).map(run);
  if(cases.some(x=>!x.numericOK))throw Error("Unbounded/nonfinite E1 physical state");
- if(cases.some(x=>x.actors!==18))throw Error("Unintended actor reproduction/teleport");
+ if(cases.some(x=>x.actors!==18))throw Error("E1 count unexpected: "+JSON.stringify(cases.map(x=>({kind:x.kind,actors:x.actors}))));
  const passive=cases.find(x=>x.kind==="passive");
  if(passive&&(passive.autonomousTicks!==0||passive.autoImpulse!==0))
   throw Error("No-initiative physical baseline was powered");
