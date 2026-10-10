@@ -11,10 +11,17 @@ const run=(query,budget=25000)=>{
   " live="+get("live"));
  return {get,html};
 };
-const out=run("g0probe=1",60000);
-const data=out.get("g0-probe");
-if(!data)throw Error("No grounded-drive matrix emitted");
-const j=JSON.parse(data.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+const fragment=label=>{
+ const out=run("g0probe="+label,55000);
+ const data=out.get("g0-probe");
+ if(!data)throw Error("No grounded-drive batch "+label+" emitted (html chars="+out.html.length+
+    " tail="+out.html.slice(-280)+")");
+ return JSON.parse(data.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+};
+const A=fragment("A"),B=fragment("B");
+if(A.part!=="A"||B.part!=="B")throw Error("Wrong G0 partition");
+const j={scope:A.scope,results:[...A.results,...B.results],warning:A.warning};
+if(A.results.length!==5||B.results.length!==5)throw Error("G0 partition incomplete");
 if(j.results?.length!==10)throw Error("Incomplete G0 predeclared matrix");
 if(j.results.some(x=>!Number.isFinite(x.chassis.dx)))throw Error("Nonfinite result");
 if(j.results.filter(x=>x.mode==="wheels").some(x=>x.rootImpulseSum!==0))
