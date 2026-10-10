@@ -120,6 +120,43 @@ export class M0Field{
   this.addFree(20.3,18.6,.61,.62,64);
   this.addFree(29.0,8.0,1.1,.22,90);
  }
+ poseActor(id,pos){
+  const a=this.actors.find(a=>a.id===id);
+  if(!a)return false;
+  const old=a.root.translation(),dx=pos.x-old.x,dy=pos.y-old.y;
+  for(const p of a.parts){
+   const body=p.body,xy=body.translation();
+   body.setTranslation(V(xy.x+dx,xy.y+dy),true);
+   body.setLinvel(V(),true);body.setAngvel(0,true);
+  }
+  a.pressure=0;a.partLoads.fill(0);a.reflexUntil=0;
+  this.world.propagateModifiedBodyPositionsToColliders();
+  return true;
+ }
+ poseObject(index,pos){
+  const o=this.objects[index];
+  if(!o||o.kind!=="free")return false;
+  o.body.setTranslation(pos,true);
+  o.body.setLinvel(V(),true);o.body.setAngvel(0,true);
+  this.world.propagateModifiedBodyPositionsToColliders();
+  return true;
+ }
+ pick(point){
+  let best=null,distance=.45;
+  for(const a of this.actors)for(const part of a.parts){
+   const q=part.collider.projectPoint(point,true).point;
+   const d=Math.hypot(q.x-point.x,q.y-point.y);
+   if(d<distance){distance=d;best={kind:"actor",id:a.id};}
+  }
+  for(let i=0;i<this.objects.length;i++){
+   const o=this.objects[i];
+   if(o.kind!=="free")continue;
+   const q=o.collider.projectPoint(point,true).point;
+   const d=Math.hypot(q.x-point.x,q.y-point.y);
+   if(d<distance){distance=d;best={kind:"object",index:i};}
+  }
+  return best;
+ }
  select(id){this.selected=this.actors.some(a=>a.id===id)?id:null;}
  get selectedActor(){return this.actors.find(a=>a.id===this.selected)||null;}
  controlSelected(direction=V(),aim=null){
