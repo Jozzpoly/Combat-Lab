@@ -1,6 +1,6 @@
 # Combat Lab — Research State
 
-**Zaktualizowano:** 2026-10-11 · **Status produktu:** no Owner-qualified new specimen; historical R0/R1/L0 Owner FAIL active; no public deployment change.
+**Zaktualizowano:** 2026-10-11 · **Status produktu:** no Owner-qualified new specimen; historical R0/R1/L0 Owner FAIL active; no public deployment change. W2 integrated candidate judged mechanically but NOT visually/experientially accepted.
 
 ## Aktualny stan — czytaj najpierw
 
@@ -10,12 +10,15 @@
 
 | Kandydat | Evidence | Aktualna kwalifikacja |
 | --- | --- | --- |
+| **W2 — dwa prawdziwie składane ciała w E1-like wspólnym świecie** | [izolowana gałąź](https://github.com/Jozzpoly/Combat-Lab/tree/experiment/w2-embodied-material-commons), [exact-head CI 38095634526](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38095634526), [genuine source frames t0](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/w2-embodied-material-commons/docs/media/w2-genuine-source-t0.png) / [t420](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/w2-embodied-material-commons/docs/media/w2-genuine-source-t420.png), [full W2 red team](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/w2-embodied-material-commons/docs/W2_INTEGRATED_MATERIAL_COMMONS.md) | Fold 3.86m→0.90m, real bounded hinges/side-matter, 20-actor shared-world numerical + interface tests; **agent visual review: still traffic-like geometric clumps, not compelling whole**. Owner feel UNKNOWN. Do NOT auto-parent. |
 | E1 — 18 lokalnie aktywnych aktorów w materialnym świecie | [Draft PR #9](https://github.com/Jozzpoly/Combat-Lab/pull/9), [exact source Chromium CI PASS 38091544155](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38091544155), [checkpoint](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/e1-local-encounter-whole/docs/E1_WHOLE_LOCAL_ENCOUNTER_CHECKPOINT_2026-10-10.md) | Causally differentiated local steering, **no Owner feel PASS**; all use finite external root motor proxy |
 | B1 — real folded/expanded mass-bearing body | [Draft PR #10](https://github.com/Jozzpoly/Combat-Lab/pull/10), [exact source CI PASS 38093724125](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38093724125), [checkpoint](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/b1-physical-envelope-gate/docs/B1_PHYSICAL_ENVELOPE_DUAL_AFFORDANCE_2026-10-10.md) | Two actual incompatible material affordances, **not** living creature or qualified architecture |
 | B1 rival — single cheap collider with edited profile | [falsifier CI 38093607072](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38093607072) | Ordinary passage+wide push replicated; naive change of profile **FAIL** against occupied material; collision-aware cheap approach **UNTESTED** |
 | G0 — ground-reaction source calibration | [closed PR #8](https://github.com/Jozzpoly/Combat-Lab/pull/8), [CI 38089508879](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38089508879) | Physical wheel traction source established, NOT true animal locomotion |
 
 **Granica źródła:** `main` = neutralny kod i dokumentacja, `rehearsal/current` = tylko wskaźnik opublikowanego pokazu (nie zmieniony), E1/B1 = osobne eksperymenty Draft bez merge ani publikacji. Sprawdzaj *live* HEAD/CI i najnowsze Owner corrections. Nie ma uczciwego pomiaru końcowego FPS, autonomicznej decyzji B1 o złożeniu, prawdziwego chodu ani Owner PASS.
+
+**Nowe źródłowe negatywne W2:** predeclared placement/actuator-null tests distinguish active commanded folding from passive compression; when joint torque=0, pressure-policy vs manual gives identical world outcomes. First W2 20-actor experience remained visually geometric/attractor-like and does not qualify a new game. Do not answer by another dozen odor/pressure parameter tweaks or auto merge.
 
 **Najbliższe pytanie, nie rozkaz:** jak połączyć *samodzielną lokalną inicjatywę* z *materialnie różnymi umiejętnościami ciała* w jednym naturalnie testowalnym i niszczalnym świecie — jeśli jest to lepsze niż inne świadomie wybrane doświadczenie — zachowując równorzędne tanie modele i pierwszeństwo odczucia Ownera. Bez obowiązkowego łączenia gałęzi, nowych „fundamentów” i presji na publikację.
 
@@ -165,7 +168,7 @@ Selected-question design record (not a declaration that implementation has not b
 
 The 2026-10-07 **research preference** for a trial physics substrate was deterministic Rapier2D behind a thin Combat Lab-owned world boundary. E1/B1 subsequently experimented on replaceable Rapier2D donors; this history is **not an endorsed final engine or required code ancestry**. Character Controller and Companion provide bounded donor properties only; neither architecture was imported wholesale.
 
-Since that selection, E1 became an isolated conditional multi-actor local-agency candidate and B1 an isolated body-affordance experiment. **The still-open whole-level selection now concerns whether multiple physically distinct body actions create valuable editable material-world play, compared with credible cheap competitors.** It must not become another chain of diagnostic cells or an automatic E1+B1 merge. See the 2026-10-11 consolidation for fresh bounds.
+Since that selection, E1 became an isolated conditional multi-actor local-agency candidate and B1 an isolated body-affordance experiment. W2 combined a genuine independently actuated morph with an E1-like editable local world without merging main; source tests PASS but visual whole-level result remains underwhelming and unqualified. **The still-open whole-level selection now concerns whether multiple physically distinct body actions create valuable editable material-world play, compared with credible cheap competitors.** It must not become another chain of diagnostic cells or an automatic E1+B1 merge. See the 2026-10-11 consolidation for fresh bounds.
 
 ## Current operating boundary
 
