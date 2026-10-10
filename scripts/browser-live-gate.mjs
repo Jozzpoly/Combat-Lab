@@ -15,8 +15,9 @@ const query=new URL(base);
 query.searchParams.set("k1probe","");
 const dom=run(query.toString(),["--dump-dom"]);
 if(!/data-k1-probe="PASS"/.test(dom)||!/data-k1-cases="9"/.test(dom)||!/data-k1-runtime="ready"/.test(dom)){
- const error=(dom.match(/data-k1-error="([^"]*)"/)||[])[1];
- throw Error("K1 live WASM/browser failed: "+(error??dom.slice(-1100)));
+ const error=(dom.match(/data-k1-(?:boot-error|error)="([^"]*)"/)||[])[1];
+ const body=(dom.match(/<body[^>]*>/)||[])[0];
+ throw Error("K1 live WASM/browser failed: "+(error??body??dom.slice(-1100)));
 }
 const raw=(dom.match(/data-k1-report="([^"]*)"/)||[])[1];
 if(!raw)throw Error("K1 no actual source report");
