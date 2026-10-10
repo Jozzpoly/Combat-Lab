@@ -37,6 +37,10 @@ Kandydat na poważne laboratorium powinien umożliwiać kilka **jakościowo ró�
 
 Źródła i dokładne poprawki: [RESEARCH_STATE](RESEARCH_STATE.md), [S2 na gałęzi badawczej](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/ground-contact-s2/docs/S2_GROUND_CONTACT_CHECKPOINT_2026-10-10.md), [K1](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/posture-contact-k1/docs/K1_POSTURE_CONTACT_CHECKPOINT_2026-10-10.md), [OWNER_TRUTH](OWNER_TRUTH_RECONCILIATION_2026-10-09.md).
 
+## 3a. Nowy priorytet Ownera: obejrzeć prawdziwy stan, zanim go dalej idealizujemy
+
+Owner poprosił 2026-10-10 o dążenie do **szczerego pokazania tego, co już istnieje**. Dlatego [pierwszy przegląd Ownera](OWNER_FIRST_LOOK.md) staje się bezpośrednim celem operacyjnym następnej kampanii — **nie po osiągnięciu produktowego PASS, lecz po uzyskaniu realnie uruchamialnego i uczciwie opisanego preview**. Nie budować nowej mechaniki, by poprawić pierwsze wrażenie, zanim sprawdzimy istniejące. Wczesny Owner FAIL/feedback jest pełnowartościowym dowodem, nie porażką ceremonii pokazowej. Publiczne wdrożenie nadal wymaga odrębnej świadomej decyzji.
+
 ## 4. Roadmapa jako mapa decyzji — nie kolejka feature'ów
 
 **Równolegle obowiązują dwa wymiary:** rośnie jakość *całościowego doświadczenia* i rośnie jakość *naszej wiedzy o mechanizmie*. Drugi bez pierwszego może uzasadniać donor, ale nie awans produktu. Poniższe kampanie to **warunkowy portfel**, nie obowiązkowa kolejność od góry.

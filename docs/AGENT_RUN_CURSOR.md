@@ -11,6 +11,13 @@
 - **Najważniejszy próg:** nowa jakość działań i eksperymentowania w **jednym wiarygodnym świecie**; wybór fizycznej reprezentacji ma być konsekwencją tego wymagania. Historyczne Owner R0/R1/L0 FAIL nie zostały odwrócone.
 - **Najbliższy run — faza A OBOWIĄZKOWA:** odzyskaj aktualny Owner intent, live refs, świeże testy; obejrzyj/przetestuj adekwatną istniejącą wersję i sprawdź zgodność z wizją. Następnie rozstrzygnij, czy dalszy „support” wymaga całościowego nowego specimen, czy najpierw trzeba obalić konkretne 2D/3D założenie. **Nie wdrażaj S3 ani 3D automatycznie.**
 
+## NOWY PRIORYTET — wczesna, uczciwa prezentacja Ownerowi
+
+- Jawny Owner feedback 2026-10-10: **dążyć do pokazania mu tego, co rzeczywiście mamy**. Nie czekać na duży skok jakości; nie nazywać istniejących eksperymentów gotową grą.
+- [Plan pierwszego przeglądu](OWNER_FIRST_LOOK.md): domyślnie uruchamialne Z1 jako pierwsze, X0 jako niezależna demonstracja przebudowy, S2 jako porównanie podparcia; K1 jako przykład ograniczenia, nie wygranej.
+- **Najbliższy konkretny ruch**: zweryfikować rzeczywisty build i dostęp do wybranego eksperymentu, przygotować najkrótszą niepubliczną ścieżkę prezentacji, przetestować dokładny artefakt i przedstawić Ownerowi z uczciwą etykietą stanu. Publiczne `rehearsal/current` zostaje bez zmian bez nowej świadomej decyzji.
+- Faza A runu nadal obowiązuje, ale nie może stać się wymówką dla kolejnego miesiąca testów, zanim Owner cokolwiek zobaczy.
+
 ## STAŁE ŹRÓDŁA I PIERWSZY RUCH
 
 1. [VISION_ADAPTIVE_ROADMAP](VISION_ADAPTIVE_ROADMAP.md) — cel i alternatywy, nie kolejka.
