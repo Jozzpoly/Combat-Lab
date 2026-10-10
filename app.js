@@ -1,4 +1,4 @@
-import {CommonsWorld,V,DT,clamp,norm,safe} from "./src/x0-world.js";
+import {CommonsWorld,BODY_PRESETS,V,DT,clamp,norm,safe} from "./src/x0-world.js";
 import {capture,restore} from "./src/x0-scene.js";
 const el=id=>document.querySelector("#"+id);
 const canvas=el("lab"),ctx=canvas.getContext("2d");
@@ -171,13 +171,28 @@ function activate(){
  for(const [index,input] of [[0,"upper"],[1,"lower"]])
    el(input).oninput=()=>fail(()=>{if(!field.setActiveArm(selected,index,Number(el(input).value)))
       throw Error("Select a body with this physical arm");});
+ const fillBodyPreset=()=>{
+   const p=BODY_PRESETS[el("body-type").value];
+   for(const [key,value] of [["new-hx",p.hx],["new-hy",p.hy],
+      ["new-arms",p.arms],["new-arm-length",p.armLength],
+      ["new-mass",p.mass],["new-motor",p.motor]])
+     el(key).value=String(value);
+ };
+ el("body-type").onchange=fillBodyPreset;
+ fillBodyPreset();
  el("spawn").onclick=()=>fail(()=>{
    const count=Number(el("count").value),form=el("body-type").value;
    if(!Number.isInteger(count)||count<1||count>100)
      throw RangeError("Use 1..100 bodies per action; repeated spawns allowed");
+   const shape={hx:safe(Number(el("new-hx").value),"hull half length"),
+     hy:safe(Number(el("new-hy").value),"hull half width"),
+     arms:safe(Number(el("new-arms").value),"real appendage count"),
+     armLength:safe(Number(el("new-arm-length").value),"real arm length"),
+     mass:safe(Number(el("new-mass").value),"root physical mass"),
+     motor:safe(Number(el("new-motor").value),"finite root drive")};
    for(let i=0;i<count;i++){
      const angle=i*2.39996,r=.50*Math.sqrt(i);
-     field.addActor(form,V(mouse.x+r*Math.cos(angle),mouse.y+r*Math.sin(angle)),angle);
+     field.addActor(form,V(mouse.x+r*Math.cos(angle),mouse.y+r*Math.sin(angle)),angle,shape);
    }
    selected=field.actors.at(-1).id;field.select(selected);
    message("Added "+count+" real dynamic bodies to same solver, no population cap.");
@@ -335,9 +350,16 @@ async function start(){
      pointer("pointerdown",lever.root.translation());
      verify(selected===lever.id,"click did not select physical second body");
      el("count").value="5";el("body-type").value="bulk";
+     el("body-type").dispatchEvent(new Event("change",{bubbles:true}));
+     el("new-arms").value="1";el("new-arm-length").value="2.15";
+     el("new-hx").value=".68";el("new-mass").value="165";
      el("spawn").click();
      verify(field.actors.length===initial.actors+5,
        "batch spawn did not add real bodies");
+     verify(field.actors.at(-1).arms.length===1 &&
+       Math.abs(field.actors.at(-1).arms[0].half-1.075)<.001 &&
+       Math.abs(field.actors.at(-1).spec.hx-.68)<.001,
+       "Owner edited morphology is only a visual setting");
      const initialMatter=field.matter.length;
      el("material-type").value="beam";el("material-mass").value="95";
      el("span").value="3.2";el("add-material").click();
