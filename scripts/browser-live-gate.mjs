@@ -50,3 +50,13 @@ if(!fairRaw||fairDom.includes("data-live-error="))throw Error("M0 matched-mass r
 const fair=JSON.parse(fairRaw.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
 if(fair.cases.length!==12)throw Error("M0 incomplete matched-envelope control");
 console.log("M0 RIGID SURROGATE "+JSON.stringify(fair));
+
+const ownerDom=execFileSync(chrome,["--headless=new","--no-sandbox","--disable-gpu",
+ "--disable-dev-shm-usage","--virtual-time-budget=2400","--dump-dom",
+ url+(url.includes("?")?"&":"?")+"ownercheck=1"],
+ {encoding:"utf8",timeout:65000,maxBuffer:12*1024*1024});
+const ownerRaw=ownerDom.match(/data-m0-ownercheck="([^"]*)"/)?.[1];
+if(!ownerRaw||ownerDom.includes("data-live-error="))throw Error("M0 actual UI click/keyboard/repose smoke FAILED");
+const owner=JSON.parse(ownerRaw.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+if(!owner.pass)throw Error("M0 UI not fully verified");
+console.log("M0 REAL OWNER-STYLE UI "+JSON.stringify(owner));
