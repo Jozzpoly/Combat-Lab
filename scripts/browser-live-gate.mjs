@@ -110,7 +110,12 @@ for(const batch of ["A","B","C","D","E"]){
   if(data.result.initialActors!==20||data.result.nonfinite!==0)throw Error("W2 heterogeneous local world corrupted");
  }else if(batch==="D"){
   if(data.results.length!==8||data.results.some(x=>x.nonfinite))throw Error("W2 missing eight opportunity cases");
- }else if(data.results.length!==4||data.results.some(x=>x.nonfinite))
+  if(data.results.some(x=>x.label==="clean-cue-approach"&&x.initialShapePairs.count!==0))
+   throw Error("W2 supposedly clean opportunity begins with intersecting shapes");
+  if(data.results.filter(x=>x.label==="near-physical-cues"||x.label==="mixed-central-pressure")
+    .some(x=>x.initialShapePairs.count<1))
+   throw Error("W2 known initial geometry confound changed; reassess evidence");
+ }else if(data.results.length!==4||data.results.some(x=>x.nonfinite||x.initialShapePairs.count!==0))
   throw Error("W2 missing four matched actuation-null cases");
  console.log("W2 PHYSICAL "+JSON.stringify(data));
 }
