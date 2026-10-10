@@ -11,12 +11,12 @@
 - **Najważniejszy próg:** nowa jakość działań i eksperymentowania w **jednym wiarygodnym świecie**; wybór fizycznej reprezentacji ma być konsekwencją tego wymagania. Historyczne Owner R0/R1/L0 FAIL nie zostały odwrócone.
 - **Najbliższy run — faza A OBOWIĄZKOWA:** odzyskaj aktualny Owner intent, live refs, świeże testy; obejrzyj/przetestuj adekwatną istniejącą wersję i sprawdź zgodność z wizją. Następnie rozstrzygnij, czy dalszy „support” wymaga całościowego nowego specimen, czy najpierw trzeba obalić konkretne 2D/3D założenie. **Nie wdrażaj S3 ani 3D automatycznie.**
 
-## NOWY PRIORYTET — wczesna, uczciwa prezentacja Ownerowi
+## AKTUALNY PRIORYTET — gotowy do udostępnienia Owner First Look Z1
 
-- Jawny Owner feedback 2026-10-10: **dążyć do pokazania mu tego, co rzeczywiście mamy**. Nie czekać na duży skok jakości; nie nazywać istniejących eksperymentów gotową grą.
-- [Plan pierwszego przeglądu](OWNER_FIRST_LOOK.md): domyślnie uruchamialne Z1 jako pierwsze, X0 jako niezależna demonstracja przebudowy, S2 jako porównanie podparcia; K1 jako przykład ograniczenia, nie wygranej.
-- **Najbliższy konkretny ruch**: zweryfikować rzeczywisty build i dostęp do wybranego eksperymentu, przygotować najkrótszą niepubliczną ścieżkę prezentacji, przetestować dokładny artefakt i przedstawić Ownerowi z uczciwą etykietą stanu. Publiczne `rehearsal/current` zostaje bez zmian bez nowej świadomej decyzji.
-- Faza A runu nadal obowiązuje, ale nie może stać się wymówką dla kolejnego miesiąca testów, zanim Owner cokolwiek zobaczy.
+- [Review branch](https://github.com/Jozzpoly/Combat-Lab/tree/review/owner-first-look-z1) `73a0945d6c660851a877dc7b095c511badd9b2a9`. Exact-head [CI PASS 38078641528](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38078641528) obejmuje realne kliknięcia przycisków, pointer canvas, WASD, przebudowę 2→0 fizycznych ramion, zapis świata oraz fizykę Z1. Jest [screenshot pierwszego ekranu](https://github.com/Jozzpoly/Combat-Lab/blob/review/owner-first-look-z1/docs/media/owner-first-look-z1-first-frame.png).
+- **Nie ma hostowanego linku do gry.** Ostatnia niezastąpiona publiczna wersja `rehearsal/current@cb4b44d4` pozostaje neutralnym smoke. Strona GitHub Pages wymaga osobnej zgody na publiczne zastąpienie. Nie twierdzić, że sama gałąź jest działającą stroną. [Szczegóły zgody i rollback](OWNER_FIRST_LOOK.md).
+- **Pierwszy ruch następnego runu:** sprawdzić live refs, nowszy Owner feedback i jakość dokładnej wersji preview. Jeśli Owner zatwierdzi publiczne czasowe wdrożenie, użyć mechanizmu `rehearsal/current` z zachowaniem starego SHA i przetestować opublikowane UI. Jeżeli nie zatwierdzi, nie implementować nowego systemu; wypracować wygodny rzeczywiście przetestowany alternatywny dostęp.
+- Owner może uznać pokaz za FAIL. Jego feedback powinien kierować następnym światem, a nie kończyć się listą koniecznych poprawek na tym samym Z1.
 
 ## STAŁE ŹRÓDŁA I PIERWSZY RUCH
 

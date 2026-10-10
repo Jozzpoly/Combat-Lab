@@ -1,6 +1,17 @@
 # Combat Lab — pierwszy uczciwy przegląd Ownera
 
-**Status: priorytet bezpośrednio potwierdzony 2026-10-10; PRZYGOTOWANIE, NIE GOTOWA PREZENTACJA.** Chodzi o umożliwienie osobistego sprawdzenia stanu, nie o ogłoszenie gry, wybór architektury, odwrócenie historycznych FAIL-ów czy publikację. Aktualna [wizja](VISION_ADAPTIVE_ROADMAP.md) i [RESEARCH_STATE](RESEARCH_STATE.md) pozostają kontekstem.
+**Status 2026-10-10: działający, CI-zweryfikowany kandydat przeglądowy jest gotowy na gałęzi review; BRAK hostowanego linku do gry i BRAK Owner oceny.** Chodzi o umożliwienie osobistego sprawdzenia stanu, nie o ogłoszenie gry, wybór architektury, odwrócenie historycznych FAIL-ów czy publikację. Aktualna [wizja](VISION_ADAPTIVE_ROADMAP.md) i [RESEARCH_STATE](RESEARCH_STATE.md) pozostają kontekstem.
+
+## Gotowy kandydat do pierwszego uruchomienia (źródło prawdy: exact SHA)
+
+- [Przegląd Z1 — źródło i polskie objaśnienia](https://github.com/Jozzpoly/Combat-Lab/tree/review/owner-first-look-z1), HEAD `73a0945d6c660851a877dc7b095c511badd9b2a9`. Fizyka przeniesiona bez świadomych zmian z `experiment/contact-only-relations-z1@f2d71e63`; zmiany dotyczą prezentacji, usunięcia nieosiągalnego fragmentu UI oraz testów operatora.
+- [Rzeczywisty, nieupiększany pierwszy ekran](https://github.com/Jozzpoly/Combat-Lab/blob/review/owner-first-look-z1/docs/media/owner-first-look-z1-first-frame.png) z faktycznego Chromium.
+- [CI exact-HEAD 38078641528](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38078641528): PASS dla fizyki Z1 oraz użycia przycisków, zaznaczenia obiektu zdarzeniem canvas, klawiatury WASD, rzeczywistej przebudowy 2→0 ramion bez resetu świata i zapisu sceny.
+- **Owner verdict:** UNKNOWN. Nadal mechaniczny, ubogi świat; brak autonomicznej inicjatywy, chodu, wiarygodnego support i gotowego combat.
+- **Publiczna granica:** `rehearsal/current` wciąż `cb4b44d417db612f3333fe515e6f6afffa3e56d8`; GitHub Pages pokazuje neutralny smoke test, nie nową wersję. Istniejący workflow może wdrożyć przegląd, ale **to zastąpi aktualny publiczny pokaz i będzie publicznie dostępne**. Nie robić bez jawnego przyzwolenia Ownera. Po zgodzie zachować powyższy commit jako rollback source i rezweryfikować realnie wdrożony Pages.
+- StackBlitz dokumentuje import publicznych gałęzi GitHub, lecz **ten konkretny build nie został w nim zweryfikowany**, więc nie należy podawać importu jako gotowego, działającego linku.
+
+**Następna decyzja Ownera (prawdziwa, nie delegować bez przyzwolenia):** czy wolno tymczasowo wystawić ten sprawdzony eksperyment na publicznej stronie GitHub Pages, zastępując neutralny smoke, żeby Owner mógł go po prostu otworzyć w przeglądarce. Jeśli nie, zachować izolowany preview i poszukać wygodnego niepublicznego sposobu dostępu, nie publikując w ciemno.
 
 ## Co Owner powinien móc zobaczyć
 
