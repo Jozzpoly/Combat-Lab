@@ -22,6 +22,7 @@
 
 - 2026-10-10 Owner zaproponował: PNG jako kotwica, potem własny/standardowy format, wieloskalowe POV, historię aktora oraz pola przepływu wielkich tłumów. Jawnie polecił **zbadać → skonsolidować → zapisać → wrócić do Combat Lab**.
 - [Skonsolidowany rezultat](VISUAL_TRUTH_PERCEPTION_EXPLORATION_2026-10-10.md): silny kierunek **raw frame + fixed-step temporal evidence + source-of-action event trace** jako opcjonalny dodatek do prawdziwego testu. Flow obserwowany ≠ flow narzucony, globalne fakty ≠ percepcja, aktualnie żaden organizm Z1 nie ma autonomicznego planu. Nie wybrano multi-scale formatu/brain/3D ani nowego sterownika tłumu.
+- **Most do ReflexBrain (oddzielna rozmowa, research only):** [REFLEXBRAIN_VISUAL_PERCEPTION_BRIDGE_2026-10-10](REFLEXBRAIN_VISUAL_PERCEPTION_BRIDGE_2026-10-10.md). Wskazuje faktyczny ReflexBrain charter/P0/P02/H01/C01/G5-D0 i rywali obraz vs sparse vs multi-scale, granice lawful sight oraz rozróżnienie host perception vs learned appraisal. ReflexBrain ma własny live frontier i nie dziedziczy architektury Combat Lab. **Po przeniesieniu koncepcji tutaj wracamy do Owner First Look / realnych działań w świecie**, bez implementacji sensor stack.
 - **Wróć do aktywnego zadania:** uczciwy Owner First Look / prawdziwy body↔world feedback, bez automatycznego budowania sensory stack. Dojrzałe pomysły odkładaj do ewentualnych przyszłych testów.
 
 ## STAŁE ŹRÓDŁA I PIERWSZY RUCH
