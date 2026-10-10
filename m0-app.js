@@ -2,7 +2,7 @@ import {V,DT} from "./src/m0-world.js";
 import {EncounterField} from "./src/e1-encounter.js";
 const $=id=>document.getElementById(id),canvas=$("lab"),ctx=canvas.getContext("2d");
 const keys=new Set();
-let field=new EncounterField(),paused=false,mode="",drag=null;
+let field=new EncounterField(),paused=false,mode="",drag=null,activeCue=null;
 let camera={x:22,y:13.5,zoom:1.0},last=performance.now(),acc=0;
 let pointer=V(22,13.5),lastDraw=0;
 const color={rigid:"#e7b574",chain:"#8bd1ed",compliant:"#b3e9a2"};
@@ -11,7 +11,7 @@ function report(s){$("message").textContent=s;}
 function reset(){
  field.dispose();field=new EncounterField({reflex:$("reflex").checked,
   initiative:$("initiative").checked,pressureResponse:$("response").checked});
- paused=false;mode="";drag=null;acc=0;last=performance.now();
+ paused=false;mode="";drag=null;activeCue=null;acc=0;last=performance.now();
  $("pause").textContent="Pauza";report("Nowy wspólny świat. Przesuwaj fizyczne źródła, obserwuj i zmieniaj reakcje.");
 }
 function resize(){
@@ -110,12 +110,13 @@ function draw(){
  $("contacts").textContent=field.contactPairs+" incidencji kontaktu · "+field.lastContactImpulse.toFixed(1)+" N·s";
  $("energy").textContent=field.episodes.contactReactions+" reakcji ruchu · "+field.episodes.steering+" zmian trybu · "+field.externalImpulse.toFixed(0)+" N·s z zewnątrz";
  const a=field.selectedActor;
- $("selection").textContent=a?names[a.kind]+" · "+a.parts.length+" dynamicznych części":"Brak zaznaczenia";
+ $("selection").textContent=a?names[a.kind]+" · "+a.parts.length+" dynamicznych części":activeCue?"Fizyczne źródło · "+activeCue.signature:"Brak zaznaczenia";
  $("selected-state").textContent=a?
    "Stan: "+(a.motive?.status??"—")+" · reakcji "+(a.motive?.reactEvents??0)+
    " · lokalnych obserwacji "+(a.motive?.senseEvents??0)+" · napęd proxy "+a.motorTicks+
-   " · nacisk "+a.pressure.toFixed(1)+" N·s":"Kliknij ciało, aby przejąć sterowanie.";
+   " · nacisk "+a.pressure.toFixed(1)+" N·s":activeCue?"6 kg ruchomej materii · sygnał zmienisz poniżej":"Kliknij ciało lub źródło bodźca.";
  if(a&&document.activeElement!==$("role"))$("role").value=a.role;
+ if(activeCue&&document.activeElement!==$("cue-signature"))$("cue-signature").value=activeCue.signature;
  $("run-status").textContent=paused?"PAUZA / edycja":field.initiative?"LOKALNE DZIAŁANIE · NIE NPC AI":"INICJATYWA OFF · fizyka działa";
 }
 function controls(){
@@ -149,8 +150,10 @@ $("step").onclick=()=>{
 $("reset").onclick=reset;
 $("initiative").onchange=()=>{field.initiative=$("initiative").checked;report("Inicjatywa "+(field.initiative?"ON":"OFF"));};
 $("response").onchange=()=>{field.pressureResponse=$("response").checked;report("Zmiana decyzji po nacisku "+(field.pressureResponse?"ON":"OFF"));};
-$("release").onclick=()=>{field.select(null);report("Oddano ciało: ma znów własne lokalne pobudki.");};
+$("release").onclick=()=>{field.select(null);activeCue=null;report("Oddano ciało: ma znów własne lokalne pobudki.");};
 $("role").onchange=()=>{if(field.selected)field.setRole(field.selected,$("role").value);};
+$("cue-signature").onchange=()=>{if(activeCue){activeCue.signature=$("cue-signature").value;
+ report("Zmieniono tylko sygnał fizycznego źródła, bez przesuwania collidera.");}};
 $("show-senses").onchange=draw;
 
 $("poke").onclick=()=>tool("poke");
@@ -175,12 +178,16 @@ canvas.addEventListener("pointerdown",e=>{
  if(mode==="poke"){drag={kind:"poke",origin:p,current:p};(e.isTrusted&&canvas.setPointerCapture(e.pointerId));return;}
  if(mode.startsWith("add-")){
   if(mode==="add-matter")field.addFree(p.x,p.y,.53,.47,55);
-  else if(mode==="add-scent")field.addScent(p,"amber");
+  else if(mode==="add-scent")field.addScent(p,$("cue-signature").value);
   else{let a=field.addCreature(mode.slice(4),p,$("role").value);field.select(a.id);}
   tool(mode);mode="";draw();return;
  }
  const found=field.pick(p);
- if(found?.kind==="actor")field.select(found.id);
+ if(found?.kind==="actor"){activeCue=null;field.select(found.id);}
+ if(found?.kind==="object"&&field.objects[found.index]?.isScent){
+  activeCue=field.objects[found.index];field.select(null);
+  $("cue-signature").value=activeCue.signature;
+ }
  if(paused&&e.ctrlKey&&found){
   drag={kind:"move",found,origin:p};
   (e.isTrusted&&canvas.setPointerCapture(e.pointerId));
