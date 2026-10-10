@@ -57,7 +57,7 @@ function run(kind){
    attended:end.actors.filter(a=>a.sensed!==null).length,avgTravel,
    stagedEditCount:edits,numericOK:numericalOK,
    sample:probes,
-   actors:end.actors.map(a=>({id:a.id,kind:a.kind,role:a.role,
+   actorRecords:end.actors.map(a=>({id:a.id,kind:a.kind,role:a.role,
      x:a.x,y:a.y,motor:a.autonomousTicks,react:a.reactions,state:a.state}))};
  }finally{w.dispose();}
 }
