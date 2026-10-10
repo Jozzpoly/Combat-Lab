@@ -1,10 +1,135 @@
 <!doctype html>
-<meta charset="utf-8">
-<title>Combat Lab — Clean Substrate</title>
-<link rel="stylesheet" href="./style.css">
-<main class="shell">
-<header><div><p class="eyebrow">Combat Lab · clean neutral substrate</p><h1 id="experiment-title">Loading…</h1><p id="experiment-purpose" class="purpose"></p></div><div class="controls"><button id="pause">Pause</button><button id="reset">Reset</button><button id="debug">Debug</button></div></header>
-<section class="viewport"><canvas id="lab" aria-label="Combat Lab neutral experiment surface"></canvas></section>
-<footer><div><strong>Controls</strong><span id="controls-text">—</span></div><div class="status"><span id="run-state">RUNNING</span><span id="sim-time">0.00 s</span><span id="build-id">source: local</span></div></footer>
-</main>
-<script type="module" src="./app.js"></script>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Combat Lab · Contact-only Relations Z1 · unqualified discovery</title>
+<link rel="stylesheet" href="./style.css"></head>
+<body><div class="shell">
+<header>
+  <div><p class="eyebrow">COMBAT LAB / isolated physical research experiment</p>
+    <h1>Contact-only Relations <span>Z1</span></h1>
+    <p class="lead">One uninterrupted editable physical field. Push free loads, resist a hinge or slide constrained matter by actual body contact — no artificial attachment or prescribed victory.</p></div>
+  <div class="top">
+    <button id="pause">Pause</button><button id="step">+1 step</button>
+    <button id="reset">Reset</button><span id="health">Initializing physics</span>
+  </div>
+</header>
+<div class="layout"><div class="work">
+  <div class="legend">
+    <span><i class="dot green"></i>Two-arm reach</span>
+    <span><i class="dot amber"></i>Single lever</span>
+    <span><i class="dot lavender"></i>Heavy hull</span>
+    <span><i class="dot gray"></i>Actual movable/hinged matter</span><span><i class="dot drive"></i>Finite powered matter</span>
+  </div>
+  <canvas id="lab" aria-label="Actual shared material world; click physics colliders"></canvas>
+  <div class="toolbar">
+    <span id="state">RUNNING</span>
+    <span id="time">0.0 s</span>
+    <span id="counts">0 actors · 0 objects</span>
+    <span id="activity">0 contact incidences</span>
+  </div>
+  <p class="directions"><strong>WASD</strong> move selected body · cursor aims ·
+    <strong>E/Q</strong> contract/extend arm 1 · <strong>R/F</strong> contract/extend arm 2 · click to select ·
+    <strong>no contact-hold</strong> in Z1 ·
+    wheel zoom · middle drag pan · <strong>pause + Ctrl-drag</strong> move bodies ·
+    <strong>pause + Alt-drag</strong> rotate bodies/hinges ·
+    <strong>pause + Shift-drag</strong> author solid wall</p>
+</div>
+<aside>
+ <section class="intro"><h2>Contact without magic grip</h2><p>Only solver-active collisions and finite body or limb motors can transfer actor force to matter. Compare different body shapes and materials. None of the organisms is assigned a path or goal.</p></section>
+ <section><h2>Selection</h2><div id="selection">Select a physical collider.</div>
+  <div class="two">
+   <label>Body or crate mass <input id="selected-mass" type="number" min=".1" value="80" step="5"></label>
+   <label>Body motor authority <input id="selected-motor" type="number" min="0" value="900" step="100"></label>
+  </div>
+  <label hidden>Contact hold force (disabled) <input id="selected-hold" type="number" min="0" max="10000000" step="100" value="680"></label>
+  <div id="hinge-controls" hidden>
+   <div class="two">
+    <label>Anchored hinge speed (rad/s)
+      <input id="selected-drive-speed" type="number" step=".1" value="0"></label>
+    <label>Finite hinge torque (N·m)
+      <input id="selected-drive-torque" type="number" min="0" step="100" value="0"></label>
+   </div>
+   <p class="micro">Physical energy source fixed to the world, not an organism motor.
+      Speed 0 or torque 0 disables it. Mass and collisions still resist motion.</p>
+  </div>
+  <button id="apply-selected">Apply material parameters</button>
+  <label class="reflex"><input id="local-response" type="checkbox" checked> Local contact response when not directly controlled</label>
+  <div class="two">
+   <label>Upper / first arm <input id="upper" type="range" min="0" max="1" step=".02" value=".82"></label>
+   <label>Lower / second arm <input id="lower" type="range" min="0" max="1" step=".02" value=".82"></label>
+  </div><p class="micro">0 = contracted, 1 = extended. E/Q and R/F independently operate the first and second real limbs; manual commands override the selected body’s local reflex.</p>
+  <div id="rebuild-panel" hidden>
+    <details id="rebuild-details">
+      <summary>Rebuild this body's actual shape · paused</summary>
+      <p class="micro">Replaces physical colliders and joints on this organism only. The same world, other actors and material motion remain; limb history and ongoing holds are reset.</p>
+      <div class="two">
+        <label>Body half-length (m)<input id="rebuild-hx" type="number" min=".11" step=".1"></label>
+        <label>Body half-width (m)<input id="rebuild-hy" type="number" min=".11" step=".1"></label>
+      </div>
+      <div class="two">
+        <label>Actual arms<select id="rebuild-arms">
+          <option value="0">0 · rigid</option><option value="1">1 · articulated</option>
+          <option value="2">2 · independently articulated</option></select></label>
+        <label>Actual arm length (m)<input id="rebuild-length" type="number" min=".8" step=".15"></label>
+      </div>
+      <button id="rebuild-actor">Rebuild selected body in this world</button>
+    </details>
+  </div>
+ </section>
+ <section><h2>Build in the same world</h2>
+  <label>New body <select id="body-type"><option value="reach">Two-arm articulated body</option>
+    <option value="lever">Long unilateral lever</option>
+    <option value="bulk">Broad heavy hull</option></select></label>
+  <div class="two"><label>Quantity <input id="count" type="number" min="1" max="100" value="1"></label>
+  <button id="spawn">Spawn around cursor</button></div>
+  <details id="morph-controls"><summary>Physical shape for the next body · edit</summary>
+   <div class="two"><label>Hull length half-size (m)
+     <input id="new-hx" type="number" min=".12" step=".1" value=".52"></label>
+    <label>Hull width half-size (m)
+     <input id="new-hy" type="number" min=".12" step=".1" value=".47"></label></div>
+   <div class="two"><label>Number of articulated arms
+     <select id="new-arms"><option value="0">0 · rigid</option>
+     <option value="1">1 · lever</option><option value="2" selected>2 · independent</option></select></label>
+    <label>Each physical arm length (m)
+     <input id="new-arm-length" type="number" min=".8" step=".2" value="1.55"></label></div>
+   <label hidden>Contact hold force (disabled) <input id="new-hold" type="number" min="0" max="10000000" step="100" value="680"></label>
+  <div class="two"><label>Root body mass (kg)
+     <input id="new-mass" type="number" min=".1" step="10" value="80"></label>
+    <label>Finite movement force (N)
+     <input id="new-motor" type="number" min="0" step="100" value="900"></label></div>
+   <p class="micro">These values build actual rigid bodies, collider sizes and revolute
+     arm joints. Presets are starting points, not fixed species. You can also rebuild an existing body while paused; solver state of other objects remains.</p>
+  </details>
+  <label>Material <select id="material-type"><option value="block">Free block</option>
+    <option value="beam">Free rigid beam</option>
+    <option value="hinge">Free pinned hinge</option><option value="hinge-drive">Powered pinned hinge</option>
+    <option value="rail">Horizontally constrained slider</option></select></label>
+  <div class="two"><label>Mass (kg) <input id="material-mass" type="number" min=".1" value="45"></label>
+  <label>Span (m) <input id="span" type="number" min=".2" value="2.5" step=".25"></label></div>
+  <div class="two">
+    <label>Hinge motor speed (rad/s) <input id="new-drive-speed" type="number" value="1.1" step=".1"></label>
+    <label>Hinge motor torque (N·m) <input id="new-drive-torque" type="number" min="0" value="900" step="100"></label>
+  </div>
+  <div class="two"><button id="add-material">Place material</button>
+  <button id="undo">Undo last authored</button></div>
+ </section>
+ <section><h2>Apply actual outside force</h2>
+  <label>Point impulse magnitude (N·s) <input id="poke-magnitude" type="number" min="0" value="230" step="25"></label>
+  <button id="poke">Impulse probe: drag from any collider</button>
+  <p class="micro">Outside research impulse: a diagnostic intervention, never credited to an organism.</p>
+ </section>
+ <details><summary>Save / load a posed *starting* world</summary>
+  <p class="micro">Portable JSON retains masses, articulated poses, constrained matter and walls.
+    NOT velocities, exact contacts or a running solver replay. Invalid input does not replace the live world.</p>
+  <textarea id="recipe" rows="7" spellcheck="false"></textarea>
+  <div class="two"><button id="capture">Capture pose</button><button id="load">Validate &amp; load</button></div>
+ </details>
+ <details><summary>Evidence boundaries</summary><p class="micro">This is an independent
+   candidate, not Owner-qualified. Top-down support is finite external planar
+   approximation, not gait, soil, feet or terrain normal force. A local
+   touch-triggered servo is not full autonomous cognition. Contacts come from
+   Rapier. Mechanical CI can never override Owner-observed FAIL.</p></details>
+ <p id="message" role="status">Awaiting physical world.</p>
+</aside></div>
+<footer><span>Isolated candidate · NO MERGE / NO PUBLIC REHEARSAL</span><span id="build">Z1 contact-only physical candidate</span></footer>
+</div><script type="module" src="./app.js"></script></body></html>
