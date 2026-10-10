@@ -11,12 +11,13 @@ const len=n=>Math.hypot(n.x,n.y);
 const kinds=["folding","rigid-wide","rigid-small"];
 export class EnvelopeField extends M0Field{
  constructor({kind="folding",withGate=true,withMatter=true,holdHeading=true,
-   stiffness=2.7,torqueCap=.5,drive=860}={}){
+   stiffness=2.7,torqueCap=.5,drive=860,selfContact=true}={}){
   super({empty:true,reflex:false,iterations:16});
   if(!kinds.includes(kind))throw RangeError("kind");
   if(!Number.isFinite(torqueCap)||torqueCap<0||torqueCap>4)throw RangeError("torque");
   this.kind=kind;this.withGate=withGate;this.holdHeading=holdHeading;
   this.stiffness=stiffness;this.torqueCap=torqueCap;this.drive=drive;
+  this.selfContact=selfContact;
   this.foldTarget=1;this.jointImpulseTotal=0;this.hingeError=0;
   this.operatorImpulse=0;this.headingImpulse=0;this.gateContacts=0;
   this.externalBodyContacts=0;
@@ -47,7 +48,10 @@ export class EnvelopeField extends M0Field{
     const body=this.makeBody(pose,sign*Math.PI/2,.7);
     const child=this.makeCollider(body,shape,20);
     const joint=this.world.createImpulseJoint(RAPIER.JointData.revolute(
-      V(0,sign*.33),V(-.80,0)),root,body,false);
+      V(0,sign*.33),V(-.80,0)),root,body,true);
+    // Fourth createImpulseJoint arg is wakeUp, not collideConnected.
+    // Exclude connected body self-contact ONLY when explicitly requested.
+    joint.setContactsEnabled(selfContact);
     wings.push({sign,body,collider:child,joint,shape});
     parts.push({body,collider:child,shape});joints.push(joint);
    }
@@ -159,7 +163,9 @@ export class EnvelopeField extends M0Field{
   const partPositions=a.parts.map(x=>({
    x:round(x.body.translation().x),y:round(x.body.translation().y),
    rotation:round(x.body.rotation())}));
-  return {kind:this.kind,ticks:this.ticks,foldTarget:this.foldTarget,
+  return {kind:this.kind,selfContact:this.selfContact,
+   jointContacts:this.actor.wings.map(w=>w.joint.contactsEnabled()),
+   ticks:this.ticks,foldTarget:this.foldTarget,
    chassis:{x:round(p.x),y:round(p.y),rotation:round(a.root.rotation()),
     vx:round(v.x),dx:round(p.x-this.startX)},
    physicalExtent:this.footprint(),
