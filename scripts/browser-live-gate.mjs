@@ -15,7 +15,7 @@ const out=run("g0probe=1",60000);
 const data=out.get("g0-probe");
 if(!data)throw Error("No grounded-drive matrix emitted");
 const j=JSON.parse(data.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
-if(j.results?.length!==9)throw Error("Incomplete G0 predeclared matrix");
+if(j.results?.length!==10)throw Error("Incomplete G0 predeclared matrix");
 if(j.results.some(x=>!Number.isFinite(x.chassis.dx)))throw Error("Nonfinite result");
 if(j.results.filter(x=>x.mode==="wheels").some(x=>x.rootImpulseSum!==0))
  throw Error("wheel branch contains illicit root force");
