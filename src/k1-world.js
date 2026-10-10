@@ -40,13 +40,13 @@ export class KineticField {
   makeGuard(x,y,kind="hinged"){
     if(!["hinged","rigid","bare"].includes(kind))throw Error("Unknown morphology");
     const root=this.add(kind,x,y,
-      [{hx:.54,hy:.48,mass:65},...(kind==="rigid"?[{hx:.20,hy:1.50,mass:25,dx:.74}]:[])]);
+      [{hx:.54,hy:.48,mass:65},...(kind==="rigid"?[{hx:.20,hy:1.50,mass:25,dx:-.74}]:[])]);
     root.panel=null;root.joint=null;root.target=0;root.maxImpulse=.28;
     if(kind==="hinged"){
-      const arm=this.add("hinge-panel",x+.74,y,[{hx:.20,hy:1.50,mass:25}]);
+      const arm=this.add("hinge-panel",x-.74,y,[{hx:.20,hy:1.50,mass:25}]);
       // The two physical shapes just meet at the joint. Connected contact ON.
       const joint=this.world.createImpulseJoint(
-        RAPIER.JointData.revolute(V(.54,0),V(-.20,0)),
+        RAPIER.JointData.revolute(V(-.54,0),V(.20,0)),
         root.body,arm.body,true);
       joint.setContactsEnabled(true);
       root.panel=arm;root.joint=joint;
@@ -146,6 +146,7 @@ export function runK1Counterfactual(){
     for(const interceptY of [10,11.2,12.0]){
       const field=new KineticField({kind,preset:"probe"});
       try{
+        field.reposition(field.witness,V(24.4,interceptY));
         const before=field.trace();
         field.shoot(V(3,interceptY),V(27,interceptY),20);
         for(let i=0;i<100;i++)field.step();
