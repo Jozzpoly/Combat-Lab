@@ -2,11 +2,26 @@
 import {V,norm} from "./x0-world.js";
 const d=(a,b)=>norm(V(a.x-b.x,a.y-b.y));
 const pos=b=>{const q=b.translation();return V(q.x,q.y);};
+function possibleBodyHolds(w){
+  const available={};
+  for(const a of w.actors){
+    w.select(a.id);
+    const items=[];
+    for(const m of w.matter){
+      if(w.beginHold(pos(m.body)))items.push(m.id);
+      w.endHold();
+    }
+    available[a.id]=items;
+  }
+  w.select(null);
+  return available;
+}
 function run(World,energy){
   const w=new World();try{
     if(!energy)for(const m of w.matter)
       if(m.kind==="hinge")w.setHingeDrive(m.id,0,0);
     w.select(null);
+    const initialHolds=possibleBodyHolds(w);
     const initial=w.actors.map(a=>pos(a.root));
     let bodiesEverTouched=new Set(),contactSteps=0,firstContact=null,maxContact=0;
     for(let t=0;t<360;t++){
@@ -19,9 +34,11 @@ function run(World,energy){
         if(!Number.isFinite(x.x+x.y+p.body.rotation()))throw Error("Nonfinite Y1 actor");
       }
     }
+    const afterHolds=possibleBodyHolds(w);
     const moved=w.actors.map((a,i)=>+d(pos(a.root),initial[i]).toFixed(3));
     return {powered:energy,actors:w.actors.length,matter:w.matter.length,
-      contactSteps,firstContact,contactActors:bodiesEverTouched.size,
+      contactSteps,firstContact,initialHolds,afterHolds,
+      contactActors:bodiesEverTouched.size,
       peakContactIncidences:maxContact,localReflexes:w.counts.reflex,
       poweredSteps:w.counts.driveTicks,actorMovement:moved,
       finalActorPositions:w.actors.map(a=>pos(a.root)),
@@ -34,9 +51,16 @@ export function runRelationalObservation(World){
   if(on.poweredSteps<=0||off.poweredSteps!==0)
     throw Error("Source of material energy is incorrectly attributed");
   const differences=on.finalActorPositions.map((p,i)=>d(p,off.finalActorPositions[i]));
+  const actionDifferentials=Object.keys(on.afterHolds).map(actor=>{
+    const powered=on.afterHolds[actor],passive=off.afterHolds[actor];
+    return {actor,on:powered,off:passive,
+      gained:powered.filter(id=>!passive.includes(id)),
+      lost:passive.filter(id=>!powered.includes(id))};
+  });
   return {scope:"one freely editable Y1 initial composition, same X0 donor mechanics; ON/OFF outside energy only, no player control",
     on:{...on,finalActorPositions:undefined,finalMatterPositions:undefined},
     off:{...off,finalActorPositions:undefined,finalMatterPositions:undefined},
+    actionDifferentials,
     maxActorAfterstateDifference:+Math.max(...differences).toFixed(4),
     actorContrasts:differences.map(x=>+x.toFixed(4)),
     warning:"Body displacement and contacts do NOT prove new actions, second-actor opportunity, Owner value or autonomous ecology"};

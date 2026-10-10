@@ -45,9 +45,7 @@ function render(){
  ctx.lineWidth=.018;ctx.strokeStyle="#25404c";
  for(let x=0;x<=42;x+=2){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,26);ctx.stroke();}
  for(let y=0;y<=26;y+=2){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(42,y);ctx.stroke();}
- ctx.fillStyle="#203c47";ctx.fillRect(5,4,7,4);
- ctx.fillStyle="#20323e";ctx.fillRect(29,16,8,5);
- ctx.fillStyle="#1b343f";ctx.fillRect(18,4,8,5);
+ // Real material geometry is drawn from the solver; the grid is nonphysical.
  for(const w of field.walls)rectangle(w.body,w.hx,w.hy,"#586978");
  for(const m of field.matter){
    const selectedItem=selected===m.id;
@@ -171,11 +169,6 @@ function frame(t){
    if(n>=4)acc=Math.min(acc,DT*2);
  }
  render();
- if(new URLSearchParams(location.search).has("vis180")){
-   field.select(null);selected=null;
-   for(let tick=0;tick<180;tick++)field.step();
-   paused=true;render();
- }
  requestAnimationFrame(frame);
 }
 function replaceWorld(next){
