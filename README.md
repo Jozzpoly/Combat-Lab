@@ -52,6 +52,12 @@ A local improvement against the previous branch version is not enough; relevant 
 
 Repository administration is the agent's responsibility. The Owner should not need to manage branches, SHAs, CI or deployment in normal work.
 
+## Long-run research navigation
+
+- [Wizja i adaptacyjna roadmapa](docs/VISION_ADAPTIVE_ROADMAP.md) — dlaczego badamy i kiedy zmieniać kierunek, bez sztywnego feature backlogu.
+- [Playbook długich kampanii](docs/CAMPAIGN_RUNBOOK.md) — **na początku każdego runu** odzyskanie Owner intent/live state, krytyczna ocena i realny test istniejącego kandydata; później wykonanie i falsyfikacja.
+- [Bieżący kursor agenta](docs/AGENT_RUN_CURSOR.md) — jeden mały punkt wznowienia; `RESEARCH_STATE` nadal jest authority.
+
 ## Current authority
 
 Read:
