@@ -2,7 +2,15 @@
 
 **Purpose:** low-attention, resilient continuation across longer runs and chat boundaries. **Agent-only operational index; not source of project truth, not a feature roadmap, not an extra CI gate.** Recover owner-observed behavior, `docs/RESEARCH_STATE.md`, relevant history and live Git refs *before* trusting this dated snapshot. A newer explicit Owner correction supersedes it.
 
-## Latest execution cursor — Z1 conclusion (2026-10-10)
+## Current execution cursor — K1 brace-dependent posture (2026-10-10)
+
+- Source-tested independent `experiment/posture-contact-k1` latest report-time head `6a8c2e0a0a0ff4047c37821b047658cea75a9aad`; verify live ref and exact-head CI. [Full bounded K1 checkpoint](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/posture-contact-k1/docs/K1_POSTURE_CONTACT_CHECKPOINT_2026-10-10.md).
+- Physical joint-target changes can modify a later body's collision outcome while the same world runs; real browser keyboard/reselection test passed, and a large rigid-envelope control was not handicapped. But **brace=0 counterfactual destroyed nearly all useful guarding contrasts** in the decisive three settings. The earlier supported posture "success" was largely a consequence of external root braking, **not demonstrated legitimate ground-reacted stance**. Keeping that negative visible is more important than the 4/5 servo PASS.
+- Frontier to recover on `kontynuuj`: investigate **which contact/support/force-bearing representation actually earns a new, readable type of bodily action or crowd behavior**. Do NOT automatically add a foot rig, build full 3D, tune K1 to block better, or replace Owner feel with collision counters. Compare low-complexity planar authored support/friction, physical support/stance alternatives and potentially constrained-3D truth with their genuine pros/cons. Let real whole-level pressure select the next physical implementation; preserve K1 as donor-only.
+- Process: use live refs, source, Owner feedback, one coherent bounded experiment at a time, batched atomic commits, exact-head emitted-browser tests, negative controls and occasional compact Owner checkpoints. Don't rewrite the last outcome as a mandatory roadmap. No merge/public rehearsal without new explicit authority or Owner validation.
+
+## Historical execution cursor — Z1 conclusion (superseded by K1)
+
 
 The current live candidate is `experiment/contact-only-relations-z1`, report-time head `f2d71e63277bfe77aa299c5d5b153143e82217ac`, independently derived from neutral main. Check its actual branch/CI before continuing; latest exact-head CI `38016427539` passed. [Z1 report](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/contact-only-relations-z1/docs/Z1_CONTACT_ONLY_CHECKPOINT_2026-10-10.md).
 
