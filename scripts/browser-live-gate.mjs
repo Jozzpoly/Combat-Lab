@@ -26,7 +26,7 @@ function validPage(dom,name){
 }
 const plain=run(base,["--dump-dom"]);
 validPage(plain,"P0 bootstrap");
-if(!plain.includes("COMBAT LAB")||!plain.includes("Dziedziniec wspólnej materii"))
+if(!plain.includes("COMBAT LAB")||!plain.includes("Odruch pod naciskiem"))
  throw Error("Not P0 actual branch runtime");
 const probe=request({p0probe:1},["--dump-dom"]);
 validPage(probe,"P0 probe");
@@ -209,3 +209,27 @@ console.log("P3 native independent two-operator contact force confrontation...")
 execFileSync(process.execPath,["scripts/p3-real-dual-input.mjs",base],{
   timeout:120000,stdio:"inherit"
 });
+
+
+const p4=request({p4probe:1},["--dump-dom"]);
+validPage(p4,"P4 real locally observed contact reflex");
+if(attr(p4,"p4-probe")!=="PASS"||attr(p4,"p4-cases")!=="32")
+ throw Error("P4 source probe failed: "+(attr(p4,"p4-error")||"missing 32"));
+const p4Result=JSON.parse(decodeURIComponent(attr(p4,"p4-report")));
+if(p4Result.cases!==32||p4Result.results.some(x=>!x.finite||x.touchTick<0))
+ throw Error("P4 source physically invalid");
+writeFileSync(resolve(folder,"p4-reflex-32-real-wasm.json"),JSON.stringify(p4Result,null,2));
+console.log("P4 32 true contact reflex vs cheap null physical source worlds:");
+console.log(JSON.stringify(p4Result.comparisons));
+for(const mode of ["off","brake","follow","conditional"]){
+ const arg={p4frame:mode};
+ const dom=request(arg,["--dump-dom"]);
+ validPage(dom,"P4 source frame "+mode);
+ const raw=attr(dom,"p4-frame");
+ if(!raw||attr(dom,"p4-frame-error"))
+  throw Error("P4 source missing "+mode+": "+attr(dom,"p4-frame-error"));
+ const data=JSON.parse(raw.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+ if(!data.finite||data.mode!==mode)throw Error("P4 frame source mismatch");
+ writeFileSync(resolve(folder,"p4-"+mode+"-source.json"),JSON.stringify(data,null,2));
+ request(arg,["--screenshot="+resolve(folder,"p4-"+mode+"-real-chromium.png")]);
+}
