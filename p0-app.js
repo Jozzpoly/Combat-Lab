@@ -338,7 +338,7 @@ if(params.has("p3frame")){
     params.get("p3frame")==="release"?"release":"dual";
   const support=params.get("terrain")==="none"?"none":"finite";
   const leftKind=params.get("left")==="bulky"?"bulky":"small";
-  world.dispose();camera={x:10.4,y:12,zoom:2.0};
+  world.dispose();camera={x:10.4,y:12,zoom:2.75};
   const v=p3Contest({mode:kind,support,leftKind,
     captureWorld:(w,{A,B,C})=>{world=w;w.setSelected(A.id);}});
   document.body.dataset.p3Frame=JSON.stringify(v);
