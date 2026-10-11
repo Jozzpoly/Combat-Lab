@@ -1,0 +1,30 @@
+name: P9 physical topology control
+
+on:
+  push:
+    branches:
+      - experiment/p9-topology-clearance-controls
+  workflow_dispatch:
+
+jobs:
+  source-affordance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install source dependencies
+        run: npm install --no-audit --no-fund
+      - name: Check source syntax
+        run: node --check src/p9-geometry-audit.js && node --check scripts/p9-geometry-audit.mjs
+      - name: Execute 40 true Rapier physical controls
+        run: node scripts/p9-geometry-audit.mjs
+      - name: Preserve real source traces
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p9-real-rapier-topology-controls
+          path: p9-evidence/
+          if-no-files-found: ignore
+          retention-days: 14
