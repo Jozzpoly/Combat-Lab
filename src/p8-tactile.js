@@ -53,7 +53,7 @@ export class TactileYard extends DoorCrowdYard{
     this.p8.pressureStalls++;this.p8.bodyBlockedTicks++;
    }
    const recent=this.sideMemory.get(a.id);
-   const strongest=contacts.reduce((best,t)=>t.impulse>best?.impulse?t:best,null);
+   const strongest=contacts.reduce((best,t)=>!best||t.impulse>best.impulse?t:best,null);
    let state=recent;
    if(strongest&&strongest.impulse>.35&&(!state||state.left<=0)){
     const own=a.body.translation(),other=strongest.other.body.translation();
