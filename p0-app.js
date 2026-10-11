@@ -1,8 +1,8 @@
 import {V,DT} from "./src/p0-world.js";
-import {TransportYard} from "./src/p2-world.js";
+import {ReflexYard} from "./src/p4-reflex.js";
 const $=id=>document.getElementById(id);
 const canvas=$("world"),ctx=canvas.getContext("2d",{alpha:false});
-let world=new TransportYard(),paused=false,mode="select",drag=null,firstActorId=null,secondActorId=null;
+let world=new ReflexYard(),paused=false,mode="select",drag=null,firstActorId=null,secondActorId=null;
 let last=performance.now(),acc=0,lastDraw=0;
 let camera={x:20,y:12,zoom:1.0},keys=new Set();
 const PI=Math.PI,rgba={wall:"#546b70",pivot:"#c99a66",gate:"#cda867",
@@ -110,12 +110,12 @@ function select(e){
 }
 function pause(){paused=!paused;acc=0;$("pause").textContent=paused?"Wznów":"Pauza";
   status(paused?"Pauza. Ctrl+przeciągnij fizyczne ciała.":"Świat działa.");render();}
-function reset(){world.dispose();firstActorId=null;secondActorId=null;world=new TransportYard({support:$("support").value});
+function reset(){world.dispose();firstActorId=null;secondActorId=null;world=new ReflexYard({support:$("support").value});
  paused=false;$("pause").textContent="Pauza";acc=0;
  status("Nowy materialny dziedziniec. Przebudowuj dowolnie.");render();}
 function p3Preset(){
  world.dispose();
- world=new TransportYard({populated:false,support:$("support").value});
+ world=new ReflexYard({populated:false,support:$("support").value});
  const A=world.spawn("small",V(9.3,12));
  const B=world.spawn("small",V(11.5,12));
  world.load(10.4,12,.48,.42,45);
@@ -269,7 +269,7 @@ if(params.has("p2input")){
  paused=true;
  try{
   world.dispose();
-  world=new TransportYard({populated:false,support:"finite"});
+  world=new ReflexYard({populated:false,support:"finite"});
   const actor=world.spawn("bulky",V(8,16)),cargo=world.load(10.4,16,.47,.43,45);
   world.setSelected(actor.id);
   let contactTick=-1;
@@ -299,7 +299,7 @@ if(params.has("p2red")){
 if(params.has("p3native")){
  paused=true;
  try{
-  world.dispose();world=new TransportYard({populated:false,support:"finite"});
+  world.dispose();world=new ReflexYard({populated:false,support:"finite"});
   const A=world.spawn("small",V(8,12)),B=world.spawn("small",V(12.8,12));
   const C=world.load(10.4,12,.48,.42,45);
   A.maxSpeedOverride=.85;B.maxSpeedOverride=.85;
@@ -317,6 +317,35 @@ if(params.has("p3native")){
   document.body.dataset.p3NativeReady=String(sourceTick);
   status("P3: native G/H separate grips after real two-sided solver contact.");
  }catch(e){document.body.dataset.p3NativeError=String(e.stack||e);console.error(e);}
+}
+if(params.has("p4probe")){
+ paused=true;
+ try{
+  const {p4Probe}=await import("./src/p4-probe.js");
+  const v=p4Probe();
+  document.body.dataset.p4Probe="PASS";
+  document.body.dataset.p4Cases=String(v.cases);
+  document.body.dataset.p4Report=encodeURIComponent(JSON.stringify(v));
+  status("P4: local contact-load reflex against cheap constant brake/follow.");
+ }catch(e){document.body.dataset.p4Probe="FAIL";
+  document.body.dataset.p4Error=String(e.stack||e);console.error(e);}
+}
+if(params.has("p4frame")){
+ paused=true;
+ try{
+  const {p4Case}=await import("./src/p4-probe.js");
+  const mode=params.get("p4frame");
+  if(!["off","conditional","follow","brake"].includes(mode))throw Error("mode");
+  const source=params.get("side")==="left"?"left":"right";
+  const support=params.get("terrain")==="none"?"none":"finite";
+  world.dispose();camera={x:10,y:15,zoom:3.1};
+  const v=p4Case({mode,side:source,support,force:160,offCenter:.33,
+   captureWorld:(w,{actor})=>{
+    world=w;firstActorId=actor.id;secondActorId=null;world.setSelected(actor.id);
+   }});
+  document.body.dataset.p4Frame=JSON.stringify(v);
+  status("P4 raw source: local reflex "+mode+" after external finite shock.");
+ }catch(e){document.body.dataset.p4FrameError=String(e.stack||e);console.error(e);}
 }
 if(params.has("p3probe")){
  paused=true;
