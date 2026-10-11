@@ -1,7 +1,8 @@
-import {MaterialYard,V,DT} from "./src/p0-world.js";
+import {V,DT} from "./src/p0-world.js";
+import {TransportYard} from "./src/p2-world.js";
 const $=id=>document.getElementById(id);
 const canvas=$("world"),ctx=canvas.getContext("2d",{alpha:false});
-let world=new MaterialYard(),paused=false,mode="select",drag=null;
+let world=new TransportYard(),paused=false,mode="select",drag=null;
 let last=performance.now(),acc=0,lastDraw=0;
 let camera={x:20,y:12,zoom:1.0},keys=new Set();
 const PI=Math.PI,rgba={wall:"#546b70",pivot:"#c99a66",gate:"#cda867",
@@ -57,13 +58,18 @@ function render(){
    ctx.arc(q.x,q.y,r,0,2*PI);ctx.stroke();ctx.setLineDash([]);
   }
  }
+ for(const g of (world.grips||[])){
+  const pa=g.holder.body.translation(),pb=g.load.body.translation();
+  ctx.strokeStyle="#eac77f";ctx.lineWidth=.095;ctx.setLineDash([.2,.12]);
+  ctx.beginPath();ctx.moveTo(pa.x,pa.y);ctx.lineTo(pb.x,pb.y);ctx.stroke();ctx.setLineDash([]);
+ }
  if(drag?.kind==="poke"){
   ctx.strokeStyle="#ffcb91";ctx.lineWidth=.14;ctx.beginPath();
   ctx.moveTo(drag.from.x,drag.from.y);
   ctx.lineTo(drag.to.x,drag.to.y);ctx.stroke();
  }
  ctx.setTransform(1,0,0,1,0,0);
- const tr=world.traces(),a=tr.selected;
+ const tr=typeof world.gripTrace==="function"?world.gripTrace():world.traces(),a=tr.selected;
  $("mode-status").textContent=paused?"PAUZA / fizyczna edycja":"SOLVER AKTYWNY / "+world.support;
  $("clock").textContent=tr.seconds.toFixed(1)+" s";
  $("selection").textContent=a?("WYBRANO: "+a.kind+" #"+a.id+"\n"+
@@ -77,7 +83,9 @@ function render(){
   "Napęd proxy: "+tr.events.rootEffort.toFixed(1)+" N·s\n"+
   "Reakcja gruntu: transl. "+tr.events.terrainLinearImpulse.toFixed(1)+
   ", kątowa "+tr.events.terrainAngularImpulse.toFixed(1)+" N·s/N·m·s\n"+
-  tr.actorCount+" ciał · "+tr.loadCount+" ciężarów";
+  tr.actorCount+" ciał · "+tr.loadCount+" ciężarów"+
+  (tr.grips?"\\nAktywne uchwyty: "+tr.grips.length+
+   " · łączny impuls chwytu: "+tr.gripEvidence.pairedImpulseSum+" N·s":"");
  document.body.dataset.p0Live="yes";
 }
 function setMode(next){
@@ -94,7 +102,7 @@ function select(e){
 }
 function pause(){paused=!paused;acc=0;$("pause").textContent=paused?"Wznów":"Pauza";
   status(paused?"Pauza. Ctrl+przeciągnij fizyczne ciała.":"Świat działa.");render();}
-function reset(){world.dispose();world=new MaterialYard({support:$("support").value});
+function reset(){world.dispose();world=new TransportYard({support:$("support").value});
  paused=false;$("pause").textContent="Pauza";acc=0;
  status("Nowy materialny dziedziniec. Przebudowuj dowolnie.");render();}
 $("pause").onclick=pause;
@@ -106,6 +114,23 @@ $("stance").onclick=()=>{const a=world.chosen;
 $("arm-left").onclick=()=>{const a=world.chosen;if(a)world.setPanelAngle(a.id,a.target-.30);render();};
 $("arm-right").onclick=()=>{const a=world.chosen;if(a)world.setPanelAngle(a.id,a.target+.30);render();};
 $("arm-neutral").onclick=()=>{const a=world.chosen;if(a)world.setPanelAngle(a.id,0);render();};
+function toggleGrip(){
+ const a=world.chosen;
+ if(!a||typeof world.grip!=="function"){status("Wybierz fizycznego aktora.");return;}
+ if(world.grips.some(x=>x.actor.id===a.id)){
+  world.release(a.id);status("Uchwyt puszczony; ładunek zachowuje pęd i kolizję.");render();return;
+ }
+ const options=world.loads.map(load=>({load,contact:world.actualContact(a,load)}))
+  .filter(x=>x.contact).sort((x,y)=>y.contact.impulse-x.contact.impulse);
+ if(!options.length){status("BRAK UCHWYTU: najpierw dotknij ciężaru fizycznie.");render();return;}
+ const out=world.grip(a.id,options[0].load.id,{maxImpulse:Number($("grip-force").value)});
+ status(out.ok?"Chwyt po realnym kontakcie, siła ograniczona. G puszcza.":"Odmowa: "+out.reason);
+ render();
+}
+$("grip").onclick=toggleGrip;
+$("grip-force").oninput=()=>{
+ $("grip-force-text").textContent=$("grip-force").value+" N·s/krok";
+};
 $("strength").oninput=()=>{$("strength-text").textContent=$("strength").value+" N·s";};
 for(const b of document.querySelectorAll(".toolbar button"))b.onclick=()=>setMode(b.dataset.mode);
 canvas.addEventListener("contextmenu",e=>e.preventDefault());
@@ -161,6 +186,7 @@ window.addEventListener("keydown",e=>{
  if(e.code==="KeyB"&&!e.repeat)$("stance").click();
  if(e.code==="KeyQ"&&!e.repeat)$("arm-left").click();
  if(e.code==="KeyE"&&!e.repeat)$("arm-right").click();
+ if(e.code==="KeyG"&&!e.repeat)$("grip").click();
  if(e.code==="Escape")setMode("select");
  keys.add(e.code);
 });
