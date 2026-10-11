@@ -101,6 +101,18 @@ try{
  const held=await evalJS("window.__p2ReadOnlyProbe()");
  if(held.grips.length!==1||held.loads[0].x!==x)
   throw Error("P2 real G failed to contact-attach without teleport");
+ // Exercise genuine release while the actor is STILL in contact. This
+ // avoids mistaking a naturally snapped high-load tether for user release.
+ await key("KeyG",true);await key("KeyG",false);
+ await wait(70);
+ const released=await evalJS("window.__p2ReadOnlyProbe()");
+ if(released.grips.length!==0||released.gripEvidence.manualReleases!==1)
+  throw Error("P2 native G release did not actually remove the physical link");
+ await key("KeyG",true);await key("KeyG",false);
+ await wait(70);
+ const reacquired=await evalJS("window.__p2ReadOnlyProbe()");
+ if(reacquired.grips.length!==1||reacquired.loads[0].x!==x)
+  throw Error("P2 real repeat contact grip failed");
  // The app is intentionally paused after real physical contact preparation.
  await clickElement("pause");
  await wait(90);
@@ -112,20 +124,17 @@ try{
  if(after.gripEvidence.pairedImpulseSum<=0||after.loads[0].x>=x-.08)
   throw Error("P2 true operator key failed physical transport: "+
    JSON.stringify({start:x,end:after.loads[0].x,grip:after.gripEvidence}));
- await key("KeyG",true);await key("KeyG",false);
- await wait(100);
- const released=await evalJS("window.__p2ReadOnlyProbe()");
- if(released.grips.length!==0||released.loads.length!==1)
-  throw Error("P2 real G release or material persistence failed");
  const png=(await send("Page.captureScreenshot",{format:"png",captureBeyondViewport:false})).data;
  writeFileSync(resolve(folder,"p2-real-g-grip-transport.png"),Buffer.from(png,"base64"));
- const result={source:"Native Chromium CDP real KeyG, mouse Pause, held KeyA, KeyG release",
+ const result={source:"Native Chromium CDP real KeyG acquire/release/reacquire, mouse Pause, held KeyA",
   initialCargoX:x,afterCargoX:after.loads[0].x,
   cargoTravelAfterContact:after.loads[0].x-x,
   sumGripImpulse:after.gripEvidence.pairedImpulseSum,
   physicalGripInitially:held.grips.length,
-  actualDynamicMaterialPreserved:released.loads.length===1,
-  linksAfterRelease:released.grips.length,
+  actualDynamicMaterialPreserved:after.loads.length===1,
+  linksAfterManualRelease:released.grips.length,
+  manualReleases:released.gripEvidence.manualReleases,
+  naturalGripBreaksDuringTransport:after.gripEvidence.breaks,
   actorXBefore:before.selected.pos.x,actorXAfter:after.selected.pos.x,
   finite:after.finite,
   caveat:"Synthetic predetermined contact scene, but real Chrome user events; NOT human Owner feel"};
