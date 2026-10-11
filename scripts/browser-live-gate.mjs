@@ -160,3 +160,15 @@ console.log("P2 owner-like interaction gate: native Chromium G acquire-release, 
 execFileSync(process.execPath,["scripts/p2-real-input.mjs",base],{
  timeout:150000,stdio:"inherit"
 });
+
+
+const p2Matched=request({p2red:1},["--dump-dom"]);
+validPage(p2Matched,"P2 equal speed adversarial cargo transport");
+if(attr(p2Matched,"p2-red")!=="PASS"||attr(p2Matched,"p2-red-cases")!=="24")
+ throw Error("P2 policy/strength redteam failed: "+(attr(p2Matched,"p2-red-error")||"no result"));
+const p2R=JSON.parse(decodeURIComponent(attr(p2Matched,"p2-red-result")));
+if(p2R.cases!==24||p2R.results.some(x=>!x.finite||!x.loadStillPhysics||x.sourceResidual>1e-6))
+ throw Error("P2 physically invalid matched speed source");
+writeFileSync(resolve(folder,"p2-matched-speed-strength-redteam.json"),JSON.stringify(p2R,null,2));
+console.log("P2 actual 24-world equal-speed falsifier:");
+console.log(JSON.stringify(p2R.comparisons));
