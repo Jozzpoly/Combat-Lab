@@ -156,12 +156,13 @@ export class MaterialYard{
   }
  }
  command(a,move){
-  const n=norm(move);if(n<1e-5||a.stance==="brace")return;
+  const n=norm(move);if(n<1e-5)return;
   const d=V(move.x/n,move.y/n),v=a.body.linvel(),maxSpeed=
     a.kind==="bulky"?1.75:a.kind==="small"?3.6:2.5;
-  const target=V(d.x*maxSpeed,d.y*maxSpeed);
+  const stanceSpeed=a.stance==="brace"?.48:1;
+  const target=V(d.x*maxSpeed*stanceSpeed,d.y*maxSpeed*stanceSpeed);
   const m=a.body.mass(),force=V((target.x-v.x)*m,(target.y-v.y)*m);
-  const L=norm(force),lim=a.motor*DT;
+  const L=norm(force),lim=a.motor*DT*(a.stance==="brace"?.76:1);
   const sc=L>lim?lim/L:1;
   const j=V(force.x*sc,force.y*sc);
   a.body.applyImpulse(j,true);this.events.rootEffort+=norm(j);
