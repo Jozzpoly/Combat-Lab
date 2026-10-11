@@ -284,7 +284,55 @@ function frame(now){
   let count=0;
   while(acc>=DT&&count<12){tick();acc-=DT;count++;}
  }
- render();requestAnimationFrame(frame);
+ 
+// P11 separate, source-visible causality probe. NOT a player-visible physics
+// upgrade. Existing P10b world and direct interaction are unaffected.
+if(params.has("p11audit")){
+ paused=true;
+ try{
+  const {p11Audit}=await import("./src/p11-brace.js");
+  const result=p11Audit();
+  document.body.dataset.p11Audit="PASS";
+  document.body.dataset.p11Worlds=String(result.worlds);
+  document.body.dataset.p11Report=encodeURIComponent(JSON.stringify(result));
+ }catch(e){
+  document.body.dataset.p11Audit="FAIL";
+  document.body.dataset.p11Error=String(e.stack||e);
+  console.error(e);
+ }
+}
+if(params.has("p11frame")){
+ paused=true;
+ try{
+  const modes={
+   unsupported:{backing:"none",actuation:"hinge"},
+   backed:{backing:"fixed",actuation:"hinge"},
+   movable:{backing:"movable",actuation:"hinge"},
+   noMotor:{backing:"fixed",actuation:"off"}
+  };
+  const mode=modes[params.get("p11frame")];
+  if(!mode)throw Error("P11 unknown frame");
+  const {makeP11World}=await import("./src/p11-brace.js");
+  world.dispose();world=makeP11World(mode);
+  if(mode.actuation==="hinge")world.setPanelAngle(world.tool.id,.9);
+  for(let i=0;i<240;i++)world.step(V());
+  camera={x:13.7,y:7.6,zoom:3.10};
+  const trace=world.trace();
+  if(!trace.finite)throw Error("P11 physical image is not finite");
+  document.body.dataset.p11Frame=encodeURIComponent(JSON.stringify({
+   mode:params.get("p11frame"),tick:trace.tick,actors:trace.actors.length,
+   cargo:trace.cargo.length,panelTorque:trace.panelImpulse,
+   rootEffort:trace.rootEffort,
+   endCargo:trace.cargo.find(x=>x.id===world.toolLoad.id),
+   root:trace.actors.find(x=>x.id===world.tool.id)}));
+  status("P11 real solver frame. Fixed wall is material backing, not a foot.");
+ }catch(e){
+  document.body.dataset.p11FrameError=String(e.stack||e);
+  console.error(e);
+ }
+}
+
+render();requestAnimationFrame(frame);
 }
 window.__p10ReadOnlyProbe=()=>world.trace();
 window.__p10ViewReadOnly=()=>({...camera});
