@@ -1,14 +1,14 @@
 <!doctype html>
 <html lang="pl"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Combat Lab · P3 contested material courtyard</title>
+<title>Combat Lab · P4 material reflex lab</title>
 <link rel="stylesheet" href="./p0.css"></head><body>
 <main id="app">
-<header><div class="intro"><p class="eyebrow">COMBAT LAB / IZOLOWANY KANDYDAT P3</p>
-<h1>Dziedziniec wspólnej materii</h1>
-<p>Jedna fizyczna skrzynia, dwa niezależne ciała. Oboje mogą ją naprawdę chwycić, ciągnąć i puścić. Zobacz, jak zmienia się ruch materii, gdy jedno ustąpi.</p></div>
+<header><div class="intro"><p class="eyebrow">COMBAT LAB / IZOLOWANY KANDYDAT P4</p>
+<h1>Odruch pod naciskiem</h1>
+<p>Materię można szarpnąć, a uchwyt może stawiać opór albo ustępować. Reakcja odczytuje wyłącznie własne połączenie fizyczne, nie drogę do celu.</p></div>
 <div class="run"><button id="pause">Pauza</button><button id="tick">1 krok</button><button id="reset">Od nowa</button></div></header>
-<section class="toolbar"><button id="p3-preset">Dwa ciała · jeden ciężar</button><button id="p3-right-grip">Chwyt drugiego · H</button>
+<section class="toolbar"><button id="p4-preset">Kontakt i uchwyt</button><button id="p4-shock-right">Szarpnij →</button><button id="p4-shock-left">← Szarpnij</button><button id="p3-preset">Dwa ciała · jeden ciężar</button><button id="p3-right-grip">Chwyt drugiego · H</button>
   <button data-mode="select" class="selected">Wybierz ciało</button>
   <button data-mode="poke">Impuls</button>
   <button data-mode="bulky">Duże ciało</button>
@@ -29,6 +29,7 @@
     </select></div>
     <div class="line"><strong>Postawa</strong><button id="stance">Wzmocnij nacisk / B</button><small id="stance-status">—</small></div>
     <div class="line"><strong>Ramię</strong><button id="arm-left">Q −</button><button id="arm-right">E +</button><button id="arm-neutral">0</button></div>
+    <div class="line"><strong>Odruch od nacisku</strong><select id="reflex-mode"><option value="conditional">Warunkowy: chroń kontakt</option><option value="off">Brak reakcji</option><option value="brake">Tani rywal: hamuj</option><option value="follow">Tani rywal: stale podążaj</option></select></div>
     <div class="line"><strong>Kontaktowy uchwyt (G)</strong><button id="grip">Chwyć / puść</button><input id="grip-force" type="range" min="0" max="10" step="0.5" value="3"><output id="grip-force-text">3 N·s/krok</output></div>
     <div class="line"><strong>Impuls myszy</strong><input id="strength" type="range" min="10" max="400" step="10" value="130"><output id="strength-text">130 N·s</output></div>
     <p class="help">Przeciągnij myszą w trybie „Impuls”. Na pauzie Ctrl+przeciągnij obiekt. Scroll: zoom. Środkowy przycisk: pan. Możesz dodawać konstrukcje także w niedorzecznych pozycjach.</p>
