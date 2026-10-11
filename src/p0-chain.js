@@ -7,7 +7,8 @@ import {MaterialYard,V} from "./p0-world.js";
 const round=x=>Math.round(x*10000)/10000;
 function gateImpulse(field,actor){
  let total=0;
- for(const p of actor.shapes)field.world.contactPair(p.collider,field.gate.shapes[0].collider,m=>{
+ for(const part of [actor,...(actor.panel?[actor.panel]:[])])for(const p of part.shapes)
+  field.world.contactPair(p.collider,field.gate.shapes[0].collider,m=>{
   for(let k=0;k<m.numSolverContacts();k++)total+=Math.abs(m.contactImpulse(k)||0);
  });
  return total;
