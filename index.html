@@ -1,10 +1,42 @@
 <!doctype html>
-<meta charset="utf-8">
-<title>Combat Lab — Clean Substrate</title>
-<link rel="stylesheet" href="./style.css">
-<main class="shell">
-<header><div><p class="eyebrow">Combat Lab · clean neutral substrate</p><h1 id="experiment-title">Loading…</h1><p id="experiment-purpose" class="purpose"></p></div><div class="controls"><button id="pause">Pause</button><button id="reset">Reset</button><button id="debug">Debug</button></div></header>
-<section class="viewport"><canvas id="lab" aria-label="Combat Lab neutral experiment surface"></canvas></section>
-<footer><div><strong>Controls</strong><span id="controls-text">—</span></div><div class="status"><span id="run-state">RUNNING</span><span id="sim-time">0.00 s</span><span id="build-id">source: local</span></div></footer>
+<html lang="pl"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Combat Lab · P0 material pressure courtyard</title>
+<link rel="stylesheet" href="./p0.css"></head><body>
+<main id="app">
+<header><div class="intro"><p class="eyebrow">COMBAT LAB / IZOlOWANY KANDYDAT P0</p>
+<h1>Dziedziniec nacisku</h1>
+<p>Jeden edytowalny świat. Brama jest prawdziwym zawiasem, ciężary zostają tam, gdzie je przesuniesz. Działania powstają z sił, kontaktów i kształtów.</p></div>
+<div class="run"><button id="pause">Pauza</button><button id="tick">1 krok</button><button id="reset">Od nowa</button></div></header>
+<section class="toolbar">
+  <button data-mode="select" class="selected">Wybierz ciało</button>
+  <button data-mode="poke">Impuls</button>
+  <button data-mode="bulky">Duże ciało</button>
+  <button data-mode="small">Małe ciało</button>
+  <button data-mode="lever">Przegubowe</button>
+  <button data-mode="rigid-lever">Sztywne porównawcze</button>
+  <button data-mode="load">Ciężar</button>
+</section>
+<section class="layout">
+  <div class="viewport"><canvas id="world" aria-label="Rzeczywisty materialny świat Combat Lab"></canvas><div class="hud"><span id="mode-status">Swobodna edycja</span><span id="clock">0.0 s</span></div></div>
+  <aside>
+    <h2>Eksperymentuj</h2>
+    <p class="help">Wybierz ciało. WASD/strzałki — fizyczny napęd proxy. B — przyjmij lub porzuć postawę. Q/E — ruch niezależnego członu.</p>
+    <div class="line"><strong>Kontakt z gruntem</strong><select id="support">
+      <option value="finite">Ograniczony opór terenu</option>
+      <option value="none">Bez podparcia (kontrola)</option>
+      <option value="damping">Zwykłe tłumienie (tani rywal)</option>
+    </select></div>
+    <div class="line"><strong>Postawa</strong><button id="stance">Wzmocnij nacisk / B</button><small id="stance-status">—</small></div>
+    <div class="line"><strong>Ramię</strong><button id="arm-left">Q −</button><button id="arm-right">E +</button><button id="arm-neutral">0</button></div>
+    <div class="line"><strong>Impuls myszy</strong><input id="strength" type="range" min="10" max="400" step="10" value="130"><output id="strength-text">130 N·s</output></div>
+    <p class="help">Przeciągnij myszą w trybie „Impuls”. Na pauzie Ctrl+przeciągnij obiekt. Scroll: zoom. Środkowy przycisk: pan. Możesz dodawać konstrukcje także w niedorzecznych pozycjach.</p>
+    <div id="selection" class="readout">Żaden organizm nieaktywny</div>
+    <div id="evidence" class="readout"></div>
+    <p class="limit">Fizyka 2D i jawny, skończony opór wirtualnego gruntu. To NIE jest chodzenie, prawdziwe stopy, NPC cognition ani uznana gra. Nie ma zaprogramowanej ścieżki ani celu zwycięstwa.</p>
+  </aside>
+</section><footer><span id="status">Uruchamianie Rapier…</span><span>Izolowany prototyp badawczy · bez publikacji · Owner feel UNKNOWN</span></footer>
 </main>
-<script type="module" src="./app.js"></script>
+<script type="module" src="./p0-app.js"></script>
+<script>addEventListener("error",e=>{document.body.dataset.p0Error=String(e.message||e.error||"script error")});addEventListener("unhandledrejection",e=>{document.body.dataset.p0Error=String(e.reason?.stack||e.reason||"unhandled rejection")});</script>
+</body></html>
