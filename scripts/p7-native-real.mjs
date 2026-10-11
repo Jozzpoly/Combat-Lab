@@ -60,6 +60,12 @@ async function coords(x,y){
  y:r.top+r.height/2+( ${y}-12)*scale};})()`);
 }
 async function clickElement(id){
+ // Human mouse clicks require on-screen targets. P8 adds sidebar controls
+ // and exposes a pre-existing CI blind spot: offscreen controls were not
+ // scrolled into view, so native Input.dispatchMouseEvent missed the button.
+ // Only SCROLL here; activation remains a genuine Chromium pointer click.
+ await evalJS(`document.getElementById("${id}").scrollIntoView({block:"center",inline:"nearest",behavior:"instant"})`);
+ await wait(75);
  const p=await evalJS(`(()=>{const r=document.getElementById("${id}").getBoundingClientRect();
  return {x:r.left+r.width/2,y:r.top+r.height/2}})()`);
  await mouse(p.x,p.y);
