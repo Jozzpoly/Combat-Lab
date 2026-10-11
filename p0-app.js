@@ -372,6 +372,10 @@ if(params.has("p3native")){
   status("P3: native G/H separate grips after real two-sided solver contact.");
  }catch(e){document.body.dataset.p3NativeError=String(e.stack||e);console.error(e);}
 }
+if(params.has("p4native")){
+ // Read-only physical introspection for genuine Chromium native mouse input.
+ window.__p4ReadOnlyProbe=()=>world.reflexTrace();
+}
 if(params.has("p4probe")){
  paused=true;
  try{
