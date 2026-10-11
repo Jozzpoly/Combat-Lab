@@ -109,19 +109,20 @@ try{
    links:tug.grips.length,effort:tug.gripEvidence.pairedImpulseSum}));
  const image1=(await send("Page.captureScreenshot",{format:"png",captureBeyondViewport:false})).data;
  writeFileSync(resolve(folder,"p3-native-two-grips-contested.png"),Buffer.from(image1,"base64"));
- await press("KeyH");await key("KeyL",false);
+ // Keep BOTH movement keys continuously held. Only H changes link state.
+ await press("KeyH");
  const released=await evalWorld();
  if(released.grips.length!==1||released.gripEvidence.manualReleases!==1)
   throw Error("P3 native second independent release was not honored");
  await wait(1400);
- await key("KeyA",false);
+ await key("KeyA",false);await key("KeyL",false);
  const after=await evalWorld();
  if(!after.finite||after.gripEvidence.pairedImpulseSum<=tug.gripEvidence.pairedImpulseSum)
   throw Error("P3 real follow-up physical towing source invalid");
  const image2=(await send("Page.captureScreenshot",{format:"png",captureBeyondViewport:false})).data;
  writeFileSync(resolve(folder,"p3-native-after-opponent-releases.png"),Buffer.from(image2,"base64"));
  const report={
-  source:"Native Chrome keyboard G/H, independent held A/L, real H release and active A pull",
+  source:"Native Chrome G/H grip, independent continuously held A/L, real H release only",
   loadStart:cargoX,loadWhileContested:tug.loads[0].x,
   loadAfterRelease:after.loads[0].x,
   simultaneousRealLinks:held.grips.length,linksAfterRelease:released.grips.length,
