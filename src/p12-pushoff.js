@@ -28,11 +28,13 @@ function touch(a,b,w){
   });
  return {n,j};
 }
-export function makeP12World({backing="fixed",support="none",kind="lever"}={}){
+export function makeP12World({backing="fixed",support="none",kind="lever",iterations=12}={}){
  if(!["absent","fixed","movable"].includes(backing)||
   !["none","finite"].includes(support)||!["lever","rigid-lever"].includes(kind))
   throw Error("P12 invalid configuration");
  const w=makeMaterialWorkshop({fixture:kind==="lever"?"hinge":"rigid-tool",support});
+ if(![4,12,24,48].includes(iterations))throw Error("P12 solver iteration variant");
+ w.world.integrationParameters.numSolverIterations=iterations;
  try{
   if(!w.moveEntity(w.tool,V(12,12)))throw Error("P12 relocated active body");
   w.setSelected(w.tool.id);
@@ -44,10 +46,10 @@ export function makeP12World({backing="fixed",support="none",kind="lever"}={}){
  }catch(e){w.dispose();throw e;}
 }
 export function p12Case({backing="fixed",support="none",
- kind="lever",drive="sweep",ticks=300}={}){
+ kind="lever",drive="sweep",ticks=300,iterations=12}={}){
  if(!["sweep","off","cycle","cheap-root"].includes(drive))
   throw Error("P12 invalid input");
- const w=makeP12World({backing,support,kind});
+ const w=makeP12World({backing,support,kind,iterations});
  try{
   const root=w.tool,panel=root.panel,bodyParts=panel?[root,panel]:[root];
   const backingBody=w.backer;
@@ -110,7 +112,7 @@ export function p12Case({backing="fixed",support="none",
   const now=com(bodyParts),sys=com(systemParts),allFinal=com(allDynamic),tr=w.trace();
   if(![...bodyParts,...(backingBody?[backingBody]:[])].every(vals)||
      !tr.finite)throw Error("P12 numerical physical invalid");
-  return {backing,support,kind,drive,ticks,initial,
+  return {backing,support,kind,drive,ticks,iterations,initial,
    comEnd:now,comDX:rd(now.x-initial.com.x),comDY:rd(now.y-initial.com.y),
    comDelta:rd(dist(now,initial.com)),
    systemCOMDelta:rd(dist(sys,systemStart)),
@@ -149,7 +151,19 @@ export function p12Audit(){
    if(group.slice(1).some(x=>x.rootEffort!==0))
     throw Error("P12 inadvertent external root drive on articulated model");
   }
- return {worlds:21,source:"actual emitted Chromium Rapier2D 0.21, internal equal/opposite actuator",cases,
+ const solverScan=[];
+ for(const iterations of [4,12,24,48])
+  for(const backing of ["absent","movable","fixed"])
+   solverScan.push(p12Case({iterations,backing,support:"none",drive:"sweep"}));
+ if(solverScan.length!==12||solverScan.some(x=>!x.finite||x.rootEffort!==0))
+  throw Error("P12 iteration counterfactual invalid");
+ return {worlds:33,
+  solverScan:solverScan.map(x=>({iterations:x.iterations,
+   backing:x.backing,bodyCOM:x.comDelta,comY:x.comDY,
+   coupledCOM:x.systemCOMDelta,allDynamicCOM:x.totalDynamicCOMDelta,
+   trueContact:x.contactSteps,foreign:x.foreignContacts,
+   motor:x.hingeEffort})),
+  source:"actual emitted Chromium Rapier2D 0.21, internal equal/opposite actuator",cases,
   summary:cases.map(x=>({support:x.support,backing:x.backing,kind:x.kind,
    drive:x.drive,bodyCOM:x.comDelta,bodyCOMY:x.comDY,systemCOM:x.systemCOMDelta,
    hit:x.contactSteps,impulse:x.sourceContactImpulse,hinge:x.hingeEffort,
