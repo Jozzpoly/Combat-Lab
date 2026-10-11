@@ -26,7 +26,7 @@ function validPage(dom,name){
 }
 const plain=run(base,["--dump-dom"]);
 validPage(plain,"P0 bootstrap");
-if(!plain.includes("COMBAT LAB")||!plain.includes("Dziedziniec nacisku"))
+if(!plain.includes("COMBAT LAB")||!plain.includes("Dziedziniec materii i chwytu"))
  throw Error("Not P0 actual branch runtime");
 const probe=request({p0probe:1},["--dump-dom"]);
 validPage(probe,"P0 probe");
