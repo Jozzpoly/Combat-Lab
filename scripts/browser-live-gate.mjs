@@ -24,6 +24,7 @@ if(!raw)throw Error("K1 no actual source report");
 const report=JSON.parse(decodeURIComponent(raw));
 if(report.cases.length!==9||report.cases.some(c=>
  !c.after.finite||c.after.externalShots!==1||c.after.driveImpulse!==0||
+ c.after.boundedPanelImpulse!==0||c.before.witnessTravel!==0||
  c.after.shotStates.length!==1))
  throw Error("Invalid K1 sourced counterfactual");
 writeFileSync(resolve(out,"k1-sourced-counterfactual.json"),JSON.stringify(report,null,2));
