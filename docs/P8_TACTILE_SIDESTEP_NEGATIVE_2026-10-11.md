@@ -1,0 +1,52 @@
+# P8 — tactile sidestep under honest physical crowd pressure (2026-10-11)
+
+**Source research checkpoint only. Owner experience NOT accepted.** Experiment branch `experiment/p8-tactile-slip-human-control` is isolated P7 donor; main/public still do NOT execute P8. Last audited implementation HEAD `ff1843a1b90e2240fd39674a01cf5f2ac96a7649`; exact-head [full WASM + Chromium CI 38111180588 PASS](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38111180588). Any documentation commit afterward must revalidate on its own exact SHA. Main and `rehearsal/current` should NEVER be merged/rewound automatically.
+
+## Owner intent / falsifier / why
+
+P7 gave real editable multi-actor Rapier contact, independent cargo, mass-matched small versus bulky defender and a physical crowd with bounded virtual-ground locomotion; yet the cheap one-shot YIELD gave 0/6 in a narrow choke. Owner historically observed excessive stiffness/blocking and wants a genuine enjoyable physical/causal world, not traffic scripts, handwaved NPC brains or a CI-score collection. P8 asks the smallest useful counterfactual: could a local actor use actual solver contact pressure and nearby **embodied body-relative separation** to temporarily move sideways while continuing a baseline +X locomotor intent, with no route omniscience, no penetration cheats, no elastic softbody or artificially changed force limits? Compare against the CHEAP original `drive` and old `yield`.
+
+## Source and actual mechanism
+
+`src/p8-tactile.js` extends `DoorCrowdYard`: seven **independently dynamic real rigid organisms** total (six small27kg pushers plus one bulky90kg defender) and two actual independent movable cargo, an authored true physical throat of 2.85 or4.65m, optional finite virtual terrain or no support. **Exactly the same physical body/collider shapes and per-tick motor cap/target speed** for `drive`, `yield`, `slip`; actual total actuator expenditure differs endogenously and is logged. All source instances get the same physical initial positions, angles, velocities and masses; two initial entry layouts (`center`, `flank`). `P8 slip` is a TACTILE motor bias, **not real sliding deformable contact**: it reads actual Rapier contactPair impulse between this actor and guard/other pushers, requires impulse greater than .35N.s, chooses a one-bit lateral direction using the actual touching body’s relative Y (ID tie-break), blends +X motor direction with Y for up to 32 steps, and then resumes root +X. Root motor caps, collision masks, collider mass, solver constraints and world geometry stay unchanged. The debug cyan line indicates *requested motor direction*, not true manifold point, velocity or external extra force. Pressure/role code is source-accounted virtual impulse, not gait, tissue compliance, spine/leg posture, softbody or cognition.
+
+P8 UI lets experimenter click 3/6/8-body scene, compare three policies without world reset, switch true guard stance, support, gap and flank pressure, select any individual body for WASD/B and pause/Ctrl+drag real barriers or cargo, issue real off-center guard impulse and resume the SAME physical world. **After source review, `drive` CHEAP comparator is default**, not new `slip` candidate, because the candidate is NOT uniformly better. Source P7 panels have focused presentation; the older P0–P6 tools remain accessible outside focus.
+
+## Exact source A/B tests
+
+`src/p8-probe.js`: 48 full factorial actual 2 widths ×2 support regimes ×2 layouts ×2 guard policies ×3 mover policies, plus 9 physically exactly same-state paired operator interventions `none/poke/open` for each three motor policies at finite narrow flank; **57 actual Rapier WASM source worlds**. A/B initial physical fingerprint equality enforced. Under paired intervention conditions, full true independent pre-event rigid-body position, velocity, rotation, mass and source trajectory are identical prior to only one material operator action. Real collider manipulation affects one barrier and is verified no organism moved at edit; operator force uses actual physical impulse.
+
+**Representative FINAL-SNAPSHOT occupancy** (NOT number ever crossing, not navigation objectives):
+| Width, source finite terrain | DRIVE | YIELD | SLIP |
+| --- | --- | --- | --- |
+| 2.85m, central lanes, dynamic brace guard | 4/6 | 0/6 | **0/6 FAIL** |
+| 2.85m, lateral lane, dynamic brace guard | 3/6 | 0/6 | **0/6 FAIL** |
+| 4.65m, central lanes, dynamic brace guard | 6/6 | 0/6 | 5/6 |
+| 4.65m, lateral lane, dynamic brace guard | 5/6 | 1/6 | **6/6** |
+| 4.65m, lateral lane, passive guard | 5/6 | 1/6 | **6/6** |
+
+Detailed 4.65m lateral/finite/brace result: `drive` ends with5/6, cumulative pusher external root motor impulse9330.7112N.s, `slip` ends6/6 with4745.1899N.s and10 real-contact-triggered sidesteps. The same strategy at 2.85m central/finite/brace has `drive`4/6 and `slip`0/6, and `slip` uses **more** root impulse (14477 vs11875N.s). This falsifies any universal claim of benefit from extra tactile steering. No motor-EFFORT-matched cross-policy claim: both policies share per-step limit but cumulative motor/ground reaction differ.
+
+**Critical interpretation correction: FINAL occupancy is NOT temporal throughput.** First probe reported a `firstCross` at tick375 for narrow passive `slip` despite final 0/6. Proper subsequent source `src/p8-probe.js` captures body ID at EVERY actual fixed timestep within a real colliding aperture, tracks distinct `everPassed`, maximum concurrent occupancy, cumulative per-body mouth residence, reentries and return-from-mouth. In 2.85m central/finite/brace: `drive` **6/6 have passed at least once**, but only4/6 remain beyond the mouth by the final tick; `slip` 0/6 ever, 0/6 final. In 2.85m central/finite/passive: `slip` 1/6 ever briefly crossed and returned, 0/6 final. In 4.65m lateral/finite/brace: `slip` all6 ever and all6 remain final vs cheap drive5 ever/final. Thus an end-snapshot "4/6" must NOT be described as four ever crossed. The readout never enters actor controller decisions. [Raw time-integrated source CI 38111102041 PASS](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38111102041) and final exact-head PASS 38111180588.
+
+**Visual, not just counters:** actual raw emitted Chromium screenshot `p8-slip-real-crowd-chromium.png` shows narrow slip bodies aligned almost vertically AGAINST real wall; `p8-drive-real-crowd-chromium.png` shows more bodies overlapping visually in dense but physically colliding cluster beyond material throat; `p8-yield-real-crowd-chromium.png` reveals one-shot yield often takes agents off the visible trial area instead of negotiatiating a group passage. Source captures are NOT generative illustration, no fake player story and not evidence of human enjoyment. A 22-frame unmodified native Chromium screenshot sequence under actual resumed seven-body physical world is stored as `p8-native-motion-frames/000.png` through `021.png` in Actions artifact; media compiled from those frames at 7fps is NOT a measured engine FPS benchmark or continuous real-time capture. Raw image evidence expires after 14-day Actions artifact retention; code/docs remain.
+
+## Native browser Owner control / provenance
+
+The emitted production JS/Rapier WASM build is tested with **REAL CDP Input.dispatchMouseEvent and Input.dispatchKeyEvent**, not synthetic DOM event, in `scripts/p8-native-real.mjs`:
+- Actual UI click P8 preset, real 7-body source and finite terrain;
+- Real native click Pause, physically select small tail actor by actual canvas/body projection, confirm selected body ID;
+- Resume and real held KeyS for32 physics ticks, own body Y **12.45 →13.3128m (Δ+0.8628m)** while other bodies' autonomous motor and world solver continue (operator priority; body not teleported);
+- Real physical external 85N.s shock to independent guard while paused;
+- Real authored wall move +1.30m aperture (source measured 2.85→4.15m) with actor poses and paused simulation tick unchanged; resume same world (no reset);
+- All P7 and P0–P6 CI inherited gates still pass. Exact source [CI 38110824752](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38110824752) PASS; later [final CI 38111180588](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38111180588) validates P8 native controls with `drive` as honest default and read-only selected-pusher step tracking. **No human Owner play session has occurred.**
+
+## Engineering forensics and negative work
+
+- Initial browser smoke regressions surfaced after P8 UI expanded sidebar: earlier P7 native `clickElement` assumed all controls visible; the post-P8 stance button lay BELOW scroll viewport and raw pointer did not activate. Real Chrome test correctly failed; repaired by bringing element INTO viewport (`scrollIntoView` only) and still using native CDP mouse for actual activation. Not a physics regression, but a real UI-test blind spot.
+- Initial P8 probe made a faulty assertion `x.loads !== 2`, where `loads` is an actual **array of the two physical bodies' afterstates** (not a numeric count); all48 worlds were actually finite with7 actors and90kg guard. Fixed to explicit `loadsCount` separate from per-load physical afterstates, recorded error rather than misclassifying. [After fix PASS](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38110824752).
+- The candidate is NOT soft-contact/compression. It does not legitimately allow actors to squeeze body mass through too-narrow passages and it still makes visually rigid sphere queues at the wall. Nothing in P8 proves real path reasoning or acceptable minute-to-minute gameplay feel. Do NOT promote to publication or describe generic "crowd AI improved."
+
+## Next work worth Owner attention
+
+**Do not repeatedly tune one contact blend coefficient to make a particular authored screenshot win.** The next pressure should be an experiential human-controlled trial in a reachable isolated preview, asking whether live movement, contact sliding, pushing and stance feel intuitive, whether camera/travel visibility is sufficient, whether dense overlap causes sticky controls and whether he can freely break/rebuild scenes. At most one bounded engineering scout could contrast **cheap rigid collision + local material occupancy awareness** against physically compliant body contact, not a softbody prerequisite; require an obvious new physical/player agency capability and a low-cost rival. Body/body material causality and Owner agency should trump cleverness of motor scripts. Owner historic R0/R1/L0 FAIL remains binding.
