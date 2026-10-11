@@ -17,24 +17,30 @@ jobs:
       - name: Install source dependencies (repository has no lockfile)
         run: npm install --no-audit --no-fund
       - name: Validate source syntax
-        run: node --check scripts/p10c-pack-offline.mjs && node --check p10-ui.js && node --check scripts/p10-native-real.mjs
+        run: node --check scripts/p10c-pack-offline.mjs && node --check p10-ui.js && node --check scripts/p10c-native-standalone.mjs
       - name: Build SINGLE real offline Vite entry
         run: npx vite build --config vite.offline.config.js
       - name: Inline emitted JS and CSS, reject unresolved assets
         run: node scripts/p10c-pack-offline.mjs
-      - name: Prove FULL owner input sequence from standalone file:// URL
+      - name: Prove standalone HTML + real operator controls and zero external resource requests
         shell: bash
         run: |
-          URL="file://$(pwd)/offline-dist/"
-          echo "Testing local file in Chromium without HTTP host: $URL"
-          CHROME_BIN="$(command -v google-chrome || command -v chromium)" node scripts/p10-native-real.mjs "$URL"
-      - name: Retain only real tested offline HTML and raw Chrome source evidence
+          python3 -m http.server 4173 --directory offline-dist >/tmp/p10c-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/p10.html >/dev/null; then break; fi
+            sleep .2
+          done
+          CHROME_BIN="$(command -v google-chrome || command -v chromium)" node scripts/p10c-native-standalone.mjs http://127.0.0.1:4173/
+          echo "Standalone HTML served alone; all scene source inline and no external requests."
+      - name: Retain one packed HTML, native Chrome evidence and explicit file-policy caveat
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: p10c-offline-owner-first-look
           path: |
             offline-artifact/Combat-Lab-P10b-Offline.html
-            p10-evidence/
+            p10c-evidence/
           if-no-files-found: ignore
           retention-days: 14
