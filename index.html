@@ -1,10 +1,107 @@
 <!doctype html>
-<meta charset="utf-8">
-<title>Combat Lab — Clean Substrate</title>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Combat Lab — Organism Field · internal</title>
 <link rel="stylesheet" href="./style.css">
-<main class="shell">
-<header><div><p class="eyebrow">Combat Lab · clean neutral substrate</p><h1 id="experiment-title">Loading…</h1><p id="experiment-purpose" class="purpose"></p></div><div class="controls"><button id="pause">Pause</button><button id="reset">Reset</button><button id="debug">Debug</button></div></header>
-<section class="viewport"><canvas id="lab" aria-label="Combat Lab neutral experiment surface"></canvas></section>
-<footer><div><strong>Controls</strong><span id="controls-text">—</span></div><div class="status"><span id="run-state">RUNNING</span><span id="sim-time">0.00 s</span><span id="build-id">source: local</span></div></footer>
-</main>
+</head><body data-lab-ready="false" data-lab-error="">
+<div class="layout">
+  <main class="play">
+    <div class="topline"><strong>COMBAT LAB / ORGANISM FIELD</strong><span id="run-summary">Initializing physical world…</span></div>
+    <div class="situation-strip" aria-label="Physical starting situations">
+      <div class="situation-heading"><span>OPEN EXPERIMENTS</span><span id="situation-caption">Existing free field — intervene anywhere.</span></div>
+      <div class="situation-buttons">
+        <button data-situation="yard" class="active">Original yard</button>
+        <button data-situation="relay">Push &amp; jam</button>
+        <button data-situation="crush">Bodies under pressure</button>
+        <button data-situation="hinge">Living doorway</button>
+        <button data-situation="footing">Mixed footing</button>
+      </div>
+    </div>
+    <canvas id="scene" aria-label="Experimental material world"></canvas>
+    <div id="live-inspect" class="live-inspect" aria-label="Selected organism live physical status"><strong id="live-inspect-title">Body physics</strong><span class="live-secondary" id="live-inspect-details">Select an organism to inspect its contacts.</span></div>
+    <div class="controlstrip">WASD / arrows: take control of selected body · hold B: finite brace · 1/2/3/4: select · mouse wheel: zoom · middle-drag: pan · click: select · Shift+drag: obstacle · Alt+click: movable matter · right-hold: physical grip on a nearby crate · PAUSED Ctrl+drag: author new physical poses</div>
+  </main>
+  <aside class="lab">
+    <header><small>ISOLATED RESEARCH · NOT OWNER QUALIFIED</small>
+      <h1>Different bodies, same physical world</h1>
+      <p>Observe, take control or disturb the world. All bodies share real contact physics. Switch scenes freely; capture a JSON scene before replacing one you want to preserve.</p>
+    </header>
+    <section><h2>Independent physical organisms</h2>
+      <div class="buttons"><button data-pick="0">1 · Dart</button><button data-pick="1">2 · Crawler</button><button data-pick="2">3 · Broad</button><button data-pick="3">4 · Inchworm</button></div>
+      <label>Spawn morphology
+        <select id="kind"><option value="dart">Compact dart</option><option value="crawler">Two-body hinged crawler</option><option value="broad">Broad pusher</option><option value="worm">Internal-stroke inchworm</option><option value="mixed">Mixed physical organisms (batch)</option></select>
+      </label>
+      <div class="buttons"><button id="spawn">Spawn at cursor</button><button id="remove">Remove selected</button></div>
+      <label>Batch population (per action) <input id="spawn-count" type="number" value="24" min="1" max="500" step="1"></label>
+      <div class="buttons"><button id="spawn-batch">Spawn physical group</button></div>
+      <p class="dim">Batch positions use a deterministic spiral around the cursor, not a scripted movement scenario. Up to 500 new organisms per click as a runtime safety guard; existing organisms are not capped. All collide in one shared solver.</p>
+      <p class="dim">Each shape has actual 2D colliders and finite drive/turn authority. The crawler has a real revolute joint. The inchworm has a real prismatic joint, reciprocal muscle strokes and alternating finite ground support. No arbitrary organism/population cap.</p>
+    </section>
+    <section><h2>Observe / intervene</h2>
+      <div class="buttons"><button id="pause">Pause</button><button id="step">Single step</button><button id="reset">Reset scene</button></div>
+      <label><input id="manual" type="checkbox"> Direct-control selected body (WASD/arrow keys also engage control; uncheck to release it back to local reactions)</label>
+      <div class="buttons"><button id="kick">Physical impulse at cursor</button><button id="add-box">Add crate at cursor</button><button id="add-gate">Add hinged gate</button></div>
+      <label>Impulse N·s <input id="impulse" type="number" value="60" step="10"></label>
+      <label>Physical impulse orientation
+        <select id="impulse-mode"><option value="radial">Radial push (linear)</option><option value="tangential">Tangential at cursor (rotates)</option></select>
+      </label>
+      <p class="dim">Right-hold directly on a crate to attach a finite physical actuator. Move cursor to drag / lever it; release preserves momentum. Reaction acts on your organism, too. Must be within authored reach.</p>
+      <p id="grip-state" class="dim">No grip active.</p>
+      <label>New crate mass (kg) <input id="mass" type="number" value="25" step="5"></label>
+      <p class="dim" id="interaction-status">Move the cursor into the world to intervene.</p>
+    </section>
+    <details class="lab-details" id="physical-settings"><summary>Physical parameters · mass, shape, motor & reactions</summary>
+    <section><h2>Independent physical parameters</h2>
+      <div class="gridfields">
+        <label>Envelope length × <input id="shape-length" type="number" step="0.1" value="1"></label>
+        <label>Envelope width × <input id="shape-width" type="number" step="0.1" value="1"></label>
+        <label>Actual body mass kg <input id="body-mass" type="number" step="1"></label>
+        <label>Requested speed m/s <input id="body-speed" type="number" step="0.1"></label>
+        <label>Ground acceleration m/s² <input id="body-accel" type="number" step="0.5"></label>
+        <label>Braking m/s² <input id="body-brake" type="number" step="0.5"></label>
+        <label>Turn rate rad/s <input id="body-turnrate" type="number" step="0.1"></label>
+        <label>Finite turn torque N·m <input id="body-torque" type="number" step="5"></label>
+        <label>Rear segment drive (crawler only: 0–1) <input id="body-rear-drive" type="number" min="0" max="1" step=".05"></label>
+        <label>Inchworm internal muscle N <input id="body-muscle" type="number" step="50"></label>
+        <label>Inchworm ground support N <input id="body-support" type="number" step="50"></label>
+        <label>Grip reach m <input id="body-reach" type="number" step="0.1"></label>
+        <label>Grip force N <input id="body-gripforce" type="number" step="25"></label>
+        <label>Yield on frontal resistance (0–1) <input id="body-yield" type="number" min="0" max="1" step="0.05"></label>
+        <label>Finite brace force N <input id="body-brace" type="number" min="0" step="100"></label>
+      </div>
+      <div class="buttons"><button id="apply-shape">Apply physical shape</button><button id="apply-body">Apply mass &amp; motor</button></div>
+      <p class="dim">Changing length and width alters real colliders; the hinged tail reanchors as an explicit edit without resetting other objects. Mass changes collider inertia. On the crawler, drive can shift front/rear. Inchworm translates via an internal muscle cycle plus alternating physical ground reaction; its speed setting changes cycle cadence, not rigid-body cruise speed. Grip force and reach remain independent of body mass. Yield controls a *local tactile tendency* to back away after sustained frontal blockage, independently of actual mass and strength. Holding B causes physical bracing with limited ground force, not arbitrary position lock. Physical contact still decides outcomes. Physically representable extremes are permitted; this is not biomechanical gait.</p>
+    </section></details>
+    <section><h2>Material world</h2>
+      <p>Drag with Shift to add a solid fixed obstacle; Alt+click creates movable material. Add a real hinged barrier at the cursor. Existing changes persist until reset. Undo and Clear remove your added objects live, preserving other physical afterstate. Pause and Ctrl+drag an actual body or crate to reposition it without disturbing the rest. Articulated segments move together, maintaining their joint. Colliding placements are intentionally allowed and may resolve forcefully on unpause. Reset rebuilds the authored starting edits.</p>
+      <div class="buttons"><button id="undo">Undo last authored addition</button><button id="clear">Clear authored edits</button></div>
+      <div class="buttons"><button id="save-scene">Capture this arrangement (.json)</button>
+        <button id="load-scene">Load starting arrangement</button>
+        <input id="scene-file" type="file" accept=".json,application/json" hidden>
+      </div>
+      <p class="dim">Portable *initial scene*: preserves current organism starts/profiles, matter placement/rotation, additional walls and gate pivots/angles. It intentionally does not save moment-to-moment velocity, joint strain or local memory. Loading constructs a new physical starting scene; no hidden gameplay replay.</p>
+      <p class="dim">The gold hinged arm can be turned by contact or by gripping it. The pivot does not move; its angle is physical afterstate.</p>
+      <p class="dim">Pale patch in the centre is an authored low-traction ground region. Grip is a finite external support approximation; flat Rapier XY physics has no native ground traction.</p>
+    </section>
+    <section><h2>Selected / causal evidence</h2>
+      <p class="dim">Selected body arrows: cyan = requested motion, amber = solver-realized velocity. Separation under contact is observable, not an automatically inferred cause.</p>
+      <pre id="selected">Select an organism</pre>
+      <label><input id="contacts" type="checkbox"> Show active contact count and collision outlines</label>
+    </section>
+    <details class="lab-details" id="internal-evidence"><summary>Research instruments & limits</summary>
+    <section><h2>Internal physical checks</h2>
+      <div id="evidence">Live boot pending.</div>
+      <p class="dim">Mechanical PASS ≠ convincing organism, crowd or gameplay. Different shapes must generate meaningfully different possibilities under free play.</p>
+    </section></details>
+  </aside>
+</div>
+<script>
+  function fault(err) {
+    document.body.dataset.labError = String(err && (err.message || err) || 'error').slice(0,400);
+    document.querySelector('#run-summary').textContent = 'Runtime error: ' + document.body.dataset.labError;
+  }
+  window.addEventListener('error', e => fault(e.error || e.message));
+  window.addEventListener('unhandledrejection', e => fault(e.reason));
+</script>
 <script type="module" src="./app.js"></script>
+</body></html>
