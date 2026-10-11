@@ -12,10 +12,10 @@ function gateImpulse(field,actor){
  });
  return total;
 }
-function continuation({worldSupport,changed,kind,speed}){
+export function continuation({worldSupport,changed,kind,speed,runnerY=11.6,openerKind="bulky"}){
  const field=new MaterialYard({populated:false,support:worldSupport});
  try{
-  const opener=field.spawn("bulky",V(15,11.7));
+  const opener=field.spawn(openerKind,V(15,11.7));
   field.setSelected(opener.id);
   let openerGateImpulse=0,openerGateFrames=0;
   for(let i=0;i<480;i++){
@@ -30,7 +30,7 @@ function continuation({worldSupport,changed,kind,speed}){
   // no edited collider collision policy, no destination-based steering.
   field.moveEntity(opener,V(34,21));
   field.selected=null;
-  const runner=field.spawn(kind,V(16.5,11.6));
+  const runner=field.spawn(kind,V(16.5,runnerY));
   const initial=runner.body.translation();
   const exactSpeedImpulse=runner.body.mass()*speed;
   runner.body.applyImpulse(V(exactSpeedImpulse,0),true);
@@ -50,7 +50,7 @@ function continuation({worldSupport,changed,kind,speed}){
    }
   }
   const after=field.traces(),p=runner.body.translation();
-  return {worldSupport,changed,kind,speed,
+  return {worldSupport,changed,kind,speed,runnerY,openerKind,
    exactSpeedImpulse:round(exactSpeedImpulse),
    openerGateImpulse:round(openerGateImpulse),openerGateFrames,
    openerPosition:{x:round(openerPosition.x),y:round(openerPosition.y)},
