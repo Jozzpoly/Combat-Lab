@@ -69,3 +69,22 @@ for(const scene of [
  request(scene,["--screenshot="+resolve(folder,"p0-"+slug+".png")]);
 }
 console.log("P0 true emitted-source Chromium temporal PNG + JSON samples saved.");
+
+
+const chain=request({p0chain:1},["--dump-dom"]);
+validPage(chain,"P0 separate-world causal material continuation");
+if(attr(chain,"p0-chain")!=="PASS"||attr(chain,"p0-chain-cases")!=="16")
+ throw Error("P0 material causal continuation failed: "+(attr(chain,"p0-chain-error")||"no source"));
+const rawChain=attr(chain,"p0-chain-result");
+if(!rawChain)throw Error("P0 missing paired material afterstates");
+const material=JSON.parse(decodeURIComponent(rawChain));
+if(material.cases.length!==16||material.cases.some(x=>!x.finite||x.rootDriveInSecond!==0))
+ throw Error("P0 invalid material route cause/false motor source");
+writeFileSync(resolve(folder,"p0-actual-second-body-afterstate.json"),JSON.stringify(material,null,2));
+console.log("P0 16 second-body material continuation counterfactuals (NOT product approval).");
+console.log(JSON.stringify(material.cases.map(x=>({
+ support:x.worldSupport,firstAction:x.changed,kind:x.kind,
+ speed:x.speed,firstGate:x.gateAfterOpener,
+ laterX:x.runnerAfter.x,passed:x.runnerCrossed,
+ runnerGate:x.runnerGateImpulse,firstStage:x.openerGateImpulse
+}))));
