@@ -1,0 +1,40 @@
+name: P10c Offline Owner First Look
+
+on:
+  push:
+    branches:
+      - experiment/p10c-offline-owner-firstlook
+  workflow_dispatch:
+
+jobs:
+  real-offline-owner-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install source dependencies (repository has no lockfile)
+        run: npm install --no-audit --no-fund
+      - name: Validate source syntax
+        run: node --check scripts/p10c-pack-offline.mjs && node --check p10-ui.js && node --check scripts/p10-native-real.mjs
+      - name: Build SINGLE real offline Vite entry
+        run: npx vite build --config vite.offline.config.js
+      - name: Inline emitted JS and CSS, reject unresolved assets
+        run: node scripts/p10c-pack-offline.mjs
+      - name: Prove FULL owner input sequence from standalone file:// URL
+        shell: bash
+        run: |
+          URL="file://$(pwd)/offline-dist/"
+          echo "Testing local file in Chromium without HTTP host: $URL"
+          CHROME_BIN="$(command -v google-chrome || command -v chromium)" node scripts/p10-native-real.mjs "$URL"
+      - name: Retain only real tested offline HTML and raw Chrome source evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p10c-offline-owner-first-look
+          path: |
+            offline-artifact/Combat-Lab-P10b-Offline.html
+            p10-evidence/
+          if-no-files-found: ignore
+          retention-days: 14
