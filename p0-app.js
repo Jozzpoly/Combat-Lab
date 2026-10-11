@@ -212,6 +212,28 @@ if(params.has("p0chain")){
  }catch(e){document.body.dataset.p0Chain="FAIL";
   document.body.dataset.p0ChainError=String(e.stack||e);console.error(e);}
 }
+if(params.has("p1frame")){
+ paused=true;
+ try{
+  const {p1Case}=await import("./src/p1-reach.js");
+  const kind=params.get("p1frame")==="rigid"?"rigid-lever":"lever";
+  const tick=Math.min(160,Math.max(0,Number(params.get("tick")||0)));
+  const support=params.get("support")==="none"?"none":"finite";
+  const restricted=params.get("cage")!=="0";
+  world.dispose();
+  camera.x=10.4;camera.y=7.5;camera.zoom=1.45;
+  const outcome=p1Case({kind,ticks:tick,support,restricted,
+   stance:"brace",loadY:7.12,target:1.1,drive:"actuate",
+   captureWorld:(field,actor)=>{
+    world=field;field.setSelected(actor.id);
+   }});
+  document.body.dataset.p1Frame=JSON.stringify(outcome);
+  status("P1 rzeczywisty stan fizyki: "+kind+" / "+tick+" kroków / "+
+    (restricted?"w klatce":"bez ograniczeń"));
+ }catch(e){
+  document.body.dataset.p1FrameError=String(e.stack||e);console.error(e);
+ }
+}
 if(params.has("p1probe")){
  paused=true;
  try{
