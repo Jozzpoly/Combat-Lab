@@ -155,3 +155,8 @@ console.log(JSON.stringify(result.results.map(x=>({
  breaks:x.gripBreaks,cap:x.cap,contactTick:x.approachTick,
  lastLink:x.linkedBeforeRelease,momentumResidual:x.sourceResidual
 }))));
+
+console.log("P2 owner-like interaction gate: native Chromium G acquire-release, physical transport.");
+execFileSync(process.execPath,["scripts/p2-real-input.mjs",base],{
+ timeout:150000,stdio:"inherit"
+});
