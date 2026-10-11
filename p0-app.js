@@ -2,7 +2,7 @@ import {V,DT} from "./src/p0-world.js";
 import {TransportYard} from "./src/p2-world.js";
 const $=id=>document.getElementById(id);
 const canvas=$("world"),ctx=canvas.getContext("2d",{alpha:false});
-let world=new TransportYard(),paused=false,mode="select",drag=null;
+let world=new TransportYard(),paused=false,mode="select",drag=null,secondActorId=null;
 let last=performance.now(),acc=0,lastDraw=0;
 let camera={x:20,y:12,zoom:1.0},keys=new Set();
 const PI=Math.PI,rgba={wall:"#546b70",pivot:"#c99a66",gate:"#cda867",
@@ -89,7 +89,7 @@ function render(){
  document.body.dataset.p0Live="yes";
 }
 function setMode(next){
- mode=next;for(const b of document.querySelectorAll(".toolbar button"))
+ mode=next;for(const b of document.querySelectorAll(".toolbar button[data-mode]"))
   b.classList.toggle("selected",b.dataset.mode===next);
  status(next==="select"?"Wybór organizmu.":"Tryb: "+next+". Kliknij dziedziniec.");
 }
@@ -102,9 +102,25 @@ function select(e){
 }
 function pause(){paused=!paused;acc=0;$("pause").textContent=paused?"Wznów":"Pauza";
   status(paused?"Pauza. Ctrl+przeciągnij fizyczne ciała.":"Świat działa.");render();}
-function reset(){world.dispose();world=new TransportYard({support:$("support").value});
+function reset(){world.dispose();secondActorId=null;world=new TransportYard({support:$("support").value});
  paused=false;$("pause").textContent="Pauza";acc=0;
  status("Nowy materialny dziedziniec. Przebudowuj dowolnie.");render();}
+function p3Preset(){
+ world.dispose();
+ world=new TransportYard({populated:false,support:$("support").value});
+ const A=world.spawn("small",V(9.3,12));
+ const B=world.spawn("small",V(11.5,12));
+ world.load(10.4,12,.48,.42,45);
+ A.maxSpeedOverride=.85;B.maxSpeedOverride=.85;
+ world.setSelected(A.id);secondActorId=B.id;
+ camera={x:10.4,y:12,zoom:2};keys.clear();
+ paused=false;$("pause").textContent="Pauza";acc=0;
+ status("P3: WASD lewe ciało, IJKL prawe, G/H chwyt tylko po dotknięciu.");
+ render();
+}
+$("p3-preset").onclick=p3Preset;
+$("p3-right-grip").onclick=()=>secondActorId===null?
+ status("Najpierw uruchom scenę dwóch ciał."):toggleGrip(secondActorId);
 $("pause").onclick=pause;
 $("tick").onclick=()=>{if(!paused)pause();world.step();render();};
 $("reset").onclick=reset;
@@ -114,8 +130,8 @@ $("stance").onclick=()=>{const a=world.chosen;
 $("arm-left").onclick=()=>{const a=world.chosen;if(a)world.setPanelAngle(a.id,a.target-.30);render();};
 $("arm-right").onclick=()=>{const a=world.chosen;if(a)world.setPanelAngle(a.id,a.target+.30);render();};
 $("arm-neutral").onclick=()=>{const a=world.chosen;if(a)world.setPanelAngle(a.id,0);render();};
-function toggleGrip(){
- const a=world.chosen;
+function toggleGrip(id=null){
+ const a=id===null?world.chosen:world.actors.find(a=>a.id===id);
  if(!a||typeof world.grip!=="function"){status("Wybierz fizycznego aktora.");return;}
  if(world.grips.some(x=>x.actor.id===a.id)){
   world.release(a.id);status("Uchwyt puszczony; ładunek zachowuje pęd i kolizję.");render();return;
@@ -127,12 +143,12 @@ function toggleGrip(){
  status(out.ok?"Chwyt po realnym kontakcie, siła ograniczona. G puszcza.":"Odmowa: "+out.reason);
  render();
 }
-$("grip").onclick=toggleGrip;
+$("grip").onclick=()=>toggleGrip();
 $("grip-force").oninput=()=>{
  $("grip-force-text").textContent=$("grip-force").value+" N·s/krok";
 };
 $("strength").oninput=()=>{$("strength-text").textContent=$("strength").value+" N·s";};
-for(const b of document.querySelectorAll(".toolbar button"))b.onclick=()=>setMode(b.dataset.mode);
+for(const b of document.querySelectorAll(".toolbar button[data-mode]"))b.onclick=()=>setMode(b.dataset.mode);
 canvas.addEventListener("contextmenu",e=>e.preventDefault());
 canvas.addEventListener("wheel",e=>{e.preventDefault();
  camera.zoom=Math.max(.32,Math.min(5,camera.zoom*Math.exp(-e.deltaY*.0012)));
@@ -187,6 +203,7 @@ window.addEventListener("keydown",e=>{
  if(e.code==="KeyQ"&&!e.repeat)$("arm-left").click();
  if(e.code==="KeyE"&&!e.repeat)$("arm-right").click();
  if(e.code==="KeyG"&&!e.repeat)$("grip").click();
+ if(e.code==="KeyH"&&!e.repeat)$("p3-right-grip").click();
  if(e.code==="Escape")setMode("select");
  keys.add(e.code);
 });
@@ -194,6 +211,8 @@ window.addEventListener("keyup",e=>keys.delete(e.code));
 window.addEventListener("blur",()=>keys.clear());
 function controls(){return V(+(keys.has("KeyD")||keys.has("ArrowRight"))-+(keys.has("KeyA")||keys.has("ArrowLeft")),
  +(keys.has("KeyS")||keys.has("ArrowDown"))-+(keys.has("KeyW")||keys.has("ArrowUp")));}
+function secondControls(){return V(+keys.has("KeyL")-+keys.has("KeyJ"),+keys.has("KeyK")-+keys.has("KeyI"));}
+
 const params=new URLSearchParams(location.search);
 if(params.has("p0realinput"))window.__p0ReadOnlyProbe=()=>world.traces();
 
@@ -351,7 +370,11 @@ function frame(t){
  const delta=Math.min(.05,Math.max(0,(t-last)/1000));last=t;
  if(!paused){
   acc+=delta;let n=0;
-  while(acc>=DT&&n<4){world.step(controls());acc-=DT;n++;}
+  while(acc>=DT&&n<4){
+   const other=world.actors.find(a=>a.id===secondActorId);
+   if(other&&other!==world.chosen)world.command(other,secondControls());
+   world.step(controls());acc-=DT;n++;
+  }
   if(n===4)acc=Math.min(acc,DT*2);
  }
  if(t-lastDraw>55){render();lastDraw=t;}
