@@ -216,11 +216,11 @@ function select(e){
 }
 function pause(){paused=!paused;acc=0;$("pause").textContent=paused?"Wznów":"Pauza";
   status(paused?"Pauza. Ctrl+przeciągnij fizyczne ciała.":"Świat działa.");render();}
-function reset(){document.body.classList.remove("p7-focus");world.dispose();firstActorId=null;secondActorId=null;world=new ReflexYard({support:$("support").value});
+function reset(){document.body.classList.remove("p7-focus","p8-focus");world.dispose();firstActorId=null;secondActorId=null;world=new ReflexYard({support:$("support").value});
  paused=false;$("pause").textContent="Pauza";acc=0;
  status("Nowy materialny dziedziniec. Przebudowuj dowolnie.");render();}
 function p8Preset(){
- document.body.classList.add("p7-focus");
+ document.body.classList.add("p7-focus","p8-focus");
  world.dispose();
  world=makeTactileYard({support:$("support").value,
   width:Number($("p7-width").value),density:Number($("p7-density").value),
@@ -244,6 +244,7 @@ $("p8-policy").onchange=()=>{
  }
 };
 function p7Preset(){
+ document.body.classList.remove("p8-focus");
  $("p8-policy").value="drive";
  document.body.classList.add("p7-focus");
  world.dispose();
@@ -288,7 +289,7 @@ $("p7-actor-policy").onchange=()=>{
  }
 };
 function p6Preset(){
- document.body.classList.remove("p7-focus");
+ document.body.classList.remove("p7-focus","p8-focus");
  world.dispose();world=createP6Commons({support:$("support").value});
  $("p5-policy").value="touch";
  $("p5-motor").textContent="Wyłącz lokalny napęd";
@@ -309,7 +310,7 @@ function p6Open(){
 $("p6-preset").onclick=p6Preset;
 $("p6-open").onclick=p6Open;
 function p5Preset(){
- document.body.classList.remove("p7-focus");
+ document.body.classList.remove("p7-focus","p8-focus");
  world.dispose();
  $("p5-motor").textContent="Wyłącz lokalny napęd";
  world=createCommons({support:$("support").value,
@@ -346,7 +347,7 @@ $("p5-apply-role").onclick=()=>{
  status("Fizyczne ciało #"+a.id+" ma lokalną regułę "+$("p5-role").value+". Brak globalnego celu.");render();
 };
 function p3Preset(){
- document.body.classList.remove("p7-focus");
+ document.body.classList.remove("p7-focus","p8-focus");
  world.dispose();
  world=new ReflexYard({populated:false,support:$("support").value});
  const A=world.spawn("small",V(9.3,12));
@@ -361,7 +362,7 @@ function p3Preset(){
 }
 let p4MaterialId=null;
 function p4Preset(){
- document.body.classList.remove("p7-focus");
+ document.body.classList.remove("p7-focus","p8-focus");
  world.dispose();
  world=new ReflexYard({populated:false,support:$("support").value});
  const actor=world.spawn("small",V(8.95,15));
@@ -631,7 +632,8 @@ if(params.has("p8frame")){
    guardPolicy:"brace",support:"finite",density:6,ticks:460,
    captureWorld:w=>{world=w;}});
   camera={x:14.2,y:12,zoom:1.85};
-  document.body.classList.add("p7-focus");
+  document.body.classList.add("p7-focus","p8-focus");
+  $("p8-policy").value=tactile;
   document.body.dataset.p8Frame=JSON.stringify({tactile,finite:result.finite,
    pass:result.passes,guard:result.guard,slip:result.slipTriggers,
    worldEvidence:result.contacts});

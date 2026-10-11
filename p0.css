@@ -21,3 +21,7 @@ body.p7-focus aside #p7-limit{display:block!important}
 
 /* P8 shares the physical P7 continuous stage and its clutter-free lens. */
 body.p7-focus .toolbar button#p8-preset{display:inline-block}
+
+body.p8-focus #p7-actor-policy{display:none}
+body.p7-focus:not(.p8-focus) aside .line:has(#p8-policy){display:none}
+body.p7-focus:not(.p8-focus) .toolbar button#p8-preset{display:inline-block}
