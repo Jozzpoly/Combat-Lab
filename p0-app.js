@@ -51,6 +51,14 @@ function render(){
     ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}
   }
   for(const p of entity.shapes)physicalShape(entity,p,chosen);
+  if(world.actors.includes(entity)&&secondActorId!==null&&
+     (entity.id===secondActorId||chosen)){
+   const label=entity.id===secondActorId?"B":"A";
+   const at=entity.body.translation();
+   ctx.fillStyle="#f3e8bd";ctx.textAlign="center";
+   ctx.font="bold .36px ui-monospace,monospace";
+   ctx.fillText(label,at.x,at.y-.67);
+  }
   if(chosen){
    const q=entity.body.translation(),r=entity.kind==="bulky"?1.49:1.13;
    ctx.strokeStyle=entity.stance==="brace"?"#ffe3a4":"#a9e3db";
@@ -113,7 +121,7 @@ function p3Preset(){
  world.load(10.4,12,.48,.42,45);
  A.maxSpeedOverride=.85;B.maxSpeedOverride=.85;
  world.setSelected(A.id);secondActorId=B.id;
- camera={x:10.4,y:12,zoom:2};keys.clear();
+ camera={x:10.4,y:12,zoom:2.75};keys.clear();
  paused=false;$("pause").textContent="Pauza";acc=0;
  status("P3: WASD lewe ciało, IJKL prawe, G/H chwyt tylko po dotknięciu.");
  render();
@@ -303,7 +311,7 @@ if(params.has("p3native")){
   }
   if(sourceTick<0)throw Error("P3 second body not in source real contact");
   world.setSelected(A.id);secondActorId=B.id;
-  camera={x:10.4,y:12,zoom:2};
+  camera={x:10.4,y:12,zoom:2.75};
   $("grip-force").value="6";$("grip-force-text").textContent="6 N·s/krok";
   window.__p3ReadOnlyProbe=()=>world.gripTrace();
   document.body.dataset.p3NativeReady=String(sourceTick);
