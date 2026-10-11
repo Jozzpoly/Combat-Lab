@@ -58,6 +58,9 @@ export function p12Case({backing="fixed",support="none",
   const systemParts=backingBody&&!backingBody.body.isFixed()?
    [...bodyParts,backingBody]:bodyParts;
   const systemStart=com(systemParts);
+  const allDynamic=w.entities.filter(e=>!e.body.isFixed());
+  const allDynamicInitial=com(allDynamic);
+  const foreign=new Map();
   if(drive==="sweep"||drive==="cycle"){
    if(!panel||!w.setPanelAngle(root.id,1.2))throw Error("P12 no physical hinged limb");
   }
@@ -70,6 +73,20 @@ export function p12Case({backing="fixed",support="none",
    if(drive==="cycle"&&step===180)w.setPanelAngle(root.id,1.2);
    const move=drive==="cheap-root"?V(0,1):V();
    w.step(move);
+   // Prove or falsify closed-system interpretation. Dynamic neighbors, walls
+   // and anchored gate are real material and can inject additional impulses.
+   // Count every root/panel/backer contact with *other* source entities,
+   // excluding own connected panel and explicitly paired backing.
+   const subjects=backingBody?[...bodyParts,backingBody]:bodyParts;
+   for(const subject of subjects)for(const other of w.entities){
+    if(subject===other||subjects.includes(other))continue;
+    const sample=touch(subject,other,w);
+    if(sample.n){
+     const key=subject.kind+":"+subject.id+" -> "+other.kind+":"+other.id;
+     const prev=foreign.get(key)||{ticks:0,impulse:0,fixed:other.body.isFixed()};
+     prev.ticks++;prev.impulse+=sample.j;foreign.set(key,prev);
+    }
+   }
    if(backingBody){
     for(const part of bodyParts){
      const hit=touch(part,backingBody,w);
@@ -90,13 +107,17 @@ export function p12Case({backing="fixed",support="none",
      com:current,system:com(systemParts),backer:backingBody?pos(backingBody):null,
      angle:root.body.rotation()});
   }
-  const now=com(bodyParts),sys=com(systemParts),tr=w.trace();
+  const now=com(bodyParts),sys=com(systemParts),allFinal=com(allDynamic),tr=w.trace();
   if(![...bodyParts,...(backingBody?[backingBody]:[])].every(vals)||
      !tr.finite)throw Error("P12 numerical physical invalid");
   return {backing,support,kind,drive,ticks,initial,
    comEnd:now,comDX:rd(now.x-initial.com.x),comDY:rd(now.y-initial.com.y),
    comDelta:rd(dist(now,initial.com)),
    systemCOMDelta:rd(dist(sys,systemStart)),
+   totalDynamicCOMDelta:rd(dist(allFinal,allDynamicInitial)),
+   foreignContacts:[...foreign].map(([pair,x])=>({
+    pair,ticks:x.ticks,impulse:rd(x.impulse),fixed:x.fixed
+   })).sort((a,b)=>b.ticks-a.ticks),
    rootDelta:rd(dist(pos(root),initial.root)),
    rootEnd:pos(root),rootYaw:rd(root.body.rotation()),
    backerDelta:backingBody?rd(dist(pos(backingBody),initial.backer)):null,
@@ -132,6 +153,7 @@ export function p12Audit(){
   summary:cases.map(x=>({support:x.support,backing:x.backing,kind:x.kind,
    drive:x.drive,bodyCOM:x.comDelta,bodyCOMY:x.comDY,systemCOM:x.systemCOMDelta,
    hit:x.contactSteps,impulse:x.sourceContactImpulse,hinge:x.hingeEffort,
-   root:x.rootEffort,rootTravel:x.rootDelta,backerTravel:x.backerDelta})),
+   root:x.rootEffort,rootTravel:x.rootDelta,backerTravel:x.backerDelta,
+   allDynamicCOM:x.totalDynamicCOMDelta,foreignContacts:x.foreignContacts})),
   limits:"A body propelling off a physical barrier is not walking. Virtual finite terrain itself transfers external momentum; only no-support and isolated-body vs combined movable-body COM can identify source. Null and cheap direct-root force controls cannot prove gameplay feel."};
 }
