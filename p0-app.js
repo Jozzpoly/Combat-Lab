@@ -189,7 +189,8 @@ function p7Preset(){
  world=makeDoorCrowd({support:$("support").value,
   width:Number($("p7-width").value),density:Number($("p7-density").value),
   guardKind:$("p7-kind").value,guardMass:90,
-  guardPolicy:$("p7-stance").value,moverPolicy:$("p7-actor-policy").value});
+  guardPolicy:$("p7-stance").value,moverPolicy:$("p7-actor-policy").value,
+  formation:$("p7-formation").value});
  firstActorId=null;secondActorId=null;p4MaterialId=null;
  $("p5-motor").textContent="Wyłącz lokalny napęd";
  camera={x:14.2,y:12,zoom:1.85};keys.clear();

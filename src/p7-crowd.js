@@ -19,14 +19,15 @@ const crowdCfg=[
 export class DoorCrowdYard extends CommonsYard{
  constructor({support="finite",guardPolicy="brace",
  moverPolicy="drive",width=3.4,density=6,
- guardKind="bulky",guardMass=90}={}){
+ guardKind="bulky",guardMass=90,formation="center"}={}){
   super({support,policy:"constant",seed:1});
   if(!guardPolicies.has(guardPolicy)||!moverPolicies.has(moverPolicy))
    throw Error("P7 unsupported bounded pressure comparator");
   if(![2.85,3.45,4.65].includes(width)||![3,6,8].includes(density))
    throw Error("P7 pressure geometry or density");
   if(!["small","bulky"].includes(guardKind))throw Error("P7 guard kind");
-  this.pressure={guardPolicy,moverPolicy,width,density,guardKind,guardMass,
+  if(!["center","flank"].includes(formation))throw Error("P7 formation");
+  this.pressure={guardPolicy,moverPolicy,width,density,guardKind,guardMass,formation,
    steps:0,guardPressureTicks:0,guardContacts:0,guardImpulse:0,
    totalMoverContacts:0,deflections:0,guardBraceTicks:0,
    moveImpulse:0,guardPokes:0,sourceEdits:0,largestCrowdForce:0};
@@ -41,7 +42,12 @@ export class DoorCrowdYard extends CommonsYard{
   this.guard=g;
   this.pushers=[];
   for(let i=0;i<density;i++){
-   const [sx,sy]=crowdCfg[i],a=this.spawn("small",V(sx,sy));
+   const [sx,sy]=crowdCfg[i];
+   // Lateral stress: SAME source motor and no additional AI. One actor
+   // starts at y13.68, with enough actual collider clearance only when
+   // the authored aperture is genuinely wide. Center baseline retained.
+   const lane=formation==="flank"&&i===1?13.68:sy;
+   const a=this.spawn("small",V(sx,lane));
    a.motor=470;a.maxSpeedOverride=1.85;
    this.pushers.push(a);
   }

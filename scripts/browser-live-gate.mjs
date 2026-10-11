@@ -408,16 +408,23 @@ for(const policy of ["stubborn","recover","stabilized"]){
 
 const p7=request({p7probe:1},["--dump-dom"]);
 validPage(p7,"P7 actual crowd/contact physical WASM source");
-if(attr(p7,"p7-probe")!=="PASS"||attr(p7,"p7-cases")!=="76")
- throw Error("P7 controlled pressure source failure: "+(attr(p7,"p7-error")||"not76"));
+if(attr(p7,"p7-probe")!=="PASS"||attr(p7,"p7-cases")!=="98")
+ throw Error("P7 controlled pressure source failure: "+(attr(p7,"p7-error")||"not98"));
 const p7data=JSON.parse(decodeURIComponent(attr(p7,"p7-report")));
-if(p7data.worlds!==76)throw Error("P7 missing source worlds");
-writeFileSync(resolve(folder,"p7-76-real-crowd-pressure.json"),
+if(p7data.worlds!==98)throw Error("P7 missing source worlds");
+writeFileSync(resolve(folder,"p7-98-real-crowd-pressure.json"),
  JSON.stringify(p7data,null,2));
 console.log("P7 fully dynamic pressure shape A/B with 90kg matched defender:");
 console.log(JSON.stringify(p7data.geometry));
 console.log("P7 same actual preintervention pressure world; real operator action A/B:");
 console.log(JSON.stringify(p7data.comparisons));
+console.log("P7 controlled flank access with equal driver and guard source:");
+console.log(JSON.stringify(p7data.lateral.map(x=>({width:x.width,
+ support:x.support,guardKind:x.guardKind,guardPolicy:x.guardPolicy,
+ contacts:x.contacts,pass:x.passedMouth,deflected:x.deflections,
+ guardX:x.guard.x,movers:x.movers.filter(a=>a.id===x.movers[1].id)}))));
+console.log("P7 owner interference under honest widened physical gap at flank:");
+console.log(JSON.stringify(p7data.flankComparisons));
 console.log("P7 body crowd pressure selected finite support scenarios:");
 console.log(JSON.stringify(p7data.base.filter(x=>x.support==="finite"&&
  x.guardKind==="bulky"&&x.density===6&&x.width===2.85).map(x=>({

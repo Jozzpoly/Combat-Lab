@@ -13,10 +13,10 @@ function physicalFingerprint(w){
   pressure:{...w.pressure},events:{...w.events}};
 }
 export function p7Case({width=3.45,density=6,support="finite",
- guardKind="bulky",guardPolicy="brace",moverPolicy="drive",
+ guardKind="bulky",guardPolicy="brace",moverPolicy="drive",formation="center",
  intervention="none",ticks=460,captureWorld=null}={}){
  const w=makeDoorCrowd({width,density,support,guardKind,guardMass:90,
-  guardPolicy,moverPolicy});
+  guardPolicy,moverPolicy,formation});
  try{
   const start=physicalFingerprint(w),interventionTick=210;
   let pre=null,postEdit=null;
@@ -61,7 +61,7 @@ export function p7Case({width=3.45,density=6,support="finite",
    const initial=actorInitial.find(x=>x.id===a.id);
    return {...a,dx:rd(a.x-initial.p.x),dy:rd(a.y-initial.p.y)};
   });
-  const out={support,width,density,guardKind,guardPolicy,moverPolicy,
+  const out={support,width,density,guardKind,guardPolicy,moverPolicy,formation,
    intervention,ticks,start:{guardMass:rd(w.guard.body.mass()),
     guardShape: w.guard.shapes[0].shape, guardStart:start.bodies.find(e=>e.id===w.guard.id)},
    realBodyCount:end.actorCount,realLoads:end.loadCount,
@@ -138,6 +138,34 @@ export function p7Probe(){
     small:{contacts:x.contacts,passed:x.passedMouth,guardX:x.guard.x},
     bulky:{contacts:y.contacts,passed:y.passedMouth,guardX:y.guard.x}});
   }
- return {worlds:base.length+paired.length,base,paired,comparisons,geometry,
+ const lateral=[];
+ for(const width of [2.85,4.65])
+  for(const support of ["finite","none"])
+   for(const guardKind of ["small","bulky"])
+    for(const guardPolicy of ["passive","brace"])
+     lateral.push(p7Case({width,support,guardKind,guardPolicy,
+      density:6,moverPolicy:"drive",formation:"flank"}));
+ if(lateral.length!==16||lateral.some(x=>!x.finite||x.formation!=="flank"))
+  throw Error("P7 lateral material width control source missing");
+ const flankPaired=[];
+ for(const guardPolicy of ["passive","brace"])
+  for(const intervention of ["none","open","poke"])
+   flankPaired.push(p7Case({width:2.85,guardPolicy,intervention,
+    density:6,support:"finite",guardKind:"bulky",
+    moverPolicy:"drive",formation:"flank"}));
+ const flankComparisons=[];
+ for(const guardPolicy of ["passive","brace"]){
+  const rows=flankPaired.filter(x=>x.guardPolicy===guardPolicy);
+  const base=rows.find(x=>x.intervention==="none");
+  if(rows.length!==3||rows.some(x=>
+      JSON.stringify(base.preIntervention)!==JSON.stringify(x.preIntervention)))
+    throw Error("P7 physical lateral source differed BEFORE operator intervention");
+  for(const x of rows)
+   flankComparisons.push({guardPolicy,edit:x.intervention,
+    endGuard:x.guard,passed:x.passedMouth,braced:x.braceTicks,
+    contact:x.contactImpulse,load0:x.loads[0]});
+ }
+ return {worlds:base.length+paired.length+lateral.length+flankPaired.length,
+  base,paired,comparisons,geometry,lateral,flankPaired,flankComparisons,
   limitations:"Bodies are 2D rigid circles, no anatomical gait, contact-informed guard stance changes finite virtual ground coupling, not intrinsic player intelligence. Entry directions/source positions authored. Crossing statistics are offline observation, not goals or passed-through-wall permission."};
 }
