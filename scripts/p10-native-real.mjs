@@ -91,6 +91,21 @@ try{
     focused.zoom<1.91)
   throw Error("P10b real camera focus did not select physical body");
  await image("p10b-native-focused-body.png");
+
+ // Exact native wheel event, ground-truth world point beneath cursor;
+ // screen-point anchored zoom must preserve that position.
+ const screenPoint=await js('(function(){var r=document.getElementById("world").getBoundingClientRect();return {x:r.left+r.width*.64,y:r.top+r.height*.54};})()');
+ const inverse='(function(){var c=document.getElementById("world"),r=c.getBoundingClientRect(),cam=window.__p10ViewReadOnly(),scale=Math.min(c.width/40,c.height/24)*cam.zoom;return {x:cam.x+((('+screenPoint.x+'-r.left)*c.width/r.width)-c.width/2)/scale,y:cam.y+((('+screenPoint.y+'-r.top)*c.height/r.height)-c.height/2)/scale,zoom:cam.zoom};})()';
+ const beforeWheel=await js(inverse);
+ await send("Input.dispatchMouseEvent",{type:"mouseWheel",
+  x:screenPoint.x,y:screenPoint.y,deltaX:0,deltaY:-200});
+ await sleep(110);
+ const afterWheel=await js(inverse);
+ const pointError=Math.hypot(afterWheel.x-beforeWheel.x,afterWheel.y-beforeWheel.y);
+ if(!(afterWheel.zoom>beforeWheel.zoom)||pointError>.003)
+  throw Error("P10b true Chromium wheel zoom broke world cursor anchor "+
+   JSON.stringify({beforeWheel,afterWheel,pointError}));
+
  await clickButton("view-all");
  const overview=await js("window.__p10ViewReadOnly()");
  if(overview.zoom!==1.1||overview.x!==20||overview.y!==12)
@@ -187,7 +202,7 @@ try{
    newAperture:afterDrag.aperture.width,sameTick:true,otherActorsUnchanged:true},
   manualMovement:{actorId:small.id,ticks:after.tick-before.tick,
    dx:q.x-p.x,sourceImpulseDelta:after.rootEffort-before.rootEffort},
-  camera:{focusedBody:tracked.id,focusedZoom:focused.zoom,overviewZoom:overview.zoom,resetZoom:resetView.zoom},
+  camera:{focusedBody:tracked.id,focusedZoom:focused.zoom,overviewZoom:overview.zoom,resetZoom:resetView.zoom,wheelZoom:afterWheel.zoom,wheelAnchorError:pointError},
   grip:{attemptedWithRealG:true,actuallyLinked:linked,reciprocalPull:pullSource,
    UI:await js('document.getElementById("status").textContent')},
   limits:"Native mechanical input proof, not Owner play/feel or realistic gait."};
