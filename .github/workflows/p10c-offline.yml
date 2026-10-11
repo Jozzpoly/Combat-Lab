@@ -1,0 +1,71 @@
+name: P10c Portable Windows Owner First Look
+
+on:
+  push:
+    branches:
+      - experiment/p10c-offline-owner-firstlook
+  workflow_dispatch:
+
+jobs:
+  native-chromium-source:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install source dependencies (repo has no lockfile)
+        run: npm install --no-audit --no-fund
+      - name: Validate native source and safe localhost host
+        run: node --check scripts/p10c-server.mjs && node --check scripts/p10-native-real.mjs
+      - name: Build unmodified P10b page with ordinary Vite chunks
+        run: npm run build && test -s dist/p10.html
+      - name: Actual Chromium pointer keyboard wheel edit and real cargo via portable localhost server
+        shell: bash
+        run: |
+          P10C_ROOT="$(pwd)/dist" P10C_PORT=4173 P10C_NO_OPEN=1 node scripts/p10c-server.mjs >/tmp/p10c-server.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          for i in {1..50}; do
+            if curl -fsS http://127.0.0.1:4173/p10.html >/dev/null; then break; fi
+            sleep .2
+          done
+          CHROME_BIN="$(command -v google-chrome || command -v chromium)" node scripts/p10-native-real.mjs http://127.0.0.1:4173/
+      - name: Archive exact-source tested static site
+        uses: actions/upload-artifact@v4
+        with:
+          name: p10c-tested-site
+          path: dist/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Archive original Chrome real-input evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p10c-native-chromium-evidence
+          path: p10-evidence/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  package-windows:
+    needs: native-chromium-source
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@v4
+        with:
+          name: p10c-tested-site
+          path: p10c-tested-site
+      - name: Verify signed official Node.exe, include license, run packaged Windows localhost smoke, create ZIP
+        shell: pwsh
+        run: ./scripts/p10c-package-windows.ps1
+      - name: Archive tested double-clickable Windows bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: p10c-portable-windows
+          path: Combat-Lab-P10b-Portable-Windows.zip
+          if-no-files-found: error
+          retention-days: 14
