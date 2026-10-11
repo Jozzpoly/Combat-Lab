@@ -212,6 +212,20 @@ if(params.has("p0chain")){
  }catch(e){document.body.dataset.p0Chain="FAIL";
   document.body.dataset.p0ChainError=String(e.stack||e);console.error(e);}
 }
+if(params.has("p2probe")){
+ paused=true;
+ try{
+  const {p2Probe}=await import("./src/p2-probe.js");
+  const v=p2Probe();
+  document.body.dataset.p2Probe="PASS";
+  document.body.dataset.p2Cases=String(v.cases);
+  document.body.dataset.p2Result=encodeURIComponent(JSON.stringify(v));
+  status("P2: solver-verified contact-gated finite cargo grip vs null");
+ }catch(e){
+  document.body.dataset.p2Probe="FAIL";
+  document.body.dataset.p2Error=String(e.stack||e);console.error(e);
+ }
+}
 if(params.has("p0probe")){
  paused=true;
  try{const {p0Probe}=await import("./src/p0-probe.js"),result=p0Probe();
