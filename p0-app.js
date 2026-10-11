@@ -376,6 +376,18 @@ if(params.has("p4native")){
  // Read-only physical introspection for genuine Chromium native mouse input.
  window.__p4ReadOnlyProbe=()=>world.reflexTrace();
 }
+if(params.has("p4axial")){
+ paused=true;
+ try{
+  const {p4AxialDonorRegression}=await import("./src/p4-axial.js");
+  const result=await p4AxialDonorRegression();
+  document.body.dataset.p4Axial="PASS";
+  document.body.dataset.p4AxialCount=String(result.actuallySimulatedPhysicalWorlds);
+  document.body.dataset.p4AxialReport=encodeURIComponent(JSON.stringify(result));
+  status("P4: audited conservative grip donor under identical P2/P3 real solver scenarios.");
+ }catch(e){document.body.dataset.p4Axial="FAIL";
+  document.body.dataset.p4AxialError=String(e.stack||e);console.error(e);}
+}
 if(params.has("p4momentum")){
  paused=true;
  try{
