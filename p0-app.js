@@ -238,6 +238,25 @@ if(params.has("p0chain")){
  }catch(e){document.body.dataset.p0Chain="FAIL";
   document.body.dataset.p0ChainError=String(e.stack||e);console.error(e);}
 }
+if(params.has("p2input")){
+ paused=true;
+ try{
+  world.dispose();
+  world=new TransportYard({populated:false,support:"finite"});
+  const actor=world.spawn("bulky",V(8,16)),cargo=world.load(10.4,16,.47,.43,45);
+  world.setSelected(actor.id);
+  let contactTick=-1;
+  for(let i=0;i<260;i++){
+   world.step(V(1,0));
+   if(world.actualContact(actor,cargo)){contactTick=i+1;break;}
+  }
+  if(contactTick<0)throw Error("No genuine contact for real input test");
+  camera.x=10;camera.y=15;camera.zoom=1.4;
+  window.__p2ReadOnlyProbe=()=>world.gripTrace();
+  document.body.dataset.p2ContactReady=String(contactTick);
+  status("G to contact-grip actual physical load; no connection yet.");
+ }catch(e){document.body.dataset.p2ContactError=String(e.stack||e);console.error(e);}
+}
 if(params.has("p2probe")){
  paused=true;
  try{
