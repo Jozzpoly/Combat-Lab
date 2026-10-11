@@ -477,3 +477,9 @@ for(const policy of ["drive","yield","slip"]){
  request({p8frame:policy},["--screenshot="+resolve(folder,
   "p8-"+policy+"-real-crowd-chromium.png")]);
 }
+
+
+console.log("P8 genuine native Chromium pointer/key control under actual 7-body crowd...");
+execFileSync(process.execPath,["scripts/p8-native-real.mjs",base],{
+ timeout:120000,stdio:"inherit"
+});
