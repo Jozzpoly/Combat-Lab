@@ -352,4 +352,50 @@ if(params.has("p10frame")){
   status("P10: rzeczywisty kadr fizyki Rapier; to nie animowany mockup.");
  }catch(e){document.body.dataset.p10FrameError=String(e.stack||e);console.error(e);}
 }
+
+if(params.has("p12audit")){
+ paused=true;
+ try{
+  const {p12Audit}=await import("./src/p12-pushoff.js");
+  const data=p12Audit();
+  document.body.dataset.p12Audit="PASS";
+  document.body.dataset.p12Worlds=String(data.worlds);
+  document.body.dataset.p12Report=encodeURIComponent(JSON.stringify(data));
+ }catch(e){
+  document.body.dataset.p12Audit="FAIL";
+  document.body.dataset.p12Error=String(e.stack||e);
+  console.error(e);
+ }
+}
+if(params.has("p12frame")){
+ paused=true;
+ try{
+  const options={
+   noContact:{backing:"absent",support:"none",drive:"sweep"},
+   solidContact:{backing:"fixed",support:"none",drive:"sweep"},
+   movingContact:{backing:"movable",support:"none",drive:"sweep"},
+   passive:{backing:"fixed",support:"none",drive:"off"}
+  };
+  const cfg=options[params.get("p12frame")];
+  if(!cfg)throw Error("P12 invalid frame");
+  const {makeP12World}=await import("./src/p12-pushoff.js");
+  world.dispose();world=makeP12World(cfg);
+  if(cfg.drive==="sweep")world.setPanelAngle(world.tool.id,1.2);
+  for(let i=0;i<300;i++)world.step(V());
+  camera={x:13.3,y:12.9,zoom:2.65};
+  const t=world.trace();
+  document.body.dataset.p12Frame=encodeURIComponent(JSON.stringify({
+   variant:params.get("p12frame"),tick:t.tick,actors:t.actors.length,
+   cargo:t.cargo.length,finite:t.finite,
+   sourceImpulse:t.rootEffort,hingeImpulse:t.panelImpulse,
+   root:t.actors.find(x=>x.id===world.tool.id),
+   panel:world.tool.panel?.body.translation(),
+   backer:world.backer?.body.translation()
+  }));
+  status("P12 source: real physically actuated member, not simulated feet.");
+ }catch(e){
+  document.body.dataset.p12FrameError=String(e.stack||e);console.error(e);
+ }
+}
+
 render();requestAnimationFrame(frame);
