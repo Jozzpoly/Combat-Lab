@@ -202,3 +202,9 @@ for(const mode of ["dual","off","release"]){
  writeFileSync(resolve(folder,"p3-frame-"+mode+".json"),JSON.stringify(trace,null,2));
  request(p,["--screenshot="+resolve(folder,"p3-frame-"+mode+".png")]);
 }
+
+
+console.log("P3 native independent two-operator contact force confrontation...");
+execFileSync(process.execPath,["scripts/p3-real-dual-input.mjs",base],{
+  timeout:120000,stdio:"inherit"
+});
