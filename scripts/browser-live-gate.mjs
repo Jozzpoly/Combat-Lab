@@ -111,3 +111,24 @@ for(const axis of ["spatial","opener"]){
    closed:x.closed.runnerCrossed
  }))}));
 }
+
+
+for(const changed of [false,true]){
+ const mode=changed?"opened":"closed";
+ const url={p0pairframe:mode};
+ const dom=request(url,["--dump-dom"]);
+ validPage(dom,"P0 true paired world "+mode);
+ const raw=attr(dom,"p0-pairframe");
+ if(!raw||attr(dom,"p0-pairframe-error"))
+  throw Error("P0 pair frame did not reproduce exact material world "+mode);
+ const state=JSON.parse(raw.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+ if(state.changed!==changed||!state.finite||state.speed!==5.5)
+  throw Error("P0 paired source trace invalid "+mode);
+ writeFileSync(resolve(folder,"p0-paired-"+mode+".json"),JSON.stringify(state,null,2));
+ request(url,["--screenshot="+resolve(folder,"p0-paired-"+mode+".png")]);
+ console.log("P0 paired honest source frame "+mode+": "+JSON.stringify({
+  gate:state.gateAfterOpener,secondActorX:state.runnerAfter.x,
+  secondBodyCrossed:state.runnerCrossed,
+  physicalContact:state.runnerGateImpulse
+ }));
+}
