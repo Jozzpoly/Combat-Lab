@@ -353,3 +353,26 @@ console.log("P6 real native pointer edits narrow passage while physical 4-body w
 execFileSync(process.execPath,["scripts/p6-native-real.mjs",base],{
  timeout:120000,stdio:"inherit"
 });
+
+const spin=request({p6orientation:1},["--dump-dom"]);
+validPage(spin,"P6 real rigid shape reorientation mechanical controls");
+if(attr(spin,"p6-orientation")!=="PASS"||attr(spin,"p6-orientation-cases")!=="24")
+ throw Error("P6 rotation source failed: "+(attr(spin,"p6-orientation-error")||"not 24"));
+const spinData=JSON.parse(decodeURIComponent(attr(spin,"p6-orientation-report")));
+if(spinData.cases!==24)throw Error("P6 missing 24 source rotation worlds");
+writeFileSync(resolve(folder,"p6-24-real-orientation-same-shape.json"),
+ JSON.stringify(spinData,null,2));
+console.log("P6 physically oriented rigid envelope vs torque/no torque/cheap power:");
+console.log(JSON.stringify(spinData.summary));
+for(const mode of ["passive","active"]){
+ const q={p6pose:mode},dom=request(q,["--dump-dom"]);
+ validPage(dom,"P6 actual elongated body "+mode);
+ const src=attr(dom,"p6-pose");
+ if(!src||attr(dom,"p6-pose-error"))
+  throw Error("P6 no raw pose "+mode+": "+attr(dom,"p6-pose-error"));
+ const f=JSON.parse(src.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+ if(!f.finite||f.mode!==mode)throw Error("P6 visual source wrong physical body");
+ writeFileSync(resolve(folder,"p6-"+mode+"-actual-shape-source.json"),JSON.stringify(f,null,2));
+ request(q,["--screenshot="+resolve(folder,
+  "p6-"+mode+"-real-elongated-body-chromium.png")]);
+}

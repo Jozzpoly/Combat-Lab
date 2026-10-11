@@ -83,6 +83,20 @@ function render(){
    ctx.strokeStyle="#8ed3bf";ctx.lineWidth=.035;ctx.stroke();
   }
  }
+ if(world.p6?.kind==="commons"){
+  const c=world.p6.passage;
+  const limit=(a,up)=>a.body.translation().y+
+   (up?-a.shapes[0].shape.hy:a.shapes[0].shape.hy);
+  const hi=limit(c.upper,false),lo=limit(c.mid,true);
+  const hi2=limit(c.mid,false),lo2=limit(c.lower,true);
+  for(const [from,to] of [[hi,lo],[hi2,lo2]]){
+   if(to<=from)continue;
+   ctx.fillStyle="#ebdcae";ctx.textAlign="left";
+   ctx.font="bold .29px ui-monospace,monospace";
+   ctx.fillText("szczelina "+(to-from).toFixed(2)+" m",
+    c.x+.58,(from+to)/2);
+  }
+ }
  for(const g of (world.grips||[])){
   const pa=g.holder.body.translation(),pb=g.load.body.translation();
   ctx.strokeStyle="#eac77f";ctx.lineWidth=.095;ctx.setLineDash([.2,.12]);
@@ -455,6 +469,33 @@ if(params.has("p3native")){
   document.body.dataset.p3NativeReady=String(sourceTick);
   status("P3: native G/H separate grips after real two-sided solver contact.");
  }catch(e){document.body.dataset.p3NativeError=String(e.stack||e);console.error(e);}
+}
+if(params.has("p6orientation")){
+ paused=true;
+ try{
+  const {p6OrientationProbe}=await import("./src/p6-orientation.js");
+  const result=p6OrientationProbe();
+  document.body.dataset.p6Orientation="PASS";
+  document.body.dataset.p6OrientationCases=String(result.cases);
+  document.body.dataset.p6OrientationReport=encodeURIComponent(JSON.stringify(result));
+  status("P6: fizyczny obrót pod momentem, kontra silniejsze pchanie bez obrotu.");
+ }catch(e){document.body.dataset.p6Orientation="FAIL";
+  document.body.dataset.p6OrientationError=String(e.stack||e);console.error(e);}
+}
+if(params.has("p6pose")){
+ paused=true;
+ try{
+  const {p6RotateCase}=await import("./src/p6-orientation.js");
+  const mode=params.get("p6pose");
+  if(!["passive","active","aligned","strong-push"].includes(mode))throw Error("mode");
+  world.dispose();
+  const result=p6RotateCase({mode,width:1.2,support:"finite",
+   captureWorld:w=>{world=w;}});
+  camera={x:14.5,y:12,zoom:2.0};
+  document.body.dataset.p6Pose=JSON.stringify(result);
+  status("P6: prawdziwa fizyczna podłużna bryła "+mode+
+   ", bez ustawiania pozycji ani kąta.");
+ }catch(e){document.body.dataset.p6PoseError=String(e.stack||e);console.error(e);}
 }
 if(params.has("p6native")){
  window.__p6ReadOnlyProbe=()=>({
