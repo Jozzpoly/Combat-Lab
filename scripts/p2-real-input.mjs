@@ -117,7 +117,14 @@ try{
  await clickElement("pause");
  await wait(90);
  await key("KeyA",true);
- await wait(3200);
+ await wait(1200);
+ const mid=await evalJS("window.__p2ReadOnlyProbe()");
+ if(mid.grips.length!==1||mid.gripEvidence.pairedImpulseSum<=0)
+  throw Error("P2 active physical grip not actually transferring impulse");
+ const active=(await send("Page.captureScreenshot",
+  {format:"png",captureBeyondViewport:false})).data;
+ writeFileSync(resolve(folder,"p2-real-active-tether.png"),Buffer.from(active,"base64"));
+ await wait(2000);
  await key("KeyA",false);
  await wait(110);
  const after=await evalJS("window.__p2ReadOnlyProbe()");
