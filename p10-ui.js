@@ -398,4 +398,20 @@ if(params.has("p12frame")){
  }
 }
 
+
+if(params.has("p12baudit")){
+ paused=true;
+ try{
+  const {p12bAudit}=await import("./src/p12b-momentum.js");
+  const result=p12bAudit();
+  document.body.dataset.p12bAudit="PASS";
+  document.body.dataset.p12bWorlds=String(result.worlds);
+  document.body.dataset.p12bReport=encodeURIComponent(JSON.stringify(result));
+ }catch(e){
+  document.body.dataset.p12bAudit="FAIL";
+  document.body.dataset.p12bError=String(e.stack||e);
+  console.error(e);
+ }
+}
+
 render();requestAnimationFrame(frame);

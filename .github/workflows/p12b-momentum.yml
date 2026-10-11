@@ -1,0 +1,41 @@
+name: P12b momentum integrity falsifier
+
+on:
+  push:
+    branches:
+      - experiment/p12b-momentum-integrity
+  workflow_dispatch:
+
+jobs:
+  source-physics-ledger:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install source dependencies
+        run: npm install --no-audit --no-fund
+      - name: Syntax parse code
+        run: node --check src/p12b-momentum.js && node --check p10-ui.js && node --check scripts/p12b-browser.mjs
+      - name: Build existing real Vite Rapier web entry and optional probe
+        run: npm run build && test -s dist/p10.html
+      - name: Twenty-four real Chromium CCD, self-contact and sleeping-material momentum worlds
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --directory dist >/tmp/p12b-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/p10.html >/dev/null; then break; fi
+            sleep .2
+          done
+          CHROME_BIN="$(command -v google-chrome || command -v chromium)" node scripts/p12b-browser.mjs http://127.0.0.1:4173/
+      - name: Preserve raw numerical source afterstate
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p12b-com-ccd-source
+          path: p12b-evidence/
+          if-no-files-found: ignore
+          retention-days: 14
