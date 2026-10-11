@@ -7,7 +7,7 @@ let world=new ReflexYard(),paused=false,mode="select",drag=null,firstActorId=nul
 let last=performance.now(),acc=0,lastDraw=0;
 let camera={x:20,y:12,zoom:1.0},keys=new Set();
 const PI=Math.PI,rgba={wall:"#546b70",pivot:"#c99a66",gate:"#cda867",
- load:"#a6b8a6",bulky:"#d48b70",small:"#a3d6ac",lever:"#78b9d6",
+ load:"#a6b8a6",barrier:"#799097",bulky:"#d48b70",small:"#a3d6ac",lever:"#78b9d6",
  "rigid-lever":"#ac97cb",effector:"#82dcd9"};
 function status(t){$("status").textContent=t;}
 function resize(){
@@ -122,7 +122,8 @@ function render(){
     " · ciężarów: "+p.contactCargo+"\\nLokalne uchwyty: "+p.localGrips+
     " · ustąpienia: "+p.turns+" · trzymanie pozycji: "+p.braceTicks+
     "\\nLokalny napęd: "+p.autonomousEffort.toFixed(1)+
-    " N·s · ingerencje Ownera: "+p.externalImpulses;
+    " N·s · ingerencje Ownera: "+p.externalImpulses+
+    " · przebudowy: "+p.materialEdits;
  }
  document.body.dataset.p0Live="yes";
 }
@@ -136,7 +137,8 @@ function select(e){
  if(!target)return;
  const actor=world.actors.find(a=>a===target||a.panel===target);
  if(actor){world.setSelected(actor.id);status("Sterowanie: "+actor.kind+".");}
- else status("To ruchoma materia. Ctrl+drag na pauzie, albo użyj impulsu.");
+ else status(target.kind==="barrier"?"Przeszkoda świata: pauza + Ctrl+przeciągnij.":
+    "To ruchoma materia. Ctrl+drag na pauzie, albo użyj impulsu.");
 }
 function pause(){paused=!paused;acc=0;$("pause").textContent=paused?"Wznów":"Pauza";
   status(paused?"Pauza. Ctrl+przeciągnij fizyczne ciała.":"Świat działa.");render();}
@@ -286,6 +288,10 @@ canvas.addEventListener("pointerdown",e=>{
   else{
    if(world.actors.length>115||world.entities.length>190){status("Limit ochronny solvera dla ekstremalnych spawnów.");return;}
    if(mode==="load")world.load(p.x,p.y);
+   else if(mode==="barrier"){
+    if(!(world instanceof CommonsYard)){status("Przeszkody edytujesz w P5.");return;}
+    world.barrier(p.x,p.y,.20,.85);
+   }
    else{const actor=world.spawn(mode,p);world.setSelected(actor.id);}
    world.world.propagateModifiedBodyPositionsToColliders();setMode("select");
   }

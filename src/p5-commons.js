@@ -20,7 +20,23 @@ export class CommonsYard extends ReflexYard{
   this.activity={steps:0,contactActor:0,contactCargo:0,contactFixed:0,
     pressureImpulse:0,turns:0,braceTicks:0,localGrips:0,
     gripAttempts:0,refusedGrips:0,autonomousEffort:0,
-    externalImpulses:0,externalImpulseSum:0};
+    externalImpulses:0,externalImpulseSum:0,materialEdits:0};
+ }
+ barrier(x,y,hx=.20,hy=.8){
+  // Editable authored static obstacle, distinct from permanent world bounds.
+  return this.add("barrier",x,y,[{hx,hy,mass:1}],{fixed:true});
+ }
+ moveEntity(entity,p){
+  if(entity?.kind==="barrier"&&entity.body.isFixed()&&
+     Number.isFinite(p.x)&&Number.isFinite(p.y)){
+   // A user explicitly edits authored topology while paused. No solver
+   // teleport during a live step, no NPC hidden escape door.
+   entity.body.setTranslation(p,true);
+   this.world.propagateModifiedBodyPositionsToColliders();
+   this.activity.materialEdits++;
+   return true;
+  }
+  return super.moveEntity(entity,p);
  }
  // Explicit and opt-in. Spawning a body never silently installs intelligence.
  register(actor,role,heading){
@@ -132,6 +148,10 @@ export class CommonsYard extends ReflexYard{
  commonsTrace(){
   return {...this.reflexTrace(),auto:this.auto,policy:this.policy,seed:this.seed,
    activity:Object.fromEntries(Object.entries(this.activity).map(([k,v])=>[k,r(v)])),
+   barriers:this.entities.filter(e=>e.kind==="barrier").map(e=>({
+    id:e.id,x:r(e.body.translation().x),y:r(e.body.translation().y),
+    hx:e.shapes[0].shape.hx,hy:e.shapes[0].shape.hy
+   })),
    local:[...this.local].map(([id,s])=>({id,role:s.role,
     h:{x:r(s.heading.x),y:r(s.heading.y)},contacts:s.contacts,
     turns:s.turns,grips:s.grips,braceLeft:s.braceLeft}))};
@@ -171,13 +191,13 @@ export function createCommons({support="finite",policy="material",seed=1,
  if(topology==="blocked"){
   // P5 original source FIRST RUN: real authored blockers physically prevented
   // cargo carriers from reaching the shared material with finite ground.
-  w.wall(15.4,14.9,.18,1.15);
-  w.wall(11.3,11.9,.15,.80);
+  w.barrier(15.4,14.9,.18,1.15);
+  w.barrier(11.3,11.9,.15,.80);
  }else{
   // SAME bodies/policies/initial trajectories. Only the material topology
   // changes, with the passage physically opened by moving fixed colliders.
-  w.wall(15.5,13.7,.18,.90);
-  w.wall(11.2,10.65,.15,.55);
+  w.barrier(15.5,13.7,.18,.90);
+  w.barrier(11.2,10.65,.15,.55);
  }
  w.topology=topology;
  w.world.propagateModifiedBodyPositionsToColliders();

@@ -15,7 +15,7 @@
   <button data-mode="small">Małe ciało</button>
   <button data-mode="lever">Przegubowe</button>
   <button data-mode="rigid-lever">Sztywne porównawcze</button>
-  <button data-mode="load">Ciężar</button>
+  <button data-mode="load">Ciężar</button><button data-mode="barrier">Przeszkoda</button>
 </section>
 <section class="layout">
   <div class="viewport"><canvas id="world" aria-label="Rzeczywisty materialny świat Combat Lab"></canvas><div class="hud"><span id="mode-status">Swobodna edycja</span><span id="clock">0.0 s</span></div></div>
@@ -32,7 +32,7 @@
     <div class="line"><strong>Odruch od nacisku</strong><select id="reflex-mode"><option value="conditional">Warunkowy: chroń kontakt</option><option value="off">Brak reakcji</option><option value="brake">Tani rywal: hamuj</option><option value="follow">Tani rywal: stale podążaj</option></select></div>
     <div class="line"><strong>Kontaktowy uchwyt (G)</strong><button id="grip">Chwyć / puść</button><input id="grip-force" type="range" min="0" max="10" step="0.5" value="3"><output id="grip-force-text">3 N·s/krok</output></div>
     <div class="line"><strong>Impuls myszy</strong><input id="strength" type="range" min="10" max="400" step="10" value="130"><output id="strength-text">130 N·s</output></div>
-    <p class="help">Przeciągnij myszą w trybie „Impuls”. Na pauzie Ctrl+przeciągnij obiekt. Scroll: zoom. Środkowy przycisk: pan. Możesz dodawać konstrukcje także w niedorzecznych pozycjach.</p>
+    <p class="help">Przeciągnij myszą w trybie „Impuls”. Na pauzie Ctrl+przeciągnij obiekt. Scroll: zoom. Środkowy przycisk: pan. W P5 przeszkody są rzeczywistymi, edytowalnymi colliderami. Przestaw je na pauzie przez Ctrl+drag. Możesz dodawać konstrukcje także w niedorzecznych pozycjach.</p>
     <div id="selection" class="readout">Żaden organizm nieaktywny</div>
     <div id="evidence" class="readout"></div>
     <p class="limit">Fizyka 2D i jawny, skończony opór wirtualnego gruntu. To NIE jest prawdziwa anatomia dłoni, chód, cognition NPC ani uznana gra. P5 zawiera proste, jawne lokalne automaty kontaktowe, ale nie pełną poznawczą autonomię NPC. Uchwyt P5 wykorzystuje osiowe, ograniczone połączenie, a nie sztywny weld. Nie ma zaprogramowanej ścieżki ani celu zwycięstwa.</p>

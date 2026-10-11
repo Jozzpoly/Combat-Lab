@@ -117,7 +117,40 @@ try{
  if(!observed.finite||observed.activity.autonomousEffort!==frozenEffort||
   observed.tick<=frozen.tick)
    throw Error("P5 motor pause wrongly also stopped physical solver");
- const report={
+ // Verify real mouse-edited physical topology on the SAME persistent
+ // world. Pause physics to author, Ctrl-drag real fixed collider, resume.
+ await clickElement("pause");await wait(100);
+ const beforeEdit=await evalJS("window.__p5ReadOnlyProbe()");
+ const barrier=beforeEdit.barriers[1];
+ if(!barrier)throw Error("P5 missing real editable barrier");
+ const screen=async(x,y)=>evalJS(`(()=>{
+  const c=document.getElementById("world"),rect=c.getBoundingClientRect();
+  const dpr=Math.min(2,window.devicePixelRatio||1);
+  const width=Math.round(rect.width*dpr),height=Math.round(rect.height*dpr);
+  const scale=Math.min(width/40,height/24)*1.85;
+  return {x:rect.left+(width/2+( ${x}-13.65)*scale)*rect.width/width,
+   y:rect.top+(height/2+( ${y}-13.35)*scale)*rect.height/height};
+ })()`);
+ const from=await screen(barrier.x,barrier.y),
+       to=await screen(barrier.x+.8,barrier.y+1.4);
+ await mouse(from.x,from.y,"press",2);
+ await send("Input.dispatchMouseEvent",{type:"mouseMoved",x:to.x,y:to.y,
+  buttons:1,modifiers:2});
+ await mouse(to.x,to.y,"release",2);
+ const edited=await evalJS("window.__p5ReadOnlyProbe()");
+ const change=edited.barriers.find(b=>b.id===barrier.id);
+ if(!change||edited.activity.materialEdits===0||
+    Math.hypot(change.x-barrier.x,change.y-barrier.y)<.6)
+  throw Error("P5 native Ctrl+drag failed to edit physical static barrier");
+ await clickElement("pause");await wait(170);
+ const resumed=await evalJS("window.__p5ReadOnlyProbe()");
+ if(resumed.tick<=edited.tick||!resumed.finite)
+  throw Error("P5 edited world did not resume actual physics");
+ const editPNG=(await send("Page.captureScreenshot",{
+  format:"png",captureBeyondViewport:false})).data;
+ writeFileSync(resolve(folder,"p5-native-edited-barrier-continuing-world.png"),
+  Buffer.from(editPNG,"base64"));
+  const report={
   source:"Real CDP Chrome mouse clicking P5 start, push 95+25 N.s into independent load and stop local motor while solver stays on",
   initial:{actors:pre.actorCount,loads:pre.loadCount,
    contacts:pre.activity.contactActor,cargoContacts:pre.activity.contactCargo,
@@ -127,6 +160,8 @@ try{
    localGrips:after.activity.localGrips,firstCargoX:after.loads[0].x,
    firstCargoY:after.loads[0].y,externalPulse:after.activity.externalImpulseSum,
    actualGripLinks:after.grips.length},
+  editBarrierTravel:Math.hypot(change.x-barrier.x,change.y-barrier.y),
+  editedSameWorldResumed:resumed.tick>edited.tick,
   motorOffPhysicsContinues:observed.tick>frozen.tick&&
     observed.activity.autonomousEffort===frozenEffort,
   finite:observed.finite,

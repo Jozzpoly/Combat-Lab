@@ -33,7 +33,7 @@ export function p5Case({policy="material",support="finite",seed=1,
     }else if(intervention==="wall"){
      // Owner-like edited physical topology: create one actual fixed collider,
      // not an AI rule or invisible navigation modifier.
-     w.wall(14.9,12.1,.19,1.05);
+     w.barrier(14.9,12.1,.19,1.05);
      w.world.propagateModifiedBodyPositionsToColliders();
     }else if(intervention!=="none")throw Error("P5 intervention invalid");
    }
