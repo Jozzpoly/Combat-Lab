@@ -61,7 +61,7 @@ function build({kind="lever",support="finite",stance="brace",
 }
 export function p1Case(opts={}){
  const {kind="lever",support="finite",stance="brace",target=1.1,
-   loadY=7.12,restricted=true,drive="actuate",ticks=160}=opts;
+   loadY=7.12,restricted=true,drive="actuate",ticks=160,captureWorld=null}=opts;
  const {w,actor,payload,cage,pairs}=build({kind,support,stance,target,loadY,restricted,drive});
  try{
   const rootStart={...actor.body.translation()},loadStart={...payload.body.translation()};
@@ -92,6 +92,7 @@ export function p1Case(opts={}){
    }
   }
   const tr=w.traces();
+  if(typeof captureWorld==="function")captureWorld(w,actor,payload);
   const effectiveActuator=kind==="lever"?tr.events.panelTorque:actuatorTotal;
   return {kind,support,stance,target,loadY,restricted,drive,ticks,
    initialPairs:pairs,initialRoot:{...rootStart},rootAfter:{...actor.body.translation()},
@@ -108,7 +109,7 @@ export function p1Case(opts={}){
    externalActorRootDrive:tr.events.rootEffort,
    finite:tr.finite,frames:cases,
    meta:"Rapier2D actual constraint/shape manifold; limit torque not matched total effort"};
- }finally{w.dispose();}
+ }finally{if(typeof captureWorld!=="function")w.dispose();}
 }
 export function p1Probe(){
  const cases=[];
