@@ -72,7 +72,7 @@ export class CommonsYard extends ReflexYard{
     else this.activity.contactFixed++;
     if(!strongest||t.impulse>strongest.impulse)strongest=t;
    }
-   if(s.role==="carrier"&&this.policy==="material"&&cargoContact&&
+   if(s.role==="carrier"&&["material","attach"].includes(this.policy)&&cargoContact&&
       !this.grips.some(g=>g.actor===a)){
     this.activity.gripAttempts++;
     const source=this.grip(a.id,cargoContact.other.id,{maxImpulse:4});
@@ -142,7 +142,7 @@ export class CommonsYard extends ReflexYard{
 // All six bodies receive independent local sensorimotor rules after start.
 export function createCommons({support="finite",policy="material",seed=1,
  density=6}={}){
- if(!["constant","touch","material"].includes(policy))throw Error("policy");
+ if(!["constant","touch","attach","material"].includes(policy))throw Error("policy");
  const w=new CommonsYard({support,policy,seed});
  const cfg=[
   ["small",8.0,12.6, 1,.11,"carrier"],
