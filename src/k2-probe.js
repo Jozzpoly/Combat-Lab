@@ -4,7 +4,31 @@
 // Question: can relative panel action change what the body does at a fixed
 // root pose while keeping a separate rear contact, vs rotating the entire
 // same-mass rigid profile with the same bounded angular impulse budget?
+import RAPIER from "@dimforge/rapier2d-deterministic";
 import {KineticField} from "./k1-world.js";
+// Corner-hinged upper shield: starts tangent at the upper front root corner;
+// swinging forward (+ angle) should remain collision-valid, swinging back
+// toward the root (- angle) may be blocked by actual connected self-contact.
+// Rigid opponent has the EXACT same initial hull, masses and collider shapes.
+class K2Field extends KineticField {
+  makeGuard(x,y,kind="hinged") {
+    if(!["hinged","rigid","bare"].includes(kind))throw Error("Unknown K2 body");
+    const p={hx:.20,hy:.85,mass:25,dx:-.74,dy:1.33};
+    const root=this.add(kind,x,y,
+      [{hx:.54,hy:.48,mass:65},...(kind==="rigid"?[p]:[])]);
+    root.panel=null;root.joint=null;root.target=0;root.maxImpulse=.28;
+    root.panelControl=false;
+    if(kind==="hinged") {
+      const arm=this.add("hinge-panel",x-.74,y+1.33,[{hx:p.hx,hy:p.hy,mass:p.mass}]);
+      const joint=this.world.createImpulseJoint(
+        RAPIER.JointData.revolute(V(-.54,.48),V(.20,-.85)),
+        root.body,arm.body,true);
+      joint.setContactsEnabled(true);
+      root.panel=arm;root.joint=joint;
+    }
+    return root;
+  }
+}
 const V=(x,y)=>({x,y});
 const round=x=>Math.round(x*10000)/10000;
 const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
@@ -19,7 +43,7 @@ function controlRigid(field,target,limit=.28){
   return Math.abs(t);
 }
 function single(kind,policy,angle,lineY,secondary){
-  const f=new KineticField({kind,preset:"probe"});
+  const f=new K2Field({kind,preset:"probe"});
   let torque=0;const frames=[];
   try {
     const rear=f.load(16.70,10.70,.26,.28,56);
