@@ -376,6 +376,18 @@ if(params.has("p4native")){
  // Read-only physical introspection for genuine Chromium native mouse input.
  window.__p4ReadOnlyProbe=()=>world.reflexTrace();
 }
+if(params.has("p4momentum")){
+ paused=true;
+ try{
+  const {p4ConservationAudit}=await import("./src/p4-conservation.js");
+  const result=p4ConservationAudit();
+  document.body.dataset.p4Momentum="PASS";
+  document.body.dataset.p4MomentumCases=String(result.cases);
+  document.body.dataset.p4MomentumReport=encodeURIComponent(JSON.stringify(result));
+  status("P4: physical impulse conservation forensic, original P2 link vs axial null.");
+ }catch(e){document.body.dataset.p4Momentum="FAIL";
+  document.body.dataset.p4MomentumError=String(e.stack||e);console.error(e);}
+}
 if(params.has("p4hard")){
  paused=true;
  try{
