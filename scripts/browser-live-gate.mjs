@@ -152,3 +152,38 @@ if(p1Report.cases!==28||p1Report.results.some(x=>!x.finite||
 writeFileSync(resolve(folder,"p1-real-solver-reach.json"),JSON.stringify(p1Report,null,2));
 console.log("P1 source 28 body-vs-rigid confinement counterfactuals from emitted Chromium (NOT product PASS)");
 console.log(JSON.stringify(p1Report.differences));
+
+
+const p1StrongDom=request({p1strong:1},["--dump-dom"]);
+validPage(p1StrongDom,"P1 actual strong rigid rival");
+if(attr(p1StrongDom,"p1-strong")!=="PASS"||attr(p1StrongDom,"p1-strong-count")!=="12")
+ throw Error("P1 rigid stress source FAIL: "+(attr(p1StrongDom,"p1-strong-error")||"missing"));
+const strong=JSON.parse(decodeURIComponent(attr(p1StrongDom,"p1-strong-data")));
+if(strong.trials!==12||strong.results.some(x=>!x.rigid.finite||!x.hinged.finite))
+ throw Error("P1 source strong rival invalid");
+writeFileSync(resolve(folder,"p1-aggressive-rigid-source.json"),JSON.stringify(strong,null,2));
+console.log("P1 aggressive SAME-SHAPE RIGID competitor actual source counterfactuals:");
+console.log(JSON.stringify(strong.results.map(x=>({
+  support:x.support,cage:x.restricted,y:x.loadY,
+  hingedLoad:x.result.hingedLoad,rigidLoad:x.result.rigidLoad,
+  hingedWall:x.result.hingedWall,rigidWall:x.result.rigidWall,
+  rigidRotation:x.result.rigidBodyRotation,
+  effortRigid:x.result.rigidEffort,effortHinged:x.result.hingedEffort
+}))));
+for(const kind of ["lever","rigid"]){
+ for(const tick of [0,60,160]){
+  const p={p1frame:kind,tick};
+  if(kind==="rigid")p.strong=1;
+  const dom=request(p,["--dump-dom"]);
+  validPage(dom,"P1 true chamber "+kind+"@"+tick);
+  const state=attr(dom,"p1-frame");
+  if(!state||attr(dom,"p1-frame-error"))
+   throw Error("P1 missing actual solver screenshot provenance "+kind+":"+tick);
+  const outcome=JSON.parse(state.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+  if(!outcome.finite||outcome.ticks!==tick||outcome.initialPairs.length)
+   throw Error("P1 invalid frame source "+kind+":"+tick);
+  const name="p1-"+kind+"-t"+tick;
+  writeFileSync(resolve(folder,name+".json"),JSON.stringify(outcome,null,2));
+  request(p,["--screenshot="+resolve(folder,name+".png")]);
+ }
+}
