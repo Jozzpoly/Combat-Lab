@@ -137,3 +137,18 @@ console.log("P0 owner-style real input: launching independent Chrome DevTools pr
 execFileSync(process.execPath,["scripts/p0-real-input.mjs",base],{
   timeout:120000,stdio:"inherit"
 });
+
+
+const p1=request({p1probe:1},["--dump-dom"]);
+validPage(p1,"P1 actual WASM reach pressure");
+if(attr(p1,"p1-probe")!=="PASS"||attr(p1,"p1-count")!=="28")
+ throw Error("P1 source actuator/shape controls failed: "+(attr(p1,"p1-error")||"missing"));
+const p1Encoded=attr(p1,"p1-report");
+if(!p1Encoded)throw Error("P1 source results not returned");
+const p1Report=JSON.parse(decodeURIComponent(p1Encoded));
+if(p1Report.cases!==28||p1Report.results.some(x=>!x.finite||
+ x.initialPairs.length||x.externalActorRootDrive!==0))
+ throw Error("P1 source invariants failed");
+writeFileSync(resolve(folder,"p1-real-solver-reach.json"),JSON.stringify(p1Report,null,2));
+console.log("P1 source 28 body-vs-rigid confinement counterfactuals from emitted Chromium (NOT product PASS)");
+console.log(JSON.stringify(p1Report.differences));
