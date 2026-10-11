@@ -60,7 +60,7 @@ export function p8Case({tactile="slip",width=2.85,formation="center",
   const state={
    source:"Rapier2D actual rigid independent physical actors, NOT softbody",
    tactile,width,formation,guardPolicy,support,density,intervention,
-   finite:out.finite,actors:out.actorCount,loads:out.loadCount,
+   finite:out.finite,actors:out.actorCount,loadsCount:out.loadCount,
    mass:out.guard.mass,shape:out.guard.shapeRadius,
    starts:start,early:preContact,preAction,postAction,
    contacts:out.pressure.guardContacts,pressure:out.pressure.guardImpulse,
@@ -85,14 +85,14 @@ export function p8Probe(){
     for(const guardPolicy of ["passive","brace"])
      for(const tactile of ["drive","yield","slip"])
       worlds.push(p8Case({width,support,formation,guardPolicy,tactile}));
- const bad=worlds.filter(x=>!x.finite||x.actors!==7||x.loads!==2||
+ const bad=worlds.filter(x=>!x.finite||x.actors!==7||x.loadsCount!==2||
   x.mass!==90);
  if(worlds.length!==48||bad.length)
   throw Error("P8 actual 48 controlled material crowd scenarios absent: "+
    JSON.stringify({total:worlds.length,bad:bad.map(x=>({
     tactile:x.tactile,width:x.width,formation:x.formation,
     support:x.support,guard:x.guardPolicy,finite:x.finite,
-    actors:x.actors,loads:x.loads,mass:x.mass}))}));
+    actors:x.actors,loadsCount:x.loadsCount,mass:x.mass}))}));
  const triples=[];
  for(const width of [2.85,4.65])
   for(const support of ["finite","none"])
