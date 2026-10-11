@@ -1,0 +1,17 @@
+# Combat Lab — P10c Owner first-look portable Windows handoff, 2026-10-11
+
+**Mission:** obtain the first actual spontaneous OWNER experiential verdict on the quiet physical P10b material workshop. DO NOT equate this to qualified organism feel or completed Combat Lab. Historical Owner R0/R1/L0 FAIL remains active. The separately isolated P12 COM push-off scientific donor is also NOT a viable gait.
+
+## Exact source, artifact, control hierarchy
+
+1. [P10c source branch](https://github.com/Jozzpoly/Combat-Lab/tree/experiment/p10c-offline-owner-firstlook), [branch negative-first portable report](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/p10c-offline-owner-firstlook/docs/P10C_PORTABLE_FIRST_LOOK_2026-10-11.md), [DRAFT PR #13](https://github.com/Jozzpoly/Combat-Lab/pull/13) against *P10b experimental parent*. Public \`rehearsal/current\` must remain untouched.
+2. [**Exact verified Windows ZIP GitHub artifact**](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38162863677/artifacts/11711395158) (GitHub zip wrapper contains inner \`Combat-Lab-P10b-Portable-Windows.zip\`); [exact two-stage source + Windows PASS run 38162863677](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38162863677). ZIP SHA256 \`b92e60d7549a4b0f78708a4f5773735b14899fe2a3c5891accf201db50e099a0\`, **35,457,293 bytes**. Artifact TTL14 days; later agents may regenerate via workflow rather than asking Owner to maintain it.
+3. Owner: unzip entire folder, double-click \`URUCHOM-COMBAT-LAB.cmd\`. Site is served on ephemeral localhost **127.0.0.1 only**, attempts browser auto-open; console URL is reliable fallback. Browser auto-open NOT tested in CI; .cmd itself started and served local HTML on genuine Windows runner. Signed Node22.23.3 license included. User needs no installations, Git, npm, hosting or Cloudflare.
+4. Real native Chromium Linux execution demonstrated actual mouse/keys/wheel, body selection, pause, contact-qualified real G and reciprocal cargo haul after held A, true collider Ctrl-drag and unchanged dynamic residents; Windows server, JS/CSS/WASM composition, signed Node and actual script startup checked separately. **Owner tactile quality, Windows native input and spontaneous real play remain UNKNOWN.**
+5. Previous one-file HTML/inline WASM prototype FAILED; obsolete experiments removed from active branch head, retained in Git history. Do NOT send dead HTML artifact or suggest disabling Windows security protection to bypass warnings.
+
+## Owner value/next frontier
+
+This is an intentionally schematic, quiet three-body five-load material playground, not a living crowd, natural locomotion or final combat. Human evaluation should ask whether moving different bodies, colliding, grabbing real objects, rearranging walls and seeing grounded consequences creates ANY interesting interaction compared with cheap scripted root-drive; and which world contacts feel impossible or nonsensical. Avoid over-instructing the Owner or claiming PASS before they try it. The canonical scientific source frontier remains [P12](P12_HANDOFF_POINTER_2026-10-11.md): material contact can move a hinged whole body COM ~9.7cm with no root force but does not yield useful repeatable locomotion; movable body COM momentum bookkeeping uncertain. **Do not tune P12 servo by inertia.**
+
+This is an agent continuity pointer, not a directive to deploy or merge. On next conversation recover latest live GitHub refs, this pointer, latest Owner feedback and full branch report; no paste needed from Owner.
