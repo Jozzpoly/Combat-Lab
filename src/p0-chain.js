@@ -12,7 +12,7 @@ function gateImpulse(field,actor){
  });
  return total;
 }
-export function continuation({worldSupport,changed,kind,speed,runnerY=11.6,openerKind="bulky"}){
+export function continuation({worldSupport,changed,kind,speed,runnerY=11.6,openerKind="bulky",captureWorld=null}){
  const field=new MaterialYard({populated:false,support:worldSupport});
  try{
   const opener=field.spawn(openerKind,V(15,11.7));
@@ -50,6 +50,7 @@ export function continuation({worldSupport,changed,kind,speed,runnerY=11.6,opene
    }
   }
   const after=field.traces(),p=runner.body.translation();
+  if(typeof captureWorld==="function")captureWorld(field);
   return {worldSupport,changed,kind,speed,runnerY,openerKind,
    exactSpeedImpulse:round(exactSpeedImpulse),
    openerGateImpulse:round(openerGateImpulse),openerGateFrames,
@@ -61,7 +62,7 @@ export function continuation({worldSupport,changed,kind,speed,runnerY=11.6,opene
    runnerCrossed:p.x>20.7,runnerGateImpulse:round(runnerGateImpulse),
    runnerGateFrames,firstRunnerGate,checkpoints,finite:after.finite,
    rootDriveInSecond:round(field.events.rootEffort-firstStageSource)};
- }finally{field.dispose();}
+ }finally{if(typeof captureWorld!=="function")field.dispose();}
 }
 export function p0MaterialChain(){
  const cases=[];
