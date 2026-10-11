@@ -498,3 +498,29 @@ writeFileSync(resolve(folder,"p9-40-rigid-clearance-control.json"),
 console.log("P9 40 actual emitted-Chromium Rapier worlds. Fixed guard is ONLY an explicit obstacle null control.");
 console.log(JSON.stringify(p9Data.summary));
 console.log(p9Data.limitation);
+
+for(const [name,geometry,guardMode,tactile] of [
+ ["narrow-fixed-slip","narrow","fixed","slip"],
+ ["narrow-dynamic-drive","narrow","dynamic","drive"],
+ ["lower-fixed-drive","widenedLower","fixed","drive"],
+ ["symmetric-fixed-drive","widenedSymmetric","fixed","drive"]
+]){
+ const query={p9frame:name},dom=request(query,["--dump-dom"]);
+ validPage(dom,"P9 genuine source screenshot "+name);
+ if(attr(dom,"p9-frame-error"))throw Error("P9 rendered source invalid "+
+  name+": "+attr(dom,"p9-frame-error"));
+ const raw=attr(dom,"p9-frame");
+ if(!raw)throw Error("P9 missing physical screenshot afterstate "+name);
+ const src=JSON.parse(decodeURIComponent(raw));
+ const exact=p9Data.cases.find(x=>x.geometry===geometry&&
+  x.guardMode===guardMode&&x.tactile===tactile&&x.formation==="center");
+ if(!exact||src.tick!==460||!src.finite||src.actorCount!==7||
+  src.loadCount!==2||src.passed!==exact.passedFinal||
+  Math.abs(src.guardX-exact.endGuard.x)>.0002||
+  src.fixed!==(guardMode==="fixed"))
+  throw Error("P9 actual visual scene does NOT match executed matrix "+name);
+ writeFileSync(resolve(folder,"p9-"+name+"-source.json"),JSON.stringify(src,null,2));
+ request(query,["--screenshot="+resolve(folder,"p9-"+name+"-real-chromium.png")]);
+ console.log("P9 native unedited scene "+name+": "+
+  JSON.stringify({passes:src.passed,guardX:src.guardX}));
+}

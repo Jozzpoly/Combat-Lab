@@ -49,8 +49,9 @@ function clearance(w){
   atLeastOneLocalSide:Math.max(below,above)>=need-1e-5,
   caveat:"LOCAL fixed-cross-section eligibility only. Does not prove traversal; endpoints of wall segments admit other global routes."};
 }
-export function p9Case({geometry="narrow",guardMode="fixed",
- tactile="drive",formation="center",ticks=460}={}){
+// Same physical setup is reused by executed matrix and raw browser frames.
+export function makeP9World({geometry="narrow",guardMode="fixed",
+ tactile="drive",formation="center"}={}){
  const conf=configurations[geometry];
  if(!conf||!["fixed","dynamic"].includes(guardMode)||
   !["drive","slip"].includes(tactile)||
@@ -60,12 +61,17 @@ export function p9Case({geometry="narrow",guardMode="fixed",
   guardKind:"bulky",guardMass:90});
  try{
   setActualGeometry(w,conf);
-  if(guardMode==="fixed"){
-   // EXPLICIT physically anchored RIGID block as a null control, not
-   // a claim that the regular 90kg guardian cannot move or is biological.
+  if(guardMode==="fixed")
    w.guard.body.setBodyType(RAPIER.RigidBodyType.Fixed,true);
-  }
   w.world.propagateModifiedBodyPositionsToColliders();
+  return w;
+ }catch(error){w.dispose();throw error;}
+}
+export function p9Case({geometry="narrow",guardMode="fixed",
+ tactile="drive",formation="center",ticks=460}={}){
+ const conf=configurations[geometry];
+ const w=makeP9World({geometry,guardMode,tactile,formation});
+ try{
   const before=initialBodies(w),shape=clearance(w);
   const expectedWidth=conf.base+(conf.edit==="none"?0:1.3);
   if(Math.abs(shape.actualWidth-expectedWidth)>.0001)

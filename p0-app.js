@@ -528,6 +528,38 @@ if(params.has("p9audit")){
  }
 }
 
+
+// P9 photograph of the ACTUAL physics at step 460: no artistic overlay,
+// no rendered fake. The same source factory constructs the numeric A/B.
+if(params.has("p9frame")){
+ paused=true;
+ try{
+  const presets={
+   "narrow-fixed-slip":{geometry:"narrow",guardMode:"fixed",tactile:"slip",formation:"center"},
+   "narrow-dynamic-drive":{geometry:"narrow",guardMode:"dynamic",tactile:"drive",formation:"center"},
+   "lower-fixed-drive":{geometry:"widenedLower",guardMode:"fixed",tactile:"drive",formation:"center"},
+   "symmetric-fixed-drive":{geometry:"widenedSymmetric",guardMode:"fixed",tactile:"drive",formation:"center"}
+  };
+  const config=presets[params.get("p9frame")];
+  if(!config)throw Error("Unknown P9 source frame");
+  const {makeP9World}=await import("./src/p9-geometry-audit.js");
+  world.dispose();world=makeP9World(config);
+  for(let i=0;i<460;i++)world.step();
+  document.body.classList.add("p7-focus","p8-focus");
+  camera={x:14.2,y:12,zoom:1.85};
+  const t=world.pressureTrace();
+  document.body.dataset.p9Frame=encodeURIComponent(JSON.stringify({
+   ...config,guardX:t.guard.x,passed:t.crossings.mouth,
+   fixed:world.guard.body.isFixed(),tick:t.tick,finite:t.finite,
+   loadCount:t.loadCount,actorCount:t.actorCount}));
+  status("P9: rzeczywista klatka po 460 krokach. Bez oceny feelu.");
+  render();
+ }catch(e){
+  document.body.dataset.p9FrameError=String(e.stack||e);
+  console.error(e);
+ }
+}
+
 if(params.has("p0realinput"))window.__p0ReadOnlyProbe=()=>world.traces();
 
 if(params.has("p0pairframe")){
