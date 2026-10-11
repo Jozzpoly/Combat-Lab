@@ -1,8 +1,15 @@
 {
-  "name": "combat-lab-clean-room",
+  "name": "combat-lab-p0-material-pressure-yard",
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --check app.js"
+    "test": "node --check app.js && node --check p0-app.js && node --check src/p0-world.js && node --check src/p0-probe.js",
+    "build": "vite build --base=./"
+  },
+  "dependencies": {
+    "@dimforge/rapier2d-deterministic": "0.21.0"
+  },
+  "devDependencies": {
+    "vite": "8.2.2"
   }
 }
