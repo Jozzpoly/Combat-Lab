@@ -233,3 +233,8 @@ for(const mode of ["off","brake","follow","conditional"]){
  writeFileSync(resolve(folder,"p4-"+mode+"-source.json"),JSON.stringify(data,null,2));
  request(arg,["--screenshot="+resolve(folder,"p4-"+mode+"-real-chromium.png")]);
 }
+
+console.log("P4 native operator source: real Chrome preset and external physical shove...");
+execFileSync(process.execPath,["scripts/p4-real-input.mjs",base],{
+ timeout:120000,stdio:"inherit"
+});
