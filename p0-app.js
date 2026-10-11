@@ -257,6 +257,18 @@ if(params.has("p2input")){
   status("G to contact-grip actual physical load; no connection yet.");
  }catch(e){document.body.dataset.p2ContactError=String(e.stack||e);console.error(e);}
 }
+if(params.has("p2red")){
+ paused=true;
+ try{
+  const {p2SpeedRedTeam}=await import("./src/p2-probe.js");
+  const v=p2SpeedRedTeam();
+  document.body.dataset.p2Red="PASS";
+  document.body.dataset.p2RedCases=String(v.cases);
+  document.body.dataset.p2RedResult=encodeURIComponent(JSON.stringify(v));
+  status("P2: 24 rzeczywiste próby z jednakową prędkością ruchu.");
+ }catch(e){document.body.dataset.p2Red="FAIL";
+  document.body.dataset.p2RedError=String(e.stack||e);console.error(e);}
+}
 if(params.has("p2probe")){
  paused=true;
  try{
