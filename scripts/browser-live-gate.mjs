@@ -249,3 +249,18 @@ if(pressure.cases!==48)throw Error("P4 missing actual true hard-source worlds");
 writeFileSync(resolve(folder,"p4-48-real-pressure-stress.json"),JSON.stringify(pressure,null,2));
 console.log("P4 grip survival vs cheap reflex rivals under real high-impact 48 worlds:");
 console.log(JSON.stringify(pressure.comparisons));
+
+
+const conservation=request({p4momentum:1},["--dump-dom"]);
+validPage(conservation,"P4 source torque conservation forensic");
+if(attr(conservation,"p4-momentum")!=="PASS"||attr(conservation,"p4-momentum-cases")!=="9")
+ throw Error("P4 physically measured momentum source fail: "+
+  (attr(conservation,"p4-momentum-error")||"missing"));
+const conservationData=JSON.parse(decodeURIComponent(attr(conservation,"p4-momentum-report")));
+if(conservationData.cases!==9)throw Error("P4 source momentum count missing");
+writeFileSync(resolve(folder,"p4-actual-angular-momentum-audit.json"),JSON.stringify(conservationData,null,2));
+console.log("P4 conservation off/grip/axial actual WASM:");
+console.log(JSON.stringify(conservationData.results.map(x=>({
+ model:x.model,pulse:x.pulse,dL:x.angularDrift,peakL:x.peakAngularDrift,
+ dP:x.linearDrift,peakP:x.peakLinearDrift,dK:x.energyChange
+}))));
