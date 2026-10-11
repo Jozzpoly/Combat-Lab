@@ -79,19 +79,21 @@ export class MaterialYard{
   e.stance="flow";e.motor=motor;e.target=0;e.panel=null;e.panelActive=false;e.actuatorLimit=1.6;
   if(kind==="lever"){
    // A real front-mounted panel with 22kg and paired bounded torques.
-   const panel=this.add("effector",p.x+1.88,p.y,
+   // A 22cm genuine clearance around the root, with actual connected
+   // self-contact still ON. No penetration/hidden disabled collision.
+   const panel=this.add("effector",p.x+2.10,p.y,
       [{hx:1.25,hy:.17,mass:22}]);
    const joint=this.world.createImpulseJoint(
-      RAPIER.JointData.revolute(V(.63,0),V(-1.25,0)),
+      RAPIER.JointData.revolute(V(.85,0),V(-1.25,0)),
       e.body,panel.body,true);
    joint.setContactsEnabled(true);
    e.panel=panel;e.joint=joint;
   } else if(kind==="rigid-lever"){
    // Cheap rival: similar envelope and combined mass, no separate actuation.
    const col=this.world.createCollider(
-    RAPIER.ColliderDesc.cuboid(1.25,.17).setTranslation(1.88,0)
+    RAPIER.ColliderDesc.cuboid(1.25,.17).setTranslation(2.10,0)
      .setMass(22).setFriction(.7),e.body);
-   e.shapes.push({collider:col,shape:{hx:1.25,hy:.17,dx:1.88,dy:0,mass:22}});
+   e.shapes.push({collider:col,shape:{hx:1.25,hy:.17,dx:2.10,dy:0,mass:22}});
   }
   this.actors.push(e);return e;
  }
@@ -135,7 +137,7 @@ export class MaterialYard{
  terrainStep(){
   if(this.support!=="finite")return;
   for(const a of this.actors){
-   const mu=a.stance==="brace"?1.35:.45;
+   const mu=a.stance==="brace"?1.20:.22;
    // Strong posture is still finite: a bounded external ground torque.
    // Flow explicitly yields to body-internal angular reaction.
    const yaw=a.stance==="brace"?80:1.5;
@@ -162,7 +164,7 @@ export class MaterialYard{
   const stanceSpeed=a.stance==="brace"?.48:1;
   const target=V(d.x*maxSpeed*stanceSpeed,d.y*maxSpeed*stanceSpeed);
   const m=a.body.mass(),force=V((target.x-v.x)*m,(target.y-v.y)*m);
-  const L=norm(force),lim=a.motor*DT*(a.stance==="brace"?.76:1);
+  const L=norm(force),lim=a.motor*DT*(a.stance==="brace"?3.1:1);
   const sc=L>lim?lim/L:1;
   const j=V(force.x*sc,force.y*sc);
   a.body.applyImpulse(j,true);this.events.rootEffort+=norm(j);
