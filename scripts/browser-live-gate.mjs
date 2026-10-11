@@ -238,3 +238,14 @@ console.log("P4 native operator source: real Chrome preset and external physical
 execFileSync(process.execPath,["scripts/p4-real-input.mjs",base],{
  timeout:120000,stdio:"inherit"
 });
+
+
+const p4stress=request({p4hard:1},["--dump-dom"]);
+validPage(p4stress,"P4 actual extreme pressure 48");
+if(attr(p4stress,"p4-hard")!=="PASS"||attr(p4stress,"p4-hard-cases")!=="48")
+ throw Error("P4 adversarial source failed: "+(attr(p4stress,"p4-hard-error")||"missing"));
+const pressure=JSON.parse(decodeURIComponent(attr(p4stress,"p4-hard-data")));
+if(pressure.cases!==48)throw Error("P4 missing actual true hard-source worlds");
+writeFileSync(resolve(folder,"p4-48-real-pressure-stress.json"),JSON.stringify(pressure,null,2));
+console.log("P4 grip survival vs cheap reflex rivals under real high-impact 48 worlds:");
+console.log(JSON.stringify(pressure.comparisons));
