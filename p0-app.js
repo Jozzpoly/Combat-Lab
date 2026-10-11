@@ -288,6 +288,28 @@ if(params.has("p2red")){
  }catch(e){document.body.dataset.p2Red="FAIL";
   document.body.dataset.p2RedError=String(e.stack||e);console.error(e);}
 }
+if(params.has("p3native")){
+ paused=true;
+ try{
+  world.dispose();world=new TransportYard({populated:false,support:"finite"});
+  const A=world.spawn("small",V(8,12)),B=world.spawn("small",V(12.8,12));
+  const C=world.load(10.4,12,.48,.42,45);
+  A.maxSpeedOverride=.85;B.maxSpeedOverride=.85;
+  world.selected=null;
+  let sourceTick=-1;
+  for(let i=0;i<280;i++){
+   world.command(A,V(1,0));world.command(B,V(-1,0));world.step();
+   if(world.actualContact(A,C)&&world.actualContact(B,C)){sourceTick=i+1;break;}
+  }
+  if(sourceTick<0)throw Error("P3 second body not in source real contact");
+  world.setSelected(A.id);secondActorId=B.id;
+  camera={x:10.4,y:12,zoom:2};
+  $("grip-force").value="6";$("grip-force-text").textContent="6 N·s/krok";
+  window.__p3ReadOnlyProbe=()=>world.gripTrace();
+  document.body.dataset.p3NativeReady=String(sourceTick);
+  status("P3: native G/H separate grips after real two-sided solver contact.");
+ }catch(e){document.body.dataset.p3NativeError=String(e.stack||e);console.error(e);}
+}
 if(params.has("p3probe")){
  paused=true;
  try{
