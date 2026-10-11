@@ -2,6 +2,7 @@ import {V,DT} from "./src/p0-world.js";
 import {ReflexYard} from "./src/p4-reflex.js";
 import {createCommons,CommonsYard} from "./src/p5-commons.js";
 import {createP6Commons,openP6} from "./src/p6-envelope.js";
+import {makeDoorCrowd,DoorCrowdYard} from "./src/p7-crowd.js";
 const $=id=>document.getElementById(id);
 const canvas=$("world"),ctx=canvas.getContext("2d",{alpha:false});
 let world=new ReflexYard(),paused=false,mode="select",drag=null,firstActorId=null,secondActorId=null;
@@ -83,6 +84,17 @@ function render(){
    ctx.strokeStyle="#8ed3bf";ctx.lineWidth=.035;ctx.stroke();
   }
  }
+ if(world instanceof DoorCrowdYard){
+  const m=world.gap, p=world.guard.body.translation(),
+    state=world.pressureTrace(),isBraced=world.guard.stance==="brace";
+  ctx.font="bold .34px ui-monospace,monospace";ctx.textAlign="center";
+  ctx.fillStyle=isBraced?"#ffd09a":"#b8d1d0";
+  ctx.fillText(isBraced?"OPÓR KONTAKTOWY":"DYNAMICZNY OBROŃCA",p.x,p.y-1.42);
+  ctx.textAlign="left";ctx.fillStyle="#f1d5a2";
+  ctx.fillText("światło "+m.width.toFixed(2)+" m",m.x+.55,m.y-1.8);
+  ctx.fillText("dotknięcia "+state.pressure.guardContacts,
+    m.x+.55,m.y-1.30);
+ }
  if(world.p6?.kind==="commons"){
   const c=world.p6.passage;
   const limit=(a,up)=>a.body.translation().y+
@@ -131,6 +143,18 @@ function render(){
    " · fizyczny napęd proxy "+rx.reflexEvents.proxyImpulse.toFixed(2)+
    " N·s · aktywne kroki "+rx.reflexEvents.active;
  }
+ if(world instanceof DoorCrowdYard){
+  const r=world.pressureTrace();
+  $("evidence").textContent+="\nP7: obrońca "+r.guard.kind+
+   " "+r.guard.mass+" kg, promień "+r.guard.shapeRadius+" m"+
+   "\nNacisk na obrońcę: "+r.pressure.guardContacts+
+   " kontaktów / sumowany impuls "+r.pressure.guardImpulse.toFixed(1)+" N·s"+
+   "\nPostawa z kontaktu: "+r.pressure.guardBraceTicks+
+   " tick · ustąpienia: "+r.pressure.deflections+
+   "\nPrzeszło gardzielą: "+r.crossings.mouth+"/"+r.pressure.density+
+   " · przecięło linię: "+r.crossings.all+
+   "\nKoszt napędu grupy: "+r.pressure.moveImpulse.toFixed(1)+" N·s";
+ }
  if(world instanceof CommonsYard){
   const p=world.commonsTrace().activity;
   $("evidence").textContent+="\\nP5 fizyczne dotknięcia ciał: "+p.contactActor+
@@ -160,6 +184,47 @@ function pause(){paused=!paused;acc=0;$("pause").textContent=paused?"Wznów":"Pa
 function reset(){world.dispose();firstActorId=null;secondActorId=null;world=new ReflexYard({support:$("support").value});
  paused=false;$("pause").textContent="Pauza";acc=0;
  status("Nowy materialny dziedziniec. Przebudowuj dowolnie.");render();}
+function p7Preset(){
+ world.dispose();
+ world=makeDoorCrowd({support:$("support").value,
+  width:Number($("p7-width").value),density:Number($("p7-density").value),
+  guardKind:$("p7-kind").value,guardMass:90,
+  guardPolicy:$("p7-stance").value,moverPolicy:$("p7-actor-policy").value});
+ firstActorId=null;secondActorId=null;p4MaterialId=null;
+ $("p5-motor").textContent="Wyłącz lokalny napęd";
+ camera={x:14.2,y:12,zoom:1.85};keys.clear();
+ acc=0;paused=false;$("pause").textContent="Pauza";
+ status("P7: realny nacisk. Strażnik to RUCHOME ciało, nie nieruchomy collider.");
+ render();
+}
+function p7Open(){
+ if(!(world instanceof DoorCrowdYard)){status("Najpierw scena P7.");return;}
+ if(!paused){status("Pauza wymagana do przebudowy świata.");return;}
+ if(world.openPassage())status("Fizyczna przeszkoda przesunięta o 1,30 m bez restartu tłumu.");
+ else status("Przejście już przebudowane.");
+ render();
+}
+function p7Poke(){
+ if(!(world instanceof DoorCrowdYard)){status("Najpierw scena P7.");return;}
+ const ok=world.pushGuard(V(85,0));
+ status(ok?"Operator szarpnął RUCHOME ciało rzeczywistym impulsem.":"Nie można szarpnąć.");
+ render();
+}
+$("p7-preset").onclick=p7Preset;
+$("p7-open").onclick=p7Open;
+$("p7-poke").onclick=p7Poke;
+$("p7-stance").onchange=()=>{
+ if(world instanceof DoorCrowdYard){
+  world.pressure.guardPolicy=$("p7-stance").value;
+  status("Nowe działanie obrońcy odczytywane TYLKO z następnego rzeczywistego kontaktu.");
+ }
+};
+$("p7-actor-policy").onchange=()=>{
+ if(world instanceof DoorCrowdYard){
+  world.pressure.moverPolicy=$("p7-actor-policy").value;
+  status("Polityka tłumu zmieniona bez resetowania świata.");
+ }
+};
 function p6Preset(){
  world.dispose();world=createP6Commons({support:$("support").value});
  $("p5-policy").value="touch";
@@ -472,6 +537,39 @@ if(params.has("p3native")){
   document.body.dataset.p3NativeReady=String(sourceTick);
   status("P3: native G/H separate grips after real two-sided solver contact.");
  }catch(e){document.body.dataset.p3NativeError=String(e.stack||e);console.error(e);}
+}
+if(params.has("p7native")){
+ window.__p7ReadOnlyProbe=()=>world instanceof DoorCrowdYard?
+  world.pressureTrace():null;
+}
+if(params.has("p7probe")){
+ paused=true;
+ try{
+  const {p7Probe}=await import("./src/p7-probe.js");
+  const result=p7Probe();
+  document.body.dataset.p7Probe="PASS";
+  document.body.dataset.p7Cases=String(result.worlds);
+  document.body.dataset.p7Report=encodeURIComponent(JSON.stringify(result));
+  status("P7: wieloosobowy rzeczywisty nacisk, bez NPC-owych celów.");
+ }catch(e){document.body.dataset.p7Probe="FAIL";
+  document.body.dataset.p7Error=String(e.stack||e);console.error(e);}
+}
+if(params.has("p7frame")){
+ paused=true;
+ try{
+  const {p7Case}=await import("./src/p7-probe.js");
+  const policy=params.get("p7frame")==="passive"?"passive":"brace";
+  const intervention=params.get("intervention")==="open"?"open":"none";
+  world.dispose();
+  const result=p7Case({width:2.85,density:6,support:"finite",guardKind:"bulky",
+   guardPolicy:policy,moverPolicy:"drive",intervention,
+   ticks:460,captureWorld:w=>{world=w;}});
+  camera={x:14.2,y:12,zoom:1.85};
+  document.body.dataset.p7Frame=JSON.stringify({
+   policy,intervention,finite:result.finite,passed:result.passedMouth,
+   pressure:result.contactImpulse,guard:result.guard});
+  status("P7: fizyczna presja kilku ciał, realny nacisk i obrona.");
+ }catch(e){document.body.dataset.p7FrameError=String(e.stack||e);console.error(e);}
 }
 if(params.has("p6recovery")){
  paused=true;

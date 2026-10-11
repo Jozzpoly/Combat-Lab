@@ -404,3 +404,35 @@ for(const policy of ["stubborn","recover","stabilized"]){
  request(q,["--screenshot="+resolve(folder,
   "p6-"+policy+"-after-jam-real-chromium.png")]);
 }
+
+
+const p7=request({p7probe:1},["--dump-dom"]);
+validPage(p7,"P7 actual crowd/contact physical WASM source");
+if(attr(p7,"p7-probe")!=="PASS"||attr(p7,"p7-cases")!=="76")
+ throw Error("P7 controlled pressure source failure: "+(attr(p7,"p7-error")||"not76"));
+const p7data=JSON.parse(decodeURIComponent(attr(p7,"p7-report")));
+if(p7data.worlds!==76)throw Error("P7 missing source worlds");
+writeFileSync(resolve(folder,"p7-76-real-crowd-pressure.json"),
+ JSON.stringify(p7data,null,2));
+console.log("P7 fully dynamic pressure shape A/B with 90kg matched defender:");
+console.log(JSON.stringify(p7data.geometry));
+console.log("P7 same actual preintervention pressure world; real operator action A/B:");
+console.log(JSON.stringify(p7data.comparisons));
+console.log("P7 body crowd pressure selected finite support scenarios:");
+console.log(JSON.stringify(p7data.base.filter(x=>x.support==="finite"&&
+ x.guardKind==="bulky"&&x.density===6&&x.width===2.85).map(x=>({
+ width:x.width,guard:x.guardPolicy,crowd:x.moverPolicy,contacts:x.contacts,
+ reacted:x.braceTicks,steered:x.deflections,passed:x.passedMouth,
+ displaced:x.guard.x,drive:x.sourceCost.root}))));
+for(const policy of ["passive","brace"]){
+ const q={p7frame:policy,intervention:"none"},dom=request(q,["--dump-dom"]);
+ validPage(dom,"P7 raw actual crowd screenshot "+policy);
+ const a=attr(dom,"p7-frame");
+ if(!a||attr(dom,"p7-frame-error"))throw Error("P7 source snapshot absent: "+
+ (attr(dom,"p7-frame-error")||policy));
+ const s=JSON.parse(a.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+ if(!s.finite||s.policy!==policy)throw Error("P7 source mismatch");
+ writeFileSync(resolve(folder,"p7-"+policy+"-source-frame.json"),JSON.stringify(s,null,2));
+ request(q,["--screenshot="+resolve(folder,
+  "p7-"+policy+"-actual-crowd-real-chromium.png")]);
+}

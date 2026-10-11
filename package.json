@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --check app.js && node --check p0-app.js && node --check src/p0-world.js && node --check src/p0-probe.js && node --check src/p0-chain.js && node --check src/p0-redteam.js && node --check scripts/p0-real-input.mjs && node --check src/p2-world.js && node --check src/p2-probe.js && node --check scripts/p2-real-input.mjs && node --check src/p3-duel.js && node --check scripts/p3-real-dual-input.mjs && node --check src/p4-reflex.js && node --check src/p4-probe.js && node --check src/p4-conservation.js && node --check src/p4-axial.js && node --check src/p5-commons.js && node --check src/p5-probe.js && node --check src/p6-envelope.js && node --check src/p6-probe.js && node --check src/p6-orientation.js && node --check src/p6-recovery.js",
+    "test": "node --check app.js && node --check p0-app.js && node --check src/p0-world.js && node --check src/p0-probe.js && node --check src/p0-chain.js && node --check src/p0-redteam.js && node --check scripts/p0-real-input.mjs && node --check src/p2-world.js && node --check src/p2-probe.js && node --check scripts/p2-real-input.mjs && node --check src/p3-duel.js && node --check scripts/p3-real-dual-input.mjs && node --check src/p4-reflex.js && node --check src/p4-probe.js && node --check src/p4-conservation.js && node --check src/p4-axial.js && node --check src/p5-commons.js && node --check src/p5-probe.js && node --check src/p6-envelope.js && node --check src/p6-probe.js && node --check src/p6-orientation.js && node --check src/p6-recovery.js && node --check src/p7-crowd.js && node --check src/p7-probe.js",
     "build": "vite build --base=./"
   },
   "dependencies": {
