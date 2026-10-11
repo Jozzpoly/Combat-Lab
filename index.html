@@ -4,11 +4,11 @@
 <title>Combat Lab · P2 contact cargo transport courtyard</title>
 <link rel="stylesheet" href="./p0.css"></head><body>
 <main id="app">
-<header><div class="intro"><p class="eyebrow">COMBAT LAB / IZOLOWANY KANDYDAT P2</p>
-<h1>Dziedziniec materii i chwytu</h1>
-<p>Jeden edytowalny świat. Brama jest prawdziwym zawiasem, ciężary zostają tam, gdzie je przesuniesz. Możesz naprawdę chwytać, ciągnąć, puszczać i przepychać materię; nic nie znika w ekwipunku.</p></div>
+<header><div class="intro"><p class="eyebrow">COMBAT LAB / IZOLOWANY KANDYDAT P3</p>
+<h1>Dziedziniec wspólnej materii</h1>
+<p>Jeden edytowalny świat. Brama jest prawdziwym zawiasem, ciężary zostają tam, gdzie je przesuniesz. Prawdziwy ciężar, kilka ciał, niezależne ograniczone uchwyty. Możesz próbować przeciągać, puścić albo przeciwstawić się drugiemu ciału.</p></div>
 <div class="run"><button id="pause">Pauza</button><button id="tick">1 krok</button><button id="reset">Od nowa</button></div></header>
-<section class="toolbar">
+<section class="toolbar"><button id="p3-preset">Dwa ciała · jeden ciężar</button><button id="p3-right-grip">Chwyt drugiego · H</button>
   <button data-mode="select" class="selected">Wybierz ciało</button>
   <button data-mode="poke">Impuls</button>
   <button data-mode="bulky">Duże ciało</button>
@@ -21,7 +21,7 @@
   <div class="viewport"><canvas id="world" aria-label="Rzeczywisty materialny świat Combat Lab"></canvas><div class="hud"><span id="mode-status">Swobodna edycja</span><span id="clock">0.0 s</span></div></div>
   <aside>
     <h2>Eksperymentuj</h2>
-    <p class="help">Wybierz ciało. G chwyta ciężar wyłącznie przy realnym kontakcie. WASD/strzałki — fizyczny napęd proxy. B — przyjmij lub porzuć postawę. Q/E — ruch niezależnego członu.</p>
+    <p class="help">Wybierz ciało. W scenie dwóch ciał: WASD pierwsze, IJKL drugie, G / H — niezależne chwyty po realnym kontakcie. Każde ciało ma jawny fizyczny napęd proxy. B — przyjmij lub porzuć postawę. Q/E — ruch niezależnego członu.</p>
     <div class="line"><strong>Kontakt z gruntem</strong><select id="support">
       <option value="finite">Ograniczony opór terenu</option>
       <option value="none">Bez podparcia (kontrola)</option>
@@ -34,7 +34,7 @@
     <p class="help">Przeciągnij myszą w trybie „Impuls”. Na pauzie Ctrl+przeciągnij obiekt. Scroll: zoom. Środkowy przycisk: pan. Możesz dodawać konstrukcje także w niedorzecznych pozycjach.</p>
     <div id="selection" class="readout">Żaden organizm nieaktywny</div>
     <div id="evidence" class="readout"></div>
-    <p class="limit">Fizyka 2D i jawny, skończony opór wirtualnego gruntu. To NIE jest prawdziwa anatomia dłoni, chód, cognition NPC ani uznana gra. Uchwyt to limitowana sprężysta para impulsów, a nie sztywny weld. Nie ma zaprogramowanej ścieżki ani celu zwycięstwa.</p>
+    <p class="limit">Fizyka 2D i jawny, skończony opór wirtualnego gruntu. To NIE jest prawdziwa anatomia dłoni, chód, cognition NPC ani uznana gra. Żaden aktor sam nie podejmuje decyzji. Uchwyt to limitowana sprężysta para impulsów, a nie sztywny weld. Nie ma zaprogramowanej ścieżki ani celu zwycięstwa.</p>
   </aside>
 </section><footer><span id="status">Uruchamianie Rapier…</span><span>Izolowany prototyp badawczy · bez publikacji · Owner feel UNKNOWN</span></footer>
 </main>
