@@ -95,3 +95,25 @@ console.log(JSON.stringify(pc.cases.map(x=>({
   torso:x.rootAngleAtShot,hinge:x.hingeAtShot,
   shotX:x.projectile.p.x
 }))));
+
+
+for(const spec of [
+ {kind:"hinged",active:1,tick:0},
+ {kind:"hinged",active:1,tick:95},
+ {kind:"hinged",active:1,tick:150},
+ {kind:"rigid",active:1,tick:95},
+ {kind:"rigid",active:1,tick:150},
+ {kind:"hinged",active:0,tick:95},
+ {kind:"hinged",active:0,tick:150}
+]){
+ const u=new URL(base);
+ u.searchParams.set("k2scene",spec.kind);
+ u.searchParams.set("k2active",String(spec.active));
+ u.searchParams.set("k2tick",String(spec.tick));
+ const source=run(u.toString(),["--dump-dom"]);
+ if(!source.includes("data-k2-scene=")||source.includes("data-k2-scene-error="))
+  throw Error("K2 exact-source visual frame did not run: "+JSON.stringify(spec));
+ const file="k2-source-"+spec.kind+"-"+(spec.active?"act":"pass")+"-t"+spec.tick+".png";
+ run(u.toString(),["--screenshot="+resolve(out,file)]);
+}
+console.log("K2 genuine emitted-source screenshots captured for passive/active rigid/hinge temporal comparison.");
