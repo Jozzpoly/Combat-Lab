@@ -348,3 +348,8 @@ writeFileSync(resolve(folder,"p6-four-body-room-frame-source.json"),
  JSON.stringify(f6,null,2));
 request({p6frame:1},["--screenshot="+resolve(folder,
  "p6-four-body-material-corridors-real-chromium.png")]);
+
+console.log("P6 real native pointer edits narrow passage while physical 4-body world persists...");
+execFileSync(process.execPath,["scripts/p6-native-real.mjs",base],{
+ timeout:120000,stdio:"inherit"
+});
