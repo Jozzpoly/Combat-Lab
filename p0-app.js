@@ -162,6 +162,8 @@ function reset(){world.dispose();firstActorId=null;secondActorId=null;world=new 
  status("Nowy materialny dziedziniec. Przebudowuj dowolnie.");render();}
 function p6Preset(){
  world.dispose();world=createP6Commons({support:$("support").value});
+ $("p5-policy").value="touch";
+ $("p5-motor").textContent="Wyłącz lokalny napęd";
  camera={x:14,y:14.4,zoom:1.75};
  firstActorId=null;secondActorId=null;p4MaterialId=null;
  keys.clear();acc=0;paused=false;$("pause").textContent="Pauza";
@@ -180,6 +182,7 @@ $("p6-preset").onclick=p6Preset;
 $("p6-open").onclick=p6Open;
 function p5Preset(){
  world.dispose();
+ $("p5-motor").textContent="Wyłącz lokalny napęd";
  world=createCommons({support:$("support").value,
   policy:$("p5-policy").value,seed:1,density:Number($("p5-density").value),topology:$("p5-topology").value});
  firstActorId=null;secondActorId=null;p4MaterialId=null;
