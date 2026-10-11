@@ -45,8 +45,8 @@ export class MaterialYard{
   this.wall(-.45,12,.45,12.5);this.wall(40.45,12,.45,12.5);
   // There is an 8m material gap between these two wall segments.
   this.wall(20,4,.34,4);this.wall(20,20,.34,4);
-  this.anchor=this.add("pivot",20,8,[{r:.28,mass:1}],{fixed:true});
-  this.gate=this.add("gate",20,10.35,[{hx:.20,hy:2.35,mass:90}]);
+  this.anchor=this.add("pivot",20,8.55,[{r:.28,mass:1}],{fixed:true});
+  this.gate=this.add("gate",20,10.90,[{hx:.20,hy:2.35,mass:90}]);
   const j=this.world.createImpulseJoint(
    RAPIER.JointData.revolute(V(0,0),V(0,-2.35)),
    this.anchor.body,this.gate.body,true);
@@ -79,19 +79,19 @@ export class MaterialYard{
   e.stance="flow";e.motor=motor;e.target=0;e.panel=null;e.panelActive=false;e.actuatorLimit=1.6;
   if(kind==="lever"){
    // A real front-mounted panel with 22kg and paired bounded torques.
-   const panel=this.add("effector",p.x+.80,p.y+1.25,
-      [{hx:.17,hy:1.25,mass:22}]);
+   const panel=this.add("effector",p.x+1.88,p.y,
+      [{hx:1.25,hy:.17,mass:22}]);
    const joint=this.world.createImpulseJoint(
-      RAPIER.JointData.revolute(V(.63,0),V(-.17,-1.25)),
+      RAPIER.JointData.revolute(V(.63,0),V(-1.25,0)),
       e.body,panel.body,true);
    joint.setContactsEnabled(true);
    e.panel=panel;e.joint=joint;
   } else if(kind==="rigid-lever"){
    // Cheap rival: similar envelope and combined mass, no separate actuation.
    const col=this.world.createCollider(
-    RAPIER.ColliderDesc.cuboid(.17,1.25).setTranslation(.80,1.25)
+    RAPIER.ColliderDesc.cuboid(1.25,.17).setTranslation(1.88,0)
      .setMass(22).setFriction(.7),e.body);
-   e.shapes.push({collider:col,shape:{hx:.17,hy:1.25,dx:.80,dy:1.25,mass:22}});
+   e.shapes.push({collider:col,shape:{hx:1.25,hy:.17,dx:1.88,dy:0,mass:22}});
   }
   this.actors.push(e);return e;
  }
@@ -136,7 +136,9 @@ export class MaterialYard{
   if(this.support!=="finite")return;
   for(const a of this.actors){
    const mu=a.stance==="brace"?1.35:.45;
-   const yaw=a.stance==="brace"?500:45;
+   // Strong posture is still finite: a bounded external ground torque.
+   // Flow explicitly yields to body-internal angular reaction.
+   const yaw=a.stance==="brace"?80:1.5;
    this.terrain(a,a.body.mass()*9.81*mu,yaw);
   }
   // Loads also have a finite non-magical ground reaction.
@@ -228,7 +230,7 @@ export class MaterialYard{
   const a=this.chosen;
   return {tick:this.ticks,seconds:round(this.ticks*DT),support:this.support,
     actorCount:this.actors.length,loadCount:this.loads.length,
-    gateAngle:round(gateRotation),gateTip:V(round(20+Math.sin(gateRotation)*(-4.7)),round(8+Math.cos(gateRotation)*4.7)),
+    gateAngle:round(gateRotation),gateTip:V(round(20+Math.sin(gateRotation)*(-4.7)),round(8.55+Math.cos(gateRotation)*4.7)),
     selected:a?{id:a.id,kind:a.kind,stance:a.stance,pos:{...a.body.translation()},
       rotation:round(a.body.rotation()),panelAngle:a.panel?round(wrap(a.panel.body.rotation()-a.body.rotation())):null}:null,
     events:Object.fromEntries(Object.entries(this.events).map(([k,v])=>[k,round(v)])),
