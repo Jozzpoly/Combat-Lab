@@ -25,7 +25,7 @@ if(att(test,"p10-audit")!=="PASS")
  throw Error("P10 emitted real WASM source control FAIL: "+
   (att(test,"p10-audit-error")||att(test,"p10-error")||"missing result"));
 const data=JSON.parse(decodeURIComponent(unesc(att(test,"p10-report"))));
-if(data.cases!==15)throw Error("P10 full declared physical source count changed: "+data.cases);
+if(data.cases!==19)throw Error("P10 expanded source count changed: "+data.cases);
 writeFileSync(resolve(folder,"p10-real-physical-controls.json"),JSON.stringify(data,null,2));
 console.log("P10 SOURCE: "+data.cases+" true quiet/control/material/hinge/topology worlds.");
 console.log(JSON.stringify({slots:data.slots,haul:data.haul,tools:data.tools,topology:data.topology,quiet:data.quiet}));
