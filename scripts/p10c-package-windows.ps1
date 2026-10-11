@@ -68,6 +68,39 @@ try {
  Remove-Item Env:P10C_PORT -ErrorAction SilentlyContinue
  Remove-Item Env:P10C_NO_OPEN -ErrorAction SilentlyContinue
 }
+# Execute the ACTUAL double-click .cmd, not only node.exe directly.
+# This is the last Windows startup boundary; native Chromium is on Linux.
+$launcher=Join-Path $folder "URUCHOM-COMBAT-LAB.cmd"
+if (!(Test-Path $launcher)) { throw "Windows launcher missing from ZIP tree" }
+$env:P10C_PORT="4175"
+$env:P10C_NO_OPEN="1"
+$launchOut=Join-Path $repo "p10c-launcher-stdout.log"
+$launchErr=Join-Path $repo "p10c-launcher-stderr.log"
+$cmdArgs='/d /c "' + $launcher + '"'
+$cmd=Start-Process -FilePath "$env:SystemRoot\System32\cmd.exe" -ArgumentList $cmdArgs -WorkingDirectory $folder -RedirectStandardOutput $launchOut -RedirectStandardError $launchErr -PassThru -WindowStyle Hidden
+try {
+ $started=$false
+ for ($n=0;$n -lt 60;$n++){
+  Start-Sleep -Milliseconds 250
+  if ($cmd.HasExited) { throw "Windows launcher quit prematurely: $($cmd.ExitCode)" }
+  try{
+   $page=Invoke-WebRequest "http://127.0.0.1:4175/p10.html" -UseBasicParsing -TimeoutSec 2
+   if ($page.StatusCode -eq 200 -and $page.Content.Contains("Materialny warsztat")){
+    $started=$true;break
+   }
+  } catch {}
+ }
+ if (!$started) {
+  $errorText=Get-Content $launchErr -Raw -ErrorAction SilentlyContinue
+  throw "Actual .cmd launcher did not start packaged local server: $errorText"
+ }
+ Write-Host "ACTUAL .cmd Windows launch chain: PASS; localhost 127.0.0.1:4175."
+} finally {
+ try{ & taskkill.exe /PID $cmd.Id /T /F | Out-Null }catch{}
+ Remove-Item Env:P10C_PORT -ErrorAction SilentlyContinue
+ Remove-Item Env:P10C_NO_OPEN -ErrorAction SilentlyContinue
+}
+
 $zip=Join-Path $repo "Combat-Lab-P10b-Portable-Windows.zip"
 if (Test-Path $zip) { Remove-Item $zip -Force }
 Compress-Archive -Path $folder -DestinationPath $zip -CompressionLevel Optimal
