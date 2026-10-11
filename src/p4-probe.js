@@ -106,3 +106,33 @@ export function p4Probe(){
   truth:"real Rapier WASM; one source-authored external impulse into real 45kg dynamic load; all actor responses strictly local linked-material velocity and tension",
   limits:"NOT a self-directed goal, cognition, proper feet or a living NPC. An active virtual traction proxy acts on root; cheap unconditional follow/brake competitors included."};
 }
+
+
+export function p4BreakRedTeam(){
+ // This is explicitly POST-HOC pressure discovery, not pre-registered evidence
+ // of unique reflex. Search for actual grip-break stress, not tiny displacement.
+ const results=[];
+ for(const support of ["finite","none"])
+  for(const mass of [45,80])
+   for(const force of [240,360,520])
+    for(const mode of ["off","brake","follow","conditional"])
+     results.push(p4Case({support,mass,force,mode,side:"right",
+      offCenter:.33,steps:180}));
+ if(results.length!==48||results.some(x=>!x.finite||x.acquiredContact<1))
+  throw Error("P4 high-pressure source worlds invalid");
+ const contrasts=[];
+ for(const support of ["finite","none"])
+  for(const mass of [45,80])
+   for(const force of [240,360,520]){
+    const g=results.filter(x=>x.support===support&&x.mass===mass&&x.force===force);
+    if(g.length!==4||g.some(x=>Math.abs(x.initialLoad.x-g[0].initialLoad.x)>1e-7))
+     throw Error("P4 invalid prepressure matched physical start");
+    contrasts.push({support,mass,force,rows:g.map(x=>({
+     mode:x.mode,gripTicks:x.gripTicks,breaks:x.breaks,
+     maxStretch:x.stretchPeak,dx:x.loadDX,ground:x.groundedSource,
+     proxy:x.reflexSource
+    }))});
+   }
+ return {cases:results.length,comparisons:contrasts,
+  limitation:"POST-HOC extreme virtual cargo impulses. A negative/positive only means source mechanical outcome, not gameplay acceptance or cognition."};
+}
