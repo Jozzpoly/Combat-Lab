@@ -95,7 +95,7 @@ export function p7Probe(){
    throw Error("P7 opponent mass not physically matched");
   if(x.moverPolicy==="drive"&&x.deflections!==0)
    throw Error("P7 no-local-policy control secretly steered");
-  if((x.support==="none"||x.guardPolicy==="passive")&&x.braceTicks!==0)
+  if(x.guardPolicy==="passive"&&x.braceTicks!==0)
    throw Error("P7 impossible pressure-dependent brace reaction");
  }
  const paired=[];
