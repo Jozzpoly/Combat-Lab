@@ -103,9 +103,9 @@ function render(){
   ctx.fillStyle=isBraced?"#ffd09a":"#b8d1d0";
   ctx.fillText(isBraced?"OPÓR KONTAKTOWY":"DYNAMICZNY OBROŃCA",p.x,p.y-1.42);
   ctx.textAlign="left";ctx.fillStyle="#f1d5a2";
-  ctx.fillText("światło "+state.mouth.width.toFixed(2)+" m",m.x+.55,m.y-1.8);
+  ctx.fillText("światło "+state.mouth.width.toFixed(2)+" m",m.x+1.75,m.y-1.9);
   ctx.fillText("dotknięcia "+state.pressure.guardContacts,
-    m.x+.55,m.y-1.30);
+    m.x+1.75,m.y-1.43);
  }
  if(world.p6?.kind==="commons"){
   const c=world.p6.passage;
@@ -193,10 +193,11 @@ function select(e){
 }
 function pause(){paused=!paused;acc=0;$("pause").textContent=paused?"Wznów":"Pauza";
   status(paused?"Pauza. Ctrl+przeciągnij fizyczne ciała.":"Świat działa.");render();}
-function reset(){world.dispose();firstActorId=null;secondActorId=null;world=new ReflexYard({support:$("support").value});
+function reset(){document.body.classList.remove("p7-focus");world.dispose();firstActorId=null;secondActorId=null;world=new ReflexYard({support:$("support").value});
  paused=false;$("pause").textContent="Pauza";acc=0;
  status("Nowy materialny dziedziniec. Przebudowuj dowolnie.");render();}
 function p7Preset(){
+ document.body.classList.add("p7-focus");
  world.dispose();
  world=makeDoorCrowd({support:$("support").value,
   width:Number($("p7-width").value),density:Number($("p7-density").value),
@@ -239,6 +240,7 @@ $("p7-actor-policy").onchange=()=>{
  }
 };
 function p6Preset(){
+ document.body.classList.remove("p7-focus");
  world.dispose();world=createP6Commons({support:$("support").value});
  $("p5-policy").value="touch";
  $("p5-motor").textContent="Wyłącz lokalny napęd";
@@ -259,6 +261,7 @@ function p6Open(){
 $("p6-preset").onclick=p6Preset;
 $("p6-open").onclick=p6Open;
 function p5Preset(){
+ document.body.classList.remove("p7-focus");
  world.dispose();
  $("p5-motor").textContent="Wyłącz lokalny napęd";
  world=createCommons({support:$("support").value,
@@ -295,6 +298,7 @@ $("p5-apply-role").onclick=()=>{
  status("Fizyczne ciało #"+a.id+" ma lokalną regułę "+$("p5-role").value+". Brak globalnego celu.");render();
 };
 function p3Preset(){
+ document.body.classList.remove("p7-focus");
  world.dispose();
  world=new ReflexYard({populated:false,support:$("support").value});
  const A=world.spawn("small",V(9.3,12));
@@ -309,6 +313,7 @@ function p3Preset(){
 }
 let p4MaterialId=null;
 function p4Preset(){
+ document.body.classList.remove("p7-focus");
  world.dispose();
  world=new ReflexYard({populated:false,support:$("support").value});
  const actor=world.spawn("small",V(8.95,15));
@@ -578,6 +583,7 @@ if(params.has("p7frame")){
    guardPolicy:policy,moverPolicy:"drive",intervention,
    ticks:460,captureWorld:w=>{world=w;}});
   camera={x:14.2,y:12,zoom:1.85};
+  document.body.classList.add("p7-focus");
   document.body.dataset.p7Frame=JSON.stringify({
    policy,intervention,finite:result.finite,passed:result.passedMouth,
    pressure:result.contactImpulse,guard:result.guard});
