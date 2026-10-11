@@ -57,11 +57,27 @@ export function makeP11World({backing="fixed",support="finite",kind="lever"}={})
  }catch(e){w.dispose();throw e;}
 }
 export function p11Case({backing="fixed",support="finite",
- kind="lever",actuation="hinge",ticks=240}={}){
+ kind="lever",actuation="hinge",ticks=240,cargoMu=null}={}){
  if(!["hinge","off","cheap-root"].includes(actuation))throw Error("P11 actuation");
  const w=makeP11World({backing,support,kind});
  try{
   const arm=w.tool,load=w.toolLoad,backer=w.backer;
+  // PREDECLARED coefficient scan: hold actor ground response fixed and
+  // restore a separately finite translational virtual-ground reaction
+  // ONLY on the 32kg target cargo. All other source dynamics unchanged.
+  // Fixed angular load friction intentionally remains at original 24N.m.
+  let cargoGroundImpulse=0;
+  if(cargoMu!==null){
+   if(!Number.isFinite(cargoMu)||cargoMu<0||cargoMu>.5||support!=="actor-only")
+    throw Error("P11 invalid cargo-only friction sweep");
+   const actorTerrain=w.terrainStep;
+   w.terrainStep=()=>{
+    actorTerrain();
+    const old=w.events.terrainLinearImpulse;
+    w.terrain(load,load.body.mass()*9.81*cargoMu,24);
+    cargoGroundImpulse+=w.events.terrainLinearImpulse-old;
+   };
+  }
   const initial={
    root:p(arm),load:p(load),panel:arm.panel?p(arm.panel):null,
    rootMass:round(arm.body.mass()),allPartsMass:round(arm.body.mass()+
@@ -106,7 +122,8 @@ export function p11Case({backing="fixed",support="finite",
      backing:backer?p(backer):null});
   }
   const t=w.trace();
-  return {backing,support,kind,actuation,ticks,initial,
+  return {backing,support,kind,actuation,ticks,initial,cargoMu,
+   cargoGroundImpulse:round(cargoGroundImpulse),
    finalRoot:p(arm),rootTravel:delta(p(arm),rootStart),
    rootYaw:round(arm.body.rotation()),peakYaw:round(rootPeakYaw),
    finalLoad:p(load),loadTravel:delta(p(load),loadStart),
@@ -147,11 +164,34 @@ export function p11Audit(){
   if(a.actuatorImpulse!==0||b.rootDriveImpulse!==0)
    throw Error("P11 mismatched root and internal force source");
  }
- return {worlds:scenarios.length,scenarios,summary:scenarios.map(x=>({
+ // Predeclared nonzero friction gradient, NOT a servo-tuning search:
+ // identical powered hinge, fixed actor ground reaction and NO root drive.
+ // Any useful change must be explained by actual material-contact afterstate,
+ // including a cheap friction threshold rather than anatomical uniqueness.
+ const scan=[];
+ for(const mu of [0,.05,.10,.15,.20,.30])
+  for(const backing of ["none","fixed"])
+   scan.push(p11Case({backing,support:"actor-only",cargoMu:mu}));
+ if(scan.length!==12||scan.some(x=>!x.finite||x.actuatorImpulse<=0||
+     x.rootDriveImpulse!==0))
+  throw Error("P11 source cargo-load friction sweep invalid");
+ for(const mu of [0,.05,.10,.15,.20,.30]){
+  const n=scan.find(x=>x.cargoMu===mu&&x.backing==="none"),
+    f=scan.find(x=>x.cargoMu===mu&&x.backing==="fixed");
+  if(!n||!f||JSON.stringify(n.initial.root)!==JSON.stringify(f.initial.root)||
+     JSON.stringify(n.initial.load)!==JSON.stringify(f.initial.load))
+   throw Error("P11 scan mismatched real initial body and load");
+ }
+ return {worlds:scenarios.length+scan.length,scenarios,
+  cargoFrictionScan:scan.map(x=>({mu:x.cargoMu,backing:x.backing,
+   cargoMove:x.loadTravel,cargoDX:x.loadDX,rootYaw:x.rootYaw,
+   motor:x.actuatorImpulse,targetGroundImpulse:x.cargoGroundImpulse,
+   backingContacts:x.backingContactTicks,cargoContacts:x.cargoContactTicks})),
+  summary:scenarios.map(x=>({
   backing:x.backing,support:x.support,kind:x.kind,act:x.actuation,
   load:x.loadTravel,dx:x.loadDX,peak:x.loadPeak,
   rootYaw:x.rootYaw,backContacts:x.backingContactTicks,
   cargoContacts:x.cargoContactTicks,actuator:x.actuatorImpulse,
   rootEffort:x.rootDriveImpulse,ground:x.terrainReaction
- })),limitations:"No product PASS. actor-only / cargo-only are controlled ablations of existing bounded virtual planar friction, not physically real foot-ground contacts. Fixed world wall is infinite-mass material support, moving 90kg cargo is a load. No active sensing/biological stance. Cheap direct-drive rival uses EXTERNAL ground proxy, not equal actuation energy. Read actual afterstates."};
+ })),limitations:"Cargo friction scan tests predeclared translational coefficient 0,.05,.10,.15,.20,.30 while holding load angular ground cap24 and actor support law constant; not biomechanically valid. No product PASS. actor-only / cargo-only are controlled ablations of existing bounded virtual planar friction, not physically real foot-ground contacts. Fixed world wall is infinite-mass material support, moving 90kg cargo is a load. No active sensing/biological stance. Cheap direct-drive rival uses EXTERNAL ground proxy, not equal actuation energy. Read actual afterstates."};
 }
