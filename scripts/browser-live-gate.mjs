@@ -88,3 +88,26 @@ console.log(JSON.stringify(material.cases.map(x=>({
  laterX:x.runnerAfter.x,passed:x.runnerCrossed,
  runnerGate:x.runnerGateImpulse,firstStage:x.openerGateImpulse
 }))));
+
+
+for(const axis of ["spatial","opener"]){
+ const red=request({p0redteam:axis},["--dump-dom"]);
+ validPage(red,"P0 red-team "+axis);
+ if(attr(red,"p0-redteam")!=="PASS"||attr(red,"p0-redteam-axis")!==axis)
+  throw Error("P0 post-hoc red team failed "+axis+": "+(attr(red,"p0-redteam-error")||"no result"));
+ const raw=attr(red,"p0-redteam-result");
+ const results=JSON.parse(decodeURIComponent(raw));
+ const desired=axis==="spatial"?9:8;
+ if(results.cases!==desired)throw Error("P0 redteam incorrect axis count "+axis);
+ writeFileSync(resolve(folder,"p0-posthoc-"+axis+".json"),JSON.stringify(results,null,2));
+ console.log("P0 post-hoc robustness "+axis+" "+desired+" matched pairs:");
+ console.log(JSON.stringify({totals:results.count,comparisons:results.data.map(x=>({
+   key:x.key,
+   openedGate:x.compare.openedGate,
+   access:x.compare.changedCross,
+   deltaX:x.compare.deltaX,
+   firstGateImpulse:x.compare.firstActionGateContact,
+   opened:x.opened.runnerCrossed,
+   closed:x.closed.runnerCrossed
+ }))}));
+}
