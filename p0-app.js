@@ -169,6 +169,20 @@ window.addEventListener("blur",()=>keys.clear());
 function controls(){return V(+(keys.has("KeyD")||keys.has("ArrowRight"))-+(keys.has("KeyA")||keys.has("ArrowLeft")),
  +(keys.has("KeyS")||keys.has("ArrowDown"))-+(keys.has("KeyW")||keys.has("ArrowUp")));}
 const params=new URLSearchParams(location.search);
+if(params.has("p0redteam")){
+ paused=true;
+ try{
+  const {redteamP0}=await import("./src/p0-redteam.js");
+  const mode=params.get("p0redteam");
+  const result=redteamP0(mode);
+  document.body.dataset.p0Redteam="PASS";
+  document.body.dataset.p0RedteamAxis=mode;
+  document.body.dataset.p0RedteamCases=String(result.cases);
+  document.body.dataset.p0RedteamResult=encodeURIComponent(JSON.stringify(result));
+  status("Rzeczywista kontrola odporności A/B: "+result.cases+" par.");
+ }catch(e){document.body.dataset.p0Redteam="FAIL";
+  document.body.dataset.p0RedteamError=String(e.stack||e);console.error(e);}
+}
 if(params.has("p0chain")){
  paused=true;
  try{
