@@ -86,7 +86,19 @@ export function p3Probe(){
   if(["off","zero"].includes(x.mode)&&x.gripPairs!==0)
    throw Error("P3 passive/zero link exerted force");
  }
- return {cases:results.length,results,
+ const releaseContrasts=[];
+ for(const support of ["finite","none"])for(const leftKind of ["small","bulky"]){
+  const held=results.find(x=>x.support===support&&x.leftKind===leftKind&&x.mode==="dual");
+  const freed=results.find(x=>x.support===support&&x.leftKind===leftKind&&x.mode==="release");
+  if(!held||!freed||held.cargoAtContest!==freed.cargoAtContest||
+    held.initialCargoX!==freed.initialCargoX||freed.activeAfterContest!==2||
+    held.activeAfterContest!==2||!freed.didRelease)
+   throw Error("P3 unmatched release vs dual initial physical states");
+  releaseContrasts.push({support,leftKind,preReleaseX:held.cargoAtContest,
+   heldAfterX:held.cargoAfter,releasedAfterX:freed.cargoAfter,
+   releaseOnlyDelta:rnd(freed.cargoAfter-held.cargoAfter)});
+ }
+ return {cases:results.length,releaseContrasts,results,
   source:"real Rapier2D WASM solver, two independent bodies one cargo",
   limit:"Authored finite input scripts; 45kg shared mass, not gameplay, no anatomy exclusivity"};
 }
