@@ -156,6 +156,45 @@ if(params.has("k1probe")){
   }catch(error){document.body.dataset.k1Probe="FAIL";
     document.body.dataset.k1Error=String(error.stack||error);console.error(error);}
 }
+if(params.has("k2scene")){
+  try{
+    paused=true;field.dispose();
+    const {K2Field}=await import("./src/k2-probe.js");
+    const kind=params.get("k2scene")||"hinged",
+      active=params.get("k2active")!=="0",
+      target=Number(params.get("k2target")||"1.1"),
+      loadY=Number(params.get("k2loady")||"10.2"),
+      pulse=Number(params.get("k2pulse")||"90"),
+      shotY=Number(params.get("k2shoty")||"11.2"),
+      tick=Math.max(0,Math.min(150,Number(params.get("k2tick")||"95")));
+    field=new K2Field({kind,preset:"probe"});
+    const second=field.load(17,loadY,.34,.32,56);
+    field.world.propagateModifiedBodyPositionsToColliders();
+    if(kind==="hinged"&&active)field.aimPanel(target);
+    const wrap=x=>Math.atan2(Math.sin(x),Math.cos(x));
+    for(let i=0;i<tick;i++){
+      if(i===15&&pulse>0)second.body.applyImpulse(V(-pulse,0),true);
+      if(i===95){
+        field.reposition(field.witness,V(24.4,shotY));
+        field.shoot(V(3,shotY),V(28,shotY),20);
+      }
+      if(kind==="rigid"&&active){
+        const b=field.guard.body,
+          error=wrap(target-b.rotation()),
+          torque=Math.max(-.28,Math.min(.28,error*.42-b.angvel()*.13));
+        b.applyTorqueImpulse(torque,true);
+      }
+      field.step();
+    }
+    document.body.dataset.k2Scene=JSON.stringify({
+      kind,active,target,pulse,loadY,shotY,tick,load:second.body.translation(),
+      guard:field.trace()});
+    report("K2 rzeczywista klatka źródłowa: t"+tick+" "+kind+
+      ", aktywacja "+active+", wtórny impuls "+pulse+" N·s");
+  }catch(e){
+    document.body.dataset.k2SceneError=String(e.stack||e);console.error(e);
+  }
+}
 if(params.has("k2pressure")){
   try{
     paused=true;
