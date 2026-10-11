@@ -2,7 +2,7 @@ import {V,DT} from "./src/p0-world.js";
 import {TransportYard} from "./src/p2-world.js";
 const $=id=>document.getElementById(id);
 const canvas=$("world"),ctx=canvas.getContext("2d",{alpha:false});
-let world=new TransportYard(),paused=false,mode="select",drag=null,secondActorId=null;
+let world=new TransportYard(),paused=false,mode="select",drag=null,firstActorId=null,secondActorId=null;
 let last=performance.now(),acc=0,lastDraw=0;
 let camera={x:20,y:12,zoom:1.0},keys=new Set();
 const PI=Math.PI,rgba={wall:"#546b70",pivot:"#c99a66",gate:"#cda867",
@@ -52,7 +52,7 @@ function render(){
   }
   for(const p of entity.shapes)physicalShape(entity,p,chosen);
   if(world.actors.includes(entity)&&secondActorId!==null&&
-     (entity.id===secondActorId||chosen)){
+     (entity.id===secondActorId||entity.id===firstActorId)){
    const label=entity.id===secondActorId?"B":"A";
    const at=entity.body.translation();
    ctx.fillStyle="#f3e8bd";ctx.textAlign="center";
@@ -110,7 +110,7 @@ function select(e){
 }
 function pause(){paused=!paused;acc=0;$("pause").textContent=paused?"Wznów":"Pauza";
   status(paused?"Pauza. Ctrl+przeciągnij fizyczne ciała.":"Świat działa.");render();}
-function reset(){world.dispose();secondActorId=null;world=new TransportYard({support:$("support").value});
+function reset(){world.dispose();firstActorId=null;secondActorId=null;world=new TransportYard({support:$("support").value});
  paused=false;$("pause").textContent="Pauza";acc=0;
  status("Nowy materialny dziedziniec. Przebudowuj dowolnie.");render();}
 function p3Preset(){
@@ -120,7 +120,7 @@ function p3Preset(){
  const B=world.spawn("small",V(11.5,12));
  world.load(10.4,12,.48,.42,45);
  A.maxSpeedOverride=.85;B.maxSpeedOverride=.85;
- world.setSelected(A.id);secondActorId=B.id;
+ world.setSelected(A.id);firstActorId=A.id;secondActorId=B.id;
  camera={x:10.4,y:12,zoom:2.75};keys.clear();
  paused=false;$("pause").textContent="Pauza";acc=0;
  status("P3: WASD lewe ciało, IJKL prawe, G/H chwyt tylko po dotknięciu.");
@@ -151,7 +151,7 @@ function toggleGrip(id=null){
  status(out.ok?"Chwyt po realnym kontakcie, siła ograniczona. G puszcza.":"Odmowa: "+out.reason);
  render();
 }
-$("grip").onclick=()=>toggleGrip();
+$("grip").onclick=()=>toggleGrip(firstActorId);
 $("grip-force").oninput=()=>{
  $("grip-force-text").textContent=$("grip-force").value+" N·s/krok";
 };
@@ -401,9 +401,17 @@ function frame(t){
  if(!paused){
   acc+=delta;let n=0;
   while(acc>=DT&&n<4){
-   const other=world.actors.find(a=>a.id===secondActorId);
-   if(other&&other!==world.chosen)world.command(other,secondControls());
-   world.step(controls());acc-=DT;n++;
+   const first=world.actors.find(a=>a.id===firstActorId);
+   const second=world.actors.find(a=>a.id===secondActorId);
+   if(first&&second){
+    // Fixed independent operator channels, regardless of body selected for
+    // inspecting physical telemetry. No scripted destination or goal.
+    world.command(first,controls());
+    world.command(second,secondControls());
+    const observedSelection=world.selected;
+    world.selected=null;world.step();world.selected=observedSelection;
+   }else world.step(controls());
+   acc-=DT;n++;
   }
   if(n===4)acc=Math.min(acc,DT*2);
  }
