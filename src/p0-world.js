@@ -218,13 +218,15 @@ export class MaterialYard{
   return true;
  }
  pick(p,{includeGate=false}={}){
+  // Direct collider narrowphase, not a large circumscribed-circle pick.
+  // The stale world broadphase used in W2 must never certify authored overlap.
   let candidate=null,best=Infinity;
   for(const e of this.entities){
    if(["wall","pivot"].includes(e.kind)||!includeGate&&e.kind==="gate")continue;
    for(const s of e.shapes){
+    if(!s.collider.containsPoint(p))continue;
     const q=s.collider.translation(),distance=norm(V(q.x-p.x,q.y-p.y));
-    const r=s.shape.r??Math.hypot(s.shape.hx,s.shape.hy);
-    if(distance<r+.25&&distance<best){candidate=e;best=distance;}
+    if(distance<best){candidate=e;best=distance;}
    }
   }return candidate;
  }
