@@ -97,8 +97,12 @@ export class DoorCrowdYard extends CommonsYard{
   // NO position servo and NO artificial lock. Standing guard is literally
   // a free dynamic rigid body resisting the crowd through the same finite
   // virtual ground reaction already used for all organisms.
-  this.guard.stance=this.pressure.guardPolicy==="brace"&&impulse>.12?
-   "brace":"flow";
+  // Owner has priority over local source rules: when selecting guard with
+  // pointer, B controls posture and WASD supplies independent real motor.
+  // Policy may NOT instantly undo the user's own stance on the next step.
+  if(this.selected!==this.guard.id)
+   this.guard.stance=this.pressure.guardPolicy==="brace"&&impulse>.12?
+    "brace":"flow";
   if(this.guard.stance==="brace")this.pressure.guardBraceTicks++;
   // The guard is not secretly applying reverse drive. OWNER can select and
   // steer it directly with WASD, if desired.
@@ -122,6 +126,12 @@ export class DoorCrowdYard extends CommonsYard{
    this.command(a,this.localHeadings.get(a.id));
    this.pressure.moveImpulse+=this.events.rootEffort-before;
   }
+ }
+ pressureContactEdges(){
+  const a=this.guard.body.translation();
+  return this.touch(this.guard).filter(t=>this.pushers.includes(t.other)&&t.impulse>0)
+   .map(t=>({a:{...a},b:{...t.other.body.translation()},
+    impulse:round(t.impulse),id:t.other.id}));
  }
  pressureTrace(){
   const base=this.commonsTrace();

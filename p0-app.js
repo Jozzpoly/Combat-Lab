@@ -85,6 +85,18 @@ function render(){
   }
  }
  if(world instanceof DoorCrowdYard){
+  if($("p7-debug").checked){
+   // Every line exists only when Rapier reports actual solver contacts.
+   // The center-to-center line is a DEBUG annotation, not the true
+   // contact manifold point; line width encodes solver impulse intensity.
+   for(const edge of world.pressureContactEdges()){
+    ctx.beginPath();ctx.moveTo(edge.a.x,edge.a.y);
+    ctx.lineTo(edge.b.x,edge.b.y);
+    ctx.strokeStyle="#f0c46f";
+    ctx.lineWidth=Math.min(.24,.04+edge.impulse*.0016);
+    ctx.stroke();
+   }
+  }
   const m=world.gap, p=world.guard.body.translation(),
     state=world.pressureTrace(),isBraced=world.guard.stance==="brace";
   ctx.font="bold .34px ui-monospace,monospace";ctx.textAlign="center";
@@ -155,7 +167,7 @@ function render(){
    " · przecięło linię: "+r.crossings.all+
    "\nKoszt napędu grupy: "+r.pressure.moveImpulse.toFixed(1)+" N·s";
  }
- if(world instanceof CommonsYard){
+ if(world instanceof CommonsYard&&!(world instanceof DoorCrowdYard)){
   const p=world.commonsTrace().activity;
   $("evidence").textContent+="\\nP5 fizyczne dotknięcia ciał: "+p.contactActor+
     " · ciężarów: "+p.contactCargo+"\\nLokalne uchwyty: "+p.localGrips+
