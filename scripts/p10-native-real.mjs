@@ -83,6 +83,25 @@ try{
  if(!ready)throw Error("P10 native browser not initialized");
  await sleep(150);
  const start=await snap();
+ // Native camera actions: no programmatic camera/state mutation.
+ await clickButton("view-selected");
+ const focused=await js("window.__p10ViewReadOnly()");
+ const tracked=start.actors.find(a=>a.id===start.selected);
+ if(!tracked||Math.hypot(focused.x-tracked.x,focused.y-tracked.y)>.005||
+    focused.zoom<1.91)
+  throw Error("P10b real camera focus did not select physical body");
+ await image("p10b-native-focused-body.png");
+ await clickButton("view-all");
+ const overview=await js("window.__p10ViewReadOnly()");
+ if(overview.zoom!==1.1||overview.x!==20||overview.y!==12)
+  throw Error("P10b actual overview camera command failed");
+ await image("p10b-native-whole-world.png");
+ await clickButton("reset");
+ const resetView=await js("window.__p10ViewReadOnly()");
+ if(Math.abs(resetView.x-17.2)>.001||Math.abs(resetView.y-14.25)>.001||
+    Math.abs(resetView.zoom-1.57)>.001)
+  throw Error("P10b reset did not restore legible opening view");
+
  if(!start?.finite||start.actors.length!==3||start.cargo.length!==5||start.auto!==false)
   throw Error("P10 native true quiet physical world absent");
  await image("p10-native-world-start.png");
@@ -136,6 +155,24 @@ try{
    JSON.stringify({p,q,before:before.tick,after:after.tick}));
  await press("KeyG");
  const grip=await snap(),linked=grip.grips.some(g=>g.actor===small.id);
+
+ // Test beyond a green grip flag: attempt an ACTUAL operator-driven
+ // reciprocal cargo action using the unchanged physical world.
+ const physicalLink=grip.grips.find(g=>g.actor===small.id);
+ let pullSource=null;
+ if(physicalLink){
+  const cargo0=grip.cargo.find(e=>e.id===physicalLink.load);
+  await key("KeyA",true);await sleep(1800);await key("KeyA",false);
+  const afterPull=await snap(),cargo1=afterPull.cargo.find(e=>e.id===physicalLink.load);
+  if(!cargo0||!cargo1||!afterPull.finite||afterPull.tick<=grip.tick)
+   throw Error("P10b real cargo afteraction source missing");
+  pullSource={cargoId:physicalLink.load,startingCargoX:cargo0.x,
+   endingCargoX:cargo1.x,cargoMovedX:cargo1.x-cargo0.x,
+   linkSurvives:afterPull.grips.some(g=>g.actor===small.id)};
+  // Deliberately DO NOT post-hoc assert success: a negative cargo
+  // afterstate is material UX evidence, NOT merely a CI failure.
+ }
+
  await image("p10-native-world-after-real-input.png");
  const report={source:"Real native Chromium CDP pointer/key events, Vite emitted Rapier. No synthetic DOM dispatch or scripted state edits.",
   initial:{actors:start.actors.length,cargo:start.cargo.length,auto:start.auto},
@@ -149,7 +186,8 @@ try{
    newAperture:afterDrag.aperture.width,sameTick:true,otherActorsUnchanged:true},
   manualMovement:{actorId:small.id,ticks:after.tick-before.tick,
    dx:q.x-p.x,sourceImpulseDelta:after.rootEffort-before.rootEffort},
-  grip:{attemptedWithRealG:true,actuallyLinked:linked,
+  camera:{focusedBody:tracked.id,focusedZoom:focused.zoom,overviewZoom:overview.zoom,resetZoom:resetView.zoom},
+  grip:{attemptedWithRealG:true,actuallyLinked:linked,reciprocalPull:pullSource,
    UI:await js('document.getElementById("status").textContent')},
   limits:"Native mechanical input proof, not Owner play/feel or realistic gait."};
  writeFileSync(resolve(dir,"p10-native-operator-source.json"),JSON.stringify(report,null,2));

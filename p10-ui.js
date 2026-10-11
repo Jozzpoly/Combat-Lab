@@ -9,9 +9,9 @@ const colors={wall:"#56777c",pivot:"#f0cc8d",gate:"#dfae70",
  barrier:"#5c8491",load:"#b6a78e",small:"#9edfc6",bulky:"#e6a57b",
  lever:"#a5c2ec","rigid-lever":"#b99cdd",effector:"#90e9db"};
 let world=makeMaterialWorkshop(),paused=false,mode="select",drag=null;
-let camera={x:17.2,y:13.3,zoom:1.63};
+let camera={x:17.2,y:14.25,zoom:1.57};
 let keys=new Set(),last=performance.now(),acc=0;
-const initialCamera=()=>({x:17.2,y:13.3,zoom:1.63});
+const initialCamera=()=>({x:17.2,y:14.25,zoom:1.57});
 function focusChosen(){
  const a=world.chosen;if(!a){status("Wybierz ciało do wyśrodkowania.");return;}
  const p=a.body.translation();
@@ -60,7 +60,7 @@ function draw(){
  ctx.arc(20,8.55,4.7,0,2*PI);ctx.stroke();
  ctx.font="500 .49px system-ui";ctx.fillStyle="rgba(195,230,217,.7)";
  ctx.fillText("ZAWIAS BRAMY",17,6.6);
- ctx.fillText("WĄSKA SZCZELINA",29.1,8.2);
+ ctx.fillText("SZCZELINA",24.3,7.65);
  // The link is genuine source state. This drawn segment is a visual
  // body-to-body annotation, NOT the exact solver attachment-point geometry.
  for(const g of world.grips){
