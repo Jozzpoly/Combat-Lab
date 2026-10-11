@@ -1,45 +1,56 @@
-// Bundle current P10b Vite HTML + source JS/CSS into a standalone owner file.
-// Never publish or replace public pages. Keep all code unmodified, inline only.
-// The Chrome file:// test is essential: generating bytes alone is NOT success.
+// Build an actual single-file P10b bundle compatible with ordinary classic
+// inline scripts, avoiding file:// ES-module origin restrictions.
+// Only packaging transformation: import.meta becomes document.baseURI,
+// top-level await is wrapped in an async IIFE, no physics or UI logic altered.
+// Validate the EXACT bundled file in real Chromium before giving it to Owner.
 import {readFileSync,writeFileSync,mkdirSync,statSync} from "node:fs";
-import {resolve,dirname} from "node:path";
+import {execFileSync} from "node:child_process";
+import {resolve} from "node:path";
 const root=resolve("offline-dist");
 let html=readFileSync(resolve(root,"p10.html"),"utf8");
-let scripts=0,styles=0;
-function local(p){
- if(!/^\.?\/?assets\/[A-Za-z0-9_.-]+$/.test(p))
-  throw Error("P10c unresolved or unsafe external local asset "+p);
- return resolve(root,p.replace(/^\.\//,""));
+let scripts=0,styles=0,sourceJs=null;
+function local(asset){
+ if(!/^\.?\/?assets\/[A-Za-z0-9_.-]+$/.test(asset))
+  throw Error("P10c unexpected asset "+asset);
+ return resolve(root,asset.replace(/^\.\//,""));
 }
-html=html.replace(/<script\b[^>]*>\s*<\/script>/gi,m=>m);
-html=html.replace(/<script\b[^>]*><\/script>/gi,m=>{
- const src=m.match(/\bsrc="([^"]+)"/);
- if(!src)return m;
- const kind=m.match(/\btype="([^"]+)"/)?.[1];
- if(kind!=="module")throw Error("P10c unexpected external nonmodule script");
- const js=readFileSync(local(src[1]),"utf8");
- scripts++;
- // Closing script literal inside JS must not terminate HTML parser.
- return "<script type=\"module\">"+js.replace(/<\/script/gi,"<\\/script")+"</script>";
+html=html.replace(/<script\b[^>]*><\/script>/gi,tag=>{
+ const src=tag.match(/\bsrc="([^"]+)"/);
+ if(!src)return tag;
+ const type=tag.match(/\btype="([^"]+)"/)?.[1];
+ if(type!=="module")throw Error("Expected original emitted Vite module");
+ if(sourceJs)throw Error("More than one source bundle entry");
+ sourceJs=readFileSync(local(src[1]),"utf8");scripts++;
+ return ""; // Move boot script after body DOM exists.
 });
-html=html.replace(/<link\b[^>]*>/gi,m=>{
- const href=m.match(/\bhref="([^"]+)"/);
- if(!href||!m.includes('rel="stylesheet"'))return m;
+html=html.replace(/<link\b[^>]*>/gi,tag=>{
+ const href=tag.match(/\bhref="([^"]+)"/);
+ if(!href||!tag.includes('rel="stylesheet"'))return tag;
  const css=readFileSync(local(href[1]),"utf8");styles++;
  return "<style>"+css.replace(/<\/style/gi,"<\\/style")+"</style>";
 });
-if(scripts!==1||styles<1)throw Error("P10c expected exactly one bundled module script and at least one stylesheet; got "+scripts+"/"+styles);
-if(/(?:src|href)=["'](?:\.\/)?assets\//.test(html)||/<link[^>]+rel="modulepreload"/i.test(html))
- throw Error("P10c unresolved asset reference/modulepreload remains");
-if(/\bimport\s*\(\s*["'](?:\.\/|\/)assets\//.test(html))
- throw Error("P10c dynamic chunk escaped bundling");
-// The experiment uses no network service, but do NOT assert this check
-// catches every possible dynamically constructed URL; real file:// test must.
-html=html.replace("<head>",'<head><script type="module">document.documentElement.dataset.p10cInlineProbe="yes";</script>');
-html=html.replace("</head>",'<meta name="combat-lab-offline-source" content="P10b isolated offline candidate; no deployment; not Owner-qualified"/>\n</head>');
+if(scripts!==1||styles<1||!sourceJs)
+ throw Error("P10c source module/CSS count mismatch "+scripts+"/"+styles);
+// ESM-specific module URI for lazy Vite helper is no longer available.
+// Bundle is ONE fully inlined chunk, so document.baseURI is the only
+// genuine local base if the helper is ever invoked.
+const code=sourceJs.replace(/import\.meta/g,"({url:document.baseURI})");
+if(/\bimport\.meta\b/.test(code))throw Error("Unconverted module URI");
+const classic="(async()=>{\n"+code+"\n})().catch(error=>{document.body.dataset.p10Error=String(error.stack||error);console.error(error);});";
+writeFileSync(resolve(root,"packed-classic.cjs"),classic);
+execFileSync(process.execPath,["--check",resolve(root,"packed-classic.cjs")],{stdio:"pipe"});
+if(!html.includes("</body>"))throw Error("Missing HTML closing body");
+html=html.replace("</body>","<script>"+classic.replace(/<\/script/gi,"<\\/script")+"</script>\n</body>");
+if(/(?:src|href)=["'](?:\.\/)?assets\//.test(html)||
+   /<link[^>]+rel="modulepreload"/i.test(html)||
+   /<script[^>]+type="module"/i.test(html))
+ throw Error("P10c unresolved assets or ESM-only script remains");
+html=html.replace("</head>",'<meta name="combat-lab-offline-source" content="isolated P10b; real singlefile classic runtime; not Owner-approved gameplay"/>\n</head>');
 mkdirSync(resolve("offline-artifact"),{recursive:true});
 for(const dest of [resolve(root,"p10.html"),resolve("offline-artifact","Combat-Lab-P10b-Offline.html")])
  writeFileSync(dest,html,"utf8");
 console.log(JSON.stringify({offlineFile:"offline-artifact/Combat-Lab-P10b-Offline.html",
  bytes:statSync(resolve("offline-artifact","Combat-Lab-P10b-Offline.html")).size,
- inlinedModules:scripts,inlinedCss:styles,source:"real Vite-built P10b, no fake UI"}));
+ inlinedScripts:scripts,inlinedStyles:styles,
+ parserCheck:"node --check classic wrapper PASS",
+ source:"Real emitted Rapier/P10b source with packaging-only ESM shim"}));
