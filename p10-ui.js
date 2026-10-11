@@ -59,7 +59,7 @@ function draw(){
  ctx.strokeStyle="rgba(244,202,116,.25)";ctx.lineWidth=.06;ctx.beginPath();
  ctx.arc(20,8.55,4.7,0,2*PI);ctx.stroke();
  ctx.font="500 .49px system-ui";ctx.fillStyle="rgba(195,230,217,.7)";
- ctx.fillText("ZAWIAS BRAMY",17,6.6);
+ ctx.fillText("ZAWIAS BRAMY",16.4,8.05);
  ctx.fillText("SZCZELINA",24.3,7.65);
  // The link is genuine source state. This drawn segment is a visual
  // body-to-body annotation, NOT the exact solver attachment-point geometry.
