@@ -40,7 +40,7 @@ const classic="(async()=>{\n"+code+"\n})().catch(error=>{document.body.dataset.p
 writeFileSync(resolve(root,"packed-classic.cjs"),classic);
 execFileSync(process.execPath,["--check",resolve(root,"packed-classic.cjs")],{stdio:"pipe"});
 if(!html.includes("</body>"))throw Error("Missing HTML closing body");
-html=html.replace("</body>","<script>"+classic.replace(/<\/script/gi,"<\\/script")+"</script>\n</body>");
+html=html.replace("</body>",'<script>document.body.dataset.p10cClassicBefore="yes";</script>'+"<script>"+classic.replace(/<\/script/gi,"<\\/script")+"</script>"+'<script>document.body.dataset.p10cClassicAfter="yes";</script>'+"\n</body>");
 if(/(?:src|href)=["'](?:\.\/)?assets\//.test(html)||
    /<link[^>]+rel="modulepreload"/i.test(html)||
    /<script[^>]+type="module"/i.test(html))
