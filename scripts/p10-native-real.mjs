@@ -131,7 +131,8 @@ try{
  await image("p10-native-world-physical-wall-edited.png");
 
  const beforeDrag=await snap();
- await ctrlDragBarrier(28,6.5,28,6.0);
+ await // Grab a visible physical part of the upper wall in the tighter view.
+ await ctrlDragBarrier(28,8.35,28,7.85);
  const afterDrag=await snap();
  if(afterDrag.tick!==beforeDrag.tick||
     Math.abs(afterDrag.aperture.width-beforeDrag.aperture.width-.5)>.025||
