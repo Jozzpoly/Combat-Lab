@@ -356,15 +356,15 @@ execFileSync(process.execPath,["scripts/p6-native-real.mjs",base],{
 
 const spin=request({p6orientation:1},["--dump-dom"]);
 validPage(spin,"P6 real rigid shape reorientation mechanical controls");
-if(attr(spin,"p6-orientation")!=="PASS"||attr(spin,"p6-orientation-cases")!=="24")
+if(attr(spin,"p6-orientation")!=="PASS"||attr(spin,"p6-orientation-cases")!=="30")
  throw Error("P6 rotation source failed: "+(attr(spin,"p6-orientation-error")||"not 24"));
 const spinData=JSON.parse(decodeURIComponent(attr(spin,"p6-orientation-report")));
-if(spinData.cases!==24)throw Error("P6 missing 24 source rotation worlds");
-writeFileSync(resolve(folder,"p6-24-real-orientation-same-shape.json"),
+if(spinData.cases!==30)throw Error("P6 missing 30 source rotation worlds");
+writeFileSync(resolve(folder,"p6-30-real-orientation-same-shape.json"),
  JSON.stringify(spinData,null,2));
 console.log("P6 physically oriented rigid envelope vs torque/no torque/cheap power:");
 console.log(JSON.stringify(spinData.summary));
-for(const mode of ["passive","active"]){
+for(const mode of ["passive","active","turn-first"]){
  const q={p6pose:mode},dom=request(q,["--dump-dom"]);
  validPage(dom,"P6 actual elongated body "+mode);
  const src=attr(dom,"p6-pose");

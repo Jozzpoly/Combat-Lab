@@ -487,7 +487,7 @@ if(params.has("p6pose")){
  try{
   const {p6RotateCase}=await import("./src/p6-orientation.js");
   const mode=params.get("p6pose");
-  if(!["passive","active","aligned","strong-push"].includes(mode))throw Error("mode");
+  if(!["passive","active","aligned","strong-push","turn-first"].includes(mode))throw Error("mode");
   world.dispose();
   const result=p6RotateCase({mode,width:1.2,support:"finite",
    captureWorld:w=>{world=w;}});
