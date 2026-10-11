@@ -1,0 +1,43 @@
+# Combat Lab — K2 concurrent material contact vs articulated guard (2026-10-11)
+
+**Qualification: SCOPED MECHANICAL PROBE / NOT AN ACCEPTED WHOLE.** The old R0/R1/L0 Owner-observed product FAIL persists. This branch `experiment/k2-concurrent-contact-choice` descends from isolated K1 **only for an explicit one-off comparator**. Nothing is merged into main or deployed to Pages/rehearsal. K2 is not a new anatomy architecture, not evidence of credible organism/crowd/game feel.
+
+## Why K2 exists — explicit selection
+K1 (exact Chromium 9-case trial) established that a simple rigid 25kg front shield and a true hinged 25kg shield both blocked the same off-axis 20N·s physical projectile, while a bare root failed. This falsified the claim that multi-part morphology was required for *passive* material cover.
+
+The next falsifiable question was **action-dependent interposition while another physical material body independently pressures the torso**: can the 25kg shield change orientation separately from the 65kg body and create a practical extra affordance versus a rigid combined body with bounded whole-body turning? It must NOT be answered by simply tuning an arbitrary threshold into a green box.
+
+## Actual implementation and source
+- Source: `src/k2-probe.js` (K1 field subclass with upper corner hinge and shape-matched rigid hull), `src/k2-concurrent.js` (forced independent load and exact solver manifold contact provenance), `k1-app.js` query-driven real-source Chromium frames, `scripts/browser-live-gate.mjs`.
+- [PASS emitted-source Chromium test with 30 action and 64 forced-pulse cases + seven raw PNGs](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38097657602) at source commit `158bc79142df3d8f5b0fb3e9b97cd942cf4773e3`. CI artifact `k1-exact-source-frames` has `k2-actual-action-counterfactual.json`, `k2-actual-forced-contact.json`, and K2 images at solver ticks 0 / 95 / 150 (rigid-active, hinged-active, hinged-passive); capture is REAL rendered Rapier2D, not drawn/AI imagery. CI success validates only its declared mechanical tests. An exact final-head status should be checked again after doc edits.
+- Physics: actual Rapier2D deterministic 0.21.0, 65kg root, 25kg front-upper panel; passive rigid comparator has the same root mass, panel mass, initial physical colliders and world arrangement. Hinged version uses genuine revolute constraint with connected self-contacts ON, bounded paired impulses. Rigid receives bounded *whole-body angular* impulse at the same numerical cap 0.28; this is an **applied authority comparator**, NOT a matched attained pose or proof of equivalent actuator energy/efficiency.
+- Actor does NOT have feet, real 2D ground traction, standing stability, body mind, independent action selection or cognition. Its ordinary UI supports a finite external root-drive proxy, deliberately kept OFF for the source trials. The action commands are scripted as operator interventions, not NPC decisions.
+- K2 forced-contact sweep: independent 56kg movable rear block starts at x=17, Y=10.2 (body-intersecting trajectory) or Y=13.0 (remote control), receives independent x-negative impulse 90N·s at tick 16 or ZERO. Panel action target ±1.1 rad or passive. After 95 true solver ticks, 20N·s physical CCD shot enters at Y=11.2 or 11.55; 55 additional solver ticks. Four contenders: rigid/passive, rigid/turn, hinged/passive, hinged/actuate. 2 rearY × 2 pulse strengths × 2 target signs × 2 shot heights × 4 controls = **64 source cases**. All finite, no root drive, exact initial guard-versus-rear narrowphase shape intersections ZERO, no hidden protected flag.
+- Actual pairwise Rapier **solver manifold impulses** are sampled for rear load→guard, projectile→guard and projectile→witness. These are not world-query broadphase snapshots (W2 false negative warning). Repeated contact ticks are solver samples, NOT action/event count, and should not be rated as such.
+
+## Critical falsifiers recovered, not hidden
+**First K2 variant was mechanically invalid:** panel attached along the middle of the root side physically self-blocked; with commands enabled, relative angle stayed ~0. The first green 30-case test only showed the solver did something, NOT independent shield motion. K2 rebuilt the hinge at the upper forward corner with the rigid competitor's colliders re-matched; contact enabled. Corrected true relative hinge angle reaches ~+0.958 or −0.956 rad before shot without zeroing self-contact. Crucially, **the torso counter-rotates** ~−0.500 or +0.515 rad due to angular momentum in the free, ungrounded model. Thus the limb is independently actuated but the body does NOT hold an independent spatial stance.
+
+**Second actor/material opportunity was initially missing:** a static rear block at x=16.7, Y=10.7 almost never contacted the bodies. Calling the setup 'concurrent contact' would have been false. A genuine independently kicked 56kg rear block and a contact-free remote control were added.
+
+**Validated actual rear contact:** for near Y=10.2 and 90N·s pulse, real solver contact impulse vs guard is nonzero; for remote Y=13 it is ZERO across tested cases despite free block traveling 1.8043m, while near block is physically slowed to roughly 0.96–1.16m by first-shot time. With zero pulse, no rear contact. Specific source case (+1.1 rad command, shot Y=11.2, near 90N·s):
+| Variant | Rear guard solver impulse sum | Solver contact-presence ticks | Rear load travel before shot | Target witness travel after shot |
+| --- | ---: | ---: | ---: | ---: |
+| rigid, passive | 53.4432 N·s | 1 | 1.0229 m | 0m |
+| rigid, angular command | 57.9245 N·s | 2 | 0.9558 m | 0m |
+| hinged, passive | 47.9898 N·s | 1 | 1.0785 m | 0m |
+| hinged, angular command | 21.2147 N·s | 13 | 0.9991 m | 0m |
+
+This is REAL different distribution of contact forces, coupled pose and motion, not proof of better defensive stance or qualitatively new action. At target -1.1 rad, the active-hinged source rear impulse is 47.1419 N·s over 2 contact ticks, not 21.2147 over 13. The asymmetry illustrates the danger of promoting one favorite placement/action sign. Both initial body action inputs and later coupling vary; matched source actuator cap does not mean matched achieved trajectories or matched energy.
+
+**All 64 tested shield variants left the 11kg downstream witness with ZERO physical displacement from their corresponding shot.** A rigid passive shield already succeeded. Direct projectile–guard solver contact is observed; direct projectile–witness contact for these cases is absent. **No demonstrated novel protective capability that required independent hinge anatomy.** Avoid further scent/detection/angle tuning as if K2 were an approved gameplay direction.
+
+## Visual truth
+Inspect the actual files in the same [CI run artifact](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38097657602): `k2-source-hinged-act-t95.png`, `-t150.png`, `k2-source-rigid-act-t95.png`, plus passive controls. These depict a tiny mechanical yard: root rectangles, narrow panel, free block, bead-like projectile/witness. Some motion and contacts are genuine, but visual readability is still technical/abstract and not a compelling multiple-body world. No owner feel judgment, actual live end-user FPS, real-pointer workflow certification or interactive user discovery claim.
+
+## Decision and next pressure
+**K2 is a successful scoped falsification and an insufficient whole-world candidate. STOP the branch as a source donor**. Do NOT fold into K1/main, deploy or ask Owner to play merely because CI is green.
+
+The single strategic material finding from K1+K2 is not 'more shields.' It is: **free-body angular reaction and absent real stance/support impede attributing appendage work to practical held-space ability.** Strong candidate for a *new independent frontier evaluation* is whether body↔ground/support/contact mechanics, perhaps via an explicit cheap finite 2D stance model vs physically grounded 3D G0-like control, earn distinctive useful *holding/yielding and simultaneous-action* outcomes. However, this is a hypothesis to falsify, not a Rapier3D selection or instruction to build a physics cathedral. Other divergent whole-world opportunities must remain competing, especially authored varied material affordances, a permissive workspace and body-specific practical actions beyond traversal.
+
+**No automatic successor** from this report. Next agent first checks newest Owner feedback/live current source and asks which observation explains absence of compelling whole; should be free to reject the stance hypothesis if another problem is more consequential. Avoid forcing an artificial four-stage roadmap.
