@@ -132,3 +132,8 @@ for(const changed of [false,true]){
   physicalContact:state.runnerGateImpulse
  }));
 }
+
+console.log("P0 owner-style real input: launching independent Chrome DevTools protocol run.");
+execFileSync(process.execPath,["scripts/p0-real-input.mjs",base],{
+  timeout:120000,stdio:"inherit"
+});
