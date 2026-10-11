@@ -6,7 +6,23 @@ import {V} from "./p0-world.js";
 const r=x=>Math.round(x*1e4)/1e4;
 const snapshot=(w,label)=>{
  const t=w.commonsTrace();
- return {label,tick:t.tick,loads:t.loads.map(x=>({id:x.id,x:x.x,y:x.y})),
+ // For the A/B external-shock pair, certify identical *physical state*,
+ // not just on-screen positions. Do this BEFORE injecting any impulse.
+ const provenance=["start","before-intervention"].includes(label)?{
+  bodies:w.entities.map(e=>{
+   const p=e.body.translation(),v=e.body.linvel();
+   return {id:e.id,kind:e.kind,p:{...p},v:{...v},
+    angle:e.body.rotation(),omega:e.body.angvel(),mass:e.body.mass(),
+    fixed:e.body.isFixed()};
+  }),
+  links:w.grips.map(g=>({owner:g.actor.id,load:g.load.id,
+   impulseCap:g.maxImpulse,anchorA:g.anchorA,anchorB:g.anchorB,
+   stretch:g.stretch,totalImpulse:g.totalImpulse})),
+  rules:[...w.local.entries()].map(([id,s])=>({id,...s})),
+  source:{ticks:w.ticks,support:w.support,policy:w.policy,
+   activity:{...w.activity},motor:{...w.events}}
+ }:undefined;
+ return {label,tick:t.tick,provenance,loads:t.loads.map(x=>({id:x.id,x:x.x,y:x.y})),
   actors:t.actors.map(x=>({id:x.id,kind:x.kind,x:x.x,y:x.y,stance:x.stance})),
   grips:t.grips.map(g=>({actor:g.actor,load:g.load,stretch:g.stretch})),
   contactActor:t.activity.contactActor,contactCargo:t.activity.contactCargo,
@@ -118,8 +134,9 @@ export function p5Probe(){
       throw Error("P5 unequal actual material starting worlds");
     const preBase=base.frames.find(x=>x.label==="before-intervention"),
      prePulse=pulse.frames.find(x=>x.label==="before-intervention");
-    if(JSON.stringify(preBase)!==JSON.stringify(prePulse))
-      throw Error("P5 mismatched physics immediately before external shock");
+    if(JSON.stringify(preBase)!==JSON.stringify(prePulse)||
+      !preBase.provenance||!prePulse.provenance)
+      throw Error("P5 mismatched complete physical positions/velocities/links/decisions immediately before external shock");
     pairs.push({support,seed,policy,
      noPulseLoad0:base.loadMotion[0],shockedLoad0:pulse.loadMotion[0],
      noPulseGrips:base.localGrips,shockedGrips:pulse.localGrips,
