@@ -76,10 +76,10 @@ export class MaterialYard{
   else if(kind==="small"){shape={r:.44,mass:27};motor=470;}
   else{shape={hx:.63,hy:.46,mass:68};motor=530;}
   const e=this.add(kind,p.x,p.y,[shape],{damping:this.support==="damping"?1.2:0});
-  e.stance="flow";e.motor=motor;e.target=0;e.panel=null;e.actuatorLimit=1.6;
+  e.stance="flow";e.motor=motor;e.target=0;e.panel=null;e.panelActive=false;e.actuatorLimit=1.6;
   if(kind==="lever"){
    // A real front-mounted panel with 22kg and paired bounded torques.
-   const panel=this.add("effector",p.x+.79,p.y+1.27,
+   const panel=this.add("effector",p.x+.80,p.y+1.25,
       [{hx:.17,hy:1.25,mass:22}]);
    const joint=this.world.createImpulseJoint(
       RAPIER.JointData.revolute(V(.63,0),V(-.17,-1.25)),
@@ -89,9 +89,9 @@ export class MaterialYard{
   } else if(kind==="rigid-lever"){
    // Cheap rival: similar envelope and combined mass, no separate actuation.
    const col=this.world.createCollider(
-    RAPIER.ColliderDesc.cuboid(.17,1.25).setTranslation(.79,1.27)
+    RAPIER.ColliderDesc.cuboid(.17,1.25).setTranslation(.80,1.25)
      .setMass(22).setFriction(.7),e.body);
-   e.shapes.push({collider:col,shape:{hx:.17,hy:1.25,dx:.79,dy:1.27,mass:22}});
+   e.shapes.push({collider:col,shape:{hx:.17,hy:1.25,dx:.80,dy:1.25,mass:22}});
   }
   this.actors.push(e);return e;
  }
@@ -112,7 +112,7 @@ export class MaterialYard{
  }
  setPanelAngle(id,target){const a=this.actors.find(x=>x.id===id);
   if(!a?.panel||!Number.isFinite(target))return false;
-  a.target=clamp(target,-1.35,1.35);return true;
+  a.target=clamp(target,-1.35,1.35);a.panelActive=true;return true;
  }
  // Explicit virtual terrain reaction: finite Coulomb-like impulses on moving
  // bodies, with separately bounded translation and yaw. This is NOT direct
@@ -144,7 +144,7 @@ export class MaterialYard{
  }
  actuation(){
   for(const a of this.actors){
-   if(!a.panel)continue;
+   if(!a.panel||!a.panelActive)continue;
    const body=a.panel.body,root=a.body;
    const delta=wrap(body.rotation()-root.rotation()),w=body.angvel()-root.angvel();
    const impulse=clamp(wrap(a.target-delta)*.60-w*.19,
