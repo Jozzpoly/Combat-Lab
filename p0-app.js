@@ -269,6 +269,33 @@ if(params.has("p2red")){
  }catch(e){document.body.dataset.p2Red="FAIL";
   document.body.dataset.p2RedError=String(e.stack||e);console.error(e);}
 }
+if(params.has("p3probe")){
+ paused=true;
+ try{
+  const {p3Probe}=await import("./src/p3-duel.js");
+  const v=p3Probe();
+  document.body.dataset.p3Probe="PASS";
+  document.body.dataset.p3Count=String(v.cases);
+  document.body.dataset.p3Result=encodeURIComponent(JSON.stringify(v));
+  status("P3 genuine physical bilateral matter pressure.");
+ }catch(e){document.body.dataset.p3Probe="FAIL";
+  document.body.dataset.p3Error=String(e.stack||e);console.error(e);}
+}
+if(params.has("p3frame")){
+ paused=true;
+ try{
+  const {p3Contest}=await import("./src/p3-duel.js");
+  const kind=params.get("p3frame")==="off"?"off":
+    params.get("p3frame")==="release"?"release":"dual";
+  const support=params.get("terrain")==="none"?"none":"finite";
+  const leftKind=params.get("left")==="bulky"?"bulky":"small";
+  world.dispose();camera={x:10.4,y:12,zoom:2.0};
+  const v=p3Contest({mode:kind,support,leftKind,
+    captureWorld:(w,{A,B,C})=>{world=w;w.setSelected(A.id);}});
+  document.body.dataset.p3Frame=JSON.stringify(v);
+  status("P3: two bodies, shared real cargo, true late-source frame.");
+ }catch(e){document.body.dataset.p3FrameError=String(e.stack||e);console.error(e);}
+}
 if(params.has("p2probe")){
  paused=true;
  try{
