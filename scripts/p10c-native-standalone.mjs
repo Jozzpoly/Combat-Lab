@@ -12,7 +12,7 @@ const child=spawn(bin,["--headless=new","--no-sandbox","--disable-gpu",
  "--disable-dev-shm-usage","--remote-allow-origins=*","--window-size=1520,970",
  "--remote-debugging-port="+port,"--user-data-dir=/tmp/p10-chrome-"+process.pid,
  "about:blank"],{stdio:"ignore"});
-let ws,id=0;const promises=new Map();const requests=[];
+let ws,id=0;const promises=new Map();const requests=[];const browserDiagnostics=[];
 function send(method,params={}){
  const n=++id;return new Promise((resolve,reject)=>{
   promises.set(n,{resolve,reject});ws.send(JSON.stringify({id:n,method,params}));
@@ -70,21 +70,28 @@ try{
  await new Promise((res,rej)=>{ws.addEventListener("open",res,{once:true});ws.addEventListener("error",rej,{once:true});});
  ws.addEventListener("message",e=>{
   let m;try{m=JSON.parse(e.data)}catch{return;}
+  if(["Runtime.exceptionThrown","Runtime.consoleAPICalled","Log.entryAdded"].includes(m.method)){
+   browserDiagnostics.push(JSON.stringify(m).slice(0,2500));return;
+  }
   if(m.method==="Network.requestWillBeSent"){
    requests.push(m.params?.request?.url||"");return;
   }
   const cb=promises.get(m.id);if(!cb)return;promises.delete(m.id);
   m.error?cb.reject(Error(JSON.stringify(m.error))):cb.resolve(m.result);
  });
- await send("Page.enable");await send("Runtime.enable");await send("Network.enable");
- await send("Page.navigate",{url:new URL("p10.html",url).toString()});
+ await send("Page.enable");await send("Runtime.enable");await send("Log.enable");await send("Network.enable");
+ const navigation=await send("Page.navigate",{url:new URL("p10.html",url).toString()});
  let ready=false;
  for(let i=0;i<150;i++){
   ready=await js('document.body?.dataset?.p10Live==="yes"').catch(()=>false);
   if(ready)break;await sleep(80);
  }
- if(!ready)throw Error("P10c standalone source did not execute: "+
-  JSON.stringify(await js("({href:location.href,ready:document.readyState,dataset:{...document.body?.dataset}})")));
+ if(!ready){
+  const status=await js("({href:location.href,ready:document.readyState,title:document.title,bodyBytes:document.body?.innerHTML.length,status:document.getElementById('status')?.textContent,dataset:{...document.body?.dataset}})");
+  const diagnostic={navigation,status,requests,browserDiagnostics};
+  writeFileSync(resolve(dir,"p10c-failed-browser-debug.json"),JSON.stringify(diagnostic,null,2));
+  throw Error("P10c executable module not bootstrapped: "+JSON.stringify(diagnostic).slice(0,9000));
+ }
  await sleep(150);
  const start=await snap();
  // Native camera actions: no programmatic camera/state mutation.
