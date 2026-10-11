@@ -48,12 +48,13 @@ export function p3Contest({support="finite",leftKind="small",rightKind="small",
     frames.push(snap(w,A,B,C,"contest-"+(i+1)));
   }
   const afterContest=snap(w,A,B,C,"contest-end");
-  // release experiment intentionally changes the SECOND body input in both
-  // paired released-vs-held controls. This is an authored intervention.
+  // Controlled A/B intervention: release only B's link. Both physical bodies
+  // retain IDENTICAL intended movement commands in all variants.
   const didRelease=mode==="release"?w.release(B.id):false;
   for(let i=0;i<afterTicks;i++){
-   w.command(A,V(-1,0));
-   if(mode!=="release")w.command(B,V(1,0));
+   // Release-vs-dual: EXACT SAME operator input on both bodies.
+   // Only the second body's physical grip link is removed.
+   w.command(A,V(-1,0));w.command(B,V(1,0));
    w.step();
    if([0,24,49,afterTicks-1].includes(i))
     frames.push(snap(w,A,B,C,"after-"+(i+1)));
