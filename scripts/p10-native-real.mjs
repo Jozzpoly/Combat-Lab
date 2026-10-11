@@ -40,7 +40,7 @@ async function bodyClick(x,y){
 }
 async function ctrlDragBarrier(x1,y1,x2,y2){
  function expr(x,y){
-  return '(function(){var c=document.getElementById("world"),r=c.getBoundingClientRect(),s=Math.min(c.width/40,c.height/24)*1.22;return {x:r.left+(c.width/2+('+x+'-view.x)*s)*r.width/c.width,y:r.top+(c.height/2+('+y+'-view.y)*s)*r.height/c.height};})()';
+  return '(function(){var c=document.getElementById("world"),r=c.getBoundingClientRect(),view=window.__p10ViewReadOnly(),s=Math.min(c.width/40,c.height/24)*view.zoom;return {x:r.left+(c.width/2+('+x+'-view.x)*s)*r.width/c.width,y:r.top+(c.height/2+('+y+'-view.y)*s)*r.height/c.height};})()';
  }
  const a=await js(expr(x1,y1)),b=await js(expr(x2,y2));
  await send("Input.dispatchMouseEvent",{type:"mouseMoved",x:a.x,y:a.y,modifiers:2});
