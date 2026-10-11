@@ -87,7 +87,7 @@ try{
   if(ready)break;await sleep(80);
  }
  if(!ready){
-  const status=await js("({href:location.href,ready:document.readyState,title:document.title,bodyBytes:document.body?.innerHTML.length,status:document.getElementById('status')?.textContent,dataset:{...document.body?.dataset}})");
+  const status=await js("({href:location.href,ready:document.readyState,title:document.title,bodyBytes:document.body?.innerHTML.length,status:document.getElementById('status')?.textContent,dataset:{...document.body?.dataset},docDataset:{...document.documentElement?.dataset},modules:[...document.querySelectorAll('script[type=module]')].map(x=>({length:x.textContent.length,src:x.src})),csp:[...document.querySelectorAll('meta[http-equiv]')].map(x=>({key:x.httpEquiv,content:x.content}))})");
   const diagnostic={navigation,status,requests,browserDiagnostics};
   writeFileSync(resolve(dir,"p10c-failed-browser-debug.json"),JSON.stringify(diagnostic,null,2));
   throw Error("P10c executable module not bootstrapped: "+JSON.stringify(diagnostic).slice(0,9000));
