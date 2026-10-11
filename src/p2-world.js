@@ -62,9 +62,13 @@ export class TransportYard extends MaterialYard {
   const load=this.loads.find(e=>e.id===loadId);
   if(!actor||!load||!Number.isFinite(maxImpulse)||maxImpulse<0||maxImpulse>200)
    return {ok:false,reason:"invalid actor/load/strength"};
-  if(this.grips.some(g=>g.actor===actor||g.load===load)){
-   // Only one pull link per actor/load in the first bounded specimen.
-   return {ok:false,reason:"already linked"};
+  if(this.grips.some(g=>g.actor===actor)){
+   // At most one link per operator, never a hidden multiple-power stack.
+   return {ok:false,reason:"actor already linked"};
+  }
+  if(this.grips.filter(g=>g.load===load).length>=2){
+   // P3 scoped conflict: two independent physical actors may contest one load.
+   return {ok:false,reason:"two-link research limit"};
   }
   const contact=this.actualContact(actor,load);
   if(!contact){this.gripEvidence.refusedWithoutContact++;
