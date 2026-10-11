@@ -111,6 +111,7 @@ export class KineticField {
       part.body.setTranslation(V(q.x+d.x,q.y+d.y),true);
       part.body.setLinvel(V(),true);part.body.setAngvel(0,true);
     }
+    e.initial=V(point.x,point.y); // Author reposition resets the outcome reference; it is NOT solver travel.
     this.world.propagateModifiedBodyPositionsToColliders();return true;
   }
   pick(p){
