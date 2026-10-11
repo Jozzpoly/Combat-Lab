@@ -212,6 +212,21 @@ if(params.has("p0chain")){
  }catch(e){document.body.dataset.p0Chain="FAIL";
   document.body.dataset.p0ChainError=String(e.stack||e);console.error(e);}
 }
+if(params.has("p1probe")){
+ paused=true;
+ try{
+  const {p1Probe}=await import("./src/p1-reach.js");
+  const result=p1Probe();
+  document.body.dataset.p1Probe="PASS";
+  document.body.dataset.p1Count=String(result.cases);
+  document.body.dataset.p1Report=encodeURIComponent(JSON.stringify(result));
+  status("P1: same-mass rigid versus physical limb in open/confined chambers.");
+ }catch(e){
+  document.body.dataset.p1Probe="FAIL";
+  document.body.dataset.p1Error=String(e.stack||e);
+  console.error(e);
+ }
+}
 if(params.has("p0probe")){
  paused=true;
  try{const {p0Probe}=await import("./src/p0-probe.js"),result=p0Probe();
