@@ -26,12 +26,15 @@ export function p7Case({width=3.45,density=6,support="finite",
    if(i===interventionTick){
     pre=physicalFingerprint(w);
     if(intervention==="open"){
-     const original=pre.bodies.find(e=>e.id===w.gap.highWall.id);
+     const original=pre.bodies.find(e=>e.id===w.gap.lowWall.id);
      if(!w.openPassage())throw Error("P7 cannot physically move authored barrier");
      postEdit=physicalFingerprint(w);
-     const wall=postEdit.bodies.find(e=>e.id===w.gap.highWall.id);
+     const wall=postEdit.bodies.find(e=>e.id===w.gap.lowWall.id);
      if(Math.abs(wall.p.y-original.p.y+1.3)>1e-6)
       throw Error("P7 topology edit failed real collider movement");
+     const aperture=w.opening();
+     if(Math.abs(aperture.width-(width+1.3))>1e-7)
+      throw Error("P7 barrier did not really WIDEN actual physical aperture");
      const exclude=(p)=>p.bodies.filter(e=>e.id!==wall.id);
      if(JSON.stringify(exclude(pre))!==JSON.stringify(exclude(postEdit)))
       throw Error("P7 topology edit changed bodies other than intended wall");

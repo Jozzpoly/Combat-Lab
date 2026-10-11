@@ -54,10 +54,20 @@ export class DoorCrowdYard extends CommonsYard{
   this.selected=null;this.auto=true;
   this.world.propagateModifiedBodyPositionsToColliders();
  }
+ opening(){
+  const bottom=this.gap.lowWall.body.translation().y+
+   this.gap.lowWall.shapes[0].shape.hy;
+  const top=this.gap.highWall.body.translation().y-
+   this.gap.highWall.shapes[0].shape.hy;
+  return {low:bottom,high:top,width:top-bottom};
+ }
  openPassage(){
   if(!this.gap||this.gap.opened)return false;
-  const upper=this.gap.highWall,p=upper.body.translation();
-  if(!this.moveEntity(upper,V(p.x,p.y-1.30)))return false;
+  // Move the physically LOWER wall down, genuinely enlarging the hole.
+  // Previous P7 donor mistakenly moved the high wall downward, actually
+  // CLOSING the space by 1.30m. Explicitly correct the real geometry.
+  const lower=this.gap.lowWall,p=lower.body.translation();
+  if(!this.moveEntity(lower,V(p.x,p.y-1.30)))return false;
   this.gap.opened=true;this.pressure.sourceEdits++;
   return true;
  }
@@ -113,7 +123,7 @@ export class DoorCrowdYard extends CommonsYard{
   const crossers=this.pushers.filter(a=>a.body.translation().x>this.gap.x+1.30);
   const withinMouth=crossers.filter(a=>{
    const p=a.body.translation(),r=a.shapes[0].shape.r||0;
-   const low=this.gap.low,high=this.gap.high;
+   const {low,high}=this.opening();
    return p.y-r>low-.06&&p.y+r<high+.06;
   });
   return {...base,
@@ -123,8 +133,7 @@ export class DoorCrowdYard extends CommonsYard{
    guard:{id:this.guard.id,kind:this.guard.kind,mass:round(this.guard.body.mass()),
     x:round(g.x),y:round(g.y),vx:round(this.guard.body.linvel().x),
     stance:this.guard.stance,shapeRadius:radius},
-   mouth:{width:this.gap.width,low:this.gap.low,high:this.gap.high,
-    changed:!!this.gap.opened},
+   mouth:{...this.opening(),changed:!!this.gap.opened},
    crossings:{all:crossers.length,mouth:withinMouth.length},
    movers:this.pushers.map(a=>({id:a.id,kind:a.kind,
     x:round(a.body.translation().x),y:round(a.body.translation().y),

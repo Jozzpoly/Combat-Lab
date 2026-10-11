@@ -108,12 +108,13 @@ try{
   Buffer.from(pokePng,"base64"));
  await clickElement("pause");await wait(125);
  const paused=await evalJS("window.__p7ReadOnlyProbe()");
- const original=paused.barriers[1];
+ const original=paused.barriers[0];
  await clickElement("p7-open");
  const altered=await evalJS("window.__p7ReadOnlyProbe()");
  const target=altered.barriers.find(x=>x.id===original.id);
  if(!altered.finite||!altered.mouth.changed||
     Math.abs(target.y-original.y+1.3)>.0001||
+    Math.abs(altered.mouth.width-paused.mouth.width-1.3)>.0001||
     altered.tick!==paused.tick||
     JSON.stringify(paused.actors)!==JSON.stringify(altered.actors)||
     JSON.stringify(paused.loads)!==JSON.stringify(altered.loads))

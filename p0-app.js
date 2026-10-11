@@ -91,7 +91,7 @@ function render(){
   ctx.fillStyle=isBraced?"#ffd09a":"#b8d1d0";
   ctx.fillText(isBraced?"OPÓR KONTAKTOWY":"DYNAMICZNY OBROŃCA",p.x,p.y-1.42);
   ctx.textAlign="left";ctx.fillStyle="#f1d5a2";
-  ctx.fillText("światło "+m.width.toFixed(2)+" m",m.x+.55,m.y-1.8);
+  ctx.fillText("światło "+state.mouth.width.toFixed(2)+" m",m.x+.55,m.y-1.8);
   ctx.fillText("dotknięcia "+state.pressure.guardContacts,
     m.x+.55,m.y-1.30);
  }
