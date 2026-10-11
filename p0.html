@@ -8,7 +8,7 @@
 <h1>Wspólny świat materii</h1>
 <p>Rzeczywiste, niezależne ciała i ruchoma materia. P8: ograniczone reakcje na fizyczne dotknięcia. P7: opór dynamicznego ciała w tłumie, edycja gardzieli bez restartu. Wybierz obrońcę myszą, steruj WASD i przełączaj B; inne ciała nadal działają. P5: trzy ciężary i lokalny kontakt. P6: dwa ciężary i dwa fizyczne przesmyki bez sztucznych testów «czy się zmieścisz». Ruszaj, zakłócaj i przebudowuj świat: kontakt może zmieniać zachowanie, ale nikt nie ma zaprogramowanej drogi ani celu.</p></div>
 <div class="run"><button id="pause">Pauza</button><button id="tick">1 krok</button><button id="reset">Od nowa</button></div></header>
-<section class="toolbar"><button id="p8-preset">P8 · Odzyskiwanie ruchu w tłumie</button><button id="p7-preset">P7 · Nacisk tłumu</button><button id="p7-poke">Szarpnij obrońcę</button><button id="p7-open">Otwórz gardziel (pauza)</button><button id="p6-preset">Przesmyki · różne ciała</button><button id="p6-open">Otwórz ciasny przesmyk (pauza)</button><button id="p5-preset">Wspólny świat · 6/10 ciał</button><button id="p5-pulse">Szarpnij ciężar</button><button id="p5-motor">Wyłącz lokalny napęd</button><button id="p4-preset">Kontakt i uchwyt</button><button id="p4-shock-right">Szarpnij →</button><button id="p4-shock-left">← Szarpnij</button><button id="p3-preset">Dwa ciała · jeden ciężar</button><button id="p3-right-grip">Chwyt drugiego · H</button>
+<section class="toolbar"><button id="p8-preset">P8 · Dotyk kontra napór</button><button id="p7-preset">P7 · Nacisk tłumu</button><button id="p7-poke">Szarpnij obrońcę</button><button id="p7-open">Otwórz gardziel (pauza)</button><button id="p6-preset">Przesmyki · różne ciała</button><button id="p6-open">Otwórz ciasny przesmyk (pauza)</button><button id="p5-preset">Wspólny świat · 6/10 ciał</button><button id="p5-pulse">Szarpnij ciężar</button><button id="p5-motor">Wyłącz lokalny napęd</button><button id="p4-preset">Kontakt i uchwyt</button><button id="p4-shock-right">Szarpnij →</button><button id="p4-shock-left">← Szarpnij</button><button id="p3-preset">Dwa ciała · jeden ciężar</button><button id="p3-right-grip">Chwyt drugiego · H</button>
   <button data-mode="select" class="selected">Wybierz ciało</button>
   <button data-mode="poke">Impuls</button>
   <button data-mode="bulky">Duże ciało</button>
@@ -24,8 +24,8 @@
     <div class="line">
       <strong>P8 · reakcja na realny dotyk (bez soft-body)</strong>
       <select id="p8-policy">
-       <option value="slip">Dotykowy ruch bokiem — kandydat</option>
-       <option value="drive">Kontrola: prosty napór</option>
+       <option value="drive">Kontrola: prosty napór (domyślna)</option>
+       <option value="slip">Eksperyment: dotykowy ruch bokiem</option>
        <option value="yield">Kontrola: pierwotne ustąpienie</option>
       </select>
       <small>Wszystkie trzy używają tych samych colliderów i ograniczenia napędu. Wybierz ciało, steruj WASD; fizyczny świat i pozostałe ciała nadal działają.</small>

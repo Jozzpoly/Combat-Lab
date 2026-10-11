@@ -93,7 +93,7 @@ try{
  await clickElement("p8-preset");await wait(1350);
  const before=await evalJS("window.__p8ReadOnlyProbe()");
  if(!before||!before.finite||before.actorCount!==7||before.loadCount!==2||
-    before.p8.tactile!=="slip"||before.guard.mass!==90||
+    before.p8.tactile!=="drive"||before.guard.mass!==90||
     before.pressure.moveImpulse<=0)
   throw Error("P8 true scene absent, wrong body/motor source");
  const firstPng=(await send("Page.captureScreenshot",{
