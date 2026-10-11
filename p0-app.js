@@ -94,6 +94,12 @@ function render(){
   tr.actorCount+" ciał · "+tr.loadCount+" ciężarów"+
   (tr.grips?"\\nAktywne uchwyty: "+tr.grips.length+
    " · łączny impuls chwytu: "+tr.gripEvidence.pairedImpulseSum+" N·s":"");
+ if(typeof world.reflexTrace==="function"&&world.reflex.size){
+  const rx=world.reflexTrace();
+  $("evidence").textContent+="\\nOdruch: "+[...world.reflex.values()].join(", ")+
+   " · fizyczny napęd proxy "+rx.reflexEvents.proxyImpulse.toFixed(2)+
+   " N·s · aktywne kroki "+rx.reflexEvents.active;
+ }
  document.body.dataset.p0Live="yes";
 }
 function setMode(next){
@@ -126,6 +132,54 @@ function p3Preset(){
  status("P3: WASD lewe ciało, IJKL prawe, G/H chwyt tylko po dotknięciu.");
  render();
 }
+let p4MaterialId=null;
+function p4Preset(){
+ world.dispose();
+ world=new ReflexYard({populated:false,support:$("support").value});
+ const actor=world.spawn("small",V(8.95,15));
+ const cargo=world.load(10,15,.48,.42,45);
+ actor.maxSpeedOverride=1.4;
+ world.selected=null;
+ let touched=false;
+ for(let i=0;i<150;i++){
+  world.command(actor,V(1,0));world.step();
+  if(world.actualContact(actor,cargo)){touched=true;break;}
+ }
+ if(!touched)throw Error("Cannot reach true Rapier contact in P4");
+ const before={...cargo.body.translation()};
+ const link=world.grip(actor.id,cargo.id,{maxImpulse:4});
+ if(!link.ok||Math.hypot(before.x-cargo.body.translation().x,before.y-cargo.body.translation().y)>1e-9)
+  throw Error("P4 material touch/grip invalid");
+ for(let i=0;i<90;i++)world.step();
+ const mode=$("reflex-mode").value;
+ world.setReflex(actor.id,mode);
+ world.setSelected(actor.id);
+ firstActorId=null;secondActorId=null;p4MaterialId=cargo.id;
+ camera={x:10,y:15,zoom:3.1};keys.clear();paused=false;acc=0;
+ $("pause").textContent="Pauza";
+ status("P4: realny uchwyt, odruch "+mode+". Szarpnij skrzynię i obserwuj.");
+ render();
+}
+function p4Shock(direction){
+ const cargo=world.loads.find(x=>x.id===p4MaterialId);
+ if(!cargo){status("Najpierw ustaw scenę Kontakt i uchwyt.");return;}
+ const p=cargo.body.translation();
+ // Explicit direct experimenter physical impulse, not an NPC decision.
+ cargo.body.applyImpulseAtPoint(V(160*direction,0),V(p.x,p.y+.33),true);
+ status("Eksperymentator: fizyczny impuls 160 N·s "+(direction>0?"w prawo":"w lewo")+
+  ". Reakcja oblicza się później lokalnie.");
+ render();
+}
+$("p4-preset").onclick=p4Preset;
+$("p4-shock-right").onclick=()=>p4Shock(1);
+$("p4-shock-left").onclick=()=>p4Shock(-1);
+$("reflex-mode").onchange=()=>{
+ const chosen=world.chosen;
+ if(chosen&&typeof world.setReflex==="function"){
+  world.setReflex(chosen.id,$("reflex-mode").value);
+  status("Odruch fizyczny: "+$("reflex-mode").value);render();
+ }
+};
 $("p3-preset").onclick=p3Preset;
 $("p3-right-grip").onclick=()=>secondActorId===null?
  status("Najpierw uruchom scenę dwóch ciał."):toggleGrip(secondActorId);
