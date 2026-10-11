@@ -34,9 +34,12 @@ if(scripts!==1||styles<1||!sourceJs)
 // ESM-specific module URI for lazy Vite helper is no longer available.
 // Bundle is ONE fully inlined chunk, so document.baseURI is the only
 // genuine local base if the helper is ever invoked.
-const code=sourceJs.replace(/import\.meta/g,"({url:document.baseURI})");
+let code=sourceJs.replace(/import\.meta/g,"({url:document.baseURI})");
+const stages="await Jb(),await ib(),Ob();";
+if(code.includes(stages))code=code.replace(stages,
+ "document.body.dataset.p10cBeforeWasm='yes';await Jb();document.body.dataset.p10cAfterWasm='yes';await ib();document.body.dataset.p10cAfterImport='yes';Ob();document.body.dataset.p10cAfterWorld='yes';");
 if(/\bimport\.meta\b/.test(code))throw Error("Unconverted module URI");
-const classic="(async()=>{\n"+code+"\n})().catch(error=>{document.body.dataset.p10Error=String(error.stack||error);console.error(error);});";
+const classic="(async()=>{document.body.dataset.p10cClassicStarted='yes';\n"+code+"\ndocument.body.dataset.p10cClassicFinished='yes';\n})().catch(error=>{document.body.dataset.p10Error=String(error.stack||error);console.error(error);});";
 writeFileSync(resolve(root,"packed-classic.cjs"),classic);
 execFileSync(process.execPath,["--check",resolve(root,"packed-classic.cjs")],{stdio:"pipe"});
 if(!html.includes("</body>"))throw Error("Missing HTML closing body");
