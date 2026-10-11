@@ -16,7 +16,7 @@ function account(entities){
  }
  return {m,com:V(px/m,py/m),p:V(mx,my),ke};
 }
-function run({backing="movable",ccd=true,iterations=12,cycle=false,selfContact=true}={}){
+function run({backing="movable",ccd=true,iterations=12,cycle=false,selfContact=true,keepAwake=false}={}){
  const w=makeP12World({backing,support:"none",kind:"lever",iterations});
  try{
   if(!w.tool.panel)throw Error("missing actual hinged source limb");
@@ -40,6 +40,7 @@ function run({backing="movable",ccd=true,iterations=12,cycle=false,selfContact=t
   for(let i=0;i<300;i++){
    if(cycle&&i===90)w.setPanelAngle(w.tool.id,0);
    if(cycle&&i===180)w.setPanelAngle(w.tool.id,1.2);
+   if(keepAwake&&w.backer)w.backer.body.wakeUp();
    w.step(V());
    let hit=0;
    if(w.backer)for(const part of [w.tool,w.tool.panel])
@@ -73,7 +74,7 @@ function run({backing="movable",ccd=true,iterations=12,cycle=false,selfContact=t
      sleeping:subjects.map(x=>({kind:x.kind,id:x.id,asleep:x.body.isSleeping()}))});
   }
   const allEnd=account(mobile),subEnd=account(subjects);
-  return {backing,ccd,iterations,cycle,selfContact,steps:300,
+  return {backing,ccd,iterations,cycle,selfContact,keepAwake,steps:300,
    mass:rnd(subStart.m),
    aggregateCOMDelta:rnd(dist(subEnd.com,subStart.com)),
    wholeWorldCOMDelta:rnd(dist(allEnd.com,allStart.com)),
@@ -101,11 +102,14 @@ export function p12bAudit(){
  for(const iterations of [4,12,24])
   for(const backing of ["absent","movable"])
    rows.push(run({iterations,ccd:true,backing,selfContact:false}));
- if(rows.length!==18||rows.some(r=>r.rootMotor!==0||r.steps!==300||
+ for(const iterations of [4,12,24])
+  for(const backing of ["absent","movable"])
+   rows.push(run({iterations,ccd:true,backing,keepAwake:true}));
+ if(rows.length!==24||rows.some(r=>r.rootMotor!==0||r.steps!==300||
    !Number.isFinite(r.aggregateCOMDelta)))
   throw Error("P12b numerical integrity cases incomplete");
  const contrast=rows.map(r=>({
-  iter:r.iterations,ccd:r.ccd,backer:r.backing,selfContact:r.selfContact,
+  iter:r.iterations,ccd:r.ccd,backer:r.backing,selfContact:r.selfContact,keepAwake:r.keepAwake,
   bodyCOM:r.aggregateCOMDelta,worldCOM:r.wholeWorldCOMDelta,
   aggregateP:r.aggregateMomentumResidual,allP:r.allWorldMomentumResidual,
   contact:r.contactSteps,firstHit:r.firstContact,
