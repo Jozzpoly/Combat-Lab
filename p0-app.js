@@ -509,6 +509,25 @@ function controls(){return V(+(keys.has("KeyD")||keys.has("ArrowRight"))-+(keys.
 function secondControls(){return V(+keys.has("KeyL")-+keys.has("KeyJ"),+keys.has("KeyK")-+keys.has("KeyI"));}
 
 const params=new URLSearchParams(location.search);
+
+// P9 geometric source falsifier: only emitted Chromium/Rapier can execute
+// this matrix. Does not change any owner-visible default simulation policy.
+if(params.has("p9audit")){
+ paused=true;
+ try{
+  const {p9Audit}=await import("./src/p9-geometry-audit.js");
+  const audit=p9Audit();
+  document.body.dataset.p9Audit="PASS";
+  document.body.dataset.p9Count=String(audit.worlds);
+  document.body.dataset.p9Report=encodeURIComponent(JSON.stringify(audit));
+  status("P9: źródłowe kontrpróby geometrii. To nie ocena feelu.");
+ }catch(e){
+  document.body.dataset.p9Audit="FAIL";
+  document.body.dataset.p9Error=String(e.stack||e);
+  console.error(e);
+ }
+}
+
 if(params.has("p0realinput"))window.__p0ReadOnlyProbe=()=>world.traces();
 
 if(params.has("p0pairframe")){

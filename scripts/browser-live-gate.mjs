@@ -484,3 +484,17 @@ console.log("P8 genuine native Chromium pointer/key control under actual 7-body 
 execFileSync(process.execPath,["scripts/p8-native-real.mjs",base],{
  timeout:120000,stdio:"inherit"
 });
+
+
+const p9=request({p9audit:1},["--dump-dom"]);
+validPage(p9,"P9 real browser/Rapier local side-clearance controls");
+if(attr(p9,"p9-audit")!=="PASS"||attr(p9,"p9-count")!=="40")
+ throw Error("P9 real solver geometry control failed: "+(attr(p9,"p9-error")||"missing 40 worlds"));
+const p9Data=JSON.parse(decodeURIComponent(attr(p9,"p9-report")));
+if(p9Data.worlds!==40||p9Data.cases.length!==40)
+ throw Error("P9 missing true 40 physical scenes");
+writeFileSync(resolve(folder,"p9-40-rigid-clearance-control.json"),
+ JSON.stringify(p9Data,null,2));
+console.log("P9 40 actual emitted-Chromium Rapier worlds. Fixed guard is ONLY an explicit obstacle null control.");
+console.log(JSON.stringify(p9Data.summary));
+console.log(p9Data.limitation);
