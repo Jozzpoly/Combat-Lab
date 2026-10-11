@@ -303,6 +303,21 @@ if(params.has("p10audit")){
   document.body.dataset.p10AuditError=String(e.stack||e);console.error(e);
  }
 }
+
+if(params.has("p10bstress")){
+ paused=true;
+ try{
+  const {p10bStress}=await import("./src/p10b-stress.js");
+  const data=p10bStress();
+  document.body.dataset.p10bStress="PASS";
+  document.body.dataset.p10bWorlds=String(data.worlds);
+  document.body.dataset.p10bReport=encodeURIComponent(JSON.stringify(data));
+ }catch(e){
+  document.body.dataset.p10bStress="FAIL";
+  document.body.dataset.p10bError=String(e.stack||e);console.error(e);
+ }
+}
+
 if(params.has("p10frame")){
  paused=true;
  try{
