@@ -6,10 +6,11 @@ import {TransportYard} from "./p2-world.js";
 import {V} from "./p0-world.js";
 const round=x=>Math.round(x*10000)/10000;
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
-function one({kind="small",mass=45,support="finite",grip="on",cap=3}){
+function one({kind="small",mass=45,support="finite",grip="on",cap=3,matchedSpeed=null}){
  const w=new TransportYard({populated:false,support});
  try{
   const actor=w.spawn(kind,V(8,16));
+  if(matchedSpeed!==null)actor.maxSpeedOverride=matchedSpeed;
   w.setSelected(actor.id);
   const cargo=w.load(10.4,16,.47,.43,mass);
   const initial={actor:{...actor.body.translation()},cargo:{...cargo.body.translation()}};
@@ -51,7 +52,7 @@ function one({kind="small",mass=45,support="finite",grip="on",cap=3}){
   if(gripBeforeRelease)w.release(actor.id);
   for(let i=0;i<45;i++)w.step(V());
   const terminal=w.gripTrace();
-  return {kind,mass,support,grip,cap,approachTick,
+  return {kind,mass,support,grip,cap,matchedSpeed,approachTick,
    initial,contact,after,finalCargo:{...cargo.body.translation()},
    cargoDXAfterPull:round(after.cargo.x-contact.cargo.x),
    bodyDXAfterPull:round(after.actor.x-contact.actor.x),
@@ -62,6 +63,7 @@ function one({kind="small",mass=45,support="finite",grip="on",cap=3}){
    gripImpulsePairs:active.gripEvidence.appliedPairs,
    sourceResidual:round(dist(momentumResidual,V())),
    gripBreaks:active.gripEvidence.breaks,
+   peakStretch:active.gripEvidence.peakStretch,
    manualReleases:terminal.gripEvidence.manualReleases,
    rootDrive:terminal.events.rootEffort,
    supportImpulse:terminal.events.terrainLinearImpulse,
@@ -89,4 +91,34 @@ export function p2Probe(){
  return {question:"Does a physically contacted, force-limited compliant grip create a real independent transport action compared with same operator motion and no grip?",
  warning:"Even if yes: not real hands, gait, self-directed NPC or Owner-feel PASS. Contact anchor is midpoint approximation, not tactile anatomy. One cargo and two root body kinds.",
  cases:cases.length,results:cases};
+}
+
+
+export function p2SpeedRedTeam(){
+ // Post-hoc fairer movement policy: same desired speed 1.75m/s; body mass,
+ // geometry and existing finite root motor strengths remain different.
+ const cases=[];
+ for(const kind of ["small","bulky"])
+  for(const support of ["finite","none"])
+   for(const mass of [45,100]){
+    const common={kind,support,mass,matchedSpeed:1.75};
+    cases.push(one({...common,grip:"off"}));
+    for(const cap of [3,6])
+     cases.push(one({...common,grip:"on",cap}));
+   }
+ if(cases.length!==24||cases.some(x=>!x.finite||!x.loadStillPhysics||
+  x.refused.ok||x.sourceResidual>1e-6||!x.approachTick))
+  throw Error("P2 speed-matched falsifier invalid source");
+ return {scope:"POST-HOC red-team 24 solver cases, same target root speed for all bodies",
+  claim:"separates programmed speed from mass, motor and strength confounds but does not isolate morphology",
+  cases:cases.length,results:cases,
+  comparisons:cases.filter(x=>x.grip==="on").map(x=>{
+   const n=cases.find(y=>y.grip==="off"&&y.kind===x.kind&&
+    y.mass===x.mass&&y.support===x.support);
+   if(!n)throw Error("P2 missing valid no-grip rival");
+   return {kind:x.kind,support:x.support,mass:x.mass,cap:x.cap,
+    noGripCargoDX:n.cargoDXAfterPull,gripCargoDX:x.cargoDXAfterPull,
+    gripBreaks:x.gripBreaks,gripImpulse:x.actualGripImpulse,
+    rootDX:x.bodyDXAfterPull,contactTick:x.approachTick};
+  })};
 }
