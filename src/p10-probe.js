@@ -67,23 +67,30 @@ function runHaul({link=false}={}){
    rootEffort:t.rootEffort,finite:t.finite};
  }finally{w.dispose();}
 }
-function runTool({kind="lever",powered=true}={}){
+function runTool({kind="lever",powered=true,stance="flow",support="finite"}={}){
  const fixture=kind==="rigid-lever"?"rigid-tool":"hinge";
- const w=makeMaterialWorkshop({fixture});
+ const w=makeMaterialWorkshop({fixture,support});
  try{
   w.setSelected(w.tool.id);
+  if(!w.setStance(w.tool.id,stance))throw Error("P10 physical stance refused");
   const loadInitial=pos(w.toolLoad),rootInitial=pos(w.tool);
   const initial=snapshot(w);
   if(powered&&w.tool.panel)w.setPanelAngle(w.tool.id,.90);
-  for(let i=0;i<175;i++)w.step(V());
-  const t=w.trace();
-  return {kind,powered,initial,
+  let touches=0;
+  for(let i=0;i<175;i++){
+   w.step(V());
+   if(w.actualContact(w.tool,w.toolLoad))touches++;
+  }
+  const t=w.trace(),tool=t.actors.find(x=>x.id===w.tool.id);
+  return {kind,powered,stance,support,initial,
    cargoStart:loadInitial,cargoEnd:pos(w.toolLoad),
    cargoDisplacement:round(distance(loadInitial,pos(w.toolLoad))),
    rootStart:rootInitial,rootEnd:pos(w.tool),
-   panelAngle:t.actors.find(x=>x.id===w.tool.id)?.panel?.theta??null,
+   rootYaw:tool.theta,
+   panel:tool.panel,
+   contactTicks:touches,
    jointEffort:t.panelImpulse,rootEffort:t.rootEffort,
-   finite:t.finite};
+   terrainImpulse:t.terrainImpulse,finite:t.finite};
  }finally{w.dispose();}
 }
 function quiet(){
@@ -124,7 +131,11 @@ export function p10Audit(){
  const hauls=[runHaul({link:false}),runHaul({link:true})];
  const tools=[runTool({kind:"lever",powered:false}),
    runTool({kind:"lever",powered:true}),
-   runTool({kind:"rigid-lever",powered:false})];
+   runTool({kind:"lever",powered:true,stance:"brace"}),
+   runTool({kind:"lever",powered:true,stance:"flow",support:"none"}),
+   runTool({kind:"lever",powered:true,stance:"brace",support:"none"}),
+   runTool({kind:"rigid-lever",powered:false}),
+   runTool({kind:"rigid-lever",powered:false,stance:"brace"})];
  const topology=editWhilePaused();
  if(q.auto!==false||q.rootEffort!==0||q.actors!==3||q.cargo!==5||!q.finite)
   throw Error("P10 independent quiet world not real");
@@ -146,7 +157,7 @@ export function p10Audit(){
   throw Error("P10 genuine link/no-link causal source controls invalid");
  if(tools.some(x=>!x.finite)||tools[0].rootEffort!==0||
   tools[1].rootEffort!==0||tools[2].rootEffort!==0||
-  tools[0].jointEffort!==0||tools[2].jointEffort!==0)
+  tools[0].jointEffort!==0||tools[5].jointEffort!==0)
   throw Error("P10 source motor off/hinge/rival invalid");
  if(!topology.finite||!topology.unchanged)
   throw Error("P10 genuine paused topology continuous world invalid");
@@ -162,7 +173,9 @@ export function p10Audit(){
    breaks:x.gripBreaks,stillAttached:x.finalLinked,effort:x.rootEffort})),
   tools:tools.map(x=>({kind:x.kind,powered:x.powered,
    cargoMove:x.cargoDisplacement,from:x.cargoStart,to:x.cargoEnd,
-   jointImpulse:x.jointEffort,rootImpulse:x.rootEffort})),
+   jointImpulse:x.jointEffort,rootImpulse:x.rootEffort,terrainImpulse:x.terrainImpulse,
+   stance:x.stance,support:x.support,rootYaw:x.rootYaw,
+   panel:x.panel,contactTicks:x.contactTicks})),
   topology,
   warning:"Controlled static world operator actions are NOT living NPC behavior. Free-form Owner feel and autonomous initiative untested. Comparators vary anatomy and input capability; no unique hinged-body superiority shown."};
 }
