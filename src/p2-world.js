@@ -36,7 +36,8 @@ export class TransportYard extends MaterialYard {
   super(options);
   this.grips=[];
   this.gripEvidence={contactApproaches:0,refusedWithoutContact:0,
-   pairedImpulseSum:0,pairedImpulseX:0,pairedImpulseY:0,
+   pairedImpulseSum:0,holderImpulseX:0,holderImpulseY:0,
+   loadImpulseX:0,loadImpulseY:0,
    appliedPairs:0,meanStretch:0,peakStretch:0,breaks:0,manualReleases:0,
    transported:false};
   this.gripMaxImpulse=3;
@@ -109,8 +110,10 @@ export class TransportYard extends MaterialYard {
    const amount=norm(impulse);
    g.totalImpulse+=amount;this.gripEvidence.appliedPairs++;
    this.gripEvidence.pairedImpulseSum+=amount;
-   this.gripEvidence.pairedImpulseX+=(-impulse.x+impulse.x);
-   this.gripEvidence.pairedImpulseY+=(-impulse.y+impulse.y);
+   this.gripEvidence.holderImpulseX-=impulse.x;
+   this.gripEvidence.holderImpulseY-=impulse.y;
+   this.gripEvidence.loadImpulseX+=impulse.x;
+   this.gripEvidence.loadImpulseY+=impulse.y;
   }
  }
  step(move=V()){
