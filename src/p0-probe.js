@@ -29,12 +29,13 @@ function testAnatomy(support,stance,target,kind="lever"){
   const actor=f.spawn(kind,V(13,11.3));
   f.selected=actor.id;f.setStance(actor.id,stance);
   const initial=actor.body.translation(),angle=actor.body.rotation();
-  if(kind==="lever")f.setPanelAngle(actor.id,target);
+  if(kind==="lever"&&target!==0)f.setPanelAngle(actor.id,target);
   const starts=initialPairs(f);
   for(let i=0;i<165;i++)f.step();
   const t=f.traces();
   return {support,stance,target,kind,initialPairs:starts,
    rootYaw:round(actor.body.rotation()-angle),
+   passiveActuator:!actor.panelActive,
    rootTravel:round(diff(initial,actor.body.translation())),
    relativePanel:t.selected.panelAngle,
    gateAngle:t.gateAngle,effort:t.events,
@@ -95,7 +96,7 @@ export function p0Probe(){
    throw Error("P0 terrain source attribution");
  for(const mode of ["none","finite","damping"]){
   const zero=anatomy.find(x=>x.support===mode&&x.stance==="brace"&&x.target===0);
-  if(Math.abs(zero.rootYaw)>1e-3)
+  if(!zero.passiveActuator||Math.abs(zero.rootYaw)>1e-3||zero.effort.panelTorque!==0)
    throw Error("P0 no-actuation null unexpectedly rotates body");
  }
  return {source:"actual browser emitted deterministic Rapier2D 0.21 fixed-step",
