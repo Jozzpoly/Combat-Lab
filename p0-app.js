@@ -340,7 +340,7 @@ if(params.has("p3frame")){
   const leftKind=params.get("left")==="bulky"?"bulky":"small";
   world.dispose();camera={x:10.4,y:12,zoom:2.75};
   const v=p3Contest({mode:kind,support,leftKind,
-    captureWorld:(w,{A,B,C})=>{world=w;w.setSelected(A.id);}});
+    captureWorld:(w,{A,B,C})=>{world=w;w.setSelected(A.id);firstActorId=A.id;secondActorId=B.id;}});
   document.body.dataset.p3Frame=JSON.stringify(v);
   status("P3: two bodies, shared real cargo, true late-source frame.");
  }catch(e){document.body.dataset.p3FrameError=String(e.stack||e);console.error(e);}
