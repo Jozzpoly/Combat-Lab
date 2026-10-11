@@ -20,6 +20,8 @@ export function p8Case({tactile="slip",width=2.85,formation="center",
   let preContact=null,preAction=null,postAction=null,
    firstRealContact=null,firstCross=null,preCollisionEffort=0;
   let zeroDriveWhileBlocked=0,stalledUnderPhysicalPressure=0;
+  const everThrough=new Set(),previousInMouth=new Set();
+  let maxConcurrentMouth=0,mouthOccupancyTicks=0,reentries=0;
   for(let step=0;step<ticks;step++){
    if(step===45)preContact=physicalState(w);
    if(step===190){
@@ -39,6 +41,22 @@ export function p8Case({tactile="slip",width=2.85,formation="center",
    }
    w.step();
    const res=w.pressureTrace();
+   // "X>16.3 at final snapshot" is NOT total throughput: an actor can
+   // briefly pass and return (or be knocked back). Observe exactly the
+   // real dynamic world state at EVERY fixed physics step.
+   const insideNow=new Set();
+   const aperture=w.opening();
+   for(const a of w.pushers){
+    const p=a.body.translation(),rad=a.shapes[0].shape.r;
+    const physicallyThrough=p.x>w.gap.x+1.30&&
+      p.y-rad>aperture.low-.06&&p.y+rad<aperture.high+.06;
+    if(!physicallyThrough)continue;
+    insideNow.add(a.id);everThrough.add(a.id);mouthOccupancyTicks++;
+    if(!previousInMouth.has(a.id))reentries++;
+   }
+   previousInMouth.clear();
+   for(const id of insideNow)previousInMouth.add(id);
+   maxConcurrentMouth=Math.max(maxConcurrentMouth,insideNow.size);
    if(firstRealContact===null&&res.pressure.guardContacts>0)
     firstRealContact=w.ticks;
    if(firstCross===null&&res.crossings.mouth>0)
@@ -65,7 +83,11 @@ export function p8Case({tactile="slip",width=2.85,formation="center",
    starts:start,early:preContact,preAction,postAction,
    contacts:out.pressure.guardContacts,pressure:out.pressure.guardImpulse,
    impulses:out.events.rootEffort,terrain:out.events.terrainLinearImpulse,
-   guard:out.guard,passes:out.crossings.mouth,movers:out.movers,
+   guard:out.guard,passes:out.crossings.mouth,
+   everPassed:everThrough.size,everPassedIds:[...everThrough],
+   maxConcurrentMouth,mouthOccupancyTicks,reentries,
+   returnedAfterPass:everThrough.size-out.crossings.mouth,
+   movers:out.movers,
    loads:out.loads,firstRealContact,firstCross,
    slipTriggers:out.p8.contactActivations,slipTicks:out.p8.slideTicks,
    actualContactTime:out.p8.contactTimes,
@@ -106,13 +128,18 @@ export function p8Probe(){
      if(group.some(x=>JSON.stringify(x.starts)!==start))
       throw Error("P8 pre-source physical mass/positions not identical");
      const slip=group.find(x=>x.tactile==="slip");
+     if(group.some(x=>x.everPassed<x.passes||
+         x.returnedAfterPass!==x.everPassed-x.passes))
+      throw Error("P8 end-snapshot / true time-integrated mouth count mismatch");
      if(slip.slipTriggers>0&&slip.actualContactTime<=0)
       throw Error("P8 tactile slip activated with no physical solver contact");
      if(group.some(x=>x.tactile!=="slip"&&x.slipTriggers!==0))
       throw Error("P8 cheap baseline showed unearned slip");
      triples.push({width,support,formation,guardPolicy,
       modes:group.map(x=>({policy:x.tactile,
-       passes:x.passes,firstCross:x.firstCross,guardX:x.guard.x,
+       passes:x.passes,ever:x.everPassed,returned:x.returnedAfterPass,
+       cumulativeMouthTicks:x.mouthOccupancyTicks,
+       firstCross:x.firstCross,guardX:x.guard.x,
        root:round(x.impulses),moverSource:round(x.cumulativeMoverEffort),
        contacts:x.contacts,slip:x.slipTriggers,
        blocked:x.stalledUnderPhysicalPressure}))});

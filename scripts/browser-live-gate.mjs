@@ -462,7 +462,8 @@ console.log("P8 actual Rapier contact slide vs cheap drive / naive yield, physic
 console.log(JSON.stringify(p8Data.triples));
 console.log("P8 exactly matched source physical pre-shock and material-intervention states:");
 console.log(JSON.stringify(p8Data.actions.map(x=>({policy:x.tactile,
- edit:x.intervention,passthrough:x.passes,slip:x.slipTriggers,
+ edit:x.intervention,passthrough:x.passes,ever:x.everPassed,
+ returned:x.returnedAfterPass,slip:x.slipTriggers,
  guard:x.guard,impulses:x.impulses,contact:x.contacts}))));
 for(const policy of ["drive","yield","slip"]){
  const dom=request({p8frame:policy},["--dump-dom"]);

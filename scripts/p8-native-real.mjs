@@ -160,6 +160,18 @@ try{
  const continued=await evalJS("window.__p8ReadOnlyProbe()");
  if(!continued.finite||continued.tick<=widened.tick||!continued.mouth.changed)
   throw Error("P8 resumed source lacked physically continuous history");
+ // Unedited temporal evidence: 22 actual Chromium frames from a running
+ // WASM solver. No generated interpolation, render retiming or faked NPC
+ // event; can be assembled into a short observer clip after retrieval.
+ const motionDir=resolve(folder,"p8-native-motion-frames");
+ mkdirSync(motionDir,{recursive:true});
+ for(let i=0;i<22;i++){
+  const png=(await send("Page.captureScreenshot",{
+   format:"png",captureBeyondViewport:false})).data;
+  writeFileSync(resolve(motionDir,String(i).padStart(3,"0")+".png"),
+   Buffer.from(png,"base64"));
+  await wait(115);
+ }
  const lastPng=(await send("Page.captureScreenshot",{
   format:"png",captureBeyondViewport:false})).data;
  writeFileSync(resolve(folder,"p8-native-owner-selected-crowd-after.png"),
@@ -173,6 +185,7 @@ try{
    gapBefore:preShock.mouth.width,gapAfter:widened.mouth.width,
    physicalPokes:postShock.activity.externalImpulses,
    bodyPositionsUnchanged:JSON.stringify(widened.actors)===JSON.stringify(postShock.actors)},
+  visualEvidence:{rawFrames:22,source:"actual Chrome Page.captureScreenshot without edits"},
   continuation:{tick:continued.tick,contact:continued.pressure.guardContacts,
    contactsUnderSlide:continued.p8.contactTimes,finite:continued.finite},
   limits:"Driver is a physical root traction proxy, not gait or measured Owner feel. Native Chrome is mechanical control evidence only."};
