@@ -264,3 +264,19 @@ console.log(JSON.stringify(conservationData.results.map(x=>({
  model:x.model,pulse:x.pulse,dL:x.angularDrift,peakL:x.peakAngularDrift,
  dP:x.linearDrift,peakP:x.peakLinearDrift,dK:x.energyChange
 }))));
+
+
+const axial=request({p4axial:1},["--dump-dom"]);
+validPage(axial,"P4 axial donor old-vs-new P2/P3 physical regression");
+if(attr(axial,"p4-axial")!=="PASS"||attr(axial,"p4-axial-count")!=="96")
+ throw Error("P4 axial 96-world source failed: "+(attr(axial,"p4-axial-error")||"missing"));
+const axialReport=JSON.parse(decodeURIComponent(attr(axial,"p4-axial-report")));
+if(axialReport.actuallySimulatedPhysicalWorlds!==96)
+ throw Error("P4 actual donor count invalid");
+writeFileSync(resolve(folder,"p4-central-axial-vs-original-p2-p3.json"),JSON.stringify(axialReport,null,2));
+console.log("P4 AXIAL grip physical donor A/B P2 transport and P3 contested matter:");
+console.log(JSON.stringify({
+ p2:axialReport.p2,
+ p3:axialReport.p3.filter(x=>["dual","release","left","off"].includes(x.mode)),
+ speed:axialReport.speedMatchedAxial
+}));
