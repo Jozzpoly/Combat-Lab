@@ -57,9 +57,13 @@ export function createP6Commons({support="finite"}={}){
  const large=w.spawn("bulky",V(9.3,17.85));
  const follower=w.spawn("small",V(6.8,11.1));
  const rival=w.spawn("small",V(8.2,17.9));
- for(const ent of [narrow,large,follower,rival]){
+ for(const [ent,role] of [[narrow,"press"],[large,"brace"],
+                           [follower,"yield"],[rival,"press"]]){
   ent.maxSpeedOverride=1.7;ent.motor=650;
-  w.register(ent,"press",V(1,0));
+  // Same initial heading/drive caps. Under the CHEAP constant policy
+  // these are ordinary straight-root drives. Under touch, only actual
+  // real solver contact force can trigger BRACE or YIELD at runtime.
+  w.register(ent,role,V(1,0));
  }
  // Independently mobile material in the two possible flow paths.
  w.load(17.5,11.15,.45,.4,35);
