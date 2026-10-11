@@ -156,6 +156,21 @@ if(params.has("k1probe")){
   }catch(error){document.body.dataset.k1Probe="FAIL";
     document.body.dataset.k1Error=String(error.stack||error);console.error(error);}
 }
+if(params.has("k2probe")){
+  try {
+    paused=true;
+    const {runK2Probe}=await import("./src/k2-probe.js");
+    const results=runK2Probe();
+    document.body.dataset.k2Probe="PASS";
+    document.body.dataset.k2Cases=String(results.cases.length);
+    document.body.dataset.k2Report=encodeURIComponent(JSON.stringify(results));
+    report("K2: 30 real physics source trials; mechanical evidence ONLY.");
+  } catch(e) {
+    document.body.dataset.k2Probe="FAIL";
+    document.body.dataset.k2Error=String(e.stack||e);
+    console.error(e);
+  }
+}
 if(params.has("k1frame")){
   paused=true;const step=Math.min(240,Math.max(0,Number(params.get("k1frame"))||0));
   field.shoot(V(3,10),V(27,10),20);
