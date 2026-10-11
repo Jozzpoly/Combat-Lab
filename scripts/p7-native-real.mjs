@@ -84,6 +84,42 @@ try{
   if(ready)break;if(i===144)throw Error("P7 actual emitted WASM site did not load");
   await wait(75);
  }
+ // Actual mouse click on the moving *physical body* selects an Owner
+ // control channel; B toggles stance without being overruled by local logic.
+ await clickElement("p7-preset");await wait(250);
+ const early=await evalJS("window.__p7ReadOnlyProbe()");
+ const center=await evalJS(`(()=>{
+  const r=document.getElementById("world").getBoundingClientRect();
+  const DPR=Math.min(2,window.devicePixelRatio||1),
+  width=Math.round(r.width*DPR),height=Math.round(r.height*DPR);
+  const scale=Math.min(width/40,height/24)*1.85;
+  return {x:r.left+(width/2+(${early.guard.x}-14.2)*scale)*r.width/width,
+   y:r.top+(height/2+(${early.guard.y}-12)*scale)*r.height/height};
+ })()`);
+ await mouse(center.x,center.y);
+ const selected=await evalJS("window.__p7ReadOnlyProbe()");
+ if(!selected?.selected||selected.selected.id!==early.guard.id)
+  throw Error("P7 real pointer did not select material defender");
+ const beforeStance=selected.guard.stance;
+ await clickElement("stance");await wait(160);
+ const posture=await evalJS("window.__p7ReadOnlyProbe()");
+ if(posture.guard.stance===beforeStance||posture.selected?.id!==early.guard.id)
+  throw Error("P7 real Owner stance toggle lost to auto guard policy");
+ // This second physical click returns to FLOW, avoiding a manufactured
+ // brace-induced immobilization during the native WASD driving check.
+ if(posture.guard.stance==="brace"){await clickElement("stance");await wait(80);}
+ const beforeMove=await evalJS("window.__p7ReadOnlyProbe()");
+ await send("Input.dispatchKeyEvent",{type:"keyDown",key:"d",code:"KeyD",
+  windowsVirtualKeyCode:68,nativeVirtualKeyCode:68});
+ await wait(420);
+ await send("Input.dispatchKeyEvent",{type:"keyUp",key:"d",code:"KeyD",
+  windowsVirtualKeyCode:68,nativeVirtualKeyCode:68});
+ const driven=await evalJS("window.__p7ReadOnlyProbe()");
+ if(driven.tick<=beforeMove.tick||driven.selected?.id!==early.guard.id||
+  Math.abs(driven.guard.x-beforeMove.guard.x)<.012)
+  throw Error("P7 genuine keyboard D did not physically move manually selected guard");
+ // Restore a clean full seven-body autonomous specimen using the actual
+ // UI preset, not a direct scripted simulation-world reset.
  await clickElement("p7-preset");await wait(2100);
  const pre=await evalJS("window.__p7ReadOnlyProbe()");
  if(!pre||!pre.finite||pre.actorCount!==7||pre.loadCount!==2||
@@ -129,6 +165,8 @@ try{
  writeFileSync(resolve(folder,"p7-native-resumed-after-physical-crowd-edit.png"),
   Buffer.from(postPng,"base64"));
  const report={source:"Actual native Chromium mouse pointer: P7 multi-actor crowd start, real dynamic guard poke, pause and translate actual fixed blocker, unpause same solver",
+  ownerControl:{clickedActor:early.guard.id,manualStance:posture.guard.stance,
+   xMovedByRealD:driven.guard.x-beforeMove.guard.x},
   before:{tick:pre.tick,actors:pre.actorCount,loads:pre.loadCount,
    guard:pre.guard,contacts:pre.pressure.guardContacts,
    pressure:pre.pressure.guardImpulse,drive:pre.pressure.moveImpulse},
