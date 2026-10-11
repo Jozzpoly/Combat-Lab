@@ -18,3 +18,6 @@ body.p7-focus aside .line:has(#reflex-mode),
 body.p7-focus aside .line:has(#grip){display:none}
 body.p7-focus aside .limit:not(#p7-limit){display:none}
 body.p7-focus aside #p7-limit{display:block!important}
+
+/* P8 shares the physical P7 continuous stage and its clutter-free lens. */
+body.p7-focus .toolbar button#p8-preset{display:inline-block}

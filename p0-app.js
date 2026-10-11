@@ -3,6 +3,7 @@ import {ReflexYard} from "./src/p4-reflex.js";
 import {createCommons,CommonsYard} from "./src/p5-commons.js";
 import {createP6Commons,openP6} from "./src/p6-envelope.js";
 import {makeDoorCrowd,DoorCrowdYard} from "./src/p7-crowd.js";
+import {makeTactileYard,TactileYard} from "./src/p8-tactile.js";
 const $=id=>document.getElementById(id);
 const canvas=$("world"),ctx=canvas.getContext("2d",{alpha:false});
 let world=new ReflexYard(),paused=false,mode="select",drag=null,firstActorId=null,secondActorId=null;
@@ -85,6 +86,18 @@ function render(){
   }
  }
  if(world instanceof DoorCrowdYard){
+  if(world instanceof TactileYard){
+   // Pure input-vector visualization from local contact memory.
+   // This is NOT a physical contact manifold point or magic lateral push.
+   for(const a of world.pushers){
+    const s=world.sideMemory.get(a.id);
+    if(!s||s.left<=0)continue;
+    const at=a.body.translation();
+    ctx.strokeStyle="#69d5e1";ctx.lineWidth=.09;
+    ctx.beginPath();ctx.moveTo(at.x,at.y);
+    ctx.lineTo(at.x+.48,at.y+.59*s.sign);ctx.stroke();
+   }
+  }
   if($("p7-debug").checked){
    // Every line exists only when Rapier reports actual solver contacts.
    // The center-to-center line is a DEBUG annotation, not the true
@@ -157,6 +170,14 @@ function render(){
    " · fizyczny napęd proxy "+rx.reflexEvents.proxyImpulse.toFixed(2)+
    " N·s · aktywne kroki "+rx.reflexEvents.active;
  }
+ if(world instanceof TactileYard){
+  const p=world.pressureTrace().p8;
+  $("evidence").textContent+="\nP8: "+p.tactile+
+   " · rzeczywistych aktywacji po dotyku: "+p.contactActivations+
+   " · kroków ślizgu: "+p.slideTicks+
+   " · licznik zacięć pod naciskiem: "+p.pressureStalls+
+   "\nŹródłowy napęd tłumu: "+p.totalRootImpulse.toFixed(1)+" N·s";
+ }
  if(world instanceof DoorCrowdYard){
   const r=world.pressureTrace();
   $("evidence").textContent+="\nP7: obrońca "+r.guard.kind+
@@ -198,7 +219,32 @@ function pause(){paused=!paused;acc=0;$("pause").textContent=paused?"Wznów":"Pa
 function reset(){document.body.classList.remove("p7-focus");world.dispose();firstActorId=null;secondActorId=null;world=new ReflexYard({support:$("support").value});
  paused=false;$("pause").textContent="Pauza";acc=0;
  status("Nowy materialny dziedziniec. Przebudowuj dowolnie.");render();}
+function p8Preset(){
+ document.body.classList.add("p7-focus");
+ world.dispose();
+ world=makeTactileYard({support:$("support").value,
+  width:Number($("p7-width").value),density:Number($("p7-density").value),
+  guardKind:$("p7-kind").value,guardMass:90,
+  guardPolicy:$("p7-stance").value,tactile:$("p8-policy").value,
+  formation:$("p7-formation").value});
+ firstActorId=null;secondActorId=null;p4MaterialId=null;
+ $("p5-motor").textContent="Wyłącz lokalny napęd";
+ camera={x:14.2,y:12,zoom:1.85};
+ keys.clear();acc=0;paused=false;$("pause").textContent="Pauza";
+ status("P8: fizyczny tłum · dotyk albo napór, steruj wybranym ciałem WASD.");
+ render();
+}
+$("p8-preset").onclick=p8Preset;
+$("p8-policy").onchange=()=>{
+ if(world instanceof TactileYard){
+  world.p8.tactile=$("p8-policy").value;
+  world.pressure.moverPolicy=world.p8.tactile==="yield"?"yield":"drive";
+  status("P8: rzeczywista polityka ruchu zmieniona BEZ resetowania ciał.");
+  render();
+ }
+};
 function p7Preset(){
+ $("p8-policy").value="drive";
  document.body.classList.add("p7-focus");
  world.dispose();
  world=makeDoorCrowd({support:$("support").value,
@@ -557,6 +603,40 @@ if(params.has("p3native")){
   document.body.dataset.p3NativeReady=String(sourceTick);
   status("P3: native G/H separate grips after real two-sided solver contact.");
  }catch(e){document.body.dataset.p3NativeError=String(e.stack||e);console.error(e);}
+}
+if(params.has("p8native")){
+ window.__p8ReadOnlyProbe=()=>world instanceof TactileYard?
+  world.pressureTrace():null;
+}
+if(params.has("p8probe")){
+ paused=true;
+ try{
+  const {p8Probe}=await import("./src/p8-probe.js");
+  const result=p8Probe();
+  document.body.dataset.p8Probe="PASS";
+  document.body.dataset.p8Cases=String(result.cases);
+  document.body.dataset.p8Report=encodeURIComponent(JSON.stringify(result));
+  status("P8: trzy polityki pod prawdziwym naciskiem, przy zgodnych stanach początkowych.");
+ }catch(e){document.body.dataset.p8Probe="FAIL";
+  document.body.dataset.p8Error=String(e.stack||e);console.error(e);}
+}
+if(params.has("p8frame")){
+ paused=true;
+ try{
+  const {p8Case}=await import("./src/p8-probe.js");
+  const tactile=params.get("p8frame");
+  if(!["drive","yield","slip"].includes(tactile))throw Error("P8 source mode");
+  world.dispose();
+  const result=p8Case({tactile,width:2.85,formation:"center",
+   guardPolicy:"brace",support:"finite",density:6,ticks:460,
+   captureWorld:w=>{world=w;}});
+  camera={x:14.2,y:12,zoom:1.85};
+  document.body.classList.add("p7-focus");
+  document.body.dataset.p8Frame=JSON.stringify({tactile,finite:result.finite,
+   pass:result.passes,guard:result.guard,slip:result.slipTriggers,
+   worldEvidence:result.contacts});
+  status("P8: surowy stan Rapier po 460 krokach prawdziwego tłumu: "+tactile);
+ }catch(e){document.body.dataset.p8FrameError=String(e.stack||e);console.error(e);}
 }
 if(params.has("p7native")){
  window.__p7ReadOnlyProbe=()=>world instanceof DoorCrowdYard?

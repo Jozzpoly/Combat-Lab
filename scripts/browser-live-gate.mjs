@@ -448,3 +448,32 @@ console.log("P7 true native Chrome pointer test: same physical crowd, operator p
 execFileSync(process.execPath,["scripts/p7-native-real.mjs",base],{
  timeout:120000,stdio:"inherit"
 });
+
+
+const p8=request({p8probe:1},["--dump-dom"]);
+validPage(p8,"P8 real source contact-induced sidestep vs cheaper controls");
+if(attr(p8,"p8-probe")!=="PASS"||attr(p8,"p8-cases")!=="57")
+ throw Error("P8 actual 57 material scenarios failed: "+(attr(p8,"p8-error")||"not57"));
+const p8Data=JSON.parse(decodeURIComponent(attr(p8,"p8-report")));
+if(p8Data.cases!==57)throw Error("P8 incomplete A/B source worlds");
+writeFileSync(resolve(folder,"p8-57-physical-contact-response.json"),
+ JSON.stringify(p8Data,null,2));
+console.log("P8 actual Rapier contact slide vs cheap drive / naive yield, physical-stall and source budgets:");
+console.log(JSON.stringify(p8Data.triples));
+console.log("P8 exactly matched source physical pre-shock and material-intervention states:");
+console.log(JSON.stringify(p8Data.actions.map(x=>({policy:x.tactile,
+ edit:x.intervention,passthrough:x.passes,slip:x.slipTriggers,
+ guard:x.guard,impulses:x.impulses,contact:x.contacts}))));
+for(const policy of ["drive","yield","slip"]){
+ const dom=request({p8frame:policy},["--dump-dom"]);
+ validPage(dom,"P8 actual material source frame "+policy);
+ const d=attr(dom,"p8-frame");
+ if(!d||attr(dom,"p8-frame-error"))
+  throw Error("P8 frame missing: "+(attr(dom,"p8-frame-error")||policy));
+ const v=JSON.parse(d.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+ if(!v.finite||v.tactile!==policy)throw Error("P8 physical frame source mismatch");
+ writeFileSync(resolve(folder,"p8-"+policy+"-raw-source.json"),
+  JSON.stringify(v,null,2));
+ request({p8frame:policy},["--screenshot="+resolve(folder,
+  "p8-"+policy+"-real-crowd-chromium.png")]);
+}
