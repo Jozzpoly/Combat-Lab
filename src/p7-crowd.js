@@ -130,7 +130,7 @@ export class DoorCrowdYard extends CommonsYard{
     x:round(a.body.translation().x),y:round(a.body.translation().y),
     vx:round(a.body.linvel().x),steered:this.deflected.has(a.id)})),
    loads:this.loads.map(a=>({id:a.id,x:round(a.body.translation().x),
-    y:round(a.body.translation().y)})};
+    y:round(a.body.translation().y)}))};
  }
 }
 export function makeDoorCrowd(options={}){
