@@ -67,3 +67,12 @@ jobs:
               --dump-dom http://127.0.0.1:4173/ > /tmp/combat-lab-dom.html
             test -s /tmp/combat-lab-dom.html
           fi
+
+      - name: Preserve P0 generated visual and physical evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p0-physical-source-evidence
+          path: p0-evidence/
+          if-no-files-found: ignore
+          retention-days: 14
