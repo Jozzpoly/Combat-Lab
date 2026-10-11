@@ -20,7 +20,7 @@ jobs:
         run: node --check src/p12b-momentum.js && node --check p10-ui.js && node --check scripts/p12b-browser.mjs
       - name: Build existing real Vite Rapier web entry and optional probe
         run: npm run build && test -s dist/p10.html
-      - name: Eighteen real Chromium CCD, root-panel self contact and momentum source worlds
+      - name: Twenty-four real Chromium CCD, self-contact and sleeping-material momentum worlds
         shell: bash
         run: |
           python3 -m http.server 4173 --directory dist >/tmp/p12b-http.log 2>&1 &
