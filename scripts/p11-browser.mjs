@@ -7,7 +7,7 @@ const bin=process.env.CHROME_BIN||"chromium";
 const base=new URL("p10.html",process.argv[2]||"http://127.0.0.1:4173/");
 const dir=resolve("p11-evidence");mkdirSync(dir,{recursive:true});
 const flags=["--headless=new","--no-sandbox","--disable-gpu",
- "--disable-dev-shm-usage","--hide-scrollbars","--window-size=1520,970",
+ "--disable-dev-shm-usage","--hide-scrollbars","--window-size=2720,970",
  "--virtual-time-budget=18000"];
 function invoke(query={},others=[]){
  const url=new URL(base);
@@ -21,12 +21,12 @@ const decode=x=>decodeURIComponent(x.replaceAll("&amp;","&").replaceAll("&quot;"
 const dataHtml=invoke({p11audit:1},["--dump-dom"]);
 if(attr(dataHtml,"p11-audit")!=="PASS")
  throw Error("P11 exact real Rapier source FAIL: "+(attr(dataHtml,"p11-error")||"missing marker"));
-if(attr(dataHtml,"p11-worlds")!=="15")throw Error("P11 expected 15 material source worlds");
+if(attr(dataHtml,"p11-worlds")!=="27")throw Error("P11 expected 27 material source worlds");
 const report=JSON.parse(decode(attr(dataHtml,"p11-report")));
-if(report.worlds!==15||report.scenarios.some(x=>!x.finite))
+if(report.worlds!==27||report.scenarios.some(x=>!x.finite))
  throw Error("P11 scenario source nonfinite or missing");
-writeFileSync(resolve(dir,"p11-real-15-material-contact-cases.json"),JSON.stringify(report,null,2));
-console.log("P11 actual 15 240-step Rapier source backing and external rival:");
+writeFileSync(resolve(dir,"p11-real-27-material-contact-cases.json"),JSON.stringify(report,null,2));
+console.log("P11 actual 27 240-step Rapier source backing and external rival:");
 for(const row of report.summary)console.log(JSON.stringify(row));
 for(const [name,backing,actuation] of [
  ["unsupported","none","hinge"],
