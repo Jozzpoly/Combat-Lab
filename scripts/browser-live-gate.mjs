@@ -137,3 +137,21 @@ console.log("P0 owner-style real input: launching independent Chrome DevTools pr
 execFileSync(process.execPath,["scripts/p0-real-input.mjs",base],{
   timeout:120000,stdio:"inherit"
 });
+
+
+const transport=request({p2probe:1},["--dump-dom"]);
+validPage(transport,"P2 actual WASM contact cargo");
+if(attr(transport,"p2-probe")!=="PASS"||attr(transport,"p2-cases")!=="12")
+ throw Error("P2 contact-cargo source invalid: "+(attr(transport,"p2-error")||"missing"));
+const result=JSON.parse(decodeURIComponent(attr(transport,"p2-result")));
+if(result.cases!==12||result.results.some(x=>!x.finite||!x.loadStillPhysics))
+ throw Error("P2 physical source invalid");
+writeFileSync(resolve(folder,"p2-contact-cargo-source.json"),JSON.stringify(result,null,2));
+console.log("P2 actually contacted cargo 12-source cases:");
+console.log(JSON.stringify(result.results.map(x=>({
+ kind:x.kind,support:x.support,grip:x.grip,
+ cargoDX:x.cargoDXAfterPull,actorDX:x.bodyDXAfterPull,
+ gripPairs:x.gripImpulsePairs,impulse:x.actualGripImpulse,
+ breaks:x.gripBreaks,cap:x.cap,contactTick:x.approachTick,
+ lastLink:x.linkedBeforeRelease,momentumResidual:x.sourceResidual
+}))));
