@@ -169,6 +169,18 @@ window.addEventListener("blur",()=>keys.clear());
 function controls(){return V(+(keys.has("KeyD")||keys.has("ArrowRight"))-+(keys.has("KeyA")||keys.has("ArrowLeft")),
  +(keys.has("KeyS")||keys.has("ArrowDown"))-+(keys.has("KeyW")||keys.has("ArrowUp")));}
 const params=new URLSearchParams(location.search);
+if(params.has("p0chain")){
+ paused=true;
+ try{
+  const {p0MaterialChain}=await import("./src/p0-chain.js");
+  const result=p0MaterialChain();
+  document.body.dataset.p0Chain="PASS";
+  document.body.dataset.p0ChainCases=String(result.cases.length);
+  document.body.dataset.p0ChainResult=encodeURIComponent(JSON.stringify(result));
+  status("P0 material continuation: 16 real separate paired physical worlds.");
+ }catch(e){document.body.dataset.p0Chain="FAIL";
+  document.body.dataset.p0ChainError=String(e.stack||e);console.error(e);}
+}
 if(params.has("p0probe")){
  paused=true;
  try{const {p0Probe}=await import("./src/p0-probe.js"),result=p0Probe();
