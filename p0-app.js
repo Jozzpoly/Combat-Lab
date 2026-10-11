@@ -169,6 +169,21 @@ window.addEventListener("blur",()=>keys.clear());
 function controls(){return V(+(keys.has("KeyD")||keys.has("ArrowRight"))-+(keys.has("KeyA")||keys.has("ArrowLeft")),
  +(keys.has("KeyS")||keys.has("ArrowDown"))-+(keys.has("KeyW")||keys.has("ArrowUp")));}
 const params=new URLSearchParams(location.search);
+if(params.has("p0pairframe")){
+ paused=true;
+ try{
+  const {continuation}=await import("./src/p0-chain.js");
+  const changed=params.get("p0pairframe")==="opened";
+  world.dispose();
+  const state=continuation({worldSupport:"finite",changed,kind:"small",
+    speed:5.5,runnerY:11.6,openerKind:"bulky",captureWorld:f=>{
+      world=f;f.setSelected(f.actors[f.actors.length-1].id);
+    }});
+  document.body.dataset.p0Pairframe=JSON.stringify(state);
+  status(changed?"Wcześniejsza materialna ingerencja OTWORZYŁA bramę.":
+    "Kontrola: brama NIENARUSZONA, ten sam fizyczny impuls małej istoty.");
+ }catch(e){document.body.dataset.p0PairframeError=String(e.stack||e);console.error(e);}
+}
 if(params.has("p0redteam")){
  paused=true;
  try{
