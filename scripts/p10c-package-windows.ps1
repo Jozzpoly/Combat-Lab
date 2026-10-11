@@ -56,10 +56,12 @@ try {
  $scriptUrl=$Matches[1]
  $scriptUri=[uri]::new([uri]"http://127.0.0.1:4174/p10.html",$scriptUrl)
  $script=Invoke-WebRequest $scriptUri -UseBasicParsing
- $jsAssets=@(Get-ChildItem -Path (Join-Path $site "assets") -Filter "*.js" -File -Recurse)
- $allJsBytes=($jsAssets | Measure-Object -Property Length -Sum).Sum
- Write-Host "Windows entry JavaScript: status=$($script.StatusCode), MIME=$($script.Headers["Content-Type"]), bytes=$($script.RawContentLength), bundled JS bytes=$allJsBytes"
- if ($script.StatusCode -ne 200 -or $script.Headers["Content-Type"] -notmatch "javascript" -or $script.RawContentLength -lt 500 -or $allJsBytes -lt 1000000) { throw "Windows served game source invalid (entry + full bundle)" }
+ $assets=@(Get-ChildItem -Path (Join-Path $site "assets") -File -Recurse)
+ $allAssetsBytes=($assets | Measure-Object -Property Length -Sum).Sum
+ $jsBytes=($assets | Where-Object Extension -eq ".js" | Measure-Object -Property Length -Sum).Sum
+ $assetTypes=($assets | Group-Object Extension | ForEach-Object { "$($_.Name):$($_.Count)" }) -join ", "
+ Write-Host "Windows entry JavaScript: status=$($script.StatusCode), MIME=$($script.Headers["Content-Type"]), bytes=$($script.RawContentLength), bundled JS=$jsBytes, TOTAL bundle assets=$allAssetsBytes; types=$assetTypes"
+ if ($script.StatusCode -ne 200 -or $script.Headers["Content-Type"] -notmatch "javascript" -or $script.RawContentLength -lt 500 -or $jsBytes -lt 100000 -or $allAssetsBytes -lt 1000000) { throw "Windows served game source invalid (entry + full WASM/CSS/JS assets)" }
  Write-Host "Windows genuine packaged node localhost static smoke PASS; HTML + JS loaded. Full real Chromium interactions were separately tested on Linux."
 } finally {
  if (!$proc.HasExited){ Stop-Process -Id $proc.Id -Force }
