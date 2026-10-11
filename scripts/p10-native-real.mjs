@@ -94,7 +94,7 @@ try{
 
  // Exact native wheel event, ground-truth world point beneath cursor;
  // screen-point anchored zoom must preserve that position.
- const screenPoint=await js('(function(){var r=document.getElementById("world").getBoundingClientRect();return {x:r.left+r.width*.64,y:r.top+r.height*.54};})()');
+ const screenPoint=await js('(function(){var r=document.getElementById("world").getBoundingClientRect();return {x:Math.round(r.left+r.width*.64),y:Math.round(r.top+r.height*.54)};})()');
  const inverse='(function(){var c=document.getElementById("world"),r=c.getBoundingClientRect(),cam=window.__p10ViewReadOnly(),scale=Math.min(c.width/40,c.height/24)*cam.zoom;return {x:cam.x+((('+screenPoint.x+'-r.left)*c.width/r.width)-c.width/2)/scale,y:cam.y+((('+screenPoint.y+'-r.top)*c.height/r.height)-c.height/2)/scale,zoom:cam.zoom};})()';
  const beforeWheel=await js(inverse);
  await send("Input.dispatchMouseEvent",{type:"mouseWheel",
