@@ -10,7 +10,7 @@ import {KineticField} from "./k1-world.js";
 // swinging forward (+ angle) should remain collision-valid, swinging back
 // toward the root (- angle) may be blocked by actual connected self-contact.
 // Rigid opponent has the EXACT same initial hull, masses and collider shapes.
-class K2Field extends KineticField {
+export class K2Field extends KineticField {
   makeGuard(x,y,kind="hinged") {
     if(!["hinged","rigid","bare"].includes(kind))throw Error("Unknown K2 body");
     const p={hx:.20,hy:.85,mass:25,dx:-.74,dy:1.33};
