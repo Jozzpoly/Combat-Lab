@@ -23,6 +23,9 @@ export function p5Case({policy="material",support="finite",seed=1,
   const frames=[t0],interventionTick=140;
   for(let t=0;t<ticks;t++){
    if(t===interventionTick){
+    // Exact observable pre-intervention state must be sampled BEFORE applying
+    // the externally authored physical impulse, not after changing velocity.
+    frames.push(snapshot(w,"before-intervention"));
     if(intervention==="pulse"){
      const obj=w.loads[0],p=obj.body.translation();
      impulseValid=w.exteriorImpulse(obj,V(95,25),V(p.x,p.y+.34));
@@ -33,7 +36,6 @@ export function p5Case({policy="material",support="finite",seed=1,
      w.wall(14.9,12.1,.19,1.05);
      w.world.propagateModifiedBodyPositionsToColliders();
     }else if(intervention!=="none")throw Error("P5 intervention invalid");
-    frames.push(snapshot(w,"before-intervention"));
    }
    w.step();
    if([39,99,139,159,239,ticks-1].includes(t))
