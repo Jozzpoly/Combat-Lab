@@ -9,8 +9,19 @@ const colors={wall:"#56777c",pivot:"#f0cc8d",gate:"#dfae70",
  barrier:"#5c8491",load:"#b6a78e",small:"#9edfc6",bulky:"#e6a57b",
  lever:"#a5c2ec","rigid-lever":"#b99cdd",effector:"#90e9db"};
 let world=makeMaterialWorkshop(),paused=false,mode="select",drag=null;
-let camera={x:20,y:12,zoom:1.22};
+let camera={x:17.2,y:13.3,zoom:1.63};
 let keys=new Set(),last=performance.now(),acc=0;
+const initialCamera=()=>({x:17.2,y:13.3,zoom:1.63});
+function focusChosen(){
+ const a=world.chosen;if(!a){status("Wybierz ciało do wyśrodkowania.");return;}
+ const p=a.body.translation();
+ camera={x:p.x,y:p.y,zoom:Math.max(1.92,camera.zoom)};
+ render();status("Kamera na wybranym fizycznym ciele. 0 pokazuje cały świat.");
+}
+function showAll(){
+ camera={x:20,y:12,zoom:1.10};
+ render();status("Pełna przestrzeń 40×24 m. F przybliża wybrane ciało.");
+}
 const focus=id=>world.actors.find(a=>a.id===id);
 function status(s){$("status").textContent=s;}
 function metrics(){
@@ -50,7 +61,21 @@ function draw(){
  ctx.font="500 .49px system-ui";ctx.fillStyle="rgba(195,230,217,.7)";
  ctx.fillText("ZAWIAS BRAMY",17,6.6);
  ctx.fillText("WĄSKA SZCZELINA",29.1,8.2);
+ // The link is genuine source state. This drawn segment is a visual
+ // body-to-body annotation, NOT the exact solver attachment-point geometry.
+ for(const g of world.grips){
+  const a=g.actor.body.translation(),b=g.load.body.translation();
+  ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
+  ctx.lineWidth=.16;ctx.strokeStyle="#d8e9a0";ctx.setLineDash([.14,.09]);
+  ctx.stroke();ctx.setLineDash([]);
+ }
+ const ready=world.chosen?world.loads.filter(x=>world.actualContact(world.chosen,x)):[];
  for(const e of world.entities){
+  if(ready.includes(e)){
+   const p=e.body.translation();
+   ctx.beginPath();ctx.arc(p.x,p.y,.85,0,2*PI);
+   ctx.lineWidth=.09;ctx.strokeStyle="#c4f7a3";ctx.stroke();
+  }
   for(const s of e.shapes)drawBody(e,s,world.selected===e.id);
   if(world.actors.includes(e)){
    const p=e.body.translation();
@@ -87,11 +112,14 @@ function ui(){
  $("chosen").textContent=a?a.kind.toUpperCase()+" · #"+a.id:"—";
  $("geometry").textContent="Prawa szczelina: "+t.aperture.width.toFixed(2)+
   " m · Mały 0,88 m · Ciężki 2,30 m.";
- $("contact").textContent=a?
-  "Połączenia: "+t.grips.filter(g=>g.actor===a.id).length+
-   " · postawa: "+a.stance+
-   " · X "+a.body.translation().x.toFixed(2)+
-   " Y "+a.body.translation().y.toFixed(2):"";
+ const held=a?t.grips.filter(g=>g.actor===a.id):[];
+ const touching=a?world.loads.filter(l=>world.actualContact(a,l)):[];
+ $("contact").textContent=a?(
+  held.length?"CHWYT AKTYWNY · "+held.length+" fizyczne połączenie · G puszcza":
+  touching.length?"KONTAKT Z ŁADUNKIEM · G dostępne (ograniczona siła)":
+  "Brak kontaktu z ładunkiem. Podjedź albo przesuń materię.")+
+  "\nPostawa: "+a.stance+" · X "+a.body.translation().x.toFixed(2)+
+  " · Y "+a.body.translation().y.toFixed(2):"";
  $("support").value=world.support;
 }
 function render(){draw();ui();}
@@ -102,7 +130,7 @@ function togglePause(){
 function reset(){
  world.dispose();world=makeMaterialWorkshop();
  paused=false;acc=0;keys.clear();drag=null;
- camera={x:20,y:12,zoom:1.22};render();
+ camera=initialCamera();render();
  status("Nowy cichy warsztat; żaden aktor nie rusza bez polecenia.");
 }
 function selectMode(value){
@@ -140,6 +168,8 @@ $("step").onclick=()=>{
  tick();render();status("Jeden prawdziwy krok Rapiera (1/60 s).");
 };
 $("reset").onclick=reset;
+$("view-selected").onclick=focusChosen;
+$("view-all").onclick=showAll;
 $("grip").onclick=grip;$("stance").onclick=stance;
 $("arm-left").onclick=()=>arm(-1);$("arm-right").onclick=()=>arm(1);
 $("open").onclick=()=>{
@@ -159,7 +189,12 @@ for(const b of document.querySelectorAll("button[data-mode]"))
  b.onclick=()=>selectMode(b.dataset.mode);
 canvas.oncontextmenu=e=>e.preventDefault();
 canvas.addEventListener("wheel",e=>{
- e.preventDefault();camera.zoom=Math.max(.36,Math.min(4.5,camera.zoom*Math.exp(-e.deltaY*.0012)));render();
+ e.preventDefault();const pointer=atMouse(e);
+ camera.zoom=Math.max(.36,Math.min(4.5,camera.zoom*Math.exp(-e.deltaY*.0012)));
+ const shifted=atMouse(e);
+ // World coordinate under cursor remains fixed during zoom.
+ camera.x+=pointer.x-shifted.x;camera.y+=pointer.y-shifted.y;
+ render();
 },{passive:false});
 canvas.addEventListener("pointerdown",e=>{
  const p=atMouse(e);
@@ -231,6 +266,8 @@ addEventListener("keydown",e=>{
  if(e.code==="KeyQ"){arm(-1);return;}
  if(e.code==="KeyE"){arm(1);return;}
  if(e.code==="KeyR"){reset();return;}
+ if(e.code==="KeyF"){focusChosen();return;}
+ if(e.code==="Digit0"){showAll();return;}
  if(e.code==="Escape"){selectMode("select");return;}
  if(/^Digit[123]$/.test(e.code)){
   const index=Number(e.code.at(-1))-1;
@@ -250,6 +287,7 @@ function frame(now){
  render();requestAnimationFrame(frame);
 }
 window.__p10ReadOnlyProbe=()=>world.trace();
+window.__p10ViewReadOnly=()=>({...camera});
 document.body.dataset.p10Live="yes";
 const params=new URLSearchParams(location.search);
 if(params.has("p10audit")){

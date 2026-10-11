@@ -23,11 +23,15 @@ export class MaterialWorkshop extends CommonsYard {
   // P0's existing hinged gate, an extra real aperture, two material clusters.
   this.barrier(6.2,5.25,.24,1.15);
   this.barrier(34.2,18.4,.36,1.45);
+  // FREE view deliberately stages real, independently editable affordances
+  // close enough to discover WITHOUT autonomous move/path scripts.
+  // All controlled slot/haul/hinge fixtures retain their previous geometry.
+  const free=fixture==="free";
   const smallStart=fixture==="slot-small"?V(25.5,10.0):
-   fixture==="haul"?V(9.6,10.6):V(8.5,10.6);
+   fixture==="haul"?V(9.6,10.6):free?V(14.0,10.7):V(8.5,10.6);
   const bulkyStart=["slot-bulky","slot-open-bulky"].includes(fixture)?
-   V(25.5,10.0):V(9.8,15.6);
-  const toolStart=V(8.8,18.6);
+   V(25.5,10.0):free?V(12.6,15.3):V(9.8,15.6);
+  const toolStart=free?V(11.1,19.0):V(8.8,18.6);
   this.small=this.spawn("small",smallStart);
   this.bulky=this.spawn("bulky",bulkyStart);
   this.tool=this.spawn(fixture==="rigid-tool"?"rigid-lever":"lever",toolStart);
@@ -35,9 +39,11 @@ export class MaterialWorkshop extends CommonsYard {
   this.bulky.maxSpeedOverride=1.55;
   this.tool.maxSpeedOverride=1.8;
   // Real independent loads. Action verbs arise from body contacts & geometry.
-  this.handLoad=this.load(fixture==="haul"?11.15:12.0,10.6,.48,.42,42);
-  this.massLoad=this.load(13.8,15.4,.68,.52,90);
-  this.toolLoad=this.load(11.70,19.35,.46,.4,32);
+  this.handLoad=this.load(fixture==="haul"?11.15:free?15.85:12.0,
+   free?10.7:10.6,.48,.42,42);
+  this.massLoad=this.load(free?15.6:13.8,free?15.3:15.4,.68,.52,90);
+  this.toolLoad=this.load(free?15.25:11.70,
+   free?19.35:19.35,.46,.4,32);
   this.farLoad=this.load(33.0,10.05,.65,.49,52);
   this.miscLoad=this.load(24.1,18.1,.6,.5,44);
   if(fixture.startsWith("slot-")){
