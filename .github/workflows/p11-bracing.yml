@@ -21,7 +21,7 @@ jobs:
         run: node --check src/p11-brace.js && node --check scripts/p11-browser.mjs && node --check p10-ui.js
       - name: Vite emitted browser bundle
         run: npm run build && test -s dist/p10.html
-      - name: Run actual Rapier 15 material controls and four source-bound Chrome frames
+      - name: Run actual Rapier 27 material controls and four source-bound Chrome frames
         shell: bash
         run: |
           python3 -m http.server 4173 --directory dist >/tmp/p11-http.log 2>&1 &
