@@ -307,3 +307,8 @@ for(const policy of ["constant","touch","attach","material"]){
  writeFileSync(resolve(folder,"p5-"+policy+"-frame.json"),JSON.stringify(v,null,2));
  request(q,["--screenshot="+resolve(folder,"p5-"+policy+"-real-chromium.png")]);
 }
+
+console.log("P5 native actual operator interruption with independent solver continuity...");
+execFileSync(process.execPath,["scripts/p5-native-real.mjs",base],{
+ timeout:120000,stdio:"inherit"
+});
