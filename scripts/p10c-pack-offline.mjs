@@ -35,6 +35,7 @@ if(/\bimport\s*\(\s*["'](?:\.\/|\/)assets\//.test(html))
  throw Error("P10c dynamic chunk escaped bundling");
 // The experiment uses no network service, but do NOT assert this check
 // catches every possible dynamically constructed URL; real file:// test must.
+html=html.replace("<head>",'<head><script type="module">document.documentElement.dataset.p10cInlineProbe="yes";</script>');
 html=html.replace("</head>",'<meta name="combat-lab-offline-source" content="P10b isolated offline candidate; no deployment; not Owner-qualified"/>\n</head>');
 mkdirSync(resolve("offline-artifact"),{recursive:true});
 for(const dest of [resolve(root,"p10.html"),resolve("offline-artifact","Combat-Lab-P10b-Offline.html")])
