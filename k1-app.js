@@ -156,6 +156,21 @@ if(params.has("k1probe")){
   }catch(error){document.body.dataset.k1Probe="FAIL";
     document.body.dataset.k1Error=String(error.stack||error);console.error(error);}
 }
+if(params.has("k2pressure")){
+  try{
+    paused=true;
+    const {runK2Concurrent}=await import("./src/k2-concurrent.js");
+    const result=runK2Concurrent();
+    document.body.dataset.k2Pressure="PASS";
+    document.body.dataset.k2PressureCases=String(result.cases.length);
+    document.body.dataset.k2PressureReport=encodeURIComponent(JSON.stringify(result));
+    report("K2 real material pulse + cover: computer source tests only.");
+  }catch(e){
+    document.body.dataset.k2Pressure="FAIL";
+    document.body.dataset.k2PressureError=String(e.stack||e);
+    console.error(e);
+  }
+}
 if(params.has("k2probe")){
   try {
     paused=true;
