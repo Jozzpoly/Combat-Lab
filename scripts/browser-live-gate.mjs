@@ -172,3 +172,33 @@ if(p2R.cases!==24||p2R.results.some(x=>!x.finite||!x.loadStillPhysics||x.sourceR
 writeFileSync(resolve(folder,"p2-matched-speed-strength-redteam.json"),JSON.stringify(p2R,null,2));
 console.log("P2 actual 24-world equal-speed falsifier:");
 console.log(JSON.stringify(p2R.comparisons));
+
+
+const p3=request({p3probe:1},["--dump-dom"]);
+validPage(p3,"P3 real two-body opposed cargo contention");
+if(attr(p3,"p3-probe")!=="PASS"||attr(p3,"p3-count")!=="24")
+ throw Error("P3 source failure: "+(attr(p3,"p3-error")||"missing 24 cases"));
+const p3Data=JSON.parse(decodeURIComponent(attr(p3,"p3-result")));
+if(p3Data.cases!==24||p3Data.results.some(x=>!x.finite||x.momentumResidual>1e-5))
+ throw Error("P3 not physically source-grounded");
+writeFileSync(resolve(folder,"p3-two-bodied-actual-wasm.json"),JSON.stringify(p3Data,null,2));
+console.log("P3 24 actual solver bilateral-cargo worlds:");
+console.log(JSON.stringify(p3Data.results.map(x=>({
+ kind:x.leftKind,support:x.support,mode:x.mode,approach:x.approached,
+ first:x.initialCargoX,duel:x.cargoAtContest,after:x.cargoAfter,
+ duelLinks:x.activeAfterContest,lateLinks:x.activeEnd,
+ gripImpulse:x.gripImpulse,breaks:x.breaks,
+ deliberateRelease:x.didRelease
+}))));
+for(const mode of ["dual","off","release"]){
+ const p={p3frame:mode};
+ const dom=request(p,["--dump-dom"]);
+ validPage(dom,"P3 source screenshot "+mode);
+ const v=attr(dom,"p3-frame");
+ if(!v||attr(dom,"p3-frame-error"))
+  throw Error("P3 real dual source frame missing "+mode+": "+attr(dom,"p3-frame-error"));
+ const trace=JSON.parse(v.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+ if(!trace.finite||trace.mode!==mode)throw Error("P3 invalid screenshot source "+mode);
+ writeFileSync(resolve(folder,"p3-frame-"+mode+".json"),JSON.stringify(trace,null,2));
+ request(p,["--screenshot="+resolve(folder,"p3-frame-"+mode+".png")]);
+}
