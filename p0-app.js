@@ -1,5 +1,6 @@
 import {V,DT} from "./src/p0-world.js";
 import {ReflexYard} from "./src/p4-reflex.js";
+import {createCommons,CommonsYard} from "./src/p5-commons.js";
 const $=id=>document.getElementById(id);
 const canvas=$("world"),ctx=canvas.getContext("2d",{alpha:false});
 let world=new ReflexYard(),paused=false,mode="select",drag=null,firstActorId=null,secondActorId=null;
@@ -66,6 +67,21 @@ function render(){
    ctx.arc(q.x,q.y,r,0,2*PI);ctx.stroke();ctx.setLineDash([]);
   }
  }
+ // Only display actual physical roles from the local policy model, never
+ // imagined autonomy or hidden NPC intentions.
+ if(world instanceof CommonsYard){
+  for(const [id,s] of world.local){
+   const a=world.actors.find(x=>x.id===id);if(!a)continue;
+   const p=a.body.translation();
+   ctx.font="bold .32px ui-monospace,monospace";
+   ctx.textAlign="center";ctx.fillStyle="#e9dec3";
+   ctx.fillText(s.role==="carrier"?"CHWYT":s.role==="brace"?"OPÓR":
+    s.role==="yield"?"USTĄP":"NAPÓR",p.x,p.y-.66);
+   ctx.beginPath();ctx.moveTo(p.x,p.y);
+   ctx.lineTo(p.x+s.heading.x*.65,p.y+s.heading.y*.65);
+   ctx.strokeStyle="#8ed3bf";ctx.lineWidth=.035;ctx.stroke();
+  }
+ }
  for(const g of (world.grips||[])){
   const pa=g.holder.body.translation(),pb=g.load.body.translation();
   ctx.strokeStyle="#eac77f";ctx.lineWidth=.095;ctx.setLineDash([.2,.12]);
@@ -100,6 +116,14 @@ function render(){
    " · fizyczny napęd proxy "+rx.reflexEvents.proxyImpulse.toFixed(2)+
    " N·s · aktywne kroki "+rx.reflexEvents.active;
  }
+ if(world instanceof CommonsYard){
+  const p=world.commonsTrace().activity;
+  $("evidence").textContent+="\\nP5 fizyczne dotknięcia ciał: "+p.contactActor+
+    " · ciężarów: "+p.contactCargo+"\\nLokalne uchwyty: "+p.localGrips+
+    " · ustąpienia: "+p.turns+" · trzymanie pozycji: "+p.braceTicks+
+    "\\nLokalny napęd: "+p.autonomousEffort.toFixed(1)+
+    " N·s · ingerencje Ownera: "+p.externalImpulses;
+ }
  document.body.dataset.p0Live="yes";
 }
 function setMode(next){
@@ -119,6 +143,41 @@ function pause(){paused=!paused;acc=0;$("pause").textContent=paused?"Wznów":"Pa
 function reset(){world.dispose();firstActorId=null;secondActorId=null;world=new ReflexYard({support:$("support").value});
  paused=false;$("pause").textContent="Pauza";acc=0;
  status("Nowy materialny dziedziniec. Przebudowuj dowolnie.");render();}
+function p5Preset(){
+ world.dispose();
+ world=createCommons({support:$("support").value,
+  policy:$("p5-policy").value,seed:1,density:Number($("p5-density").value)});
+ firstActorId=null;secondActorId=null;p4MaterialId=null;
+ camera={x:13.65,y:13.35,zoom:1.85};
+ keys.clear();acc=0;paused=false;$("pause").textContent="Pauza";
+ status("P5: swobodny kontakt. Ruch wynika z własnego kierunku, reagowanie wyłącznie z realnych dotknięć.");
+ render();
+}
+function p5Pulse(){
+ if(!(world instanceof CommonsYard)){status("Najpierw uruchom Wspólny świat P5.");return;}
+ const load=world.loads[0],p=load.body.translation();
+ const n=world.exteriorImpulse(load,V(95,25),V(p.x,p.y+.34));
+ if(!n)throw Error("P5 physical user pulse refused");
+ status("Realne szarpnięcie ruchomej materii; organizmy nie otrzymały rozkazu.");
+ render();
+}
+$("p5-preset").onclick=p5Preset;
+$("p5-pulse").onclick=p5Pulse;
+$("p5-motor").onclick=()=>{
+ if(!(world instanceof CommonsYard))return;
+ world.auto=!world.auto;
+ $("p5-motor").textContent=world.auto?"Wyłącz lokalny napęd":"Włącz lokalny napęd";
+ status(world.auto?"Samodzielny lokalny napęd aktywny.":"Napęd istot wstrzymany. Solver wciąż działa.");render();
+};
+$("p5-apply-role").onclick=()=>{
+ if(!(world instanceof CommonsYard)||!world.chosen)return;
+ const a=world.chosen;
+ if(!world.local.has(a.id)){
+  world.register(a,$("p5-role").value,V(1,0));
+ }else world.setRole(a.id,$("p5-role").value);
+ world.selected=null;
+ status("Fizyczne ciało #"+a.id+" ma lokalną regułę "+$("p5-role").value+". Brak globalnego celu.");render();
+};
 function p3Preset(){
  world.dispose();
  world=new ReflexYard({populated:false,support:$("support").value});
@@ -371,6 +430,38 @@ if(params.has("p3native")){
   document.body.dataset.p3NativeReady=String(sourceTick);
   status("P3: native G/H separate grips after real two-sided solver contact.");
  }catch(e){document.body.dataset.p3NativeError=String(e.stack||e);console.error(e);}
+}
+if(params.has("p5native")){
+ window.__p5ReadOnlyProbe=()=>world instanceof CommonsYard?world.commonsTrace():null;
+}
+if(params.has("p5probe")){
+ paused=true;
+ try{
+  const {p5Probe}=await import("./src/p5-probe.js");
+  const evidence=p5Probe();
+  document.body.dataset.p5Probe="PASS";
+  document.body.dataset.p5Cases=String(evidence.cases);
+  document.body.dataset.p5Report=encodeURIComponent(JSON.stringify(evidence));
+  status("P5: pressure counters measured in real freely running 6/10-body worlds.");
+ }catch(e){document.body.dataset.p5Probe="FAIL";
+  document.body.dataset.p5Error=String(e.stack||e);console.error(e);}
+}
+if(params.has("p5frame")){
+ paused=true;
+ try{
+  const {p5Case}=await import("./src/p5-probe.js");
+  const policy=params.get("p5frame");
+  if(!["constant","touch","attach","material"].includes(policy))throw Error("p5 mode");
+  const intervention=params.get("shock")==="pulse"?"pulse":"none";
+  const seed=Number(params.get("seed")||1);
+  world.dispose();
+  const result=p5Case({policy,support:"finite",seed,intervention,
+   density:6,ticks:330,captureWorld:(w)=>{world=w;}});
+  firstActorId=null;secondActorId=null;p4MaterialId=null;
+  camera={x:13.65,y:13.35,zoom:1.85};
+  document.body.dataset.p5Frame=JSON.stringify(result);
+  status("P5: prawdziwe fizyczne kontinuum, bez skryptu zachowania.");
+ }catch(e){document.body.dataset.p5FrameError=String(e.stack||e);console.error(e);}
 }
 if(params.has("p4native")){
  // Read-only physical introspection for genuine Chromium native mouse input.

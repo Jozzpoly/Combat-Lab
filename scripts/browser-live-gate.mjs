@@ -26,7 +26,7 @@ function validPage(dom,name){
 }
 const plain=run(base,["--dump-dom"]);
 validPage(plain,"P0 bootstrap");
-if(!plain.includes("COMBAT LAB")||!plain.includes("Odruch pod naciskiem"))
+if(!plain.includes("COMBAT LAB")||!plain.includes("Wspólny świat materii"))
  throw Error("Not P0 actual branch runtime");
 const probe=request({p0probe:1},["--dump-dom"]);
 validPage(probe,"P0 probe");
@@ -280,3 +280,30 @@ console.log(JSON.stringify({
  p3:axialReport.p3.filter(x=>["dual","release","left","off"].includes(x.mode)),
  speed:axialReport.speedMatchedAxial
 }));
+
+
+const commons=request({p5probe:1},["--dump-dom"]);
+validPage(commons,"P5 source actual multi-body free-run");
+if(attr(commons,"p5-probe")!=="PASS"||attr(commons,"p5-cases")!=="40")
+ throw Error("P5 free commons source failed: "+(attr(commons,"p5-error")||"not 40"));
+const commonsData=JSON.parse(decodeURIComponent(attr(commons,"p5-report")));
+if(commonsData.cases!==40)throw Error("P5 missing actual free-run world cases");
+writeFileSync(resolve(folder,"p5-40-physical-free-commons.json"),JSON.stringify(commonsData,null,2));
+console.log("P5 40 actual WASM physically free-running worlds:");
+console.log(JSON.stringify(commonsData.regular.map(x=>({
+ p:x.policy,s:x.support,seed:x.seed,shock:x.intervention,
+ actorContacts:x.contactActor,loadContacts:x.contactCargo,
+ localGrips:x.localGrips,activeGrips:x.activeGrips,
+ movements:x.loadMotion,rootEffort:x.autonomousImpulse
+}))));
+for(const policy of ["constant","touch","attach","material"]){
+ const q={p5frame:policy,shock:"pulse",seed:1},dom=request(q,["--dump-dom"]);
+ validPage(dom,"P5 raw actual material commons frame "+policy);
+ const raw=attr(dom,"p5-frame");
+ if(!raw||attr(dom,"p5-frame-error"))throw Error("P5 frame missing "+
+  policy+" "+attr(dom,"p5-frame-error"));
+ const v=JSON.parse(raw.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+ if(v.policy!==policy||!v.finite)throw Error("P5 real visual source mismatch");
+ writeFileSync(resolve(folder,"p5-"+policy+"-frame.json"),JSON.stringify(v,null,2));
+ request(q,["--screenshot="+resolve(folder,"p5-"+policy+"-real-chromium.png")]);
+}

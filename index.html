@@ -1,14 +1,14 @@
 <!doctype html>
 <html lang="pl"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Combat Lab · P4 material reflex lab</title>
+<title>Combat Lab · P5 material commons</title>
 <link rel="stylesheet" href="./p0.css"></head><body>
 <main id="app">
-<header><div class="intro"><p class="eyebrow">COMBAT LAB / IZOLOWANY KANDYDAT P4</p>
-<h1>Odruch pod naciskiem</h1>
-<p>Materię można szarpnąć, a uchwyt może stawiać opór albo ustępować. Reakcja odczytuje wyłącznie własne połączenie fizyczne, nie drogę do celu.</p></div>
+<header><div class="intro"><p class="eyebrow">COMBAT LAB / IZOLOWANY KANDYDAT P5</p>
+<h1>Wspólny świat materii</h1>
+<p>Kilka niezależnych ciał, trzy prawdziwe ciężary i przeszkody. Ruszaj, zakłócaj i przebudowuj świat: kontakt może zmieniać zachowanie, ale nikt nie ma zaprogramowanej drogi ani celu.</p></div>
 <div class="run"><button id="pause">Pauza</button><button id="tick">1 krok</button><button id="reset">Od nowa</button></div></header>
-<section class="toolbar"><button id="p4-preset">Kontakt i uchwyt</button><button id="p4-shock-right">Szarpnij →</button><button id="p4-shock-left">← Szarpnij</button><button id="p3-preset">Dwa ciała · jeden ciężar</button><button id="p3-right-grip">Chwyt drugiego · H</button>
+<section class="toolbar"><button id="p5-preset">Wspólny świat · 6/10 ciał</button><button id="p5-pulse">Szarpnij ciężar</button><button id="p5-motor">Wyłącz lokalny napęd</button><button id="p4-preset">Kontakt i uchwyt</button><button id="p4-shock-right">Szarpnij →</button><button id="p4-shock-left">← Szarpnij</button><button id="p3-preset">Dwa ciała · jeden ciężar</button><button id="p3-right-grip">Chwyt drugiego · H</button>
   <button data-mode="select" class="selected">Wybierz ciało</button>
   <button data-mode="poke">Impuls</button>
   <button data-mode="bulky">Duże ciało</button>
@@ -20,7 +20,7 @@
 <section class="layout">
   <div class="viewport"><canvas id="world" aria-label="Rzeczywisty materialny świat Combat Lab"></canvas><div class="hud"><span id="mode-status">Swobodna edycja</span><span id="clock">0.0 s</span></div></div>
   <aside>
-    <h2>Eksperymentuj</h2>
+    <h2>Eksperymentuj</h2><div class="line"><strong>P5 · źródło lokalnych reakcji</strong><select id="p5-policy"><option value="material">Dotyk + chwyt + lokalne podążanie</option><option value="attach">Dotyk + chwyt, bez podążania</option><option value="touch">Tylko fizyczna reakcja na dotyk</option><option value="constant">Tani rywal: stały lokalny napęd</option></select><select id="p5-density"><option value="6">6 ciał</option><option value="10">10 ciał</option></select><select id="p5-role"><option value="carrier">CHWYT — przy kontakcie ładunku</option><option value="yield">USTĄP — od nacisku</option><option value="brace">OPÓR — od nacisku</option><option value="press">NAPÓR — stały kierunek</option></select><button id="p5-apply-role">Nadaj rolę wybranemu ciału</button></div>
     <p class="help">Wybierz ciało. W scenie dwóch ciał: WASD pierwsze, IJKL drugie, G / H — niezależne chwyty po realnym kontakcie. Każde ciało ma jawny fizyczny napęd proxy. B — przyjmij lub porzuć postawę. Q/E — ruch niezależnego członu.</p>
     <div class="line"><strong>Kontakt z gruntem</strong><select id="support">
       <option value="finite">Ograniczony opór terenu</option>
@@ -35,7 +35,7 @@
     <p class="help">Przeciągnij myszą w trybie „Impuls”. Na pauzie Ctrl+przeciągnij obiekt. Scroll: zoom. Środkowy przycisk: pan. Możesz dodawać konstrukcje także w niedorzecznych pozycjach.</p>
     <div id="selection" class="readout">Żaden organizm nieaktywny</div>
     <div id="evidence" class="readout"></div>
-    <p class="limit">Fizyka 2D i jawny, skończony opór wirtualnego gruntu. To NIE jest prawdziwa anatomia dłoni, chód, cognition NPC ani uznana gra. Żaden aktor sam nie podejmuje decyzji. Uchwyt to limitowana sprężysta para impulsów, a nie sztywny weld. Nie ma zaprogramowanej ścieżki ani celu zwycięstwa.</p>
+    <p class="limit">Fizyka 2D i jawny, skończony opór wirtualnego gruntu. To NIE jest prawdziwa anatomia dłoni, chód, cognition NPC ani uznana gra. P5 zawiera proste, jawne lokalne automaty kontaktowe, ale nie pełną poznawczą autonomię NPC. Uchwyt P5 wykorzystuje osiowe, ograniczone połączenie, a nie sztywny weld. Nie ma zaprogramowanej ścieżki ani celu zwycięstwa.</p>
   </aside>
 </section><footer><span id="status">Uruchamianie Rapier…</span><span>Izolowany prototyp badawczy · bez publikacji · Owner feel UNKNOWN</span></footer>
 </main>
