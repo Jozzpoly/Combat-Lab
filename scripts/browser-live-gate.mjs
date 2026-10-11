@@ -183,6 +183,7 @@ if(p3Data.cases!==24||p3Data.results.some(x=>!x.finite||x.momentumResidual>1e-5)
  throw Error("P3 not physically source-grounded");
 writeFileSync(resolve(folder,"p3-two-bodied-actual-wasm.json"),JSON.stringify(p3Data,null,2));
 console.log("P3 24 actual solver bilateral-cargo worlds:");
+console.log("P3 isolated LINK-RELEASE matched-command contrasts:",JSON.stringify(p3Data.releaseContrasts));
 console.log(JSON.stringify(p3Data.results.map(x=>({
  kind:x.leftKind,support:x.support,mode:x.mode,approach:x.approached,
  first:x.initialCargoX,duel:x.cargoAtContest,after:x.cargoAfter,
