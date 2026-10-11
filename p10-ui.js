@@ -168,8 +168,12 @@ canvas.addEventListener("pointerdown",e=>{
  else if(e.button===0&&e.ctrlKey&&paused){
   const target=world.pick(p,{includeGate:true});
   if(target&&target.kind!=="gate"&&target.kind!=="pivot"&&
-      !world.entities.some(a=>a.panel===target))
-   drag={kind:"edit",target};
+      !world.entities.some(a=>a.panel===target)){
+   const center=target.body.translation();
+   // Preserve the exact material grab offset: no snapping body CENTRE
+   // onto cursor merely because the user grabbed near an edge.
+   drag={kind:"edit",target,offset:V(center.x-p.x,center.y-p.y)};
+  }
  }else if(e.button===0&&mode==="select"){
   const target=world.pick(p);
   const actor=world.actors.find(a=>a===target||a.panel===target);
@@ -199,7 +203,7 @@ canvas.addEventListener("pointermove",e=>{
   drag.cx=e.clientX;drag.cy=e.clientY;
  }else if(drag.kind==="poke")drag.to=p;
  else if(drag.kind==="edit"){
-  world.moveEntity(drag.target,p);
+  world.moveEntity(drag.target,V(p.x+drag.offset.x,p.y+drag.offset.y));
  }
  render();
 });
