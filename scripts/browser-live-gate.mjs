@@ -317,3 +317,34 @@ console.log("P5 native actual operator interruption with independent solver cont
 execFileSync(process.execPath,["scripts/p5-native-real.mjs",base],{
  timeout:120000,stdio:"inherit"
 });
+
+
+const p6=request({p6probe:1},["--dump-dom"]);
+validPage(p6,"P6 actual matched body envelope physical pressure");
+if(attr(p6,"p6-probe")!=="PASS"||attr(p6,"p6-cases")!=="76")
+ throw Error("P6 body envelope WASM failed: "+(attr(p6,"p6-error")||"not 76"));
+const p6Data=JSON.parse(decodeURIComponent(attr(p6,"p6-report")));
+if(p6Data.cases!==76)throw Error("P6 incomplete source physical controls");
+writeFileSync(resolve(folder,"p6-76-body-envelope-real-rapier.json"),JSON.stringify(p6Data,null,2));
+console.log("P6 matched shape-only narrow/broad pressure actual source:");
+console.log(JSON.stringify(p6Data.matchedGeometryPairs));
+console.log("P6 same-world edited fixed-collider passage physical source:");
+console.log(JSON.stringify(p6Data.editedPairs.map(x=>({kind:x.kind,area:x.width,
+ support:x.support,edit:x.edit,crossed:x.crossed,tick:x.crossedAt,
+ endX:x.end.x,effort:x.totalEffort,geom:x.bodyShape}))));
+console.log("P6 physically inhabited multi-actor room:");
+console.log(JSON.stringify(p6Data.inhabited.map(x=>({
+ support:x.support,policy:x.policy,contact:x.barrierContacts,
+ actor:x.displacement,cargo:x.cargoDisplacement}))));
+const p6Frame=request({p6frame:1},["--dump-dom"]);
+validPage(p6Frame,"P6 actual four body room screenshot source");
+const raw6=attr(p6Frame,"p6-frame");
+if(!raw6||attr(p6Frame,"p6-frame-error"))
+ throw Error("P6 missing physical 4-body frame: "+attr(p6Frame,"p6-frame-error"));
+const f6=JSON.parse(raw6.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+if(!f6.finite||f6.actorCount!==4||f6.loadCount!==2)
+ throw Error("P6 raw source not a full real corridor world");
+writeFileSync(resolve(folder,"p6-four-body-room-frame-source.json"),
+ JSON.stringify(f6,null,2));
+request({p6frame:1},["--screenshot="+resolve(folder,
+ "p6-four-body-material-corridors-real-chromium.png")]);

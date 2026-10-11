@@ -1,6 +1,7 @@
 import {V,DT} from "./src/p0-world.js";
 import {ReflexYard} from "./src/p4-reflex.js";
 import {createCommons,CommonsYard} from "./src/p5-commons.js";
+import {createP6Commons,openP6} from "./src/p6-envelope.js";
 const $=id=>document.getElementById(id);
 const canvas=$("world"),ctx=canvas.getContext("2d",{alpha:false});
 let world=new ReflexYard(),paused=false,mode="select",drag=null,firstActorId=null,secondActorId=null;
@@ -145,6 +146,24 @@ function pause(){paused=!paused;acc=0;$("pause").textContent=paused?"Wznów":"Pa
 function reset(){world.dispose();firstActorId=null;secondActorId=null;world=new ReflexYard({support:$("support").value});
  paused=false;$("pause").textContent="Pauza";acc=0;
  status("Nowy materialny dziedziniec. Przebudowuj dowolnie.");render();}
+function p6Preset(){
+ world.dispose();world=createP6Commons({support:$("support").value});
+ camera={x:14,y:14.4,zoom:1.75};
+ firstActorId=null;secondActorId=null;p4MaterialId=null;
+ keys.clear();acc=0;paused=false;$("pause").textContent="Pauza";
+ status("P6: wąski i szeroki przesmyk w jednej materialnej przestrzeni. Zatrzymaj i edytuj.");
+ render();
+}
+function p6Open(){
+ if(!world.p6){status("Najpierw uruchom scenę Przesmyki P6.");return;}
+ if(!paused){status("Najpierw PAUZA: edycja collidera nie powinna zachodzić podczas solvera.");return;}
+ if(openP6(world)){
+  status("Fizyczny collider przeniesiony. Wznów i zobacz, czy ciało przejdzie.");
+ }else status("Przesmyk już otwarty.");
+ render();
+}
+$("p6-preset").onclick=p6Preset;
+$("p6-open").onclick=p6Open;
 function p5Preset(){
  world.dispose();
  world=createCommons({support:$("support").value,
@@ -436,6 +455,35 @@ if(params.has("p3native")){
   document.body.dataset.p3NativeReady=String(sourceTick);
   status("P3: native G/H separate grips after real two-sided solver contact.");
  }catch(e){document.body.dataset.p3NativeError=String(e.stack||e);console.error(e);}
+}
+if(params.has("p6native")){
+ window.__p6ReadOnlyProbe=()=>({
+  ...world.commonsTrace(),opened:!!world.p6?.opened,
+  p6BodyIds:world.p6?.actors??[],center:14.4});
+}
+if(params.has("p6probe")){
+ paused=true;
+ try{
+  const {p6PressureProbe}=await import("./src/p6-probe.js");
+  const outcome=p6PressureProbe();
+  document.body.dataset.p6Probe="PASS";
+  document.body.dataset.p6Cases=String(outcome.cases);
+  document.body.dataset.p6Report=encodeURIComponent(JSON.stringify(outcome));
+  status("P6 prawdziwe kształty ciał w fizycznych wąskich przejściach.");
+ }catch(e){
+  document.body.dataset.p6Probe="FAIL";
+  document.body.dataset.p6Error=String(e.stack||e);console.error(e);
+ }
+}
+if(params.has("p6frame")){
+ paused=true;
+ try{
+  world.dispose();world=createP6Commons({support:"finite"});
+  for(let i=0;i<430;i++)world.step();
+  camera={x:14,y:14.4,zoom:1.75};
+  document.body.dataset.p6Frame=JSON.stringify(world.commonsTrace());
+  status("P6: prawdziwy solver, cztery ciała, dwa fizyczne przesmyki.");
+ }catch(e){document.body.dataset.p6FrameError=String(e.stack||e);console.error(e);}
 }
 if(params.has("p5native")){
  window.__p5ReadOnlyProbe=()=>world instanceof CommonsYard?world.commonsTrace():null;

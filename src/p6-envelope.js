@@ -49,19 +49,10 @@ export function createP6Commons({support="finite"}={}){
  // One tight and one generous aperture in ONE continuous world.
  const x=14.4;
  const a=w.barrier(x,9.1,.25,1.5);      // [7.6,10.6]
- const b=w.barrier(x,13.65,.25,2.45);    // [11.2,16.1] => .6 narrow? fix below
- const c=w.barrier(x,20.3,.25,2.55);     // [17.75,22.85] =>1.65 broad
- // Deliberately explicit geometry, not a passability tag.
- // Adjust to tight y11.3 [10.6,12.0] by changing mid start.
- w.moveEntity(b,V(x,14.05)); // mid [11.60,16.50] => gap 1.0
- // Larger lower opening: [16.50,17.75] =1.25, still too small for bulky.
- // A *broad* second opening is an actual collider geometry choice:
- w.moveEntity(c,V(x,21.35)); // [18.8,23.9], broad gap 2.3
- // More robust: lower mid top 16.5, lower wall start 18.8 =>2.3,
- // bulky diameter2.3 is borderline; shift lower to22 to yield 2.95.
- w.moveEntity(c,V(x,22.0)); // [19.45,24.55], broad gap 2.95
- // We keep outer boundary at y24.45; wall extends beyond supported
- // courtyard, but no bypass within 0..24 world.
+ const b=w.barrier(x,14.05,.25,2.45);    // [11.60,16.50] tight top gap 1.0
+ const c=w.barrier(x,22.0,.25,2.55);     // [19.45,24.55] lower gap 2.95
+ // Actual physical collider geometry, not scripted gates: one 1m tight
+ // aperture, one 2.95m opening. All bodies use ordinary same solver rules.
  const narrow=w.spawn("small",V(9.5,11.1));
  const large=w.spawn("bulky",V(9.3,17.85));
  const follower=w.spawn("small",V(6.8,11.1));
