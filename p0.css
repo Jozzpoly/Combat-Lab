@@ -5,10 +5,7 @@ aside{background:#182b32;border:1px solid #405860;border-radius:8px;padding:16px
 /* P7 is a user-facing lens on the SAME experimental app, not a second
    misleading demonstration with duplicate physics. Existing P0-P6 browser
    harnesses retain their original visible controls until P7 is entered. */
-body.p7-focus .toolbar button:not(#p7-preset):not(#p7-poke):not(#p7-open)
- :not([data-mode="select"]):not([data-mode="poke"])
- :not([data-mode="bulky"]):not([data-mode="small"])
- :not([data-mode="load"]):not([data-mode="barrier"]){display:none}
+body.p7-focus .toolbar button:not(:is(#p7-preset,#p7-poke,#p7-open,[data-mode="select"],[data-mode="poke"],[data-mode="bulky"],[data-mode="small"],[data-mode="load"],[data-mode="barrier"])){display:none}
 body.p7-focus #legacy-sidebar,body.p7-focus aside .help{display:none}
 body.p7-focus header .intro p:not(.eyebrow){max-width:980px}
 body.p7-focus .viewport{height:min(67vh,690px);min-height:480px}
