@@ -20,7 +20,7 @@ jobs:
         run: node --check src/p10-workshop.js && node --check src/p10-probe.js && node --check p10-ui.js && node --check scripts/p10-browser.mjs && node --check scripts/p10-native-real.mjs
       - name: Exact real-page Vite build
         run: npm run build && test -s dist/p10.html
-      - name: Execute genuine Chromium/Rapier 15-world source controls
+      - name: Execute genuine Chromium/Rapier 19-world source controls
         shell: bash
         run: |
           python3 -m http.server 4173 --directory dist >/tmp/p10-http.log 2>&1 &
