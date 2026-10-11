@@ -146,7 +146,7 @@ function reset(){world.dispose();firstActorId=null;secondActorId=null;world=new 
 function p5Preset(){
  world.dispose();
  world=createCommons({support:$("support").value,
-  policy:$("p5-policy").value,seed:1,density:Number($("p5-density").value)});
+  policy:$("p5-policy").value,seed:1,density:Number($("p5-density").value),topology:$("p5-topology").value});
  firstActorId=null;secondActorId=null;p4MaterialId=null;
  camera={x:13.65,y:13.35,zoom:1.85};
  keys.clear();acc=0;paused=false;$("pause").textContent="Pauza";

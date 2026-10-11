@@ -141,7 +141,8 @@ export class CommonsYard extends ReflexYard{
 // There are no destinations, goals, scripted interactions or timed choices.
 // All six bodies receive independent local sensorimotor rules after start.
 export function createCommons({support="finite",policy="material",seed=1,
- density=6}={}){
+ density=6,topology="open"}={}){
+ if(!["blocked","open"].includes(topology))throw Error("topology");
  if(!["constant","touch","attach","material"].includes(policy))throw Error("policy");
  const w=new CommonsYard({support,policy,seed});
  const cfg=[
@@ -167,8 +168,18 @@ export function createCommons({support="finite",policy="material",seed=1,
  w.load(13.5,12.6,.63,.58,45);
  w.load(13.9,16.3,.65,.50,70);
  w.load(10.8,14.75,.44,.40,24);
- w.wall(15.4,14.9,.18,1.15);
- w.wall(11.3,11.9,.15,.80);
+ if(topology==="blocked"){
+  // P5 original source FIRST RUN: real authored blockers physically prevented
+  // cargo carriers from reaching the shared material with finite ground.
+  w.wall(15.4,14.9,.18,1.15);
+  w.wall(11.3,11.9,.15,.80);
+ }else{
+  // SAME bodies/policies/initial trajectories. Only the material topology
+  // changes, with the passage physically opened by moving fixed colliders.
+  w.wall(15.5,13.7,.18,.90);
+  w.wall(11.2,10.65,.15,.55);
+ }
+ w.topology=topology;
  w.world.propagateModifiedBodyPositionsToColliders();
  w.selected=null;
  return w;

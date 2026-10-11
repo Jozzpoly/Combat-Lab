@@ -15,8 +15,8 @@ const snapshot=(w,label)=>{
   turns:t.activity.turns,braceTicks:t.activity.braceTicks};
 };
 export function p5Case({policy="material",support="finite",seed=1,
- density=6,intervention="none",ticks=330,captureWorld=null}={}){
- const w=createCommons({policy,support,seed,density});
+ density=6,topology="open",intervention="none",ticks=330,captureWorld=null}={}){
+ const w=createCommons({policy,support,seed,density,topology});
  try{
   const t0=snapshot(w,"start");
   let impulseValid=null;
@@ -50,7 +50,7 @@ export function p5Case({policy="material",support="finite",seed=1,
     displacement:r(Math.hypot(x.x-p.x,x.y-p.y))};
   });
   const uniqueTouchedActors=trace.local.filter(x=>x.contacts>0).length;
-  const out={policy,support,seed,density,intervention,ticks,
+  const out={policy,support,seed,density,topology,intervention,ticks,
    finite:trace.finite,actualActorBodies:trace.actorCount,
    actualLoads:trace.loadCount,totalDynamicObjects:trace.actorCount+trace.loadCount,
    contactActor:trace.activity.contactActor,contactCargo:trace.activity.contactCargo,
@@ -77,13 +77,21 @@ export function p5Probe(){
   for(const seed of [1,3])
    for(const intervention of ["none","pulse"])
     for(const policy of ["constant","touch","attach","material"])
-     results.push(p5Case({support,seed,intervention,policy}));
+     results.push(p5Case({support,seed,intervention,policy,topology:"blocked"}));
  // Multi-body stress/alternative topology, NOT a victory certificate.
  const pressure=[];
  for(const intervention of ["none","wall"])
   for(const policy of ["constant","touch","attach","material"])
    pressure.push(p5Case({support:"finite",seed:3,density:10,
-    intervention,policy,ticks:300}));
+    intervention,policy,ticks:300,topology:"blocked"}));
+ const opened=[];
+ for(const support of ["finite","none"])
+  for(const seed of [1,3])
+   for(const intervention of ["none","pulse"])
+    for(const policy of ["touch","attach","material"])
+     opened.push(p5Case({support,seed,intervention,policy,topology:"open"}));
+ if(opened.length!==24||opened.some(x=>!x.finite||x.actualActorBodies!==6))
+  throw Error("P5 genuine changed topology worlds invalid");
  if(results.length!==32||pressure.length!==8||
   [...results,...pressure].some(x=>!x.finite||x.actualLoads!==3||
    x.actualActorBodies!==x.density||!Number.isFinite(x.autonomousImpulse)))
@@ -118,6 +126,6 @@ export function p5Probe(){
      impulseCost:pulse.autonomousImpulse,
      bodyContacts:pulse.contactActor,cargoContacts:pulse.contactCargo});
    }
- return {cases:results.length+pressure.length,regular:results,stress:pressure,
+ return {cases:results.length+pressure.length+opened.length,regular:results,stress:pressure,opened,
   pairs,limitations:"Six/ten locally motile virtual traction bodies are NOT cognitive NPCs, not gait, not proved morphology advantage or gameplay. Settings intentionally seeded starting directions to create research pressure; no path, waypoint or scripted action sequence."};
 }

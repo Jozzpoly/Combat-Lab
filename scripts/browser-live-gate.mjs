@@ -284,17 +284,22 @@ console.log(JSON.stringify({
 
 const commons=request({p5probe:1},["--dump-dom"]);
 validPage(commons,"P5 source actual multi-body free-run");
-if(attr(commons,"p5-probe")!=="PASS"||attr(commons,"p5-cases")!=="40")
+if(attr(commons,"p5-probe")!=="PASS"||attr(commons,"p5-cases")!=="64")
  throw Error("P5 free commons source failed: "+(attr(commons,"p5-error")||"not 40"));
 const commonsData=JSON.parse(decodeURIComponent(attr(commons,"p5-report")));
-if(commonsData.cases!==40)throw Error("P5 missing actual free-run world cases");
+if(commonsData.cases!==64)throw Error("P5 missing actual free-run world cases");
 writeFileSync(resolve(folder,"p5-40-physical-free-commons.json"),JSON.stringify(commonsData,null,2));
-console.log("P5 40 actual WASM physically free-running worlds:");
+console.log("P5 64 actual WASM physically free-running worlds:");
 console.log(JSON.stringify(commonsData.regular.map(x=>({
  p:x.policy,s:x.support,seed:x.seed,shock:x.intervention,
  actorContacts:x.contactActor,loadContacts:x.contactCargo,
  localGrips:x.localGrips,activeGrips:x.activeGrips,
  movements:x.loadMotion,rootEffort:x.autonomousImpulse
+}))));
+console.log(JSON.stringify(commonsData.opened.map(x=>({
+ topology:x.topology,policy:x.policy,support:x.support,seed:x.seed,
+ shock:x.intervention,grips:x.localGrips,liveLinks:x.activeGrips,
+ cargoContacts:x.contactCargo,changes:x.loadMotion
 }))));
 for(const policy of ["constant","touch","attach","material"]){
  const q={p5frame:policy,shock:"pulse",seed:1},dom=request(q,["--dump-dom"]);
