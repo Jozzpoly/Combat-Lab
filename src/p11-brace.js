@@ -24,10 +24,25 @@ function contact(w,part,other){
 }
 export function makeP11World({backing="fixed",support="finite",kind="lever"}={}){
  if(!["none","fixed","movable"].includes(backing)||
-  !["finite","none"].includes(support)||!["lever","rigid-lever"].includes(kind))
+  !["finite","none","actor-only","cargo-only"].includes(support)||
+  !["lever","rigid-lever"].includes(kind))
   throw Error("P11 input");
- const w=makeMaterialWorkshop({fixture:kind==="lever"?"hinge":"rigid-tool",support});
+ const w=makeMaterialWorkshop({fixture:kind==="lever"?"hinge":"rigid-tool",
+  support:support==="none"?"none":"finite"});
  try{
+  if(support==="actor-only"||support==="cargo-only"){
+   // An EXPLICIT diagnostic ablation of only one source of the old
+   // virtual ground friction; the real rigid collision solve is untouched.
+   // Do not identify this impulse law with actual discrete foot contact.
+   w.terrainStep=()=>{
+    if(support==="actor-only")for(const a of w.actors){
+     const mu=a.stance==="brace"?1.20:.22;
+     w.terrain(a,a.body.mass()*9.81*mu,a.stance==="brace"?80:1.5);
+    }
+    if(support==="cargo-only")for(const load of w.loads)
+     w.terrain(load,load.body.mass()*9.81*.30,24);
+   };
+  }
   // Empty northern source region of the SAME P10b physical courtyard.
   // All body and cargo positions are true authored material transforms.
   if(!w.moveEntity(w.tool,V(12,6.6))||!w.moveEntity(w.toolLoad,V(15.15,7.32)))
@@ -112,7 +127,7 @@ export function p11Case({backing="fixed",support="finite",
 }
 export function p11Audit(){
  const scenarios=[];
- for(const support of ["finite","none"])
+ for(const support of ["finite","actor-only","cargo-only","none"])
   for(const backing of ["none","fixed","movable"])
    for(const actuation of ["off","hinge"])
     scenarios.push(p11Case({support,backing,actuation}));
@@ -121,10 +136,10 @@ export function p11Audit(){
  // the hinge's internal paired torque; it is a causal pragmatic rival only.
  for(const backing of ["none","fixed","movable"])
   scenarios.push(p11Case({backing,kind:"rigid-lever",actuation:"cheap-root"}));
- if(scenarios.length!==15||scenarios.some(x=>!x.finite||
+ if(scenarios.length!==27||scenarios.some(x=>!x.finite||
     !Number.isFinite(x.loadTravel)||x.ticks!==240))
   throw Error("P11 source counterfactual worlds incomplete or nonfinite");
- for(const support of ["finite","none"])for(const backing of ["none","fixed","movable"]){
+ for(const support of ["finite","actor-only","cargo-only","none"])for(const backing of ["none","fixed","movable"]){
   const a=scenarios.find(x=>x.support===support&&x.backing===backing&&x.actuation==="off");
   const b=scenarios.find(x=>x.support===support&&x.backing===backing&&x.actuation==="hinge");
   if(!a||!b||JSON.stringify(a.initial)!==JSON.stringify(b.initial))
@@ -138,5 +153,5 @@ export function p11Audit(){
   rootYaw:x.rootYaw,backContacts:x.backingContactTicks,
   cargoContacts:x.cargoContactTicks,actuator:x.actuatorImpulse,
   rootEffort:x.rootDriveImpulse,ground:x.terrainReaction
- })),limitations:"No product PASS, no true 3D normal/ground traction, no biologically plausible stance, scripted lab actuator command, rigid backing with fixed infinite mass or actual movable 90kg cargo. All physical outcomes must be read from source rather than assuming improvement."};
+ })),limitations:"No product PASS. actor-only / cargo-only are controlled ablations of existing bounded virtual planar friction, not physically real foot-ground contacts. Fixed world wall is infinite-mass material support, moving 90kg cargo is a load. No active sensing/biological stance. Cheap direct-drive rival uses EXTERNAL ground proxy, not equal actuation energy. Read actual afterstates."};
 }
