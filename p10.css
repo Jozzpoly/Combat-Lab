@@ -21,3 +21,8 @@ input[type=range]{width:100%}.limits p{font-size:.80rem;color:#b0c5ca;line-heigh
 footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;margin:11px 2px;color:#abbfc5;font-size:.79rem}
 #status{color:#c8dfb9}
 @media(max-width:950px){.layout{grid-template-columns:1fr}.stage{height:65vh;min-height:350px}aside{max-height:unset}header{align-items:flex-start;flex-direction:column}.controls{margin-bottom:3px}}
+
+/* P10b readability first: no fake extra physical bodies or hidden goals. */
+#chosen{color:#d8efd0}.sub{white-space:pre-line}
+.controls button{font-size:.81rem;padding:8px 9px}
+.overlay.foot{max-width:90%;line-height:1.35}

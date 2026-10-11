@@ -1,0 +1,42 @@
+name: P10b legibility physical regression
+
+on:
+  push:
+    branches:
+      - experiment/p10b-affordance-legibility
+  workflow_dispatch:
+
+jobs:
+  exact-source:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install project dependencies
+        run: npm install --no-audit --no-fund
+      - name: Source syntax checks
+        run: node --check src/p10-workshop.js && node --check src/p10-probe.js && node --check p10-ui.js && node --check scripts/p10-browser.mjs && node --check scripts/p10-native-real.mjs
+      - name: Exact real-page Vite build
+        run: npm run build && test -s dist/p10.html
+      - name: Execute genuine Chromium/Rapier 19-world source controls
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --directory dist >/tmp/p10-http.log 2>&1 &
+          PID=$!
+          trap 'kill $PID 2>/dev/null || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/p10.html >/dev/null; then break; fi
+            sleep 0.2
+          done
+          CHROME_BIN="$(command -v google-chrome || command -v chromium)" node scripts/p10-browser.mjs http://127.0.0.1:4173/
+          CHROME_BIN="$(command -v google-chrome || command -v chromium)" node scripts/p10-native-real.mjs http://127.0.0.1:4173/
+      - name: Preserve source-proven visual and numeric evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p10b-readability-source
+          path: p10-evidence/
+          if-no-files-found: ignore
+          retention-days: 14

@@ -2,10 +2,10 @@
 <html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Combat Lab · P10 Materialny Warsztat</title><link rel="stylesheet" href="./p10.css"></head>
 <body><main>
-<header><div><div class="eyebrow">COMBAT LAB / IZOLowany EKSPERYMENT P10</div>
+<header><div><div class="eyebrow">COMBAT LAB / IZOLOWANY EKSPERYMENT P10</div>
 <h1>Materialny warsztat</h1>
 <p>Różne ciała, jeden fizyczny świat. Nic samo nie idzie do celu. Wybierz, porusz, naciśnij, chwyć lub przebuduj — i obserwuj przyczynę.</p></div>
-<div class="controls"><button id="pause">Pauza</button><button id="step" title="Jeden krok na pauzie">1 krok</button><button id="reset">Nowy świat</button></div></header>
+<div class="controls"><button id="pause">Pauza</button><button id="step" title="Jeden krok na pauzie">1 krok</button><button id="view-selected" title="F">F · Przy ciele</button><button id="view-all" title="0">0 · Cały świat</button><button id="reset">Nowy świat</button></div></header>
 <div class="actions" role="toolbar" aria-label="Narzędzia warsztatu">
 <button data-mode="select" class="active">Wybieraj</button><button data-mode="poke">Impuls</button>
 <span class="separator"></span>
@@ -16,11 +16,11 @@
 <section class="layout">
 <div class="stage"><canvas id="world" aria-label="Edytowalny świat fizyczny"></canvas>
 <div class="overlay top"><span id="clock">t = 0.0 s</span><span id="runstate">RUCH</span></div>
-<div class="overlay foot">Scroll: zoom · środkowy / prawy: pan · Ctrl + przeciągnij na pauzie: przebuduj</div>
+<div class="overlay foot">Scroll: zoom pod kursorem · prawy: pan · F: przy ciele · 0: cały świat · Ctrl + przeciągnij na pauzie: przebuduj</div>
 </div>
 <aside>
 <div class="group"><div class="tiny">AKTYWNE CIAŁO</div><div id="chosen" class="chosen">—</div>
-<div class="keys">WASD — poruszaj · 1/2/3 — wybierz pierwszą trójkę</div>
+<div class="keys">1/2/3 — wybierz ciało · WASD — ruch · F — zbliż kamerę · 0 — całość</div>
 <div class="row"><button id="grip">G · Chwyt / puść</button><button id="stance">B · Postawa</button></div>
 <div class="row"><button id="arm-left">Q · − ramię</button><button id="arm-right">E · + ramię</button></div>
 <div id="contact" class="sub"></div></div>
@@ -30,6 +30,8 @@
 <label for="support">Model podparcia</label><select id="support"><option value="finite">Skończona reakcja gruntu (proxy)</option><option value="none">Brak podparcia</option><option value="damping">Tanie tłumienie</option></select>
 <label for="strength">Siła impulsu operatora: <output id="strength-out">130</output> N·s</label><input id="strength" type="range" min="10" max="400" step="10" value="130">
 </div>
+<div class="group"><div class="tiny">MOŻLIWOŚCI W TYM ŚWIECIE</div>
+<div class="sub">Dotknij ładunku małym ciałem i spróbuj G, po czym wycofaj się. Ciężkim ciałem sprawdź, czy zmieści się w prawej szczelinie — możesz przenieść jej prawdziwą ścianę. Zawias podlega reakcji całego korpusu; jego skuteczność nadal jest wątpliwa.</div></div>
 <div class="group limits"><strong>Granica wiarygodności</strong>
 <p>Rzeczywisty Rapier2D, sztywne collidery, obiekty z masą, zawias i kontaktowo inicjowany ograniczony chwyt. Ruch jest jawnym proxy siły od wirtualnego gruntu — nie chodem ani świadomym NPC. Brak Owner oceny feelu i jakiejkolwiek publikacji tego eksperymentu.</p></div>
 </aside>

@@ -35,12 +35,12 @@ async function clickButton(name){
  await down(p.x,p.y);
 }
 async function bodyClick(x,y){
- const p=await js('(function(){var c=document.getElementById("world"),r=c.getBoundingClientRect(),s=Math.min(c.width/40,c.height/24)*1.22;return {x:r.left+(c.width/2+('+x+'-20)*s)*r.width/c.width,y:r.top+(c.height/2+('+y+'-12)*s)*r.height/c.height};})()');
+ const p=await js('(function(){var c=document.getElementById("world"),r=c.getBoundingClientRect(),view=window.__p10ViewReadOnly(),s=Math.min(c.width/40,c.height/24)*view.zoom;return {x:r.left+(c.width/2+('+x+'-view.x)*s)*r.width/c.width,y:r.top+(c.height/2+('+y+'-view.y)*s)*r.height/c.height};})()');
  await down(p.x,p.y);
 }
 async function ctrlDragBarrier(x1,y1,x2,y2){
  function expr(x,y){
-  return '(function(){var c=document.getElementById("world"),r=c.getBoundingClientRect(),s=Math.min(c.width/40,c.height/24)*1.22;return {x:r.left+(c.width/2+('+x+'-20)*s)*r.width/c.width,y:r.top+(c.height/2+('+y+'-12)*s)*r.height/c.height};})()';
+  return '(function(){var c=document.getElementById("world"),r=c.getBoundingClientRect(),view=window.__p10ViewReadOnly(),s=Math.min(c.width/40,c.height/24)*view.zoom;return {x:r.left+(c.width/2+('+x+'-view.x)*s)*r.width/c.width,y:r.top+(c.height/2+('+y+'-view.y)*s)*r.height/c.height};})()';
  }
  const a=await js(expr(x1,y1)),b=await js(expr(x2,y2));
  await send("Input.dispatchMouseEvent",{type:"mouseMoved",x:a.x,y:a.y,modifiers:2});
@@ -83,6 +83,40 @@ try{
  if(!ready)throw Error("P10 native browser not initialized");
  await sleep(150);
  const start=await snap();
+ // Native camera actions: no programmatic camera/state mutation.
+ await clickButton("view-selected");
+ const focused=await js("window.__p10ViewReadOnly()");
+ const tracked=start.actors.find(a=>a.id===start.selected);
+ if(!tracked||Math.hypot(focused.x-tracked.x,focused.y-tracked.y)>.005||
+    focused.zoom<1.91)
+  throw Error("P10b real camera focus did not select physical body");
+ await image("p10b-native-focused-body.png");
+
+ // Exact native wheel event, ground-truth world point beneath cursor;
+ // screen-point anchored zoom must preserve that position.
+ const screenPoint=await js('(function(){var r=document.getElementById("world").getBoundingClientRect();return {x:Math.round(r.left+r.width*.64),y:Math.round(r.top+r.height*.54)};})()');
+ const inverse='(function(){var c=document.getElementById("world"),r=c.getBoundingClientRect(),cam=window.__p10ViewReadOnly(),scale=Math.min(c.width/40,c.height/24)*cam.zoom;return {x:cam.x+((('+screenPoint.x+'-r.left)*c.width/r.width)-c.width/2)/scale,y:cam.y+((('+screenPoint.y+'-r.top)*c.height/r.height)-c.height/2)/scale,zoom:cam.zoom};})()';
+ const beforeWheel=await js(inverse);
+ await send("Input.dispatchMouseEvent",{type:"mouseWheel",
+  x:screenPoint.x,y:screenPoint.y,deltaX:0,deltaY:-200});
+ await sleep(110);
+ const afterWheel=await js(inverse);
+ const pointError=Math.hypot(afterWheel.x-beforeWheel.x,afterWheel.y-beforeWheel.y);
+ if(!(afterWheel.zoom>beforeWheel.zoom)||pointError>.003)
+  throw Error("P10b true Chromium wheel zoom broke world cursor anchor "+
+   JSON.stringify({beforeWheel,afterWheel,pointError}));
+
+ await clickButton("view-all");
+ const overview=await js("window.__p10ViewReadOnly()");
+ if(overview.zoom!==1.1||overview.x!==20||overview.y!==12)
+  throw Error("P10b actual overview camera command failed");
+ await image("p10b-native-whole-world.png");
+ await clickButton("reset");
+ const resetView=await js("window.__p10ViewReadOnly()");
+ if(Math.abs(resetView.x-17.2)>.001||Math.abs(resetView.y-14.25)>.001||
+    Math.abs(resetView.zoom-1.57)>.001)
+  throw Error("P10b reset did not restore legible opening view");
+
  if(!start?.finite||start.actors.length!==3||start.cargo.length!==5||start.auto!==false)
   throw Error("P10 native true quiet physical world absent");
  await image("p10-native-world-start.png");
@@ -112,7 +146,8 @@ try{
  await image("p10-native-world-physical-wall-edited.png");
 
  const beforeDrag=await snap();
- await ctrlDragBarrier(28,6.5,28,6.0);
+ await // Grab a visible physical part of the upper wall in the tighter view.
+ await ctrlDragBarrier(28,8.35,28,7.85);
  const afterDrag=await snap();
  if(afterDrag.tick!==beforeDrag.tick||
     Math.abs(afterDrag.aperture.width-beforeDrag.aperture.width-.5)>.025||
@@ -136,6 +171,24 @@ try{
    JSON.stringify({p,q,before:before.tick,after:after.tick}));
  await press("KeyG");
  const grip=await snap(),linked=grip.grips.some(g=>g.actor===small.id);
+
+ // Test beyond a green grip flag: attempt an ACTUAL operator-driven
+ // reciprocal cargo action using the unchanged physical world.
+ const physicalLink=grip.grips.find(g=>g.actor===small.id);
+ let pullSource=null;
+ if(physicalLink){
+  const cargo0=grip.cargo.find(e=>e.id===physicalLink.load);
+  await key("KeyA",true);await sleep(1800);await key("KeyA",false);
+  const afterPull=await snap(),cargo1=afterPull.cargo.find(e=>e.id===physicalLink.load);
+  if(!cargo0||!cargo1||!afterPull.finite||afterPull.tick<=grip.tick)
+   throw Error("P10b real cargo afteraction source missing");
+  pullSource={cargoId:physicalLink.load,startingCargoX:cargo0.x,
+   endingCargoX:cargo1.x,cargoMovedX:cargo1.x-cargo0.x,
+   linkSurvives:afterPull.grips.some(g=>g.actor===small.id)};
+  // Deliberately DO NOT post-hoc assert success: a negative cargo
+  // afterstate is material UX evidence, NOT merely a CI failure.
+ }
+
  await image("p10-native-world-after-real-input.png");
  const report={source:"Real native Chromium CDP pointer/key events, Vite emitted Rapier. No synthetic DOM dispatch or scripted state edits.",
   initial:{actors:start.actors.length,cargo:start.cargo.length,auto:start.auto},
@@ -149,7 +202,8 @@ try{
    newAperture:afterDrag.aperture.width,sameTick:true,otherActorsUnchanged:true},
   manualMovement:{actorId:small.id,ticks:after.tick-before.tick,
    dx:q.x-p.x,sourceImpulseDelta:after.rootEffort-before.rootEffort},
-  grip:{attemptedWithRealG:true,actuallyLinked:linked,
+  camera:{focusedBody:tracked.id,focusedZoom:focused.zoom,overviewZoom:overview.zoom,resetZoom:resetView.zoom,wheelZoom:afterWheel.zoom,wheelAnchorError:pointError},
+  grip:{attemptedWithRealG:true,actuallyLinked:linked,reciprocalPull:pullSource,
    UI:await js('document.getElementById("status").textContent')},
   limits:"Native mechanical input proof, not Owner play/feel or realistic gait."};
  writeFileSync(resolve(dir,"p10-native-operator-source.json"),JSON.stringify(report,null,2));

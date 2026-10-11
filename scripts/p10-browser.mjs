@@ -43,3 +43,20 @@ for(const name of ["free","blocked","opened","haul","hinge"]){
   selected:state.selected,aperture:state.aperture.width,
   joint:state.panelImpulse,effort:state.rootEffort}));
 }
+
+
+const stress=req({p10bstress:1},["--dump-dom"]);
+if(att(stress,"p10b-stress")!=="PASS"||att(stress,"p10b-worlds")!=="16")
+ throw Error("P10b actual destructive physical stress failed: "+
+  (att(stress,"p10b-error")||att(stress,"p10-error")||"not 16 worlds"));
+const stressData=JSON.parse(decodeURIComponent(unesc(att(stress,"p10b-report"))));
+if(stressData.worlds!==16||stressData.results.some(x=>!x.finalFinite))
+ throw Error("P10b actual material disruption nonfinite or incomplete");
+writeFileSync(resolve(folder,"p10b-16-world-destructive-real-rapier.json"),
+ JSON.stringify(stressData,null,2));
+console.log("P10b source 16 material disruption worlds * 550 Rapier frames; no gameplay inference:");
+console.log(JSON.stringify(stressData.results.map(x=>({
+ support:x.support,seed:x.seed,actors:x.actors,loads:x.loads,
+ contact:x.manifoldTouchObservations,maxSpeed:x.maxSpeed,maxPosition:x.maxPosition,
+ impulse:x.totalMotorImpulse,poke:x.physicalOperatorPokes,edit:x.editWidth
+}))));
