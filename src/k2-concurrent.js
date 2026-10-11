@@ -28,6 +28,18 @@ function trueInitialIntersections(a,b){
   }
   return collisions;
 }
+// Sample REAL solver manifold impulse, not visual distance, cached broadphase
+// initial query, or count of merely nearby pairs.
+function impulseBetween(field,ea,eb){
+  let force=0;
+  for(const a of ea.parts)for(const b of eb.parts){
+    field.world.contactPair(a.collider,b.collider,m=>{
+      for(let k=0;k<m.numSolverContacts();k++)
+        force+=Math.abs(m.contactImpulse(k)||0);
+    });
+  }
+  return force;
+}
 function runOne(kind,policy,angle,lineY,pulse,loadY){
   const f=new K2Field({kind,preset:"probe"});
   try{
@@ -37,7 +49,8 @@ function runOne(kind,policy,angle,lineY,pulse,loadY){
     const initialIntersections=guardShapes.reduce(
       (n,g)=>n+trueInitialIntersections(g,load),0);
     if(initialIntersections!==0)throw Error("False physical baseline overlap");
-    let rootTorque=0;
+    let rootTorque=0,loadContactTicks=0,loadContactImpulse=0;
+    let projectileGuardTicks=0,projectileWitnessTicks=0,projectileWitnessImpulse=0;
     const rootStart={...f.guard.body.translation()},loadStart={...load.body.translation()};
     const samples=[];
     if(kind==="hinged"&&policy==="active")f.aimPanel(angle);
@@ -45,6 +58,8 @@ function runOne(kind,policy,angle,lineY,pulse,loadY){
       if(i===15&&pulse)load.body.applyImpulse(V(-pulse,0),true);
       if(kind==="rigid"&&policy==="active")rootTorque+=rootCommand(f,angle);
       f.step();
+      const contact=guardShapes.reduce((sum,g)=>sum+impulseBetween(f,load,g),0);
+      if(contact>0){loadContactTicks++;loadContactImpulse+=contact;}
       if([15,32,55,75,95].includes(i+1)){
         samples.push({t:i+1,
           root:{...f.guard.body.translation()},angle:digits(f.guard.body.rotation()),
@@ -62,6 +77,13 @@ function runOne(kind,policy,angle,lineY,pulse,loadY){
     for(let i=0;i<55;i++){
       if(kind==="rigid"&&policy==="active")rootTorque+=rootCommand(f,angle);
       f.step();
+      const shot=f.shots[0];
+      const guardShot=guardShapes.reduce((sum,g)=>sum+impulseBetween(f,shot,g),0);
+      if(guardShot>0)projectileGuardTicks++;
+      const witnessShot=impulseBetween(f,shot,f.witness);
+      if(witnessShot>0){projectileWitnessTicks++;projectileWitnessImpulse+=witnessShot;}
+      const contact=guardShapes.reduce((sum,g)=>sum+impulseBetween(f,load,g),0);
+      if(contact>0){loadContactTicks++;loadContactImpulse+=contact;}
     }
     const after=f.trace();
     return {kind,policy,angle,lineY,pulse,loadY,
@@ -74,6 +96,11 @@ function runOne(kind,policy,angle,lineY,pulse,loadY){
       rootMovedBeforeShot:digits(dist(rootStart,positionPreShot)),
       loadMovedBeforeShot:digits(dist(loadStart,loadPreShot)),
       loadPostShift:digits(dist(loadPreShot,load.body.translation())),
+      rearActualContactTicks:loadContactTicks,
+      rearActualContactImpulse:digits(loadContactImpulse),
+      projectileActualGuardTicks:projectileGuardTicks,
+      projectileWitnessContactTicks:projectileWitnessTicks,
+      projectileWitnessImpulse:digits(projectileWitnessImpulse),
       loadVelocityPost:digits(load.body.linvel().x),
       witnessMovedAfterShot:digits(dist(targetStart,f.witness.body.translation())),
       projectile:after.shotStates[0],
