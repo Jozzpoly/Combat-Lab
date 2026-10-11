@@ -197,7 +197,8 @@ export class MaterialYard{
   const n=norm(delta);if(n<1e-6)return false;
   const hit=this.pick(p,{includeGate:true});
   if(!hit||hit.body.isFixed())return false;
-  hit.body.applyImpulse(V(delta.x/n*magnitude,delta.y/n*magnitude),true);
+  // Force is applied at the actual picked world point: off-center hits spin bodies.
+  hit.body.applyImpulseAtPoint(V(delta.x/n*magnitude,delta.y/n*magnitude),p,true);
   this.events.operatorPokes++;return true;
  }
  moveEntity(entity,p){
