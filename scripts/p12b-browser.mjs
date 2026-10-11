@@ -10,15 +10,15 @@ const html=execFileSync(bin,["--headless=new","--no-sandbox","--disable-gpu",
  "--dump-dom",u.toString()],{encoding:"utf8",timeout:180000,
  maxBuffer:22*1024*1024,stdio:["ignore","pipe","pipe"]});
 function get(name){return (html.match(new RegExp('data-'+name+'="([^"]*)"'))||[])[1];}
-if(get("p12b-audit")!=="PASS"||get("p12b-worlds")!=="12")
- throw Error("P12b source error: "+(get("p12b-error")||"missing full 12-world witness"));
+if(get("p12b-audit")!=="PASS"||get("p12b-worlds")!=="18")
+ throw Error("P12b source error: "+(get("p12b-error")||"missing full 18-world witness"));
 const decode=x=>decodeURIComponent(x.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
 const report=JSON.parse(decode(get("p12b-report")));
-if(report.worlds!==12||report.contrast.length!==12)
+if(report.worlds!==18||report.contrast.length!==18)
  throw Error("P12b source matrix incomplete");
 mkdirSync("p12b-evidence",{recursive:true});
 writeFileSync(resolve("p12b-evidence/p12b-source-momentum-accounting.json"),
  JSON.stringify(report,null,2));
-console.log("P12b 12 exact source worlds true Rapier: contact vs CCD/solver:");
+console.log("P12b 18 exact source worlds true Rapier: contact vs CCD/solver:");
 for(const row of report.contrast)console.log("P12B "+JSON.stringify(row));
 console.log(report.interpretation);
