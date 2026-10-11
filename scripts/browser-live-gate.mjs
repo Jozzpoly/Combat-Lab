@@ -436,3 +436,8 @@ for(const policy of ["passive","brace"]){
  request(q,["--screenshot="+resolve(folder,
   "p7-"+policy+"-actual-crowd-real-chromium.png")]);
 }
+
+console.log("P7 true native Chrome pointer test: same physical crowd, operator perturbation and continuing edited matter...");
+execFileSync(process.execPath,["scripts/p7-native-real.mjs",base],{
+ timeout:120000,stdio:"inherit"
+});
