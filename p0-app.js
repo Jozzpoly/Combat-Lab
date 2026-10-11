@@ -490,10 +490,10 @@ if(params.has("p6recoverframe")){
  try{
   const {p6RecoveryCase}=await import("./src/p6-recovery.js");
   const policy=params.get("p6recoverframe");
-  if(!["stubborn","recover"].includes(policy))throw Error("recovery frame policy");
+  if(!["stubborn","recover","stabilized"].includes(policy))throw Error("recovery frame policy");
   world.dispose();
   const result=p6RecoveryCase({width:1.2,support:"finite",policy,
-   haltOnCross:policy==="recover",captureWorld:w=>{world=w;}});
+   haltOnCross:policy!=="stubborn",captureWorld:w=>{world=w;}});
   camera={x:14.4,y:12,zoom:2.0};
   document.body.dataset.p6RecoveryFrame=JSON.stringify(result);
   status("P6 fizyczna próba przeciw zaklinowaniu: "+policy);

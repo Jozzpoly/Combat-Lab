@@ -11,7 +11,7 @@ const wrap=x=>Math.atan2(Math.sin(x),Math.cos(x));
 const r=x=>Math.round(x*1e4)/1e4;
 export function p6RecoveryCase({support="finite",width=1.2,
  policy="recover",ticks=850,haltOnCross=false,captureWorld=null}={}){
- if(!["recover","stubborn"].includes(policy))throw Error("recovery policy");
+ if(!["recover","stubborn","stabilized"].includes(policy))throw Error("recovery policy");
  const w=new CommonsYard({support,policy:"constant",seed:1});
  try{
   corridor(w,width);
@@ -28,7 +28,9 @@ export function p6RecoveryCase({support="finite",width=1.2,
   for(let i=0;i<ticks;i++){
    if(state==="advance"||state==="reapproach")w.command(a,V(1,0));
    else if(state==="retreat")w.command(a,V(-1,0));
-   else if(state==="orient"){
+   if(state==="orient"||(state==="reapproach"&&policy==="stabilized")){
+    // Rival keeps physically providing bounded yaw traction AFTER unwedging.
+    // Explicitly account the additional source; never secretly lock yaw.
     const q=wrap(-a.body.rotation()),omega=a.body.angvel();
     const j=clamp(q*3-omega*5,-1.8,1.8);
     a.body.applyTorqueImpulse(j,true);
@@ -38,7 +40,7 @@ export function p6RecoveryCase({support="finite",width=1.2,
    const p=a.body.translation(),vel=a.body.linvel();
    const trueBarrierContact=w.touch(a).filter(x=>x.other.kind==="barrier");
    const hit=trueBarrierContact.some(x=>x.impulse>.025);
-   if(state==="advance"&&policy==="recover"){
+   if(state==="advance"&&policy!=="stubborn"){
     const blocked=hit&&Math.abs(vel.x)<.22;
     stalled=blocked?stalled+1:0;
     if(stalled>=3){
@@ -83,16 +85,16 @@ export function p6RecoveryProbe(){
  const results=[];
  for(const width of [1.2,2.1,2.85])
   for(const support of ["finite","none"])
-   for(const policy of ["stubborn","recover"])
+   for(const policy of ["stubborn","recover","stabilized"])
     results.push(p6RecoveryCase({support,width,policy}));
- if(results.length!==12||results.some(x=>!x.finite||
+ if(results.length!==18||results.some(x=>!x.finite||
   Math.abs(x.start.mass-90)>1e-6||x.actorShape.hx!==1.2))
   throw Error("P6 recovery actual starting mass/shape invalid");
  const comparisons=[];
  for(const width of [1.2,2.1,2.85])
   for(const support of ["finite","none"]){
    const p=results.filter(x=>x.width===width&&x.support===support);
-   if(p.length!==2||JSON.stringify(p[0].start)!==JSON.stringify(p[1].start))
+   if(p.length!==3||p.some(x=>JSON.stringify(p[0].start)!==JSON.stringify(x.start)))
     throw Error("P6 recovery physically different source initial state");
    comparisons.push({width,support,rows:p.map(x=>({
     policy:x.policy,jamTick:x.jamAt?.tick,

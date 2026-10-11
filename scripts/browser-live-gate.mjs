@@ -380,18 +380,18 @@ for(const mode of ["passive","active","turn-first"]){
 const autoRecovery=request({p6recovery:1},["--dump-dom"]);
 validPage(autoRecovery,"P6 true contact-reactive anti-jam source");
 if(attr(autoRecovery,"p6-recovery")!=="PASS"||
- attr(autoRecovery,"p6-recovery-cases")!=="12")
+ attr(autoRecovery,"p6-recovery-cases")!=="18")
  throw Error("P6 real touch/jam source error: "+
-  (attr(autoRecovery,"p6-recovery-error")||"not12"));
+  (attr(autoRecovery,"p6-recovery-error")||"not18"));
 const rawRecovery=attr(autoRecovery,"p6-recovery-report");
 if(!rawRecovery)throw Error("P6 missing physical source recovery JSON");
 const recoveryData=JSON.parse(decodeURIComponent(rawRecovery));
-if(recoveryData.cases!==12)throw Error("P6 actual pressure cases wrong");
-writeFileSync(resolve(folder,"p6-12-real-contact-jam-recovery.json"),
+if(recoveryData.cases!==18)throw Error("P6 actual pressure cases wrong");
+writeFileSync(resolve(folder,"p6-18-real-contact-jam-recovery.json"),
  JSON.stringify(recoveryData,null,2));
 console.log("P6 actual physics jam recovery from manifold pressure:");
 console.log(JSON.stringify(recoveryData.comparisons));
-for(const policy of ["stubborn","recover"]){
+for(const policy of ["stubborn","recover","stabilized"]){
  const q={p6recoverframe:policy},dom=request(q,["--dump-dom"]);
  validPage(dom,"P6 actual jam source frame "+policy);
  const val=attr(dom,"p6-recovery-frame");
