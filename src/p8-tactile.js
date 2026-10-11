@@ -18,6 +18,11 @@ export class TactileYard extends DoorCrowdYard{
  }
  localStep(){
   if(this.p8.tactile!=="slip"){
+   // Owner input has priority in ALL three strategies, not just SLIP.
+   // This counter observes the inherited controller's actual selection
+   // path; no extra impulse, new route or physical state modification.
+   if(this.auto&&this.pushers.some(a=>a.id===this.selected))
+    this.p8.ownerSteps++;
    const effort=this.events.rootEffort,prior=this.pressure.totalMoverContacts;
    super.localStep();
    this.p8.contactTimes+=this.pressure.totalMoverContacts-prior;
