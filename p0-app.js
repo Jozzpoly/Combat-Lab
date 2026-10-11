@@ -473,6 +473,32 @@ if(params.has("p3native")){
   status("P3: native G/H separate grips after real two-sided solver contact.");
  }catch(e){document.body.dataset.p3NativeError=String(e.stack||e);console.error(e);}
 }
+if(params.has("p6recovery")){
+ paused=true;
+ try{
+  const {p6RecoveryProbe}=await import("./src/p6-recovery.js");
+  const result=p6RecoveryProbe();
+  document.body.dataset.p6Recovery="PASS";
+  document.body.dataset.p6RecoveryCases=String(result.cases);
+  document.body.dataset.p6RecoveryReport=encodeURIComponent(JSON.stringify(result));
+  status("P6: fizyczny nacisk na ścianę → wycofanie → realny obrót → próba.");
+ }catch(e){document.body.dataset.p6Recovery="FAIL";
+  document.body.dataset.p6RecoveryError=String(e.stack||e);console.error(e);}
+}
+if(params.has("p6recoverframe")){
+ paused=true;
+ try{
+  const {p6RecoveryCase}=await import("./src/p6-recovery.js");
+  const policy=params.get("p6recoverframe");
+  if(!["stubborn","recover"].includes(policy))throw Error("recovery frame policy");
+  world.dispose();
+  const result=p6RecoveryCase({width:1.2,support:"finite",policy,
+   haltOnCross:policy==="recover",captureWorld:w=>{world=w;}});
+  camera={x:14.4,y:12,zoom:2.0};
+  document.body.dataset.p6RecoveryFrame=JSON.stringify(result);
+  status("P6 fizyczna próba przeciw zaklinowaniu: "+policy);
+ }catch(e){document.body.dataset.p6RecoveryFrameError=String(e.stack||e);console.error(e);}
+}
 if(params.has("p6orientation")){
  paused=true;
  try{

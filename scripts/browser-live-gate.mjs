@@ -376,3 +376,31 @@ for(const mode of ["passive","active","turn-first"]){
  request(q,["--screenshot="+resolve(folder,
   "p6-"+mode+"-real-elongated-body-chromium.png")]);
 }
+
+const autoRecovery=request({p6recovery:1},["--dump-dom"]);
+validPage(autoRecovery,"P6 true contact-reactive anti-jam source");
+if(attr(autoRecovery,"p6-recovery")!=="PASS"||
+ attr(autoRecovery,"p6-recovery-cases")!=="12")
+ throw Error("P6 real touch/jam source error: "+
+  (attr(autoRecovery,"p6-recovery-error")||"not12"));
+const rawRecovery=attr(autoRecovery,"p6-recovery-report");
+if(!rawRecovery)throw Error("P6 missing physical source recovery JSON");
+const recoveryData=JSON.parse(decodeURIComponent(rawRecovery));
+if(recoveryData.cases!==12)throw Error("P6 actual pressure cases wrong");
+writeFileSync(resolve(folder,"p6-12-real-contact-jam-recovery.json"),
+ JSON.stringify(recoveryData,null,2));
+console.log("P6 actual physics jam recovery from manifold pressure:");
+console.log(JSON.stringify(recoveryData.comparisons));
+for(const policy of ["stubborn","recover"]){
+ const q={p6recoverframe:policy},dom=request(q,["--dump-dom"]);
+ validPage(dom,"P6 actual jam source frame "+policy);
+ const val=attr(dom,"p6-recovery-frame");
+ if(!val||attr(dom,"p6-recovery-frame-error"))
+  throw Error("P6 physical recovery frame missing "+policy+" "+
+    attr(dom,"p6-recovery-frame-error"));
+ const rec=JSON.parse(val.replaceAll("&quot;",'"').replaceAll("&amp;","&"));
+ if(!rec.finite||rec.policy!==policy)throw Error("P6 source rescue frame invalid");
+ writeFileSync(resolve(folder,"p6-"+policy+"-jam-frame.json"),JSON.stringify(rec,null,2));
+ request(q,["--screenshot="+resolve(folder,
+  "p6-"+policy+"-after-jam-real-chromium.png")]);
+}
