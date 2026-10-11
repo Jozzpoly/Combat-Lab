@@ -169,6 +169,8 @@ window.addEventListener("blur",()=>keys.clear());
 function controls(){return V(+(keys.has("KeyD")||keys.has("ArrowRight"))-+(keys.has("KeyA")||keys.has("ArrowLeft")),
  +(keys.has("KeyS")||keys.has("ArrowDown"))-+(keys.has("KeyW")||keys.has("ArrowUp")));}
 const params=new URLSearchParams(location.search);
+if(params.has("p0realinput"))window.__p0ReadOnlyProbe=()=>world.traces();
+
 if(params.has("p0pairframe")){
  paused=true;
  try{
