@@ -30,11 +30,12 @@ function manifold(field,one,two){
  }
  return {impulse,touching};
 }
-function actualRootCommand(a,target,maxImpulse=1.6){
+function actualRootCommand(a,target,maxImpulse=1.6,aggressive=false){
  const b=a.body,err=wrap(target-b.rotation()),omega=b.angvel();
  // Same per-tick 1.6 N·m·s peak as the independent limb controller,
  // NOT assumed equal net work, wheel/traction or achievable root pose.
- const j=clamp(err*.60-omega*.19,-maxImpulse,maxImpulse);
+ const j=aggressive && Math.abs(err)>.08 ? Math.sign(err)*maxImpulse :
+  clamp(err*.60-omega*.19,-maxImpulse,maxImpulse);
  b.applyTorqueImpulse(j,true);return Math.abs(j);
 }
 function build({kind="lever",support="finite",stance="brace",
@@ -61,7 +62,8 @@ function build({kind="lever",support="finite",stance="brace",
 }
 export function p1Case(opts={}){
  const {kind="lever",support="finite",stance="brace",target=1.1,
-   loadY=7.12,restricted=true,drive="actuate",ticks=160,captureWorld=null}=opts;
+   loadY=7.12,restricted=true,drive="actuate",ticks=160,
+   rigidControl="pd",captureWorld=null}=opts;
  const {w,actor,payload,cage,pairs}=build({kind,support,stance,target,loadY,restricted,drive});
  try{
   const rootStart={...actor.body.translation()},loadStart={...payload.body.translation()};
@@ -74,7 +76,7 @@ export function p1Case(opts={}){
   if(drive==="actuate"&&kind==="lever")w.setPanelAngle(actor.id,target);
   for(let i=0;i<ticks;i++){
    if(drive==="actuate"&&kind==="rigid-lever")
-    actuatorTotal+=actualRootCommand(actor,target);
+    actuatorTotal+=actualRootCommand(actor,target,1.6,rigidControl==="max");
    w.step();
    const whole=[actor,...(actor.panel?[actor.panel]:[])];
    let q=0;
@@ -94,7 +96,7 @@ export function p1Case(opts={}){
   const tr=w.traces();
   if(typeof captureWorld==="function")captureWorld(w,actor,payload);
   const effectiveActuator=kind==="lever"?tr.events.panelTorque:actuatorTotal;
-  return {kind,support,stance,target,loadY,restricted,drive,ticks,
+  return {kind,support,stance,target,loadY,restricted,drive,ticks,rigidControl,
    initialPairs:pairs,initialRoot:{...rootStart},rootAfter:{...actor.body.translation()},
    rootRotation:round(wrap(actor.body.rotation()-rootRotationStart)),
    rootTravel:round(dist(rootStart,actor.body.translation())),
@@ -142,4 +144,27 @@ export function p1Probe(){
  source:"Actual deterministic 2D Rapier WASM, no actor root motor and no task state",
  caveat:"Competitor has matched start mass/profile and per-step torque cap, NOT equal mechanical work or optimal cheap surrogate.",
  cases:cases.length,results:cases,differences};
+}
+
+
+export function p1StrongRival(){
+ const trials=[];
+ for(const restricted of [false,true])
+  for(const support of ["finite","none"])
+   for(const loadY of [6.9,7.12,7.35]){
+    const base={restricted,support,loadY,stance:"brace",target:1.1,drive:"actuate"};
+    const hinged=p1Case({...base,kind:"lever"});
+    const rigid=p1Case({...base,kind:"rigid-lever",rigidControl:"max"});
+    trials.push({restricted,support,loadY,hinged,rigid,
+      result:{hingedLoad:hinged.payloadTravel,rigidLoad:rigid.payloadTravel,
+      hingedWall:hinged.wallContactImpulse,rigidWall:rigid.wallContactImpulse,
+      rigidEffort:rigid.actuatorImpulse,hingedEffort:hinged.actuatorImpulse,
+      rigidBodyRotation:rigid.rootRotation}});
+   }
+ if(trials.length!==12||trials.some(x=>[x.hinged,x.rigid].some(y=>
+    !y.finite||y.initialPairs.length||y.externalActorRootDrive!==0)))
+  throw Error("P1 aggressive matched-geometry red team invalid");
+ return {source:"true solver, same initial mass and shape; aggressive capped-impulse rigid motor",
+  note:"Rival motor uses MAX 1.6 Nms/tick while target unmet, so aggregate work/torque can exceed hinged. This is intentionally an adversarial stronger cheap comparator, not equal energy.",
+  trials:trials.length,results:trials};
 }
