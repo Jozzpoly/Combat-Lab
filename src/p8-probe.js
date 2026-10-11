@@ -85,9 +85,14 @@ export function p8Probe(){
     for(const guardPolicy of ["passive","brace"])
      for(const tactile of ["drive","yield","slip"])
       worlds.push(p8Case({width,support,formation,guardPolicy,tactile}));
- if(worlds.length!==48||worlds.some(x=>!x.finite||x.actors!==7||
-  x.loads!==2||x.mass!==90))
-  throw Error("P8 actual 48 controlled material crowd scenarios absent");
+ const bad=worlds.filter(x=>!x.finite||x.actors!==7||x.loads!==2||
+  x.mass!==90);
+ if(worlds.length!==48||bad.length)
+  throw Error("P8 actual 48 controlled material crowd scenarios absent: "+
+   JSON.stringify({total:worlds.length,bad:bad.map(x=>({
+    tactile:x.tactile,width:x.width,formation:x.formation,
+    support:x.support,guard:x.guardPolicy,finite:x.finite,
+    actors:x.actors,loads:x.loads,mass:x.mass}))}));
  const triples=[];
  for(const width of [2.85,4.65])
   for(const support of ["finite","none"])
