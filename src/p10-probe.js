@@ -17,9 +17,10 @@ function runSlot({who="small",open=false,support="finite"}={}){
  const w=makeMaterialWorkshop({fixture:who==="small"?"slot-small":"slot-bulky",support});
  try{
   const t0=w.trace(),before=snapshot(w),active=w.chosen,initial=pos(active);
+  const farCargoBefore=pos(w.farLoad);
   if(open&&!w.openSlot())throw Error("P10 physical topology change failed");
   const aperture=w.aperture(),firstEnter=null;
-  let firstExit=null,firstTouch=0,peakX=initial.x,maxPenetration=0;
+  let firstExit=null,firstTouch=0,peakX=initial.x,farTouch=0,firstFarTouch=null;
   for(let i=0;i<470;i++){
    w.step(V(1,0));
    const p=active.body.translation(),r=active.shapes[0].shape.r;
@@ -28,12 +29,19 @@ function runSlot({who="small",open=false,support="finite"}={}){
     p.y+r<aperture.lowWallEdge+.02)firstExit=w.ticks;
    if(w.touch(active).some(t=>t.other===w.slot.upper||t.other===w.slot.lower))
     firstTouch++;
+   if(w.actualContact(active,w.farLoad)){
+    farTouch++;if(firstFarTouch===null)firstFarTouch=w.ticks;
+   }
   }
   const t=w.trace();
   return {who,open,support,actualGap:aperture.width,diameter:active.shapes[0].shape.r*2,
    mass:round(active.body.mass()),speed:active.maxSpeedOverride,motor:active.motor,
    initially:before,start:initial,end:pos(active),peakX:round(peakX),
-   firstExit,colliderTouchTicks:firstTouch,finalFinite:t.finite,
+   firstExit,colliderTouchTicks:firstTouch,
+   farCargoStart:farCargoBefore,farCargoEnd:pos(w.farLoad),
+   farCargoTravel:round(distance(farCargoBefore,pos(w.farLoad))),
+   farCargoContactTicks:farTouch,firstFarContact:firstFarTouch,
+   finalFinite:t.finite,
    effort:t.rootEffort,otherActors:t.actors.filter(a=>a.id!==active.id).map(a=>({
     id:a.id,x:a.x,y:a.y})),materialLoads:t.cargo.length};
  }finally{w.dispose();}
@@ -166,7 +174,10 @@ export function p10Audit(){
   slots:slots.map(x=>({who:x.who,open:x.open,support:x.support,
    width:x.actualGap,bodyDiameter:x.diameter,mass:x.mass,
    peakX:x.peakX,afterX:x.end.x,firstExit:x.firstExit,effort:x.effort,
-   blockerContact:x.colliderTouchTicks})),
+   blockerContact:x.colliderTouchTicks,
+   farMaterialDX:round(x.farCargoEnd.x-x.farCargoStart.x),
+   farMaterialContact:x.farCargoContactTicks,
+   farMaterialFirstContact:x.firstFarContact})),
   haul:hauls.map(x=>({link:x.link,contactTick:x.atContact,
    cargoStart:x.cargoStart,cargoPreReverse:x.cargoPreReverse,
    cargoEnd:x.cargoEnd,rootEnd:x.bodyEnd,pairedImpulses:x.gripPairs,
