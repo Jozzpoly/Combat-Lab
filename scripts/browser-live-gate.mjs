@@ -72,3 +72,26 @@ console.log(JSON.stringify(k2.cases.map(x=>({
  rear:x.rearMatterTravelTotal,witness:x.witnessTravelFromShot,
  shotX:x.projectileAfter.p.x
 }))));
+
+const purl=new URL(base);purl.searchParams.set("k2pressure","");
+const pdom=run(purl.toString(),["--dump-dom"]);
+const perr=(pdom.match(/data-k2-pressure-error="([^"]*)"/)||[])[1];
+if(!/data-k2-pressure="PASS"/.test(pdom)||!/data-k2-pressure-cases="64"/.test(pdom))
+ throw Error("K2 forced-contact Chromium source invalid: "+(perr||pdom.match(/<body[^>]*>/)?.[0]||"missing"));
+const pencoded=(pdom.match(/data-k2-pressure-report="([^"]*)"/)||[])[1];
+if(!pencoded)throw Error("K2 forced-contact no machine source results");
+const pc=JSON.parse(decodeURIComponent(pencoded));
+if(pc.cases.length!==64||pc.cases.some(x=>
+ !x.finite||x.initialIntersections!==0||x.shots!==1||x.rootDrive!==0||
+ x.guardTotalMass!==90||
+ (x.kind==="hinged"&&x.policy==="passive"&&x.hingeDrive!==0)))
+  throw Error("K2 forced-contact physical counterfactual invalid");
+writeFileSync(resolve(out,"k2-actual-forced-contact.json"),JSON.stringify(pc,null,2));
+console.log("K2 genuinely forced load-pressure: 64 source cases valid (NOT a claim of superior actuation).");
+console.log(JSON.stringify(pc.cases.map(x=>({
+  body:x.kind,policy:x.policy,target:x.angle,line:x.lineY,
+  pulse:x.pulse,loadY:x.loadY,rear:x.loadMovedBeforeShot,
+  witness:x.witnessMovedAfterShot,
+  torso:x.rootAngleAtShot,hinge:x.hingeAtShot,
+  shotX:x.projectile.p.x
+}))));
