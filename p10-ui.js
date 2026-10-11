@@ -265,12 +265,26 @@ if(params.has("p10frame")){
  paused=true;
  try{
   const test=params.get("p10frame");
-  if(!["free","slot","hinge"].includes(test))throw Error("unknown frame");
+  if(!["free","blocked","opened","haul","hinge"].includes(test))throw Error("unknown frame");
   world.dispose();
-  world=makeMaterialWorkshop({fixture:test==="slot"?"slot-open-bulky":
-   test==="hinge"?"hinge":"free"});
-  if(test==="slot"){
+  world=makeMaterialWorkshop({fixture:
+   test==="blocked"?"slot-bulky":
+   test==="opened"?"slot-open-bulky":
+   test==="haul"?"haul":"free"});
+  if(test==="blocked"||test==="opened"){
    for(let i=0;i<270;i++)world.step(V(1,0));
+  }else if(test==="haul"){
+   world.setSelected(world.small.id);
+   let contacted=false;
+   for(let i=0;i<115;i++){
+    world.step(V(1,0));
+    if(world.actualContact(world.small,world.handLoad)){contacted=true;break;}
+   }
+   if(!contacted)throw Error("P10 visual cargo case did not physically contact cargo");
+   const grip=world.grip(world.small.id,world.handLoad.id,{maxImpulse:4});
+   if(!grip.ok)throw Error("P10 visual cargo not physically grasped");
+   for(let i=0;i<30;i++)world.step(V());
+   for(let i=0;i<185;i++)world.step(V(-1,0));
   }else if(test==="hinge"){
    world.setSelected(world.tool.id);
    world.setPanelAngle(world.tool.id,.9);
