@@ -29,7 +29,7 @@ if(data.cases!==19)throw Error("P10 expanded source count changed: "+data.cases)
 writeFileSync(resolve(folder,"p10-real-physical-controls.json"),JSON.stringify(data,null,2));
 console.log("P10 SOURCE: "+data.cases+" true quiet/control/material/hinge/topology worlds.");
 console.log(JSON.stringify({slots:data.slots,haul:data.haul,tools:data.tools,topology:data.topology,quiet:data.quiet}));
-for(const name of ["free","slot","hinge"]){
+for(const name of ["free","blocked","opened","haul","hinge"]){
  const p={p10frame:name},dom=req(p,["--dump-dom"]);
  if(att(dom,"p10-frame-error")||att(dom,"p10-error")||!att(dom,"p10-frame"))
   throw Error("P10 actual visual source "+name+" absent: "+(att(dom,"p10-frame-error")||att(dom,"p10-error")));
