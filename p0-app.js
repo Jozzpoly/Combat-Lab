@@ -234,6 +234,20 @@ if(params.has("p1frame")){
   document.body.dataset.p1FrameError=String(e.stack||e);console.error(e);
  }
 }
+if(params.has("p1strong")){
+ paused=true;
+ try{
+  const {p1StrongRival}=await import("./src/p1-reach.js");
+  const v=p1StrongRival();
+  document.body.dataset.p1Strong="PASS";
+  document.body.dataset.p1StrongCount=String(v.trials);
+  document.body.dataset.p1StrongData=encodeURIComponent(JSON.stringify(v));
+  status("P1 mocniejszy sztywny rywal: ograniczony maksymalny impuls, bez ukrytych blokad.");
+ }catch(e){
+  document.body.dataset.p1Strong="FAIL";
+  document.body.dataset.p1StrongError=String(e.stack||e);console.error(e);
+ }
+}
 if(params.has("p1probe")){
  paused=true;
  try{
