@@ -376,6 +376,18 @@ if(params.has("p4native")){
  // Read-only physical introspection for genuine Chromium native mouse input.
  window.__p4ReadOnlyProbe=()=>world.reflexTrace();
 }
+if(params.has("p4hard")){
+ paused=true;
+ try{
+  const {p4BreakRedTeam}=await import("./src/p4-probe.js");
+  const v=p4BreakRedTeam();
+  document.body.dataset.p4Hard="PASS";
+  document.body.dataset.p4HardCases=String(v.cases);
+  document.body.dataset.p4HardData=encodeURIComponent(JSON.stringify(v));
+  status("P4: genuine adversarial grip-break source, no policy victory manufactured.");
+ }catch(e){document.body.dataset.p4Hard="FAIL";
+  document.body.dataset.p4HardError=String(e.stack||e);console.error(e);}
+}
 if(params.has("p4probe")){
  paused=true;
  try{
