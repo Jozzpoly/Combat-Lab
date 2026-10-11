@@ -38,6 +38,16 @@ async function bodyClick(x,y){
  const p=await js('(function(){var c=document.getElementById("world"),r=c.getBoundingClientRect(),s=Math.min(c.width/40,c.height/24)*1.22;return {x:r.left+(c.width/2+('+x+'-20)*s)*r.width/c.width,y:r.top+(c.height/2+('+y+'-12)*s)*r.height/c.height};})()');
  await down(p.x,p.y);
 }
+async function ctrlDragBarrier(x1,y1,x2,y2){
+ function expr(x,y){
+  return '(function(){var c=document.getElementById("world"),r=c.getBoundingClientRect(),s=Math.min(c.width/40,c.height/24)*1.22;return {x:r.left+(c.width/2+('+x+'-20)*s)*r.width/c.width,y:r.top+(c.height/2+('+y+'-12)*s)*r.height/c.height};})()';
+ }
+ const a=await js(expr(x1,y1)),b=await js(expr(x2,y2));
+ await send("Input.dispatchMouseEvent",{type:"mouseMoved",x:a.x,y:a.y,modifiers:2});
+ await send("Input.dispatchMouseEvent",{type:"mousePressed",x:a.x,y:a.y,button:"left",buttons:1,modifiers:2,clickCount:1});
+ await send("Input.dispatchMouseEvent",{type:"mouseMoved",x:b.x,y:b.y,button:"left",buttons:1,modifiers:2});
+ await send("Input.dispatchMouseEvent",{type:"mouseReleased",x:b.x,y:b.y,button:"left",buttons:0,modifiers:2,clickCount:1});
+}
 async function key(code,on){
  const k=code.slice(3).toLowerCase(),n=code.slice(3).toUpperCase().charCodeAt(0);
  await send("Input.dispatchKeyEvent",{type:on?"keyDown":"keyUp",key:k,code,windowsVirtualKeyCode:n,nativeVirtualKeyCode:n});
@@ -100,6 +110,17 @@ try{
     JSON.stringify(pre.actors)!==JSON.stringify(edited.actors))
   throw Error("P10 actual live physical authoring corrupted other actors or time");
  await image("p10-native-world-physical-wall-edited.png");
+
+ const beforeDrag=await snap();
+ await ctrlDragBarrier(28,6.5,28,6.0);
+ const afterDrag=await snap();
+ if(afterDrag.tick!==beforeDrag.tick||
+    Math.abs(afterDrag.aperture.width-beforeDrag.aperture.width-.5)>.025||
+    JSON.stringify(afterDrag.actors)!==JSON.stringify(beforeDrag.actors))
+  throw Error("P10 real Ctrl+pointer drag failed real fixed collider editing or altered resident states "+
+   JSON.stringify({before:beforeDrag.aperture,after:afterDrag.aperture}));
+ await image("p10-native-real-ctrl-drag-edited-wall.png");
+
  const small=edited.actors.find(a=>a.kind==="small");
  await bodyClick(small.x,small.y);
  if((await snap()).selected!==small.id)
@@ -124,6 +145,8 @@ try{
   authoredMaterial:{sameTick:pre.tick===edited.tick,
    oldWidth:pre.aperture.width,newWidth:edited.aperture.width,
    unchangedActors:JSON.stringify(pre.actors)===JSON.stringify(edited.actors)},
+  freeAuthoring:{nativeCtrlDrag:true,oldAperture:beforeDrag.aperture.width,
+   newAperture:afterDrag.aperture.width,sameTick:true,otherActorsUnchanged:true},
   manualMovement:{actorId:small.id,ticks:after.tick-before.tick,
    dx:q.x-p.x,sourceImpulseDelta:after.rootEffort-before.rootEffort},
   grip:{attemptedWithRealG:true,actuallyLinked:linked,
