@@ -12,3 +12,9 @@ body.p7-focus .viewport{height:min(67vh,690px);min-height:480px}
 body.p7-focus .toolbar{margin:8px 0}
 body.p7-focus .layout{grid-template-columns:minmax(0,1fr) 290px}
 @media(max-width:950px){body.p7-focus .layout{grid-template-columns:1fr}}
+
+body.p7-focus aside .line:has(#arm-left),
+body.p7-focus aside .line:has(#reflex-mode),
+body.p7-focus aside .line:has(#grip){display:none}
+body.p7-focus aside .limit:not(#p7-limit){display:none}
+body.p7-focus aside #p7-limit{display:block!important}

@@ -99,9 +99,11 @@ function render(){
   }
   const m=world.gap, p=world.guard.body.translation(),
     state=world.pressureTrace(),isBraced=world.guard.stance==="brace";
-  ctx.font="bold .34px ui-monospace,monospace";ctx.textAlign="center";
-  ctx.fillStyle=isBraced?"#ffd09a":"#b8d1d0";
-  ctx.fillText(isBraced?"OPÓR KONTAKTOWY":"DYNAMICZNY OBROŃCA",p.x,p.y-1.42);
+  // Put stance inside the true circular collider: avoid misleading overlap
+  // with the actual physical aperture and contact counters.
+  ctx.font="bold .33px ui-monospace,monospace";ctx.textAlign="center";
+  ctx.fillStyle=isBraced?"#2f2926":"#30444a";
+  ctx.fillText(isBraced?"OPÓR":"RUCH",p.x,p.y+.12);
   ctx.textAlign="left";ctx.fillStyle="#f1d5a2";
   ctx.fillText("światło "+state.mouth.width.toFixed(2)+" m",m.x+1.75,m.y-1.9);
   ctx.fillText("dotknięcia "+state.pressure.guardContacts,
