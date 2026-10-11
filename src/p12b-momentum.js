@@ -16,10 +16,14 @@ function account(entities){
  }
  return {m,com:V(px/m,py/m),p:V(mx,my),ke};
 }
-function run({backing="movable",ccd=true,iterations=12,cycle=false}={}){
+function run({backing="movable",ccd=true,iterations=12,cycle=false,selfContact=true}={}){
  const w=makeP12World({backing,support:"none",kind:"lever",iterations});
  try{
   if(!w.tool.panel)throw Error("missing actual hinged source limb");
+  if(!selfContact){
+   if(typeof w.tool.joint?.setContactsEnabled!=="function")throw Error("Rapier joint self-contact switch unavailable");
+   w.tool.joint.setContactsEnabled(false);
+  }
   const mobile=w.entities.filter(e=>!e.body.isFixed());
   const subjects=[w.tool,w.tool.panel,...(w.backer?[w.backer]:[])];
   if(!ccd)for(const e of mobile){
@@ -63,7 +67,7 @@ function run({backing="movable",ccd=true,iterations=12,cycle=false}={}){
      combinedKinetic:rnd(sub.ke)});
   }
   const allEnd=account(mobile),subEnd=account(subjects);
-  return {backing,ccd,iterations,cycle,steps:300,
+  return {backing,ccd,iterations,cycle,selfContact,steps:300,
    mass:rnd(subStart.m),
    aggregateCOMDelta:rnd(dist(subEnd.com,subStart.com)),
    wholeWorldCOMDelta:rnd(dist(allEnd.com,allStart.com)),
@@ -86,11 +90,14 @@ export function p12bAudit(){
   for(const ccd of [true,false])
    for(const backing of ["absent","movable"])
     rows.push(run({iterations,ccd,backing}));
- if(rows.length!==12||rows.some(r=>r.rootMotor!==0||r.steps!==300||
+ for(const iterations of [4,12,24])
+  for(const backing of ["absent","movable"])
+   rows.push(run({iterations,ccd:true,backing,selfContact:false}));
+ if(rows.length!==18||rows.some(r=>r.rootMotor!==0||r.steps!==300||
    !Number.isFinite(r.aggregateCOMDelta)))
   throw Error("P12b numerical integrity cases incomplete");
  const contrast=rows.map(r=>({
-  iter:r.iterations,ccd:r.ccd,backer:r.backing,
+  iter:r.iterations,ccd:r.ccd,backer:r.backing,selfContact:r.selfContact,
   bodyCOM:r.aggregateCOMDelta,worldCOM:r.wholeWorldCOMDelta,
   aggregateP:r.aggregateMomentumResidual,allP:r.allWorldMomentumResidual,
   contact:r.contactSteps,firstHit:r.firstContact,
@@ -98,5 +105,5 @@ export function p12bAudit(){
   peakP:r.peakCombinedP,damping:r.exactDamping
  }));
  return {worlds:rows.length,results:rows,contrast,
-  interpretation:"Actual no-virtual-terrain shared-world solver. CCD 4/12/24 iteration cross-check distinguishes velocity momentum vs COM position residual. Nonzero COM/velocity is recorded as a numerical/physics-model caveat, not physical energy-conserving locomotion. Actuator is equal/opposite torque but joint/contact correction may not conserve tracked linear momentum."};
+  interpretation:"Actual no-virtual-terrain shared-world solver. CCD 4/12/24 iteration cross-check, plus joint self-contact ON/OFF, distinguishes velocity momentum vs COM position residual. Nonzero COM/velocity is recorded as a numerical/physics-model caveat, not physical energy-conserving locomotion. Actuator is equal/opposite torque but joint/contact correction may not conserve tracked linear momentum."};
 }
