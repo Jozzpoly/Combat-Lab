@@ -35,7 +35,7 @@ async function send(method,params={}){
 async function evalJS(expression){
  const a=await send("Runtime.evaluate",{expression,returnByValue:true,awaitPromise:true});
  if(a.exceptionDetails)throw Error("Browser expression: "+JSON.stringify(a.exceptionDetails));
- return a.result.result?.value;
+ return a.result?.value;
 }
 async function mouse(x,y,kind="click",modifiers=0){
  await send("Input.dispatchMouseEvent",{type:"mouseMoved",x,y,modifiers});
