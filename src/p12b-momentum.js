@@ -35,6 +35,7 @@ function run({backing="movable",ccd=true,iterations=12,cycle=false,selfContact=t
   if(!w.setPanelAngle(w.tool.id,1.2))throw Error("missing source actuator");
   let firstResidual=null,firstProjectionResidual=null,peakCombinedP=0,peakAllP=0;
   let maxCOM=0,firstContact=null,contactSteps=0;
+  let firstBackingSleep=null,sleepAtFirstResidual=null;
   const sampled=[];
   for(let i=0;i<300;i++){
    if(cycle&&i===90)w.setPanelAngle(w.tool.id,0);
@@ -46,11 +47,15 @@ function run({backing="movable",ccd=true,iterations=12,cycle=false,selfContact=t
      w.world.contactPair(c.collider,b.collider,m=>{hit+=m.numSolverContacts()});
    if(hit){contactSteps++;if(firstContact===null)firstContact=i+1;}
    const all=account(mobile),sub=account(subjects);
+   if(firstBackingSleep===null&&w.backer?.body.isSleeping())firstBackingSleep=i+1;
    const allP=dist(all.p,allStart.p),subP=dist(sub.p,subStart.p);
    const cd=dist(sub.com,subStart.com);
    maxCOM=Math.max(maxCOM,cd);peakCombinedP=Math.max(peakCombinedP,subP);
    peakAllP=Math.max(peakAllP,allP);
-   if(firstResidual===null&&subP>.01)firstResidual=i+1;
+   if(firstResidual===null&&subP>.01){
+    firstResidual=i+1;
+    sleepAtFirstResidual=subjects.map(x=>({kind:x.kind,id:x.id,sleep:x.body.isSleeping()}));
+   }
    // The COM should evolve by velocity*dt if solver applies only physical
    // forces; sudden discrepancy indicates position projection, NOT work.
    if(i>0&&firstProjectionResidual===null){
@@ -64,7 +69,8 @@ function run({backing="movable",ccd=true,iterations=12,cycle=false,selfContact=t
     sampled.push({tick:i+1,hit:hit>0,systemCOM:V(rnd(sub.com.x),rnd(sub.com.y)),
      combinedMomentum:V(rnd(sub.p.x),rnd(sub.p.y)),
      allMomentum:V(rnd(all.p.x),rnd(all.p.y)),
-     combinedKinetic:rnd(sub.ke)});
+     combinedKinetic:rnd(sub.ke),
+     sleeping:subjects.map(x=>({kind:x.kind,id:x.id,asleep:x.body.isSleeping()}))});
   }
   const allEnd=account(mobile),subEnd=account(subjects);
   return {backing,ccd,iterations,cycle,selfContact,steps:300,
@@ -75,6 +81,8 @@ function run({backing="movable",ccd=true,iterations=12,cycle=false,selfContact=t
    allWorldMomentumResidual:rnd(dist(allEnd.p,allStart.p)),
    peakCombinedP:rnd(peakCombinedP),peakAllP:rnd(peakAllP),
    firstMomentumResidual:firstResidual,firstProjectionResidual,
+   firstBackingSleep,sleepAtFirstResidual,
+   finalSleeping:subjects.map(x=>({kind:x.kind,id:x.id,sleep:x.body.isSleeping()})),
    firstContact,contactSteps,maxCOM:rnd(maxCOM),
    energyBefore:rnd(subStart.ke),energyAfter:rnd(subEnd.ke),
    actuatorCost:rnd(w.trace().panelImpulse),
@@ -102,6 +110,8 @@ export function p12bAudit(){
   aggregateP:r.aggregateMomentumResidual,allP:r.allWorldMomentumResidual,
   contact:r.contactSteps,firstHit:r.firstContact,
   firstP:r.firstMomentumResidual,firstProj:r.firstProjectionResidual,
+  firstBackingSleep:r.firstBackingSleep,sleepAtFirstP:r.sleepAtFirstResidual,
+  finalSleeping:r.finalSleeping,
   peakP:r.peakCombinedP,damping:r.exactDamping
  }));
  return {worlds:rows.length,results:rows,contrast,
