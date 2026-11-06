@@ -73,6 +73,14 @@ export class MaterialWorkshop extends CommonsYard {
   this.materialEvents.edits++;
   return true;
  }
+ // Research-only inverse intervention: same collider, no reloaded world or fake win state.
+ closeSlot(){
+  if(this.aperture().width<3.499)return false; // do not close beyond initial physical aperture
+  const e=this.slot.lower,p=e.body.translation();
+  if(!this.moveEntity(e,V(p.x,p.y-1.30)))return false;
+  this.materialEvents.edits++;
+  return true;
+ }
  toggleContactGrip(actor=this.chosen,load=null,maxImpulse=4){
   if(!actor)return {ok:false,reason:"no actor selected"};
   if(this.grips.some(g=>g.actor===actor)){
