@@ -18,6 +18,10 @@ test("real-source witness: parent-bound, read-only, explicit non-replayable samp
         grips:[],worldEntities:2,rootEffort:8,selected:1,aperture:{width:2.2}},
         camera:{x:4,y:5,zoom:2},paused:true,operatorMode:"select"};
     });
+    assert.equal(out.length,1,"identity is announced even if the parent's first hi was early");
+    assert.equal(out[0].data.type,"hello");
+    assert.equal(out[0].origin,"*"); // public identity, never private source state
+    out.length=0;
     const emit = (source, origin, data) => handlers.get("message")({source,origin,data});
     emit({}, "https://workbench.example", {jaskinia:1,type:"hi"});
     assert.equal(reads, 0, "unrelated frame must not start telemetry");
