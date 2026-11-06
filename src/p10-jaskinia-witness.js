@@ -44,11 +44,17 @@ export function installP10JaskiniaWitness(read, perform = null) {
   const sendState = () => {
     try {
       const t = read().trace;
+      const selectedBody=t.actors.find(a=>a.id===t.selected)||null;
+      const selectedGripCount=t.grips.filter(g=>g.actor===t.selected).length;
       send({ jaskinia: 1, type: "state",
         text: "P10b · " + (t.tick / 60).toFixed(2) + "s · " + t.actors.length +
           " bodies · " + t.cargo.length + " loads · " + t.grips.length + " grips",
         data: { fixture: t.fixture, tick: t.tick, selected: t.selected,
-          entities: t.worldEntities, aperture: t.aperture?.width, restorable: false } });
+          entities: t.worldEntities, aperture: t.aperture?.width, restorable: false,
+          selectedActor: selectedBody ? {id:selectedBody.id,kind:selectedBody.kind,
+            x:selectedBody.x,y:selectedBody.y,vx:selectedBody.vx,vy:selectedBody.vy,
+            mass:selectedBody.mass,stance:selectedBody.stance} : null,
+          selectedGripCount, worldEdits:t.materialEvents.edits } });
       send({ jaskinia: 1, type: "signals",
         values: { tick: t.tick, bodies: t.actors.length, cargo: t.cargo.length,
           grips: t.grips.length, effort: t.rootEffort } });
