@@ -74,6 +74,12 @@ export function installP10JaskiniaWitness(read) {
     }
   };
   window.addEventListener("message", onMessage);
+  // The parent may send its initial "hi" before async Rapier module evaluation
+  // finishes. Announce non-sensitive identity proactively, like the legacy drop-in.
+  // Source data still requires a direct parent handshake first.
+  try { parent.postMessage({ jaskinia: 1, type: "hello",
+    name: "Combat Lab · P10b", version: "worldbench witness v0",
+    wants: ["evidence"] }, "*"); } catch { /* standalone execution stays independent */ }
   const interval = window.setInterval(() => { if (hostOrigin) sendState(); }, 1000);
   return () => { alive = false; window.clearInterval(interval); window.removeEventListener("message", onMessage); };
 }
