@@ -9,6 +9,7 @@ export function installP10JaskiniaWitness(read) {
   if (typeof read !== "function") throw new TypeError("witness needs an actual world read function");
   const parent = window.parent;
   let hostOrigin = null, alive = true;
+  const runtimeId = "p10b-" + Date.now() + "-" + Math.random().toString(36).slice(2, 12);
   const target = () => hostOrigin === "null" ? "*" : hostOrigin;
   const send = data => {
     if (!alive || !hostOrigin) return;
@@ -19,6 +20,8 @@ export function installP10JaskiniaWitness(read) {
     if (!value || typeof value !== "object" || !value.trace) throw new Error("No physical source trace");
     const record = {
       specimen: "Combat Lab / P10b",
+      runtimeId,
+      sourceRevisionClaim: null, // do not pretend a built Pages/CI SHA is known at runtime
       contract: PROTOCOL,
       kind: "read-only-physical-witness",
       restorable: false,
