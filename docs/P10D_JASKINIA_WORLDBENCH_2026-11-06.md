@@ -1,0 +1,24 @@
+# Combat Lab → Jaskinia Worldbench physical integration / 2026-11-06
+
+**Status: isolated source/e2e experiment, NOT an accepted gameplay, body, framework, replay or release.** This branch derives from exact P10b research head; it is not `main` or `rehearsal/current`. Companion old Jaskinia branch and draft [PR #7](https://github.com/Jozzpoly/Jozz-Cave-Workbench/pull/7); this branch's draft [PR #15](https://github.com/Jozzpoly/Combat-Lab/pull/15).
+
+## What was actually executed
+
+**Independent source test:** `npm test` invokes `scripts/p10-jaskinia-witness.test.mjs` (parent/frame binding, size limit, source state, owner permission denial, stale before-state/runtime, required pause, bounded reverse and exactly-once ID semantics), plus original Combat tests.
+
+**Cross-project real browser evidence:** [old Jaskinia CI #42309795677](https://github.com/Jozzpoly/Jozz-Cave-Workbench/actions/runs/42309795677), source-pinned `experiment/gpt6-worldbench-witness-2026-11-06` commit `c623d60d3c2d1aea4bf900d929b10af7ece59e8f`. Ubuntu 24.04, real Chromium and actual Vite-built `@dimforge/rapier2d-deterministic` WASM. Host opens an actual P10b world inside the REAL Jaskinia v6.4.1 native workspace, captures source-reported `world.trace()`, pauses via real UI, physically widens the true Rapier collider 2.2→3.5m, confirms actor/cargo counts and no time advancement, grants opt-in in the P10b UI, requests a second physical widen from the native host (3.5→4.8m), rejects stale physical state, accepts reverse (4.8→3.5m), keeps identical runtime after moving the genuine native divider. Independent project/session switch creates different runtime identity, then return to original preserves it. Actual Chrome with Pixel 7 emulation taps Pause/Open, gets actual physical afterstate, changes native window via touch dock, and comes back to unchanged runtime. Source reports live selected body in native microscope (actor 14 = bulky, 160kg) following actual keyboard selection.
+
+**UX failure caught and corrected:** old P10b vertically stacked in 360×616 Jaskinia pane had zero visible physical canvas. Embedding-only CSS now keeps 100% of physical canvas visible in the tested browser geometry, retains scrollable original controls. Dedicated `launchFocus` workbench gives 1121px physical canvas at 1600×950 and a separate native microscope; original crowded Jaskinia workspace remains intact. P10b bodies/visuals are still schematic and not an Owner-approved organic combat feeling.
+
+## Code ownership / exact semantic boundary
+
+- `src/p10-workshop.js`: `openSlot` and research-only `closeSlot` physically translate the SAME collider; each increments the source's `materialEvents.edits`. `closeSlot` is one bounded inverse, not generic undo/history.
+- `src/p10-jaskinia-witness.js`: optional in-iframe bridge. A reported state is read-only source material. `runtimeId` is volatile and changes on `reset()`; no solver checkpoint, world persistence, transport replay or trusted physical certificate.
+- `p10-ui.js` / `p10.html` / `p10.css`: user permits limited physical edits in the *running P10b session* via explicit toggle. Source requires permission, pause, exact prior aperture + edit count + runtime identity. Rejected commands do NOT move the collider. The browser host cannot grant itself this permission, call arbitrary solver functions or force a resize of the Owner's Jaskinia.
+- This does NOT give a third-party parent trusted access: a framing host can read a public `hello`, and first parent `hi` establishes the origin for this experimental adapter. Production requires explicit approved-parent identity and origin/capability policy. **Never run this experimental Jaskinia host on the browser origin holding valuable Owner private materials.**
+
+## Why this is only a donor
+
+Rapier observation/physical action is useful but is not yet a meaningful new organism. Historical Owner R0/R1/L0 failures, lack of gait and practically negative hinge value persist. P10b is a constrained mechanical test scene, not a physical platform choice for the whole project. A generic Jaskinia environment should preserve a lab's own domain authority rather than force a shared Combat/Coopege world schema.
+
+**Next falsifier:** unscripted human physical interactions in a safe, conveniently accessible artifact; single-action causal observation and experimental A/B with explicit exact-world and operator-condition identity. Real Owner mobile/desktop feel, robust click/touch ergonomics and long-lived return not yet proved. Keep both branch heads discoverable and refuse automatic merges.
