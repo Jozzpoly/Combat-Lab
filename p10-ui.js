@@ -10,11 +10,42 @@ const colors={wall:"#56777c",pivot:"#f0cc8d",gate:"#dfae70",
  barrier:"#5c8491",load:"#b6a78e",small:"#9edfc6",bulky:"#e6a57b",
  lever:"#a5c2ec","rigid-lever":"#b99cdd",effector:"#90e9db"};
 let world=makeMaterialWorkshop(),paused=false,mode="select",drag=null;
+let worldGeneration=0, remotePermission=false;
 let camera={x:17.2,y:14.25,zoom:1.57};
 let keys=new Set(),last=performance.now(),acc=0;
 const initialCamera=()=>({x:17.2,y:14.25,zoom:1.57});
 // Independent browser-world witness: no simulation control, save, or replay promises.
-installP10JaskiniaWitness(() => ({trace:world.trace(),camera:{...camera},paused,operatorMode:mode}));
+const grantButton = $("wb-grant");
+function updateRemotePermissionUI() {
+  grantButton.hidden=window.parent===window;
+  grantButton.textContent=remotePermission?"Odbierz uprawnienie Jaskini":"Zezwól na edycję z Jaskini";
+  grantButton.setAttribute("aria-pressed",String(remotePermission));
+}
+grantButton.onclick=()=>{
+  if(window.parent===window)return;
+  remotePermission=!remotePermission;
+  updateRemotePermissionUI();
+  status(remotePermission ?
+    "Ta jedna sesja: zezwolono Jaskini na zmiany fizycznej szczeliny wyłącznie na pauzie." :
+    "Cofnięto uprawnienie Jaskini. Odczyt fizyki pozostaje dostępny.");
+};
+updateRemotePermissionUI();
+function performWorldbenchAction(action) {
+  if(!remotePermission)return {ok:false,error:"owner-opt-in-required"};
+  if(!paused)return {ok:false,error:"pause-required"};
+  const before=world.aperture().width;
+  const ok=action==="p10b.aperture.widen" ? world.openSlot() :
+    action==="p10b.aperture.narrow" ? world.closeSlot() : false;
+  if(!ok)return {ok:false,error:"physical-world-refused"};
+  const after=world.aperture().width;
+  render();
+  status("Edycja fizycznej szczeliny z Jaskini: "+before.toFixed(2)+" → "+after.toFixed(2)+" m.");
+  return {ok:true,action,before,after};
+}
+installP10JaskiniaWitness(
+  () => ({trace:world.trace(),camera:{...camera},paused,operatorMode:mode,
+    generation:worldGeneration,remotePermission}),
+  performWorldbenchAction);
 function focusChosen(){
  const a=world.chosen;if(!a){status("Wybierz ciało do wyśrodkowania.");return;}
  const p=a.body.translation();
@@ -132,6 +163,7 @@ function togglePause(){
 }
 function reset(){
  world.dispose();world=makeMaterialWorkshop();
+ worldGeneration++;remotePermission=false;updateRemotePermissionUI();
  paused=false;acc=0;keys.clear();drag=null;
  camera=initialCamera();render();
  status("Nowy cichy warsztat; żaden aktor nie rusza bez polecenia.");
