@@ -1,6 +1,7 @@
 // P10 operator-workbench: actual physical state only; no fake sprite interactions,
 // no route script, no game-level passes or observer counters fed into control.
 import {makeMaterialWorkshop} from "./src/p10-workshop.js";
+import {installP10JaskiniaWitness} from "./src/p10-jaskinia-witness.js";
 import {V,DT} from "./src/p0-world.js";
 const $=id=>document.getElementById(id);
 const canvas=$("world"),ctx=canvas.getContext("2d",{alpha:false});
@@ -12,6 +13,8 @@ let world=makeMaterialWorkshop(),paused=false,mode="select",drag=null;
 let camera={x:17.2,y:14.25,zoom:1.57};
 let keys=new Set(),last=performance.now(),acc=0;
 const initialCamera=()=>({x:17.2,y:14.25,zoom:1.57});
+// Independent browser-world witness: no simulation control, save, or replay promises.
+installP10JaskiniaWitness(() => ({trace:world.trace(),camera:{...camera},paused,operatorMode:mode}));
 function focusChosen(){
  const a=world.chosen;if(!a){status("Wybierz ciało do wyśrodkowania.");return;}
  const p=a.body.translation();
