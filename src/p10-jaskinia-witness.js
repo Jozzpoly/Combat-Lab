@@ -54,7 +54,7 @@ export function installP10JaskiniaWitness(read, perform = null) {
           selectedActor: selectedBody ? {id:selectedBody.id,kind:selectedBody.kind,
             x:selectedBody.x,y:selectedBody.y,vx:selectedBody.vx,vy:selectedBody.vy,
             mass:selectedBody.mass,stance:selectedBody.stance} : null,
-          selectedGripCount, worldEdits:t.materialEvents.edits } });
+          selectedGripCount, worldEdits:Number.isSafeInteger(t.materialEvents?.edits) ? t.materialEvents.edits : null } });
       send({ jaskinia: 1, type: "signals",
         values: { tick: t.tick, bodies: t.actors.length, cargo: t.cargo.length,
           grips: t.grips.length, effort: t.rootEffort } });
