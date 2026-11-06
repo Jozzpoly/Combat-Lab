@@ -4,12 +4,13 @@
 const PROTOCOL = "jozz-worldbench/v0";
 const MAX_BYTES = 32000;
 
-export function installP10JaskiniaWitness(read) {
+export function installP10JaskiniaWitness(read, perform = null) {
   if (typeof window === "undefined" || window.parent === window) return () => {};
   if (typeof read !== "function") throw new TypeError("witness needs an actual world read function");
   const parent = window.parent;
   let hostOrigin = null, alive = true;
-  const runtimeId = "p10b-" + Date.now() + "-" + Math.random().toString(36).slice(2, 12);
+  const runtimeBase = "p10b-" + Date.now() + "-" + Math.random().toString(36).slice(2, 12);
+  const performed = new Map(); // idempotent response to duplicate same-id requests
   const target = () => hostOrigin === "null" ? "*" : hostOrigin;
   const send = data => {
     if (!alive || !hostOrigin) return;
@@ -20,7 +21,12 @@ export function installP10JaskiniaWitness(read) {
     if (!value || typeof value !== "object" || !value.trace) throw new Error("No physical source trace");
     const record = {
       specimen: "Combat Lab / P10b",
-      runtimeId,
+      runtimeId: runtimeBase + "-g" + Number(value.generation || 0),
+      capabilities: {
+        ownerGrantedRemoteEdit: !!value.remotePermission,
+        operations: ["p10b.aperture.widen","p10b.aperture.narrow"],
+        requiresPause: true,
+      },
       sourceRevisionClaim: null, // do not pretend a built Pages/CI SHA is known at runtime
       contract: PROTOCOL,
       kind: "read-only-physical-witness",
@@ -71,6 +77,37 @@ export function installP10JaskiniaWitness(read) {
         send({ protocol: PROTOCOL, type: "capture", id: d.id, ok: false,
           error: String(err?.message || err).slice(0,180) });
       }
+     else if (d.protocol === PROTOCOL && d.type === "action?" &&
+               typeof d.id === "string" && /^[a-z0-9_-]{1,80}$/i.test(d.id)) {
+      let receipt = performed.get(d.id);
+      if (!receipt) {
+        try {
+          const value=read();
+          if(!value.remotePermission) throw Error("owner-opt-in-required");
+          if(typeof perform!=="function") throw Error("source-has-no-edit-handler");
+          const expected=d.expected;
+          const current=runtimeBase+"-g"+Number(value.generation||0);
+          if(!expected || expected.runtimeId!==current) throw Error("stale-runtime");
+          if(!value.paused) throw Error("pause-required");
+          if(!Number.isFinite(expected.aperture) ||
+             expected.aperture!==value.trace.aperture.width ||
+             expected.edits!==value.trace.materialEvents.edits) throw Error("stale-physical-state");
+          if(!["p10b.aperture.widen","p10b.aperture.narrow"].includes(d.action))
+            throw Error("unsupported-source-operation");
+          const result=perform(d.action,expected);
+          if(!result?.ok) throw Error(String(result?.error||"source-rejected"));
+          receipt={protocol:PROTOCOL,type:"action",id:d.id,ok:true,result,
+            record:sample()};
+          send({jaskinia:1,type:"event",level:"uwaga",
+            text:"Wykonano fizyczną edycję szczeliny z uprawnionego narzędzia Worldbench."});
+        }catch(err){
+          receipt={protocol:PROTOCOL,type:"action",id:d.id,ok:false,
+            error:String(err?.message||err).slice(0,180)};
+        }
+        performed.set(d.id,receipt);
+        if(performed.size>100)performed.delete(performed.keys().next().value);
+      }
+      send(receipt);
     }
   };
   window.addEventListener("message", onMessage);
