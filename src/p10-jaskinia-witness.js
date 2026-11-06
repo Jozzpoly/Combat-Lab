@@ -77,7 +77,7 @@ export function installP10JaskiniaWitness(read, perform = null) {
         send({ protocol: PROTOCOL, type: "capture", id: d.id, ok: false,
           error: String(err?.message || err).slice(0,180) });
       }
-     else if (d.protocol === PROTOCOL && d.type === "action?" &&
+    } else if (d.protocol === PROTOCOL && d.type === "action?" &&
                typeof d.id === "string" && /^[a-z0-9_-]{1,80}$/i.test(d.id)) {
       let receipt = performed.get(d.id);
       if (!receipt) {
