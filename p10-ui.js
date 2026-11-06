@@ -5,6 +5,9 @@ import {installP10JaskiniaWitness} from "./src/p10-jaskinia-witness.js";
 import {V,DT} from "./src/p0-world.js";
 const $=id=>document.getElementById(id);
 const canvas=$("world"),ctx=canvas.getContext("2d",{alpha:false});
+// A Jaskinia native window is a viewport, not a full desktop page.
+// Keep the physical world visible while keeping all original controls accessible.
+if (window.parent !== window) document.body.classList.add("wb-embedded");
 const PI=Math.PI;
 const colors={wall:"#56777c",pivot:"#f0cc8d",gate:"#dfae70",
  barrier:"#5c8491",load:"#b6a78e",small:"#9edfc6",bulky:"#e6a57b",
