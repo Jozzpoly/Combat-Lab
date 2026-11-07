@@ -2,6 +2,15 @@
 
 **Status: isolated source/e2e experiment, NOT an accepted gameplay, body, framework, replay or release.** This branch derives from exact P10b research head; it is not `main` or `rehearsal/current`. Companion old Jaskinia branch and draft [PR #7](https://github.com/Jozzpoly/Jozz-Cave-Workbench/pull/7); this branch's draft [PR #15](https://github.com/Jozzpoly/Combat-Lab/pull/15).
 
+## CURRENT (7 Nov 2026) — live recovery point
+
+- **Exact paired verification now current:** [Jaskinia browser CI #42316347341](https://github.com/Jozzpoly/Jozz-Cave-Workbench/actions/runs/42316347341) passed against this branch's latest audited source `de357943156a48691925034851ea707e7d01c598`. [Independent Combat CI](https://github.com/Jozzpoly/Combat-Lab/actions/runs/42310444316) also passed. The historical earlier CI/revisions below remain provenance, not current HEAD.
+- **New observed falsifier:** switching away from a native Jaskinia space preserved exactly the same world instance, but its solver was throttled: in one test 52 ticks in 850 ms visible versus 1 tick in 1400 ms hidden (normalized background progression ≈1.2%); a prior run recorded 2 hidden ticks (~2.3%). Therefore "continued to exist" ≠ "continued to live". Do NOT presume wall-clock, hidden-time semantics or uniform active simulation.
+- **Scope boundary:** The authorized host gesture physically edits one P10b collider. This is host-issued, Lab-authorized material editing, **not evidence that the actor can perform that operation autonomously**. Companion and ReflexBrain separately research actor agency; never conflate domains.
+- **Owner-facing deficit:** 100% visible canvas and successful emulated touch Pause/Open still do not prove delightful direct manipulation. Mobile physical editing in P10b requires keyboard Ctrl+drag, locomotion requires keyboard; no real phone-Owner control PASS.
+- **Choice for next run:** stop growing the data-panel witness. Work from one open-ended, directly manipulable material situation with contrasting bodies, where a user's intervention visibly changes feasible actor actions and their subsequent physical consequences. Compare stand-alone vs Jaskinia focus workspace; a subjective Owner encounter is required before promotion. Favor immediate mouse/touch physical gesture over new general host infrastructure. Preserve P10b as donor and be willing to abandon its UI and machinery.
+- **Destructive freedom:** both experimental PRs are open drafts, unique branches, unmerged; main and shared user data remain untouched. Code and test evidence retained without duplicating main, histories or other agents' work. The next branch need not extend this adapter if a fresh physical workshop is more valuable.
+
 ## What was actually executed
 
 **Independent source test:** `npm test` invokes `scripts/p10-jaskinia-witness.test.mjs` (parent/frame binding, size limit, source state, owner permission denial, stale before-state/runtime, required pause, bounded reverse and exactly-once ID semantics), plus original Combat tests.
