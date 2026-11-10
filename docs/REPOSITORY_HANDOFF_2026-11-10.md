@@ -37,7 +37,7 @@ GitHub's ordinary Branches page deletes branches individually. **Do not rename a
 The simpler alternative is the one-time [GitHub Actions cleanup workflow](https://github.com/Jozzpoly/Combat-Lab/actions/workflows/archived-research-cleanup.yml) on the **main** branch. No terminal:
 
 1. Open the workflow, click **Run workflow**, leave `operation=AUDIT_ONLY`, click Run workflow. Check the report.
-2. Only once you consciously decide to remove the 44 exact inventoried refs, Run workflow again with `operation=DELETE_ARCHIVED_REFS` and type `DELETE_44_ARCHIVED_COMBAT_BRANCHES` in the confirmation field.
+2. Only once you consciously decide to remove the 44 exact inventoried refs, Run workflow again with `operation=DELETE_ARCHIVED_REFS`, check `backup_saved` after independently saving the ZIP, and type `DELETE_44_ARCHIVED_COMBAT_BRANCHES` in the confirmation field.
 3. Check the run result and remaining refs. Intended list: `main`, `rehearsal/current`, `archive/all-research-pre-provider-handoff-2026-11-10`.
 
 **Safety:** GitHub Actions [read-only test #42906193845](https://github.com/Jozzpoly/Combat-Lab/actions/runs/42906193845) PASS for actual live remote refs and archive ancestry: 44 candidates, 0 changed. Only a manual run with both the deletion option and the exact typed confirmation can reach the `contents: write` job. It rechecks the SHA of every old ref and that its commit is reachable from the archive. It refuses to touch `main`, the public rehearsal pointer, or the archive. If another agent updates a branch meanwhile, deletion fails rather than silently discarding its changes. GitHub may still refuse the write due to repository permissions/rules; such a failure is NOT completion. The removal path remains *unexecuted and therefore not independently verified end-to-end*.
@@ -63,6 +63,17 @@ The 10 November cleanup updates these **148 URLs to the exact, immutable origina
 - GitHub commit history, including a synthetic 46-parent archival commit, is **not a second independent backup**. If the GitHub repository/account becomes unavailable, this archive does not save the research. A full local `git clone --mirror` or `git bundle` stored outside the same GitHub account would be a stronger later disaster-recovery layer; none has been created or uploaded by this run.
 - This cleanup does **not** represent a full secret/license/compliance audit of every historical commit. The repository is public; removing branch names or retaining an archive will not erase previously published secrets. A credential compromise needs revocation/history remediation, not only Git cleanup.
 - CI source-recovery is **not** a fresh, fully interactive run of every obsolete prototype; old GitHub Actions binaries/screenshots have finite retention. No Owner approval of a new embodied experience is claimed.
+
+## Final pre-deletion checks and actual GitHub canary (10/11 November)
+
+- [Complete Git bundle PASS](https://github.com/Jozzpoly/Combat-Lab/actions/runs/42924068867): 3.49 MB, fresh independent `git clone --mirror` restored **all 47 original branch heads** and three historic Owner trial commits. A downloadable 90-day GitHub Actions artifact is available; it becomes independent disaster recovery **only after the Owner downloads and saves it outside this GitHub account**. For the latest `main`, use the latest successful [verified backup workflow](https://github.com/Jozzpoly/Combat-Lab/actions/workflows/verified-offsite-git-backup.yml), not an older artifact.
+- [Public Git history heuristic credential screening PASS](https://github.com/Jozzpoly/Combat-Lab/actions/runs/42924588275): 8,617 reachable objects, 2,707 blob snapshots, zero flagged high-confidence API-token/private-key patterns. **Not a complete secrets, privacy or license audit**, and never log raw candidate values.
+- [Actual GitHub write/delete canary PASS](https://github.com/Jozzpoly/Combat-Lab/actions/runs/42925147056): `verification/cleanup-write-canary-*` created, source SHA verified, removed via `--force-with-lease`, absence confirmed. No original experiment ref touched. Canary workflow changed to **manual only** thereafter.
+- The real 44-ref deletion is still **NOT EXECUTED**. The GitHub Actions UI now demands three independent conditions: `operation=DELETE_ARCHIVED_REFS`, `backup_saved=true` (explicit off-GitHub copy acknowledgement), and the exact confirmation string. It verifies exact refs + archive and aborts on newly introduced branches; reports partial deletion as failure. This safeguards the action but cannot guarantee all 44 pushes will succeed atomically.
+- Targeted review of old/new Jaskinia, Commons, ReflexBrain, Companion and Medium found and repaired Jaskinia issue #4's old Combat branch URL. The review is **not an exhaustive scan** of every historical issue and external link.
+- This **public** repo has no top-level `LICENSE` at the checked snapshot; public visibility is not a permissive reuse license. Do not silently set one during cleanup.
+
+Cross-repo lesson: [verified cleanup playbook](REPO_CLEANUP_TRANSFER_PLAYBOOK_2026-11-11.md) — independent methods for Companion tags, ReflexBrain tags, Combat's synthetic archive and SPC production triggers.
 
 ## The exact repo cleanup boundary
 

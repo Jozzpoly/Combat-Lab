@@ -7,6 +7,9 @@ on:
     paths:
       - '.github/workflows/verified-offsite-git-backup.yml'
       - 'tools/create-pre-prune-backup.mjs'
+      - 'README.md'
+      - 'AGENTS.md'
+      - 'docs/REPOSITORY_HANDOFF_2026-11-10.md'
   workflow_dispatch:
 
 permissions:
