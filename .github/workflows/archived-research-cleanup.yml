@@ -94,7 +94,7 @@ jobs:
       - name: Revalidate and delete ONLY exact inventoried archived refs
         run: |
           node tools/validate-handoff.mjs
-          node tools/prune-archived-branches.mjs --apply
+          node tools/prune-archived-branches.mjs --apply --confirm=DELETE_44_ARCHIVED_COMBAT_BRANCHES
       - name: Report remaining branch refs
         run: |
           git ls-remote --heads origin

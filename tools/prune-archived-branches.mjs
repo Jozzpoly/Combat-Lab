@@ -9,6 +9,8 @@ import { fileURLToPath } from "node:url";
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
 const manifest=JSON.parse(fs.readFileSync(path.join(root,"docs/BRANCH_INVENTORY_2026-11-10.json"),"utf8"));
 const apply=process.argv.includes("--apply");
+const confirmed=process.argv.includes("--confirm=DELETE_44_ARCHIVED_COMBAT_BRANCHES");
+if(apply&&!confirmed)throw Error("ABORT: --apply requires --confirm=DELETE_44_ARCHIVED_COMBAT_BRANCHES");
 const expectedArchive="archive/all-research-pre-provider-handoff-2026-11-10";
 const keep=new Set(["main","rehearsal/current",expectedArchive]);
 const run=(args)=>execFileSync("git",args,{cwd:root,encoding:"utf8",stdio:["ignore","pipe","pipe"]}).trim();
@@ -21,7 +23,7 @@ const lsRef=(name)=>{
 if(manifest.repository!=="Jozzpoly/Combat-Lab"||manifest.archive.branch!==expectedArchive)throw Error("unexpected manifest/repository");
 if(manifest.keep_branches.length!==3||keep.size!==3||manifest.prune_branches.length!==44)throw Error("manifest changed: re-audit first");
 const remote=run(["remote","get-url","origin"]);
-if(!/Jozzpoly\/Combat-Lab(?:\.git)?$/.test(remote))throw Error("ABORT: origin does not end with Jozzpoly/Combat-Lab");
+if(!/^(?:https:\/\/github\.com\/|git@github\.com:|ssh:\/\/git@github\.com\/)Jozzpoly\/Combat-Lab(?:\.git)?$/.test(remote))throw Error("ABORT: origin must be EXACT authenticated GitHub repository URL");
 if(run(["rev-parse","--is-shallow-repository"])!=="false")throw Error("ABORT: use a full, non-shallow clone for ancestry checks");
 const archiveHead=lsRef(expectedArchive);
 own(archiveHead,manifest.archive.sha);
@@ -40,7 +42,7 @@ const found=manifest.prune_branches.map(x=>({...x,remoteSha:lsRef(x.ref)}));
 const mismatched=found.filter(x=>x.remoteSha && x.remoteSha!==x.sha);
 if(mismatched.length)throw Error("ABORT: refs have changed since capture: "+mismatched.map(x=>x.ref).join(", "));
 console.log((apply?"APPLY":"DRY RUN")+": "+found.filter(x=>x.remoteSha).length+" removable refs, "+found.filter(x=>!x.remoteSha).length+" already absent.");
-if(!apply){console.log("Safety checks passed. No remote refs changed. A future authorized agent can run: node tools/prune-archived-branches.mjs --apply");process.exit(0);}
+if(!apply){console.log("Safety checks passed. No remote refs changed. A future authorized agent can run: node tools/prune-archived-branches.mjs --apply --confirm=DELETE_44_ARCHIVED_COMBAT_BRANCHES");process.exit(0);}
 let deleted=0;
 for(const item of found){
   if(!item.remoteSha)continue;
