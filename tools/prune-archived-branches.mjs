@@ -22,6 +22,14 @@ const lsRef=(name)=>{
 };
 if(manifest.repository!=="Jozzpoly/Combat-Lab"||manifest.archive.branch!==expectedArchive)throw Error("unexpected manifest/repository");
 if(manifest.keep_branches.length!==3||keep.size!==3||manifest.prune_branches.length!==44)throw Error("manifest changed: re-audit first");
+// An unlisted new branch is not old clutter. Never report a clean 3-ref
+// repository while another agent's new, legitimate work exists.
+const allHeads=()=>run(["ls-remote","--heads","origin"]).split("\n").filter(Boolean)
+  .map(line=>({sha:line.split("\t")[0],ref:line.split("\t")[1]?.replace(/^refs\/heads\//,"")}));
+const known=new Set([...keep,...manifest.prune_branches.map(x=>x.ref)]);
+const unlisted=allHeads().filter(x=>!known.has(x.ref));
+if(unlisted.length)throw Error("ABORT: new or unlisted branch(es) need separate review: "+
+  unlisted.map(x=>x.ref).join(", "));
 const remote=run(["remote","get-url","origin"]);
 if(!/^(?:https:\/\/github\.com\/|git@github\.com:|ssh:\/\/git@github\.com\/)Jozzpoly\/Combat-Lab(?:\.git)?$/.test(remote))throw Error("ABORT: origin must be EXACT authenticated GitHub repository URL");
 if(run(["rev-parse","--is-shallow-repository"])!=="false")throw Error("ABORT: use a full, non-shallow clone for ancestry checks");
@@ -51,4 +59,9 @@ for(const item of found){
   deleted++;
   console.log("PRUNED "+item.ref+" @ "+item.sha);
 }
+const finalHeads=allHeads();
+const unfinished=finalHeads.filter(x=>!keep.has(x.ref));
+const remaining=finalHeads.filter(x=>keep.has(x.ref));
+if(unfinished.length||remaining.length!==3)
+  throw Error("PARTIAL CLEANUP: retained "+unfinished.length+" unexpected old refs; inspect live GitHub before declaring success");
 console.log("COMPLETE: "+deleted+" refs pruned; all original commits remain anchored in "+expectedArchive);
