@@ -1,5 +1,7 @@
 # Combat Lab — AGENT RUN CURSOR
 
+> **ARCHIVED WORKFLOW CURSOR (11 Oct 2026).** Not a live run plan. Project was put into provider-independent dormancy/cleanup on 10 Nov 2026. Read [current repository handoff](REPOSITORY_HANDOFF_2026-11-10.md), then verify live refs and Owner direction. Do not revive the October NEXT or an old draft PR automatically.
+
 **Checkpoint:** 2026-10-11, after E1/B1/W2 and K1/K2, P0 material afterstate, P1 arm-reach negative, P2 contact material haul, P3 two-actor controlled force contest, P4 cheap reactive transport + grip angular-source audit, P5 first editable 6/10-actor material commons, P6 physical envelope + jam recovery, P7 genuinely shared contact/crowd pressure, P8 negative-first tactile sidestep, P9 geometric clearance versus real guard displacement, P10 quiet manual material workshop, P10b direct source manipulation P11 bounded material-backup/cargo drag negative, P12 one-off world-contact COM test, P10c verified portable Windows first look of P10b, and P12b causal sleep/contact diagnostic. **Operating cursor, not technical authority.** Owner feedback, current GitHub source/CI and Owner-observed feel override dated docs. **No background execution between turns.** New chat requires NO Owner paste.
 
 ## Mission / why

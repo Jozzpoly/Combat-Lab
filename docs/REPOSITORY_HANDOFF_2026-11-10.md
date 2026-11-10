@@ -26,6 +26,20 @@ A lab for discovering **physically different bodies, movement, contact, pressure
 
 All counts are a dated snapshot. On return, first query the live Git refs/PR states and run the offline validator. No background work or future action has been scheduled.
 
+## Owner-friendly branch deletion — prepared, NOT run
+
+GitHub's ordinary Branches page deletes branches individually. **Do not rename all 44 branches**: that creates new refs until old ones are removed, making the repo worse.
+
+The simpler alternative is the one-time [GitHub Actions cleanup workflow](https://github.com/Jozzpoly/Combat-Lab/actions/workflows/archived-research-cleanup.yml) on the **main** branch. No terminal:
+
+1. Open the workflow, click **Run workflow**, leave `operation=AUDIT_ONLY`, click Run workflow. Check the report.
+2. Only once you consciously decide to remove the 44 exact inventoried refs, Run workflow again with `operation=DELETE_ARCHIVED_REFS` and type `DELETE_44_ARCHIVED_COMBAT_BRANCHES` in the confirmation field.
+3. Check the run result and remaining refs. Intended list: `main`, `rehearsal/current`, `archive/all-research-pre-provider-handoff-2026-11-10`.
+
+**Safety:** GitHub Actions [read-only test #42906193845](https://github.com/Jozzpoly/Combat-Lab/actions/runs/42906193845) PASS for actual live remote refs and archive ancestry: 44 candidates, 0 changed. Only a manual run with both the deletion option and the exact typed confirmation can reach the `contents: write` job. It rechecks the SHA of every old ref and that its commit is reachable from the archive. It refuses to touch `main`, the public rehearsal pointer, or the archive. If another agent updates a branch meanwhile, deletion fails rather than silently discarding its changes. GitHub may still refuse the write due to repository permissions/rules; such a failure is NOT completion. The removal path remains *unexecuted and therefore not independently verified end-to-end*.
+
+The older cross-platform fallback remains `node tools/prune-archived-branches.mjs` (dry run by default; `--apply` deletes). It is **not** the preferred path for the Owner. After branch pruning, future agents can deliberately retire the one-off cleanup workflow/script without removing the archival manifest.
+
 ## The exact repo cleanup boundary
 
 - Source snapshot **46 original branches**, **10 open drafts at capture**, many nested head/base PRs. This is stale navigation, not 46 active initiatives.

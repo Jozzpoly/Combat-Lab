@@ -1,5 +1,7 @@
 # Combat Lab — Research State
 
+> **HISTORICAL RESEARCH STATE (11 Oct 2026).** Mechanical findings and negative controls remain evidence, but the operational state changed on 10 Nov 2026: no active draft PR, original experiment refs archived, repo prepared for non-GPT agents. Start with [provider-neutral handoff](REPOSITORY_HANDOFF_2026-11-10.md) for current operational recovery. Do not infer an active roadmap or playable product from dated \"current\" headings below.
+
 **Zaktualizowano:** 2026-10-11 (P12b sleep-induced momentum discrepancy RESOLVED at source; P10c Windows Owner first-look READY, Owner feel UNKNOWN) · **Status produktu:** no Owner-qualified new specimen; historical R0/R1/L0 Owner FAIL active; no public deployment change. W2 mechanically interesting but visually unqualified; K1 rigid shield equals hinged on passive projectile cover; K2 produced real material+hinge coupled contact but NO novel downstream protective outcome over simple rigid. P0 physically verified a later actor gaining material passage after another changes a real gate, but cheap opener bodies matched the effect. No Owner-accepted whole or unique-body action.
 
 ## Aktualny stan — czytaj najpierw
