@@ -26,9 +26,11 @@ if(run(["rev-parse","--is-shallow-repository"])!=="false")throw Error("ABORT: us
 const archiveHead=lsRef(expectedArchive);
 own(archiveHead,manifest.archive.sha);
 const mainHead=lsRef("main");
-own(mainHead,manifest.baseline.main_commit);
+if(!mainHead)throw Error("ABORT: main ref missing");
 if(!lsRef("rehearsal/current"))throw Error("ABORT: public rehearsal ref missing");
-run(["fetch","origin","refs/heads/"+expectedArchive]);
+run(["fetch","origin","refs/heads/"+expectedArchive,"refs/heads/main"]);
+try{run(["merge-base","--is-ancestor",manifest.baseline.main_commit,mainHead]);}
+catch{throw Error("ABORT: current main no longer descends from archived original baseline");}
 for(const item of manifest.prune_branches){
   if(keep.has(item.ref)||!item.ref.match(/^(experiment\/|review\/|probe\/|archive\/)[A-Za-z0-9_.\/-]+$/))throw Error("ABORT: forbidden ref "+item.ref);
   try{run(["merge-base","--is-ancestor",item.sha,archiveHead]);}
