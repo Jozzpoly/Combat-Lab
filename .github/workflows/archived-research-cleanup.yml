@@ -10,6 +10,7 @@ on:
       - '.github/workflows/archived-research-cleanup.yml'
       - 'tools/prune-archived-branches.mjs'
       - 'tools/validate-handoff.mjs'
+      - 'tools/rehearse-archive-recovery.mjs'
       - 'docs/BRANCH_INVENTORY_2026-11-10.json'
   workflow_dispatch:
     inputs:
