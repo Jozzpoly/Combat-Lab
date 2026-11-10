@@ -22,6 +22,11 @@ on:
         options:
           - AUDIT_ONLY
           - DELETE_ARCHIVED_REFS
+      backup_saved:
+        description: 'I have stored the verified Git bundle outside this GitHub account'
+        type: boolean
+        required: true
+        default: false
       confirmation:
         description: 'For deletion only: type DELETE_44_ARCHIVED_COMBAT_BRANCHES'
         type: string
@@ -53,9 +58,14 @@ jobs:
         env:
           OPERATION: ${{ inputs.operation }}
           CONFIRMATION: ${{ inputs.confirmation }}
+          BACKUP_SAVED: ${{ inputs.backup_saved }}
         run: |
           if [[ "$OPERATION" == "DELETE_ARCHIVED_REFS" && "$CONFIRMATION" != "DELETE_44_ARCHIVED_COMBAT_BRANCHES" ]]; then
             echo "::error::Deletion selected without exact confirmation phrase."
+            exit 1
+          fi
+          if [[ "$OPERATION" == "DELETE_ARCHIVED_REFS" && "$BACKUP_SAVED" != "true" ]]; then
+            echo "::error::Download and separately store the verified Git bundle before deleting refs."
             exit 1
           fi
           if [[ "$OPERATION" != "" && "$OPERATION" != "AUDIT_ONLY" && "$OPERATION" != "DELETE_ARCHIVED_REFS" ]]; then
@@ -80,6 +90,7 @@ jobs:
       github.repository == 'Jozzpoly/Combat-Lab' &&
       github.ref == 'refs/heads/main' &&
       inputs.operation == 'DELETE_ARCHIVED_REFS' &&
+      inputs.backup_saved == true &&
       inputs.confirmation == 'DELETE_44_ARCHIVED_COMBAT_BRANCHES'
     runs-on: ubuntu-latest
     timeout-minutes: 15

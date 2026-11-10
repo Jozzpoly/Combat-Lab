@@ -62,7 +62,8 @@ const readme=[
  "Do not merge the archive's 46-parent synthetic commit into main.",
  "Bundle SHA256: "+digest,
  "Original archive commit: "+manifest.archive.sha,
- "Original main tip: "+manifest.baseline.main_commit
+ "Original main tip (pre-cleanup): "+manifest.baseline.main_commit,
+ "Captured live main tip: "+git(root,"rev-parse","refs/remotes/origin/main")
 ].join("\n")+"\n";
 fs.writeFileSync(path.join(out,"RESTORE_AND_LIMITS.txt"),readme);
 console.log("PASS: full Git bundle produced; fresh mirror clone recovered all 47 original remote refs");
