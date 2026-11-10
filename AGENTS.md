@@ -1,13 +1,14 @@
-# Combat Lab — instructions for any code agent
+# Combat Lab — notes for any AI provider
 
-These are repository-local working constraints, **not** instructions tied to GPT, Claude, Gemini, Grok or any particular provider. Latest direct Owner instruction overrides older plans.
+**Start with [what actually matters](docs/WHAT_MATTERS_2026-11-11.md), not the latest Git commit or the old October execution cursor.** Then read [the operational handoff](docs/REPOSITORY_HANDOFF_2026-11-10.md) if you need exact ref/SHA recovery.
 
-Read `docs/REPOSITORY_HANDOFF_2026-11-10.md` before substantial changes. Read `docs/OWNER_EXPERIENCE_PRIMARY_EVIDENCE_2026-11-10.md` before treating any physical prototype as Owner-qualified. This repo is deliberately dormant pending the Owner's return; do not wake a roadmap just because a tool can write code.
+- **Owner goal:** create, change, inhabit, stress and break genuinely material situations involving distinct bodies, movement, physical contact and crowds. Direct manipulation and surprising causal consequences matter more than dashboards or elaborate tests.
+- **Evidence hierarchy:** latest direct Owner feedback and actual experience > source/real-browser behavior > agent interpretation > dated planning prose. R0/R1/L0 Owner-experience FAIL remains valid. Green CI never cancels it.
+- **Research is disposable:** no old specimen, Rapier choice, locomotor proxy, geometry, brain or Jaskinia bridge is an automatic architectural parent. Prefer cheap rival explanations and physically meaningful counterfactuals.
+- **Preservation is selective:** keep critical intent, genuine Owner trials, failures, causal discoveries and a few justified code donors visible. Do **not** turn 44 old branches into a work queue. Unselected history is cold storage, not dead obligations.
+- **Topology:** main = neutral research index; rehearsal/current = existing public build pointer; archive/all-research-pre-provider-handoff-2026-11-10 = permanently referenced forensic Git history inside this GitHub repo. Never merge/deploy the synthetic 46-parent archive commit. Use immutable SHA links for old cases.
+- **Agent autonomy:** work on a new descriptive isolated branch for substantive experiments; keep Owner burden low. Do not deploy, move the public pointer, delete selected history, merge an experiment or spend external API credits just for cleanup.
+- **Privacy:** ChatGPT conversation transcripts and personal material must **not** be pasted into this public repository automatically. Only source-grounded, carefully selected project intent and non-sensitive evidence may enter public docs.
+- **Handoff:** explain what changed, what ran, what failed, exact SHA and how the next provider can inspect it. Write less, preserve more signal.
 
-- **Goal:** open-ended exploration of embodied movement, material contact, crowds, pressure and meaningful differences between physical bodies. Owner should be able to directly change, break, observe and rebuild worlds. Product-level R0/R1/L0 failures remain binding.
-- **Authority:** Owner's latest instruction > current verified live source / direct evidence > dated research summaries > old agent prompts. An experiment is not automatically a foundation; a green CI test is not Owner-accepted gameplay.
-- **Topology:** `main` = neutral current research truth, not a playable feature branch; `rehearsal/current` = controlled public deploy pointer; `archive/all-research-pre-provider-handoff-2026-11-10` = synthetic forensic graph only, never build/merge/deploy it. See JSON branch manifest for exact recovery. You may experiment on new clearly named branches; don't resurrect dozens of old PRs.
-- **Permissions:** isolated/reversible tests and PRs are appropriate. Before deleting historical refs, require a full verified Git bundle downloaded outside this GitHub account; in-account archive is not independent disaster recovery. Treat deleting remote history, changing production, exposing data, charging accounts, and irreversible migrations as separate boundaries. Preserve exact source and rollback when appropriate. Do not insert private conversations, secret keys, Library files or user data into public source/CI logs.
-- **Proof:** distinguish source PASS, real browser PASS, Owner experience UNKNOWN/FAIL and source-causal explanations. Explicitly note when exact code was not executed.
-- **Handoff:** write one small honest checkpoint in plain Markdown with SHA, tests, decisions and unresolved questions. Avoid provider-only memory/skills as the sole continuity path. Prefer work/output over status theater.
-- **Do not silently select technology:** Rapier2D, Rapier3D, AI control, player input, world persistence and Jaskinia integration remain hypotheses, not accepted product contracts.
+No GPT Memory, private files, browser session or specific AI provider is needed to understand this repository.
