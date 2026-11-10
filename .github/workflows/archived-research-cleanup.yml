@@ -1,17 +1,10 @@
 name: Combat Lab - guarded archive cleanup
 
-# Any push event only audits. Destructive deletion is manual, SHA-locked and human confirmed.
+# One-time manual operation only: audit or explicitly confirmed SHA-locked deletion.
+# No cleanup CI work is scheduled on ordinary push events.
 # The only deletion route requires a manual GitHub Actions dispatch on main,
 # the explicit operation, and the exact human-typed confirmation phrase.
 on:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/archived-research-cleanup.yml'
-      - 'tools/prune-archived-branches.mjs'
-      - 'tools/validate-handoff.mjs'
-      - 'tools/rehearse-archive-recovery.mjs'
-      - 'docs/BRANCH_INVENTORY_2026-11-10.json'
   workflow_dispatch:
     inputs:
       operation:
