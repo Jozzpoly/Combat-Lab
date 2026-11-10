@@ -1,72 +1,22 @@
 # Combat Lab
 
-Combat Lab is a research laboratory for discovering embodied combat, movement and world-interaction possibilities.
+**Laboratorium badań nad ruchem, zróżnicowanymi fizycznymi ciałami, kontaktem, tłumem i edytowalną materią.** / A research lab for physical body–world possibilities. Not a finished combat game.
 
-## Current state — neutral main, independently evolving research
+> **10 Nov 2026 — provider-independent freeze / cleanup.** The Owner is pausing GPT usage. The repository must remain recoverable and easy for a new AI provider to understand. No accepted new playable organism or game has been established.
 
-`main` contains a neutral smoke surface, repository/deployment infrastructure and canonical research documentation. It is **not** an accepted combat, crowd, movement or organism implementation.
+## Start here (any AI or human)
 
-Start with [the current Research State](docs/RESEARCH_STATE.md) and [the compact agent run cursor](docs/AGENT_RUN_CURSOR.md). [The 2026-10-11 E1/B1 campaign consolidation](docs/COMBAT_LAB_CAMPAIGN_CONSOLIDATION_2026-10-11.md) preserves source-level results, counterexamples, Owner constraints and the cross-chat frontier. [The W2 isolated real-physics experiment](https://github.com/Jozzpoly/Combat-Lab/tree/experiment/w2-embodied-material-commons) has real source screenshots and mechanical controls passing, but the visually inspected world still resembles a geometric traffic-style encounter and remains **Owner-UNKNOWN / NOT APPROVED**; W2 is not automatically a parent architecture. The 23 older overlays are [preserved separately](docs/history/RESEARCH_STATE_OVERLAYS_THROUGH_2026-10-10.md) rather than stacked ahead of live truth. For *what is being built or published now*, verify live experiment branches, their exact CI results and the separate `rehearsal/current` pointer. A static README cannot override changing source or Owner evidence.
+**[Repository recovery and exact current state](docs/REPOSITORY_HANDOFF_2026-11-10.md)** · [Agent-neutral instructions](AGENTS.md) · [Research truth](docs/RESEARCH_STATE.md) · [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) · [Why the previous direction failed](docs/FAILURE_SCAR_2026-10-06.md)
 
-The previous implementation line is absent from the active tree. Its Git history remains reachable only for deliberate forensic recovery.
+The entire old research branch history has been anchored under **`archive/all-research-pre-provider-handoff-2026-11-10`**. [Original branch names and SHAs](docs/BRANCH_INVENTORY_2026-11-10.json) are recorded for provider-independent recovery. The archive is a *Git ancestry container only*, not a candidate project base. Branch deletions are a separate verified operation; do not infer completion from archive creation.
 
-## What survives the failure
+## Current boundaries
 
-The project keeps:
+- **`main`**: neutral smoke page + durable findings, *not* the latest active game.
+- **`rehearsal/current`**: separately controlled GitHub Pages deployment pointer. Do not move it for cleanup.
+- **Archive history**: exact old experiment code, positive findings and negative controls; neither acceptance nor a roadmap.
+- **Owner verdict**: historical R0/R1/L0 product-level **FAIL**; no new whole experience accepted. Chromium/Rapier tests show only narrower source and browser mechanics.
 
-- Owner evidence and corrections;
-- observed phenomena;
-- falsifiers and causal findings;
-- provenance;
-- protocol lessons;
-- the ability to recover old commits when a concrete future question needs them.
+Do not infer from a green test, recent commit or old draft PR that an experiment is a live deploy. No private account/ChatGPT Memory/secret is needed to navigate this public repository.
 
-It does **not** grant automatic authority to:
-
-- old branch ancestry;
-- green mechanism tests;
-- previous "foundation" labels;
-- the last canonical `NEXT`;
-- code merely because it already exists.
-
-## Current operating model
-
-The repaired experiment protocol distinguishes:
-
-- **discovery** — find valuable whole phenomena first;
-- **diagnosis / attribution** — explain a phenomenon without letting the diagnostic fixture own the roadmap;
-- **serious construction** — build a coherent qualitative step when evidence or Owner direction calls for one;
-- **Lab infrastructure** — neutral capabilities that expand experimentation without encoding the answer.
-
-A diagnostic PASS is a finding, not an automatic parent implementation.
-
-A local improvement against the previous branch version is not enough; relevant progress must be judged against the actual Owner baseline and project goal.
-
-## Repository contract
-
-- `main` is the neutral current Lab state and durable research truth.
-- `rehearsal/current` is an exact deployment pointer only.
-- `archive/forensic-pre-cleanroom-2026-10-06` is forensic reachability only.
-- CI may prove runtime/mechanical/repository facts but may not assert research-roadmap semantics.
-- Public rehearsal occurs only from an explicitly selected exact source.
-
-Repository administration is the agent's responsibility. The Owner should not need to manage branches, SHAs, CI or deployment in normal work.
-
-## Long-run research navigation
-
-- [Pierwszy uczciwy przegląd dla Ownera](docs/OWNER_FIRST_LOOK.md) — aktualny priorytet: umożliwić osobiste uruchomienie realnych, niedojrzałych eksperymentów bez promocji ich do gotowego produktu.
-- [Wizja i adaptacyjna roadmapa](docs/VISION_ADAPTIVE_ROADMAP.md) — dlaczego badamy i kiedy zmieniać kierunek, bez sztywnego feature backlogu.
-- [Playbook długich kampanii](docs/CAMPAIGN_RUNBOOK.md) — **na początku każdego runu** odzyskanie Owner intent/live state, krytyczna ocena i realny test istniejącego kandydata; później wykonanie i falsyfikacja.
-- [Bieżący kursor agenta](docs/AGENT_RUN_CURSOR.md) — jeden mały punkt wznowienia; `RESEARCH_STATE` nadal jest authority.
-
-## Current authority
-
-Read:
-
-1. `docs/RESEARCH_STATE.md`
-2. `docs/EXPERIMENT_PROTOCOL.md`
-3. `docs/FAILURE_SCAR_2026-10-06.md`
-
-The protocol is explicitly provisional and may be changed when evidence shows a better way to run the Lab.
-
-> **Discover valuable phenomena first; diagnose them when needed; build serious wholes from knowledge rather than from the accidental ancestry of diagnostic fixtures.**
+**Core creative goal:** change a material world → inhabit/operate it → observe authentic physical consequences → disrupt or rebuild it. More realistic solvers and diagnostics must earn their place against simple alternatives and the Owner's actual experience.

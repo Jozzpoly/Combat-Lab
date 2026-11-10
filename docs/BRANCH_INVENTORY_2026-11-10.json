@@ -1,0 +1,391 @@
+{
+  "schema": "combat-lab/branch-handoff/v1",
+  "captured_utc": "2026-11-10",
+  "repository": "Jozzpoly/Combat-Lab",
+  "purpose": "Recovery and guarded ref pruning after preserving all reachable commit history",
+  "archive": {
+    "branch": "archive/all-research-pre-provider-handoff-2026-11-10",
+    "sha": "863c0a056e9e0dfa7e5895ccf443a8ecfd4f520d",
+    "tree_sha": "439ed56ffb192783bc4d12e031b271ecc2245e3a",
+    "parents": 46,
+    "identity": "synthetic multi-parent forensic anchor; never merge into main or deploy"
+  },
+  "baseline": {
+    "main_commit": "59190922bd6e51e7383eaa43e1845db076fd9e4e",
+    "main_tree": "439ed56ffb192783bc4d12e031b271ecc2245e3a",
+    "baseline_branch_count": 46,
+    "post_archive_count": 47
+  },
+  "keep_branches": [
+    "archive/all-research-pre-provider-handoff-2026-11-10",
+    "main",
+    "rehearsal/current"
+  ],
+  "prune_branches": [
+    {
+      "ref": "archive/forensic-pre-cleanroom-2026-10-06",
+      "sha": "69cdf398af4ab7b639a06ab88ebe88bd62805afa",
+      "kind": "legacy-forensic-ref"
+    },
+    {
+      "ref": "experiment/b1-physical-envelope-gate",
+      "sha": "24bd930fb1bb83425ea43168660a9c9c75d5b7d6",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/commons-w1-composition",
+      "sha": "59ed490d65c17bc14a9f721fa63883d6e19c9186",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/contact-contingent-resident-v0",
+      "sha": "f431981a3c3b72a79452059e06445c060ad55838",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/contact-only-relations-z1",
+      "sha": "f2d71e63277bfe77aa299c5d5b153143e82217ac",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/e1-local-encounter-whole",
+      "sha": "55efe756ad79493b0c92c8a00360d77a14eef6ea",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/embodied-effectors-v0",
+      "sha": "db2427c4651640d9f75da9cf33c0300880d6a59d",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/finite-lateral-maneuver-v0",
+      "sha": "c03c082d9ba6ecbd462fa4ba39d25c34e55a8cdd",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/g0-physical-ground-reaction",
+      "sha": "4d2c48339b4776db019b7e63fa8fa51b17a1dce7",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/gpt6-worldbench-witness-2026-11-06",
+      "sha": "f569b3127a884ddd5d1d46cd3a837ff3142272b6",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/ground-contact-s2",
+      "sha": "ec237bfc1c45cf7d3ccd0f88f0720e9a10c95332",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/integrated-organism-field-v0",
+      "sha": "8d5380cf1a76086a8e7733699c51d654250c1140",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/k1-kinetic-shelter-scouter",
+      "sha": "e87018b143c61923c35335d59f926686fbbe1641",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/k2-concurrent-contact-choice",
+      "sha": "cefba93ed2f2a46b4eb380701e80f0033226e74e",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/lateral-body-recovery-v0",
+      "sha": "a7185883b0a545aed78eb168d936f254f4e21629",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/live-body-intervention-workbench-v0",
+      "sha": "a8fdea7151764af6660cac26275f56ae6b7be15e",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/m0-physical-phenotypes",
+      "sha": "fc5059eee4c8d564182ef1747aaab9ce060ff550",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/material-agency-yard-v0",
+      "sha": "b2a3984cdd26cabae71ed3a4afbb25ce1e3aa092",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/material-choice-integration-v0",
+      "sha": "0c829e880b1040392b805e2446eab92b1321b84e",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/material-commons-x0-whole",
+      "sha": "2d80ca0be2014482d88fcd2108683581aa7e0c13",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/p0-material-pressure-yard",
+      "sha": "33834a5658ac4848e193f00d76694fe4f702308e",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/p1-confined-reach-falsifier",
+      "sha": "5a1921479f993f5b84f886490a3f0f15e048cc3d",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/p10-material-workshop-whole",
+      "sha": "4aebe67e72803f5c8e06562b5a8793ccf1a90472",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/p10b-affordance-legibility",
+      "sha": "72ac69af949c3c1e45a2af9128bc785f3cd1763d",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/p10c-offline-owner-firstlook",
+      "sha": "bd236ccd24d54beb27fec269d3a6d3e7138a7ecf",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/p11-material-brace-source",
+      "sha": "2d34334484605eecf32173f7d48ec9eb552b6c7c",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/p12-material-pushoff",
+      "sha": "0c55f1318a4f672ee17a80816d5d8ec5f0e81565",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/p12b-momentum-integrity",
+      "sha": "c345647b16472dfd62960cf2dd20c2e7eaa49fc4",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/p2-contact-transport-scout",
+      "sha": "740794fa0829389915dab8242070838d860c33af",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/p3-contested-material-agency",
+      "sha": "c703298734ace5139518a7657d15886ada02e89c",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/p4-load-contact-reflex",
+      "sha": "e3ae977b901fb2c79169732e9cb2654979a11bde",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/p5-free-material-commons",
+      "sha": "eccfef12a60827955699f6db0785070f5d586045",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/p6-body-envelope-pressure",
+      "sha": "6d7239f9bd7ee6e16369d047c54c0088516ed3e9",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/p7-contested-doorway-crowd",
+      "sha": "0dcea7ab60cd1f811c4eb8ef72fd2f90482b0afc",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/p8-tactile-slip-human-control",
+      "sha": "2106fb99b2434189f57c3f31416dddd5559ebfa3",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/p9-topology-clearance-controls",
+      "sha": "b126c40ee9967463dadb01ee1ef1d7170fd126d7",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/posture-contact-k1",
+      "sha": "6a8c2e0a0a0ff4047c37821b047658cea75a9aad",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/relational-possibilities-y1",
+      "sha": "7898953d035dd84e21f516ecaba71cf6e53e6e97",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/three-body-pressure-chain-v0",
+      "sha": "0abc6017449dd7f2e816519bc28e62e0de21f189",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/two-body-material-encounter-v0",
+      "sha": "10a65456f08cd5fbaf4126fc85f9904199bc920b",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/w2-embodied-material-commons",
+      "sha": "ee90e37d7a794d3195fb23e6566186a5119c7255",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "experiment/z1-anatomy-null-t0",
+      "sha": "559958647246227b1f135240b21a7cfb990f15d4",
+      "kind": "research-branch"
+    },
+    {
+      "ref": "probe/contact-continuation-x0-2026-10",
+      "sha": "1c117fb7735d343d42b724eb0ed289c67eff8a9c",
+      "kind": "legacy-control-ref"
+    },
+    {
+      "ref": "review/owner-first-look-z1",
+      "sha": "73a0945d6c660851a877dc7b095c511badd9b2a9",
+      "kind": "legacy-control-ref"
+    }
+  ],
+  "prs_at_capture": [
+    {
+      "number": 1,
+      "head": "experiment/integrated-organism-field-v0",
+      "head_sha": "8d5380cf1a76086a8e7733699c51d654250c1140",
+      "base": "main",
+      "state": "open",
+      "merged": false,
+      "title": "[QUARANTINE — draft donor] 2D organism/material experiment; NO Owner qualification"
+    },
+    {
+      "number": 2,
+      "head": "experiment/embodied-effectors-v0",
+      "head_sha": "db2427c4651640d9f75da9cf33c0300880d6a59d",
+      "base": "main",
+      "state": "open",
+      "merged": false,
+      "title": "[QUARANTINE | CHECKPOINT] Independent embodied effectors; Owner review pending"
+    },
+    {
+      "number": 3,
+      "head": "probe/contact-continuation-x0-2026-10",
+      "head_sha": "1c117fb7735d343d42b724eb0ed289c67eff8a9c",
+      "base": "experiment/embodied-effectors-v0",
+      "state": "closed",
+      "merged": false,
+      "title": "[CLOSED RESEARCH PROBE] X0 limb-to-material causal continuation — bounded result"
+    },
+    {
+      "number": 4,
+      "head": "experiment/material-commons-x0-whole",
+      "head_sha": "2d80ca0be2014482d88fcd2108683581aa7e0c13",
+      "base": "main",
+      "state": "open",
+      "merged": false,
+      "title": "[Draft discovery / NOT OWNER-QUALIFIED] X0 one-world material commons + heterogeneous physical bodies"
+    },
+    {
+      "number": 5,
+      "head": "experiment/z1-anatomy-null-t0",
+      "head_sha": "559958647246227b1f135240b21a7cfb990f15d4",
+      "base": "review/owner-first-look-z1",
+      "state": "closed",
+      "merged": false,
+      "title": "[ISOLATED DIAGNOSTIC / DO NOT MERGE] Z1 phase-2 rigid-body null rival"
+    },
+    {
+      "number": 6,
+      "head": "experiment/commons-w1-composition",
+      "head_sha": "1ca4aa8f7b6a3528b2feac5795f2e75ecb68f760",
+      "base": "experiment/embodied-effectors-v0",
+      "state": "closed",
+      "merged": false,
+      "title": "[ISOLATED DISCOVERY / NOT OWNER-QUALIFIED] W1 composed material commons"
+    },
+    {
+      "number": 7,
+      "head": "experiment/m0-physical-phenotypes",
+      "head_sha": "1a85581f913984a013bd13a5c5982a1b334c4221",
+      "base": "main",
+      "state": "closed",
+      "merged": false,
+      "title": "[ISOLATED DISCOVERY · NOT QUALIFIED] M0 heterogeneous physical organism field"
+    },
+    {
+      "number": 8,
+      "head": "experiment/g0-physical-ground-reaction",
+      "head_sha": "4d2c48339b4776db019b7e63fa8fa51b17a1dce7",
+      "base": "main",
+      "state": "closed",
+      "merged": false,
+      "title": "[ISOLATED CALIBRATION — NOT AN ANIMAL] G0: wheel-ground traction versus root proxy"
+    },
+    {
+      "number": 9,
+      "head": "experiment/e1-local-encounter-whole",
+      "head_sha": "55efe756ad79493b0c92c8a00360d77a14eef6ea",
+      "base": "experiment/m0-physical-phenotypes",
+      "state": "open",
+      "merged": false,
+      "title": "[EXPLORATORY WHOLE / NOT OWNER-QUALIFIED] E1 local initiative, bodies and movable cues"
+    },
+    {
+      "number": 10,
+      "head": "experiment/b1-physical-envelope-gate",
+      "head_sha": "24bd930fb1bb83425ea43168660a9c9c75d5b7d6",
+      "base": "experiment/m0-physical-phenotypes",
+      "state": "open",
+      "merged": false,
+      "title": "[B1 EXPERIMENT / NOT BODY ACCEPTANCE] physical fold vs rigid envelope at editable aperture"
+    },
+    {
+      "number": 11,
+      "head": "experiment/p10-material-workshop-whole",
+      "head_sha": "4aebe67e72803f5c8e06562b5a8793ccf1a90472",
+      "base": "experiment/p8-tactile-slip-human-control",
+      "state": "open",
+      "merged": false,
+      "title": "[P10 EXPERIMENT / NOT ACCEPTANCE] Quiet editable material commons, real manual affordances"
+    },
+    {
+      "number": 12,
+      "head": "experiment/p10b-affordance-legibility",
+      "head_sha": "72ac69af949c3c1e45a2af9128bc785f3cd1763d",
+      "base": "experiment/p10-material-workshop-whole",
+      "state": "open",
+      "merged": false,
+      "title": "[DRAFT / P10b] Direct physical operator affordances + native camera + crowd-clutter redteam"
+    },
+    {
+      "number": 13,
+      "head": "experiment/p10c-offline-owner-firstlook",
+      "head_sha": "bd236ccd24d54beb27fec269d3a6d3e7138a7ecf",
+      "base": "experiment/p10b-affordance-legibility",
+      "state": "open",
+      "merged": false,
+      "title": "[DRAFT · P10c ONLY] Verified portable Windows owner-first-look without public deployment"
+    },
+    {
+      "number": 14,
+      "head": "experiment/p12b-momentum-integrity",
+      "head_sha": "c345647b16472dfd62960cf2dd20c2e7eaa49fc4",
+      "base": "experiment/p12-material-pushoff",
+      "state": "open",
+      "merged": false,
+      "title": "[P12b NEGATIVE-FIRST] Movable material sleeping caused false coupled COM/momentum loss"
+    },
+    {
+      "number": 15,
+      "head": "experiment/gpt6-worldbench-witness-2026-11-06",
+      "head_sha": "f569b3127a884ddd5d1d46cd3a837ff3142272b6",
+      "base": "experiment/p10b-affordance-legibility",
+      "state": "open",
+      "merged": false,
+      "title": "[GPT-6 R&D / NOT PROMOTION] P10b live physics witness + Owner-opt-in Jaskinia material edits"
+    }
+  ],
+  "boundaries": [
+    "Do not delete main or rehearsal/current (rehearsal is the only automatic Pages deployment pointer).",
+    "Synthetic archive branch keeps all 46 original tips as direct parents; do not merge that octopus to main.",
+    "This manifest records public Git metadata, NOT a working application or Owner approval.",
+    "Ref pruning must require remote SHA match and archive ancestry. If any branch changed, STOP before deleting it.",
+    "Closed PR history remains readable, but deleted branch URLs will stop working; recover exact commits from SHA.",
+    "Do not infer old CI screenshot artifact availability: temporary artifacts expire."
+  ]
+}
