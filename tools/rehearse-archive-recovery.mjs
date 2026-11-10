@@ -92,7 +92,7 @@ try {
   walk(path.join(root,"docs"));
   docs.push(path.join(root,"README.md"),path.join(root,"AGENTS.md"));
   const broken=[];let checked=0;
-  const link=/https:\/\/github\.com\/Jozzpoly\/Combat-Lab\/(blob|tree|raw)\/([0-9a-f]{40})(?:\/([^\\s)>"']+))?/g;
+  const link=/https:\/\/github\.com\/Jozzpoly\/Combat-Lab\/(blob|tree|raw)\/([0-9a-f]{40})(?:\/([^\s)>"']+))?/g;
   for(const p of docs){
     const text=fs.readFileSync(p,"utf8");
     for(const x of text.matchAll(link)){
