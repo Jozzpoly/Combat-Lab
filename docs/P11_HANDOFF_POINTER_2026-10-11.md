@@ -4,7 +4,7 @@
 
 ## Exact source of truth
 
-- [P11 isolated experimental source](https://github.com/Jozzpoly/Combat-Lab/tree/experiment/p11-material-brace-source), [forensic full report](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/p11-material-brace-source/docs/P11_MATERIAL_BACKING_CARGO_GROUND_NEGATIVE_2026-10-11.md).
+- [P11 isolated experimental source](https://github.com/Jozzpoly/Combat-Lab/tree/2d34334484605eecf32173f7d48ec9eb552b6c7c), [forensic full report](https://github.com/Jozzpoly/Combat-Lab/blob/2d34334484605eecf32173f7d48ec9eb552b6c7c/docs/P11_MATERIAL_BACKING_CARGO_GROUND_NEGATIVE_2026-10-11.md).
 - [Exact PHYSICAL implementation HEAD \`db55c696\` CI PASS 38155662371](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38155662371), [independent normal source checks PASS 38155662318](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38155662318). Branch tip may contain **doc-only** commit \`2d343344\`; recheck live. 39 actual 240-tick Rapier2D worlds, four raw screenshots tied to source afterstates and quantitative full JSON in CI artifact (\`p11-real-bracing-source\`, 14-day retention).
 - The latest whole-level practical donor remains [P10b quiet material workshop](P10B_HANDOFF_POINTER_2026-10-11.md). P11 from P10b branch is ONLY a source instrument triggered through optional \`p11audit/p11frame\` query; existing playable default UI and normal behavior remain unchanged.
 

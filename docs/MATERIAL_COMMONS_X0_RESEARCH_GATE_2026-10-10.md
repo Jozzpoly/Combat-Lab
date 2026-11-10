@@ -3,7 +3,7 @@
 **2026-10-10 · RESEARCH CANDIDATE / PROVISIONAL BEST NEXT DISCRIMINATOR**  
 **Owner qualification: NONE. Implementation: NOT STARTED.**  
 
-**Later implementation update (2026-10-10, does NOT change this original research gate):** a first independent *whole* has since been built on [isolated draft PR #4](https://github.com/Jozzpoly/Combat-Lab/pull/4); see [source-bound checkpoint](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/material-commons-x0-whole/docs/X0_FIRST_WHOLE_CHECKPOINT_2026-10-10.md). The historical header above describes the time of this proposal, **not current live implementation status**. The hypothesis and Owner-qualification remain open; no architecture approved and public rehearsal unchanged.
+**Later implementation update (2026-10-10, does NOT change this original research gate):** a first independent *whole* has since been built on [isolated draft PR #4](https://github.com/Jozzpoly/Combat-Lab/pull/4); see [source-bound checkpoint](https://github.com/Jozzpoly/Combat-Lab/blob/2d80ca0be2014482d88fcd2108683581aa7e0c13/docs/X0_FIRST_WHOLE_CHECKPOINT_2026-10-10.md). The historical header above describes the time of this proposal, **not current live implementation status**. The hypothesis and Owner-qualification remain open; no architecture approved and public rehearsal unchanged.
 
 This is a bounded experiment *proposal*, not a new canonical foundation, a feature checklist, a committed runtime, an Owner request to merge, or approval of either previous draft. The default route remains live [RESEARCH_STATE](RESEARCH_STATE.md) and most recent explicit Owner corrections. This is an outcome of [competing whole-world hypotheses](COMPETING_WHOLE_WORLD_HYPOTHESES_2026-10-10.md).
 

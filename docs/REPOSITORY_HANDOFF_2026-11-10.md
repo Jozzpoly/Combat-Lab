@@ -40,6 +40,14 @@ The simpler alternative is the one-time [GitHub Actions cleanup workflow](https:
 
 The older cross-platform fallback remains `node tools/prune-archived-branches.mjs` (dry run by default; `--apply` deletes). It is **not** the preferred path for the Owner. After branch pruning, future agents can deliberately retire the one-off cleanup workflow/script without removing the archival manifest.
 
+## Link preservation — prerequisite for branch deletion
+
+A deeper audit found **148 fully qualified GitHub `blob/tree/raw` links** in **25 Markdown files** under current `main/docs` (including the archived research overlay) that pointed to the 44 branch names slated for removal. Merely archiving commits does NOT preserve these old `/blob/experiment/.../path` URLs after deleting the named branch.
+
+The 10 November cleanup updates these **148 URLs to the exact, immutable original branch-tip commit SHAs** from `docs/BRANCH_INVENTORY_2026-11-10.json`. No research claims were edited by this step. The offline `tools/validate-handoff.mjs` also recursively scans current `docs` and root README/AGENTS for remaining old-branch URL dependencies. **Do not run the removal workflow until that CI gate is green.**
+
+**Boundary:** Links embedded in earlier Git commits, old PR comments, and external repositories were not rewritten (immutable historical sources must not be silently rewritten). Their code is still recoverable from the source SHA inventory, but some old branch-based external URLs may break; preserve the original name-to-SHA index. The link audit tests *link stability*, not whether a historically quoted file name was ever correct.
+
 ## The exact repo cleanup boundary
 
 - Source snapshot **46 original branches**, **10 open drafts at capture**, many nested head/base PRs. This is stale navigation, not 46 active initiatives.

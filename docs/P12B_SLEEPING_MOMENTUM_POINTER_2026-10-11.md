@@ -4,9 +4,9 @@
 
 ## Live primary evidence
 
-- [P12b isolated diagnostic source](https://github.com/Jozzpoly/Combat-Lab/tree/experiment/p12b-momentum-integrity), [full forensic report](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/p12b-momentum-integrity/docs/P12B_SLEEPING_MOMENTUM_CAUSE_2026-10-11.md), [draft PR #14](https://github.com/Jozzpoly/Combat-Lab/pull/14).
+- [P12b isolated diagnostic source](https://github.com/Jozzpoly/Combat-Lab/tree/c345647b16472dfd62960cf2dd20c2e7eaa49fc4), [full forensic report](https://github.com/Jozzpoly/Combat-Lab/blob/c345647b16472dfd62960cf2dd20c2e7eaa49fc4/docs/P12B_SLEEPING_MOMENTUM_CAUSE_2026-10-11.md), [draft PR #14](https://github.com/Jozzpoly/Combat-Lab/pull/14).
 - [Exact emitted Rapier WASM/Chromium 24-world causal A/B PASS 38163867448](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38163867448), implementation HEAD \`5083f79c2ef53c413aa4a49635b4b3e9718fb124\`; after-report HEAD may differ, recheck. Two independently moving creature parts, 90kg backing, 0 virtual-ground, 0 direct root movement, 0 linear/angular damping. True contacts measured. CCD enabled/disabled, joint self-contact enabled/disabled, 4/12/24 solver iterations, backing absent vs movable, and explicit keep-awake afterstate control. 24×300 true solver steps, not node mock.
-- [Prior P12 original report](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/p12-material-pushoff/docs/P12_WORLD_CONTACT_COM_NULL_2026-10-11.md) remains an accurate *historical* account of why the original evidence was narrow. Its numerical discrepancy section is superseded by P12b.
+- [Prior P12 original report](https://github.com/Jozzpoly/Combat-Lab/blob/0c55f1318a4f672ee17a80816d5d8ec5f0e81565/docs/P12_WORLD_CONTACT_COM_NULL_2026-10-11.md) remains an accurate *historical* account of why the original evidence was narrow. Its numerical discrepancy section is superseded by P12b.
 
 ## Causal result
 

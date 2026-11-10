@@ -4,8 +4,8 @@
 
 ## Gotowy kandydat do pierwszego uruchomienia (źródło prawdy: exact SHA)
 
-- [Przegląd Z1 — źródło i polskie objaśnienia](https://github.com/Jozzpoly/Combat-Lab/tree/review/owner-first-look-z1), HEAD `73a0945d6c660851a877dc7b095c511badd9b2a9`. Fizyka przeniesiona bez świadomych zmian z `experiment/contact-only-relations-z1@f2d71e63`; zmiany dotyczą prezentacji, usunięcia nieosiągalnego fragmentu UI oraz testów operatora.
-- [Rzeczywisty, nieupiększany pierwszy ekran](https://github.com/Jozzpoly/Combat-Lab/blob/review/owner-first-look-z1/docs/media/owner-first-look-z1-first-frame.png) z faktycznego Chromium.
+- [Przegląd Z1 — źródło i polskie objaśnienia](https://github.com/Jozzpoly/Combat-Lab/tree/73a0945d6c660851a877dc7b095c511badd9b2a9), HEAD `73a0945d6c660851a877dc7b095c511badd9b2a9`. Fizyka przeniesiona bez świadomych zmian z `experiment/contact-only-relations-z1@f2d71e63`; zmiany dotyczą prezentacji, usunięcia nieosiągalnego fragmentu UI oraz testów operatora.
+- [Rzeczywisty, nieupiększany pierwszy ekran](https://github.com/Jozzpoly/Combat-Lab/blob/73a0945d6c660851a877dc7b095c511badd9b2a9/docs/media/owner-first-look-z1-first-frame.png) z faktycznego Chromium.
 - [CI exact-HEAD 38078641528](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38078641528): PASS dla fizyki Z1 oraz użycia przycisków, zaznaczenia obiektu zdarzeniem canvas, klawiatury WASD, rzeczywistej przebudowy 2→0 ramion bez resetu świata i zapisu sceny.
 - **Owner verdict:** UNKNOWN. Nadal mechaniczny, ubogi świat; brak autonomicznej inicjatywy, chodu, wiarygodnego support i gotowego combat.
 - **Publiczna granica:** `rehearsal/current` wciąż `cb4b44d417db612f3333fe515e6f6afffa3e56d8`; GitHub Pages pokazuje neutralny smoke test, nie nową wersję. Istniejący workflow może wdrożyć przegląd, ale **to zastąpi aktualny publiczny pokaz i będzie publicznie dostępne**. Nie robić bez jawnego przyzwolenia Ownera. Po zgodzie zachować powyższy commit jako rollback source i rezweryfikować realnie wdrożony Pages.
@@ -32,7 +32,7 @@ Przegląd należy umożliwić **w rozsądnym terminie, bez wymagania „Owner-wo
 
 To **osobne eksperymenty**, nie moduły już działające w jednym produkcie. Nie budować nowego wspólnego runtime tylko po to, żeby zaprezentować gotowość, której nie ma. Zredukować wybór do jednego prostego pierwszego uruchomienia; pozostałe oferować jako fakultatywne.
 
-Źródła: [Z1](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/contact-only-relations-z1/docs/Z1_CONTACT_ONLY_CHECKPOINT_2026-10-10.md), [X0](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/material-commons-x0-whole/docs/X0_LOCAL_RESPONSE_GENERALIZATION_2026-10-10.md), [S2](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/ground-contact-s2/docs/S2_GROUND_CONTACT_CHECKPOINT_2026-10-10.md), [K1](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/posture-contact-k1/docs/K1_POSTURE_CONTACT_CHECKPOINT_2026-10-10.md).
+Źródła: [Z1](https://github.com/Jozzpoly/Combat-Lab/blob/f2d71e63277bfe77aa299c5d5b153143e82217ac/docs/Z1_CONTACT_ONLY_CHECKPOINT_2026-10-10.md), [X0](https://github.com/Jozzpoly/Combat-Lab/blob/2d80ca0be2014482d88fcd2108683581aa7e0c13/docs/X0_LOCAL_RESPONSE_GENERALIZATION_2026-10-10.md), [S2](https://github.com/Jozzpoly/Combat-Lab/blob/ec237bfc1c45cf7d3ccd0f88f0720e9a10c95332/docs/S2_GROUND_CONTACT_CHECKPOINT_2026-10-10.md), [K1](https://github.com/Jozzpoly/Combat-Lab/blob/6a8c2e0a0a0ff4047c37821b047658cea75a9aad/docs/K1_POSTURE_CONTACT_CHECKPOINT_2026-10-10.md).
 
 ## Najkrótsza droga od źródeł do Ownera
 

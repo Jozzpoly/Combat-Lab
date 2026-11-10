@@ -4,9 +4,9 @@
 
 ## Provenance
 
-- Isolated, unmerged implementation: [experiment/p9-topology-clearance-controls](https://github.com/Jozzpoly/Combat-Lab/tree/experiment/p9-topology-clearance-controls); last exact audited implementation head `b126c40ee9967463dadb01ee1ef1d7170fd126d7`.
+- Isolated, unmerged implementation: [experiment/p9-topology-clearance-controls](https://github.com/Jozzpoly/Combat-Lab/tree/b126c40ee9967463dadb01ee1ef1d7170fd126d7); last exact audited implementation head `b126c40ee9967463dadb01ee1ef1d7170fd126d7`.
 - [Full exact-head source Chromium/Rapier CI PASS 38112643693](https://github.com/Jozzpoly/Combat-Lab/actions/runs/38112643693), 40 actual physical 460-step worlds plus FOUR raw native Chromium screenshots, source-checked against executed numerical states. The screenshots are not human-observed feel evidence; evidence artifact `p0-physical-source-evidence` expires after 14 days.
-- [Actual mechanism and immutable source experiment](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/p9-topology-clearance-controls/src/p9-geometry-audit.js), emitted browser entry in `p0-app.js`, CI driver in `scripts/browser-live-gate.mjs`. `main` and public `rehearsal/current` retain their previous executable behavior.
+- [Actual mechanism and immutable source experiment](https://github.com/Jozzpoly/Combat-Lab/blob/b126c40ee9967463dadb01ee1ef1d7170fd126d7/src/p9-geometry-audit.js), emitted browser entry in `p0-app.js`, CI driver in `scripts/browser-live-gate.mjs`. `main` and public `rehearsal/current` retain their previous executable behavior.
 - One FIRST failed attempt launched Rapier's browser-oriented package via bare Node import (module resolution error); that harness was removed. Actual validated source matrix executes via the emitted Vite Chromium runtime, preserving solver/evidence parity. Do not classify initial harness fail as a physics finding.
 
 ## Question and sources

@@ -20,7 +20,7 @@ Długoterminowym horyzontem jest świat z fizycznie i funkcjonalnie różnymi is
 
 **Owner-confirmed horizon odzyskany z historii (2026-10-10):** znacznie szersza różnorodność zwierzęcych, humanoidalnych, wieloczłonowych, wielkich/małych i podatnych ciał; ruch w tłumie, kompresja, fizyczne negocjowanie przestrzeni, obserwacja zachowania w absurdalnych sytuacjach. Walka, bronie, ranged i magia pozostają przyszłymi możliwościami, nie aktualnym zobowiązaniem.
 
-**Hipoteza agenta — NOT SELECTED ARCHITECTURE:** wspólne projektowanie **body × source of effort/locomotion × local control/reaction × material world** może mieć większą wartość niż osobne ulepszanie manipulacji obiektami, solvera i percepcji. W M0 mechanicznie odróżniono sztywne, przegubowe i sprężyste fenotypy, lecz zachowano sztuczny zewnętrzny root motor — nie dostarczono rzeczywistej samoistnej lokomocji, żywego celu ani Owner-worthy whole. Zobacz [wyniki i obrazy](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/m0-physical-phenotypes/docs/M0_PHENOTYPES_CONTACT_CHECKPOINT_2026-10-10.md). Test M0 nie oznacza wyboru soft-body, 2D, ewolucji ani żadnej linii M1. **Nie pozwolić, by laboratorium ciał stało się kolejnym showroomem mechanicznych brył.**
+**Hipoteza agenta — NOT SELECTED ARCHITECTURE:** wspólne projektowanie **body × source of effort/locomotion × local control/reaction × material world** może mieć większą wartość niż osobne ulepszanie manipulacji obiektami, solvera i percepcji. W M0 mechanicznie odróżniono sztywne, przegubowe i sprężyste fenotypy, lecz zachowano sztuczny zewnętrzny root motor — nie dostarczono rzeczywistej samoistnej lokomocji, żywego celu ani Owner-worthy whole. Zobacz [wyniki i obrazy](https://github.com/Jozzpoly/Combat-Lab/blob/fc5059eee4c8d564182ef1747aaab9ce060ff550/docs/M0_PHENOTYPES_CONTACT_CHECKPOINT_2026-10-10.md). Test M0 nie oznacza wyboru soft-body, 2D, ewolucji ani żadnej linii M1. **Nie pozwolić, by laboratorium ciał stało się kolejnym showroomem mechanicznych brył.**
 
 ## 2. Produktowe kryterium wartości — zanim powstanie następna podstawa
 
@@ -41,7 +41,7 @@ Kandydat na poważne laboratorium powinien umożliwiać kilka **jakościowo ró�
 | K1 | Ramiona zmieniają fizyczny obrys w trakcie życia świata | Że blokowanie działa bez sztucznego podparcia — *brace-off* ten claim w dużej części obalił |
 | **S2 (najnowsza)** | Prawdziwy normal/friction, obciążenie i utrata podłoża w 3D; tanie 2D umie przybliżyć część poślizgu | Że 3D jest niezbędne, ma lepszy feel/skaling, że to chód/stance albo udana gra |
 
-Źródła i dokładne poprawki: [RESEARCH_STATE](RESEARCH_STATE.md), [S2 na gałęzi badawczej](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/ground-contact-s2/docs/S2_GROUND_CONTACT_CHECKPOINT_2026-10-10.md), [K1](https://github.com/Jozzpoly/Combat-Lab/blob/experiment/posture-contact-k1/docs/K1_POSTURE_CONTACT_CHECKPOINT_2026-10-10.md), [OWNER_TRUTH](OWNER_TRUTH_RECONCILIATION_2026-10-09.md).
+Źródła i dokładne poprawki: [RESEARCH_STATE](RESEARCH_STATE.md), [S2 na gałęzi badawczej](https://github.com/Jozzpoly/Combat-Lab/blob/ec237bfc1c45cf7d3ccd0f88f0720e9a10c95332/docs/S2_GROUND_CONTACT_CHECKPOINT_2026-10-10.md), [K1](https://github.com/Jozzpoly/Combat-Lab/blob/6a8c2e0a0a0ff4047c37821b047658cea75a9aad/docs/K1_POSTURE_CONTACT_CHECKPOINT_2026-10-10.md), [OWNER_TRUTH](OWNER_TRUTH_RECONCILIATION_2026-10-09.md).
 
 ## 3a. Nowy priorytet Ownera: obejrzeć prawdziwy stan, zanim go dalej idealizujemy
 

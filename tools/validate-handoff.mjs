@@ -33,4 +33,29 @@ for(const pr of m.prs_at_capture) {
 for(const name of ["README.md","AGENTS.md","docs/REPOSITORY_HANDOFF_2026-11-10.md","tools/prune-archived-branches.mjs"]) {
   assert.ok(fs.statSync(path.join(root,name)).isFile());
 }
+// Preserve internal document navigation after removing branch refs. Exact source
+// commit SHAs remain valid because the synthetic archive retains their ancestry.
+const retired=m.prune_branches.slice().sort((a,b)=>b.ref.length-a.ref.length);
+const docs=[];
+function walk(d) {
+  for(const item of fs.readdirSync(d,{withFileTypes:true})){
+    const p=path.join(d,item.name);
+    if(item.isDirectory())walk(p);
+    else if(item.name.endsWith(".md"))docs.push(p);
+  }
+}
+walk(path.join(root,"docs"));
+docs.push(path.join(root,"README.md"),path.join(root,"AGENTS.md"));
+const invalid=[];
+for(const file of docs){
+  const text=fs.readFileSync(file,"utf8");
+  const matches=text.matchAll(/https:\/\/github\.com\/Jozzpoly\/Combat-Lab\/(?:blob|tree|raw)\/([^\s)>"']+)/g);
+  for(const match of matches){
+    const rest=match[1];
+    const b=retired.find(x=>rest===x.ref||rest.startsWith(x.ref+"/"));
+    if(b)invalid.push(path.relative(root,file)+": "+b.ref);
+  }
+}
+assert.deepEqual(invalid,[],"old branch links would break on prune; replace with immutable commit SHA");
 console.log("PASS: 46-branch original snapshot, 44 guarded prune refs, 15 PR refs, recovery files; no network needed");
+console.log("PASS: main research documents do not depend on retired branch URLs");

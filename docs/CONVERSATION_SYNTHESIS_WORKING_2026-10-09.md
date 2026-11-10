@@ -21,7 +21,7 @@ A future workstream should be chosen by independently assessing the phenomenon a
 ## 3. Current truth (exact snapshot; verify again)
 
 - Neutral `main` on **`2d86dc1822c5de9037920aa882c48e8525325aba`** at synthesis time. No new Owner-qualified organism, locomotion, crowd or combat architecture.
-- Current isolated candidate: [`experiment/finite-lateral-maneuver-v0`](https://github.com/Jozzpoly/Combat-Lab/tree/experiment/finite-lateral-maneuver-v0), exact checked HEAD **`c03c082d9ba6ecbd462fa4ba39d25c34e55a8cdd`**; [same-commit CI run 37950162672](https://github.com/Jozzpoly/Combat-Lab/actions/runs/37950162672): 11/11 Node checks; 106 browser/Rapier entries split **86 scoped PASS, 20 OBSERVED, zero FAIL**. These are not 106 experience approvals.
+- Current isolated candidate: [`experiment/finite-lateral-maneuver-v0`](https://github.com/Jozzpoly/Combat-Lab/tree/c03c082d9ba6ecbd462fa4ba39d25c34e55a8cdd), exact checked HEAD **`c03c082d9ba6ecbd462fa4ba39d25c34e55a8cdd`**; [same-commit CI run 37950162672](https://github.com/Jozzpoly/Combat-Lab/actions/runs/37950162672): 11/11 Node checks; 106 browser/Rapier entries split **86 scoped PASS, 20 OBSERVED, zero FAIL**. These are not 106 experience approvals.
 - `rehearsal/current` remains **`cb4b44d417db612f3333fe515e6f6afffa3e56d8`**, deliberately separate from the experimental HEAD. No public promotion is implied.
 - Older experimental branches remain bounded controls/donor evidence, not a future module tree.
 - **Beware source staleness:** some README/research-state copies *inside experimental ancestry* still describe pre-implementation. Prefer live branch code/CI for its current mechanism and `main/docs/RESEARCH_STATE.md` for project truth.
