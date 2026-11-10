@@ -63,6 +63,8 @@ jobs:
           fi
       - name: Validate offline manifest and recovery documents
         run: node tools/validate-handoff.mjs
+      - name: Cold-recover seven physical research cases from archive alone
+        run: node tools/rehearse-archive-recovery.mjs
       - name: Audit live GitHub refs and archive ancestry (no deletion)
         run: node tools/prune-archived-branches.mjs
       - name: Confirm no branches changed during audit
@@ -94,6 +96,7 @@ jobs:
       - name: Revalidate and delete ONLY exact inventoried archived refs
         run: |
           node tools/validate-handoff.mjs
+          node tools/rehearse-archive-recovery.mjs
           node tools/prune-archived-branches.mjs --apply --confirm=DELETE_44_ARCHIVED_COMBAT_BRANCHES
       - name: Report remaining branch refs
         run: |
