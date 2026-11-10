@@ -61,7 +61,23 @@ try {
     assert.ok(bytes>100,label+" report suspiciously small");
     console.log("RECOVERABLE "+label+": "+sha.slice(0,12)+" / "+sourcePath+" ("+bytes+" bytes)");
   }
-  console.log("PASS: archive-only cold recovery: 46 independent tip commits, correct neutral tree, no old refs, 7 research source reports");
+  // These three owner-experience records were deleted from later branch tips.
+  // They are NOT represented by checking only current file trees. Prove
+  // reachability of their earlier exact Git commits through archive ancestry.
+  const buried=[
+    ["B0 actual owner workbench recording","bae859f2058a20599051c0c80d7c1f96497b0c48","docs/B0_WORKBENCH_OWNER_RECORDING_FEEDBACK_2026-09-25.md"],
+    ["Second owner crowd recording","f45a620c2d43f26c0264c82a6c128192176bfc51","docs/ACTIVE_SECOND_OWNER_REHEARSAL_RECORDING_FEEDBACK_2026-09-27.md"],
+    ["L0 owner rejection","06585c0bfa74a458cc4111cac522f45450182774","docs/LIVING_MOVEMENT_L0_FIRST_OWNER_REHEARSAL_FAIL_2026-10-06.md"]
+  ];
+  for(const [label,sha,sourcePath] of buried){
+    git(tmp,"merge-base","--is-ancestor",sha,imported);
+    assert.equal(git(tmp,"cat-file","-t",sha+":"+sourcePath),"blob",
+      label+": historic deleted report is not recoverable from archive only");
+    const bytes=Number(git(tmp,"cat-file","-s",sha+":"+sourcePath));
+    assert.ok(bytes>100);
+    console.log("RECOVERABLE DELETED OWNER RECORD "+label+": "+sha.slice(0,12)+" ("+bytes+" bytes)");
+  }
+  console.log("PASS: archive-only cold recovery: 46 original tips, 7 tip reports, 3 formerly deleted owner-experience reports, zero old refs");
 } finally {
   fs.rmSync(tmp,{recursive:true,force:true});
 }
