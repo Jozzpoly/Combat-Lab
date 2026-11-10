@@ -1,0 +1,42 @@
+name: Combat Lab - disposable branch delete permission canary
+
+# Technical proof of deleting ONE disposable ref. No research ref touched.
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/branch-delete-permission-canary.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  canary:
+    if: github.repository == 'Jozzpoly/Combat-Lab' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Create and delete ONLY a unique disposable branch ref
+        shell: bash
+        run: |
+          set -euo pipefail
+          CANARY="verification/cleanup-write-canary-$GITHUB_RUN_ID"
+          SHA="$(git rev-parse HEAD)"
+          cleanup() {
+            if git ls-remote --heads origin "$CANARY" | grep -q 'refs/heads/'; then
+              git push --force-with-lease="refs/heads/$CANARY:$SHA" origin ":refs/heads/$CANARY" || true
+            fi
+          }
+          trap cleanup EXIT
+          test -z "$(git ls-remote --heads origin "$CANARY")"
+          git push origin "HEAD:refs/heads/$CANARY"
+          test "$(git ls-remote --heads origin "$CANARY" | cut -f1)" = "$SHA"
+          git push --force-with-lease="refs/heads/$CANARY:$SHA" origin ":refs/heads/$CANARY"
+          test -z "$(git ls-remote --heads origin "$CANARY")"
+          echo "PASS: GitHub token can delete SHA-leased disposable branch; 44 old experiment refs untouched"
