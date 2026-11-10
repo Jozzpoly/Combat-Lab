@@ -32,8 +32,9 @@ try {
   git(tmp,"init","--quiet");
   // Import ONE named archive ref from a full local checkout. None of the old
   // 44 branch references are imported into the fresh destination.
-  git(tmp,"fetch","--quiet","--no-tags",root,
-      "refs/heads/"+m.archive.branch);
+  // Actions checkout keeps this ref under refs/remotes/origin/, not
+  // refs/heads/. Fetch by the exact captured object SHA instead of any name.
+  git(tmp,"fetch","--quiet","--no-tags",root,m.archive.sha);
   const imported=git(tmp,"rev-parse","FETCH_HEAD");
   assert.equal(imported,m.archive.sha);
   assert.equal(git(tmp,"for-each-ref","--format=%(refname)"),"",
