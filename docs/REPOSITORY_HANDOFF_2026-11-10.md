@@ -16,6 +16,16 @@ A lab for discovering **physically different bodies, movement, contact, pressure
 
 **Four kinds of proof never to conflate:** source/mechanics PASS; genuine browser/input execution; human play/feel judgment; independent, source-grounded causal explanation. For visual/feel claims, ask the Owner only when a usable candidate exists; don't pretend automatic CI decides.
 
+## Completed audit actions / 10 November 2026
+
+- **PASS:** One Git forensic archive ref contains **all 46 original branch heads as direct parents**, with exactly the old neutral `main` file tree. Independently checked against the live branch API: **zero omitted heads**.
+- **PASS:** Rewrote `README.md` as an honest short entrance; created provider-neutral `AGENTS.md`, this handoff, exact public branch/PR JSON inventory, guarded dry-run Git pruner, and an offline inventory validation script. `main` CI [#42903997954](https://github.com/Jozzpoly/Combat-Lab/actions/runs/42903997954) passed, testing all 46 original refs, 44 candidates, and 15 historical PRs.
+- **PASS:** All **10 previously open draft PRs have been closed without merging**, each with direct pointers to the preserved original tip. Final read-back: **0 open PRs**.
+- **NOT DONE:** The 44 stale research refs have **not** been deleted. Final read-back: **47 Git branches** (46 original + one archive). The Chat-mode GitHub connector exposed safe file/PR/ref operations but **no branch-ref deletion**. A future provider with standard Git push permission can run the included guarded script `node tools/prune-archived-branches.mjs --apply` after checking its dry-run. The intended stable branch count is **3**, not the present 47. Do **not** report the prune as completed.
+- **UNCHANGED:** `rehearsal/current@cb4b44d417db612f3333fe515e6f6afffa3e56d8`, all gameplay experiments, owner data, public Pages and the main neutral app. No publishing, no merging, no model/backend adoption.
+
+All counts are a dated snapshot. On return, first query the live Git refs/PR states and run the offline validator. No background work or future action has been scheduled.
+
 ## The exact repo cleanup boundary
 
 - Source snapshot **46 original branches**, **10 open drafts at capture**, many nested head/base PRs. This is stale navigation, not 46 active initiatives.
