@@ -10,6 +10,10 @@
 4. An experimental result in an archived commit is **evidence, not selected code**. Read the report, examine exact source and CI/negative controls, then decide afresh whether to borrow the smallest useful part.
 5. Prefer your own provider's tools and isolated branch; GitHub and plain Markdown/JSON are the recovery substrate. No connection to ChatGPT Memory, GPT skill, private Commons, Opera tab, AgentMail or personal accounts is required to understand this public repository.
 
+## Historical Owner-rehearsal evidence that old tip files lost
+
+**[Three firsthand-trial reports recovered from Git ancestry](OWNER_EXPERIENCE_PRIMARY_EVIDENCE_2026-11-10.md)** (25 Sep B0, 27 Sep crowd, 6 Oct L0 FAIL) are an unusually high-value source. Previous cleanups removed them from branch tip trees. They are now linked by immutable commit SHA; the independent archive-only rehearsal tests actual recoverability of these *deleted* historical records. Do not infer Owner acceptance from mechanics PASS or mistake agent-invented hypothetical quotes for his real feedback.
+
 ## What this project is
 
 A lab for discovering **physically different bodies, movement, contact, pressure, crowds and material interactions in an editable world**. The Owner aims for the loop: build/change → run → observe real consequences → disrupt/break → rebuild. It is **not** a traffic simulation, a dashboard of numerical tests, or a commitment to Rapier2D, 3D, any single actor-brain or any particular Jaskinia integration. The historical R0/R1/L0 experience **FAIL** remains; later test success does not imply gameplay acceptance.

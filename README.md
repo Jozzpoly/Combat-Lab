@@ -6,7 +6,7 @@
 
 ## Start here (any AI or human)
 
-**[Repository recovery and exact current state](docs/REPOSITORY_HANDOFF_2026-11-10.md)** · [Agent-neutral instructions](AGENTS.md) · [Research truth](docs/RESEARCH_STATE.md) · [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) · [Why the previous direction failed](docs/FAILURE_SCAR_2026-10-06.md)
+**[Owner's real experimental feedback — 3 historically deleted records](docs/OWNER_EXPERIENCE_PRIMARY_EVIDENCE_2026-11-10.md)** · [Repository recovery and exact current state](docs/REPOSITORY_HANDOFF_2026-11-10.md)** · [Agent-neutral instructions](AGENTS.md) · [Research truth](docs/RESEARCH_STATE.md) · [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) · [Why the previous direction failed](docs/FAILURE_SCAR_2026-10-06.md)
 
 **One-screen branch cleanup:** [GitHub Actions — guarded archive cleanup](https://github.com/Jozzpoly/Combat-Lab/actions/workflows/archived-research-cleanup.yml). Run `AUDIT_ONLY` first; when you are ready to remove the inventoried 44 old branch refs, select `DELETE_ARCHIVED_REFS` and type the exact confirmation phrase shown by GitHub. No terminal or 44 individual UI deletions. **Deletion has not been executed.** The last read-only GitHub Actions audit [passed](https://github.com/Jozzpoly/Combat-Lab/actions/runs/42906193845). Do not rename the old branches just to find them.
 

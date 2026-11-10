@@ -2,7 +2,7 @@
 
 These are repository-local working constraints, **not** instructions tied to GPT, Claude, Gemini, Grok or any particular provider. Latest direct Owner instruction overrides older plans.
 
-Read `docs/REPOSITORY_HANDOFF_2026-11-10.md` before substantial changes. This repo is deliberately dormant pending the Owner's return; do not wake a roadmap just because a tool can write code.
+Read `docs/REPOSITORY_HANDOFF_2026-11-10.md` before substantial changes. Read `docs/OWNER_EXPERIENCE_PRIMARY_EVIDENCE_2026-11-10.md` before treating any physical prototype as Owner-qualified. This repo is deliberately dormant pending the Owner's return; do not wake a roadmap just because a tool can write code.
 
 - **Goal:** open-ended exploration of embodied movement, material contact, crowds, pressure and meaningful differences between physical bodies. Owner should be able to directly change, break, observe and rebuild worlds. Product-level R0/R1/L0 failures remain binding.
 - **Authority:** Owner's latest instruction > current verified live source / direct evidence > dated research summaries > old agent prompts. An experiment is not automatically a foundation; a green CI test is not Owner-accepted gameplay.
