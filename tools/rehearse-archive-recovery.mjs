@@ -77,7 +77,43 @@ try {
     assert.ok(bytes>100);
     console.log("RECOVERABLE DELETED OWNER RECORD "+label+": "+sha.slice(0,12)+" ("+bytes+" bytes)");
   }
-  console.log("PASS: archive-only cold recovery: 46 original tips, 7 tip reports, 3 formerly deleted owner-experience reports, zero old refs");
+  // 148 converted branch-based doc links are of little use if their target
+  // paths do not exist at the pinned commit. Verify actual blobs/trees in the
+  // archive-only clone, never by depending on the retired named branch.
+  const oldTips=new Set(m.prune_branches.map(x=>x.sha));
+  const docs=[];
+  function walk(d){
+    for(const f of fs.readdirSync(d,{withFileTypes:true})){
+      const p=path.join(d,f.name);
+      if(f.isDirectory())walk(p);
+      else if(f.name.endsWith(".md"))docs.push(p);
+    }
+  }
+  walk(path.join(root,"docs"));
+  docs.push(path.join(root,"README.md"),path.join(root,"AGENTS.md"));
+  const broken=[];let checked=0;
+  const link=/https:\/\/github\.com\/Jozzpoly\/Combat-Lab\/(blob|tree|raw)\/([0-9a-f]{40})(?:\/([^\\s)>"']+))?/g;
+  for(const p of docs){
+    const text=fs.readFileSync(p,"utf8");
+    for(const x of text.matchAll(link)){
+      if(!oldTips.has(x[2]))continue;
+      checked++;
+      const raw=(x[3]||"").split(/[?#]/)[0];
+      let sourcePath;
+      try { sourcePath=decodeURIComponent(raw); }
+      catch { broken.push(path.relative(root,p)+": malformed URL"); continue; }
+      const object=x[2]+(sourcePath?":"+sourcePath:"");
+      try {
+        const type=git(tmp,"cat-file","-t",object);
+        const expected=x[1]==="tree"?(sourcePath?"tree":"commit"):"blob";
+        if(type!==expected)broken.push(path.relative(root,p)+": "+object+" expected "+expected+" got "+type);
+      }catch{broken.push(path.relative(root,p)+": missing "+object);}
+    }
+  }
+  assert.ok(checked>=148,"expected at least the 148 converted historical branch links");
+  assert.deepEqual(broken,[],"pinned research links did not resolve in archive-only clone");
+  console.log("PASS: "+checked+" original-branch research links resolve as actual Git blobs/trees with only archived source objects");
+    console.log("PASS: archive-only cold recovery: 46 original tips, 7 tip reports, 3 formerly deleted owner-experience reports, zero old refs");
 } finally {
   fs.rmSync(tmp,{recursive:true,force:true});
 }
