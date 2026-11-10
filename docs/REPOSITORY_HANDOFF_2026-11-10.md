@@ -52,6 +52,18 @@ The 10 November cleanup updates these **148 URLs to the exact, immutable origina
 
 **Boundary:** Links embedded in earlier Git commits, old PR comments, and external repositories were not rewritten (immutable historical sources must not be silently rewritten). Their code is still recoverable from the source SHA inventory, but some old branch-based external URLs may break; preserve the original name-to-SHA index. The link audit tests *link stability*, not whether a historically quoted file name was ever correct.
 
+## Latest verification and remaining boundaries (10 Nov 2026)
+
+**Latest real, read-only checkout test:** [GitHub Actions #42911607801](https://github.com/Jozzpoly/Combat-Lab/actions/runs/42911607801) PASS. It creates a separate empty Git repository and fetches only the exact forensic archive SHA. It proves all 46 old tip commits are reachable, retrieves 7 branch-tip reports, **3 formerly deleted Owner-recording reports**, and verifies **all 148 current archived-branch research links** resolve to actual blobs or trees in the archive-only object database. The later validator deliberately does **not** freeze 148 as an eternal document-count requirement: future agents can legitimately simplify docs; every retained pinned source link must still resolve.
+
+**External links:** [new Jaskinia donor issue #4](https://github.com/Jozzpoly/Jaskinia/issues/4) was corrected from a doomed Combat branch-based source URL to the immutable `f569b3127a884ddd5d1d46cd3a837ff3142272b6` source link. Primary checked handoffs in Commons, old/new Jaskinia, Reflex, Companion and Medium did not expose another specific break requiring a source rewrite. **This was a targeted cross-repository audit, NOT an exhaustive scan of every historic PR comment, conversation or external document.** Some old `blob/<branch>` links outside this repository may fail after deletion; the branch/SHA inventory is the recovery key.
+
+**Material unresolved risks (do not hide):**
+- The one-time **write-enabled branch deletion job has not been exercised**. GitHub permissions/rules may reject some refs; partial cleanup is possible and safe to re-audit. Keep the archive; verify live branch list afterward. 44 refs are currently still present.
+- GitHub commit history, including a synthetic 46-parent archival commit, is **not a second independent backup**. If the GitHub repository/account becomes unavailable, this archive does not save the research. A full local `git clone --mirror` or `git bundle` stored outside the same GitHub account would be a stronger later disaster-recovery layer; none has been created or uploaded by this run.
+- This cleanup does **not** represent a full secret/license/compliance audit of every historical commit. The repository is public; removing branch names or retaining an archive will not erase previously published secrets. A credential compromise needs revocation/history remediation, not only Git cleanup.
+- CI source-recovery is **not** a fresh, fully interactive run of every obsolete prototype; old GitHub Actions binaries/screenshots have finite retention. No Owner approval of a new embodied experience is claimed.
+
 ## The exact repo cleanup boundary
 
 - Source snapshot **46 original branches**, **10 open drafts at capture**, many nested head/base PRs. This is stale navigation, not 46 active initiatives.
