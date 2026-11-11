@@ -19,6 +19,12 @@ W [workflow Pages](../.github/workflows/pages.yml) automatyczna publikacja wymag
 - `archive/all-research-pre-provider-handoff-2026-11-10@863c0a056e9e0dfa7e5895ccf443a8ecfd4f520d` — **trwała zwykła referencja GitHuba**, jej 46 rodziców obejmuje dokładnie pierwotnych 46 HEAD-ów. Pliki archiwalnego commita są tylko neutralnym smoke; eksperymenty odzyskuje się po dawnych SHA, nie przez checkout tego drzewa jako gry.
 - Na dzień sporządzenia: **47 gałęzi, 0 otwartych PR-ów; 44 dawne gałęzie przeznaczone do porządkowego usunięcia**, ale nie zostały skasowane. [Precyzyjny manifest nazw/SHA i PR](BRANCH_INVENTORY_2026-11-10.json).
 
+## Archiwum: dwa wskaźniki, jedna historia (11 XI 2026)
+
+- Główna gałąź `archive/all-research-pre-provider-handoff-2026-11-10` **oraz** [tag `archive/combat-lab-critical-history-2026-11-10`](https://github.com/Jozzpoly/Combat-Lab/tree/863c0a056e9e0dfa7e5895ccf443a8ecfd4f520d) wskazują ten sam commit `863c0a056e9e0dfa7e5895ccf443a8ecfd4f520d`. GitHub Actions [#42930791209](https://github.com/Jozzpoly/Combat-Lab/actions/runs/42930791209) utworzył znacznik i potwierdził 46 rodziców; niezależny odczyt API GitHuba potwierdził dokładne SHA. **Nie przechowuje dwóch kopii kodu** — to dwa wskaźniki do tych samych obiektów.
+- **Istotna pozostała granica:** brak rulesetu chroniącego archiwalną gałąź lub tag przed nadpisaniem/usunięciem. Znacznik redukuje ryzyko pojedynczego przypadkowego skasowania referencji, lecz **nie jest blokadą uprawnień** ani niezależną kopią poza GitHubem. Przed udzieleniem szerokich uprawnień zapisu nowym agentom warto nadać ruleset `Restrict deletions` i `Restrict updates` tylko tym dwóm archiwalnym referencjom. Nie chronić wszystkich 44 refów wyznaczonych do sprzątania.
+- Ręczna procedura kasowania 44 starych gałęzi dodatkowo wymaga obecności obu wskaźników do dokładnego SHA. Sam workflow usuwania nie był uruchamiany.
+
 ## Faktycznie wykonane dowody
 
 - 46 starych głów gałęzi zachowanych w archiwum; test nowego pustego repozytorium pobrał tylko archiwum i odzyskał wszystkie główne commit-SHA.

@@ -35,6 +35,11 @@ if(!/^(?:https:\/\/github\.com\/|git@github\.com:|ssh:\/\/git@github\.com\/)Jozz
 if(run(["rev-parse","--is-shallow-repository"])!=="false")throw Error("ABORT: use a full, non-shallow clone for ancestry checks");
 const archiveHead=lsRef(expectedArchive);
 own(archiveHead,manifest.archive.sha);
+const archiveGuardTag="archive/combat-lab-critical-history-2026-11-10";
+const tagLine=run(["ls-remote","--tags","--refs","origin","refs/tags/"+archiveGuardTag]);
+const tagSha=tagLine?tagLine.split("\t")[0]:null;
+own(tagSha,manifest.archive.sha); // Second immutable-name recovery anchor must exist.
+
 const mainHead=lsRef("main");
 if(!mainHead)throw Error("ABORT: main ref missing");
 if(!lsRef("rehearsal/current"))throw Error("ABORT: public rehearsal ref missing");

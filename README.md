@@ -13,6 +13,7 @@ Dla nowego agenta: [AGENTS.md](AGENTS.md) · [krótki, aktualny stan i odzyskiwa
 - **main** — neutralna strona testowa i dokumentacja. Nie jest najnowszym grywalnym organizmem.
 - **rehearsal/current** — niezależny wskaźnik istniejącego publicznego pokazu. Podczas sprzątania pozostaje nietknięty.
 - **archive/all-research-pre-provider-handoff-2026-11-10** — zwykła, utrzymywana na GitHubie gałąź z historią wszystkich 46 pierwotnych końcówek badań. To *zimne archiwum*, nie kod do scalenia, nie plan i nie źródło obowiązków.
+- **Dodatkowy znacznik ochronny `archive/combat-lab-critical-history-2026-11-10`** wskazuje *ten sam* archiwalny commit. Nie duplikuje danych; jest zabezpieczeniem na wypadek omyłkowego skasowania gałęzi archiwum. Ani znacznika, ani gałęzi archiwum nie należy usuwać.
 - **44 dawne gałęzie badawcze** — nadal widoczne przed ręcznym usunięciem; 0 otwartych PR. [Indeks ich SHA](docs/BRANCH_INVENTORY_2026-11-10.json) jest dostępny tylko do precyzyjnego odzyskiwania.
 
 **Wysoki priorytet:** zachować rzeczywisty Owner intent, bezpośrednie próby, negatywne wyniki i mały zbiór dawców godnych sprawdzenia. **Niski priorytet:** setki lokalnych wariantów kodu, dawne plany i liczba zielonych testów jako miara jakości.
