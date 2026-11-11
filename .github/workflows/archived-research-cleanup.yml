@@ -5,6 +5,10 @@ name: Combat Lab - guarded archive cleanup
 # The only deletion route requires a manual GitHub Actions dispatch on main,
 # the explicit operation, and the exact human-typed confirmation phrase.
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/archived-research-cleanup.yml'
   workflow_dispatch:
     inputs:
       operation:
