@@ -10,6 +10,14 @@ Tworzyć światy, w których fizycznie różne ciała **naprawdę mają inne mo�
 
 Ta wizja wciąż jest otwarta: 2D/3D, solver, modele ciał, AI i integracja z Jaskinią nie są wybrane na zawsze.
 
+### Trzy granice, które naprawdę zmieniają badania
+
+- **Oddzielne wymiary ciała:** rozmiar/obrys, masa i bezwładność, obciążenie, dostępna siła przyspieszania/hamowania oraz sprawność aktuatora nie są jednym suwakiem „duże–małe” ani „szybkie–wolne”. Pancerz może dodać masy bez powiększenia sylwetki; małe ciało może dysponować dużą, lecz skończoną siłą. [Wczesny zapis źródłowy](BODY_WORLD_SUBSTRATE_AND_SPECIMEN_2026-10-07.md).
+- **Autorstwo ≠ odkryty skutek:** człowiek może jawnie ustawić geometrię, fizyczną materię, wyjątkowe parametry lub reguły świata. Dopiero późniejsze zdarzenia należy przypisywać faktycznemu źródłu: gestowi operatora, efektowi kontaktu solvera, lokalnej obserwacji aktora albo jego własnemu skończonemu napędowi. Nie wpisywać wygodnego „duże ciała nie przechodzą” jako magicznej reguły, jeśli to ma wynikać z fizyki. [Material Commons — kontrprzykłady i granice](MATERIAL_COMMONS_X0_RESEARCH_GATE_2026-10-10.md).
+- **Wynik ruchu ≠ wiedza organizmu:** świat może obliczać pełne kolizje, lecz działający organizm nie powinien z automatu znać całego świata. W badaniach kompetencji lokalnych oddzielać informację realnie dostępną ciału od ukrytej wiedzy operatora/debuggera. [Eksperymentalny model świat–ciało](CONVERSATION_SYNTHESIS_WORKING_2026-10-09.md).
+
+**Kontrola jakości doświadczenia:** surowe kadry i krótkie sekwencje ruchu są ważnym dowodem. Pokazują martwotę, braki w sylwetkach, problemy kontaktu i niewygodę interakcji, których liczby nie ujawniają. Przyrządy powinny pomagać *wyjaśnić przyczynę*, nie zastępować spojrzenia na żywy świat. [Protokół pracy](EXPERIMENT_PROTOCOL.md).
+
 ## 2. Najcenniejszy materiał: rzeczywiste próby Ownera
 
 [Indeks trzech raportów odtworzonych z dawnych, usuniętych drzew Git](OWNER_EXPERIENCE_PRIMARY_EVIDENCE_2026-11-10.md). Raporty są **analizami agentów na podstawie prób**, nie zachowanymi surowymi filmami ani kompletnymi stenogramami rozmów.
