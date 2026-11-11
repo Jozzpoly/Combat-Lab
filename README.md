@@ -19,4 +19,4 @@ Dla nowego agenta: [AGENTS.md](AGENTS.md) · [krótki, aktualny stan i odzyskiwa
 
 **Porządki:** [jednorazowy audyt / ręczne usuwanie 44 gałęzi na GitHubie](https://github.com/Jozzpoly/Combat-Lab/actions/workflows/archived-research-cleanup.yml). Nie trzeba pobierać niczego na komputer. GitHubowe archiwum zachowuje osiągalność kodu dopóki istnieją repo i jego ref. Żadna historyczna gałąź nie została jeszcze skasowana.
 
-Wszystkie surowe historie prób pozostają dostępne na żądanie. Nie czytaj ich wszystkich z rozpędu. **Najpierw ustal, jakie doświadczenie chcemy teraz poprawić.**
+Archiwum zachowuje kod i wiele raportów, **nie gwarantuje zachowania surowych nagrań ani pełnych rozmów**. Nie odkopuj całej historii bez konkretnego pytania. **Najpierw ustal, jakie doświadczenie chcemy teraz poprawić.**

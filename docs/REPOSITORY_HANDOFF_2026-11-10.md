@@ -8,6 +8,10 @@
 2. [AGENTS.md](../AGENTS.md): zasady pracy niezależne od dostawcy.
 3. W razie potrzeby [szczegóły evidence historyczne](RESEARCH_STATE.md) i [dawny failure scar](FAILURE_SCAR_2026-10-06.md). Nie odziedziczaj historycznej listy NEXT jako planu.
 
+## Niezamierzone skutki zmian dokumentacyjnych
+
+W [workflow Pages](../.github/workflows/pages.yml) automatyczna publikacja wymaga pomyślnego `check` dotyczącego `rehearsal/current` (albo osobnego ręcznego `workflow_dispatch`). Zwykły commit dokumentacji na `main` nadal uruchamia `check`, ale **nie powinien automatycznie publikować Pages**. Jest to wniosek ze sprawdzonej konfiguracji, nie obietnica wobec przyszłych zmian workflow lub zewnętrznych webhooków. W trakcie porządków nie przesuwano `rehearsal/current`.
+
 ## Git, deployment, granice
 
 - `main` — neutralny kod/smoke + docs, nie grywalny aktualny organizm.
