@@ -17,13 +17,13 @@ W [workflow Pages](../.github/workflows/pages.yml) automatyczna publikacja wymag
 - `main` — neutralny kod/smoke + docs, nie grywalny aktualny organizm.
 - `rehearsal/current@cb4b44d417db612f3333fe515e6f6afffa3e56d8` — odrębny wskaźnik publicznych Pages; nie ruszać dla porządku.
 - `archive/all-research-pre-provider-handoff-2026-11-10@863c0a056e9e0dfa7e5895ccf443a8ecfd4f520d` — **trwała zwykła referencja GitHuba**, jej 46 rodziców obejmuje dokładnie pierwotnych 46 HEAD-ów. Pliki archiwalnego commita są tylko neutralnym smoke; eksperymenty odzyskuje się po dawnych SHA, nie przez checkout tego drzewa jako gry.
-- Na dzień sporządzenia: **47 gałęzi, 0 otwartych PR-ów; 44 dawne gałęzie przeznaczone do porządkowego usunięcia**, ale nie zostały skasowane. [Precyzyjny manifest nazw/SHA i PR](BRANCH_INVENTORY_2026-11-10.json).
+- **Stan po zakończeniu 11 XI:** **3 gałęzie, 0 otwartych PR-ów; 44 historyczne gałęzie usunięte** przez [GitHub Actions #42934600209](https://github.com/Jozzpoly/Combat-Lab/actions/runs/42934600209), po kontroli SHA i archiwum. Żaden PR nie został scalony. [Precyzyjny manifest nazw/SHA i PR](BRANCH_INVENTORY_2026-11-10.json).
 
 ## Archiwum: dwa wskaźniki, jedna historia (11 XI 2026)
 
 - Główna gałąź `archive/all-research-pre-provider-handoff-2026-11-10` **oraz** [tag `archive/combat-lab-critical-history-2026-11-10`](https://github.com/Jozzpoly/Combat-Lab/tree/863c0a056e9e0dfa7e5895ccf443a8ecfd4f520d) wskazują ten sam commit `863c0a056e9e0dfa7e5895ccf443a8ecfd4f520d`. GitHub Actions [#42930791209](https://github.com/Jozzpoly/Combat-Lab/actions/runs/42930791209) utworzył znacznik i potwierdził 46 rodziców; niezależny odczyt API GitHuba potwierdził dokładne SHA. **Nie przechowuje dwóch kopii kodu** — to dwa wskaźniki do tych samych obiektów.
 - **Istotna pozostała granica:** brak rulesetu chroniącego archiwalną gałąź lub tag przed nadpisaniem/usunięciem. Znacznik redukuje ryzyko pojedynczego przypadkowego skasowania referencji, lecz **nie jest blokadą uprawnień** ani niezależną kopią poza GitHubem. Przed udzieleniem szerokich uprawnień zapisu nowym agentom warto nadać ruleset `Restrict deletions` i `Restrict updates` tylko tym dwóm archiwalnym referencjom. Nie chronić wszystkich 44 refów wyznaczonych do sprzątania.
-- Ręczna procedura kasowania 44 starych gałęzi dodatkowo wymaga obecności obu wskaźników do dokładnego SHA. Sam workflow usuwania nie był uruchamiany.
+- Procedura kasowania wymagała obu wskaźników do dokładnego SHA. **Uruchomiono ją 11 XI: `audit=success`, `delete=success`; 44 refs usunięte, 3 zachowane.** Po zakończeniu niezależnie odczytano listę gałęzi i archiwalny tag.
 
 ## Faktycznie wykonane dowody
 
@@ -42,8 +42,12 @@ W [workflow Pages](../.github/workflows/pages.yml) automatyczna publikacja wymag
 - GitHub Actions i ich artefakty mają retencję czasową; **nie używać ich jako archiwum badawczego**.
 - Pomyślne źródłowe/Chromium testy P7/P10/W2/Worldbench ≠ aprobowany gameplay/feel.
 
-## Jedyny otwarty krok technicznego sprzątania
+## Zakończenie sprzątania gałęzi — 11 listopada 2026
 
-[Workflow ręcznego usuwania starych gałęzi](https://github.com/Jozzpoly/Combat-Lab/actions/workflows/archived-research-cleanup.yml) jest przygotowany, ale **nieuruchomiony w trybie kasowania**. Opcja AUDIT_ONLY nic nie usuwa. Opcja DELETE_ARCHIVED_REFS wraz z dokładną frazą `DELETE_44_ARCHIVED_COMBAT_BRANCHES` zleca usunięcie wyłącznie 44 identycznych SHA z manifestu, po potwierdzeniu archiwum, braku nowych nieznanych gałęzi oraz wykluczeniu `main`, `rehearsal/current` i archiwum. Operacja jest wieloetapowa, więc możliwe jest częściowe wykonanie; po niej trzeba sprawdzić liczbę gałęzi i zaktualizować stan. Nie ma obowiązku pobierania ZIP.
+**Wykonane i niezależnie odczytane:** [GitHub Actions #42934600209](https://github.com/Jozzpoly/Combat-Lab/actions/runs/42934600209) — etap audytu `success`, etap `delete` `success`. Dokładnie 44 wskazane w historycznym manifeście gałęzie usunięto ze zdalnego GitHuba. Pozostały `main`, `rehearsal/current`, `archive/all-research-pre-provider-handoff-2026-11-10` i niezależnie nazwany tag `archive/combat-lab-critical-history-2026-11-10` wskazujący archiwalny commit. Oba wskaźniki archiwum zachowują się po operacji. Strona Pages nie została przełączona.
+
+**One-off machinery retired from active `main`:** nie pozostawiać workflow z uprawnieniem do usuwania gałęzi ani jednorazowego skryptu prune jako przyszłej komendy. Zachowano tylko historyczny indeks nazw/SHA, czytelny rezultat Actions i możliwość odzyskania interesującego commit-SHA.
+
+**Pozostałe osobne ryzyka:** archiwalne refy nie mają rulesetu chroniącego przed skasowaniem/nadpisaniem; brak niezależnej kopii konta GitHub oraz pełnych surowych rozmów i nagrań; dotychczas nie wykazano, że obcy agent odtworzy z miejsca pożądaną grywalną sytuację. Żadne z tych twierdzeń nie jest ukrytym zobowiązaniem do kolejnej operacji Git.
 
 Wcześniejsze 15-kilobajtowe opisy procedury i dawny proces backupów pozostają w historii commitów Git, ale nie są nowym kontraktem współpracy. **Zainteresuj się badaniem świata, nie procedurą archiwalną.**

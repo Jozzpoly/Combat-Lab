@@ -3,6 +3,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --check app.js && node --check tools/prune-archived-branches.mjs && node tools/validate-handoff.mjs"
+    "test": "node --check app.js && node --check tools/rehearse-archive-recovery.mjs && node tools/validate-handoff.mjs"
   }
 }

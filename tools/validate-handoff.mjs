@@ -30,7 +30,7 @@ for(const pr of m.prs_at_capture) {
   assert.match(pr.head_sha,/^[0-9a-f]{40}$/);
   assert.ok(allOld.has(pr.head)||pr.head==="main");
 }
-for(const name of ["README.md","AGENTS.md","docs/REPOSITORY_HANDOFF_2026-11-10.md","tools/prune-archived-branches.mjs"]) {
+for(const name of ["README.md","AGENTS.md","docs/REPOSITORY_HANDOFF_2026-11-10.md","tools/rehearse-archive-recovery.mjs"]) {
   assert.ok(fs.statSync(path.join(root,name)).isFile());
 }
 // Preserve internal document navigation after removing branch refs. Exact source
